@@ -13,6 +13,11 @@
 # with this program; if not, write to the Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
+# Variables
+CONTENT_PATH = "content"
+TARGET_PATH = "output"
+
+# Required imports
 import bs4
 import jinja2
 import json
@@ -20,41 +25,64 @@ import markdown
 import os
 import shutil
 
-CONTENT_PATH = "content"
-TARGET_PATH = "output"
-
 
 def pretty_print(html):
+    """
+        Returns a cleanly indented version of the provided html code.
+    """
+
     soup = bs4.BeautifulSoup(html)
     return soup.prettify(formatter="html")
 
 
 def load_json(filename):
+    """
+        Load the provided JSON file from the content directory.
+    """
+
     with open("%s/%s" % (CONTENT_PATH, filename), "r") as fd:
         return json.loads(fd.read())
 
 
 def gen_menu(structure, override, prefix):
+    """
+        Generate a list representing the menu.
+        If there are sub-menus, the content of the entry will be a
+        nested list.
+
+        The function takes the structure list and an optional override
+        dict used to handle translations.
+
+        When all internal links must be prefixed, prefix should be set.
+    """
+
     menu = []
     sub_menu = None
     sub_menu_title = None
 
     for entry in structure:
         item = dict(entry)
+
+        # Apply the override (if any)
         item.update(override.get(entry['path'], {}))
 
         if prefix:
+            # Prepend the prefix to all internal links
             item['path'] = "%s%s" % (prefix, item['path'])
 
         if "generator" not in item:
+            # Menu splitter
             item['path'] = ""
         elif item['generator'] == "link":
+            # External link
             item['path'] = item['meta']['url']
 
         if len(item['menu']) == 1:
+            # Simple menu entry
             menu.append((item['path'],
                          item['menu'][-1]))
         else:
+            # Drop-down menu
             if sub_menu_title != item['menu'][0]:
                 if sub_menu:
                     menu.append((sub_menu, sub_menu_title))
@@ -64,6 +92,7 @@ def gen_menu(structure, override, prefix):
             sub_menu.append((item['path'],
                              item['menu'][-1]))
 
+    # Process the last drop-down menu
     if structure and sub_menu_title:
         if sub_menu:
             menu.append((sub_menu, sub_menu_title))
@@ -74,20 +103,29 @@ def gen_menu(structure, override, prefix):
 def gen_pages(structure, override, prefix, **variables):
     for entry in structure:
         item = dict(entry)
+
+        # Apply the override (if any)
         item.update(override.get(entry['path'], {}))
 
+        # Store the original path (required for translations)
         page_raw_path = item['path']
+
         if prefix:
+            # Prepend the prefix to all internal links
             item['path'] = "%s%s" % (prefix, item['path'])
 
         if "generator" not in item or item['generator'] == "link":
+            # Skip the virtual entries (external links, splitters)
             continue
 
+        # Generate the target path and create any missing directory
         output_path = "%s%s/index.html" % (TARGET_PATH, item['path'])
         if not os.path.exists(os.path.dirname(output_path)):
             os.makedirs(os.path.dirname(output_path))
 
+        # Generate the page content
         content = ""
+        template = "page.tpl.html"
         if item['generator'] == "html":
             with open("%s/%s" % (CONTENT_PATH,
                                  item['meta']['input']), "r") as fd:
@@ -99,7 +137,8 @@ def gen_pages(structure, override, prefix, **variables):
         elif item['generator'] == "downloads":
             pass
 
-        template = env.get_template("page.tpl.html")
+        # Pass all the variables to the template and generate the html
+        template = env.get_template(template)
         with open(output_path, "w+") as fd:
             fd.write(pretty_print(
                 template.render(page_path=item['path'],
@@ -110,20 +149,20 @@ def gen_pages(structure, override, prefix, **variables):
                                 **variables)))
 
 
-# Load the configuration
+# Load the configuration and structure
 env = jinja2.Environment(loader=jinja2.FileSystemLoader('templates/'))
 config = load_json("CONFIG.json")
 structure = load_json("STRUCTURE.json")
 
+# Wipe the output directory clean
 if os.path.exists(TARGET_PATH):
     shutil.rmtree(TARGET_PATH)
 os.mkdir(TARGET_PATH)
 os.symlink("../static", "%s/%s" % (TARGET_PATH, "static"))
 
+# Start generating the website
 for lang_code, lang_name in config['languages']:
-    if lang_code:
-        os.mkdir("%s/%s" % (TARGET_PATH, lang_code))
-
+    # Load a translation override
     override = {}
     try:
         override = {entry['path']: entry
@@ -131,12 +170,15 @@ for lang_code, lang_name in config['languages']:
     except FileNotFoundError:
         pass
 
+    # Figure out the translation prefix
     lang_prefix = ""
     if lang_code:
         lang_prefix = "/%s" % lang_code
 
+    # Generate the menu
     menu = gen_menu(structure, override, lang_prefix)
 
+    # Generate all the pages
     gen_pages(structure, override, lang_prefix,
               menu=menu, page_lang=lang_code,
               languages=config['languages'])
