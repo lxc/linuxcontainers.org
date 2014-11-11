@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+{% block head %}
+        <meta charset="utf-8"/>
+        <link rel="icon" href="/static/img/favicon.ico"/>
+
+        <title>{% block title %}{% endblock %}</title>
+
+        <!-- Bootstrap core CSS -->
+        <link href="/static/css/bootstrap.min.css" rel="stylesheet"/>
+        <link href="/static/css/bootstrap-theme.min.css" rel="stylesheet"/>
+        <link href="/static/css/local.css" rel="stylesheet"/>
+{% endblock %}
+    </head>
+
+    <body role="document">
+{% include "common/header.tpl.html" %}
+
+        <div class="container">
+{% block content %}{% endblock %}
+
+{% include ["common/footer." + page_lang + ".tpl.html", "common/footer.tpl.html"] %}
+
+            <script src="/static/js/jquery.min.js"></script>
+            <script src="/static/js/bootstrap.min.js"></script>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,204 @@
+[
+    {"path": "/",
+     "title": "",
+     "menu": ["Home"],
+     "generator": "html",
+     "meta": {"input": "index.html"}},
+
+
+
+    {"path": "/lxc/introduction",
+     "title": "LXC - Introduction",
+     "menu": ["LXC", "Introduction"],
+     "generator": "markdown",
+     "meta": {"input": "lxc/introduction.md"}},
+
+    {"path": "/lxc/news",
+     "title": "LXC - News",
+     "menu": ["LXC", "News"],
+     "generator": "markdown",
+     "meta": {"input": "lxc/news.md"}},
+
+    {"path": "/lxc/getting-started",
+     "title": "LXC - Getting started",
+     "menu": ["LXC", "Getting started"],
+     "generator": "markdown",
+     "meta": {"input": "lxc/getting-started.md"}},
+
+    {"path": "/lxc/documentation",
+     "title": "LXC - Documentation",
+     "menu": ["LXC", "Documentation"],
+     "generator": "markdown",
+     "meta": {"input": "lxc/documentation.md"}},
+
+    {"path": "/lxc/contribute",
+     "title": "LXC - Contribute",
+     "menu": ["LXC", "Contribute"],
+     "generator": "markdown",
+     "meta": {"input": "lxc/contribute.md"}},
+
+    {"path": "/lxc/downloads",
+     "title": "LXC - Downloads",
+     "menu": ["LXC", "Downloads"],
+     "generator": "downloads",
+     "meta": {"input": "downloads/lxc"}},
+
+    {"path": "/lxc/external-resources",
+     "menu": ["LXC", "External resources"]},
+
+    {"path": "/lxc/articles",
+     "title": "LXC - Articles",
+     "menu": ["LXC", "Articles"],
+     "generator": "markdown",
+     "meta": {"input": "lxc/articles.md"}},
+
+    {"path": "/lxc/mailing-lists",
+     "menu": ["LXC", "Mailing lists"],
+     "generator": "link",
+     "meta": {"url": "https://lists.linuxcontainers.org"}},
+
+    {"path": "/lxc/github",
+     "menu": ["LXC", "Github"],
+     "generator": "link",
+     "meta": {"url": "https://github.com/lxc/lxc"}},
+
+    {"path": "/lxc/jenkins-ci",
+     "menu": ["LXC", "Jenkins CI"],
+     "generator": "link",
+     "meta": {"url": "https://jenkins.linuxcontainers.org/view/LXC/"}},
+
+    {"path": "/lxc/travis-ci",
+     "menu": ["LXC", "Travis CI"],
+     "generator": "link",
+     "meta": {"url": "https://travis-ci.org/lxc/lxc"}},
+
+
+
+    {"path": "/lxd/introduction",
+     "title": "LXD - Introduction",
+     "menu": ["LXD", "Introduction"],
+     "generator": "markdown",
+     "meta": {"input": "lxd/introduction.md"}},
+
+    {"path": "/lxd/news",
+     "title": "LXD - News",
+     "menu": ["LXD", "News"],
+     "generator": "markdown",
+     "meta": {"input": "lxd/news.md"}},
+
+    {"path": "/lxd/getting-started-cli",
+     "title": "LXD - Getting started - command line",
+     "menu": ["LXD", "Getting started - command line"],
+     "generator": "markdown",
+     "meta": {"input": "lxd/getting-started-cli.md"}},
+
+    {"path": "/lxd/getting-started-openstack",
+     "title": "LXD - Getting started - OpenStack",
+     "menu": ["LXD", "Getting started - OpenStack"],
+     "generator": "markdown",
+     "meta": {"input": "lxd/getting-started-openstack.md"}},
+
+    {"path": "/lxd/rest-api",
+     "title": "LXD - REST API",
+     "menu": ["LXD", "REST API"],
+     "generator": "markdown",
+     "meta": {"input": "lxd/rest-api.md"}},
+
+    {"path": "/lxd/contribute",
+     "title": "LXD - Contribute",
+     "menu": ["LXD", "Contribute"],
+     "generator": "markdown",
+     "meta": {"input": "lxd/contribute.md"}},
+
+    {"path": "/lxd/downloads",
+     "title": "LXD - Downloads",
+     "menu": ["LXD", "Downloads"],
+     "generator": "downloads",
+     "meta": {"input": "downloads/lxd"}},
+
+    {"path": "/lxd/external-resources",
+     "menu": ["LXD", "External resources"]},
+
+    {"path": "/lxd/articles",
+     "title": "LXD - Articles",
+     "menu": ["LXD", "Articles"],
+     "generator": "markdown",
+     "meta": {"input": "lxd/articles.md"}},
+
+    {"path": "/lxd/mailing-lists",
+     "menu": ["LXD", "Mailing lists"],
+     "generator": "link",
+     "meta": {"url": "https://lists.linuxcontainers.org"}},
+
+    {"path": "/lxd/github",
+     "menu": ["LXD", "Github"],
+     "generator": "link",
+     "meta": {"url": "https://github.com/lxc/lxd"}},
+
+    {"path": "/lxd/travis-ci",
+     "menu": ["LXD", "Travis CI"],
+     "generator": "link",
+     "meta": {"url": "https://travis-ci.org/lxc/lxd"}},
+
+
+
+    {"path": "/cgmanager/introduction",
+     "title": "CGManager - Introduction",
+     "menu": ["CGManager", "Introduction"],
+     "generator": "markdown",
+     "meta": {"input": "cgmanager/introduction.md"}},
+
+    {"path": "/cgmanager/news",
+     "title": "CGManager - News",
+     "menu": ["CGManager", "News"],
+     "generator": "markdown",
+     "meta": {"input": "cgmanager/news.md"}},
+
+    {"path": "/cgmanager/getting-started",
+     "title": "CGManager - Getting started",
+     "menu": ["CGManager", "Getting started"],
+     "generator": "markdown",
+     "meta": {"input": "cgmanager/getting-started.md"}},
+
+    {"path": "/cgmanager/dbus-api",
+     "title": "CGManager - D-Bus API",
+     "menu": ["CGManager", "D-Bus API"],
+     "generator": "markdown",
+     "meta": {"input": "cgmanager/dbus-api.md"}},
+
+    {"path": "/cgmanager/contribute",
+     "title": "CGManager - Contribute",
+     "menu": ["CGManager", "Contribute"],
+     "generator": "markdown",
+     "meta": {"input": "cgmanager/contribute.md"}},
+
+    {"path": "/cgmanager/downloads",
+     "title": "CGManager - Downloads",
+     "menu": ["CGManager", "Downloads"],
+     "generator": "downloads",
+     "meta": {"input": "downloads/cgmanager"}},
+
+    {"path": "/cgmanager/external-resources",
+     "menu": ["CGManager", "External resources"]},
+
+    {"path": "/cgmanager/articles",
+     "title": "CGManager - Articles",
+     "menu": ["CGManager", "Articles"],
+     "generator": "markdown",
+     "meta": {"input": "cgmanager/articles.md"}},
+
+    {"path": "/cgmanager/mailing-lists",
+     "menu": ["CGManager", "Mailing lists"],
+     "generator": "link",
+     "meta": {"url": "https://lists.linuxcontainers.org"}},
+
+    {"path": "/cgmanager/github",
+     "menu": ["CGManager", "Github"],
+     "generator": "link",
+     "meta": {"url": "https://github.com/cgmanager/cgmanager"}},
+
+    {"path": "/cgmanager/travis-ci",
+     "menu": ["CGManager", "Travis CI"],
+     "generator": "link",
+     "meta": {"url": "https://travis-ci.org/cgmanager/cgmanager"}}
+]

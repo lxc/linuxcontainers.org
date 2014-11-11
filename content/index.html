@@ -1,0 +1,78 @@
+<h2>LinuxContainers.org <span class="text-muted">Infrastructure for container projects.</span></h2>
+<div class="content">
+    <p><img src="/static/img/logo.png"
+            alt="logo" style="float:right"/>
+       linuxcontainers.org is the umbrella project behind LXC,
+       LXD and CGManager.</p>
+
+    <p>The goal is to offer a distro and vendor neutral environment
+       for the development of Linux container technologies.
+       The project provides resources such as build machines, CI
+       infrastructure, mailing-lists, website, e-mail, ...
+       to the various projects under it.</p>
+
+    <p>Current project sponsors are:
+        <ul>
+            <li>Stéphane Graber
+                <ul>
+                    <li>domain names and SSL certificates</li>
+                    <li>public server (websites, downloads, e-mails, DNS)</li>
+                    <li>build infrastructure (jenkins, i386, amd64 and armhf builders)</li>
+                </ul>
+            </li>
+            <li>Canonical Ltd.
+                <ul>
+                    <li>build infrastructure (arm64 and ppc64el builders)</li>
+                </ul>
+            </li>
+        </ul>
+    </p>
+</div>
+
+<hr/>
+<h2>Projects. <span class="text-muted">The interesting stuff.</span></h2>
+<div class="row">
+    <div class="col-lg-4">
+        <h2>LXC <span class="text-muted">(lex-cee)</span></h2>
+        <p>LXC is the well known set of tools, templates,
+           library and language bindings. It's pretty low
+           level, very flexible and covers just about every
+           containment feature supported by the upstream
+           kernel.</p>
+        <p>LXC is production ready with LXC 1.0 getting 5
+           years of security updates and bugfixes
+           (until April 2019).</p>
+        <p><a class="btn btn-primary" href="#" role="button">More &raquo;</a></p>
+    </div>
+
+    <div class="col-lg-4">
+        <h2>LXD <span class="text-muted">(lex-dee)</span></h2>
+        <p>LXD is the new LXC experience. It offers a
+           completely fresh and intuitive user experience
+           with a single command line tool to manage your
+           containers. Containers can be managed over the
+           network in a transparent way through a REST API.
+           It also works with large scale deployments by
+           integrating with OpenStack.</p>
+
+        <p>LXD was announced in early November 2014 and is
+           still under very active development.</p>
+
+        <p><a class="btn btn-primary" href="#" role="button">More &raquo;</a></p>
+   </div>
+
+    <div class="col-lg-4">
+        <h2>CGManager</h2>
+        <p>CGManager is our cgroup manager daemon. It's
+           designed to allow nested unprivileged containers
+           to still be able to create and manage their
+           cgroups through a DBus API.</p>
+
+        <p>CGManager has been used by default with LXC in
+           Ubuntu since April 2014 and since by other
+           distributions as they start needing working
+           unprivileged containers.</p>
+
+        <p><a class="btn btn-primary" href="#" role="button">More &raquo;</a></p>
+    </div>
+</div>

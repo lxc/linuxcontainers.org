@@ -1,0 +1,142 @@
+#!/usr/bin/python3
+
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License version 2, as
+# published by the Free Software Foundation.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License along
+# with this program; if not, write to the Free Software Foundation, Inc.,
+# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+
+import bs4
+import jinja2
+import json
+import markdown
+import os
+import shutil
+
+CONTENT_PATH = "content"
+TARGET_PATH = "output"
+
+
+def pretty_print(html):
+    soup = bs4.BeautifulSoup(html)
+    return soup.prettify(formatter="html")
+
+
+def load_json(filename):
+    with open("%s/%s" % (CONTENT_PATH, filename), "r") as fd:
+        return json.loads(fd.read())
+
+
+def gen_menu(structure, override, prefix):
+    menu = []
+    sub_menu = None
+    sub_menu_title = None
+
+    for entry in structure:
+        item = dict(entry)
+        item.update(override.get(entry['path'], {}))
+
+        if prefix:
+            item['path'] = "%s%s" % (prefix, item['path'])
+
+        if "generator" not in item:
+            item['path'] = ""
+        elif item['generator'] == "link":
+            item['path'] = item['meta']['url']
+
+        if len(item['menu']) == 1:
+            menu.append((item['path'],
+                         item['menu'][-1]))
+        else:
+            if sub_menu_title != item['menu'][0]:
+                if sub_menu:
+                    menu.append((sub_menu, sub_menu_title))
+                sub_menu = []
+                sub_menu_title = item['menu'][0]
+
+            sub_menu.append((item['path'],
+                             item['menu'][-1]))
+
+    if structure and sub_menu_title:
+        if sub_menu:
+            menu.append((sub_menu, sub_menu_title))
+
+    return menu
+
+
+def gen_pages(structure, override, prefix, **variables):
+    for entry in structure:
+        item = dict(entry)
+        item.update(override.get(entry['path'], {}))
+
+        page_raw_path = item['path']
+        if prefix:
+            item['path'] = "%s%s" % (prefix, item['path'])
+
+        if "generator" not in item or item['generator'] == "link":
+            continue
+
+        output_path = "%s%s/index.html" % (TARGET_PATH, item['path'])
+        if not os.path.exists(os.path.dirname(output_path)):
+            os.makedirs(os.path.dirname(output_path))
+
+        content = ""
+        if item['generator'] == "html":
+            with open("%s/%s" % (CONTENT_PATH,
+                                 item['meta']['input']), "r") as fd:
+                content = fd.read()
+        elif item['generator'] == "markdown":
+            with open("%s/%s" % (CONTENT_PATH,
+                                 item['meta']['input']), "r") as fd:
+                content = markdown.markdown(fd.read())
+        elif item['generator'] == "downloads":
+            pass
+
+        template = env.get_template("page.tpl.html")
+        with open(output_path, "w+") as fd:
+            fd.write(pretty_print(
+                template.render(page_path=item['path'],
+                                page_raw_path=page_raw_path,
+                                page_title=item['title'],
+                                page_menu=item['menu'],
+                                content=content,
+                                **variables)))
+
+
+# Load the configuration
+env = jinja2.Environment(loader=jinja2.FileSystemLoader('templates/'))
+config = load_json("CONFIG.json")
+structure = load_json("STRUCTURE.json")
+
+if os.path.exists(TARGET_PATH):
+    shutil.rmtree(TARGET_PATH)
+os.mkdir(TARGET_PATH)
+os.symlink("../static", "%s/%s" % (TARGET_PATH, "static"))
+
+for lang_code, lang_name in config['languages']:
+    if lang_code:
+        os.mkdir("%s/%s" % (TARGET_PATH, lang_code))
+
+    override = {}
+    try:
+        override = {entry['path']: entry
+                    for entry in load_json("STRUCTURE.%s.json" % lang_code)}
+    except FileNotFoundError:
+        pass
+
+    lang_prefix = ""
+    if lang_code:
+        lang_prefix = "/%s" % lang_code
+
+    menu = gen_menu(structure, override, lang_prefix)
+
+    gen_pages(structure, override, lang_prefix,
+              menu=menu, page_lang=lang_code,
+              languages=config['languages'])
