@@ -22,6 +22,11 @@
 {% include "common/header.tpl.html" %}
 
         <div class="container">
+            <ol class="breadcrumb">
+{% for entry in page_menu %}
+                <li>{{ entry }}</li>
+{% endfor %}
+            </ol>
 {% block content %}{% endblock %}
 
 {% include ["common/footer." + page_lang + ".tpl.html", "common/footer.tpl.html"] %}
