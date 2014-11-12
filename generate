@@ -135,7 +135,29 @@ def gen_pages(structure, override, prefix, **variables):
                                  item['meta']['input']), "r") as fd:
                 content = markdown.markdown(fd.read())
         elif item['generator'] == "downloads":
-            pass
+            downloads = []
+            for entry in sorted(os.listdir(item['meta']['dir'].lstrip("/")),
+                                reverse=True):
+                if entry.endswith(".asc"):
+                    continue
+
+                fs_path = "%s/%s" % (item['meta']['dir'].lstrip("/"), entry)
+
+                download = {}
+                download['filename'] = entry
+                download['path'] = "%s/%s" % (item['meta']['dir'], entry)
+                download['signame'] = None
+                download['sigpath'] = None
+                if os.path.exists("%s.asc" % fs_path):
+                    download['signame'] = "%s.asc" % download['filename']
+                    download['sigpath'] = "%s.asc" % download['path']
+                download['size'] = "%sK" % \
+                    (round(os.stat(fs_path).st_size / 1024, 2))
+
+                downloads.append(download)
+
+            variables['downloads'] = downloads
+            template = "downloads.tpl.html"
 
         # Pass all the variables to the template and generate the html
         template = env.get_template(template)
@@ -158,7 +180,8 @@ structure = load_json("STRUCTURE.json")
 if os.path.exists(TARGET_PATH):
     shutil.rmtree(TARGET_PATH)
 os.mkdir(TARGET_PATH)
-os.symlink("../static", "%s/%s" % (TARGET_PATH, "static"))
+shutil.copytree("static", "%s/%s" % (TARGET_PATH, "static"))
+shutil.copytree("downloads", "%s/%s" % (TARGET_PATH, "downloads"))
 
 # Start generating the website
 for lang_code, lang_name in config['languages']:

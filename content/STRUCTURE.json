@@ -41,7 +41,7 @@
      "title": "LXC - Downloads",
      "menu": ["LXC", "Downloads"],
      "generator": "downloads",
-     "meta": {"input": "downloads/lxc"}},
+     "meta": {"dir": "/downloads/lxc"}},
 
     {"path": "/lxc/external-resources",
      "menu": ["LXC", "External resources"]},
@@ -114,7 +114,7 @@
      "title": "LXD - Downloads",
      "menu": ["LXD", "Downloads"],
      "generator": "downloads",
-     "meta": {"input": "downloads/lxd"}},
+     "meta": {"dir": "/downloads/lxd"}},
 
     {"path": "/lxd/external-resources",
      "menu": ["LXD", "External resources"]},
@@ -176,7 +176,7 @@
      "title": "CGManager - Downloads",
      "menu": ["CGManager", "Downloads"],
      "generator": "downloads",
-     "meta": {"input": "downloads/cgmanager"}},
+     "meta": {"dir": "/downloads/cgmanager"}},
 
     {"path": "/cgmanager/external-resources",
      "menu": ["CGManager", "External resources"]},

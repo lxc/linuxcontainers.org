@@ -5,7 +5,11 @@
         <meta charset="utf-8"/>
         <link rel="icon" href="/static/img/favicon.ico"/>
 
-        <title>{% block title %}{% endblock %}</title>
+{% if page_title %}
+        <title>Linux Containers - {{ page_title }}</title>
+{% else %}
+        <title>Linux Containers</title>
+{% endif %}
 
         <!-- Bootstrap core CSS -->
         <link href="/static/css/bootstrap.min.css" rel="stylesheet"/>
