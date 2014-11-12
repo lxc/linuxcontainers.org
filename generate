@@ -135,6 +135,12 @@ def gen_pages(structure, override, prefix, **variables):
                                  item['meta']['input']), "r") as fd:
                 content = markdown.markdown(fd.read())
         elif item['generator'] == "downloads":
+            # Support a markdown description before the download table
+            if "input" in item['meta']:
+                with open("%s/%s" % (CONTENT_PATH,
+                                     item['meta']['input']), "r") as fd:
+                    content = markdown.markdown(fd.read())
+
             downloads = []
             for entry in sorted(os.listdir(item['meta']['dir'].lstrip("/")),
                                 reverse=True):
