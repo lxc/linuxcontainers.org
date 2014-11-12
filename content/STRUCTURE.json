@@ -57,6 +57,11 @@
      "generator": "link",
      "meta": {"url": "https://lists.linuxcontainers.org"}},
 
+    {"path": "/lxc/irc",
+     "menu": ["LXC", "IRC"],
+     "generator": "link",
+     "meta": {"url": "https://webchat.freenode.net/?channels=#lxcontainers"}},
+
     {"path": "/lxc/github",
      "menu": ["LXC", "Github"],
      "generator": "link",
@@ -130,6 +135,11 @@
      "generator": "link",
      "meta": {"url": "https://lists.linuxcontainers.org"}},
 
+    {"path": "/lxd/irc",
+     "menu": ["LXD", "IRC"],
+     "generator": "link",
+     "meta": {"url": "https://webchat.freenode.net/?channels=#lxcontainers"}},
+
     {"path": "/lxd/github",
      "menu": ["LXD", "Github"],
      "generator": "link",
@@ -191,6 +201,11 @@
      "menu": ["CGManager", "Mailing lists"],
      "generator": "link",
      "meta": {"url": "https://lists.linuxcontainers.org"}},
+
+    {"path": "/cgmanager/irc",
+     "menu": ["CGManager", "IRC"],
+     "generator": "link",
+     "meta": {"url": "https://webchat.freenode.net/?channels=#cgmanager"}},
 
     {"path": "/cgmanager/github",
      "menu": ["CGManager", "Github"],

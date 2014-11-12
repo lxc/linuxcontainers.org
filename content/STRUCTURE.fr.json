@@ -39,6 +39,9 @@
     {"path": "/lxc/mailing-lists",
      "menu": ["LXC", "Listes de diffusions"]},
 
+    {"path": "/lxc/irc",
+     "menu": ["LXC", "IRC"]},
+
     {"path": "/lxc/github",
      "menu": ["LXC", "Github"]},
 
@@ -88,6 +91,9 @@
     {"path": "/lxd/mailing-lists",
      "menu": ["LXD", "Listes de diffusions"]},
 
+    {"path": "/lxd/irc",
+     "menu": ["LXD", "IRC"]},
+
     {"path": "/lxd/github",
      "menu": ["LXD", "Github"]},
 
@@ -129,6 +135,9 @@
 
     {"path": "/cgmanager/mailing-lists",
      "menu": ["CGManager", "Listes de diffusions"]},
+
+    {"path": "/cgmanager/irc",
+     "menu": ["CGManager", "IRC"]},
 
     {"path": "/cgmanager/github",
      "menu": ["CGManager", "Github"]},
