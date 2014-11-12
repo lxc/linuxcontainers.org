@@ -1,5 +1,5 @@
 # Current development version
 
-You can clone cgmanager directly with:
+You can clone lxd directly with:
 
-    git clone git://github.com/cgmanager/cgmanager
+    git clone git://github.com/lxc/lxd
