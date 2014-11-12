@@ -26,6 +26,9 @@ Comes from the Humanity icon theme (browser-download.svg):
 > can be found in \`/usr/share/common-licenses/GPL-3', and the full text of the
 > LGPL version 3 can be found in \`/usr/share/common-licenses/LGPL-3'.
 
-# favicon.ico and logo.png
+# favicon.ico and containers.png
 
-Come from the lxd page on the www.ubuntu.com website.
+Provided for public use by Canonical, initially published on the lxd
+page of www.ubuntu.com.
+
+License unclear, assume it to be only usable for linuxcontainers.org.
