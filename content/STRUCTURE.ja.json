@@ -1,0 +1,147 @@
+[
+    {"path": "/",
+     "title": "",
+     "menu": ["ホーム"]},
+
+
+
+    {"path": "/lxc/introduction",
+     "title": "LXC - イントロダクション",
+     "menu": ["LXC", "イントロダクション"]},
+
+    {"path": "/lxc/news",
+     "title": "LXC - ニュース",
+     "menu": ["LXC", "ニュース"]},
+
+    {"path": "/lxc/getting-started",
+     "title": "LXC - はじめに",
+     "menu": ["LXC", "はじめに"]},
+
+    {"path": "/lxc/documentation",
+     "title": "LXC - ドキュメント",
+     "menu": ["LXC", "ドキュメント"]},
+
+    {"path": "/lxc/contribute",
+     "title": "LXC - コントリビュート",
+     "menu": ["LXC", "コントリビュート"]},
+
+    {"path": "/lxc/downloads",
+     "title": "LXC - ダウンロード",
+     "menu": ["LXC", "ダウンロード"]},
+
+    {"path": "/lxc/external-resources",
+     "menu": ["LXC", "外部リソース"]},
+
+    {"path": "/lxc/articles",
+     "title": "LXC - 記事",
+     "menu": ["LXC", "記事"]},
+
+    {"path": "/lxc/mailing-lists",
+     "menu": ["LXC", "メーリングリスト"]},
+
+    {"path": "/lxc/irc",
+     "menu": ["LXC", "IRC"]},
+
+    {"path": "/lxc/github",
+     "menu": ["LXC", "Github"]},
+
+    {"path": "/lxc/jenkins-ci",
+     "menu": ["LXC", "Jenkins CI"]},
+
+    {"path": "/lxc/travis-ci",
+     "menu": ["LXC", "Travis CI"]},
+
+
+
+    {"path": "/lxd/introduction",
+     "title": "LXD - イントロダクション",
+     "menu": ["LXD", "イントロダクション"]},
+
+    {"path": "/lxd/news",
+     "title": "LXD - ニュース",
+     "menu": ["LXD", "ニュース"]},
+
+    {"path": "/lxd/getting-started-cli",
+     "title": "LXD - はじめに - コマンドライン",
+     "menu": ["LXD", "はじめに - コマンドライン"]},
+
+    {"path": "/lxd/getting-started-openstack",
+     "title": "LXD - はじめに - OpenStack",
+     "menu": ["LXD", "はじめに - OpenStack"]},
+
+    {"path": "/lxd/rest-api",
+     "title": "LXD - REST API",
+     "menu": ["LXD", "REST API"]},
+
+    {"path": "/lxd/contribute",
+     "title": "LXD - コントリビュート",
+     "menu": ["LXD", "コントリビュート"]},
+
+    {"path": "/lxd/downloads",
+     "title": "LXD - ダウンロード",
+     "menu": ["LXD", "ダウンロード"]},
+
+    {"path": "/lxd/external-resources",
+     "menu": ["LXD", "外部リソース"]},
+
+    {"path": "/lxd/articles",
+     "title": "LXD - 記事",
+     "menu": ["LXD", "記事"]},
+
+    {"path": "/lxd/mailing-lists",
+     "menu": ["LXD", "メーリングリスト"]},
+
+    {"path": "/lxd/irc",
+     "menu": ["LXD", "IRC"]},
+
+    {"path": "/lxd/github",
+     "menu": ["LXD", "Github"]},
+
+    {"path": "/lxd/travis-ci",
+     "menu": ["LXD", "Travis CI"]},
+
+
+
+    {"path": "/cgmanager/introduction",
+     "title": "CGManager - イントロダクション",
+     "menu": ["CGManager", "イントロダクション"]},
+
+    {"path": "/cgmanager/news",
+     "title": "CGManager - ニュース",
+     "menu": ["CGManager", "ニュース"]},
+
+    {"path": "/cgmanager/getting-started",
+     "title": "CGManager - はじめに",
+     "menu": ["CGManager", "はじめに"]},
+
+    {"path": "/cgmanager/dbus-api",
+     "title": "CGManager - D-Bus API",
+     "menu": ["CGManager", "D-Bus API"]},
+
+    {"path": "/cgmanager/contribute",
+     "title": "CGManager - コントリビュート",
+     "menu": ["CGManager", "コントリビュート"]},
+
+    {"path": "/cgmanager/downloads",
+     "title": "CGManager - ダウンロード",
+     "menu": ["CGManager", "ダウンロード"]},
+
+    {"path": "/cgmanager/external-resources",
+     "menu": ["CGManager", "外部リソース"]},
+
+    {"path": "/cgmanager/articles",
+     "title": "CGManager - 記事",
+     "menu": ["CGManager", "記事"]},
+
+    {"path": "/cgmanager/mailing-lists",
+     "menu": ["CGManager", "メーリングリスト"]},
+
+    {"path": "/cgmanager/irc",
+     "menu": ["CGManager", "IRC"]},
+
+    {"path": "/cgmanager/github",
+     "menu": ["CGManager", "Github"]},
+
+    {"path": "/cgmanager/travis-ci",
+     "menu": ["CGManager", "Travis CI"]}
+]
