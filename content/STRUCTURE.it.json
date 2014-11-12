@@ -1,0 +1,222 @@
+[
+    {"path": "/",
+     "title": "",
+     "menu": ["Home"],
+     "generator": "html",
+     "meta": {"input": "index.html"}},
+
+
+
+    {"path": "/lxc/introduction",
+     "title": "LXC - Introduzione",
+     "menu": ["LXC", "Introduzione"],
+     "generator": "markdown",
+     "meta": {"input": "lxc/introduction.md"}},
+
+    {"path": "/lxc/news",
+     "title": "LXC - Notizie",
+     "menu": ["LXC", "Notizie"],
+     "generator": "markdown",
+     "meta": {"input": "lxc/news.md"}},
+
+    {"path": "/lxc/getting-started",
+     "title": "LXC - Iniziando",
+     "menu": ["LXC", "Iniziando"],
+     "generator": "markdown",
+     "meta": {"input": "lxc/getting-started.md"}},
+
+    {"path": "/lxc/documentation",
+     "title": "LXC - Documentazione",
+     "menu": ["LXC", "Documentazione"],
+     "generator": "markdown",
+     "meta": {"input": "lxc/documentation.md"}},
+
+    {"path": "/lxc/contribute",
+     "title": "LXC - Contribuire",
+     "menu": ["LXC", "Contribuire"],
+     "generator": "markdown",
+     "meta": {"input": "lxc/contribute.md"}},
+
+    {"path": "/lxc/downloads",
+     "title": "LXC - Downloads",
+     "menu": ["LXC", "Downloads"],
+     "generator": "downloads",
+     "meta": {"dir": "/downloads/lxc",
+              "input": "lxc/downloads.md"}},
+
+    {"path": "/lxc/external-resources",
+     "menu": ["LXC", "Risorse esterne"]},
+
+    {"path": "/lxc/articles",
+     "title": "LXC - Articoli",
+     "menu": ["LXC", "Articoli"],
+     "generator": "markdown",
+     "meta": {"input": "lxc/articles.md"}},
+
+    {"path": "/lxc/mailing-lists",
+     "menu": ["LXC", "Mailing lists"],
+     "generator": "link",
+     "meta": {"url": "https://lists.linuxcontainers.org"}},
+
+    {"path": "/lxc/irc",
+     "menu": ["LXC", "IRC"],
+     "generator": "link",
+     "meta": {"url": "https://webchat.freenode.net/?channels=#lxcontainers"}},
+
+    {"path": "/lxc/github",
+     "menu": ["LXC", "Github"],
+     "generator": "link",
+     "meta": {"url": "https://github.com/lxc/lxc"}},
+
+    {"path": "/lxc/jenkins-ci",
+     "menu": ["LXC", "Jenkins CI"],
+     "generator": "link",
+     "meta": {"url": "https://jenkins.linuxcontainers.org/view/LXC/"}},
+
+    {"path": "/lxc/travis-ci",
+     "menu": ["LXC", "Travis CI"],
+     "generator": "link",
+     "meta": {"url": "https://travis-ci.org/lxc/lxc"}},
+
+
+
+    {"path": "/lxd/introduction",
+     "title": "LXD - Introduzione",
+     "menu": ["LXD", "Introduzione"],
+     "generator": "markdown",
+     "meta": {"input": "lxd/introduction.md"}},
+
+    {"path": "/lxd/news",
+     "title": "LXD - Notizie",
+     "menu": ["LXD", "Notizie"],
+     "generator": "markdown",
+     "meta": {"input": "lxd/news.md"}},
+
+    {"path": "/lxd/getting-started-cli",
+     "title": "LXD - Iniziando - linea di comando",
+     "menu": ["LXD", "Iniziando - linea di comando"],
+     "generator": "markdown",
+     "meta": {"input": "lxd/getting-started-cli.md"}},
+
+    {"path": "/lxd/getting-started-openstack",
+     "title": "LXD - Iniziando - OpenStack",
+     "menu": ["LXD", "Iniziando - OpenStack"],
+     "generator": "markdown",
+     "meta": {"input": "lxd/getting-started-openstack.md"}},
+
+    {"path": "/lxd/rest-api",
+     "title": "LXD - REST API",
+     "menu": ["LXD", "REST API"],
+     "generator": "markdown",
+     "meta": {"input": "lxd/rest-api.md"}},
+
+    {"path": "/lxd/contribute",
+     "title": "LXD - Contribuire",
+     "menu": ["LXD", "Contribuire"],
+     "generator": "markdown",
+     "meta": {"input": "lxd/contribute.md"}},
+
+    {"path": "/lxd/downloads",
+     "title": "LXD - Downloads",
+     "menu": ["LXD", "Downloads"],
+     "generator": "downloads",
+     "meta": {"dir": "/downloads/lxd",
+              "input": "lxd/downloads.md"}},
+
+    {"path": "/lxd/external-resources",
+     "menu": ["LXD", "Risorse esterne"]},
+
+    {"path": "/lxd/articles",
+     "title": "LXD - Articoli",
+     "menu": ["LXD", "Articoli"],
+     "generator": "markdown",
+     "meta": {"input": "lxd/articles.md"}},
+
+    {"path": "/lxd/mailing-lists",
+     "menu": ["LXD", "Mailing lists"],
+     "generator": "link",
+     "meta": {"url": "https://lists.linuxcontainers.org"}},
+
+    {"path": "/lxd/irc",
+     "menu": ["LXD", "IRC"],
+     "generator": "link",
+     "meta": {"url": "https://webchat.freenode.net/?channels=#lxcontainers"}},
+
+    {"path": "/lxd/github",
+     "menu": ["LXD", "Github"],
+     "generator": "link",
+     "meta": {"url": "https://github.com/lxc/lxd"}},
+
+    {"path": "/lxd/travis-ci",
+     "menu": ["LXD", "Travis CI"],
+     "generator": "link",
+     "meta": {"url": "https://travis-ci.org/lxc/lxd"}},
+
+
+
+    {"path": "/cgmanager/introduction",
+     "title": "CGManager - Introduzione",
+     "menu": ["CGManager", "Introduzione"],
+     "generator": "markdown",
+     "meta": {"input": "cgmanager/introduction.md"}},
+
+    {"path": "/cgmanager/news",
+     "title": "CGManager - Notizie",
+     "menu": ["CGManager", "Notizie"],
+     "generator": "markdown",
+     "meta": {"input": "cgmanager/news.md"}},
+
+    {"path": "/cgmanager/getting-started",
+     "title": "CGManager - Iniziando",
+     "menu": ["CGManager", "Iniziando"],
+     "generator": "markdown",
+     "meta": {"input": "cgmanager/getting-started.md"}},
+
+    {"path": "/cgmanager/dbus-api",
+     "title": "CGManager - D-Bus API",
+     "menu": ["CGManager", "D-Bus API"],
+     "generator": "markdown",
+     "meta": {"input": "cgmanager/dbus-api.md"}},
+
+    {"path": "/cgmanager/contribute",
+     "title": "CGManager - Contribuire",
+     "menu": ["CGManager", "Contribuire"],
+     "generator": "markdown",
+     "meta": {"input": "cgmanager/contribute.md"}},
+
+    {"path": "/cgmanager/downloads",
+     "title": "CGManager - Downloads",
+     "menu": ["CGManager", "Downloads"],
+     "generator": "downloads",
+     "meta": {"dir": "/downloads/cgmanager",
+              "input": "cgmanager/downloads.md"}},
+
+    {"path": "/cgmanager/external-resources",
+     "menu": ["CGManager", "Risorse esterne"]},
+
+    {"path": "/cgmanager/articles",
+     "title": "CGManager - Articoli",
+     "menu": ["CGManager", "Articoli"],
+     "generator": "markdown",
+     "meta": {"input": "cgmanager/articles.md"}},
+
+    {"path": "/cgmanager/mailing-lists",
+     "menu": ["CGManager", "Mailing lists"],
+     "generator": "link",
+     "meta": {"url": "https://lists.linuxcontainers.org"}},
+
+    {"path": "/cgmanager/irc",
+     "menu": ["CGManager", "IRC"],
+     "generator": "link",
+     "meta": {"url": "https://webchat.freenode.net/?channels=#cgmanager"}},
+
+    {"path": "/cgmanager/github",
+     "menu": ["CGManager", "Github"],
+     "generator": "link",
+     "meta": {"url": "https://github.com/cgmanager/cgmanager"}},
+
+    {"path": "/cgmanager/travis-ci",
+     "menu": ["CGManager", "Travis CI"],
+     "generator": "link",
+     "meta": {"url": "https://travis-ci.org/cgmanager/cgmanager"}}
+]
