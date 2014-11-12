@@ -1,19 +1,22 @@
 {% extends "common/base.tpl.html" %}
 {% block content %}
     {{ content }}
+
+{% if downloads %}
     <table class="table table-striped">
-{% include ["common/download-headers." + page_lang + ".tpl.html",
-            "common/download-headers.tpl.html"] %}
-{% for download in downloads %}
+    {% include ["common/download-headers." + page_lang + ".tpl.html",
+                "common/download-headers.tpl.html"] %}
+    {% for download in downloads %}
         <tr>
             <td><a href="{{ download['path'] }}">{{ download['filename'] }}</td>
-    {% if download['signame'] %}
+        {% if download['signame'] %}
             <td><a href="{{ download['sigpath'] }}">{{ download['signame'] }}</td>
-    {% else %}
+        {% else %}
             <td>-</td>
-    {% endif %}
+        {% endif %}
             <td>{{ download['size'] }}</td>
         </tr>
-{% endfor %}
+    {% endfor %}
     </table>
+{% endif %}
 {% endblock %}
