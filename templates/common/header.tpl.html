@@ -53,16 +53,16 @@
 {% if languages %}
             <ul class="nav navbar-nav navbar-right">
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Language <span class="caret"></span></a>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ page_language[2] }} <span class="caret"></span></a>
                     <ul class="dropdown-menu" role="menu">
-    {% for lang_code, lang_name in languages %}
-        {% if page_lang == lang_code %}
-                        <li class="active"><a href="#">{{ lang_name }}</a></li>
+    {% for language in languages %}
+        {% if page_language[0] == language[0] %}
+                        <li class="active"><a href="#">{{ language[1] }}</a></li>
         {% else %}
-            {% if lang_code %}
-                        <li><a href="/{{ lang_code }}{{ page_raw_path }}">{{ lang_name }}</a></li>
+            {% if language[0] %}
+                        <li><a href="/{{ language[0] }}{{ page_raw_path }}">{{ language[1] }}</a></li>
             {% else %}
-                        <li><a href="{{ page_raw_path }}">{{ lang_name }}</a></li>
+                        <li><a href="{{ page_raw_path }}">{{ language[1] }}</a></li>
             {% endif %}
         {% endif %}
     {% endfor %}

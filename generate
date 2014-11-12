@@ -190,24 +190,24 @@ shutil.copytree("static", "%s/%s" % (TARGET_PATH, "static"))
 shutil.copytree("downloads", "%s/%s" % (TARGET_PATH, "downloads"))
 
 # Start generating the website
-for lang_code, lang_name in config['languages']:
+for language in config['languages']:
     # Load a translation override
     override = {}
     try:
         override = {entry['path']: entry
-                    for entry in load_json("STRUCTURE.%s.json" % lang_code)}
+                    for entry in load_json("STRUCTURE.%s.json" % language[0])}
     except FileNotFoundError:
         pass
 
     # Figure out the translation prefix
     lang_prefix = ""
-    if lang_code:
-        lang_prefix = "/%s" % lang_code
+    if language[0]:
+        lang_prefix = "/%s" % language[0]
 
     # Generate the menu
     menu = gen_menu(structure, override, lang_prefix)
 
     # Generate all the pages
     gen_pages(structure, override, lang_prefix,
-              menu=menu, page_lang=lang_code,
+              menu=menu, page_language=language,
               languages=config['languages'])

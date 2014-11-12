@@ -1,7 +1,7 @@
 {
     "languages": [
-                    ["", "English"],
-                    ["fr", "Français"],
-                    ["it", "Italiano"],
-                    ["ja", "日本語"]]
+                    ["", "English", "Language"],
+                    ["fr", "Français", "Langue"],
+                    ["it", "Italiano", "Lingua"],
+                    ["ja", "日本語", "言語"]]
 }

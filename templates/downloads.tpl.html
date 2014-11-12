@@ -4,7 +4,7 @@
 
 {% if downloads %}
     <table class="table table-striped">
-    {% include ["common/download-headers." + page_lang + ".tpl.html",
+    {% include ["common/download-headers." + page_language[0] + ".tpl.html",
                 "common/download-headers.tpl.html"] %}
     {% for download in downloads %}
         <tr>
