@@ -2,8 +2,34 @@
     color: white;
 }
 
-div.content p {
+div.container p {
+    width: 35em;
+    font-size: 16px;
+}
+
+div.container footer p {
+    width: initial;
+}
+
+div.container pre {
+    margin-left: 30px;
+}
+
+div.container p img {
+    float:right;
+}
+
+div.large_content p {
     font-size: 20px;
+}
+
+div.large_content p {
+    width: initial;
+}
+
+div.row p {
+    width: initial;
+    font-size: 14px;
 }
 
 hr {
