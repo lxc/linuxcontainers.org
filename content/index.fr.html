@@ -1,0 +1,73 @@
+<h2>LinuxContainers.org <span class="text-muted">Infrastructure pour projets de conteneurs.</span></h2>
+<div class="large_content">
+    <p><img src="/static/img/containers.png"
+            alt="logo"/>
+       linuxcontainers.org est le projet parent de LXC, LXD et CGManager.</p>
+
+    <p>L'objéctif est d'offrir un environement neutre sans influence des
+       distributions et fournisseurs permettant le développement de projet de
+       conteneur.
+       Le projet fournit des ressources telles que infrastructure de
+       compilation et tests, listes de diffusions, sites web, e-mail, ...</p>
+
+    <p>Les sponsors actuels sont:
+        <ul>
+            <li>Stéphane Graber
+                <ul>
+                    <li>noms de domaines et certificats SSL</li>
+                    <li>serveur public (sites webs, téléchargements, e-mails, DNS)</li>
+                    <li>infrastructure de test (jenkins) et compilation (i386, amd64 et armhf)</li>
+                </ul>
+            </li>
+            <li>Canonical Ltd.
+                <ul>
+                    <li>infrastructure de compilation (arm64 et ppc64el)</li>
+                </ul>
+            </li>
+        </ul>
+    </p>
+</div>
+
+<hr/>
+<h2>Projets. <span class="text-muted">Les choses intéressantes.</span></h2>
+<div class="row">
+    <div class="col-lg-4">
+        <h3>LXC <span class="text-muted">(lex-cee)</span></h3>
+        <p>LXC est l'ensemble bien connu d'outils, modèles, bibliothèque et
+           connecteurs pour différents langages. LXC est bas niveau,
+           très flexible et couvre à peu près toutes les technologies de
+           confinement supportées par le noyau.
+        <p>LXC est prêt pour la production. La version 1.0 est supportée
+           pour 5 ans (jusqu'à Avril 2019 avec des mises à jour de sécurité et
+           correctifs.</p>
+        <p><a class="btn btn-primary" href="/fr//lxc/introduction" role="button">Plus d'information &raquo;</a></p>
+    </div>
+
+    <div class="col-lg-4">
+        <h3>LXD <span class="text-muted">(lex-dee)</span></h3>
+        <p>LXD est la nouvelle expérience LXC avec une seule commande
+           intuitive pour contrôler tous vos conteneurs. Les conteneurs
+           sont gérés par le réseau de façon complètement transparente
+           grâce à une interface REST. Il marche aussi à grande échelle,
+           s'intégrant avec OpenStack.</p>
+
+        <p>LXD a été annoncé en début Novembre 2014 et est en
+           développement actif.</p>
+
+        <p><a class="btn btn-primary" href="/fr/lxd/introduction" role="button">Plus d'information &raquo;</a></p>
+   </div>
+
+    <div class="col-lg-4">
+        <h3>CGManager</h3>
+        <p>CGManager est notre gestionnaire de cgroup. Son but est de
+           permettre aux conteneurs imbriqués de créer et gérer leurs
+           cgroups à travers une interface D-Bus.</p>
+
+        <p>CGManager a fait ses débuts en avril 2014 où il a été intégré
+           avec LXC par Ubuntu. Depuis, il a rejoint d'autres
+           distributions leur permettant ainsi d'offrir des conteneurs
+           non-priviliégiés fonctionels.</p>
+
+        <p><a class="btn btn-primary" href="/fr/cgmanager/introduction" role="button">Plus d'information &raquo;</a></p>
+    </div>
+</div>

@@ -1,7 +1,8 @@
 [
     {"path": "/",
      "title": "",
-     "menu": ["Accueil"]},
+     "menu": ["Accueil"],
+     "meta": {"input": "index.fr.html"}},
 
 
 
