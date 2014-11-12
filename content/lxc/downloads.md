@@ -1,14 +1,13 @@
+![Download icon](/static/img/download.png)
 # Distribution packages
+LXC is included in most Linux distributions.  
+In most cases installing it is as simple as selecting it in your package manager.
 
-LXC is included in most Linux distributions, so in most cases installing
-it is as simple as selecting it in your package manager.
+Distributions also often provide backports of newer versions of LXC for their stable releases.  
+You may want to look for that, especially if your distribution doesn't include LXC 1.0.
 
-Distributions also often have backports of newer versions of LXC for
-their stable releases, you may want to look for that, especially if your
-distribution doesn't include LXC 1.0.
-
-For production environment, try to stick to LXC 1.0.x as this is the
-long term, stable release which we will support until April 2019.
+For production environment, try to stick to LXC 1.0.x as this is the long term,  
+stable release which we will support until April 2019.
 
 For Ubuntu users, we have official PPAs for LXC:
 
