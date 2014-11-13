@@ -1,0 +1,120 @@
+<h2>LinuxContainers.org <span class="text-muted">Infrastructure for container projects.</span></h2>
+<div class="large_content">
+    <p><img src="/static/img/containers.png"
+            alt="logo"/>
+      <!--
+       linuxcontainers.org is the umbrella project behind LXC,
+       LXD and CGManager.-->
+       linuxcontainers.org は LXC、LXD、CGManager を傘下に持つプロジェクトです。
+    </p>
+
+    <p>
+      <!--
+       The goal is to offer a distro and vendor neutral environment
+       for the development of Linux container technologies.
+       The project provides resources such as build machines, CI
+       infrastructure, mailing-lists, website, e-mail, ...
+       to the various projects under it.
+       -->
+      このプロジェクトの目的は、Linux のコンテナ技術を開発するための、ディストリビューションやベンダから中立の環境を提供することです。プロジェクトは傘下のプロジェクトに対して、ビルドのためのマシン、CI環境、メーリングリスト、ウェブサイト、メールなどのリソースを提供します。
+    </p>
+
+    <p>
+      <!--
+      Current project sponsors are:
+      -->
+      現在のプロジェクトのスポンサーは:
+        <ul>
+            <li>Stéphane Graber
+                <ul>
+                    <li><!-- domain names and SSL certificates -->ドメイン名と SSL 証明書</li>
+                    <li><!-- public server (websites, downloads, e-mails, DNS) -->公開サーバ (webサイト、ダウンロード、メール、DNS)</li>
+                    <li><!-- test (jenkins) and build infrastructure (i386, amd64 and armhf builders) -->テスト (jenkins) とビルドのための環境 (jenkins、i386、amd64、armhf のビルド環境)</li>
+                </ul>
+            </li>
+            <li>Canonical Ltd.
+                <ul>
+                    <li><!-- build infrastructure (arm64 and ppc64el builders) -->ビルドのための環境 (arm64、ppc64el のビルド環境)</li>
+                </ul>
+            </li>
+        </ul>
+    </p>
+</div>
+
+<hr/>
+<h2>Projects. <span class="text-muted">The interesting stuff.</span></h2>
+<div class="row">
+    <div class="col-lg-4">
+        <h3>LXC <span class="text-muted">(lex-cee)</span></h3>
+        <p>
+	  <!--
+	   LXC is the well known set of tools, templates,
+           library and language bindings. It's pretty low
+           level, very flexible and covers just about every
+           containment feature supported by the upstream
+           kernel.
+	   -->
+	  LXC はツール、テンプレート、ライブラリ、言語バインディングの良く知られたセットです。低レイヤの非常に柔軟性に富んだものであり、Upstream のカーネルがサポートするほとんどのコンテナ関連機能をカバーします。
+	</p>
+        <p>
+	  <!--
+	   LXC is production ready with LXC 1.0 getting 5
+           years of security updates and bugfixes
+           (until April 2019).
+	   -->
+	  LXC は production ready であり、LXC 1.0 が 5 年間のセキュリティアップデートとバグ修正を提供します (2019 年 4 月まで)。
+	</p>
+        <p><a class="btn btn-primary" href="/lxc/introduction" role="button">詳しく見る &raquo;</a></p>
+    </div>
+
+    <div class="col-lg-4">
+        <h3>LXD <span class="text-muted">(lex-dee)</span></h3>
+        <p>
+	  <!--
+           LXD is the new LXC experience. It offers a
+           completely fresh and intuitive user experience
+           with a single command line tool to manage your
+           containers. Containers can be managed over the
+           network in a transparent way through a REST API.
+           It also works with large scale deployments by
+           integrating with OpenStack.
+	    -->
+	  LXD は LXC の新しい体験です。コンテナを管理するための一つのコマンドラインツールで、完全に新鮮で直感的なユーザ体験を提供します。コンテナを REST API を通した透過的な方法でネットワーク経由で管理できます。LXD は OpenStack との統合により大規模のデプロイも扱います。
+	</p>
+
+        <p>
+	  <!--
+	   LXD was announced in early November 2014 and is
+           still under very active development.
+	   -->
+	  LXD は 2014 年 11 月初旬にアナウンスされ、まだ非常に活発に開発されているところです。
+	</p>
+
+        <p><a class="btn btn-primary" href="/lxd/introduction" role="button">詳しく見る &raquo;</a></p>
+   </div>
+
+    <div class="col-lg-4">
+        <h3>CGManager</h3>
+        <p>
+	  <!--
+           CGManager is our cgroup manager daemon. It's
+           designed to allow nested unprivileged containers
+           to still be able to create and manage their
+           cgroups through a DBus API.
+	   -->
+	  CGManager は cgroup を管理するデーモンです。DBus API を通して、ネストした非特権コンテナであっても、コンテナを作成してそのコンテナの cgroup を管理できるように設計されています。
+	</p>
+
+        <p>
+	  <!--
+	   CGManager has been used by default with LXC in
+           Ubuntu since April 2014 and since by other
+           distributions as they start needing working
+           unprivileged containers.
+	   -->
+	  CGManager は 2014 年 4 月から Ubuntu の LXC がデフォルトで使用しています。非特権コンテナの動作が必要な他のディストリビューションでも使用されています。
+	</p>
+
+        <p><a class="btn btn-primary" href="/cgmanager/introduction" role="button">詳しく見る &raquo;</a></p>
+    </div>
+</div>

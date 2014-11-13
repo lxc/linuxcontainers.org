@@ -1,7 +1,8 @@
 [
     {"path": "/",
      "title": "",
-     "menu": ["ホーム"]},
+     "menu": ["ホーム"],
+     "meta": {"input": "index.ja.html"}},
 
 
 
