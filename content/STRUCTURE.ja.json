@@ -28,7 +28,9 @@
 
     {"path": "/lxc/downloads",
      "title": "LXC - ダウンロード",
-     "menu": ["LXC", "ダウンロード"]},
+     "menu": ["LXC", "ダウンロード"],
+     "meta": {"dir": "/downloads/lxc/",
+	      "input": "lxc/downloads.ja.md"}},
 
     {"path": "/lxc/external-resources",
      "menu": ["LXC", "外部リソース"]},
@@ -80,7 +82,9 @@
 
     {"path": "/lxd/downloads",
      "title": "LXD - ダウンロード",
-     "menu": ["LXD", "ダウンロード"]},
+     "menu": ["LXD", "ダウンロード"],
+     "meta": {"dir": "/downloads/lxd/",
+              "input": "lxd/downloads.ja.md"}},
 
     {"path": "/lxd/external-resources",
      "menu": ["LXD", "外部リソース"]},
@@ -125,7 +129,9 @@
 
     {"path": "/cgmanager/downloads",
      "title": "CGManager - ダウンロード",
-     "menu": ["CGManager", "ダウンロード"]},
+     "menu": ["CGManager", "ダウンロード"],
+     "meta": {"dir": "/downloads/cgmanager/",
+              "input": "cgmanager/downloads.ja.md"}},
 
     {"path": "/cgmanager/external-resources",
      "menu": ["CGManager", "外部リソース"]},
