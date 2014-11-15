@@ -28,7 +28,9 @@
 
     {"path": "/lxc/downloads",
      "title": "LXC - ダウンロード",
-     "menu": ["LXC", "ダウンロード"]},
+     "menu": ["LXC", "ダウンロード"],
+     "meta": {"dir": "/downloads/lxc/",
+	      "input": "lxc/downloads.ja.md"}},
 
     {"path": "/lxc/external-resources",
      "menu": ["LXC", "外部リソース"]},
