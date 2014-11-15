@@ -82,7 +82,9 @@
 
     {"path": "/lxd/downloads",
      "title": "LXD - ダウンロード",
-     "menu": ["LXD", "ダウンロード"]},
+     "menu": ["LXD", "ダウンロード"],
+     "meta": {"dir": "/downloads/lxd/",
+              "input": "lxd/downloads.ja.md"}},
 
     {"path": "/lxd/external-resources",
      "menu": ["LXD", "外部リソース"]},
