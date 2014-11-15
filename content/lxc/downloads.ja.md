@@ -43,7 +43,7 @@ LXC にはアクティブな git ブランチが 2 つ存在します:
 <!--
 You can clone those directly with:
 -->
-以下から直接 clone 可能です:
+以下から直接 clone できます:
 
     git clone git://github.com/lxc/lxc -b <branch name>
 
@@ -53,5 +53,5 @@ You can clone those directly with:
 Stable release tarballs are available for download below.
 All the post 1.0 ones are GPG signed by one of the maintainers.
 -->
-Stable リリース版の tarball は以下から取得可能です。
+Stable リリース版の tarball は以下から取得できます。
 1.0 の過去のリリースは全てメンテナの GPG による署名が行われています。
