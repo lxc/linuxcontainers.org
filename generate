@@ -188,6 +188,7 @@ if os.path.exists(TARGET_PATH):
 os.mkdir(TARGET_PATH)
 shutil.copytree("static", "%s/%s" % (TARGET_PATH, "static"))
 shutil.copytree("downloads", "%s/%s" % (TARGET_PATH, "downloads"))
+os.symlink("static/img/favicon.ico", "%s/favicon.ico" % TARGET_PATH)
 
 # Start generating the website
 for language in config['languages']:
