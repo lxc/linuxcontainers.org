@@ -14,7 +14,9 @@
 
     {"path": "/lxc/news",
      "title": "LXC - ニュース",
-     "menu": ["LXC", "ニュース"]},
+     "menu": ["LXC", "ニュース"],
+     "generator": "markdown",
+     "meta": {"input": "lxc/news.ja.md"}},
 
     {"path": "/lxc/getting-started",
      "title": "LXC - はじめに",
