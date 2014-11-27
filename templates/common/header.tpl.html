@@ -52,7 +52,11 @@
                         {% endif %}
                             <a href="#">{{ sub_entry[1] }}</a>
 
+                        {% if sub_entry[0]|length > 15 %}
                             <ul class="dropdown-menu columns" role="menu">
+                        {% else %}
+                            <ul class="dropdown-menu" role="menu">
+                        {% endif %}
                         {% for sub_sub_entry in sub_entry[0] %}
                             {% if not sub_sub_entry[0] %}
                                 <li class="divider"></li>

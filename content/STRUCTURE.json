@@ -184,6 +184,12 @@
      "generator": "markdown",
      "meta": {"input": "cgmanager/dbus-api.md"}},
 
+    {"path": "/cgmanager/manpages",
+     "title": "CGManager - Manpages",
+     "menu": ["CGManager", "Manpages"],
+     "generator": "manpages",
+     "meta": {"dir": "/manpages/cgmanager"}},
+
     {"path": "/cgmanager/contribute",
      "title": "CGManager - Contribute",
      "menu": ["CGManager", "Contribute"],
