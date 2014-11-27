@@ -214,8 +214,29 @@ def gen_pages(structure, override, prefix, **variables):
                                             stdout=subprocess.PIPE,
                                             universal_newlines=True)
                 man2html.wait()
-                contents = bs4.BeautifulSoup(man2html.stdout.read()) \
-                    .findAll("body")[0].contents
+                soup = bs4.BeautifulSoup(man2html.stdout.read())
+
+                # Remove all broken links
+                for link in soup.findAll("a"):
+                    if not link.get("href", None):
+                        continue
+
+                    if link['href'] in ("../index.html",):
+                        continue
+
+                    if link['href'].startswith("mailto"):
+                        continue
+
+                    if link['href'].startswith("#"):
+                        continue
+
+                    filename = link['href'].split("/")[-1].split(".html")[0]
+                    if filename in os.listdir(man_path):
+                        continue
+
+                    link.replace_with_children()
+
+                contents = soup.findAll("body")[0].contents
                 content = "".join([str(entry)
                                    for entry in contents[1:]])
 
