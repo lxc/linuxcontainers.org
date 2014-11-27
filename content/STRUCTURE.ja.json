@@ -28,7 +28,9 @@
 
     {"path": "/lxc/contribute",
      "title": "LXC - コントリビュート",
-     "menu": ["LXC", "コントリビュート"]},
+     "menu": ["LXC", "コントリビュート"],
+     "generator": "markdown",
+     "meta": {"input": "lxc/contribute.ja.md"}},
 
     {"path": "/lxc/downloads",
      "title": "LXC - ダウンロード",
