@@ -26,6 +26,11 @@
      "title": "LXC - ドキュメント",
      "menu": ["LXC", "ドキュメント"]},
 
+    {"path": "/lxc/manpages",
+     "title": "LXC - Manpages",
+     "menu": ["LXC", "Manpages"],
+     "meta": {"dir": "/manpages/lxc/ja"}},
+
     {"path": "/lxc/contribute",
      "title": "LXC - コントリビュート",
      "menu": ["LXC", "コントリビュート"],
@@ -36,7 +41,7 @@
      "title": "LXC - ダウンロード",
      "menu": ["LXC", "ダウンロード"],
      "meta": {"dir": "/downloads/lxc/",
-	      "input": "lxc/downloads.ja.md"}},
+              "input": "lxc/downloads.ja.md"}},
 
     {"path": "/lxc/external-resources",
      "menu": ["LXC", "外部リソース"]},

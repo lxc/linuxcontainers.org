@@ -31,6 +31,12 @@
      "generator": "markdown",
      "meta": {"input": "lxc/documentation.md"}},
 
+    {"path": "/lxc/manpages",
+     "title": "LXC - Manpages",
+     "menu": ["LXC", "Manpages"],
+     "generator": "manpages",
+     "meta": {"dir": "/manpages/lxc"}},
+
     {"path": "/lxc/contribute",
      "title": "LXC - Contribute",
      "menu": ["LXC", "Contribute"],

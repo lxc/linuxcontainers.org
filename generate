@@ -24,6 +24,7 @@ import json
 import markdown
 import os
 import shutil
+import subprocess
 
 
 def pretty_print(html):
@@ -78,9 +79,22 @@ def gen_menu(structure, override, prefix):
             item['path'] = item['meta']['url']
 
         if len(item['menu']) == 1:
-            # Simple menu entry
-            menu.append((item['path'],
-                         item['menu'][-1]))
+            if "generator" in item and item['generator'] == "manpages":
+                # Dynamic manpage menu
+                man_menu = []
+                man_path = item['meta']['dir'].lstrip("/")
+
+                for entry in sorted(os.listdir(man_path)):
+                    if not os.path.isfile("%s/%s" % (man_path, entry)):
+                        continue
+
+                    entry_link = "/%s/%s" % (item['path'].lstrip("/"), entry)
+                    man_menu.append((entry_link, entry))
+
+                menu.append((man_menu, item['menu'][0]))
+            else:
+                # Simple menu entry
+                menu.append((item['path'], item['menu'][0]))
         else:
             # Drop-down menu
             if sub_menu_title != item['menu'][0]:
@@ -89,8 +103,23 @@ def gen_menu(structure, override, prefix):
                 sub_menu = []
                 sub_menu_title = item['menu'][0]
 
-            sub_menu.append((item['path'],
-                             item['menu'][-1]))
+            if "generator" in item and item['generator'] == "manpages":
+                # Dynamic manpage menu
+                man_menu = []
+                man_path = item['meta']['dir'].lstrip("/")
+
+                for entry in sorted(os.listdir(man_path)):
+                    if not os.path.isfile("%s/%s" % (man_path, entry)):
+                        continue
+
+                    entry_link = "/%s/man%s/%s.html" % (
+                        item['path'].lstrip("/"), entry.split(".")[-1], entry)
+                    man_menu.append((entry_link, entry))
+
+                sub_menu.append((man_menu, item['menu'][-1]))
+            else:
+                # Simple menu entry
+                sub_menu.append((item['path'], item['menu'][-1]))
 
     # Process the last drop-down menu
     if structure and sub_menu_title:
@@ -164,6 +193,59 @@ def gen_pages(structure, override, prefix, **variables):
 
             variables['downloads'] = downloads
             template = "downloads.tpl.html"
+        elif item['generator'] == "manpages":
+            man_path = item['meta']['dir'].lstrip("/")
+
+            for entry in sorted(os.listdir(man_path)):
+                if not os.path.isfile("%s/%s" % (man_path, entry)):
+                    continue
+
+                section = entry.split(".")[-1]
+
+                output_man_path = "%s%s/man%s/%s.html" % (TARGET_PATH,
+                                                          item['path'],
+                                                          section, entry)
+
+                if not os.path.exists(os.path.dirname(output_man_path)):
+                    os.makedirs(os.path.dirname(output_man_path))
+
+                man2html = subprocess.Popen(["man2html", "-r",
+                                             "%s/%s" % (man_path, entry)],
+                                            stdout=subprocess.PIPE,
+                                            universal_newlines=True)
+                man2html.wait()
+                contents = bs4.BeautifulSoup(man2html.stdout.read()) \
+                    .findAll("body")[0].contents
+                content = "".join([str(entry)
+                                   for entry in contents[1:]])
+
+                entry_link = "/%s/man%s/%s.html" % (
+                    item['path'].lstrip("/"), section, entry)
+
+                template = env.get_template(template)
+                with open(output_man_path, "w+") as fd:
+                    fd.write(pretty_print(
+                        template.render(page_path=entry_link,
+                                        page_raw_path="%s/man%s/%s.html" % (
+                                            page_raw_path, section, entry),
+                                        page_title="%s - %s" % (item['title'],
+                                                                entry),
+                                        page_menu=item['menu'] + [entry],
+                                        content=content,
+                                        **variables)))
+
+            content = "<ul>"
+            for entry in sorted(os.listdir(man_path)):
+                if not os.path.isfile("%s/%s" % (man_path, entry)):
+                    continue
+
+                section = entry.split(".")[-1]
+                entry_link = "/%s/man%s/%s.html" % (
+                    item['path'].lstrip("/"), section, entry)
+
+                content += "<li><a href=\"%s\">%s</a></li>" % (entry_link,
+                                                               entry)
+            content += "</ul>"
 
         # Pass all the variables to the template and generate the html
         template = env.get_template(template)

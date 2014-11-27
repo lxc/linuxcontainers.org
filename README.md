@@ -5,6 +5,7 @@ linuxcontainers.org website.
 
 ## Dependencies
 
+ * man2html-base
  * python3
  * python3-bs4
  * python3-jinja2
