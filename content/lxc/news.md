@@ -702,6 +702,6 @@
    projects!</p>
 
 <p>The current projects maintainers are
-   <a href="http://s3hh.wordpress.com">Serge Hallyn</a>
+   <a href="https://s3hh.wordpress.com">Serge Hallyn</a>
    and <a href="https://www.stgraber.org">St&eacute;phane Graber</a>.
 </p>

@@ -45,7 +45,7 @@
 * <!-- cgmanager get/set: clean up child (v2) -->cgmanager get/set: cgmanager で確実に子グループを刈り取るようにしました
 * <!-- Add extra debugging -->デバッグ出力の追加
 * <!-- do_mount_entry: add nexec, nosuid, nodev, rdonly flags
-             if needed at remount -->do_mount_entry: remount 時に必要であれば nexec, nosuid, nodev, rdonly フラグを追加するようにしました (訳注: 関連 <a href="http://lkml.org/lkml/2014/8/13/746">http://lkml.org/lkml/2014/8/13/746</a>)
+             if needed at remount -->do_mount_entry: remount 時に必要であれば nexec, nosuid, nodev, rdonly フラグを追加するようにしました (訳注: 関連 <a href="https://lkml.org/lkml/2014/8/13/746">https://lkml.org/lkml/2014/8/13/746</a>)
 * <!-- command socket: use hash if needed -->command socket: 必要な場合にハッシュを使うようにしました (訳注: コンテナのコマンドソケット名が長すぎる場合にはハッシュを使うようにしました)
 * <!-- monitor: fix sockname calculation for long lxcpaths -->monitor: 長い lxcpath の場合のソケット名の計算を修正しました
 * <!-- show additional info if btrfs subvolume deletion fails
@@ -712,8 +712,8 @@
 
 
 <!-- The current projects maintainers are
-        <a href="http://s3hh.wordpress.com">Serge Hallyn</a>
+        <a href="https://s3hh.wordpress.com">Serge Hallyn</a>
         and <a href="https://www.stgraber.org">St&eacute;phane Graber</a>. -->
-  現在のプロジェクトメンテナは <a href="http://s3hh.wordpress.com">Serge Hallyn</a>
+  現在のプロジェクトメンテナは <a href="https://s3hh.wordpress.com">Serge Hallyn</a>
   と <a href="https://www.stgraber.org">St&eacute;phane Graber</a> です。
 
