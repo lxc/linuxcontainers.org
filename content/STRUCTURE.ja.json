@@ -27,8 +27,8 @@
      "menu": ["LXC", "ドキュメント"]},
 
     {"path": "/lxc/manpages",
-     "title": "LXC - Manpages",
-     "menu": ["LXC", "Manpages"],
+     "title": "LXC - Man ページ",
+     "menu": ["LXC", "Man ページ"],
      "meta": {"dir": "/manpages/lxc/ja"}},
 
     {"path": "/lxc/contribute",
