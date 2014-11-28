@@ -36,13 +36,20 @@ def pretty_print(html):
     return soup.prettify(formatter="html")
 
 
+def content_path(filename):
+    """
+        Returns the path to a file from the content directory
+    """
+    return os.path.join(CONTENT_PATH, filename)
+
+
 def load_json(filename):
     """
         Load the provided JSON file from the content directory.
     """
 
-    with open("%s/%s" % (CONTENT_PATH, filename), "r") as fd:
-        return json.loads(fd.read())
+    with open(content_path(filename), "r") as fd:
+        return json.load(fd)
 
 
 def gen_menu(structure, override, prefix):
@@ -156,18 +163,15 @@ def gen_pages(structure, override, prefix, **variables):
         content = ""
         template = "page.tpl.html"
         if item['generator'] == "html":
-            with open("%s/%s" % (CONTENT_PATH,
-                                 item['meta']['input']), "r") as fd:
+            with open(content_path(item['meta']['input']), "r") as fd:
                 content = fd.read()
         elif item['generator'] == "markdown":
-            with open("%s/%s" % (CONTENT_PATH,
-                                 item['meta']['input']), "r") as fd:
+            with open(content_path(item['meta']['input']), "r") as fd:
                 content = markdown.markdown(fd.read())
         elif item['generator'] == "downloads":
             # Support a markdown description before the download table
             if "input" in item['meta']:
-                with open("%s/%s" % (CONTENT_PATH,
-                                     item['meta']['input']), "r") as fd:
+                with open(content_path(item['meta']['input']), "r") as fd:
                     content = markdown.markdown(fd.read())
 
             downloads = []
