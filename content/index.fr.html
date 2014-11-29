@@ -31,7 +31,7 @@
 <hr/>
 <h2>Projets. <span class="text-muted">Les choses intéressantes.</span></h2>
 <div class="row">
-    <div class="col-lg-4">
+    <div class="col-md-4">
         <h3>LXC</h3>
         <p>LXC est l'ensemble bien connu d'outils, modèles, bibliothèque et
            connecteurs pour différents langages. LXC est bas niveau,
@@ -43,7 +43,7 @@
         <p><a class="btn btn-primary" href="/fr//lxc/introduction" role="button">Plus d'information &raquo;</a></p>
     </div>
 
-    <div class="col-lg-4">
+    <div class="col-md-4">
         <h3>LXD</h3>
         <p>LXD est la nouvelle expérience LXC avec une seule commande
            intuitive pour contrôler tous vos conteneurs. Les conteneurs
@@ -55,9 +55,9 @@
            développement actif.</p>
 
         <p><a class="btn btn-primary" href="/fr/lxd/introduction" role="button">Plus d'information &raquo;</a></p>
-   </div>
+    </div>
 
-    <div class="col-lg-4">
+    <div class="col-md-4">
         <h3>CGManager</h3>
         <p>CGManager est notre gestionnaire de cgroup. Son but est de
            permettre aux conteneurs imbriqués de créer et gérer leurs
@@ -69,5 +69,22 @@
            non-priviliégiés fonctionels.</p>
 
         <p><a class="btn btn-primary" href="/fr/cgmanager/introduction" role="button">Plus d'information &raquo;</a></p>
+    </div>
+
+    <div class="col-md-6">
+        <h3>LXFS</h3>
+        <p>Système de fichier (FUSE) offrant deux fonctionalités principales:
+            <ul>
+                <li>Remplacement pour cpuinfo, meminfo, stat et uptime.</li>
+                <li>Une vue compatible avec cgroupfs permettant les écritures non-privilègiées.</li>
+            </ul>
+        </p>
+
+        <p>Son but est de contourner les limites des systèmes de
+           fichiers procfs, sysfs et cgroupfs par la mise à disposition
+           de fichiers correspondant à ce que l'utilisateur s'attend à
+           voir dans un conteneur complet (système).</p>
+
+        <p><span class="btn btn-primary">Bientôt!</span></p>
     </div>
 </div>
