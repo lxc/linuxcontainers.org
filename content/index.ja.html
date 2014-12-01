@@ -44,33 +44,33 @@
 <hr/>
 <h2>プロジェクト <span class="text-muted">The interesting stuff.</span></h2>
 <div class="row">
-    <div class="col-lg-4">
+    <div class="col-md-4">
         <h3>LXC</h3>
         <p>
-	  <!--
-	   LXC is the well known set of tools, templates,
+          <!--
+           LXC is the well known set of tools, templates,
            library and language bindings. It's pretty low
            level, very flexible and covers just about every
            containment feature supported by the upstream
            kernel.
-	   -->
-	  LXC はツール、テンプレート、ライブラリ、言語バインディングの良く知られたセットです。低レイヤで非常に柔軟性に富んでおり、Upstream のカーネルがサポートするほとんどのコンテナ関連機能をカバーします。
-	</p>
+           -->
+          LXC はツール、テンプレート、ライブラリ、言語バインディングの良く知られたセットです。低レイヤで非常に柔軟性に富んでおり、Upstream のカーネルがサポートするほとんどのコンテナ関連機能をカバーします。
+        </p>
         <p>
-	  <!--
-	   LXC is production ready with LXC 1.0 getting 5
+          <!--
+           LXC is production ready with LXC 1.0 getting 5
            years of security updates and bugfixes
            (until April 2019).
-	   -->
-	  LXC は production ready であり、LXC 1.0 が 5 年間のセキュリティアップデートとバグ修正を提供します (2019 年 4 月まで)。
-	</p>
+           -->
+          LXC は production ready であり、LXC 1.0 が 5 年間のセキュリティアップデートとバグ修正を提供します (2019 年 4 月まで)。
+        </p>
         <p><a class="btn btn-primary" href="/ja/lxc/introduction" role="button">詳しく見る &raquo;</a></p>
     </div>
 
-    <div class="col-lg-4">
+    <div class="col-md-4">
         <h3>LXD</h3>
         <p>
-	  <!--
+          <!--
            LXD is the new LXC experience. It offers a
            completely fresh and intuitive user experience
            with a single command line tool to manage your
@@ -78,43 +78,78 @@
            network in a transparent way through a REST API.
            It also works with large scale deployments by
            integrating with OpenStack.
-	    -->
-	  LXD は LXC の新しい体験です。コンテナを管理するための一つのコマンドラインツールで、完全に新鮮で直感的なユーザ体験を提供します。コンテナを REST API を通した透過的な方法でネットワーク経由で管理できます。LXD は OpenStack との統合により大規模のデプロイも扱います。
-	</p>
+            -->
+          LXD は LXC の新しい体験です。コンテナを管理するための一つのコマンドラインツールで、完全に新鮮で直感的なユーザ体験を提供します。コンテナを REST API を通した透過的な方法でネットワーク経由で管理できます。LXD は OpenStack との統合により大規模のデプロイも扱います。
+        </p>
 
         <p>
-	  <!--
-	   LXD was announced in early November 2014 and is
+          <!--
+           LXD was announced in early November 2014 and is
            still under very active development.
-	   -->
-	  LXD は 2014 年 11 月初旬にアナウンスされ、まだ非常に活発に開発されているところです。
-	</p>
+           -->
+          LXD は 2014 年 11 月初旬にアナウンスされ、まだ非常に活発に開発されているところです。
+        </p>
 
         <p><a class="btn btn-primary" href="/lxd/introduction" role="button">詳しく見る &raquo;</a></p>
    </div>
 
-    <div class="col-lg-4">
+    <div class="col-md-4">
         <h3>CGManager</h3>
         <p>
-	  <!--
+          <!--
            CGManager is our cgroup manager daemon. It's
            designed to allow nested unprivileged containers
            to still be able to create and manage their
            cgroups through a DBus API.
-	   -->
-	  CGManager は cgroup を管理するデーモンです。DBus API を通して、ネストした非特権コンテナであっても、コンテナを作成してそのコンテナの cgroup を管理できるように設計されています。
-	</p>
+           -->
+          CGManager は cgroup を管理するデーモンです。DBus API を通して、ネストした非特権コンテナであっても、コンテナを作成してそのコンテナの cgroup を管理できるように設計されています。
+        </p>
 
         <p>
-	  <!--
-	   CGManager has been used by default with LXC in
+          <!--
+           CGManager has been used by default with LXC in
            Ubuntu since April 2014 and since by other
            distributions as they start needing working
            unprivileged containers.
-	   -->
-	  CGManager は 2014 年 4 月から Ubuntu の LXC がデフォルトで使用しています。非特権コンテナの動作が必要な他のディストリビューションでも使用されています。
-	</p>
+           -->
+          CGManager は 2014 年 4 月から Ubuntu の LXC がデフォルトで使用しています。非特権コンテナの動作が必要な他のディストリビューションでも使用されています。
+        </p>
 
         <p><a class="btn btn-primary" href="/cgmanager/introduction" role="button">詳しく見る &raquo;</a></p>
+    </div>
+
+    <div class="col-md-6">
+        <h3>LXFS</h3>
+        <p>
+          <!--
+          Userspace (FUSE) filesystem offering two main things:
+          -->
+          主に以下の2つを提供する FUSE を使ったユーザスペースのファイルシステムです:
+            <ul>
+                <li>
+                  <!--
+                  Overlay files for cpuinfo, meminfo, stat and uptime.
+                  -->
+                  cpuinfo, meminfo, stat, uptime のためのファイルを差し替えます
+                </li>
+                <li>
+                  <!--
+                  A cgroupfs compatible tree allowing unprivileged writes.
+                  -->
+                  一般ユーザ権限でも書き込める cgroupfs 互換のツリーを提供します
+                </li>
+            </ul>
+        </p>
+
+        <p>
+          <!--
+           It's designed to workaround the shortcomings of procfs, sysfs
+           and cgroupfs by exporting files which match what a system
+           container user would expect.
+          -->
+	  このファイルシステムは、システムコンテナのユーザが期待する情報を書き出すことによって、procfs、sysfs、cgroupfs の欠点を回避するようにデザインされます。
+        </p>
+
+        <p><span class="btn btn-primary">Coming soon!</span></p>
     </div>
 </div>
