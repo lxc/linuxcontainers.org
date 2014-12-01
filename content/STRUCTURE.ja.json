@@ -134,6 +134,12 @@
      "title": "CGManager - D-Bus API",
      "menu": ["CGManager", "D-Bus API"]},
 
+    {"path": "/cgmanager/manpages",
+     "title": "CGManager - Man ページ",
+     "menu": ["CGManager", "Man ページ"],
+     "generator": "manpages",
+     "meta": {"dir": "/manpages/cgmanager"}},
+
     {"path": "/cgmanager/contribute",
      "title": "CGManager - コントリビュート",
      "menu": ["CGManager", "コントリビュート"]},
