@@ -1,3 +1,4 @@
 *.swp
 output/*
 manpages/*
+content/lxc/doxygen/*

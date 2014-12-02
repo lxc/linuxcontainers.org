@@ -31,6 +31,10 @@
      "generator": "markdown",
      "meta": {"input": "lxc/documentation.md"}},
 
+    {"path": "/lxc/apidoc",
+     "generator": "directory",
+     "meta": {"input": "lxc/doxygen"}},
+
     {"path": "/lxc/manpages",
      "title": "LXC - Manpages",
      "menu": ["LXC", "Manpages"],
