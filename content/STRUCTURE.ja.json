@@ -120,7 +120,9 @@
 
     {"path": "/cgmanager/introduction",
      "title": "CGManager - イントロダクション",
-     "menu": ["CGManager", "イントロダクション"]},
+     "menu": ["CGManager", "イントロダクション"],
+     "generator": "markdown",
+     "meta": {"input": "cgmanager/introduction.ja.md"}},
 
     {"path": "/cgmanager/news",
      "title": "CGManager - ニュース",
@@ -133,6 +135,12 @@
     {"path": "/cgmanager/dbus-api",
      "title": "CGManager - D-Bus API",
      "menu": ["CGManager", "D-Bus API"]},
+
+    {"path": "/cgmanager/manpages",
+     "title": "CGManager - Man ページ",
+     "menu": ["CGManager", "Man ページ"],
+     "generator": "manpages",
+     "meta": {"dir": "/manpages/cgmanager"}},
 
     {"path": "/cgmanager/contribute",
      "title": "CGManager - コントリビュート",
