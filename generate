@@ -87,6 +87,9 @@ def gen_menu(structure, override, prefix):
             # External link
             item['path'] = item['meta']['url']
 
+        if not "menu" in item:
+            continue
+
         if len(item['menu']) == 1:
             if "generator" in item and item['generator'] == "manpages":
                 # Dynamic manpage menu
@@ -280,6 +283,12 @@ def gen_pages(structure, override, prefix, **variables):
                 content += "<li><a href=\"%s\">%s</a></li>" % (entry_link,
                                                                entry)
             content += "</ul>"
+
+        elif item['generator'] == "directory":
+            os.rmdir("%s/%s" % (TARGET_PATH, item['path']))
+            shutil.copytree(content_path(item['meta']['input']),
+                            "%s/%s" % (TARGET_PATH, item['path']))
+            continue
 
         # Pass all the variables to the template and generate the html
         template = env.get_template(template)
