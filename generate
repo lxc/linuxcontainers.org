@@ -22,6 +22,8 @@ import bs4
 import jinja2
 import json
 import markdown
+import markdown.extensions.codehilite
+import pygments.formatters
 import os
 import shutil
 import subprocess
@@ -162,17 +164,24 @@ def gen_pages(structure, override, prefix, **variables):
         # Generate the page content
         content = ""
         template = "page.tpl.html"
+        hilite_config = [('linenums', None),
+                         ('guess_lang', False),
+                         ('noclasses', False)]
+        codehilite = markdown.extensions.codehilite.makeExtension(
+            hilite_config)
+
         if item['generator'] == "html":
             with open(content_path(item['meta']['input']), "r") as fd:
                 content = fd.read()
         elif item['generator'] == "markdown":
             with open(content_path(item['meta']['input']), "r") as fd:
-                content = markdown.markdown(fd.read())
+                content = markdown.markdown(fd.read(), extensions=[codehilite])
         elif item['generator'] == "downloads":
             # Support a markdown description before the download table
             if "input" in item['meta']:
                 with open(content_path(item['meta']['input']), "r") as fd:
-                    content = markdown.markdown(fd.read())
+                    content = markdown.markdown(fd.read(),
+                                                extensions=[codehilite])
 
             downloads = []
             for entry in sorted(os.listdir(item['meta']['dir'].lstrip("/")),
@@ -293,9 +302,12 @@ structure = load_json("STRUCTURE.json")
 if os.path.exists(TARGET_PATH):
     shutil.rmtree(TARGET_PATH)
 os.mkdir(TARGET_PATH)
-shutil.copytree("static", "%s/%s" % (TARGET_PATH, "static"))
-shutil.copytree("downloads", "%s/%s" % (TARGET_PATH, "downloads"))
+shutil.copytree("static", "%s/static" % TARGET_PATH)
+shutil.copytree("downloads", "%s/downloads" % TARGET_PATH)
 os.symlink("static/img/favicon.ico", "%s/favicon.ico" % TARGET_PATH)
+
+with open("%s/static/css/pygments.css" % TARGET_PATH, "w+") as fd:
+    fd.write(pygments.formatters.HtmlFormatter().get_style_defs())
 
 # Start generating the website
 for language in config['languages']:

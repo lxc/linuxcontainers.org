@@ -10,6 +10,7 @@ linuxcontainers.org website.
  * python3-bs4
  * python3-jinja2
  * python3-markdown
+ * python3-pygments
 
 ## Generating the website
 

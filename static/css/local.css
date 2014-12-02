@@ -38,6 +38,10 @@ span.text-muted {
     white-space:nowrap;
 }
 
+div.codehilite pre {
+    margin-left: 0;
+}
+
 
 
 .dropdown-submenu {
