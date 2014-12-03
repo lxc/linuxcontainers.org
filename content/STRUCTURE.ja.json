@@ -26,7 +26,9 @@
 
     {"path": "/lxc/documentation",
      "title": "LXC - ドキュメント",
-     "menu": ["LXC", "ドキュメント"]},
+     "menu": ["LXC", "ドキュメント"],
+     "generator": "markdown",
+     "meta": {"input": "lxc/documentation.ja.md"}},
 
     {"path": "/lxc/manpages",
      "title": "LXC - Man ページ",
