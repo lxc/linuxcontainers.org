@@ -19,7 +19,7 @@ Recommended libraries:
 
  * libcap (to allow for capability drops)
  * libapparmor (to set a different apparmor profile for the container)
- * libselinux (to set a different seccomp context for the container)
+ * libselinux (to set a different selinux context for the container)
  * libseccomp (to set a seccomp policy for the container)
  * libgnutls (for various checksumming)
  * liblua (for the LUA binding)
