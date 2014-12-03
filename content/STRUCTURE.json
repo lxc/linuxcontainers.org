@@ -33,7 +33,7 @@
 
     {"path": "/lxc/apidoc",
      "generator": "directory",
-     "meta": {"input": "lxc/doxygen"}},
+     "meta": {"input": "lxc/apidoc"}},
 
     {"path": "/lxc/manpages",
      "title": "LXC - Manpages",
