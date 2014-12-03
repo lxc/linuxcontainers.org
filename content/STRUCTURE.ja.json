@@ -20,11 +20,15 @@
 
     {"path": "/lxc/getting-started",
      "title": "LXC - はじめに",
-     "menu": ["LXC", "はじめに"]},
+     "menu": ["LXC", "はじめに"],
+     "generator": "markdown",
+     "meta": {"input": "lxc/getting-started.ja.md"}},
 
     {"path": "/lxc/documentation",
      "title": "LXC - ドキュメント",
-     "menu": ["LXC", "ドキュメント"]},
+     "menu": ["LXC", "ドキュメント"],
+     "generator": "markdown",
+     "meta": {"input": "lxc/documentation.ja.md"}},
 
     {"path": "/lxc/manpages",
      "title": "LXC - Man ページ",
