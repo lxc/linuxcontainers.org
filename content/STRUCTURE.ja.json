@@ -20,7 +20,9 @@
 
     {"path": "/lxc/getting-started",
      "title": "LXC - はじめに",
-     "menu": ["LXC", "はじめに"]},
+     "menu": ["LXC", "はじめに"],
+     "generator": "markdown",
+     "meta": {"input": "lxc/getting-started.ja.md"}},
 
     {"path": "/lxc/documentation",
      "title": "LXC - ドキュメント",
