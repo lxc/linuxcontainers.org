@@ -42,6 +42,10 @@ div.codehilite pre {
     margin-left: 0;
 }
 
+div.manpage {
+    max-width: 45em;
+}
+
 
 
 .dropdown-submenu {

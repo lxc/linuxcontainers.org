@@ -256,6 +256,8 @@ def gen_pages(structure, override, prefix, **variables):
                 content = "".join([str(entry)
                                    for entry in contents[1:]])
 
+                content = "<div class='manpage'>%s</div>" % content
+
                 entry_link = "/%s/man%s/%s.html" % (
                     item['path'].lstrip("/"), section, entry)
 
