@@ -52,7 +52,9 @@
 
     {"path": "/lxc/articles",
      "title": "LXC - 記事",
-     "menu": ["LXC", "記事"]},
+     "menu": ["LXC", "記事"],
+     "generator": "markdown",
+     "meta": {"input": "lxc/articles.ja.md"}},
 
     {"path": "/lxc/mailing-lists",
      "menu": ["LXC", "メーリングリスト"]},
