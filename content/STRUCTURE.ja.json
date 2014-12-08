@@ -132,7 +132,9 @@
 
     {"path": "/cgmanager/news",
      "title": "CGManager - ニュース",
-     "menu": ["CGManager", "ニュース"]},
+     "menu": ["CGManager", "ニュース"],
+     "generator": "markdown",
+     "meta": {"input": "cgmanager/news.ja.md"}},
 
     {"path": "/cgmanager/getting-started",
      "title": "CGManager - はじめに",
