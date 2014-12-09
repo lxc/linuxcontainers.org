@@ -1,52 +1,52 @@
-# ºÇ¿·¤Î API <!-- Current API -->
+# æœ€æ–°ã® API <!-- Current API -->
 <!--
 The current API is made of the following methods:
 -->
-ºÇ¿·¤Î API ¤Ï°Ê²¼¤Î¥á¥½¥Ã¥É¤Ç¹½À®¤µ¤ì¤Æ¤¤¤Ş¤¹:
+æœ€æ–°ã® API ã¯ä»¥ä¸‹ã®ãƒ¡ã‚½ãƒƒãƒ‰ã§æ§‹æˆã•ã‚Œã¦ã„ã¾ã™:
 
 ### Ping (int junk) -> None
 <!--
 Ping is just used to test that the manager is alive and well, the value of the integer is ignored.
 -->
-Ping ¤Ï manager ¤¬Àµ¾ï¤ËÆ°ºî¤·¤Æ¤¤¤ë¤«¤É¤¦¤«¤ò¥Æ¥¹¥È¤¹¤ë¤Î¤Ë»È¤¤¤Ş¤¹¡£integer ¤ÎÃÍ¤ÏÌµ»ë¤µ¤ì¤Ş¤¹¡£
+Ping ã¯ manager ãŒæ­£å¸¸ã«å‹•ä½œã—ã¦ã„ã‚‹ã‹ã©ã†ã‹ã‚’ãƒ†ã‚¹ãƒˆã™ã‚‹ã®ã«ä½¿ã„ã¾ã™ã€‚integer ã®å€¤ã¯ç„¡è¦–ã•ã‚Œã¾ã™ã€‚
 
 ### GetPidCgroup (string controller, int pid) -> string cgroup
 <!--
 Takes a controller and PID and returns the cgroup path.
 -->
-controller ¤È PID ¤òÍ¿¤¨¤ë¤È¡¢cgroup ¤Î¥Ñ¥¹¤òÊÖ¤·¤Ş¤¹¡£
+controller ã¨ PID ã‚’ä¸ãˆã‚‹ã¨ã€cgroup ã®ãƒ‘ã‚¹ã‚’è¿”ã—ã¾ã™ã€‚
 
 ### GetPidCgroupAbs (string controller, int pid) -> string cgroup
 <!--
 Takes a controller and PID and returns the absolute cgroup path.
 -->
-controller ¤È PID ¤òÍ¿¤¨¤ë¤È¡¢cgroup ¤ÎÀäÂĞ¥Ñ¥¹¤òÊÖ¤·¤Ş¤¹¡£
+controller ã¨ PID ã‚’ä¸ãˆã‚‹ã¨ã€cgroup ã®çµ¶å¯¾ãƒ‘ã‚¹ã‚’è¿”ã—ã¾ã™ã€‚
 
 ### Create (string controller, string cgroup) -> int existed
 <!--
 Creates a new cgroup path in the provided controller, returns 1  
 if the path already existed, 0 if it was created.
 -->
-»ØÄê¤·¤¿ controller Æâ¤Ë¿·¤·¤¤ cgroup ¥Ñ¥¹¤òºîÀ®¤·¤Ş¤¹¡£´û¤Ë¥Ñ¥¹¤¬Â¸ºß¤¹¤ë¾ì¹ç¤Ï 1 ¤ò¡¢ºîÀ®¤¬À®¸ù¤·¤¿¾ì¹ç¤Ï 0 ¤òÊÖ¤·¤Ş¤¹¡£
+æŒ‡å®šã—ãŸ controller å†…ã«æ–°ã—ã„ cgroup ãƒ‘ã‚¹ã‚’ä½œæˆã—ã¾ã™ã€‚æ—¢ã«ãƒ‘ã‚¹ãŒå­˜åœ¨ã™ã‚‹å ´åˆã¯ 1 ã‚’ã€ä½œæˆãŒæˆåŠŸã—ãŸå ´åˆã¯ 0 ã‚’è¿”ã—ã¾ã™ã€‚
 
 ### Chown (string controller, string cgroup, int uid, int gid) -> None
 <!--
 Chown the provided controller/cgroup path to the provied uid and gid,  
 this will chown the directory as well as the cgroup.procs and tasks files.
 -->
-»ØÄê¤·¤¿ uid ¤È gid ¤Ç¡¢»ØÄê¤·¤¿¥Ñ¥¹ controller/cgroup ¤ò chown ¤·¤Ş¤¹¡£¥Ç¥£¥ì¥¯¥È¥ê¡¢cgroup.procs¡¢tasks ¥Õ¥¡¥¤¥ë¤ò chown ¤·¤Ş¤¹¡£
+æŒ‡å®šã—ãŸ uid ã¨ gid ã§ã€æŒ‡å®šã—ãŸãƒ‘ã‚¹ controller/cgroup ã‚’ chown ã—ã¾ã™ã€‚ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã€cgroup.procsã€tasks ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ chown ã—ã¾ã™ã€‚
 
 ### Chmod (string controller, string cgroup, string file, int mode) -> None
 <!--
 Chmod the provided controller/cgroup/file path to the provided mode.
 -->
-»ØÄê¤·¤¿¥Ñ¥¹¤Î controller/cgroup/file ¤ò»ØÄê¤·¤¿ mode ¤Ë chmod ¤·¤Ş¤¹¡£
+æŒ‡å®šã—ãŸãƒ‘ã‚¹ã® controller/cgroup/file ã‚’æŒ‡å®šã—ãŸ mode ã« chmod ã—ã¾ã™ã€‚
 
 ### MovePid (string controller, string cgroup, int pid) -> None
 <!--
 Moves the provided PID into the provided controller/cgroup.
 -->
-»ØÄê¤·¤¿ PID ¤ò»ØÄê¤·¤¿ controller/cgroup ¤Ë°ÜÆ°¤·¤Ş¤¹¡£
+æŒ‡å®šã—ãŸ PID ã‚’æŒ‡å®šã—ãŸ controller/cgroup ã«ç§»å‹•ã—ã¾ã™ã€‚
 
 ### MovePidAbs (string controller, string cgroup, int pid) -> None
 <!--
@@ -54,89 +54,89 @@ Similar to MovePid but takes an absolute cgroup path rather than one relative
 to the caller (or proxy). This call is restricted to root as it lets you escape  
 your current cgroup restrictions.
 -->
-MovePid ¤ÈÆ±ÍÍ¤Ç¤¹¤¬¡¢¸Æ¤Ó½Ğ¤·¸µ (¤â¤·¤¯¤Ï¥×¥í¥­¥·) ¤«¤é¤ÎÁêÂĞ cgroup ¥Ñ¥¹¤Ç¤Ê¤¯¡¢ÀäÂĞ cgroup ¥Ñ¥¹¤ò»ØÄê¤·¤Ş¤¹¡£
-¤³¤Î¸Æ¤Ó½Ğ¤·¤Ï¸½ºß¤Î cgroup ¤ÎÀ©¸Â¤ò¥¨¥¹¥±¡¼¥×¤¹¤ë¤Î¤Ç root ¤ËÀ©¸Â¤µ¤ì¤Æ¤¤¤Ş¤¹¡£
+MovePid ã¨åŒæ§˜ã§ã™ãŒã€å‘¼ã³å‡ºã—å…ƒ (ã‚‚ã—ãã¯ãƒ—ãƒ­ã‚­ã‚·) ã‹ã‚‰ã®ç›¸å¯¾ cgroup ãƒ‘ã‚¹ã§ãªãã€çµ¶å¯¾ cgroup ãƒ‘ã‚¹ã‚’æŒ‡å®šã—ã¾ã™ã€‚
+ã“ã®å‘¼ã³å‡ºã—ã¯ç¾åœ¨ã® cgroup ã®åˆ¶é™ã‚’ã‚¨ã‚¹ã‚±ãƒ¼ãƒ—ã™ã‚‹ã®ã§ root ã«åˆ¶é™ã•ã‚Œã¦ã„ã¾ã™ã€‚
 
 ### GetValue (string controller, string cgroup, string key) -> string value
 <!--
 Queries the value of the given key in the given controller/cgroup.  
 The value is always returned as a string.
 -->
-»ØÄê¤·¤¿ controller/cgroup Æâ¤Î»ØÄê¤·¤¿ key ¤ÎÃÍ¤òÊÖ¤·¤Ş¤¹¡£¾ï¤ËÊ¸»úÎó¤¬ÊÖ¤µ¤ì¤Ş¤¹¡£
+æŒ‡å®šã—ãŸ controller/cgroup å†…ã®æŒ‡å®šã—ãŸ key ã®å€¤ã‚’è¿”ã—ã¾ã™ã€‚å¸¸ã«æ–‡å­—åˆ—ãŒè¿”ã•ã‚Œã¾ã™ã€‚
 
 ### SetValue (string controller, string cgroup, string key, string value) -> None
 <!--
 Sets the value of the given key to that provided.
 -->
-»ØÄê¤·¤¿ contoller/cgroup Æâ¤Î»ØÄê¤·¤¿ key ¤ËÃÍ¤òÀßÄê¤·¤Ş¤¹¡£
+æŒ‡å®šã—ãŸ contoller/cgroup å†…ã®æŒ‡å®šã—ãŸ key ã«å€¤ã‚’è¨­å®šã—ã¾ã™ã€‚
 
 ### Remove (string controller, string cgroup, int recursive) -> int existed
 <!--
 Removes the provided cgroup, if recursive is set to 1, any sub-cgroup will also be removed.  
 The return value indicates whether the cgroup existed.
 -->
-»ØÄê¤·¤¿ cgroup ¤òºï½ü¤·¤Ş¤¹¡£¤â¤· recursive ¤¬ 1 ¤Î¾ì¹ç¤Ï»ØÄê¤·¤¿ cgroup ¤Î¥µ¥Ö cgroup ¤âºï½ü¤µ¤ì¤Ş¤¹¡£
-ÊÖ¤êÃÍ¤Ï»ØÄê¤·¤¿ cgroup ¤¬Â¸ºß¤·¤¿¤«¤É¤¦¤«¤ò¼¨¤·¤Ş¤¹¡£
+æŒ‡å®šã—ãŸ cgroup ã‚’å‰Šé™¤ã—ã¾ã™ã€‚ã‚‚ã— recursive ãŒ 1 ã®å ´åˆã¯æŒ‡å®šã—ãŸ cgroup ã®ã‚µãƒ– cgroup ã‚‚å‰Šé™¤ã•ã‚Œã¾ã™ã€‚
+è¿”ã‚Šå€¤ã¯æŒ‡å®šã—ãŸ cgroup ãŒå­˜åœ¨ã—ãŸã‹ã©ã†ã‹ã‚’ç¤ºã—ã¾ã™ã€‚
 
 ### GetTasks (string controller, string cgroup) -> array of int
 <!--
 Returns an array of int representing all the PIDs in the provided cgroup path.
 -->
-»ØÄê¤·¤¿ cgroup ¥Ñ¥¹Æâ¤ÎÁ´¤Æ¤Î PID ¤ò int ¤ÎÇÛÎó¤ÇÊÖ¤·¤Ş¤¹¡£
+æŒ‡å®šã—ãŸ cgroup ãƒ‘ã‚¹å†…ã®å…¨ã¦ã® PID ã‚’ int ã®é…åˆ—ã§è¿”ã—ã¾ã™ã€‚
 
 ### GetTasksRecursive (string controller, string cgroup) -> array of int
 <!--
 Returns an array of int representing all the PIDs in the provided cgroup path and its sub-directories.
 -->
-»ØÄê¤·¤¿ cgroup ¥Ñ¥¹¤È¤½¤Î¥µ¥Ö¥Ç¥£¥ì¥¯¥È¥ê (»ÒÂ¹¤Î cgroup) Æâ¤ÎÁ´¤Æ¤Î PID ¤ò int ¤ÎÇÛÎó¤ÇÊÖ¤·¤Ş¤¹¡£
+æŒ‡å®šã—ãŸ cgroup ãƒ‘ã‚¹ã¨ãã®ã‚µãƒ–ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒª (å­å­«ã® cgroup) å†…ã®å…¨ã¦ã® PID ã‚’ int ã®é…åˆ—ã§è¿”ã—ã¾ã™ã€‚
 
 ### ListChildren (string controller, string cgroup) -> array of string
 <!--
 Returns an array of string representing all the children (sub-cgroup) of the provided cgroup path.
 -->
-»ØÄê¤·¤¿ cgroup ¥Ñ¥¹¤ÎÁ´¤Æ¤Î»Ò¶¡ (¥µ¥Ö cgroup) ¤òÊ¸»úÎó¤ÎÇÛÎó¤ÇÊÖ¤·¤Ş¤¹¡£
+æŒ‡å®šã—ãŸ cgroup ãƒ‘ã‚¹ã®å…¨ã¦ã®å­ä¾› (ã‚µãƒ– cgroup) ã‚’æ–‡å­—åˆ—ã®é…åˆ—ã§è¿”ã—ã¾ã™ã€‚
 
 ### RemoveOnEmpty (string controller, string cgroup) -> None
 <!--
 Marks the cgroup as removable when empty.  
 Once the last task exists the cgroup, cgmanager will automatically remove it.
 -->
-»ØÄê¤·¤¿ cgroup ¤¬¶õ¤Î¾ì¹ç¤Ë¾Ãµî²ÄÇ½¤Ê¥Ş¡¼¥¯¤ò¤Ä¤±¤Ş¤¹¡£cgroup ¤ÎºÇ¸å¤Î¥¿¥¹¥¯¤¬¤Ê¤¯¤Ê¤Ã¤¿¤È¤­¡¢cgmanager ¤Ï¼«Æ°Åª¤Ë¤½¤Î cgroup ¤ò¾Ãµî¤·¤Ş¤¹¡£
+æŒ‡å®šã—ãŸ cgroup ãŒç©ºã®å ´åˆã«æ¶ˆå»å¯èƒ½ãªãƒãƒ¼ã‚¯ã‚’ã¤ã‘ã¾ã™ã€‚cgroup ã®æœ€å¾Œã®ã‚¿ã‚¹ã‚¯ãŒãªããªã£ãŸã¨ãã€cgmanager ã¯è‡ªå‹•çš„ã«ãã® cgroup ã‚’æ¶ˆå»ã—ã¾ã™ã€‚
 
 ### Prune (string controller, string cgroup) -> None
 <!--
 Calls RemoveOnEmpty on the cgroups path and any sub-directory (recursively).
 -->
-»ØÄê¤·¤¿ cgroup ¥Ñ¥¹¤È¥µ¥Ö¥Ç¥£¥ì¥¯¥È¥ê¤Ç (ºÆµ¢Åª¤Ë) RemoveOnEmpty ¤ò¸Æ¤Ó½Ğ¤·¤Ş¤¹¡£
+æŒ‡å®šã—ãŸ cgroup ãƒ‘ã‚¹ã¨ã‚µãƒ–ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã§ (å†å¸°çš„ã«) RemoveOnEmpty ã‚’å‘¼ã³å‡ºã—ã¾ã™ã€‚
 
 <!--
 Tasks will not be killed but once they all exit either naturally or  
 because something killed them, the cgroup will disappear.
 -->
-¥¿¥¹¥¯¤¬ kill ¤µ¤ì¤ë¤³¤È¤Ï¤¢¤ê¤Ş¤»¤ó¤¬¡¢¥¿¥¹¥¯¤¬¼«Á³¤Ë exit ¤¹¤ë¤«²¿¤«¤ÎÍıÍ³¤Ç kill ¤µ¤ì¤¿¤é¤¹¤°¤Ë cgroup ¤Ï¾Ã¤¨¤ë¤Ç¤·¤ç¤¦¡£
+ã‚¿ã‚¹ã‚¯ãŒ kill ã•ã‚Œã‚‹ã“ã¨ã¯ã‚ã‚Šã¾ã›ã‚“ãŒã€ã‚¿ã‚¹ã‚¯ãŒè‡ªç„¶ã« exit ã™ã‚‹ã‹ä½•ã‹ã®ç†ç”±ã§ kill ã•ã‚ŒãŸã‚‰ã™ãã« cgroup ã¯æ¶ˆãˆã‚‹ã§ã—ã‚‡ã†ã€‚
 
 ### ListControllers () -> array of string
 <!--
 Returns an array of string representing the supported controllers.
 -->
-¥µ¥İ¡¼¥È¤µ¤ì¤ë¥³¥ó¥È¥í¡¼¥é¤òÊ¸»úÎó¤Î¥ê¥¹¥È¤Î·Á¼°¤ÇÊÖ¤·¤Ş¤¹¡£
+ã‚µãƒãƒ¼ãƒˆã•ã‚Œã‚‹ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©ã‚’æ–‡å­—åˆ—ã®ãƒªã‚¹ãƒˆã®å½¢å¼ã§è¿”ã—ã¾ã™ã€‚
 
 ### ListKeys (string controller, string cgroup) -> array of (string, uint, uint, uint)
 <!--
 Returns an array of (string name, uint uid, uint gid, uint mode) representing the available cgroup keys.
 -->
-ÍøÍÑ²ÄÇ½¤Ê cgroup ¤Î¥­¡¼¤ò (string name, uint uid, uint gid, uint mode) ¤Î¥ê¥¹¥È¤ÇÊÖ¤·¤Ş¤¹¡£
+åˆ©ç”¨å¯èƒ½ãª cgroup ã®ã‚­ãƒ¼ã‚’ (string name, uint uid, uint gid, uint mode) ã®ãƒªã‚¹ãƒˆã§è¿”ã—ã¾ã™ã€‚
 
 ### api\_version (property) -> integer
 <!--
 The current internal API version, used for feature checks.
 -->
-¸½ºß¤ÎÆâÉôÅª¤Ê API ¤Î¥Ğ¡¼¥¸¥ç¥ó¤òÊÖ¤·¤Ş¤¹¡£¾­ÍèÅª¤Ê¥Á¥§¥Ã¥¯¤Ë»È¤¤¤Ş¤¹¡£
+ç¾åœ¨ã®å†…éƒ¨çš„ãª API ã®ãƒãƒ¼ã‚¸ãƒ§ãƒ³ã‚’è¿”ã—ã¾ã™ã€‚å°†æ¥çš„ãªãƒã‚§ãƒƒã‚¯ã«ä½¿ã„ã¾ã™ã€‚
 
-# API ¤òÄêµÁ¤¹¤ë¥É¥­¥å¥á¥ó¥È <!-- API definition document -->
+# API ã‚’å®šç¾©ã™ã‚‹ãƒ‰ã‚­ãƒ¥ãƒ¡ãƒ³ãƒˆ <!-- API definition document -->
 
 <!--
 The [org.linuxcontainers.cgmanager.xml file](https://github.com/cgmanager/cgmanager/blob/master/org.linuxcontainers.cgmanager.xml)
 in the cgmanager cgmanager tree is used to generate the client library and is the authoritative API definition.
 -->
-cgmanager ¥Ä¥ê¡¼Æâ¤Î [org.linuxcontainers.cgmanager.xml ¥Õ¥¡¥¤¥ë](https://github.com/cgmanager/cgmanager/blob/master/org.linuxcontainers.cgmanager.xml) ¤¬¥¯¥é¥¤¥¢¥ó¥È¥é¥¤¥Ö¥é¥ê¤òÀ¸À®¤¹¤ë¤Î¤Ë»È¤ï¤ì¤Ş¤¹¡£¤½¤·¤Æ¡¢¤³¤Î¥Õ¥¡¥¤¥ë¤¬Àµ¼°¤Ê API ¤ÎÄêµÁ¤Ç¤¹¡£
+cgmanager ãƒ„ãƒªãƒ¼å†…ã® [org.linuxcontainers.cgmanager.xml ãƒ•ã‚¡ã‚¤ãƒ«](https://github.com/cgmanager/cgmanager/blob/master/org.linuxcontainers.cgmanager.xml) ãŒã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆãƒ©ã‚¤ãƒ–ãƒ©ãƒªã‚’ç”Ÿæˆã™ã‚‹ã®ã«ä½¿ã‚ã‚Œã¾ã™ã€‚ãã—ã¦ã€ã“ã®ãƒ•ã‚¡ã‚¤ãƒ«ãŒæ­£å¼ãª API ã®å®šç¾©ã§ã™ã€‚
