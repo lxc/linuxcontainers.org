@@ -169,7 +169,9 @@
 
     {"path": "/cgmanager/articles",
      "title": "CGManager - 記事",
-     "menu": ["CGManager", "記事"]},
+     "menu": ["CGManager", "記事"],
+     "generator": "markdown",
+     "meta": {"input": "cgmanager/articles.ja.md"}},
 
     {"path": "/cgmanager/mailing-lists",
      "menu": ["CGManager", "メーリングリスト"]},
