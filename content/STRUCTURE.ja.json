@@ -154,7 +154,9 @@
 
     {"path": "/cgmanager/contribute",
      "title": "CGManager - コントリビュート",
-     "menu": ["CGManager", "コントリビュート"]},
+     "menu": ["CGManager", "コントリビュート"],
+     "generator": "markdown",
+     "meta": {"input": "cgmanager/contribute.ja.md"}},
 
     {"path": "/cgmanager/downloads",
      "title": "CGManager - ダウンロード",
