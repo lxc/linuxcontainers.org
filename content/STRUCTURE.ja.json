@@ -138,11 +138,15 @@
 
     {"path": "/cgmanager/getting-started",
      "title": "CGManager - はじめに",
-     "menu": ["CGManager", "はじめに"]},
+     "menu": ["CGManager", "はじめに"],
+     "generator": "markdown",
+     "meta": {"input": "cgmanager/getting-started.ja.md"}},
 
     {"path": "/cgmanager/dbus-api",
      "title": "CGManager - D-Bus API",
-     "menu": ["CGManager", "D-Bus API"]},
+     "menu": ["CGManager", "D-Bus API"],
+     "generator": "markdown",
+     "meta": {"input": "cgmanager/dbus-api.ja.md"}},
 
     {"path": "/cgmanager/manpages",
      "title": "CGManager - Man ページ",
@@ -152,7 +156,9 @@
 
     {"path": "/cgmanager/contribute",
      "title": "CGManager - コントリビュート",
-     "menu": ["CGManager", "コントリビュート"]},
+     "menu": ["CGManager", "コントリビュート"],
+     "generator": "markdown",
+     "meta": {"input": "cgmanager/contribute.ja.md"}},
 
     {"path": "/cgmanager/downloads",
      "title": "CGManager - ダウンロード",
@@ -165,7 +171,9 @@
 
     {"path": "/cgmanager/articles",
      "title": "CGManager - 記事",
-     "menu": ["CGManager", "記事"]},
+     "menu": ["CGManager", "記事"],
+     "generator": "markdown",
+     "meta": {"input": "cgmanager/articles.ja.md"}},
 
     {"path": "/cgmanager/mailing-lists",
      "menu": ["CGManager", "メーリングリスト"]},
