@@ -144,7 +144,9 @@
 
     {"path": "/cgmanager/dbus-api",
      "title": "CGManager - D-Bus API",
-     "menu": ["CGManager", "D-Bus API"]},
+     "menu": ["CGManager", "D-Bus API"],
+     "generator": "markdown",
+     "meta": {"input": "cgmanager/dbus-api.ja.md"}},
 
     {"path": "/cgmanager/manpages",
      "title": "CGManager - Man ページ",
