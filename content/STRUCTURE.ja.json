@@ -138,7 +138,9 @@
 
     {"path": "/cgmanager/getting-started",
      "title": "CGManager - はじめに",
-     "menu": ["CGManager", "はじめに"]},
+     "menu": ["CGManager", "はじめに"],
+     "generator": "markdown",
+     "meta": {"input": "cgmanager/getting-started.ja.md"}},
 
     {"path": "/cgmanager/dbus-api",
      "title": "CGManager - D-Bus API",
