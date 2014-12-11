@@ -26,7 +26,7 @@ and easily give you an overview of all the containers on your network,
 let you create some more where you want them and even move them around while they're running.
 -->
 コマンドラインツールは非常にシンプルに設計されています。しかし、全てのコンテナを管理するための非常にパワフルなツールです。
-複数のコンテナホストへの接続を扱えます。そして、ネットワーク上の全てのコンテナ全てが見渡せ、さらに作成したいところに作成でき、実行中に色々なところに移動できます。
+複数のコンテナホストへの接続を扱えます。そして、ネットワーク上の全てのコンテナ全てが見渡せ、必要なところに追加で作成でき、実行中に色々なところに移動できます。
 
 <!--
 The OpenStack plugin then allows you to use your lxd hosts as compute nodes,  
@@ -48,7 +48,7 @@ LXDの主要な特長には以下のようなものがあります:
 
  * セキュアなデザイン (非特権コンテナ、リソース制限、その他) <!-- Secure by design (unprivileged containers, resource restrictions and much more) -->
  * 拡張性 (あなたのラップトップ機から数千のコンピュートノードまで) <!-- Scalable (from containers on your laptop to thousand of compute nodes) -->
- * 直感的 (シンプルでクリアな API、簡潔なコマンドライン実行) <!-- Intuitive (simple, clear API and crisp command line experience) -->
+ * 直感的 (シンプルでクリアな API、きびきびしたコマンドライン体験) <!-- Intuitive (simple, clear API and crisp command line experience) -->
  * イメージをベースにしている (ディストリビューションテンプレートは不要で、良い信頼できるイメージのみ使用) <!-- Image based (no more distribution templates, only good, trusted images) -->
  * ライブマイグレーション <!-- Live migration -->
 
@@ -60,7 +60,7 @@ better user experience. Under the scene, LXD uses LXC through liblxc and its Go 
 to create and manage the containers.
 -->
 LXD は LXC の書き直しではありません。実際 LXD は新しい、より良いユーザ体験を提供するために LXC 上で構築されています。
-LXD はコンテナを作成したり管理したりするために liblxc を通して LXC と LXC の Go バインディングを使っています。
+LXD はコンテナを作成したり管理したりするために liblxc とその Go バインディングを通して LXC を利用しています。
 
 <!--
 It's basically an alternative to LXC's tools and distribution template system  
