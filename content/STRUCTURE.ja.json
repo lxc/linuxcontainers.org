@@ -85,7 +85,9 @@
 
     {"path": "/lxd/getting-started-cli",
      "title": "LXD - はじめに - コマンドライン",
-     "menu": ["LXD", "はじめに - コマンドライン"]},
+     "menu": ["LXD", "はじめに - コマンドライン"],
+     "generator": "markdown",
+     "meta": {"input": "lxd/getting-started-cli.ja.md"}},
 
     {"path": "/lxd/getting-started-openstack",
      "title": "LXD - はじめに - OpenStack",
