@@ -75,7 +75,9 @@
 
     {"path": "/lxd/introduction",
      "title": "LXD - イントロダクション",
-     "menu": ["LXD", "イントロダクション"]},
+     "menu": ["LXD", "イントロダクション"],
+     "generator": "markdown",
+     "meta": {"input": "lxd/introduction.ja.md"}},
 
     {"path": "/lxd/news",
      "title": "LXD - ニュース",
