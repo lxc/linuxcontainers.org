@@ -6,27 +6,16 @@
        LXD, LXCFS and CGManager.</p>
 
     <p>The goal is to offer a distro and vendor neutral environment
-       for the development of Linux container technologies.
-       The project provides resources such as build machines, CI
-       infrastructure, mailing-lists, website, e-mail, ...
-       to the various projects under it.</p>
+       for the development of Linux container technologies.</p>
 
-    <p>Current project sponsors are:
-        <ul>
-            <li>Stéphane Graber
-                <ul>
-                    <li>domain names and SSL certificates</li>
-                    <li>public server (websites, downloads, e-mails, DNS)</li>
-                    <li>test (jenkins) and build infrastructure (i386, amd64 and armhf builders)</li>
-                </ul>
-            </li>
-            <li>Canonical Ltd.
-                <ul>
-                    <li>build infrastructure (arm64 and ppc64el builders)</li>
-                </ul>
-            </li>
-        </ul>
-    </p>
+    <p>Our main focus is system containers. That is, containers which
+       offer an environment as close to possible as the one you'd get from a
+       VM but without the overhead that comes with running a separate
+       kernel and simulating all the hardware.</p>
+
+    <p>This is achieved through a combination of kernel security
+       features such as namespaces, mandatory access control and control
+       groups.</p>
 </div>
 
 <hr/>
