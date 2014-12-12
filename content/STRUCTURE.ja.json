@@ -97,7 +97,9 @@
 
     {"path": "/lxd/rest-api",
      "title": "LXD - REST API",
-     "menu": ["LXD", "REST API"]},
+     "menu": ["LXD", "REST API"],
+     "generator": "markdown",
+     "meta": {"input": "lxd/rest-api.ja.md"}},
 
     {"path": "/lxd/contribute",
      "title": "LXD - コントリビュート",
