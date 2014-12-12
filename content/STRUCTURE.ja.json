@@ -91,7 +91,9 @@
 
     {"path": "/lxd/getting-started-openstack",
      "title": "LXD - はじめに - OpenStack",
-     "menu": ["LXD", "はじめに - OpenStack"]},
+     "menu": ["LXD", "はじめに - OpenStack"],
+     "generator": "markdown",
+     "meta": {"input": "lxd/getting-started-openstack.ja.md"}},
 
     {"path": "/lxd/rest-api",
      "title": "LXD - REST API",
