@@ -103,7 +103,9 @@
 
     {"path": "/lxd/contribute",
      "title": "LXD - コントリビュート",
-     "menu": ["LXD", "コントリビュート"]},
+     "menu": ["LXD", "コントリビュート"],
+     "generator": "markdown",
+     "meta": {"input": "lxd/contribute.ja.md"}},
 
     {"path": "/lxd/downloads",
      "title": "LXD - ダウンロード",
