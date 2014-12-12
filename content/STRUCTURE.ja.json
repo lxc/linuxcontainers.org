@@ -118,7 +118,9 @@
 
     {"path": "/lxd/articles",
      "title": "LXD - 記事",
-     "menu": ["LXD", "記事"]},
+     "menu": ["LXD", "記事"],
+     "generator": "markdown",
+     "meta": {"input": "lxd/articles.ja.md"}},
 
     {"path": "/lxd/mailing-lists",
      "menu": ["LXD", "メーリングリスト"]},
