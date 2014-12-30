@@ -97,7 +97,7 @@ For convenience, networks can be accessed as a list (and modified that way too):
 
     #!python
     container.network[0].ipv4 = "10.0.3.50"
-    container.netowkr[0].ipv4_gateway = "10.0.3.1"
+    container.network[0].ipv4_gateway = "10.0.3.1"
 
 Multi-value configuration entries are represented as list:
 
