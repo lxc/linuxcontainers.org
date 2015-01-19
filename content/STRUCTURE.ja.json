@@ -171,7 +171,7 @@
      "menu": ["LXCFS", "ダウンロード"],
      "generator": "downloads",
      "meta": {"dir": "/downloads/lxcfs",
-              "input": "lxcfs/downloads.md"}},
+              "input": "lxcfs/downloads.ja.md"}},
 
     {"path": "/lxcfs/external-resources",
      "menu": ["LXCFS", "外部リソース"]},
