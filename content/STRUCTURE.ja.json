@@ -152,7 +152,7 @@
      "title": "LXCFS - はじめに",
      "menu": ["LXCFS", "はじめに"],
      "generator": "markdown",
-     "meta": {"input": "lxcfs/getting-started.md"}},
+     "meta": {"input": "lxcfs/getting-started.ja.md"}},
 
     {"path": "/lxcfs/manpages",
      "title": "LXCFS - Man ページ",
