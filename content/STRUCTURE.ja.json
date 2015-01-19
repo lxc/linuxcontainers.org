@@ -164,7 +164,7 @@
      "title": "LXCFS - コントリビュート",
      "menu": ["LXCFS", "コントリビュート"],
      "generator": "markdown",
-     "meta": {"input": "lxcfs/contribute.md"}},
+     "meta": {"input": "lxcfs/contribute.ja.md"}},
 
     {"path": "/lxcfs/downloads",
      "title": "LXCFS - ダウンロード",
