@@ -136,6 +136,63 @@
 
 
 
+    {"path": "/lxcfs/introduction",
+     "title": "LXCFS - イントロダクション",
+     "menu": ["LXCFS", "イントロダクション"],
+     "generator": "markdown",
+     "meta": {"input": "lxcfs/introduction.ja.md"}},
+
+    {"path": "/lxcfs/news",
+     "title": "LXCFS - ニュース",
+     "menu": ["LXCFS", "ニュース"],
+     "generator": "markdown",
+     "meta": {"input": "lxcfs/news.ja.md"}},
+
+    {"path": "/lxcfs/getting-started",
+     "title": "LXCFS - はじめに",
+     "menu": ["LXCFS", "はじめに"],
+     "generator": "markdown",
+     "meta": {"input": "lxcfs/getting-started.ja.md"}},
+
+    {"path": "/lxcfs/manpages",
+     "title": "LXCFS - Man ページ",
+     "menu": ["LXCFS", "Man ページ"],
+     "generator": "manpages",
+     "meta": {"dir": "/manpages/lxcfs"}},
+
+    {"path": "/lxcfs/contribute",
+     "title": "LXCFS - コントリビュート",
+     "menu": ["LXCFS", "コントリビュート"],
+     "generator": "markdown",
+     "meta": {"input": "lxcfs/contribute.ja.md"}},
+
+    {"path": "/lxcfs/downloads",
+     "title": "LXCFS - ダウンロード",
+     "menu": ["LXCFS", "ダウンロード"],
+     "generator": "downloads",
+     "meta": {"dir": "/downloads/lxcfs",
+              "input": "lxcfs/downloads.ja.md"}},
+
+    {"path": "/lxcfs/external-resources",
+     "menu": ["LXCFS", "外部リソース"]},
+
+    {"path": "/lxcfs/mailing-lists",
+     "menu": ["LXCFS", "メーリングリスト"],
+     "generator": "link",
+     "meta": {"url": "https://lists.linuxcontainers.org"}},
+
+    {"path": "/lxcfs/irc",
+     "menu": ["LXCFS", "IRC"],
+     "generator": "link",
+     "meta": {"url": "https://webchat.freenode.net/?channels=#lxcontainers"}},
+
+    {"path": "/lxcfs/github",
+     "menu": ["LXCFS", "Github"],
+     "generator": "link",
+     "meta": {"url": "https://github.com/lxc/lxcfs"}},
+
+
+
     {"path": "/cgmanager/introduction",
      "title": "CGManager - イントロダクション",
      "menu": ["CGManager", "イントロダクション"],
