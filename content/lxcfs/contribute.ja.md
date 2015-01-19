@@ -12,7 +12,7 @@ and not on stable releases, unless the bug only affects a stable release.
 -->
 レビューのためにパッチを送る場合は、バグが stable リリースにのみ影響する場合を除いて、stable リリースでなく現時点の開発バージョンのツリーを元にしてください。
 
-# <!-- Patch submission process -->
+# パッチの提案プロセス<!-- Patch submission process -->
 <!--
 Contributions to LXCFS must be submitted as Github pull-requests.
 -->
