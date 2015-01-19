@@ -140,13 +140,13 @@
      "title": "LXCFS - イントロダクション",
      "menu": ["LXCFS", "イントロダクション"],
      "generator": "markdown",
-     "meta": {"input": "lxcfs/introduction.md"}},
+     "meta": {"input": "lxcfs/introduction.ja.md"}},
 
     {"path": "/lxcfs/news",
      "title": "LXCFS - ニュース",
      "menu": ["LXCFS", "ニュース"],
      "generator": "markdown",
-     "meta": {"input": "lxcfs/news.md"}},
+     "meta": {"input": "lxcfs/news.ja.md"}},
 
     {"path": "/lxcfs/getting-started",
      "title": "LXCFS - はじめに",
