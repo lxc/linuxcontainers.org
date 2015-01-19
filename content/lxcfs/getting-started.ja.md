@@ -1,14 +1,14 @@
-# git ����� lxcfs �Υӥ�ɤȼ¹� <!-- Building and running lxcfs from git -->
+# git からの lxcfs のビルドと実行 <!-- Building and running lxcfs from git -->
 
 <!--
 LXCFS is meant to be run once per host system at /var/lib/lxcfs.
 -->
-LXCFS �ϥۥ��ȥ����ƥऴ�Ȥ� 1 �Ĥ�����/var/lib/lxcfs �Ǽ¹Ԥ���褦�˺���Ƥ��ޤ���
+LXCFS はホストシステムごとに 1 つだけ、/var/lib/lxcfs で実行するように作られています。
 
 <!--
 Building lxcfs requires the following libraries and development headers:
 -->
-lxcfs ��ӥ�ɤ���ˤϰʲ��Υ饤�֥��ȳ�ȯ�إå���ɬ�פǤ�:
+lxcfs をビルドするには以下のライブラリと開発ヘッダが必要です:
 
  - libcgmanager-dev
  - libnih-dbus-dev
@@ -18,7 +18,7 @@ lxcfs ��ӥ�ɤ���ˤϰʲ��Υ饤�֥��ȳ�ȯ�إå���ɬ�פǤ�:
 <!--
 Then to build and run it from the git repository, do:
 -->
-�����ưʲ��Τ褦�� git ��ݥ��ȥ꤫�饳���ɤ���������ӥ�ɡ��¹Ԥ��ޤ���
+そして以下のように git リポジトリからコードを取得し、ビルド、実行します。
 
     git clone git://github.com/lxc/lxcfs
     cd lxcfs
@@ -31,4 +31,4 @@ Then to build and run it from the git repository, do:
 <!--
 And that's it, you'll have lxcfs mounted on top of /var/lib/lxcfs/.
 -->
-�ʾ�ǡ�/var/lib/lxcfs/ �� lxcfs ���ޥ���ȤǤ��ޤ���
+以上で、/var/lib/lxcfs/ で lxcfs がマウントできます。
