@@ -1,0 +1,17 @@
+language: python
+python:
+ - 3.2
+ - 3.3
+before_install:
+ - sudo add-apt-repository ppa:ubuntu-lxc/daily -y
+ - sudo apt-get update -qq
+ - sudo apt-get install -qq man2html-base python3 python3-bs4 python3-jinja2 python3-markdown python3-pygments pep8 pyflakes3
+script:
+ - pep8 generate
+ - pyflakes3 generate
+ - ./generate
+notifications:
+  irc:
+    channels:
+      - "chat.freenode.net#lxcontainers"
+    use_notice: true
