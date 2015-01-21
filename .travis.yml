@@ -5,7 +5,8 @@ python:
 before_install:
  - sudo add-apt-repository ppa:ubuntu-lxc/daily -y
  - sudo apt-get update -qq
- - sudo apt-get install -qq man2html-base python3 python3-bs4 python3-jinja2 python3-markdown python3-pygments pep8
+ - sudo apt-get install -qq man2html-base
+ - pip install beautifulsoup4 jinja2 markdown pygments pep8
 script: pep8 generate && python generate
 notifications:
   irc:
