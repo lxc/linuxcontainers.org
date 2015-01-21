@@ -15,7 +15,7 @@ des versions à jour de CGManager:
 
 cgmanager peut être cloné directement avec:
 
-    git clone git://github.com/cgmanager/cgmanager
+    git clone git://github.com/lxc/cgmanager
 
 # Tarballs des versions stables
 

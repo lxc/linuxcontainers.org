@@ -136,7 +136,7 @@ The current internal API version, used for feature checks.
 # API を定義するドキュメント <!-- API definition document -->
 
 <!--
-The [org.linuxcontainers.cgmanager.xml file](https://github.com/cgmanager/cgmanager/blob/master/org.linuxcontainers.cgmanager.xml)
+The [org.linuxcontainers.cgmanager.xml file](https://github.com/lxc/cgmanager/blob/master/org.linuxcontainers.cgmanager.xml)
 in the cgmanager cgmanager tree is used to generate the client library and is the authoritative API definition.
 -->
-cgmanager ツリー内の [org.linuxcontainers.cgmanager.xml ファイル](https://github.com/cgmanager/cgmanager/blob/master/org.linuxcontainers.cgmanager.xml) がクライアントライブラリを生成するのに使われます。そして、このファイルが正式な API の定義です。
+cgmanager ツリー内の [org.linuxcontainers.cgmanager.xml ファイル](https://github.com/lxc/cgmanager/blob/master/org.linuxcontainers.cgmanager.xml) がクライアントライブラリを生成するのに使われます。そして、このファイルが正式な API の定義です。

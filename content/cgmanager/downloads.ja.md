@@ -26,7 +26,7 @@ You can clone cgmanager directly with:
 -->
 以下から直接 clone できます:
 
-    git clone git://github.com/cgmanager/cgmanager
+    git clone git://github.com/lxc/cgmanager
 
 # リリース版 tarball
 

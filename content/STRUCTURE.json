@@ -286,10 +286,10 @@
     {"path": "/cgmanager/github",
      "menu": ["CGManager", "Github"],
      "generator": "link",
-     "meta": {"url": "https://github.com/cgmanager/cgmanager"}},
+     "meta": {"url": "https://github.com/lxc/cgmanager"}},
 
     {"path": "/cgmanager/travis-ci",
      "menu": ["CGManager", "Travis CI"],
      "generator": "link",
-     "meta": {"url": "https://travis-ci.org/cgmanager/cgmanager"}}
+     "meta": {"url": "https://travis-ci.org/lxc/cgmanager"}}
 ]

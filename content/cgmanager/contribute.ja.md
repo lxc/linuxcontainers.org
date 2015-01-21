@@ -4,7 +4,7 @@ The current development version of CGManager can be cloned from Github with:
 -->
 CGManager の最新の開発バージョンは Github からクローンできます:
 
-    git clone git://github.com/cgmanager/cgmanager
+    git clone git://github.com/lxc/cgmanager
 
 <!--
 Source tarballs from the various stable releases are also available in

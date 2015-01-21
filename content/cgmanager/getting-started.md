@@ -12,7 +12,7 @@ If logind has not placed you into your own cgroup, you can then do so using:
 # Building CGManager on other distributions
 If you are running another distribution, you can install it by hand using:
 
-    git clone git://github.com/cgmanager/cgmanager
+    git clone git://github.com/lxc/cgmanager
     sh bootstrap.sh
     ./configure --prefix=/
     make

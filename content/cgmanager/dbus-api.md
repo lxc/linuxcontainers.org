@@ -69,5 +69,5 @@ Returns an array of (string name, uint uid, uint gid, uint mode) representing th
 The current internal API version, used for feature checks.
 
 # API definition document
-The [org.linuxcontainers.cgmanager.xml file](https://github.com/cgmanager/cgmanager/blob/master/org.linuxcontainers.cgmanager.xml)
+The [org.linuxcontainers.cgmanager.xml file](https://github.com/lxc/cgmanager/blob/master/org.linuxcontainers.cgmanager.xml)
 in the cgmanager cgmanager tree is used to generate the client library and is the authoritative API definition.
