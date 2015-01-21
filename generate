@@ -100,6 +100,9 @@ def gen_menu(structure, override, prefix):
                     if not os.path.isfile("%s/%s" % (man_path, entry)):
                         continue
 
+                    if entry.startswith("."):
+                        continue
+
                     entry_link = "/%s/%s" % (item['path'].lstrip("/"), entry)
                     man_menu.append((entry_link, entry))
 
@@ -122,6 +125,9 @@ def gen_menu(structure, override, prefix):
 
                 for entry in sorted(os.listdir(man_path)):
                     if not os.path.isfile("%s/%s" % (man_path, entry)):
+                        continue
+
+                    if entry.startswith("."):
                         continue
 
                     entry_link = "/%s/man%s/%s.html" % (
@@ -187,12 +193,15 @@ def gen_pages(structure, override, prefix, **variables):
                                                 extensions=[codehilite])
 
             downloads = []
-            for entry in sorted(os.listdir(item['meta']['dir'].lstrip("/")),
-                                reverse=True):
-                if entry.endswith(".asc"):
+            download_path = item['meta']['dir'].lstrip("/")
+            for entry in sorted(os.listdir(download_path), reverse=True):
+                if not os.path.isfile("%s/%s" % (download_path, entry)):
                     continue
 
-                fs_path = "%s/%s" % (item['meta']['dir'].lstrip("/"), entry)
+                if entry.startswith(".") or entry.endswith(".asc"):
+                    continue
+
+                fs_path = "%s/%s" % (download_path, entry)
 
                 download = {}
                 download['filename'] = entry
@@ -214,6 +223,9 @@ def gen_pages(structure, override, prefix, **variables):
 
             for entry in sorted(os.listdir(man_path)):
                 if not os.path.isfile("%s/%s" % (man_path, entry)):
+                    continue
+
+                if entry.startswith("."):
                     continue
 
                 section = entry.split(".")[-1]
@@ -276,6 +288,9 @@ def gen_pages(structure, override, prefix, **variables):
             content = "<ul>"
             for entry in sorted(os.listdir(man_path)):
                 if not os.path.isfile("%s/%s" % (man_path, entry)):
+                    continue
+
+                if entry.startswith("."):
                     continue
 
                 section = entry.split(".")[-1]
