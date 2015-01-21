@@ -87,7 +87,7 @@ def gen_menu(structure, override, prefix):
             # External link
             item['path'] = item['meta']['url']
 
-        if not "menu" in item:
+        if "menu" not in item:
             continue
 
         if len(item['menu']) == 1:
