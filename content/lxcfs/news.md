@@ -1,5 +1,17 @@
 # News
 
+## LXCFS 0.4 release announcement<span class="text-muted">23rd of January 2015</span>
+Critical bug/security fix update for LXFS.
+
+Prior versions of LXCFS would replace the host's /proc with the container's  
+when a read to /proc/uptime was done on a system with / mounted rshared (default on systemd).
+
+This release includes ONLY this bugfix and should be immediately deployed by anyone currently using lxcfs.
+
+### Downloads
+The release tarballs can be found on our [download page](/lxcfs/downloads).
+
+
 ## LXCFS 0.3 release announcement<span class="text-muted">21st of January 2015</span>
 This release is identical to 0.2 except for a fixed installation path of the LXC configuration file.
 
