@@ -1,5 +1,14 @@
 # News
 
+## LXCFS 0.5 release announcement<span class="text-muted">28th of January 2015</span>
+Bugfix release.
+
+This tweaks configure.ac to detect cgmanager version and tweak the LXC hook.
+
+### Downloads
+The release tarballs can be found on our [download page](/lxcfs/downloads).
+
+
 ## LXCFS 0.4 release announcement<span class="text-muted">23rd of January 2015</span>
 Critical bug/security fix update for LXFS.
 
