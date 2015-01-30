@@ -64,7 +64,7 @@ This release was made possible by contributions from 84 developers.
  * lxc.arch for PER\_LINUX32 is now output as i686
  * lxc-execute: lxc-init is now bind-mounted in the container if it can't be found
  * lxc-start: containers now start daemonized by default
- * core: pivot\_root is now done with the use of lxc.pivotdir, as a result this option is now considered deprecated and will be removed in upcoming releases.
+ * core: pivot\_root is now done without the use of lxc.pivotdir, as a result this option is now considered deprecated and will be removed in upcoming releases.
  * core: with the switch to daemonized containers by default, close-all-fds is also now the default.
  * core: lxc.autodev was reworked, it no longer uses /dev/lxc, instead mounting a tmpfs directly on the container's /dev, it also now works with unprivileged containers
  * core: lxc.autodev is now on by default (can be overriden with lxc.autodev=0)
