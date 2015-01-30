@@ -47,7 +47,7 @@ This release was made possible by contributions from 84 developers.
  * init: Add identical support of systemd, upstart and sysvinit scripts
  * core: Add support for checkpoint and restore of containers using CRIU
  * core: Add a new aa\_allow\_incomplete flag to allow container startup with partial apparmor support
- * lxc-lua: Now a C binary installed by default (was a lua script)
+ * lxc-top: Now a C binary installed by default (was a lua script)
  * API: Addition of attach\_interface and detach\_interface
  * lxc-device: Now a C binary installed by default (was a python3 script)
  * lxc-config: Now supports querying lxc.cgroup.(use|pattern)
