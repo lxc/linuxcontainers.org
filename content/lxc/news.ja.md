@@ -33,7 +33,7 @@ Support for running systemd as the init system inside the container was also gre
 and should now work by default both for privileged and unprivileged containers when combined  
 with lxcfs and a recent systemd.
 -->
-コンテナ内の init として systemd の実行のサポートも大きな改良点です。lxcf と最新の systemd の組み合わせで、特権、非特権の両方のコンテナが動作するでしょう。
+コンテナ内の init として systemd の実行のサポートも大きな改良点です。lxcfs と最新の systemd の組み合わせで、特権、非特権の両方のコンテナが動作するでしょう。
 
 <!--
 Init scripts have now all been updated to provide the same feature set, which means that a lxcbr0 bridge  
