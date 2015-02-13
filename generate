@@ -13,10 +13,6 @@
 # with this program; if not, write to the Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-# Variables
-CONTENT_PATH = "content"
-TARGET_PATH = "output"
-
 # Required imports
 import bs4
 import jinja2
@@ -27,6 +23,10 @@ import pygments.formatters
 import os
 import shutil
 import subprocess
+
+# Variables
+CONTENT_PATH = "content"
+TARGET_PATH = "output"
 
 
 def pretty_print(html):
