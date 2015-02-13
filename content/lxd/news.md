@@ -4,6 +4,7 @@
 This is the initial LXD release.
 
 With this first release of LXD, it is possible to:
+
  * List containers
  * create, destroy, start, stop and execute commands into an Ubuntu 14.04 LTS amd64 container
  * Transfer files in and out of containers
