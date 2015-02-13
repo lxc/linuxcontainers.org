@@ -7,6 +7,10 @@
 
 
 
+    {"path": "/lxc",
+     "generator": "alias",
+     "meta": {"target": "/lxc/introduction"}},
+
     {"path": "/lxc/introduction",
      "title": "LXC - Introduction",
      "menu": ["LXC", "Introduction"],
@@ -90,6 +94,10 @@
 
 
 
+    {"path": "/lxd",
+     "generator": "alias",
+     "meta": {"target": "/lxd/introduction"}},
+
     {"path": "/lxd/introduction",
      "title": "LXD - Introduction",
      "menu": ["LXD", "Introduction"],
@@ -163,6 +171,9 @@
      "meta": {"url": "https://travis-ci.org/lxc/lxd"}},
 
 
+    {"path": "/lxcfs",
+     "generator": "alias",
+     "meta": {"target": "/lxcfs/introduction"}},
 
     {"path": "/lxcfs/introduction",
      "title": "LXCFS - Introduction",
@@ -220,6 +231,9 @@
      "meta": {"url": "https://github.com/lxc/lxcfs"}},
 
 
+    {"path": "/cgmanager",
+     "generator": "alias",
+     "meta": {"target": "/cgmanager/introduction"}},
 
     {"path": "/cgmanager/introduction",
      "title": "CGManager - Introduction",
