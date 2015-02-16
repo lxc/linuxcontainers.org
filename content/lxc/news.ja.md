@@ -12,7 +12,7 @@ whichever comes last. -->
 If you need a long-term supported version of LXC for use in production, we still strongly recommend  
 you stick to LXC 1.0 which is supported with frequent stable releases until April 2019.
 -->
-プロダクション環境での長期間のサポートが必要であれば、2019 年 4 月まで安定版リリースとしてサポートされる LXC 1.0 を使う続けることを強くおすすめします。
+プロダクション環境での長期間のサポートが必要であれば、2019 年 4 月まで安定版リリースとしてサポートされる LXC 1.0 を使い続けることを強くおすすめします。
 
 <!--
 While not strictly required, it is recommended that LXC 1.1 be used with cgmanager 0.35 (or higher)  
