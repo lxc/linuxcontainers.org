@@ -9,7 +9,7 @@ With this first release of LXD, it is possible to:
  * create, destroy, start, stop and execute commands into an Ubuntu 14.04 LTS amd64 container
  * Transfer files in and out of containers
  * Management of multiple LXD hosts through the lxc command line tool
- * Experiment with the LXD REST API
+ * Experiment with the LXD [REST API](/lxd/rest-api)
 
 Support for other container images, container migration, container configuration and profiles  
 and a stable REST API will be coming in the next few releases.
