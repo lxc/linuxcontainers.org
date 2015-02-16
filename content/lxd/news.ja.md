@@ -16,13 +16,13 @@ With this first release of LXD, it is possible to:
  * Ubuntu 14.04 LTS amd64 コンテナに対する create、destroy、start、stop、execute コマンドの実行 <!-- create, destroy, start, stop and execute commands into an Ubuntu 14.04 LTS amd64 container -->
  * コンテナの外と中の間でのファイルの転送 <!-- Transfer files in and out of containers -->
  * lxc コマンドラインツールを使った複数の LXD ホストの管理 <!-- Management of multiple LXD hosts through the lxc command line tool -->
- * LXD REST API の試験的な使用<!-- Experiment with the LXD REST API -->
+ * LXD [REST API](/lxd/rest-api) の試験的な使用<!-- Experiment with the LXD REST API -->
 
 <!--
 Support for other container images, container migration, container configuration and profiles  
 and a stable REST API will be coming in the next few releases.
 -->
-他のコンテナイメージ、コンテナマイグレーション、コンテナの設定と設定の表示、Stable な REST API はこの後のリリースで可能になるでしょう。
+他のコンテナイメージ、コンテナマイグレーション、コンテナの設定とプロファイル、Stable な REST API はこの後のリリースで可能になるでしょう。
 
 <!--
 This release is our first development snapshot and isn't intended for production use  
