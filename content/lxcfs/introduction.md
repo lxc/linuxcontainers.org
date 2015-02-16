@@ -1,4 +1,4 @@
-# What's LXFS?
+# What's LXCFS?
 
 LXCFS is a simple userspace filesystem designed to workaround some current limitations of the Linux kernel.
 
