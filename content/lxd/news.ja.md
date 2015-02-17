@@ -22,14 +22,14 @@ With this first release of LXD, it is possible to:
 Support for other container images, container migration, container configuration and profiles  
 and a stable REST API will be coming in the next few releases.
 -->
-他のコンテナイメージ、コンテナマイグレーション、コンテナの設定とプロファイル、Stable な REST API はこの後のリリースで可能になるでしょう。
+他のコンテナイメージ、コンテナマイグレーション、コンテナの設定とプロファイル、Stable な REST API はこの後のリリースで提供予定です。
 
 <!--
 This release is our first development snapshot and isn't intended for production use  
 and comes with no support statement from upstream. 
 (reported bugs and patches will be included in the next release)
 -->
-このリリースは最初の開発スナップショットであり、プロダクション利用向きではなく、サポートもありません。(報告されたバグとパッチは次のリリースに含まれる予定です)
+このリリースは最初の開発スナップショットであり、プロダクション利用向きではなく、サポートもありません。(報告されたバグ修正やパッチは次のリリースに含まれる予定です)
 
 ### Downloads
 <!--
