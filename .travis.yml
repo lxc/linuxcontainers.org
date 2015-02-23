@@ -9,7 +9,4 @@ before_install:
  - pip install beautifulsoup4 jinja2 markdown pygments pep8
 script: pep8 generate && python generate
 notifications:
-  irc:
-    channels:
-      - "chat.freenode.net#lxcontainers"
-    use_notice: true
+ webhooks: https://linuxcontainers.org/webhook-lxcbot/
