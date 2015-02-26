@@ -12,6 +12,13 @@ our PPA instead with:
     apt-get update
     apt-get install lxd
 
+The package creates a new "lxd" group which contains all users allowed to talk to  
+lxd over the local unix socket. All members of the "admin" and "sudoers" groups are automatically added.  
+If your user isn't a member of one of these groups, you'll need to manually add your user to the "lxd" group.
+
+Because group membership is only applied at login, you then either need to close  
+and re-open your user session or use the "newgrp lxd" command in the shell you're going to interact with lxd from.
+
 ## Other distributions
 As of today, only Ubuntu has packages for LXD. Users of other distributions  
 can directly download and build LXD from git or use our latest release tarball.  
