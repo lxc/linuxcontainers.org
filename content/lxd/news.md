@@ -1,5 +1,5 @@
+![Download icon](/static/img/containers.png)
 # News
-
 ## LXD 0.2 release announcement<span class="text-muted">27th of February 2015</span>
 
 The major changes for this release are:
