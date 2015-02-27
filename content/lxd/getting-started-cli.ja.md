@@ -18,6 +18,19 @@ our PPA instead with:
     apt-get update
     apt-get install lxd
 
+<!--
+The package creates a new "lxd" group which contains all users allowed to talk to  
+lxd over the local unix socket. All members of the "admin" and "sudoers" groups are automatically added.  
+If your user isn't a member of one of these groups, you'll need to manually add your user to the "lxd" group.
+-->
+パッケージは新しく "lxd" グループを作ります。このグループに所属するユーザ全員がローカルの Unix ソケット経由で lxd と通信を行います。"admin" と "sudoers" グループのメンバーは自動的に "lxd" グループに追加されます。あなたがこのグループのメンバーでない場合は、自身で "lxd" グループにあなたを追加する必要があります。
+
+<!--
+Because group membership is only applied at login, you then either need to close  
+and re-open your user session or use the "newgrp lxd" command in the shell you're going to interact with lxd from.
+-->
+グループメンバーシップはログイン時にのみ追加されるので、追加後にあなたのユーザセッションを閉じて開くか、LXD と通信したいシェル上で "newgrp lxd" コマンドを実行する必要があります
+
 ## 他のディストリビューション <!-- Other distributions -->
 <!--
 As of today, only Ubuntu has packages for LXD. Users of other distributions  
