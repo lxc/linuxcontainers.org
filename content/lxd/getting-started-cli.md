@@ -1,12 +1,6 @@
 # Installing LXD and the command line tool
 ## Ubuntu
-If you are on the current development release (vivid), then you can install LXD  
-directly from the repository with:
-
-    apt-get install lxd
-
-If you are on an older release or you want the latest version of LXD, you can use  
-our PPA instead with:
+As LXD evolves quite rapidly, we recommend Ubuntu users use our PPA:
 
     add-apt-repository ppa:ubuntu-lxc/lxd-daily
     apt-get update
