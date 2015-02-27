@@ -12,7 +12,7 @@ directly from the repository with:
 If you are on an older release or you want the latest version of LXD, you can use  
 our PPA instead with:
 -->
-古いリリースを使っているか、最新の LXD を使いたい場合は、代わりに PPA を使えます。
+古いリリースを使っているか、最新の LXD を使いたい場合は、代わりに PPA が使えます。
 
     add-apt-repository ppa:ubuntu-lxc/lxd-daily
     apt-get update
@@ -23,13 +23,13 @@ The package creates a new "lxd" group which contains all users allowed to talk t
 lxd over the local unix socket. All members of the "admin" and "sudoers" groups are automatically added.  
 If your user isn't a member of one of these groups, you'll need to manually add your user to the "lxd" group.
 -->
-パッケージは新しく "lxd" グループを作ります。このグループに所属するユーザ全員がローカルの Unix ソケット経由で lxd と通信を行います。"admin" と "sudoers" グループのメンバーは自動的に "lxd" グループに追加されます。あなたがこのグループのメンバーでない場合は、自身で "lxd" グループにあなたを追加する必要があります。
+パッケージは新しく "lxd" グループを作ります。このグループに所属するユーザ全員がローカルの Unix ソケット経由で lxd と通信を行います。"admin" と "sudoers" グループのメンバーは自動的に "lxd" グループに追加されます。あなたがこのグループのメンバーでない場合は、自身で "lxd" グループにユーザを追加する必要があります。
 
 <!--
 Because group membership is only applied at login, you then either need to close  
 and re-open your user session or use the "newgrp lxd" command in the shell you're going to interact with lxd from.
 -->
-グループメンバーシップはログイン時にのみ追加されるので、追加後にあなたのユーザセッションを閉じて開くか、LXD と通信したいシェル上で "newgrp lxd" コマンドを実行する必要があります
+グループメンバーシップはログイン時にのみ追加されるので、追加後にあなたのユーザセッションを閉じて再度開くか、LXD と通信したいシェル上で "newgrp lxd" コマンドを実行する必要があります
 
 ## 他のディストリビューション <!-- Other distributions -->
 <!--
@@ -51,7 +51,7 @@ We expect the way to import and keep your images up to date to change in the fut
 but today we have a simple python script which we ship with LXD and that will let you  
 import LXC images into it.
 -->
-将来的にはイメージをインポートして、最新に保つ方法は変更されるでしょうが、現時点では LXD に付属するシンプルな Python スクリプトがあり、それを使って LXC イメージをインポートできます。
+将来的にはイメージをインポートして最新に保つ方法は変更されるでしょうが、現時点では LXD に付属するシンプルな Python スクリプトがあり、それを使って LXC イメージをインポートできます。
 
 <!--
 So let's import some current Ubuntu and Debian images:
@@ -91,7 +91,7 @@ That will create and start a new ubuntu container as can be confirmed with:
 Your container here is called "first". You also could let LXD give it a random name by  
 just calling "lxc launch ubuntu" without a name.
 -->
-あなたが作成し、起動したコンテナは "first" という名前です。"lxc launch ubuntu" のように名前を指定せずにコマンドを実行し、ランダムな名前になるようにも LXD を実行できます。
+あなたが作成し、起動したコンテナは "first" という名前です。"lxc launch ubuntu" のように名前を指定せずにコマンドを実行し、ランダムな名前になるように LXD を実行することもできます。
 
 <!--
 Now that your container is running, you can get a shell inside it with:
@@ -135,7 +135,7 @@ And to remove it entirely:
 
     lxc delete first
 
-# 複数のホスト <!-- Multiple hosts ->
+# 複数のホスト <!-- Multiple hosts -->
 <!--
 The "lxc" command line tool can talk to multiple LXD servers.  
 It defaults to talking to the local one using a local UNIX socket.
