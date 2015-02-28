@@ -59,7 +59,7 @@ So let's import some current Ubuntu and Debian images:
 現時点の Ubuntu と Debian イメージをインポートしてみましょう:
 
     lxd-images import lxc ubuntu trusty amd64 --alias ubuntu
-    lxd-images import lxc debian wheezy amd64 --aiias debian
+    lxd-images import lxc debian wheezy amd64 --alias debian
 
 <!--
 That's going to take a little while as it downloads both images (total of about 150MB)  
