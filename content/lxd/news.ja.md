@@ -1,4 +1,39 @@
+![Download icon](/static/img/containers.png)
 # News
+## LXD 0.2 リリースのお知らせ <!-- LXD 0.2 release announcement --><span class="text-muted">2015 年 2 月 27 日 <!-- 27th of February 2015 --></span>
+
+<!--
+The major changes for this release are:
+-->
+このリリースの主な変更は以下です。
+
+ * ビルトインイメージストアの最初のバージョン <!-- Initial version of the built-in image store -->
+   * 全てのコンテナはイメージから作らなければならなくなりました <!-- All containers must now be created from images -->
+   * イメージは提供の "lxd-images" ツールを使って LXD にインポートできます <!-- Images can be imported into LXD by using the provided "lxd-images" tool -->
+   * イメージを見つけやすくするためのイメージのエイリアスを設定できます <!-- Image aliases can be setup to make it easier to find your images -->
+ * データベースバックエンド (全ての LXD データは SQLite のデータベースに保存されるようになりました) <!-- Database backend (all LXD data is now stored in a SQLite database) -->
+ * コンテナ設定の初期段階 (APIの一部のみ) <!-- Early stage of container configuration (partial API only) -->
+ * gcc-go 経由の多数のアーキテクチャ向けのビルドのサポート (全ての依存関係に互換性があるとは限りません) <!-- Support for building for many architectures through gcc-go (not all dependencies are compatible) -->
+ * exec のメカニズムの再構築 <!-- Reworked exec mechanism -->
+ * 多数のバグフィックス <!-- A lot of bugfixes -->
+
+<!--
+Please note that it's still early in the LXD development and that current LXD isn't intended  
+for production use and comes with no support statement from upstream.  
+(reported bugs and patches will be included in the next release)
+-->
+このリリースはまだ LXD 開発の初期であり、現時点の LXD はまだプロダクション利用向きではないことに注意してください。そしてサポートはありません。
+
+<!--
+We are still busy working on container migration, proper container configuration and a stable REST API.
+-->
+我々はまだコンテナのマイグレーション、適切にコンテナを設定できるようにすること、stable な REST API の開発に精力的に取り組んでいます。
+
+### ダウンロード <!-- Downloads -->
+<!--
+The release tarballs can be found on our [download page](/lxd/downloads).
+-->
+このリリースの tarball は [ダウンロードページ](/lxd/downloads) から取得できます。
 
 ## LXD 0.1 リリースのお知らせ <!-- LXD 0.1 release announcement --><span class="text-muted">2015 年 2 月 13 日 <!-- 13th of February 2015 --></span>
 
@@ -31,7 +66,7 @@ and comes with no support statement from upstream.
 -->
 このリリースは最初の開発スナップショットであり、プロダクション利用向きではなく、サポートもありません。(報告されたバグ修正やパッチは次のリリースに含まれる予定です)
 
-### Downloads
+### ダウンロード <!-- Downloads -->
 <!--
 The release tarballs can be found on our [download page](/lxd/downloads).
 -->
