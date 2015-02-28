@@ -1,18 +1,9 @@
 # LXD とコマンドラインツールのインストール <!-- Installing LXD and the command line tool -->
 ## Ubuntu
 <!--
-If you are on the current development release (vivid), then you can install LXD  
-directly from the repository with:
+As LXD evolves quite rapidly, we recommend Ubuntu users use our PPA:
 -->
-現時点の開発リリース (vivid) を使っている場合は、直接リポジトリから LXD をインストールできます。
-
-    apt-get install lxd
-
-<!--
-If you are on an older release or you want the latest version of LXD, you can use  
-our PPA instead with:
--->
-古いリリースを使っているか、最新の LXD を使いたい場合は、代わりに PPA が使えます。
+LXD は非常に急速に開発が進んでいますので、Ubuntu ユーザは我々の PPA を使うことをおすすめします。
 
     add-apt-repository ppa:ubuntu-lxc/lxd-daily
     apt-get update
