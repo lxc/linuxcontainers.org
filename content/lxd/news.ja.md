@@ -22,7 +22,7 @@ Please note that it's still early in the LXD development and that current LXD is
 for production use and comes with no support statement from upstream.  
 (reported bugs and patches will be included in the next release)
 -->
-このリリースはまだ LXD 開発の初期であり、現時点の LXD はまだプロダクション用途向きではないことに注意してください。そしてサポートはありません。
+このリリースはまだ LXD 開発の初期であり、現時点の LXD はまだプロダクション用途向きではないことに注意してください。そしてサポートはありません。(報告されたバグ修正やパッチは次のリリースに含まれる予定です)
 
 <!--
 We are still busy working on container migration, proper container configuration and a stable REST API.
