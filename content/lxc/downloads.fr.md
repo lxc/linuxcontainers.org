@@ -14,7 +14,7 @@ car elles sont suppportées plus longtemps (jusqu'à avril 2019).
 Pour les utilisateurs d'Ubuntu, nous avons aussi des PPAs officielles:
 
  * [stable](https://launchpad.net/~ubuntu-lxc/+archive/stable): "Backports" de la version stable actuelle
- * [daily-stable](https://launchpad.net/~ubuntu-lxc/+archive/daily-stable): Paquets journaliers de la branche "stable-1.0"
+ * [daily-stable](https://launchpad.net/~ubuntu-lxc/+archive/daily-stable-1.0): Paquets journaliers de la branche "stable-1.0"
  * [daily](https://launchpad.net/~ubuntu-lxc/+archive/daily): Paquets journaliers de la branche "master"
 
 # Version de développement actuelle
