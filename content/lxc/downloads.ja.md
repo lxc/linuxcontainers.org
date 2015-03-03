@@ -27,7 +27,7 @@ For Ubuntu users, we have official PPAs for LXC:
 Ubuntu ユーザは、LXC のオフィシャルな PPA があります。
 
  * [stable](https://launchpad.net/~ubuntu-lxc/+archive/stable): 現在の Stable リリースのバックポート<!-- Backports of the current stable release -->
- * [daily-stable](https://launchpad.net/~ubuntu-lxc/+archive/daily-stable): stable-1.0 ブランチのデイリービルド <!-- Daily builds of the stable-1.0 branch -->
+ * [daily-stable](https://launchpad.net/~ubuntu-lxc/+archive/daily-stable-1.0): stable-1.0 ブランチのデイリービルド <!-- Daily builds of the stable-1.0 branch -->
  * [daily](https://launchpad.net/~ubuntu-lxc/+archive/daily): master ブランチのデイリービルド <!-- Daily builds of the master branch -->
 
 # 現時点の開発バージョン <!-- Current development version -->
