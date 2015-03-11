@@ -9,8 +9,8 @@ The major changes for this release are:
    - Improved image handling, now supporting more compression algorithms and support for image export.
    - Initial support of live migration (requires particular container configuration)
    - Initial support of container configuration and profiles
-    * Support for disks and network interfaces
-    * Support for creating/deleting/assigining profiles
+     * Support for disks and network interfaces
+     * Support for creating/deleting/assigining profiles
    - Introduce a "default" profile which is applied to all new containers unless otherwise specified.
  * lxc:
    - Improved user experience for the various "list" commands
