@@ -5,26 +5,26 @@
 The major changes for this release are:
 
  * lxd:
-   - Reworked exec, now with separate interactive and non-interactive modes and proper support for escape sequences.
-   - Improved image handling, now supporting more compression algorithms and support for image export.
-   - Initial support of live migration (requires particular container configuration)
-   - Initial support of container configuration and profiles
-     * Support for disks and network interfaces
-     * Support for creating/deleting/assigining profiles
-   - Introduce a "default" profile which is applied to all new containers unless otherwise specified.
+    * Reworked exec, now with separate interactive and non-interactive modes and proper support for escape sequences.
+    * Improved image handling, now supporting more compression algorithms and support for image export.
+    * Initial support of live migration (requires particular container configuration)
+    * Initial support of container configuration and profiles
+        * Support for disks and network interfaces
+        * Support for creating/deleting/assigining profiles
+    * Introduce a "default" profile which is applied to all new containers unless otherwise specified.
  * lxc:
-   - Improved user experience for the various "list" commands
-   - Improved info command, now showing PID and IP addresses
-   - Implement the image info command, shows all image properties and aliases.
-   - Early (partial) french translation as an example translation of LXD.
-   - Support of the "edit" command for images and profiles.
+    * Improved user experience for the various "list" commands
+    * Improved info command, now showing PID and IP addresses
+    * Implement the image info command, shows all image properties and aliases.
+    * Early (partial) french translation as an example translation of LXD.
+    * Support of the "edit" command for images and profiles.
  * lxd-images:
-   - Now supports creating a minimal busybox image.
-   - Vastly improved image imports from images.linuxcontainers.org by no longer requiring repacking.
-   - Now working with python3.2
+    * Now supports creating a minimal busybox image.
+    * Vastly improved image imports from images.linuxcontainers.org by no longer requiring repacking.
+    * Now working with python3.2
  * Testsuite:
-   - Added tests for container configuration, profiles, devices, migration, exec and database.
-   - Now running using a minimal busybox image, making it run in just a few seconds.
+    * Added tests for container configuration, profiles, devices, migration, exec and database.
+    * Now running using a minimal busybox image, making it run in just a few seconds.
  * Many bugfixes
 
 Please note that it's still early in the LXD development and that current LXD isn't intended  
@@ -45,9 +45,9 @@ The release tarballs can be found on our [download page](/lxd/downloads).
 The major changes for this release are:
 
  * Initial version of the built-in image store
-   * All containers must now be created from images
-   * Images can be imported into LXD by using the provided "lxd-images" tool
-   * Image aliases can be setup to make it easier to find your images
+    * All containers must now be created from images
+    * Images can be imported into LXD by using the provided "lxd-images" tool
+    * Image aliases can be setup to make it easier to find your images
  * Database backend (all LXD data is now stored in a SQLite database)
  * Early stage of container configuration (partial API only)
  * Support for building for many architectures through gcc-go (not all dependencies are compatible)
