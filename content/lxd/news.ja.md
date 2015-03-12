@@ -58,7 +58,7 @@ The release tarballs can be found on our [download page](/lxd/downloads).
 <!--
 The major changes for this release are:
 -->
-このリリースの主な変更は以下です。
+このリリースでの主な変更点は以下の通りです。
 
  * ビルトインイメージストアの最初のバージョン <!-- Initial version of the built-in image store -->
    * 全てのコンテナはイメージから作らなければならなくなりました <!-- All containers must now be created from images -->
