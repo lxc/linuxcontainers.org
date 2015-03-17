@@ -1,5 +1,30 @@
 ![Download icon](/static/img/containers.png)
 # News
+## LXD 0.4 release announcement<span class="text-muted">17th of March 2015</span>
+
+The major changes for this release are:
+
+ * Support for starting a container from a remote image
+ * Support for copying/moving containers between hosts
+ * Improved command line (listing, aliases, profiles, partial hashes, ...)
+ * Improved error logging
+ * API fixes to more closely match the spec
+ * A lot of bugfixes
+
+Please note that it's still early in the LXD development and that current LXD isn't intended  
+for production use and comes with no support statement from upstream.  
+(reported bugs and patches will be included in the next release)
+
+At this point, most core LXD features are present but many of the  
+particular options aren't implemented yet (don't match our  
+specifications), we expect to make great progress in supporting all of  
+the expected options over the next couple of releases.
+
+### Downloads
+The release tarballs can be found on our [download page](/lxd/downloads).
+
+
+
 ## LXD 0.3 release announcement<span class="text-muted">10th of March 2015</span>
 
 The major changes for this release are:
