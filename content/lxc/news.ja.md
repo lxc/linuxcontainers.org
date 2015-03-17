@@ -1,4 +1,43 @@
 # News
+## LXC 1.1.1 リリースのお知らせ <!-- LXC 1.1.1 release announcement --><span class="text-muted">2015 年 3 月 16 日<!-- 16th of March 2015 --></span>
+<!--
+This is the first bugfix release for LXC 1.1.
+-->
+このリリースは LXC 1.1 の初めてのバグフィックスリリースです。
+
+### 変更点 <!-- Changes -->
+
+* config: デフォルトで FUSE へのアクセスが可能になりました (元々ほとんどのテンプレートそれぞれで許可されていました) <!-- Allow FUSE access by default (instead of individually in most templates) -->
+ * proc:mixed を使った場合、/proc/sys/net が書き込み可能になりました (ネットワーク設定に必要です)<!-- Make /proc/sys/net writable when using proc:mixed (required for network config) -->
+ * バックグラウンドで起動している LXC プロセスに識別可能なタイトルを設定するようにしました <!-- Set the process title of backgrounded LXC to an identifiable name -->
+ * lxc.mount.auto が設定されている場合の get\_config\_item を修正しました <!-- Fix get\_config\_item with lxc.mount.auto -->
+ * attach 時の tty の問題をいくつか修正しました <!-- Fix some tty issues with attach -->
+ * seccomp で powerpc のサポートを追加しました <!-- Add powerpc support to seccomp -->
+ * oracle: 非特権の場合の lxc-console の修正 <!-- Fix unprivileged lxc-console -->
+ * centos: 非特権の場合の lxc-console の修正 <!-- Fix unprivileged lxc-console -->
+ * lxc-top: 長いコンテナ名の場合の表示の修正 <!-- Fix long container names rendering -->
+ * LVM: Thin Provisioning を使わない LVM の場合に rdepends を使うようにしました (訳注: Thin Provisioning を使わない LVM の場合、スナップショットクローン元のコンテナが削除できなくなりました) <!-- Use rdepends for non-thinpool container clones -->
+ * gentoo: base イメージのダウンロードの修正 <!-- Fix base image download -->
+ * 色々な部分での man pages の更新 <!-- Various manpages update -->
+
+<!--
+Those stable fixes were brought to you by 13 individual contributors.
+-->
+これらの stable の修正は 13 名のコントリビュータによってなされました。
+
+### ダウンロード <!-- Downloads -->
+<!--
+The release tarballs may be found on our [download page](/lxc/downloads) and we expect most distributions  
+will very soon ship a packaged version of LXC 1.1.1.
+-->
+このリリースの tarball は [ダウンロードページ](/lxc/downloads) から取得できます。そして、各ディストリビューションがすぐに LXC 1.1.1 のパッケージをリリースするでしょう。
+
+<!--
+Should you be interested in individual changes or just looking at the detailed development history,  
+our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-1.1).
+-->
+個々の変更点に興味がある場合、そして開発の履歴を見たい場合、stable ブランチ (stable-1.1) は [Github](https://github.com/lxc/lxc/tree/stable-1.1) にあります。
+
 
 ## LXC 1.1.0 リリースのお知らせ <!-- LXC 1.1.0 release announcement --><span class="text-muted">2015 年 1 月 30 日</span>
 <!-- The LXC team is pleased to announce the release of LXC 1.1. -->
