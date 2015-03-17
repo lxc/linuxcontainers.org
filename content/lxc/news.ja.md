@@ -132,7 +132,7 @@ init スクリプトが更新されました。これにより LXC を使うい�
 ### ダウンロード<!-- Downloads -->
 <!-- The release tarballs may be found on our [download page](/lxc/downloads) and we expect most distributions  
 will very soon ship a packaged version of LXC 1.1.0, unless they decide to stick to the long term 1.0 release. -->
-このリリースの tarball は [ダウンロードページ](/lxc/downloads) から取得できます。そして、各ディストリビューションが長期サポートの 1.0 リリースの採用を続ける決定をしない場合は、LXC 1.1.0 のパッケージをリリースすることを期待しています。
+このリリースの tarball は [ダウンロードページ](/lxc/downloads) から取得できます。そして、各ディストリビューションが長期サポートの 1.0 リリースの採用を続ける決定をしない場合は、すぐに LXC 1.1.0 のパッケージをリリースするでしょう。
 
 <!--
 Should you be interested in individual changes or just looking at the detailed development history,  
@@ -242,7 +242,7 @@ Those stable fixes were brought to you by 27 individual contributors.
 The release tarballs may be found on our [download page](/lxc/downloads) and we expect most distributions  
 will very soon ship a packaged version of LXC 1.0.7.
 -->
-このリリースの tarball は [ダウンロードページ](/lxc/downloads) から取得できます。そして、各ディストリビューションがすぐに LXC 1.0.7 のパッケージをリリースすることを期待しています。
+このリリースの tarball は [ダウンロードページ](/lxc/downloads) から取得できます。そして、各ディストリビューションがすぐに LXC 1.0.7 のパッケージをリリースするでしょう。
 
 <!--
 Should you be interested in individual changes or just looking at the detailed development history,  
@@ -365,7 +365,7 @@ our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-1.0).
         <a href="/downloads">download page</a> and we expect most
         distributions will very soon ship a packaged version of LXC 1.0.6. -->
   このリリースの tarball は [ダウンロードページ](/lxc/downloads) から取得できます。
-  そして、各ディストリビューションがすぐに LXC 1.0.6 のパッケージをリリースすることを期待しています。
+  そして、各ディストリビューションがすぐに LXC 1.0.6 のパッケージをリリースするでしょう。
 
 
 <!-- Should you be interested in individual changes or just
@@ -464,7 +464,7 @@ our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-1.0).
         [download page</a> and we expect most
         distributions will very soon ship a packaged version of LXC 1.0.5. -->
   このリリースの tarball は [ダウンロードページ](/lxc/downloads) から取得できます。
-  そして、各ディストリビューションがすぐに LXC 1.0.5 のパッケージをリリースすることを期待しています。
+  そして、各ディストリビューションがすぐに LXC 1.0.5 のパッケージをリリースするでしょう。
 
 
 <!-- Should you be interested in individual changes or just
@@ -587,7 +587,7 @@ our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-1.0).
         [download page</a> and we expect most
         distributions will very soon ship a packaged version of LXC 1.0.4. -->
   このリリースの tarball は [ダウンロードページ](/lxc/downloads) から取得できます。
-  そして、各ディストリビューションがすぐに LXC 1.0.4 のパッケージをリリースすることを期待しています。
+  そして、各ディストリビューションがすぐに LXC 1.0.4 のパッケージをリリースするでしょう。
 
 
 <!-- Should you be interested in individual changes or just
@@ -666,7 +666,7 @@ our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-1.0).
         [download page</a> and we expect most
         distributions will very soon ship a packaged version of LXC 1.0.3. -->
   このリリースの tarball は [ダウンロードページ](/lxc/downloads) から取得できます。
-  そして、各ディストリビューションがすぐに LXC 1.0.3 のパッケージをリリースすることを期待しています。
+  そして、各ディストリビューションがすぐに LXC 1.0.3 のパッケージをリリースするでしょう。
 
 
 <!-- Should you be interested in individual changes or just
@@ -729,7 +729,7 @@ our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-1.0).
         [download page</a> and we expect most
         distributions will very soon ship a packaged version of LXC 1.0.2. -->
   このリリースの tarball は [ダウンロードページ](/lxc/downloads) から取得できます。
-  そして、各ディストリビューションがすぐに LXC 1.0.2 のパッケージをリリースすることを期待しています。
+  そして、各ディストリビューションがすぐに LXC 1.0.2 のパッケージをリリースするでしょう。
 
 
 <!-- Should you be interested in individual changes or just
@@ -824,7 +824,7 @@ our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-1.0).
         [download page</a> and we expect most
         distributions will very soon ship a packaged version of LXC 1.0.1. -->
   このリリースの tarball は [ダウンロードページ](/lxc/downloads) から取得できます。
-  そして、各ディストリビューションがすぐに LXC 1.0.1 のパッケージをリリースすることを期待しています。
+  そして、各ディストリビューションがすぐに LXC 1.0.1 のパッケージをリリースするでしょう。
 
 
 <!-- Should you be interested in individual changes or just
