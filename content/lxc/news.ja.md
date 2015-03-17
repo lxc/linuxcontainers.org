@@ -13,8 +13,9 @@ This is the first bugfix release for LXC 1.1.
  * lxc.mount.auto が設定されている場合の get\_config\_item を修正しました <!-- Fix get\_config\_item with lxc.mount.auto -->
  * attach 時の tty の問題をいくつか修正しました <!-- Fix some tty issues with attach -->
  * seccomp で powerpc のサポートを追加しました <!-- Add powerpc support to seccomp -->
- * oracle: 非特権の場合の lxc-console の修正 <!-- Fix unprivileged lxc-console -->
- * centos: 非特権の場合の lxc-console の修正 <!-- Fix unprivileged lxc-console -->
+ * oracle: 非特権の場合の lxc-console の修正を行いました <!-- Fix unprivileged lxc-console -->
+ * centos: 非特権の場合の lxc-console の修正を行いました <!-- Fix unprivileged lxc-console -->
+ * plamo: コンテナ内で /dev 以下のデバイスファイルの生成方法を変更しました <!-- Change way to create objects under /dev in the container -->
  * lxc-top: 長いコンテナ名の場合の表示の修正 <!-- Fix long container names rendering -->
  * LVM: Thin Provisioning を使わない LVM の場合に rdepends を使うようにしました (訳注: Thin Provisioning を使わない LVM の場合、スナップショットクローン元のコンテナが削除できなくなりました) <!-- Use rdepends for non-thinpool container clones -->
  * gentoo: base イメージのダウンロードの修正 <!-- Fix base image download -->

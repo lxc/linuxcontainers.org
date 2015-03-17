@@ -13,6 +13,7 @@ This is the first bugfix release for LXC 1.1.
  * Add powerpc support to seccomp
  * oracle: Fix unprivileged lxc-console
  * centos: Fix unprivileged lxc-console
+ * plamo: Change way to create objects under /dev in the container
  * lxc-top: Fix long container names rendering
  * LVM: Use rdepends for non-thinpool container clones
  * gentoo: Fix base image download
