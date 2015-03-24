@@ -1,5 +1,32 @@
 ![Download icon](/static/img/containers.png)
 # News
+## LXD 0.5 release announcement<span class="text-muted">24th of March 2015</span>
+
+The major changes for this release are:
+
+ * IPv6 support for remote servers
+ * Check if the remote server happens to have a certificate which is trusted by the system
+ * Implemented "lxc image copy"
+ * Improved remote handling (default configuration, support for https:// and unix:// and a bunch of convenient aliases)
+ * API consistency for key/value storage (always exported as dictionaries)
+ * Remote images can now be started by their long or short hash
+ * Remote image properties are now properly mirrored in the local cache
+ * A lot of database locking issues have been resolved
+
+Please note that it's still early in the LXD development and that current LXD isn't intended  
+for production use and comes with no support statement from upstream.  
+(reported bugs and patches will be included in the next release)
+
+At this point, most core LXD features are present but many of the  
+particular options aren't implemented yet (don't match our  
+specifications), we expect to make great progress in supporting all of  
+the expected options over the next couple of releases.
+
+### Downloads
+The release tarballs can be found on our [download page](/lxd/downloads).
+
+
+
 ## LXD 0.4 release announcement<span class="text-muted">17th of March 2015</span>
 
 The major changes for this release are:
