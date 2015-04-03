@@ -1,4 +1,15 @@
+![Download icon](/static/img/containers.png)
 # News
+
+## LXCFS 0.7 release announcement<span class="text-muted">3rd of April 2015</span>
+Bugfix release.
+
+ * Support for /proc/diskstats.
+ * Fixes a few bugs that were causing hangs.
+
+### Downloads
+The release tarballs can be found on our [download page](/lxcfs/downloads).
+
 
 ## LXCFS 0.6 release announcement<span class="text-muted">16th of February 2015</span>
 Bugfix release.
