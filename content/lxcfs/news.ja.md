@@ -1,5 +1,21 @@
 # News
 
+## LXCFS 0.7 リリースのお知らせ <!-- LXCFS 0.7 release announcement --><span class="text-muted">2015 年 4 月 3 日<!-- 3rd of April 2015 --></span>
+バグリックスのリリースです。
+<!--
+Bugfix release.
+-->
+
+ * /proc/diskstatsに対応しました <!-- Support for /proc/diskstats. -->
+ * ハングアップの原因となるバグをいくつか修正しました <!-- Fixes a few bugs that were causing hangs. -->
+
+### Downloads
+<!--
+The release tarballs can be found on our [download page](/lxcfs/downloads).
+-->
+このリリースの tarball は [ダウンロードページ](/lxcfs/downloads) から取得できます。
+
+
 ## LXCFS 0.6 リリースのお知らせ <!-- LXCFS 0.6 release announcement --><span class="text-muted">2015 年 2 月 16 日 <!-- 16th of February 2015 --></span>
 <!--
 Bugfix release.
