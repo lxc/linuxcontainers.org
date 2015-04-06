@@ -1,6 +1,6 @@
 ![Download icon](/static/img/containers.png)
 # News
-## LXD 0.5 release announcement<span class="text-muted">24th of March 2015</span>
+## LXD 0.5 リリースのお知らせ <!-- LXD 0.5 release announcement --><span class="text-muted">2015 年 3 月 24 日<!-- 24th of March 2015 --></span>
 
 <!--
 The major changes for this release are:

@@ -9,7 +9,7 @@ Bugfix release.
  * /proc/diskstatsに対応しました <!-- Support for /proc/diskstats. -->
  * ハングアップの原因となるバグをいくつか修正しました <!-- Fixes a few bugs that were causing hangs. -->
 
-### Downloads
+### ダウンロード <!-- Downloads -->
 <!--
 The release tarballs can be found on our [download page](/lxcfs/downloads).
 -->
