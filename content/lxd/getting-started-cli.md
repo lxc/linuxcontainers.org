@@ -58,11 +58,11 @@ Or just run a command directly:
 
 To pull a file from the container, use:
 
-    lxc file pull /etc/hosts .
+    lxc file pull first/etc/hosts .
 
 To push one, use:
 
-    lxc file push hosts /tmp
+    lxc file push hosts first/tmp
 
 To stop the container, simply do:
 
