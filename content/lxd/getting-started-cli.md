@@ -2,7 +2,7 @@
 ## Ubuntu
 As LXD evolves quite rapidly, we recommend Ubuntu users use our PPA:
 
-    add-apt-repository ppa:ubuntu-lxc/lxd-daily
+    add-apt-repository ppa:ubuntu-lxc/lxd-git-master
     apt-get update
     apt-get install lxd
 

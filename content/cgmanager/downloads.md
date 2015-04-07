@@ -4,11 +4,13 @@ At this time, both Ubuntu and Debian provide cgmanager packages.
 On those, CGManager will typically come as a dependency of LXC or even be installed by default.  
 If not, just install it using your package manager.
 
-For Ubuntu users, the official LXC PPAs also contain up to date versions of CGManager:
+For Ubuntu users, we have an official PPA for CGManager:
 
- * [stable](https://launchpad.net/~ubuntu-lxc/+archive/stable): Backports of the current stable release of LXC
- * [daily-stable](https://launchpad.net/~ubuntu-lxc/+archive/daily-stable): Daily builds of the LXC stable-1.0 branch
- * [daily](https://launchpad.net/~ubuntu-lxc/+archive/daily): Daily builds of the LXC master branch
+ * [cgmanager-stable](https://launchpad.net/~ubuntu-lxc/+archive/cgmanager-stable): Latest stable release
+
+And for those who want development snapshots:
+
+ * [cgmanager-git-master](https://launchpad.net/~ubuntu-lxc/+archive/cgmanager-git-master): "master" branch
 
 # Current development version
 

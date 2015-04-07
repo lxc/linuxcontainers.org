@@ -11,7 +11,7 @@ For Ubuntu users, there's also a daily PPA for LXD:
 -->
 Ubuntuユーザは、公式のLXC PPAにも最新の lxd があります:
 
- * [lxd-daily](https://launchpad.net/~ubuntu-lxc/+archive/lxd-daily): Daily builds of the LXD master branch
+ * [lxd-git-master](https://launchpad.net/~ubuntu-lxc/+archive/lxd-git-master): Daily builds of the LXD master branch
 
 # 現時点の開発バージョン <!-- Current development version -->
 

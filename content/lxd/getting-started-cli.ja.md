@@ -5,7 +5,7 @@ As LXD evolves quite rapidly, we recommend Ubuntu users use our PPA:
 -->
 LXD は非常に急速に開発が進んでいますので、Ubuntu ユーザは我々の PPA を使うことをおすすめします。
 
-    add-apt-repository ppa:ubuntu-lxc/lxd-daily
+    add-apt-repository ppa:ubuntu-lxc/lxd-git-master
     apt-get update
     apt-get install lxd
 

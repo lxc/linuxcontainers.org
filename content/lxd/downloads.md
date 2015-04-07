@@ -3,9 +3,13 @@
 Currently only Ubuntu includes lxd and that's only in the current development release.  
 We expect it to be soon picked up by the other distributions who already ship recent LXC today.
 
-For Ubuntu users, there's also a daily PPA for LXD:
+For Ubuntu users, we have an official PPA for LXD:
 
- * [lxd-daily](https://launchpad.net/~ubuntu-lxc/+archive/lxd-daily): Daily builds of the LXD master branch
+ * [lxd-stable](https://launchpad.net/~ubuntu-lxc/+archive/lxd-stable): Latest stable release
+
+And for those who want development snapshots:
+
+ * [lxd-git-master](https://launchpad.net/~ubuntu-lxc/+archive/lxd-git-master): "master" branch
 
 # Current development version
 

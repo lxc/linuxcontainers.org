@@ -11,9 +11,14 @@ stable release which we will support until April 2019.
 
 For Ubuntu users, we have official PPAs for LXC:
 
- * [stable](https://launchpad.net/~ubuntu-lxc/+archive/stable): Backports of the current stable release
- * [daily-stable](https://launchpad.net/~ubuntu-lxc/+archive/daily-stable-1.0): Daily builds of the stable-1.0 branch
- * [daily](https://launchpad.net/~ubuntu-lxc/+archive/daily): Daily builds of the master branch
+ * [lxc-lts](https://launchpad.net/~ubuntu-lxc/+archive/lxc-lts): Latest long term release
+ * [lxc-stable](https://launchpad.net/~ubuntu-lxc/+archive/lxc-stable): Latest stable release
+
+And for those who want development snapshots:
+
+ * [lxc-git-master](https://launchpad.net/~ubuntu-lxc/+archive/lxc-git-master): "master" branch
+ * [lxc-git-stable-1.0](https://launchpad.net/~ubuntu-lxc/+archive/lxc-git-stable-1.0): "stable-1.0" branch
+ * [lxc-git-stable-1.1](https://launchpad.net/~ubuntu-lxc/+archive/lxc-git-stable-1.1): "stable-1.1" branch
 
 # Current development version
 

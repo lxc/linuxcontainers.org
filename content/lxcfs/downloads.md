@@ -3,9 +3,13 @@
 Currently only Ubuntu includes lxcfs and that's only in the current development release.  
 We expect it to be soon picked up by the other distributions who already ship cgmanager today.
 
-For Ubuntu users, the official LXC PPAs also contain up to date versions of lxcfs:
+For Ubuntu users, we have an official PPA for LXCFS:
 
- * [daily](https://launchpad.net/~ubuntu-lxc/+archive/daily): Daily builds of the LXC master branch
+ * [lxcfs-stable](https://launchpad.net/~ubuntu-lxc/+archive/lxcfs-stable): Latest stable release
+
+And for those who want development snapshots:
+
+ * [lxcfs-git-master](https://launchpad.net/~ubuntu-lxc/+archive/lxcfs-git-master): "master" branch
 
 # Current development version
 
