@@ -1,5 +1,29 @@
 ![Download icon](/static/img/containers.png)
 # News
+## LXD 0.6 release announcement<span class="text-muted">7th of April 2015</span>
+
+The major changes for this release are:
+
+ * Added a vagrant configuration file
+ * The container's MAC address is now persistent
+ * Variety of fixes regarding remote servers handling
+ * Recursive query support (massive speed improvement for image servers)
+ * TLS now configured to only support strong ciphers
+ * Support setting aliases at image import time
+ * Improved test coverage
+ * Improved error messages on the client
+ * Fix privileged containers handling
+ * LXD can now be built on powerpc
+ * And a lot more bugfixes and tweaks
+
+Please note that it's still early in the LXD development and that current LXD isn't intended  
+for production use and comes with no support statement from upstream.  
+(reported bugs and patches will be included in the next release)
+
+### Downloads
+The release tarballs can be found on our [download page](/lxd/downloads).
+
+
 ## LXD 0.5 release announcement<span class="text-muted">24th of March 2015</span>
 
 The major changes for this release are:
@@ -26,7 +50,6 @@ the expected options over the next couple of releases.
 The release tarballs can be found on our [download page](/lxd/downloads).
 
 
-
 ## LXD 0.4 release announcement<span class="text-muted">17th of March 2015</span>
 
 The major changes for this release are:
@@ -49,7 +72,6 @@ the expected options over the next couple of releases.
 
 ### Downloads
 The release tarballs can be found on our [download page](/lxd/downloads).
-
 
 
 ## LXD 0.3 release announcement<span class="text-muted">10th of March 2015</span>
@@ -114,6 +136,7 @@ We are still busy working on container migration, proper container configuration
 
 ### Downloads
 The release tarballs can be found on our [download page](/lxd/downloads).
+
 
 ## LXD 0.1 release announcement<span class="text-muted">13th of February 2015</span>
 This is the initial LXD release.
