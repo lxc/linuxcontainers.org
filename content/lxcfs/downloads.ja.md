@@ -7,11 +7,18 @@ We expect it to be soon picked up by the other distributions who already ship cg
 現時点ではUbuntuの最新の開発リリースにのみlxcfsが含まれています。すでに現時点でcgmanagerパッケージをリリースしている他のディストリビューションでも今後リリースが行われるでしょう。
 
 <!--
-For Ubuntu users, the official LXC PPAs also contain up to date versions of lxcfs:
+For Ubuntu users, we have an official PPA for LXCFS:
 -->
-Ubuntuユーザは、公式のLXC PPAにも最新のlxcfsがあります:
+Ubuntuユーザは、LXCFS の公式 PPA があります:
 
- * [daily](https://launchpad.net/~ubuntu-lxc/+archive/daily): LXC master ブランチのデイリービルド <!-- Daily builds of the LXC master branch -->
+* [lxcfs-stable](https://launchpad.net/~ubuntu-lxc/+archive/lxcfs-stable): 最新の stable リリース <!-- Latest stable release -->
+
+<!--
+And for those who want development snapshots:
+-->
+開発中のスナップショットが必要な場合はこちらです:
+
+ * [lxcfs-git-master](https://launchpad.net/~ubuntu-lxc/+archive/lxcfs-git-master): "master" ブランチ <!-- "master" branch -->
 
 # 現時点の開発バージョン <!-- Current development version -->
 

@@ -103,14 +103,14 @@ To pull a file from the container, use:
 -->
 コンテナからファイルを取得するには以下のようにします:
 
-    lxc file pull /etc/hosts .
+    lxc file pull first/etc/hosts .
 
 <!--
 To push one, use:
 -->
 コンテナへファイルを送るには以下のようにします:
 
-    lxc file push hosts /tmp
+    lxc file push hosts first/tmp
 
 <!--
 To stop the container, simply do:
