@@ -11,13 +11,18 @@ If not, just install it using your package manager.
 この 2 つでは、CGManager は一般的には LXC の依存パッケージとしてインストールされるか、デフォルトでインストールされるでしょう。
 
 <!--
-For Ubuntu users, the official LXC PPAs also contain up to date versions of CGManager:
+For Ubuntu users, we have an official PPA for CGManager:
 -->
-Ubuntu ユーザは、公式の LXC の PPA が CGManager のデイリーバージョンも提供しています:
+Ubuntu ユーザは、CGManager の公式 PPA があります:
 
- * [stable](https://launchpad.net/~ubuntu-lxc/+archive/stable): LXC の現在の stable リリース のバックポート
- * [daily-stable](https://launchpad.net/~ubuntu-lxc/+archive/daily-stable): LXC の stable-1.0 ブランチのデイリービルド
- * [daily](https://launchpad.net/~ubuntu-lxc/+archive/daily): LXC の master ブランチのデイリービルド
+ * [cgmanager-stable](https://launchpad.net/~ubuntu-lxc/+archive/cgmanager-stable): 最新の stable リリース <!-- Latest stable release -->
+
+<!--
+And for those who want development snapshots:
+-->
+開発中のスナップショットが必要な場合はこちらです:
+
+ * [cgmanager-git-master](https://launchpad.net/~ubuntu-lxc/+archive/cgmanager-git-master): "master" ブランチ <!-- "master" branch -->
 
 # 現時点の開発バージョン
 

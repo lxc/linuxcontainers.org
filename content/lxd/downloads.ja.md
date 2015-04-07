@@ -7,11 +7,18 @@ We expect it to be soon picked up by the other distributions who already ship re
 現時点では Ubuntu だけが lxd のパッケージを提供しています。lxd パッケージが存在する Ubuntu のバージョンは現在の開発リリースのみです。すでに現時点で LXC パッケージをリリースしている他のディストリビューションでも今後リリースが行われるでしょう。
 
 <!--
-For Ubuntu users, there's also a daily PPA for LXD:
+For Ubuntu users, we have an official PPA for LXD:
 -->
-Ubuntuユーザは、公式のLXC PPAにも最新の lxd があります:
+Ubuntuユーザは、LXD の公式 PPA があります:
 
- * [lxd-git-master](https://launchpad.net/~ubuntu-lxc/+archive/lxd-git-master): Daily builds of the LXD master branch
+ * [lxd-stable](https://launchpad.net/~ubuntu-lxc/+archive/lxd-stable): 最新の stable リリース <!-- Latest stable release -->
+
+<!--
+And for those who want development snapshots:
+-->
+開発中のスナップショットが必要な場合はこちらです:
+
+ * [lxd-git-master](https://launchpad.net/~ubuntu-lxc/+archive/lxd-git-master): "master" ブランチ <!-- "master" branch -->
 
 # 現時点の開発バージョン <!-- Current development version -->
 

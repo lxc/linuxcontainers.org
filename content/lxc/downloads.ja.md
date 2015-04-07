@@ -24,11 +24,19 @@ Production 環境では、2019 年 4 月までの長期サポートの Stable �
 <!--
 For Ubuntu users, we have official PPAs for LXC:
 -->
-Ubuntu ユーザは、LXC のオフィシャルな PPA があります。
+Ubuntu ユーザは、LXC のオフィシャルな PPA があります:
 
- * [stable](https://launchpad.net/~ubuntu-lxc/+archive/stable): 現在の Stable リリースのバックポート<!-- Backports of the current stable release -->
- * [daily-stable](https://launchpad.net/~ubuntu-lxc/+archive/lxc-git-stable-1.0): stable-1.0 ブランチのデイリービルド <!-- Daily builds of the stable-1.0 branch -->
- * [daily](https://launchpad.net/~ubuntu-lxc/+archive/daily): master ブランチのデイリービルド <!-- Daily builds of the master branch -->
+ * [lxc-lts](https://launchpad.net/~ubuntu-lxc/+archive/lxc-lts): 最新の長期サポート版リリース <!-- Latest long term release -->
+ * [lxc-stable](https://launchpad.net/~ubuntu-lxc/+archive/lxc-stable): 最新の stable リリース <!-- Latest stable release -->
+
+<!--
+And for those who want development snapshots:
+-->
+開発中のスナップショットが必要な場合はこちらです:
+
+ * [lxc-git-master](https://launchpad.net/~ubuntu-lxc/+archive/lxc-git-master): "master" ブランチ <!-- "master" branch -->
+ * [lxc-git-stable-1.0](https://launchpad.net/~ubuntu-lxc/+archive/lxc-git-stable-1.0): "stable-1.0" ブランチ <!-- "stable-1.0" branch -->
+ * [lxc-git-stable-1.1](https://launchpad.net/~ubuntu-lxc/+archive/lxc-git-stable-1.1): "stable-1.1" ブランチ <!-- "stable-1.1" branch -->
 
 # 現時点の開発バージョン <!-- Current development version -->
 
