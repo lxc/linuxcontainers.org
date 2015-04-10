@@ -1,5 +1,32 @@
 ![Download icon](/static/img/containers.png)
 # News
+## LXC 1.1.2 release announcement<span class="text-muted">10th of April 2015</span>
+This is the second bugfix release for LXC 1.1.
+
+### Changes
+
+ * core: Fix non-tty stdin during attach
+ * core: Improved container logging
+ * core: Fix cgroup handling for unprivileged containers
+ * core: Properly destroy overlayfs based containers
+ * core: Fix some multi-threading issues
+ * core: Various fixes to checkpoint/restore with CRIU
+ * docs: Various manpage updates
+ * tests: Fix hang in apparmor test
+ * centos: Properly detect the yum version
+ * centos: Don't mistakenly change tty.conf of the host
+ * gentoo: Fix /dev/shm handling
+
+Those stable fixes were brought to you by 9 individual contributors.
+
+### Downloads
+The release tarballs may be found on our [download page](/lxc/downloads) and we expect most distributions  
+will very soon ship a packaged version of LXC 1.1.1.
+
+Should you be interested in individual changes or just looking at the detailed development history,  
+our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-1.1).
+
+
 ## LXC 1.1.1 release announcement<span class="text-muted">16th of March 2015</span>
 This is the first bugfix release for LXC 1.1.
 
