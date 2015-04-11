@@ -21,7 +21,7 @@ Those stable fixes were brought to you by 9 individual contributors.
 
 ### Downloads
 The release tarballs may be found on our [download page](/lxc/downloads) and we expect most distributions  
-will very soon ship a packaged version of LXC 1.1.1.
+will very soon ship a packaged version of LXC 1.1.2.
 
 Should you be interested in individual changes or just looking at the detailed development history,  
 our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-1.1).
