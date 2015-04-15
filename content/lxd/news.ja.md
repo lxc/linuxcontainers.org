@@ -1,5 +1,32 @@
 ![Download icon](/static/img/containers.png)
 # News
+## LXC 0.7 リリースのお知らせ <!-- LXD 0.7 release announcement --><span class="text-muted">2015 年 4 月 14 日 <!-- 14th of April 2015 --></span>
+
+<!--
+The major changes for this release are:
+-->
+このリリースの主な変更点は以下の通りです。
+
+ * コンテナがプライベートイメージから起動できるようになりました <!-- Containers can now be started from a private image -->
+ * 一時的 (Ephemeral) なコンテナをサポートしました <!-- Ephemeral containers are supported -->
+ * デバッグの改良を行いました <!-- Improved debugging -->
+ * 一部のドキュメントを更新しました <!-- Some documentation update -->
+ * いくつか小さい修正を行いました <!-- A few more minor fixes -->
+
+<!--
+Please note that it's still early in the LXD development and that current LXD isn't intended  
+for production use and comes with no support statement from upstream.  
+(reported bugs and patches will be included in the next release
+-->
+このリリースはまだ LXD 開発の初期であり、現時点の LXD はまだプロダクション用途向きではないことに注意してください。そしてサポートはありません。(報告されたバグ修正やパッチは次のリリースに含まれる予定です)
+
+### ダウンロード <!-- Downloads -->
+<!--
+The release tarballs can be found on our [download page](/lxd/downloads).
+-->
+このリリースの tarball は [ダウンロードページ](/lxd/downloads) から取得できます。
+
+
 ## LXD 0.6 リリースのお知らせ <!-- LXD 0.6 release announcement --><span class="text-muted">2015 年 4 月 7 日 <!-- 7th of April 2015 --></span>
 
 <!--
