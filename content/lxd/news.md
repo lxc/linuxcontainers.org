@@ -1,5 +1,23 @@
 ![Download icon](/static/img/containers.png)
 # News
+## LXD 0.7 release announcement<span class="text-muted">14th of April 2015</span>
+
+The major changes for this release are:
+
+ * Containers can now be started from a private image
+ * Ephemeral containers are supported
+ * Improved debugging
+ * Some documentation update
+ * A few more minor fixes
+
+Please note that it's still early in the LXD development and that current LXD isn't intended  
+for production use and comes with no support statement from upstream.  
+(reported bugs and patches will be included in the next release)
+
+### Downloads
+The release tarballs can be found on our [download page](/lxd/downloads).
+
+
 ## LXD 0.6 release announcement<span class="text-muted">7th of April 2015</span>
 
 The major changes for this release are:
