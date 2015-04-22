@@ -13,6 +13,7 @@
 
 # 外部のブログと紹介記事 <!-- External blogs and reviews -->
  * [Hands on With LXD on Tutum Blog](http://blog.tutum.co/2014/12/09/hands-on-with-lxd)
+ * [LXDを試してみた by Hiroaki Nakamura](http://hnakamur.github.io/blog/2014/12/01/lxd-the-linux-container-daemon/) (日本語)
  * [10分で試せる lxd by 加藤泰文](http://d.hatena.ne.jp/defiant/20150311/1426069809) (日本語)
  * [lxd を使ったライブマイグレーション (1) by 加藤泰文](http://d.hatena.ne.jp/defiant/20150415/1429089615) (日本語)
  * [lxd を使ったライブマイグレーション (2) by 加藤泰文](http://d.hatena.ne.jp/defiant/20150415/1429090896) (日本語)
