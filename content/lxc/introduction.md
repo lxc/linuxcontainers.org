@@ -49,10 +49,12 @@ specific versions of LXC can enjoy long term support with frequent bugfix update
 Other releases will typically be maintained on a best effort basis which  
 typically means until the next stable release is out.
 
+Commercial support for LXC on Ubuntu LTS releaess can be obtained from [Canonical Ltd](https://www.canonical.com).
+
 ## Extended support
 At this time, the only such release is LXC 1.0 which was released in  
 February 2014 and will be supported until April 2019 (a bit over 5 years).
 
-This is thanks to Ubuntu who included LXC 1.0 in Ubuntu 14.04 LTS (Long  
-Term Support) and work closely with LXC upstream to maintain the stable  
-1.0 branch.
+This is thanks to [Canonical Ltd](https://www.canonical.com) and Ubuntu who included  
+LXC 1.0 in Ubuntu 14.04 LTS (Long Term Support) and work closely with LXC upstream  
+to maintain the stable 1.0 branch.

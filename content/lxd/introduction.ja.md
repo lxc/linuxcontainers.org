@@ -22,7 +22,7 @@ The daemon exports a REST API both locally and if enabled, over the network.
 <!--
 The command line tool is designed to be a very simple, yet very powerful tool  
 to manage all your containers. It can handle connect to multiple container hosts  
-and easily give you an overview of all the containers on your network,   
+and easily give you an overview of all the containers on your network,  
 let you create some more where you want them and even move them around while they're running.
 -->
 コマンドラインツールは非常にシンプルに設計されています。しかし、全てのコンテナを管理するための非常にパワフルなツールです。

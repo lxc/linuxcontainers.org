@@ -43,3 +43,15 @@ The cgmanager API is only available on that separate D-Bus socket, cgmanager its
 to the system bus and so a running dbus daemon isn't a requirement of cgmanager/cgproxy.
 
 You can read more about the D-Bus API [here](/cgmanager/dbus-api).
+
+# Licensing
+CGManager is free software, most of the code is released under the terms of the GNU LGPLv2.1+ license,  
+some binaries are released under the GNU GPLv2 license.
+
+The default license for the project is the GNU LGPLv2.1+.
+
+# Support
+CGManager's stable release support relies on the Linux distributions  
+and their own commitment to pushing stable fixes and security updates.
+
+Commercial support for CGManager on Ubuntu LTS releaess can be obtained from [Canonical Ltd](https://www.canonical.com).
