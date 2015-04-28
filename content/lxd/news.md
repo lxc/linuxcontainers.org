@@ -1,5 +1,21 @@
 ![Download icon](/static/img/containers.png)
 # News
+## LXD 0.8 release announcement<span class="text-muted">28th of April 2015</span>
+
+The major changes for this release are:
+
+ * Fixed uid/gid in lxc file push
+ * Respect PROXY environment variables
+ * Fix database locking issues
+ * Add more debugging options
+ * Various fixes to ephemeral containers
+ * Fix creating a new container from a snapshot
+ * When available, use btrfs subvolumes for faster container creation
+
+### Downloads
+The release tarballs can be found on our [download page](/lxd/downloads).
+
+
 ## LXD 0.7 release announcement<span class="text-muted">14th of April 2015</span>
 
 The major changes for this release are:
