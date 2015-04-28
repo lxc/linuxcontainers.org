@@ -1,3 +1,5 @@
+![Download icon](/static/img/containers.png)
+
 # What's LXD?
 LXD is a container "hypervisor" and a new user experience for LXC.
 
@@ -20,8 +22,6 @@ running workloads on containers rather than virtual machines.
 
 The LXD project was founded and is currently led by [Canonical Ltd](https://www.canonical.com)  
 and Ubuntu with contributions from a range of other companies and individual contributors.
-
-LXD is currently in very active development and isn't yet ready for production use.
 
 # Features
 Some of the biggest features of LXD are:
@@ -48,3 +48,5 @@ LXD's stable release support relies on the Linux distributions
 and their own commitment to pushing stable fixes and security updates.
 
 Commercial support for LXD on Ubuntu LTS releaess can be obtained from [Canonical Ltd](https://www.canonical.com).
+
+[<img src="/static/img/canonical.png" alt="Canonical logo"/ style="display:block;float:none;margin-left:auto;margin-right:auto;padding-top:1em;padding-bottom:1em;">](http://www.canonical.com)
