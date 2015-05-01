@@ -1,11 +1,11 @@
 ![Download icon](/static/img/containers.png)
 # News
-## LXD 0.8.1 release announcement<span class="text-muted">29th of April 2015</span>
+## LXD 0.8.1 リリースのお知らせ <!-- LXD 0.8.1 release announcement --><span class="text-muted">2015 年 4 月 29 日 <!-- 29th of April 2015 --></span>
 
 <!--
 Bugfix only release on top of 0.8 fixing some regressions:
 -->
-0.8 で生じたバグフィックスのみを目的とするリリースです。
+0.8 で生じたバグの修正のみを目的とするリリースです。
 
  * 全てのアーキテクチャでのビルドの問題を修正しました <!-- Fix building on all architectures -->
  * go-protobuf リポジトリの URL を変更しました <!-- Change the go-protobuf repository URL -->
