@@ -138,7 +138,7 @@ To talk to a remote LXD, you can simply add it with:
 -->
 リモートの LXD と通信するには、以下のようにホストを追加します:
 
-    lxc remote host-a https://<ip address>:8443
+    lxc remote add host-a https://<ip address>:8443
 
 <!--
 And after that, use all the same command as above but prefixing the container  
