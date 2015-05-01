@@ -85,7 +85,7 @@ The python bindings are typically very close to the C API except for the part wh
 proper objects instead of structs.
 
 The binding is made in two parts, the raw "\_lxc" C extension and the "lxc" python overlay  
-which provides the improve user experience.
+which provides an improved user experience.
 
 Loading a container called "test" can be done with:
 
