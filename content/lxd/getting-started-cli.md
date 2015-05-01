@@ -78,7 +78,7 @@ It defaults to talking to the local one using a local UNIX socket.
 
 To talk to a remote LXD, you can simply add it with:
 
-    lxc remote host-a https://<ip address>:8443
+    lxc remote add host-a https://<ip address>:8443
 
 And after that, use all the same command as above but prefixing the container  
 and images name with the remote host like:
