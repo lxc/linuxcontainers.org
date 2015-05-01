@@ -1,5 +1,4 @@
 # LXD とは? <!-- What's LXD? -->
-
 <!--
 LXD is a container "hypervisor" and a new user experience for LXC.
 -->
@@ -35,12 +34,12 @@ running workloads on containers rather than virtual machines.
 OpenStack プラグインは lxd ホストをコンピュートノードとして使えます。そして、実行中の作業を仮想マシンでなくコンテナ上で実行できます。
 
 <!--
-LXD is currently in very active development and isn't yet ready for production use.
+The LXD project was founded and is currently led by [Canonical Ltd](http://www.canonical.com)  
+and Ubuntu with contributions from a range of other companies and individual contributors.
 -->
-LXD は現在非常に活発に開発中で、まだ本番環境で利用するレベルには達していません。
+LXD プロジェクトは [Canonical Ltd](http://www.canonical.com) と Ubuntu によって設立され、現在は様々な企業や個人のコントリビュータの貢献のもとで [Canonical Ltd](http://www.canonical.com) と Ubuntu が主導しています。
 
 # 機能<!-- Features -->
-
 <!--
 Some of the biggest features of LXD are:
 -->
@@ -53,7 +52,6 @@ LXDの主要な特長には以下のようなものがあります:
  * ライブマイグレーション <!-- Live migration -->
 
 # LXC との関係 <!-- Relationship with LXC -->
-
 <!--
 LXD isn't a rewrite of LXC, in fact it's building on top of LXC to provide a new,  
 better user experience. Under the scene, LXD uses LXC through liblxc and its Go binding  
@@ -69,8 +67,21 @@ with the added features that come from being controllable over the network.
 LXD は基本的には LXC ツールとディストリビューションテンプレートの仕組みの代わりとなる新しいもので、ネットワーク経由でコントロールできる特長を追加したものです。
 
 # ライセンス <!-- Licensing -->
-
 <!--
 LXD is free software and is developed under the Apache 2 license.
 -->
 LXD はフリーソフトウェアであり、Apache 2 ライセンスのもとで開発されています。
+
+# サポート <!-- Support -->
+<!--
+LXD's stable release support relies on the Linux distributions
+and their own commitment to pushing stable fixes and security updates.
+-->
+LXD の stable リリースは各 Linux ディストリビューションの stable に対する修正とセキュリティアップデートのポリシーに依存します。
+
+<!--
+Commercial support for LXD on Ubuntu LTS releaess can be obtained from [Canonical Ltd](http://www.canonical.com).
+-->
+Ubuntu LTS リリースに含まれる LXD に対する商用サポートは [Canonical Ltd](http://www.canonical.com) から受けることができます。
+
+[<img src="/static/img/canonical.png" alt="Canonical logo"/ style="display:block;float:none;margin-left:auto;margin-right:auto;padding-top:1em;padding-bottom:1em;">](http://www.canonical.com)

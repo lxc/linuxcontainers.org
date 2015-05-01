@@ -82,6 +82,11 @@ typically means until the next stable release is out.
 -->
 他のリリースは、一般的に次の stable リリースが出るまでを指すベストエフォートの原則で、一般的にはメンテナンスされるでしょう。
 
+<!--
+Commercial support for LXC on Ubuntu LTS releaess can be obtained from [Canonical Ltd](http://www.canonical.com).
+-->
+Ubuntu LTS リリースに含まれる LXC に対する商用サポートは [Canonical Ltd](http://www.canonical.com) から受けることができます。
+
 ## 延長サポート <!-- Extended support -->
 
 <!--
@@ -91,8 +96,8 @@ February 2014 and will be supported until April 2019 (a bit over 5 years).
 現時点で、2014 年 2 月にリリースされた LXC 1.0 だけがサポート対象のリリースとなります。LXC 1.0 は 2019 年 4 月まで 5 年ほどサポートされる予定です。
 
 <!--
-This is thanks to Ubuntu who included LXC 1.0 in Ubuntu 14.04 LTS (Long  
-Term Support) and work closely with LXC upstream to maintain the stable  
-1.0 branch.
+This is thanks to [Canonical Ltd](http://www.canonical.com) and Ubuntu who included
+LXC 1.0 in Ubuntu 14.04 LTS (Long Term Support) and work closely with LXC upstream
+to maintain the stable 1.0 branch.
 -->
-これは、Ubuntu が Ubuntu 14.04 LTS (長期サポート版) に LXC 1.0 を含めているためであり、stable である 1.0 ブランチをメンテナンスするために LXC の upstream と密接に連携しているためです。
+これは、[Canonical Ltd](http://www.canonical.com) と Ubuntu が Ubuntu 14.04 LTS (長期サポート版) に LXC 1.0 を含めているためであり、stable である 1.0 ブランチをメンテナンスするために LXC の upstream と密接に連携しているためです。
