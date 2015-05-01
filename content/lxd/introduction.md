@@ -47,6 +47,6 @@ LXD is free software and is developed under the Apache 2 license.
 LXD's stable release support relies on the Linux distributions  
 and their own commitment to pushing stable fixes and security updates.
 
-Commercial support for LXD on Ubuntu LTS releaess can be obtained from [Canonical Ltd](http://www.canonical.com).
+Commercial support for LXD on Ubuntu LTS releases can be obtained from [Canonical Ltd](http://www.canonical.com).
 
 [<img src="/static/img/canonical.png" alt="Canonical logo"/ style="display:block;float:none;margin-left:auto;margin-right:auto;padding-top:1em;padding-bottom:1em;">](http://www.canonical.com)

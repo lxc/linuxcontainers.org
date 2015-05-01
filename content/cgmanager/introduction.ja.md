@@ -83,3 +83,27 @@ cgmanager API は独立した D-Bus ソケット上でのみ利用可能です�
 You can read more about the D-Bus API [here](/cgmanager/dbus-api).
 -->
 D-Bus API の更に詳しい情報は [こちら](/cgmanager/dbus-api) で読むことができます。
+
+# ライセンス <!-- Licensing -->
+<!--
+CGManager is free software, most of the code is released under the terms of the GNU LGPLv2.1+ license,  
+some binaries are released under the GNU GPLv2 license.
+-->
+CGManager はフリーソフトウェアで、コードのほとんどの部分が GNU LGPLv2.1+ の条項に基づいてリリースされています。GNU GPLv2 ライセンスに基づいてリリースされているバイナリもあります。
+
+<!--
+The default license for the project is the GNU LGPLv2.1+.
+-->
+プロジェクトのデフォルトのライセンスは GNU LGPLv2.1+ です。
+
+# <!-- Support -->
+<!--
+CGManager's stable release support relies on the Linux distributions  
+and their own commitment to pushing stable fixes and security updates.
+-->
+CGManager の stable リリースは各 Linux ディストリビューションの stable に対する修正とセキュリティアップデートのポリシーに依存します。
+
+<!--
+Commercial support for CGManager on Ubuntu LTS releaess can be obtained from [Canonical Ltd](http://www.canonical.com).
+-->
+Ubuntu LTS リリースに含まれる CGManager に対する商用サポートは [Canonical Ltd](http://www.canonical.com) から受けることができます。
