@@ -1,6 +1,6 @@
 # What's LXCFS?
 
-LXCFS is a simple userspace filesystem designed to workaround some current limitations of the Linux kernel.
+LXCFS is a simple userspace filesystem designed to work around some current limitations of the Linux kernel.
 
 Specifically, it's providing two main things
 
