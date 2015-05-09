@@ -13,7 +13,7 @@
  * [Where we're going with LXD by Dustin Kirkland](http://blog.dustinkirkland.com/2014/11/where-were-going-with-lxd.html)
 
 # 外部のブログと紹介記事 <!-- External blogs and reviews -->
- * [Introduction to nova-computed-lxd by Chuck Short](https://zulcss.wordpress.com/2015/05/01/introduction-to-nova-compute-lxd/)
+ * [A Quick Introduction to LXD BY Scott Lowe](http://blog.scottlowe.org/2015/05/06/quick-intro-lxd/)
  * [Hands on With LXD on Tutum Blog](http://blog.tutum.co/2014/12/09/hands-on-with-lxd)
  * [LXDを試してみた by Hiroaki Nakamura](http://hnakamur.github.io/blog/2014/12/01/lxd-the-linux-container-daemon/) (日本語)
  * [10分で試せる lxd by 加藤泰文](http://d.hatena.ne.jp/defiant/20150311/1426069809) (日本語)
