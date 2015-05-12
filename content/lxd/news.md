@@ -1,5 +1,30 @@
 ![Download icon](/static/img/containers.png)
 # News
+## LXD 0.9 release announcement<span class="text-muted">12th of May 2015</span>
+
+The main changes for this release are:
+ - Fixed memory and file descriptior leaks (and add extra tests for those)
+ - Fallback to chmod when setfacl fails (filesystem without ACLs support)
+ - Fixed container logging and make it available through lxc info (--show-log)
+ - Setup the right uid/gid map for privileged containers
+ - Report invalid configuration in "lxc config edit" and "lxc profile edit"
+ - Improved the first use experience and the profile/config examples
+ - Rename "lxc config profile \*" to "lxc profile \*" (old syntax is still supported)
+ - More reliable database handling
+ - Container copies get a new MAC address
+ - USER is now set in the container environment (on exec)
+ - Track the image used to build the container and use this to optimize copy/migration
+ - Improved database testing
+ - Fixed pts device owneship on exec
+ - Fixed raw.lxc being applied too early (resulted in broken lxc.network.script and others)
+ - Better argument parsing in both lxc and lxd
+ - Improved performance in container and network listing
+ - Fixed certificate name conflicts in the trust database
+
+### Downloads
+The release tarballs can be found on our [download page](/lxd/downloads).
+
+
 ## LXD 0.8.1 release announcement<span class="text-muted">29th of April 2015</span>
 
 Bugfix only release on top of 0.8 fixing some regressions:
