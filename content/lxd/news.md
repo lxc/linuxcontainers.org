@@ -1,5 +1,32 @@
 ![Download icon](/static/img/containers.png)
 # News
+## LXD 0.10 release announcement<span class="text-muted">26th of May 2015</span>
+
+The main changes for this release are:
+
+ * Implemented snapshot restore
+ * New --accept-certificate flag to lxc remote add
+ * New --password flag to lxc remote add
+ * Added "lxc profile device show" and " lxc config device show"
+ * "lxc config show" and "lxc config set" now work for server configuration
+ * lxc profile edit and lxc config edit now accept configuration on stdin
+ * Added recursion support to /1.0/images/aliases API
+ * Added recursion support to /1.0/containers/{name}/snapshots API
+ * The command line client no longer depends on go-lxc
+ * Re-worked uid/gid allocation and uid/gid shifting
+ * Improved help and usage
+ * Improved lxc list rendering
+ * Improved lxc profile show and lxc config show
+ * Improved debug messages
+ * The LXD version is now exported on /1.0
+ * Improved README
+ * SSL certificates now expire after 10 years
+ * Various test improvements and bugfixes
+
+### Downloads
+The release tarballs can be found on our [download page](/lxd/downloads).
+
+
 ## LXD 0.9 release announcement<span class="text-muted">12th of May 2015</span>
 
 The main changes for this release are:
