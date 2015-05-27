@@ -5,6 +5,7 @@
  * [Technical announce of LXD](https://lists.linuxcontainers.org/pipermail/lxc-devel/2014-November/010817.html)
 
 # Blog posts by the LXD team
+ * [Introduction to pylxd by Chuck Short](https://zulcss.wordpress.com/2015/05/27/introducing-pylxd/)
  * [Introduction to nova-computed-lxd by Chuck Short](https://zulcss.wordpress.com/2015/05/01/introduction-to-nova-compute-lxd/)
  * [Getting started with LXD - the container lightervisor by Stéphane Graber](https://www.stgraber.org/2015/04/21/lxd-getting-started/)
  * [Live Migration in LXD by Tycho Andersen](http://tycho.ws/blog/2015/04/lxd-live-migration.html)
