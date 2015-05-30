@@ -83,7 +83,7 @@ typically means until the next stable release is out.
 他のリリースは、一般的に次の stable リリースが出るまでを指すベストエフォートの原則で、一般的にはメンテナンスされるでしょう。
 
 <!--
-Commercial support for LXC on Ubuntu LTS releaess can be obtained from [Canonical Ltd](http://www.canonical.com).
+Commercial support for LXC on Ubuntu LTS releases can be obtained from [Canonical Ltd](http://www.canonical.com).
 -->
 Ubuntu LTS リリースに含まれる LXC に対する商用サポートは [Canonical Ltd](http://www.canonical.com) から受けることができます。
 

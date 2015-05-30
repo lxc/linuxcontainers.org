@@ -54,4 +54,4 @@ The default license for the project is the GNU LGPLv2.1+.
 CGManager's stable release support relies on the Linux distributions  
 and their own commitment to pushing stable fixes and security updates.
 
-Commercial support for CGManager on Ubuntu LTS releaess can be obtained from [Canonical Ltd](http://www.canonical.com).
+Commercial support for CGManager on Ubuntu LTS releases can be obtained from [Canonical Ltd](http://www.canonical.com).

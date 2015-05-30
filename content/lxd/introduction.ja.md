@@ -80,7 +80,7 @@ and their own commitment to pushing stable fixes and security updates.
 LXD の stable リリースは各 Linux ディストリビューションの stable に対する修正とセキュリティアップデートのポリシーに依存します。
 
 <!--
-Commercial support for LXD on Ubuntu LTS releaess can be obtained from [Canonical Ltd](http://www.canonical.com).
+Commercial support for LXD on Ubuntu LTS releases can be obtained from [Canonical Ltd](http://www.canonical.com).
 -->
 Ubuntu LTS リリースに含まれる LXD に対する商用サポートは [Canonical Ltd](http://www.canonical.com) から受けることができます。
 

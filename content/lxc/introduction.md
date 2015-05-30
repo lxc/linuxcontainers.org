@@ -49,7 +49,7 @@ specific versions of LXC can enjoy long term support with frequent bugfix update
 Other releases will typically be maintained on a best effort basis which  
 typically means until the next stable release is out.
 
-Commercial support for LXC on Ubuntu LTS releaess can be obtained from [Canonical Ltd](http://www.canonical.com).
+Commercial support for LXC on Ubuntu LTS releases can be obtained from [Canonical Ltd](http://www.canonical.com).
 
 ## Extended support
 At this time, the only such release is LXC 1.0 which was released in  

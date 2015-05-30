@@ -104,6 +104,6 @@ and their own commitment to pushing stable fixes and security updates.
 CGManager の stable リリースは各 Linux ディストリビューションの stable に対する修正とセキュリティアップデートのポリシーに依存します。
 
 <!--
-Commercial support for CGManager on Ubuntu LTS releaess can be obtained from [Canonical Ltd](http://www.canonical.com).
+Commercial support for CGManager on Ubuntu LTS releases can be obtained from [Canonical Ltd](http://www.canonical.com).
 -->
 Ubuntu LTS リリースに含まれる CGManager に対する商用サポートは [Canonical Ltd](http://www.canonical.com) から受けることができます。
