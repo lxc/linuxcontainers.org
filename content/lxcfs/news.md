@@ -1,6 +1,20 @@
 ![Download icon](/static/img/containers.png)
 # News
 
+## LXCFS 0.9 release announcement<span class="text-muted">3rd of June 2015</span>
+Bugfix release.
+
+ * Fixes from Michael McCracken to fix lxcfs crashes
+
+## LXCFS 0.8 release announcement<span class="text-muted">7th of May 2015</span>
+
+ * Use direct io
+ * Cache file and dir open work and re-use at read/write
+ * Force the fuse options we need (especially threading)
+ * Fix some errors in the manpage
+ * Fix handling of cpusets
+ * Some fixes for the lxc hook
+
 ## LXCFS 0.7 release announcement<span class="text-muted">3rd of April 2015</span>
 Bugfix release.
 
