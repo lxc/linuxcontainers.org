@@ -1,5 +1,22 @@
 # News
 
+## LXCFS 0.9 リリースのお知らせ<!-- LXCFS 0.9 release announcement --><span class="text-muted">2015 年 6 月 3 日 <!-- 3rd of June 2015 --></span>
+<!--
+Bugfix release.
+-->
+バグフィックスのためのリリースです。
+
+ * lxcfs のクラッシュを修正する Michael McCracken 氏からの修正をマージしました <!-- Fixes from Michael McCracken to fix lxcfs crashes -->
+
+## LXCFS 0.8 リリースのお知らせ <!-- LXCFS 0.8 release announcement --><span class="text-muted">2015 年 5 月 7 日<!-- 7th of May 2015 --></span>
+
+ * (FUSE の) direct_io モードを使うようになりました <!-- Use direct io -->
+ * ファイルとディレクトリのオープンにキャッシュを使うようになり、読み書きの際に再利用するようになりました <!-- Cache file and dir open work and re-use at read/write -->
+ * (特に Threading に) 必要な FUSE のオプションを強制するようになりました <!-- Force the fuse options we need (especially threading) -->
+ * man ページのエラーをいくつか修正しました <!-- Fix some errors in the manpage -->
+ * cpuset の扱いを修正しました <!-- Fix handling of cpusets -->
+ * lxc のフックの修正をいくつか行いました <!-- Some fixes for the lxc hook -->
+
 ## LXCFS 0.7 リリースのお知らせ <!-- LXCFS 0.7 release announcement --><span class="text-muted">2015 年 4 月 3 日<!-- 3rd of April 2015 --></span>
 バグリックスのリリースです。
 <!--
