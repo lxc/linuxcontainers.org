@@ -1,5 +1,29 @@
 ![Download icon](/static/img/containers.png)
 # News
+## LXD 0.11 release announcement<span class="text-muted">9th of June 2015</span>
+
+The main changes for this release are:
+
+ * File templating suport in images
+ * Socket activation with Systemd
+ * Support for clean shutdown and container restart on startup
+ * Implement "lxc image show"
+ * Implement SIGWINCH support in exec (terminal resize event)
+ * Make all configuration keys spec-compliant
+ * Fix "lxc image edit"
+ * Allow running the testsuite without any outside connectivity
+ * Improve testsuite output to be more readable
+ * And the usual set of bugfixes.
+
+
+NOTE: The key to set a server password is now, core.trust\_password. 
+On first startup of LXD 0.11, all the old supported names will be converted to the official one.
+
+
+### Downloads
+The release tarballs can be found on our [download page](/lxd/downloads).
+
+
 ## LXD 0.10 release announcement<span class="text-muted">26th of May 2015</span>
 
 The main changes for this release are:
