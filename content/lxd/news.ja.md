@@ -1,5 +1,36 @@
 ![Download icon](/static/img/containers.png)
 # News
+## LXD 0.11 リリースのお知らせ <!-- LXD 0.11 release announcement --><span class="text-muted">2015 年 6 月 9 日<!-- 9th of June 2015 --></span>
+
+<!--
+The main changes for this release are:
+-->
+このリリースの主な変更点は以下の通りです。
+
+ * イメージ内のテンプレートファイルをサポートしました <!-- File templating suport in images -->
+ * systemd の socket activation をサポートしました <!-- Socket activation with Systemd -->
+ * スタートアップ時のコンテナのクリーンシャットダウンと再起動をサポートしました <!-- Support for clean shutdown and container restart on startup -->
+ * "lxc image show" コマンドの実装をしました <!-- Implement "lxc image show" -->
+ * exec での SIGWINCH シグナル (ターミナルのリサイズイベント) のサポートを実装しました <!-- Implement SIGWINCH support in exec (terminal resize event) -->
+ * すべての設定キーを仕様に沿ったものにしました <!-- Make all configuration keys spec-compliant -->
+ * "lxc image edit" の修正を行いました <!-- Fix "lxc image edit" -->
+ * 外部との接続性がなくてもすべてのテストが実行できるようになりました <!-- Allow running the testsuite without any outside connectivity -->
+ * テストの出力をより読みやすいように改良しました <!-- Improve testsuite output to be more readable -->
+ * その他のバグフィックスを行いました <!-- And the usual set of bugfixes. -->
+
+<!--
+NOTE: The key to set a server password is now, core.trust\_password. 
+On first startup of LXD 0.11, all the old supported names will be converted to the official one.
+-->
+注意: サーバパスワードを設定するためのキーは core.trust\_password になりました。
+LXD 0.11 の最初の起動時に、古いバージョンでサポートされていた名前はすべて正式なキー名に変換されます。
+
+### ダウンロード <!-- Downloads -->
+<!--
+The release tarballs can be found on our [download page](/lxd/downloads).
+-->
+このリリースの tarball は [ダウンロードページ](/lxd/downloads) から取得できます。
+
 ## LXD 0.10 リリースのお知らせ <!-- LXD 0.10 release announcement --><span class="text-muted">2015 年 5 月 26 日<!-- 26th of May 2015 --></span>
 
 <!--

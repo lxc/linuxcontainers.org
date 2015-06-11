@@ -4,7 +4,7 @@
 
 The main changes for this release are:
 
- * File templating suport in images
+ * File templating support in images
  * Socket activation with Systemd
  * Support for clean shutdown and container restart on startup
  * Implement "lxc image show"
