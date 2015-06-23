@@ -1,5 +1,29 @@
 ![Download icon](/static/img/containers.png)
 # News
+## LXD 0.12 release announcement<span class="text-muted">23rd of June 2015</span>
+
+The main changes for this release are:
+
+ * Implement /dev/lxd
+ * Fix initial console size on exec
+ * Reduce memory footprint of migration
+ * Use user redable date strings in the API
+ * Allow unset for server config keys
+ * Fix various race conditions with exec
+ * Switch to a pure-go gettext implementation
+ * Set proper Content-Type on all replies
+ * Show the host veth device in info
+ * Some changes to better support Snappy ubuntu
+ * Various other bugfixes
+ * Improve help messages
+ * Improve testsuite
+ * Initial German translation
+
+
+### Downloads
+The release tarballs can be found on our [download page](/lxd/downloads).
+
+
 ## LXD 0.11 release announcement<span class="text-muted">9th of June 2015</span>
 
 The main changes for this release are:
