@@ -1,5 +1,35 @@
 ![Download icon](/static/img/containers.png)
 # News
+## LXD 0.12 リリースのお知らせ <!-- LXD 0.12 release announcement --><span class="text-muted">2015 年 6 月 23 日 <!-- 23rd of June 2015 --></span>
+
+<!--
+The main changes for this release are:
+-->
+このリリースの主な変更点は以下の通りです。
+
+ * /dev/lxd を実装しました <!-- Implement /dev/lxd -->
+ * exec 時の初期コンソールサイズの修正を行いました <!-- Fix initial console size on exec -->
+ * マイグレーションのメモリ消費量を減少させました <!-- Reduce memory footprint of migration -->
+ * API でユーザが読める形式の日付フォーマットを使うようになりました <!-- Use user redable date strings in the API -->
+ * サーバの設定キーを設定しなくても良くなりました <!-- Allow unset for server config keys -->
+ * exec の様々な競合状態を修正しました <!-- Fix various race conditions with exec -->
+ * 純粋な Go 言語による gettext 実装を使用するように変更しました <!-- Switch to a pure-go gettext implementation -->
+ * すべての応答で正しい Content-Type をセットするようにしました <!-- Set proper Content-Type on all replies -->
+ * info でホストの veth デバイスの情報を表示するようになりました <!-- how the host veth device in info -->
+ * より良い Snappy ubuntu サポートのためにいくつか変更を行いました <!-- Some changes to better support Snappy ubuntu -->
+ * 様々なその他のバグフィックスを行いました <!-- Various other bugfixes -->
+ * ヘルプメッセージの改良を行いました <!-- Improve help messages -->
+ * テストの改良を行いました <!-- Improve testsuite -->
+ * ドイツ語の翻訳を追加しました <!-- Initial German translation -->
+
+
+### ダウンロード <!-- Downloads -->
+<!--
+The release tarballs can be found on our [download page](/lxd/downloads).
+-->
+このリリースの tarball は [ダウンロードページ](/lxd/downloads) から取得できます。
+
+
 ## LXD 0.11 リリースのお知らせ <!-- LXD 0.11 release announcement --><span class="text-muted">2015 年 6 月 9 日<!-- 9th of June 2015 --></span>
 
 <!--

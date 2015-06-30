@@ -7,7 +7,7 @@ The main changes for this release are:
  * Implement /dev/lxd
  * Fix initial console size on exec
  * Reduce memory footprint of migration
- * Use user redable date strings in the API
+ * Use user readable date strings in the API
  * Allow unset for server config keys
  * Fix various race conditions with exec
  * Switch to a pure-go gettext implementation
