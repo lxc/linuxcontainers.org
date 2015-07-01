@@ -5,6 +5,7 @@
  * [LXD の技術的なアナウンス](https://lists.linuxcontainers.org/pipermail/lxc-devel/2014-November/010817.html)
 
 # LXD チームメンバーのブログ記事 <!-- Blog posts by the LXD team -->
+ * [Publishing LXD images by Serge Hallyn](https://s3hh.wordpress.com/2015/06/30/publishing-lxd-images/)
  * [Introduction to pylxd by Chuck Short](https://zulcss.wordpress.com/2015/05/27/introducing-pylxd/)
  * [Introduction to nova-computed-lxd by Chuck Short](https://zulcss.wordpress.com/2015/05/01/introduction-to-nova-compute-lxd/)
  * [Getting started with LXD - the container lightervisor by Stéphane Graber](https://www.stgraber.org/2015/04/21/lxd-getting-started/)
