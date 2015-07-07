@@ -1,5 +1,26 @@
 ![Download icon](/static/img/containers.png)
 # News
+## LXD 0.13 release announcement<span class="text-muted">7th of July 2015</span>
+
+The main changes for this release are:
+
+ * Add support for LVM thin pools as a storage backend.
+ * Add basic bash completion
+ * Implement the "publish" command, turning a container into an image
+ * Improve file push/pull reliability
+ * Make it possible to start/stop/restart/delete multiple containers at once
+ * Fix build under gccgo (currently disabling /dev/lxd in such case)
+ * Improve btrfs performance during container copy
+ * A lot of other bugfixes, minor improvements and cleanups
+
+This is the first release of LXD where the client may be built on operating systems  
+other than Linux. At the moment, MacOS X has been confirmed to work and Windows is known not to work,  
+other Unix may work too but haven't been tested.
+
+### Downloads
+The release tarballs can be found on our [download page](/lxd/downloads).
+
+
 ## LXD 0.12 release announcement<span class="text-muted">23rd of June 2015</span>
 
 The main changes for this release are:
@@ -18,7 +39,6 @@ The main changes for this release are:
  * Improve help messages
  * Improve testsuite
  * Initial German translation
-
 
 ### Downloads
 The release tarballs can be found on our [download page](/lxd/downloads).
