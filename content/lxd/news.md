@@ -1,5 +1,35 @@
 ![Download icon](/static/img/containers.png)
 # News
+## LXD 0.14 release announcement<span class="text-muted">21st of July 2015</span>
+
+The main changes for this release are:
+
+ * Improve command line help
+ * Improve LVM backend (only mount/umount storage while the container is running, ...)
+ * Rework certificate handling (user interface, generation and recursive query support)
+ * Fix a publish bug that would lead to invalid images
+ * Fix IPv6 support of container copy/migration
+ * New logging code (syslog support, logfile support and log levels)
+ * Implement support for "split" images (separate metadata and rootfs)
+ * Add download progress tracking to lxd-images
+ * Detect and report architecture mismatches
+ * Direct image copy between servers is now supported
+ * /dev/lxd now supports the meta-data interface
+ * Ubuntu cloud images may now be imported using lxd-images
+ * Other code improvements (golint, refactoring, compression handling, tests, ...)
+
+This is the first LXD release to support the official Ubuntu Cloud images.  
+At this time, those are only available for the current development release (wily)  
+but we hope to have images for all supported Ubuntu releases over the next few days.
+
+To import one of those images into your LXD image store, run:
+
+    lxd-images import ubuntu --alias ubuntu-cloud
+
+### Downloads
+The release tarballs can be found on our [download page](/lxd/downloads).
+
+
 ## LXD 0.13 release announcement<span class="text-muted">7th of July 2015</span>
 
 The main changes for this release are:
