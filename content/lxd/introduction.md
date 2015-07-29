@@ -34,7 +34,7 @@ Some of the biggest features of LXD are:
 
 # Relationship with LXC
 LXD isn't a rewrite of LXC, in fact it's building on top of LXC to provide a new,  
-better user experience. Under the scene, LXD uses LXC through liblxc and its Go binding  
+better user experience. Under the hood, LXD uses LXC through liblxc and its Go binding  
 to create and manage the containers.
 
 It's basically an alternative to LXC's tools and distribution template system  
