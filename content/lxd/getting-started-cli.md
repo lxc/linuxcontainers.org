@@ -4,6 +4,7 @@ As LXD evolves quite rapidly, we recommend Ubuntu users use our PPA:
 
     add-apt-repository ppa:ubuntu-lxc/lxd-git-master
     apt-get update
+    apt-get dist-upgrade
     apt-get install lxd
 
 The package creates a new "lxd" group which contains all users allowed to talk to  
