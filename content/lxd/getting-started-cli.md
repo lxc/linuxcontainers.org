@@ -13,6 +13,9 @@ If your user isn't a member of one of these groups, you'll need to manually add 
 Because group membership is only applied at login, you then either need to close  
 and re-open your user session or use the "newgrp lxd" command in the shell you're going to interact with lxd from.
 
+    newgrp lxd
+
+
 ## Other distributions
 As of today, only Ubuntu has packages for LXD. Users of other distributions  
 can directly download and build LXD from git or use our latest release tarball.  
