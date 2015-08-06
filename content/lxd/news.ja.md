@@ -1,5 +1,51 @@
 ![Download icon](/static/img/containers.png)
 # News
+## LXD 0.15 リリースのお知らせ <!-- LXD 0.15 release announcement --><span class="text-muted">2015 年 8 月 4 日<!--4th of August 2015 --></span>
+
+<!--
+The main changes for this release are:
+-->
+このリリースの主な変更点は以下の通りです。
+
+ * ストレージとネットワークのホットプラグ機能を追加しました <!-- Added storage and network hotplug -->
+ * ロギングの改良を行いました <!-- Improved logging -->
+ * LVM と btrfs バックエンドの改良を行いました <!-- Improved LVM and btrfs backend -->
+ * /dev/lxd が gccgo でも動作するようになりました <!-- /dev/lxd now works with gccgo -->
+ * コンテナ内部の環境変数を設定するための新しい environment.* という設定を追加しました <!-- Added new environment.* configuration namespace to set environment variables inside the container -->
+ * init と launch コマンドでコンテナ名を表示するようになりました <!-- Init and launch now print the container name -->
+ * lxd-images コマンドが扱うイメージのデフォルトが Ubuntu 14.04 LTS になりました <!-- lxd-images now defaults to Ubuntu 14.04 LTS -->
+ * --tcp オプションは設定 core.https_address で置き換えられました <!-- &#045;&#045;tcp has now been replaced by the core.https_address config option -->
+ * LVM と btrfs サポートの改良を行いました <!-- Improved LVM and btrfs support -->
+ * LXD のスピードテストをいくつか追加しました <!-- Add some LXD speed tests -->
+ * LXD クライアントのみをビルドする "make client" ターゲットを Makefile に追加しました (MacOS Xで使用します) <!-- New "make client" target to only build the LXD client (use this for MacOS X) -->
+ * lxdbr0 ブリッジ用のスクリプトと http プロキシコードを新たに追加しました <!-- Introduce new scripts and http proxy code for a lxdbr0 bridge -->
+ * ストレージの内部構造を変更しました <!-- Rework internal storage representation -->
+ * コンテナの内部構造を変更しました <!-- Rework internal container representation -->
+ * データベースの内部構造を変更しました <!-- Rework internal database representation -->
+ * 色々なテストの改良を行いました <!-- Various testsuite improvements -->
+ * 多数のバグフィックスと小さな改良を行いました <!-- A lot more bugfixes and other small improvements -->
+
+<!--
+This release moves containers from /var/lib/lxd/lxc to /var/lib/lxd/containers  
+and snapshots from /var/lib/lxd/lxc/\<name\>/snapshots to /var/lib/lxd/snapshots/\<name\>.
+To do so, LXD will stop all containers on the next startup, then start them again  
+after moving everything to the new location.
+-->
+このリリースでコンテナが /var/lib/lxd/lxc から /var/lib/lxd/containers へ、スナップショットは /var/lib/lxd/lxc/\<name\>/snapshots から /var/lib/lxd/snapshots/\<name\> へ移動しました。このため、LXD は次回の起動時にすべてのコンテナを停止し、すべてのコンテナを新しい場所に移動させたあとにコンテナを起動します。
+
+<!--
+The --tcp daemon option has been replaced by the core.https\_address option allowing users  
+to change the address and port LXD binds to. Changes are now applied immediately.
+-->
+--tcp デーモンオプションは、ユーザが LXD がバインドするポートを変更するための  core.https\_address オプションに置き換えられました。この変更はすぐに適用されます。
+
+### Downloads
+<!--
+The release tarballs can be found on our [download page](/lxd/downloads).
+-->
+このリリースの tarball は [ダウンロードページ](/lxd/downloads) から取得できます。
+
+
 ## LXD 0.14 リリースのお知らせ <!-- LXD 0.14 release announcement --><span class="text-muted">2015 年 7 月 21 日<!-- 21st of July 2015 --></span>
 
 <!--
