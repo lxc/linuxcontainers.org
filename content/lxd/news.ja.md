@@ -17,7 +17,7 @@ The main changes for this release are:
  * --tcp オプションは設定 core.https_address で置き換えられました <!-- &#045;&#045;tcp has now been replaced by the core.https_address config option -->
  * LVM と btrfs サポートの改良を行いました <!-- Improved LVM and btrfs support -->
  * LXD のスピードテストをいくつか追加しました <!-- Add some LXD speed tests -->
- * LXD クライアントのみをビルドする "make client" ターゲットを Makefile に追加しました <!-- New "make client" target to only build the LXD client (use this for MacOS X) -->
+ * LXD クライアントのみをビルドする "make client" ターゲットを Makefile に追加しました (MacOS Xで使用します) <!-- New "make client" target to only build the LXD client (use this for MacOS X) -->
  * lxdbr0 ブリッジ用のスクリプトと http プロキシコードを新たに追加しました <!-- Introduce new scripts and http proxy code for a lxdbr0 bridge -->
  * ストレージの内部構造を変更しました <!-- Rework internal storage representation -->
  * コンテナの内部構造を変更しました <!-- Rework internal container representation -->
