@@ -37,7 +37,7 @@ after moving everything to the new location.
 The --tcp daemon option has been replaced by the core.https\_address option allowing users  
 to change the address and port LXD binds to. Changes are now applied immediately.
 -->
---tcp デーモンオプションは、ユーザが LXD がバインドするポートを変更するための  core.https\_address オプションに置き換えられました。この変更はすぐに適用されます。
+--tcp デーモンオプションは、ユーザが LXD がバインドするアドレスとポートを変更するための  core.https\_address オプションに置き換えられました。この変更はすぐに適用されます。
 
 ### Downloads
 <!--
