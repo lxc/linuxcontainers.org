@@ -7,6 +7,7 @@ LXD は非常に急速に開発が進んでいますので、Ubuntu ユーザは
 
     add-apt-repository ppa:ubuntu-lxc/lxd-git-master
     apt-get update
+    apt-get dist-upgrade
     apt-get install lxd
 
 <!--
@@ -21,6 +22,9 @@ Because group membership is only applied at login, you then either need to close
 and re-open your user session or use the "newgrp lxd" command in the shell you're going to interact with lxd from.
 -->
 グループメンバーシップはログイン時にのみ追加されるので、追加後にあなたのユーザセッションを閉じて再度開くか、LXD と通信したいシェル上で "newgrp lxd" コマンドを実行する必要があります
+
+    newgrp lxd
+
 
 ## 他のディストリビューション <!-- Other distributions -->
 <!--
