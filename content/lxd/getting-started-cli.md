@@ -18,8 +18,11 @@ and re-open your user session or use the "newgrp lxd" command in the shell you'r
 
 
 ## Other distributions
-As of today, only Ubuntu has packages for LXD. Users of other distributions  
-can directly download and build LXD from git or use our latest release tarball.  
+There are currently packages for multiple distributions including Gentoo and, of
+course, Ubuntu.
+Users of other distributions might find it in their package manager too.
+If it is not there yet please download and build LXD from git or use our latest
+release tarball.
 Instructions for both are available [here](/lxd/downloads).
 
 # Importing some images
