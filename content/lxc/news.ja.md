@@ -1,4 +1,95 @@
 # News
+## LXC 1.1.3 リリースのお知らせ <!-- LXC 1.1.3 release announcement --><span class="text-muted">2015 年 8 月 14 日<!-- 14th of August 2015 --></span>
+<!--
+This is the third bugfix release for LXC 1.1.
+-->
+このリリースは LXC 1.1 の 3 回目のバグフィックスリリースです。
+
+### 変更点 <!-- Changes -->
+
+重要な変更<!-- Important -->:
+
+ * セキュリティホール CVE-2015-1331 の修正 <!-- Security fix for CVE-2015-1331 -->
+ * セキュリティホール CVE-2015-1334 の修正 <!-- Security fix for CVE-2015-1334 -->
+ * LXC 1.1 で生じた LXC 1.0 との ABI の非互換性に関する修正を行いました <!-- Fix an ABI regression in LXC 1.1 compared to LXC 1.0. -->  
+   大変申し訳ないことですが、この修正は LXC 1.1.0、1.1.1、1.1.2 でビルドしたバイナリは LXC 1.1.3 で再度ビルドする必要があることを意味します。しかし、この修正は LXC 1.0 とそのバグフィックスリリースに対するバイナリとの後方互換性を損なうよりも望ましいことです。
+   <!--
+   Fixing this unfortunately means that binaries built against LXC
+   1.1.0, 1.1.1 and 1.1.2 will need rebuilding against LXC 1.1.3.  
+   This is however preferable to not having backward compatibility with
+   binaries built for LXC 1.0 and its bugfix releases.
+   -->
+
+コア<!-- Core -->:
+
+ * apparmor: ラッパーの代わりに /lib/apparmor/profile-load を直接呼ぶようにしました <!-- Call /lib/apparmor/profile-load directly instead of the wrapper -->
+ * aufs: 非特権コンテナのサポートを追加しました <!-- Support unprivileged containers -->
+ * bash: POSIX 互換の関数名を使用するようにしました <!-- Use POSIX-compliant function names -->
+ * cgmanager: lxc.cgroup.use の値を使用するようになりました <!-- Respect lxc.cgroup.use -->
+ * cgmanager: /proc/self/cgroups の代わりに cgmanager の listcontrollers を使用するようになりました <!-- Use listcontrollers instead of /proc/self/cgroups -->
+ * cgroup: 正しい順序でメモリの制限を適用するようになりました <!-- Apply the memory restrictions in the right order -->
+ * clone: ファイルシステムのケーパビリティを適切に扱うようになりました <!-- Properly handle filesystem capabilities -->
+ * clone: ハードリンクを適切に扱うようになりました <!-- Properly handle hardlinks -->
+ * core: コンテナのロギングがスレッドセーフになりました <!-- Container logging is now thread safe -->
+ * destroy: Btrfs のサブボリュームを適切に消去するようになりました <!-- Properly remove btrfs subvolumes -->
+ * lua: Lua 5.3 をサポートするようになりました <!-- Support Lua 5.3 -->
+ * lxc-net: いくつかバグを修正しました <!-- Fix several bugs -->
+ * lxc-net: IPv6 のサポートを追加しました <!-- Support IPv6 -->
+ * lxc-net: ifconfig の代わりに iproute を使うようになりました <!-- Use iproute instead of ifconfig -->
+ * monitor: コンテナのモニタを行うインターフェースの競合状態を修正しました <!-- Fix race conditions in the monitor container interface -->
+ * network: リブート時の veth のセットアップを適切に扱うようになりました <!-- Properly handle veth setup on reboot -->
+ * overlayfs: workdir がない場合に作成するようになりました <!-- Create the workdir if missing -->
+ * seccomp: セットアップコードを単純化し、ルールの解析を修正しました <!-- simplify the setup code and fix rule parsing -->
+ * start: デーモン化の際に常に FD 0-2 をクローズするようにしました <!-- Always close fds 0-2 when daemonized -->
+ * start: デーモンで起動する際の失敗をいくつかより適切に扱うようになりました <!-- Better handle some daemonized startup failures -->
+ * start: lxc-init が見つからない場合のエラーメッセージを改良しました <!-- Improve error message when lxc-init can't be found -->
+ * start: ユーザネームスペース使用時、/proc のアンマウントの失敗を無視するようにしました <!-- In userns, ignore umount failures for /proc -->
+ * start: 使用できる場合は、loop デバイスの設定に /dev/loop-control を使うようになりました <!-- When available, use /dev/loop-control to configure the loop devices -->
+ * systemd: lxc-containers と lxc-net 間の起動時の競合状態を修正しました <!-- Fix startup race condition between lxc-containers and lxc-net -->
+ * 小さなメモリリークをいくつか修正しました (Coverity により) <!-- Several fixes for small memory leaks (thanks to Coverity) -->
+ * チェックポイント/リストア機能の様々な改良を行いました <!-- Various improvements to the checkpoint/restore feature -->
+ * 様々なドキュメントの改良を行いました <!-- Various documentation improvements -->
+ * 様々なテストの改良を行いました <!-- Various tests improvements -->
+
+コマンド<!-- Commands-->:
+
+ * lxc-autostart: stdout が tty でない場合に出力が壊れる不具合を修正しました <!-- Fix broken output when stdout isn't a tty -->
+ * lxc-checkconfig: 新しいカーネルをサポートしました <!-- support newer kernels -->
+
+テンプレート<!-- Templates -->:
+
+ * alpine: /dev/shm の扱いを修正しました <!-- Fix /dev/shm handling -->
+ * alpine: apk バイナリの検証を修正しました <!-- Fix verification of the apk binary -->
+ * centos: いくつかのバージョンの yum のサポートに関する修正を行いました <!-- Fix support for some version of yum -->
+ * debian: GREP\_OPTIONS が設定されている場合の debootstrap に関する修正を行いました <!-- Fix debootrstap when GREP\_OPTIONS is set -->
+ * debian: dbus がインストールされていない場合のエラーを修正しました <!-- Fix errors when dbus isn't installed -->
+ * debian: ロケールを再設定するようにしました <!-- Reconfigure locales -->
+ * debian: unstable/sid の場合のセキュリティリポジトリをスキップするようにしました <!-- Skip the security mirror for unstable/sid -->
+ * fedora: セカンダリアーキテクチャのサポートを追加しました <!-- Support secondary architectures -->
+ * fedora: Fedora 20 用の古いリリースリポジトリを更新しました <!-- Update to the old release repository for Fedora 20 -->
+ * gentoo: /dev/mqueue と /dev/shm の扱いを修正しました <!-- Fix /dev/mqueue and /dev/shm handling -->
+ * opensuse: ビルドバージョンを決定するために rpm を使うようになりました <!-- Use rpm to determine the build version -->
+ * oracle: /dev/shm の扱いを修正しました <!-- Fix /dev/shm handling -->
+
+<!--
+Those stable fixes were brought to you by 31 individual contributors.
+-->
+これらの stable の修正は 31 名のコントリビュータによってなされました。
+
+### ダウンロード<!-- Downloads -->
+<!--
+The release tarballs may be found on our [download page](/lxc/downloads) and we expect most distributions  
+will very soon ship a packaged version of LXC 1.1.3.
+-->
+このリリースの tarball は [ダウンロードページ](/lxc/downloads) から取得できます。そして、各ディストリビューションがすぐに LXC 1.1.3 のパッケージをリリースするでしょう。
+
+<!--
+Should you be interested in individual changes or just looking at the detailed development history,  
+our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-1.1).
+-->
+個々の変更点に興味がある場合、そして開発の履歴を見たい場合、stable ブランチ (stable-1.1) は [Github](https://github.com/lxc/lxc/tree/stable-1.1) にあります。
+
+
 ## LXC 1.1.2 リリースのお知らせ <!-- LXC 1.1.2 release announcement --><span class="text-muted">2015 年 4 月 10 日 <!-- 10th of April 2015 --></span>
 <!--
 This is the second bugfix release for LXC 1.1.
