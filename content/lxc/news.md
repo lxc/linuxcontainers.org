@@ -9,10 +9,9 @@ Important:
 
  * Security fix for CVE-2015-1331
  * Security fix for CVE-2015-1334
- * Fix an ABI regression in LXC 1.1 compared to LXC 1.0.
+ * Fix an ABI regression in LXC 1.1 compared to LXC 1.0.  
    Fixing this unfortunately means that binaries built against LXC
-   1.1.0, 1.1.1 and 1.1.2 will need rebuilding against LXC 1.1.3.
-
+   1.1.0, 1.1.1 and 1.1.2 will need rebuilding against LXC 1.1.3.  
    This is however preferable to not having backward compatibility with
    binaries built for LXC 1.0 and its bugfix releases.
 
