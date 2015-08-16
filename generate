@@ -162,12 +162,24 @@ def gen_page(entry, override, prefix, **variables):
 
     if "generator" not in item or item['generator'] == "link":
         # Skip the virtual entries (external links, splitters)
-        continue
+        return
 
     # Generate the target path and create any missing directory
     output_path = "%s%s/index.html" % (TARGET_PATH, item['path'])
     if not os.path.exists(os.path.dirname(output_path)):
         os.makedirs(os.path.dirname(output_path))
+
+    # Process directories and aliases and return
+    if item['generator'] == "directory":
+        os.rmdir("%s/%s" % (TARGET_PATH, item['path']))
+        shutil.copytree(content_path(item['meta']['input']),
+                        "%s/%s" % (TARGET_PATH, item['path']))
+        return
+    elif item['generator'] == "alias":
+        os.symlink("../%s/index.html" % (item['meta']['target']
+                                         .lstrip("/")),
+                   "%s/%s/index.html" % (TARGET_PATH, item['path']))
+        return
 
     # Generate the page content
     content = ""
@@ -299,17 +311,6 @@ def gen_page(entry, override, prefix, **variables):
             content += "<li><a href=\"%s\">%s</a></li>" % (entry_link,
                                                            entry)
         content += "</ul>"
-
-    elif item['generator'] == "directory":
-        os.rmdir("%s/%s" % (TARGET_PATH, item['path']))
-        shutil.copytree(content_path(item['meta']['input']),
-                        "%s/%s" % (TARGET_PATH, item['path']))
-        continue
-    elif item['generator'] == "alias":
-        os.symlink("../%s/index.html" % (item['meta']['target']
-                                         .lstrip("/")),
-                   "%s/%s/index.html" % (TARGET_PATH, item['path']))
-        continue
 
     # Pass all the variables to the template and generate the html
     template = env.get_template(template)
