@@ -147,8 +147,7 @@ def gen_menu(structure, override, prefix):
     return menu
 
 
-def gen_pages(structure, override, prefix, **variables):
-    for entry in structure:
+def gen_page(entry, override, prefix, **variables):
         item = dict(entry)
 
         # Apply the override (if any)
@@ -359,6 +358,7 @@ for language in config['languages']:
     menu = gen_menu(structure, override, lang_prefix)
 
     # Generate all the pages
-    gen_pages(structure, override, lang_prefix,
+    for entry in structure:
+        gen_page(entry, override, lang_prefix,
               menu=menu, page_language=language,
               languages=config['languages'])
