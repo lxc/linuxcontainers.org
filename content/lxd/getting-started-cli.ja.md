@@ -28,11 +28,17 @@ and re-open your user session or use the "newgrp lxd" command in the shell you'r
 
 ## 他のディストリビューション <!-- Other distributions -->
 <!--
-As of today, only Ubuntu has packages for LXD. Users of other distributions  
-can directly download and build LXD from git or use our latest release tarball.  
+There are currently packages for multiple distributions including Gentoo and, of
+course, Ubuntu.
+Users of other distributions might find it in their package manager too.
+If it is not there yet please download and build LXD from git or use our latest
+release tarball.
 Instructions for both are available [here](/lxd/downloads).
 -->
-現時点では、Ubuntu だけが LXD のパッケージを提供しています。他のディストリビューションのユーザは、最新のリリース tarball か git リポジトリから直接 LXD をダウンロードしてビルドできます。
+現時点で、Gentoo と Ubuntu の複数のディストリビューションにパッケージが存在します。
+他のディストリビューションのユーザも、各ディストリビューションのパッケージマネージャ内でパッケージを見つけることができるかもしれません。
+もし存在しない場合は、git リポジトリからダウンロードしてビルドするか、最新のリリース tarball を使ってください。
+方法は両方とも[ダウンロードページ](/lxd/downloads)に載っています。
 
 # イメージのインポート <!-- Importing some images -->
 <!--
