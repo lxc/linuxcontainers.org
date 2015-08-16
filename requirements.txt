@@ -1,0 +1,4 @@
+beautifulsoup4
+jinja2
+markdown
+pygments
