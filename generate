@@ -147,6 +147,20 @@ def gen_menu(structure, override, prefix):
     return menu
 
 
+def md2html(path):
+    """
+        Given path to Markdown file, return rendered HTML content.
+    """
+    hilite_config = [('linenums', None),
+                     ('guess_lang', False),
+                     ('noclasses', False)]
+    codehilite = markdown.extensions.codehilite.makeExtension(hilite_config)
+
+    with open(path, "r") as fd:
+        return markdown.markdown(fd.read(), extensions=[codehilite])
+
+
+
 def gen_page(entry, override, prefix, **variables):
     item = dict(entry)
 
@@ -184,24 +198,16 @@ def gen_page(entry, override, prefix, **variables):
     # Generate the page content
     content = ""
     template = "page.tpl.html"
-    hilite_config = [('linenums', None),
-                     ('guess_lang', False),
-                     ('noclasses', False)]
-    codehilite = markdown.extensions.codehilite.makeExtension(
-        hilite_config)
 
     if item['generator'] == "html":
         with open(content_path(item['meta']['input']), "r") as fd:
             content = fd.read()
     elif item['generator'] == "markdown":
-        with open(content_path(item['meta']['input']), "r") as fd:
-            content = markdown.markdown(fd.read(), extensions=[codehilite])
+        content = md2html(content_path(item['meta']['input']))
     elif item['generator'] == "downloads":
         # Support a markdown description before the download table
         if "input" in item['meta']:
-            with open(content_path(item['meta']['input']), "r") as fd:
-                content = markdown.markdown(fd.read(),
-                                            extensions=[codehilite])
+            content = md2html(content_path(item['meta']['input']))
 
         downloads = []
         download_path = item['meta']['dir'].lstrip("/")
