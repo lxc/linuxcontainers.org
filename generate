@@ -19,6 +19,7 @@ import jinja2
 import json
 import markdown
 import markdown.extensions.codehilite
+import markdown.extensions.toc
 import pygments.formatters
 import os
 import shutil
@@ -156,9 +157,11 @@ def md2html(path):
                      ('noclasses', False)]
     codehilite = markdown.extensions.codehilite.makeExtension(hilite_config)
 
-    with open(path, "r") as fd:
-        return markdown.markdown(fd.read(), extensions=[codehilite])
+    # Using toc extension to generate HTML anchors for paragraphs
+    anchors = markdown.extensions.toc.TocExtension(permalink=True)
 
+    with open(path, "r") as fd:
+        return markdown.markdown(fd.read(), extensions=[codehilite, anchors])
 
 
 def gen_page(entry, override, prefix, **variables):
