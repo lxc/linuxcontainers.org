@@ -158,7 +158,8 @@ def md2html(path):
     codehilite = markdown.extensions.codehilite.makeExtension(hilite_config)
 
     # Using toc extension to generate HTML anchors for paragraphs
-    anchors = markdown.extensions.toc.TocExtension(permalink=True)
+    anchors = markdown.extensions.toc.TocExtension(
+        configs=[("permalink", 1)])
 
     with open(path, "r") as fd:
         return markdown.markdown(fd.read(), extensions=[codehilite, anchors])
