@@ -1,5 +1,23 @@
 ![Download icon](/static/img/containers.png)
 # News
+## LXD 0.16 release announcement<span class="text-muted">18th of August 2015</span>
+
+The main changes for this release are:
+
+ * Added container auto-start support, includes start delay and start ordering
+ * Support copying container and images from a local (unix socket) to a remote (https) daemon
+ * Remap the unprivileged containers when transferring between hosts with differing allocations
+ * Remap existing containers when their idmap changes or when they're switched between privileged and unprivileged
+ * The EDITOR variable is now properly respected
+ * When starting a container from a remote image, the cached image now expires
+ * New --public flag added to lxd-images
+ * Allow --stateful snapshots
+ * And a lot of bugfixes, performance and test improvements
+
+### Downloads
+The release tarballs can be found on our [download page](/lxd/downloads).
+
+
 ## LXD 0.15 release announcement<span class="text-muted">4th of August 2015</span>
 
 The main changes for this release are:
@@ -11,7 +29,7 @@ The main changes for this release are:
  * Added new environment.* configuration namespace to set environment variables inside the container
  * Init and launch now print the container name
  * lxd-images now defaults to Ubuntu 14.04 LTS
- * --tcp has now been replaced by the core.https_address config option
+ * --tcp has now been replaced by the core.https\_address config option
  * Improved LVM and btrfs support
  * Add some LXD speed tests
  * New "make client" target to only build the LXD client (use this for MacOS X)
