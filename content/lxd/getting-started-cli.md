@@ -29,6 +29,7 @@ LXD is image based. Containers must be created from an image and so the image st
 must get some images before you can do much with LXD.
 
 There are three ways to feed that image store:
+
  1. Use a remote LXD as an image server
  2. Use the lxd-images script to import an image from a non-LXD source
  3. Manually import one using "lxc image import \<file\> --alias \<name\>"
@@ -48,6 +49,7 @@ lxd-images is a python script which knows about non-LXD image servers
 and can pull and import images for you.
 
 It currently supports two sources:
+
  1. A local busybox image made from your existing busybox binary (used for testing)
  2. Ubuntu cloud images taken from the official simplestream feed
 
