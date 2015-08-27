@@ -3,5 +3,6 @@
                     ["", "English", "Language"],
                     ["fr", "Français", "Langue"],
                     ["it", "Italiano", "Lingua"],
-                    ["ja", "日本語", "言語"]]
+                    ["ja", "日本語", "言語"],
+                    ["ru", "Русский", "Язык"]]
 }
