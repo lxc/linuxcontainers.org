@@ -15,7 +15,7 @@
      "title": "LXC - Введение",
      "menu": ["LXC", "Введение"],
      "generator": "markdown",
-     "meta": {"input": "lxc/introduction.md"}},
+     "meta": {"input": "lxc/introduction.ru.md"}},
 
     {"path": "/lxc/news",
      "title": "LXC - Новости",
