@@ -1,5 +1,45 @@
 ![Download icon](/static/img/containers.png)
 # News
+## LXD 0.17 release announcement<span class="text-muted">1st of September 2015</span>
+
+The main changes for this release are:
+
+ * lxc: Add a new "lxc file edit" command
+ * lxc: Add support for public remotes
+ * lxc: Support adding a remote by its IPv6 address
+ * lxd/core: Fix building with Go 1.5
+ * lxd/core: Allow renaming snapshots
+ * lxd/core: Add a new /logs REST API to containers
+ * lxd/core: Export the storage backend name and version
+ * lxd/btrfs: Support for recursive subvolume snapshot and removal
+ * lxd/lvm: Add snapshot support
+ * lxd/lvm: Add container copy support
+ * lxd/lvm: Add container rename support
+ * lxd/lvm: Disallow changing LVM config if pool is in use.
+ * lxd/lvm: Document LVM config keys in specs
+ * lxd-images: Deprecate "lxd images import lxc"
+ * lxd-images: Print the manifest URL
+ * lxd-images: Default to the "releases" stream for Ubuntu images
+ * vagrant: Support running in vmware
+ * A bunch more fixes, tests and other improvements
+
+Note that as of this release, the use of "lxd-images import lxc" is
+deprecated in favor of using the images.linuxcontainers.org remote.
+
+For example:
+
+    lxd-images import lxc centos 7 amd64 --alias centos
+    lxc launch centos my-container
+
+Now becomes:
+
+    lxc remote add images images.linuxcontainers.org    # one-time setup
+    lxc launch images:centos/7/amd64 my-container
+
+### Downloads
+The release tarballs can be found on our [download page](/lxd/downloads).
+
+
 ## LXD 0.16 release announcement<span class="text-muted">18th of August 2015</span>
 
 The main changes for this release are:
@@ -26,7 +66,7 @@ The main changes for this release are:
  * Improved logging
  * Improved LVM and btrfs backend
  * /dev/lxd now works with gccgo
- * Added new environment.* configuration namespace to set environment variables inside the container
+ * Added new environment.\* configuration namespace to set environment variables inside the container
  * Init and launch now print the container name
  * lxd-images now defaults to Ubuntu 14.04 LTS
  * --tcp has now been replaced by the core.https\_address config option
