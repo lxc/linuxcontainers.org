@@ -100,7 +100,7 @@ To pull a file from the container, use:
 
 To push one, use:
 
-    lxc file push hosts first/tmp
+    lxc file push hosts first/tmp/
 
 To stop the container, simply do:
 

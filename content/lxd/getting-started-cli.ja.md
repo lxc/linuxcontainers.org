@@ -174,7 +174,7 @@ To push one, use:
 -->
 コンテナへファイルを送るには以下のようにします:
 
-    lxc file push hosts first/tmp
+    lxc file push hosts first/tmp/
 
 <!--
 To stop the container, simply do:
