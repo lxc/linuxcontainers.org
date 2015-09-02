@@ -30,7 +30,7 @@ The main changes for this release are:
 Note that as of this release, the use of "lxd-images import lxc" is
 deprecated in favor of using the images.linuxcontainers.org remote.
 -->
-このリリース以降、images.linuxcontainers.org を使用した "lxd-images import lxc" コマンドの使用は廃止となりました。
+このリリース以降、"lxd-images import lxc" コマンドの使用は廃止となりました。代わりにリモートサーバとして images.linuxcontainers.org を使用してください。
 
 <!--
 For example:
