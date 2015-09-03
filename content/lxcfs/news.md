@@ -1,10 +1,25 @@
 ![Download icon](/static/img/containers.png)
 # News
 
+## LXCFS 0.10 release announcement<span class="text-muted">3rd of September 2015</span>
+Bugfix release.
+
+ * Detect libnih threading support and use when available.
+ * Fix threading issues related to DBus.
+ * Handle missing memory cgroup.
+ * Turn off threading globally because of problems with libdbus.
+ * Tweak lxcfs mounts to better accomodate systemd.
+
+### Downloads
+The release tarballs can be found on our [download page](/lxcfs/downloads).
+
 ## LXCFS 0.9 release announcement<span class="text-muted">3rd of June 2015</span>
 Bugfix release.
 
  * Fixes from Michael McCracken to fix lxcfs crashes
+
+### Downloads
+The release tarballs can be found on our [download page](/lxcfs/downloads).
 
 ## LXCFS 0.8 release announcement<span class="text-muted">7th of May 2015</span>
 
@@ -14,6 +29,9 @@ Bugfix release.
  * Fix some errors in the manpage
  * Fix handling of cpusets
  * Some fixes for the lxc hook
+
+### Downloads
+The release tarballs can be found on our [download page](/lxcfs/downloads).
 
 ## LXCFS 0.7 release announcement<span class="text-muted">3rd of April 2015</span>
 Bugfix release.
