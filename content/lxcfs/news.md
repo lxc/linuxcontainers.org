@@ -8,7 +8,7 @@ Bugfix release.
  * Fix threading issues related to DBus.
  * Handle missing memory cgroup.
  * Turn off threading globally because of problems with libdbus.
- * Tweak lxcfs mounts to better accomodate systemd.
+ * Tweak lxcfs mounts to better accommodate systemd.
 
 ### Downloads
 The release tarballs can be found on our [download page](/lxcfs/downloads).
