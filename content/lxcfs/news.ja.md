@@ -1,12 +1,36 @@
 # News
 
+## LXCFS 0.10 リリースのお知らせ <!-- LXCFS 0.10 release announcement --><span class="text-muted">2015 年 9 月 3 日<!-- 3rd of September 2015 --></span>
+<!--
+Bugfix release.
+-->
+バグフィックスのためのリリースです。
+
+ * libnih のスレッドサポートを検出し、使える場合は使います <!-- Detect libnih threading support and use when available. -->
+ * DBus 関連のスレッディングの問題を修正しました <!-- Fix threading issues related to DBus. -->
+ * memory cgroup がない場合も動作ができるようになりました <!-- Handle missing memory cgroup. -->
+ * libdbus と使う場合に起こる問題のため、全体的にスレッディングを止めました <!-- Turn off threading globally because of problems with libdbus. -->
+ * より systemd に適応するために lxcfs マウントを調整しました <!-- Tweak lxcfs mounts to better accomodate systemd. -->
+
+### ダウンロード <!-- Downloads -->
+<!--
+The release tarballs can be found on our [download page](/lxcfs/downloads).
+-->
+このリリースの tarball は [ダウンロードページ](/lxcfs/downloads) から取得できます。
+
 ## LXCFS 0.9 リリースのお知らせ<!-- LXCFS 0.9 release announcement --><span class="text-muted">2015 年 6 月 3 日 <!-- 3rd of June 2015 --></span>
 <!--
 Bugfix release.
 -->
 バグフィックスのためのリリースです。
 
- * lxcfs のクラッシュを修正する Michael McCracken 氏からの修正をマージしました <!-- Fixes from Michael McCracken to fix lxcfs crashes -->
+* lxcfs のクラッシュを修正する Michael McCracken 氏からの修正をマージしました <!-- Fixes from Michael McCracken to fix lxcfs crashes -->
+
+### ダウンロード <!-- Downloads -->
+<!--
+The release tarballs can be found on our [download page](/lxcfs/downloads).
+-->
+このリリースの tarball は [ダウンロードページ](/lxcfs/downloads) から取得できます。
 
 ## LXCFS 0.8 リリースのお知らせ <!-- LXCFS 0.8 release announcement --><span class="text-muted">2015 年 5 月 7 日<!-- 7th of May 2015 --></span>
 
@@ -16,6 +40,12 @@ Bugfix release.
  * man ページのエラーをいくつか修正しました <!-- Fix some errors in the manpage -->
  * cpuset の扱いを修正しました <!-- Fix handling of cpusets -->
  * lxc のフックの修正をいくつか行いました <!-- Some fixes for the lxc hook -->
+
+### ダウンロード <!-- Downloads -->
+<!--
+The release tarballs can be found on our [download page](/lxcfs/downloads).
+-->
+このリリースの tarball は [ダウンロードページ](/lxcfs/downloads) から取得できます。
 
 ## LXCFS 0.7 リリースのお知らせ <!-- LXCFS 0.7 release announcement --><span class="text-muted">2015 年 4 月 3 日<!-- 3rd of April 2015 --></span>
 バグリックスのリリースです。
