@@ -64,7 +64,7 @@ Unfortunately this also means that the following common operations aren't allowe
   * any operation against a uid/gid outside of the mapped set
 
 Because of that, most distribution templates simply won't work with those.  
-Instead you should the "download" template which will provide you with pre-built images  
+Instead you should use the "download" template which will provide you with pre-built images  
 of the distributions that are known to work in such an environment.
 
 Now, everything below assumes a recent Ubuntu system or another Linux distribution which offers  
