@@ -1,5 +1,26 @@
 ![Download icon](/static/img/containers.png)
 # News
+## LXD 0.18 release announcement<span class="text-muted">15th of September 2015</span>
+
+The main changes for this release are:
+
+ * lxc: Add a new --force-local argument
+ * lxc: Allow file push/pull using stdin/stdout
+ * lxc: Rework translation template
+ * lxd/core: Fix image creation of privileged containers
+ * lxd/core: implement per-container apparmor profiles
+ * lxd/core: implement per-container seccomp profiles
+ * lxd/core: Fix socket-activation on exit
+ * lxd/core: Add support for nested LXD
+ * lxd/btrfs: Fix shared mount detection on btrfs
+ * lxd: Implement new "shutdown" sub-command
+ * lxd: Implement new "activateifneeded" sub-command
+ * scripts: Add script to set up and delete LVM storage
+ * A bunch more fixes, tests and other improvements
+
+### Downloads
+The release tarballs can be found on our [download page](/lxd/downloads).
+
 ## LXD 0.17 release announcement<span class="text-muted">1st of September 2015</span>
 
 The main changes for this release are:
