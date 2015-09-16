@@ -1,5 +1,32 @@
 ![Download icon](/static/img/containers.png)
 # News
+## LXD 0.18 リリースのお知らせ <!-- LXD 0.18 release announcement --><span class="text-muted">2015 年 9 月 15 日<!-- 15th of September 2015 --></span>
+
+<!--
+The main changes for this release are:
+-->
+このリリースの主な変更点は以下の通りです。
+
+ * lxc: 新たに --force-local オプションを追加しました <!-- Add a new \-\-force-local argument -->
+ * lxc: ファイルの push/pull の際に stdin/stdout が使えるようになりました <!-- Allow file push/pull using stdin/stdout -->
+ * lxc: 翻訳テンプレートを変更しました <!-- Rework translation template -->
+ * lxd/core: 特権コンテナのイメージ作成の問題を修正しました <!-- Fix image creation of privileged containers -->
+ * lxd/core: コンテナごとの apparmor プロファイルを実装しました <!-- implement per-container apparmor profiles -->
+ * lxd/core: コンテナごとの seccomp プロファイルを実装しました <!-- implement per-container seccomp profiles -->
+ * lxd/core: exit 時のソケットテクティベーションの問題を修正しました <!-- Fix socket-activation on exit -->
+ * lxd/core: ネストした LXD のサポートを追加しました <!-- Add support for nested LXD -->
+ * lxd/btrfs: btrfs におけるシェアードマウント検出の問題を修正しました <!-- Fix shared mount detection on btrfs -->
+ * lxd: 新たに "shutdown" サブコマンドを実装しました <!-- Implement new "shutdown" sub-command -->
+ * lxd: 新たに "activateifneeded" サブコマンドを実装しました <!-- Implement new "activateifneeded" sub-command -->
+ * scripts: LVM ストレージをセットアップおよび削除するスクリプトを追加しました <!-- Add script to set up and delete LVM storage -->
+ * 多数のバグ修正と、テストなどの改良を行いました <!-- A bunch more fixes, tests and other improvements -->
+
+### ダウンロード <!-- Downloads -->
+<!--
+The release tarballs can be found on our [download page](/lxd/downloads).
+-->
+このリリースの tarball は [ダウンロードページ](/lxd/downloads) から取得できます。
+
 ## LXD 0.17 リリースのお知らせ <!-- LXD 0.17 release announcement --><span class="text-muted">2015 年 9 月 1 日<!-- 1st of September 2015 --></span>
 
 <!--
