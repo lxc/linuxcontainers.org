@@ -1,5 +1,5 @@
 # Installing LXD and the command line tool
-## Ubuntu
+## Ubuntu desktop and Ubuntu server
 As LXD evolves quite rapidly, we recommend Ubuntu users use our PPA:
 
     add-apt-repository ppa:ubuntu-lxc/lxd-stable
@@ -15,6 +15,14 @@ Because group membership is only applied at login, you then either need to close
 and re-open your user session or use the "newgrp lxd" command in the shell you're going to interact with lxd from.
 
     newgrp lxd
+
+## Ubuntu Core (snappy)
+LXD is available for Ubuntu Core as a Snap package in the store.  
+You can install it with:
+
+    sudo snappy install lxd.stgraber
+
+After that, LXD can be interacted with through the "lxc" and "lxd-images" commands.
 
 ## Other distributions
 There are currently packages for multiple distributions including Gentoo and, of course, Ubuntu.  
