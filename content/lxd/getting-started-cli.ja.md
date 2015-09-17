@@ -1,5 +1,5 @@
 # LXD とコマンドラインツールのインストール <!-- Installing LXD and the command line tool -->
-## Ubuntu
+## Ubuntu デスクトップと Ubuntu サーバ
 <!--
 As LXD evolves quite rapidly, we recommend Ubuntu users use our PPA:
 -->
@@ -25,6 +25,19 @@ and re-open your user session or use the "newgrp lxd" command in the shell you'r
 
     newgrp lxd
 
+## Ubuntu Core (snappy)
+<!--
+LXD is available for Ubuntu Core as a Snap package in the store.  
+You can install it with:
+-->
+LXD はストア内の Snap パッケージとして Ubuntu Core で利用できます。以下のようにインストールできます。
+
+    sudo snappy install lxd.stgraber
+
+<!--
+After that, LXD can be interacted with through the "lxc" and "lxd-images" commands.
+-->
+インストール後は、LXD は "lxc" と "lxd-images" コマンド経由で操作できます。
 
 ## 他のディストリビューション <!-- Other distributions -->
 <!--
