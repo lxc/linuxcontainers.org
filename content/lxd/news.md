@@ -1,5 +1,32 @@
 ![Download icon](/static/img/containers.png)
 # News
+## LXD 0.19 release announcement<span class="text-muted">29th of September 2015</span>
+
+The main changes for this release are:
+
+ * ZFS support
+ * Support for container nesting
+ * Allow setting multi-line configuration keys by reading from stdin (using "-" as the value)
+ * It's now possible to make an ephemeral copy of a container (-e/--ephemeral flag)
+ * Public read-only servers are now auto-detected (no more --public needed)
+ * lxd-images now supports updating existing images (when using the --sync flag)
+ * It is now possible to mark/unmark images as public (through the edit command)
+
+Additionally:
+
+ * A completely reworked testsuite
+ * Some refactoring in preparation for a Windows client
+ * Updated documentation and specifications
+ * A lot of bugfixes (no known bugs left at time of release)
+
+Note that due to an API implementation problem in past releases, older command line clients  
+will fail to interact with LXD 0.19's image store. Such clients should be upgraded to 0.19.
+
+
+### Downloads
+The release tarballs can be found on our [download page](/lxd/downloads).
+
+
 ## LXD 0.18 release announcement<span class="text-muted">15th of September 2015</span>
 
 The main changes for this release are:
@@ -20,6 +47,7 @@ The main changes for this release are:
 
 ### Downloads
 The release tarballs can be found on our [download page](/lxd/downloads).
+
 
 ## LXD 0.17 release announcement<span class="text-muted">1st of September 2015</span>
 
