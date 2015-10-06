@@ -1,5 +1,84 @@
 ![Download icon](/static/img/containers.png)
 # News
+## LXC 1.1.4 release announcement<span class="text-muted">6th of October 2015</span>
+
+Important:
+
+ * Security fix for CVE-2015-1335
+
+Core:
+
+ * Check for NULL pointers before calling setenv()
+ * Factorize handle of create=dir and create=file
+ * Refactor and factorize mount entries
+ * Split handle of lxc.mount* with 3 functions
+ * init: Support older apparmor
+ * Make LXC_CLONE_KEEPNAME work
+ * Fix automatic mounts without a rootfs
+ * Fix container creation without a rootfs
+ * Fix /dev symlinks without a rootfs
+ * Allow autodev without a rootfs
+ * Only mount /proc if needed, even without a rootfs
+ * When creating container, save configuration if rootfs already exists
+ * Fix verification of start hook without a rootfs
+ * Tear down network devices during container halt
+ * coverity: fix mount_entry_create_dir_file
+ * Add a nesting.conf which can be included to support nesting containers
+ * Fix reallocation calculation
+ * Add bdev_destroy() and bdev_destroy_wrapper()
+ * overlayfs_clone: rsync the mounted rootfs
+ * lxc_rmdir_onedev: don't fail if path doesn't exist
+ * overlayfs_mount: create delta dir if it doesn't exist
+ * ovl_rsync: make sure to umount
+ * Destroy bdevs using bdev_destroy() from bdev.h
+ * Fix indentation
+ * cmds: fix abstract socket length problem
+ * coverity: drop second (redundant) block
+ * Check return value of snprintf in mount_proc_if_needed()
+ * Add CAP_AUDIT_READ
+ * Add CAP_BLOCK_SUSPEND
+ * Free allocated memory on failure (v2)
+ * Define O_PATH and O_NOFOLLOW for Android
+ * seccomp: add aarch64 support
+ * lxc-test-symlink: add a test using absolute symlink
+ * lxc_mount_auto_mounts: fix weirdness
+ * Fix the type of i in lxc_mount_auto_mounts
+
+Tools:
+
+ * Fix grammar in some of the executables "NAME for name of the container" becomes "NAME of the container"
+ * lxc-checkconfig: add some more config options
+ * lxc-start-ephemeral: Parse passwd directly
+
+Documentation:
+
+ * Add long option for -P in documentation
+ * Add doc for optional, create=dir and create=file in lxc.container.conf man
+ * Update lxc.cgroup.use in lxc.system.conf(5)
+ * Add the description of common options in lxc-destroy(1)
+ * Add LXC-specific mount option in Japanese lxc.container.conf(5)
+
+Templates:
+
+ * lxc-debian: support stretch (Debian 9) images
+ * lxc-debian: allow not including contrib/non-free
+ * lxc-debian: Test dpkg for multiarch support
+ * lxc-debian: Alternative test for dpkg multiarch support in lxc-debian template
+ * lxc-ubuntu: ubuntu.common.conf: mount /dev/mqueue
+ * lxc-debian: We should only check the kernel architecture.
+ * lxc-alpine: avoid GNU BRE extensions for better portability
+ * lxc-alpine: use getopt to parse options
+
+Those stable fixes were brought to you by 14 individual contributors.
+
+### Downloads
+The release tarballs may be found on our [download page](/lxc/downloads) and we expect most distributions  
+will very soon ship a packaged version of LXC 1.1.4.
+
+Should you be interested in individual changes or just looking at the detailed development history,  
+our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-1.1).
+
+
 ## LXC 1.1.3 release announcement<span class="text-muted">14th of August 2015</span>
 This is the third bugfix release for LXC 1.1.
 
