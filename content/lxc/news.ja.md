@@ -36,7 +36,7 @@
  * mount_proc_if_needed() で snprintf の返り値のチェックを行うようにしました <!-- Check return value of snprintf in mount_proc_if_needed() -->
  * CAP_AUDIT_READ を追加しました <!-- Add CAP_AUDIT_READ -->
  * CAP_BLOCK_SUSPEND を追加しました <!-- Add CAP_BLOCK_SUSPEND -->
- * 処理の失敗時に確保されたメモリを開放するようにしました <!-- Free allocated memory on failure (v2) -->
+ * 処理の失敗時に確保されたメモリを解放するようにしました <!-- Free allocated memory on failure (v2) -->
  * Android 用に O_PATH と O_NOFOLLOW を定義しました <!-- Define O_PATH and O_NOFOLLOW for Android -->
  * seccomp: aarch64 のサポートを追加しました <!-- add aarch64 support -->
  * lxc-test-symlink: 絶対パスのシンボリックリンクを使ったテストを追加しました <!-- add a test using absolute symlink -->
