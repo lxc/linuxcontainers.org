@@ -109,8 +109,8 @@ Importing a new image can be done with:
 -->
 新しいイメージの取得は以下のように行います:
 
-    lxd-images import lxc ubuntu trusty amd64 --alias ubuntu
-    lxd-images import lxc debian wheezy amd64 --alias debian
+    lxd-images import busybox --alias busybox
+    lxd-images import ubuntu --alias ubuntu
 
 <!--
 And then simply using the image to start containers:
