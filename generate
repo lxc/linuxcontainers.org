@@ -22,6 +22,7 @@ import markdown.extensions.codehilite
 import markdown.extensions.toc
 import pygments.formatters
 import os
+import re
 import shutil
 import subprocess
 
@@ -165,6 +166,28 @@ def md2html(path):
         return markdown.markdown(fd.read(), extensions=[codehilite, anchors])
 
 
+def download_sort_key(download_name):
+    """
+        Given a download target filename, return its relative sort order.
+        Sorting alphabetically will mix up version numbers.  This assumes
+        all downloads in the same list have a similar delimiter structure;
+        otherwise the ordering may be wrong for some other reason.
+    """
+
+    # Sort integer-y tokens in numeric order, everything else alphabetically.
+    # Additionally, sort alphabetic tokens before numeric ones to handle
+    # differing numbers of version components (even though this may not be
+    # necessary so far).
+    def token_key(token):
+        if re.match(r'\A\d+\Z', token):
+            return (1, int(token))
+        else:
+            return (0, token)
+
+    # Treat the entire filename as tokens delimited by dash or dot.
+    return [token_key(token) for token in re.split(r'[-.]', download_name)]
+
+
 def gen_page(entry, override, prefix, **variables):
     item = dict(entry)
 
@@ -215,7 +238,8 @@ def gen_page(entry, override, prefix, **variables):
 
         downloads = []
         download_path = item['meta']['dir'].lstrip("/")
-        for entry in sorted(os.listdir(download_path), reverse=True):
+        for entry in sorted(os.listdir(download_path),
+                            key=download_sort_key, reverse=True):
             if not os.path.isfile("%s/%s" % (download_path, entry)):
                 continue
 
