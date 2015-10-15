@@ -1,5 +1,38 @@
 ![Download icon](/static/img/containers.png)
 # News
+## LXD 0.20 リリースのお知らせ <!-- LXD 0.20 release announcement --><span class="text-muted">2015 年 10 月 14 日<!-- 14th of October 2015 --></span>
+
+<!--
+The main changes for this release are:
+-->
+このリリースの主な変更点は以下の通りです。
+
+ * コンテナの再起動は stop+start として実装されました (すべての設定がリロードされます) <!-- Container restart is now implemented as stop + start (reloads all config) -->
+ * --config/-c を使って起動時に設定 key=value を与えられるようになりました <!-- Config key=value can now be passed at launch time using \-\-config/-c -->
+ * コンテナを一時的に停止させるために新しく "pause" コマンドが使えるようになりました <!-- A new "pause" command is now available to temporarily freeze a container -->
+ * デフォルトではキャッシュしたイメージはプライベートとなります <!-- Cached images are now private by default -->
+ * リモートのコンテナをローカルのイメージストアに publish できるようになりました <!-- You can now publish a remote container into the local image store -->
+ * キャラクタデバイス、ブロックデバイスをコンテナに追加できるようになりました <!-- It is now possible to add character or block devices to a container -->
+ * イメージのリストでイメージサイズの確認ができるようになりました <!-- The image size is now shown in the image list -->
+
+<!--
+Additionally:
+-->
+加えて、
+
+ * 様々なストレージバックエンドの修正 <!-- Various storage backend fixes -->
+ * より良いエラーの取り扱いと報告 <!-- Better error handling and error reporting -->
+ * テストの改良 <!-- Improved testsuite -->
+ * 多数のバグフィックス (リリース時点での既知のバグはなくなりました) <!-- A lot of bugfixes (no known bugs left at time of release) -->
+
+
+### ダウンロード <!-- Downloads -->
+<!--
+The release tarballs can be found on our [download page](/lxd/downloads).
+-->
+このリリースの tarball は [ダウンロードページ](/lxd/downloads) から取得できます。
+
+
 ## LXD 0.19 リリースのお知らせ <!-- LXD 0.19 release announcement --><span class="text-muted"><!-- 29th of September 2015 -->2015 年 9 月 25 日</span>
 
 <!--
