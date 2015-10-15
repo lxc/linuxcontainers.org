@@ -1,5 +1,29 @@
 ![Download icon](/static/img/containers.png)
 # News
+## LXD 0.20 release announcement<span class="text-muted">14th of October 2015</span>
+
+The main changes for this release are:
+
+ * Container restart is now implemented as stop + start (reloads all config)
+ * Config key=value can now be passed at launch time using --config/-c
+ * A new "pause" command is now available to temporarily freeze a container
+ * Cached images are now private by default
+ * You can now publish a remote container into the local image store
+ * It is now possible to add character or block devices to a container
+ * The image size is now shown in the image list
+
+Additionally:
+
+ * Various storage backend fixes
+ * Better error handling and error reporting
+ * Improved testsuite
+ * A lot of bugfixes (no known bugs left at time of release)
+
+
+### Downloads
+The release tarballs can be found on our [download page](/lxd/downloads).
+
+
 ## LXD 0.19 release announcement<span class="text-muted">29th of September 2015</span>
 
 The main changes for this release are:
