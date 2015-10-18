@@ -1,0 +1,219 @@
+<script src="/static/js/term.js" type="text/javascript"></script>
+<script src="/static/js/jquery.min.js"></script>
+
+<script type="text/javascript">
+    var tryit_terms_hash = "";
+
+    $(document).ready(function() {
+        function getTimeRemaining(endtime){
+            var current = Math.floor(new Date() / 1000);
+            var remaining = endtime - current
+
+            if (remaining < 0) {
+                remaining = 0
+            }
+
+            return remaining
+        }
+
+        function initializeClock(id, endtime){
+            var clock = document.getElementById(id);
+            var minutesSpan = clock.querySelector('.minutes');
+            var secondsSpan = clock.querySelector('.seconds');
+
+            function updateClock(){
+                var t = getTimeRemaining(endtime);
+
+                var minutes = Math.floor(t / 60)
+                var seconds = t - minutes * 60;
+
+                minutesSpan.innerHTML = ('0' + minutes).slice(-2);
+                secondsSpan.innerHTML = ('0' + seconds).slice(-2);
+
+                if(t <= 0){
+                    clearInterval(timeinterval);
+                    location.reload()
+                }
+            }
+
+            updateClock();
+            var timeinterval = setInterval(updateClock, 1000);
+        }
+
+        $('#tryit_info_panel').css("display", "none")
+        $('#tryit_console_panel').css("display", "none")
+        $('#tryit_examples_panel').css("display", "none")
+        $('#tryit_progress').css("display", "none")
+
+        $.ajax({
+            url: "https://lxd-demo.linuxcontainers.org:8443/1.0"
+        }).then(function(data) {
+            if (data.server_console_only == true) {
+                $('#tryit_address_row').css("display", "none");
+                $('#tryit_fqdn_row').css("display", "none");
+                $('#tryit_username_row').css("display", "none");
+                $('#tryit_password_row').css("display", "none");
+            }
+
+            $('#tryit_protocol').text(data.client_protocol);
+            $('#tryit_address').text(data.client_address);
+            $('#tryit_count').text(data.containers_count);
+            $('#tryit_max').text(data.containers_max);
+        });
+
+        $.ajax({
+            url: "https://lxd-demo.linuxcontainers.org:8443/1.0/terms"
+        }).then(function(data) {
+            tryit = data;
+            $('#tryit_terms').html(data.terms);
+            tryit_terms_hash = data.hash;
+        });
+
+        $('#tryit_accept').click(function() {
+            $('#tryit_terms_panel').css("display", "none");
+            $('#tryit_accept').css("display", "none");
+            $('#tryit_progress').css("display", "inherit");
+
+            $.ajax({
+                url: "https://lxd-demo.linuxcontainers.org:8443/1.0/start?terms="+tryit_terms_hash
+            }).then(function(data) {
+                $('#tryit_container_console').html(data.console);
+                $('#tryit_container_ip').html(data.ip);
+                $('#tryit_container_fqdn').text(data.fqdn);
+                $('#tryit_container_username').html(data.username);
+                $('#tryit_container_password').html(data.password);
+                initializeClock('tryit_clock', data.expiry);
+
+                $('#tryit_status_panel').css("display", "none");
+                $('#tryit_start_panel').css("display", "none");
+                $('#tryit_info_panel').css("display", "inherit");
+                $('#tryit_console_panel').css("display", "inherit");
+                $('#tryit_examples_panel').css("display", "inherit");
+
+                var sock = new WebSocket("wss://lxd-demo.linuxcontainers.org:8443/1.0/console?uuid="+data.console);
+
+                sock.onerror = function (e) {
+                    console.log("socket error", e);
+                };
+
+                sock.onopen = function (e) {
+                    var term = new Terminal({
+                        cols: 150,
+                        rows: 20,
+                        useStyle: true,
+                        screenKeys: false
+                    });
+
+                    term.open(document.getElementById("tryit_console"))
+
+                    term.on('data', function(data) {
+                        sock.send(data);
+                    });
+
+                    sock.onmessage = function(msg) {
+                        term.write(msg.data);
+                    };
+
+                    sock.onclose = function(msg) {
+                        $('#tryit_console_panel').css("display", "none");
+                        term.destroy();
+                    };
+                };
+            });
+        });
+    });
+</script>
+
+<div class="panel panel-success" id="tryit_status_panel">
+    <div class="panel-heading">Server status</div>
+    <div class="panel-body">
+        You are connected over: <span id="tryit_protocol"></span> (<span id="tryit_address"></span>)<br/>
+        The test server is currently running <span id="tryit_count"></span> containers out of <span id="tryit_max"></span>
+    </div>
+</div>
+
+<div class="panel panel-primary" id="tryit_terms_panel">
+    <div class="panel-heading">Terms of service</div>
+    <div class="panel-body" id="tryit_terms"></div>
+</div>
+
+<div class="panel panel-warning" id="tryit_start_panel">
+    <div class="panel-heading">Start</div>
+    <div class="panel-body">
+        <button class="btn btn-default btn-lg" id="tryit_accept" type="button">
+            <span aria-hidden="true" class="glyphicon glyphicon-ok"></span>
+            I have read and accept the terms of service above
+        </button>
+
+        <div id="tryit_progress" style="width:50em">
+            <h1>Starting the container...</h1>
+            <div class="progress">
+                <div class="progress-bar progress-bar-striped active" style="width: 100%">
+                    <span class="sr-only">Creating...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="panel panel-success" id="tryit_info_panel">
+    <div class="panel-heading">Container information</div>
+    <div class="panel-body">
+        <table class="table">
+            <tr id="tryit_address_row">
+                <th>Public IPv6 address</th>
+                <td id="tryit_container_ip"></td>
+            </tr>
+
+<!--            <tr id="tryit_fqdn_row">
+                <th>Internal FQDN</th>
+                <td id="tryit_container_fqdn"></td>
+            </tr>-->
+
+            <tr id="tryit_username_row">
+                <th>SSH username</th>
+                <td id="tryit_container_username"></td>
+            </tr>
+
+            <tr id="tryit_password_row">
+                <th>SSH password</th>
+                <td id="tryit_container_password"></td>
+            </tr>
+
+            <tr id="tryit_clock">
+                <th>Time remaining</th>
+                <td><span class="minutes"></span> minutes, <span class="seconds"></span> seconds</td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<div class="panel panel-primary" id="tryit_console_panel">
+    <div class="panel-heading">Console</div>
+    <div class="panel-body">
+        <div id="tryit_console" style="background-color:black;"></div>
+    </div>
+</div>
+
+<div class="panel panel-info" id="tryit_examples_panel">
+    <div class="panel-heading">What now?</div>
+    <div class="panel-body">
+        <p>You are now root inside a LXD container with a nested LXD
+           installed inside it.
+        </p>
+
+        <p>As a first step, you can launch an Ubuntu container called "test":
+           <pre>lxc launch ubuntu test</pre>
+        </p>
+
+        <p>Initial startup can take a few seconds due to having to
+           generate SSL keys on a rather busy system.<br />
+           Further commands should then be near instantenous.
+        </p>
+
+        <p>To learn more about what you can do in this environment, you
+           may want to read our
+           <a href="/lxd/getting-started-cli">Getting started document</a>.
+        </p>
+    </div>
+</div>
