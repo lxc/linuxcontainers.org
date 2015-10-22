@@ -132,6 +132,7 @@ The latter sets a trust password to be used when contacting that server.
 
 Now to talk to that remote LXD, you can simply add it with:
 
+    lxc config set core.https_address [::]
     lxc remote add host-a <ip address or DNS>
 
 This will prompt you to confirm the remote server fingerprint and then ask you for the password.
