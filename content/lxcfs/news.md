@@ -1,6 +1,15 @@
 ![Download icon](/static/img/containers.png)
 # News
 
+## LXCFS 0.11 release announcement<span class="text-muted">26th of October 2015</span>
+
+ * Switch from libnih and dbus to glib and GDbus.  Since these are
+   thread-safe, enable threading by default.
+ * Support newer systemd which places itself into init.scope.
+
+### Downloads
+The release tarballs can be found on our [download page](/lxcfs/downloads).
+
 ## LXCFS 0.10 release announcement<span class="text-muted">3rd of September 2015</span>
 Bugfix release.
 
