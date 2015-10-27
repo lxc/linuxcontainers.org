@@ -1,5 +1,16 @@
 # News
 
+## LXCFS 0.11 リリースのお知らせ <!-- LXCFS 0.11 release announcement --><span class="text-muted">2015 年 10 月 26 日<!-- 26th of October 2015 --></span>
+
+ * libnih と dbus から glib と GDbus の使用に切り替えました。glib と GDbus はスレッドセーフですので、デフォルトでスレッディングが有効になります。 <!-- Switch from libnih and dbus to glib and GDbus.  Since these are thread-safe, enable threading by default. -->
+ * 自身を init.scope 内に配置する新しい systemd に対応しました <!-- Support newer systemd which places itself into init.scope. -->
+
+### ダウンロード <!-- Downloads -->
+<!--
+The release tarballs can be found on our [download page](/lxcfs/downloads).
+-->
+このリリースの tarball は [ダウンロードページ](/lxcfs/downloads) から取得できます。
+
 ## LXCFS 0.10 リリースのお知らせ <!-- LXCFS 0.10 release announcement --><span class="text-muted">2015 年 9 月 3 日<!-- 3rd of September 2015 --></span>
 <!--
 Bugfix release.
