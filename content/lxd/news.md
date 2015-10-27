@@ -1,5 +1,25 @@
 ![Download icon](/static/img/containers.png)
 # News
+## LXD 0.21 release announcement<span class="text-muted">27th of October 2015</span>
+
+The main changes for this release are:
+
+ * Client is now builable on Windows.
+ * Default LVM volume size has been reduced to 10GB.
+ * Command aliases can be setup in the client.
+ * "lxc info" now prints server information too.
+ * It's now possible to use a nested LXD on btrfs storage.
+
+Additionally:
+
+ * Various storage backend fixes
+ * Better error handling and error reporting
+ * A lot of bugfixes (no known bugs left at time of release)
+
+### Downloads
+The release tarballs can be found on our [download page](/lxd/downloads).
+
+
 ## LXD 0.20 release announcement<span class="text-muted">14th of October 2015</span>
 
 The main changes for this release are:
