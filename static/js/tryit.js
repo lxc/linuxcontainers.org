@@ -45,10 +45,8 @@ $(document).ready(function() {
         url: "https://lxd-demo.linuxcontainers.org:8443/1.0"
     }).then(function(data) {
         if (data.server_console_only == true) {
-            $('#tryit_address_row').css("display", "none");
-            $('#tryit_fqdn_row').css("display", "none");
-            $('#tryit_username_row').css("display", "none");
-            $('#tryit_password_row').css("display", "none");
+            $('#tryit_ssh_row').css("display", "none");
+            $('#tryit_lxd_row').css("display", "none");
         }
 
         $('#tryit_protocol').text(data.client_protocol);
@@ -73,11 +71,11 @@ $(document).ready(function() {
         $.ajax({
             url: "https://lxd-demo.linuxcontainers.org:8443/1.0/start?terms="+tryit_terms_hash
         }).then(function(data) {
-            $('#tryit_container_console').html(data.console);
-            $('#tryit_container_ip').html(data.ip);
-            $('#tryit_container_fqdn').text(data.fqdn);
-            $('#tryit_container_username').html(data.username);
-            $('#tryit_container_password').html(data.password);
+            $('.tryit_container_console').html(data.console);
+            $('.tryit_container_ip').html(data.ip);
+            $('.tryit_container_fqdn').text(data.fqdn);
+            $('.tryit_container_username').html(data.username);
+            $('.tryit_container_password').html(data.password);
             initializeClock('tryit_clock', data.expiry);
 
             $('#tryit_status_panel').css("display", "none");

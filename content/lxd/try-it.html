@@ -38,28 +38,18 @@
     <div class="panel-heading">Container information</div>
     <div class="panel-body">
         <table class="table">
-            <tr id="tryit_address_row">
-                <th>Public IPv6 address</th>
-                <td id="tryit_container_ip"></td>
+            <tr id="tryit_ssh_row">
+                <th>SSH</th>
+                <td>ssh <span class="tryit_container_username"></span>@<span class="tryit_container_ip"></span> (password: <span class="tryit_container_password"></span>)</td>
             </tr>
 
-<!--            <tr id="tryit_fqdn_row">
-                <th>Internal FQDN</th>
-                <td id="tryit_container_fqdn"></td>
-            </tr>-->
-
-            <tr id="tryit_username_row">
-                <th>SSH username</th>
-                <td id="tryit_container_username"></td>
-            </tr>
-
-            <tr id="tryit_password_row">
-                <th>SSH password</th>
-                <td id="tryit_container_password"></td>
+            <tr id="tryit_lxd_row">
+                <th>LXD</th>
+                <td>lxc remote add tryit <span class="tryit_container_ip"></span> (password: <span class="tryit_container_password"></span>)</td>
             </tr>
 
             <tr id="tryit_clock">
-                <th>Time remaining</th>
+                <th>Time</th>
                 <td><span class="minutes"></span> minutes, <span class="seconds"></span> seconds</td>
             </tr>
         </table>

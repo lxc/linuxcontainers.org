@@ -31,15 +31,6 @@ CONTENT_PATH = "content"
 TARGET_PATH = "output"
 
 
-def pretty_print(html):
-    """
-        Returns a cleanly indented version of the provided html code.
-    """
-
-    soup = bs4.BeautifulSoup(html)
-    return soup.prettify(formatter="html")
-
-
 def content_path(filename):
     """
         Returns the path to a file from the content directory
@@ -320,7 +311,7 @@ def gen_page(entry, override, prefix, **variables):
 
             template = env.get_template(template)
             with open(output_man_path, "w+") as fd:
-                fd.write(pretty_print(
+                fd.write(
                     template.render(page_path=entry_link,
                                     page_raw_path="%s/man%s/%s.html" % (
                                         page_raw_path, section, entry),
@@ -328,7 +319,7 @@ def gen_page(entry, override, prefix, **variables):
                                                             entry),
                                     page_menu=item['menu'] + [entry],
                                     content=content,
-                                    **variables)))
+                                    **variables))
 
         content = "<ul>"
         for entry in sorted(os.listdir(man_path)):
@@ -349,13 +340,13 @@ def gen_page(entry, override, prefix, **variables):
     # Pass all the variables to the template and generate the html
     template = env.get_template(template)
     with open(output_path, "w+") as fd:
-        fd.write(pretty_print(
+        fd.write(
             template.render(page_path=item['path'],
                             page_raw_path=page_raw_path,
                             page_title=item['title'],
                             page_menu=item['menu'],
                             content=content,
-                            **variables)))
+                            **variables))
 
 
 # Load the configuration and structure
