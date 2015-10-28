@@ -1,7 +1,7 @@
 $(document).ready(function() {
     var tryit_terms_hash = "";
     var tryit_console = "";
-    var tryit_server = "lxd-demo.linuxcontainers.org:8443";
+    var tryit_server = "lxd-demo.linuxcontainers.org";
 
     function getUrlParameter(sParam) {
         var sPageURL = decodeURIComponent(window.location.search.substring(1)),
