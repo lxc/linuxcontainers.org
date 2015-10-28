@@ -16,7 +16,7 @@
 </div>
 
 <div class="panel panel-warning" id="tryit_start_panel">
-    <div class="panel-heading">試用開始</div>
+    <div class="panel-heading">試用開始 <!-- Start --></div>
     <div class="panel-body">
         <button class="btn btn-default btn-lg" id="tryit_accept" type="button">
             <span aria-hidden="true" class="glyphicon glyphicon-ok"></span>
@@ -38,29 +38,24 @@
     <div class="panel-heading">コンテナの情報 <!-- Container information --></div>
     <div class="panel-body">
         <table class="table">
-            <tr id="tryit_address_row">
-                <th>Public IPv6 アドレス <!-- Public IPv6 Address --></th>
-                <td class="tryit_container_ip"></td>
+            <tr id="tryit_ssh_row">
+                <th>SSH</th>
+                <td>ssh <span class="tryit_container_username"></span>@<span class="tryit_container_ip"></span></td>
             </tr>
 
-<!--            <tr id="tryit_fqdn_row">
-                <th>Internal FQDN</th>
-                <td id="tryit_container_fqdn"></td>
-            </tr>-->
-
-            <tr id="tryit_username_row">
-                <th>SSH ユーザ名 <!-- SSH username --></th>
-                <td class="tryit_container_username"></td>
+            <tr id="tryit_lxd_row">
+                <th>LXD</th>
+                <td>lxc remote add tryit <span class="tryit_container_ip"></span></td>
             </tr>
 
             <tr id="tryit_password_row">
-                <th>SSH パスワード <!-- SSH password --></th>
-                <td class="tryit_container_password"></td>
+                <th>パスワード</th>
+                <td><span class="tryit_container_password"></span></td>
             </tr>
 
             <tr id="tryit_clock">
-                <th>残り時間 <!-- Time remaining --></th>
-                <td><span class="minutes"></span> 分 <!-- minutes, --> <span class="seconds"></span> 秒 <!-- seconds --></td>
+                <th>残り時間 <!-- Time --></th>
+                <td><span class="minutes"></span> 分<!-- minutes, --> <span class="seconds"></span> 秒<!-- seconds --></td>
             </tr>
         </table>
     </div>
@@ -94,7 +89,7 @@
 
         <p>
            多少負荷のある状態で SSL 鍵を生成する必要があるため、最初の起動には数秒かかる可能性があります。<br/>
-           さらにコマンドを実行するとすぐに実行されるはずです。
+           それ以降に実行するコマンドはすぐに実行されるはずです。
            <!--
            Initial startup can take a few seconds due to having to
            generate SSL keys on a rather busy system.<br />
