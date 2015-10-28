@@ -38,29 +38,19 @@
     <div class="panel-heading">コンテナの情報 <!-- Container information --></div>
     <div class="panel-body">
         <table class="table">
-            <tr id="tryit_address_row">
-                <th>Public IPv6 アドレス <!-- Public IPv6 Address --></th>
-                <td class="tryit_container_ip"></td>
+            <tr id="tryit_ssh_row">
+                <th>SSH</th>
+                <td>ssh <span class="tryit_container_username"></span>@<span class="tryit_container_ip"></span> (パスワード<!-- password -->: <span class="tryit_container_password"></span>)</td>
             </tr>
 
-<!--            <tr id="tryit_fqdn_row">
-                <th>Internal FQDN</th>
-                <td id="tryit_container_fqdn"></td>
-            </tr>-->
-
-            <tr id="tryit_username_row">
-                <th>SSH ユーザ名 <!-- SSH username --></th>
-                <td class="tryit_container_username"></td>
-            </tr>
-
-            <tr id="tryit_password_row">
-                <th>SSH パスワード <!-- SSH password --></th>
-                <td class="tryit_container_password"></td>
+            <tr id="tryit_lxd_row">
+                <th>LXD</th>
+                <td>lxc remote add tryit <span class="tryit_container_ip"></span> (パスワード <!-- password -->: <span class="tryit_container_password"></span>)</td>
             </tr>
 
             <tr id="tryit_clock">
-                <th>残り時間 <!-- Time remaining --></th>
-                <td><span class="minutes"></span> 分 <!-- minutes, --> <span class="seconds"></span> 秒 <!-- seconds --></td>
+                <th>残り時間 <!-- Time --></th>
+                <td><span class="minutes"></span> 分<!-- minutes, --> <span class="seconds"></span> 秒<!-- seconds --></td>
             </tr>
         </table>
     </div>
