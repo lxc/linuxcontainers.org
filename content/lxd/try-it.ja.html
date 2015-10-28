@@ -1,0 +1,114 @@
+<script src="/static/js/term.js" type="text/javascript"></script>
+<script src="/static/js/jquery.min.js" type="text/javascript"></script>
+<script src="/static/js/tryit.js" type="text/javascript"></script>
+
+<div class="panel panel-success" id="tryit_status_panel">
+    <div class="panel-heading">サーバの状態 <!-- Server status --></div>
+    <div class="panel-body">
+        接続元 <!-- You are connected over: --><span id="tryit_protocol"></span> (<span id="tryit_address"></span>)<br/>
+        テストサーバは現在 <span id="tryit_count"></span> 台を実行中です (最大 <span id="tryit_max"></span> 台中)<!-- The test server is currently running <span id="tryit_count"></span> containers out of <span id="tryit_max"></span> -->
+    </div>
+</div>
+
+<div class="panel panel-primary" id="tryit_terms_panel">
+    <div class="panel-heading">サービス利用規約 <!-- Terms of service --></div>
+    <div class="panel-body" id="tryit_terms"></div>
+</div>
+
+<div class="panel panel-warning" id="tryit_start_panel">
+    <div class="panel-heading">試用開始</div>
+    <div class="panel-body">
+        <button class="btn btn-default btn-lg" id="tryit_accept" type="button">
+            <span aria-hidden="true" class="glyphicon glyphicon-ok"></span>
+            私はサービス利用規約を読み、同意しました<!-- I have read and accept the terms of service above -->
+        </button>
+
+        <div id="tryit_progress" style="width:50em">
+            <h1>コンテナの起動中... <!-- Starting the container... --></h1>
+            <div class="progress">
+                <div class="progress-bar progress-bar-striped active" style="width: 100%">
+                    <span class="sr-only">作成中... <!-- Creating... --></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="panel panel-success" id="tryit_info_panel">
+    <div class="panel-heading">コンテナの情報 <!-- Container information --></div>
+    <div class="panel-body">
+        <table class="table">
+            <tr id="tryit_address_row">
+                <th>Public IPv6 アドレス <!-- Public IPv6 Address --></th>
+                <td id="tryit_container_ip"></td>
+            </tr>
+
+<!--            <tr id="tryit_fqdn_row">
+                <th>Internal FQDN</th>
+                <td id="tryit_container_fqdn"></td>
+            </tr>-->
+
+            <tr id="tryit_username_row">
+                <th>SSH ユーザ名 <!-- SSH username --></th>
+                <td id="tryit_container_username"></td>
+            </tr>
+
+            <tr id="tryit_password_row">
+                <th>SSH パスワード <!-- SSH password --></th>
+                <td id="tryit_container_password"></td>
+            </tr>
+
+            <tr id="tryit_clock">
+                <th>残り時間 <!-- Time remaining --></th>
+                <td><span class="minutes"></span> 分 <!-- minutes, --> <span class="seconds"></span> 秒 <!-- seconds --></td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<div class="panel panel-primary" id="tryit_console_panel">
+    <div class="panel-heading">コンソール <!-- Console --></div>
+    <div class="panel-body">
+        <div id="tryit_console" style="background-color:black;"></div>
+    </div>
+</div>
+
+<div class="panel panel-info" id="tryit_examples_panel">
+    <div class="panel-heading">次は何をする? <!-- What now? --></div>
+    <div class="panel-body">
+        <p>
+           今、あなたは LXD コンテナ内に root としてログインしています。このコンテナには LXD がネストしてインストールされています。
+           <!--
+           You are now root inside a LXD container with a nested LXD
+           installed inside it.
+           -->
+        </p>
+
+        <p>
+           最初のステップとして、"test" という名前の Ubuntu コンテナを起動してみましょう。
+           <!--
+           As a first step, you can launch an Ubuntu container called "test":
+           -->
+           <pre>lxc launch ubuntu test</pre>
+        </p>
+
+        <p>
+           多少負荷のある状態で SSL 鍵を生成する必要があるため、最初の起動には数秒かかる可能性があります。<br/>
+           さらにコマンドを実行するとすぐに実行されるはずです。
+           <!--
+           Initial startup can take a few seconds due to having to
+           generate SSL keys on a rather busy system.<br />
+           Further commands should then be near instantenous.
+           -->
+        </p>
+
+        <p>
+           この環境内でできることをもっと学ぶには、<a href="/lxd/getting-started-cli">「はじめに - コマンドライン」</a> をご覧ください。
+           <!--
+           To learn more about what you can do in this environment, you
+           may want to read our
+           <a href="/ja/lxd/getting-started-cli">Getting started document</a>.
+           -->
+        </p>
+    </div>
+</div>
