@@ -4,7 +4,7 @@
 
 The main changes for this release are:
 
- * Client is now builable on Windows.
+ * Client is now buildable on Windows.
  * Default LVM volume size has been reduced to 10GB.
  * Command aliases can be setup in the client.
  * "lxc info" now prints server information too.
