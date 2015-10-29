@@ -51,6 +51,12 @@
      "generator": "markdown",
      "meta": {"input": "lxc/contribute.md"}},
 
+    {"path": "/lxc/security",
+     "title": "LXC - Security",
+     "menu": ["LXC", "Security"],
+     "generator": "markdown",
+     "meta": {"input": "lxc/security.md"}},
+
     {"path": "/lxc/downloads",
      "title": "LXC - Downloads",
      "menu": ["LXC", "Downloads"],
