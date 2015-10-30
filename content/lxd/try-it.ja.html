@@ -2,7 +2,7 @@
 <script src="/static/js/jquery.min.js" type="text/javascript"></script>
 <script src="/static/js/tryit.js" type="text/javascript"></script>
 
-<div class="panel panel-success" id="tryit_status_panel">
+<div class="panel panel-success" id="tryit_status_panel" style="display:none">
     <div class="panel-heading">サーバの状態 <!-- Server status --></div>
     <div class="panel-body">
         接続元 <!-- You are connected over: --><span id="tryit_protocol"></span> (<span id="tryit_address"></span>)<br/>
@@ -10,12 +10,12 @@
     </div>
 </div>
 
-<div class="panel panel-primary" id="tryit_terms_panel">
+<div class="panel panel-primary" id="tryit_terms_panel" style="display:none">
     <div class="panel-heading">サービス利用規約 <!-- Terms of service --></div>
     <div class="panel-body" id="tryit_terms"></div>
 </div>
 
-<div class="panel panel-warning" id="tryit_start_panel">
+<div class="panel panel-warning" id="tryit_start_panel" style="display:none">
     <div class="panel-heading">試用開始 <!-- Start --></div>
     <div class="panel-body">
         <button class="btn btn-default btn-lg" id="tryit_accept" type="button">
@@ -23,7 +23,7 @@
             私はサービス利用規約を読み、同意しました<!-- I have read and accept the terms of service above -->
         </button>
 
-        <div id="tryit_progress" style="width:50em">
+        <div id="tryit_progress" style="width:50em;display:none">
             <h1>コンテナの起動中... <!-- Starting the container... --></h1>
             <div class="progress">
                 <div class="progress-bar progress-bar-striped active" style="width: 100%">
@@ -34,7 +34,7 @@
     </div>
 </div>
 
-<div class="panel panel-success" id="tryit_info_panel">
+<div class="panel panel-success" id="tryit_info_panel" style="display:none">
     <div class="panel-heading">コンテナの情報 <!-- Container information --></div>
     <div class="panel-body">
         <table class="table">
@@ -61,19 +61,19 @@
     </div>
 </div>
 
-<div class="panel panel-primary" id="tryit_console_panel">
+<div class="panel panel-primary" id="tryit_console_panel" style="display:none">
     <div class="panel-heading">コンソール <!-- Console --></div>
     <div class="panel-body">
         <div id="tryit_console" style="background-color:black;"></div>
 
-        <button class="btn btn-default btn-lg" id="tryit_console_reconnect" type="button">
+        <button class="btn btn-default btn-lg" id="tryit_console_reconnect" type="button" style="display:none">
             <span aria-hidden="true" class="glyphicon glyphicon-repeat"></span>
             再接続 <!-- Reconnect -->
         </button>
     </div>
 </div>
 
-<div class="panel panel-info" id="tryit_examples_panel">
+<div class="panel panel-info" id="tryit_examples_panel" style="display:none">
     <div class="panel-heading">次は何をする? <!-- What now? --></div>
     <div class="panel-body">
         <p>
@@ -110,5 +110,21 @@
            <a href="/ja/lxd/getting-started-cli">Getting started document</a>.
            -->
         </p>
+    </div>
+</div>
+
+<div class="panel panel-danger" id="tryit_maintenance_panel" style="display:none">
+    <div class="panel-heading">Maintenance in progress</div>
+    <div class="panel-body">
+        <p>The demo service is currently down for maintenance and should
+           be back online in a few minutes.</p>
+    </div>
+</div>
+
+<div class="panel panel-danger" id="tryit_unreachable_panel" style="display:none">
+    <div class="panel-heading">Unreachable</div>
+    <div class="panel-body">
+        <p>Your browser couldn't reach the demo server. This is most
+           likely because of a firewall or proxy issue on your side.</p>
     </div>
 </div>

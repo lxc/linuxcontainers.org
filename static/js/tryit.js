@@ -96,13 +96,6 @@ $(document).ready(function() {
     tryit_console = getUrlParameter("id");
 
     if (tryit_console == "") {
-        $('#tryit_console_panel').css("display", "none")
-        $('#tryit_examples_panel').css("display", "none")
-        $('#tryit_info_panel').css("display", "none")
-        $('#tryit_maintenance_panel').css("display", "none");
-        $('#tryit_unreachable_panel').css("display", "none");
-        $('#tryit_progress').css("display", "none")
-
         $.ajax({
             url: "https://"+tryit_server+"/1.0",
             success: function(data) {
@@ -117,11 +110,10 @@ $(document).ready(function() {
                     $('#tryit_count').text(data.containers_count);
                     $('#tryit_max').text(data.containers_max);
                 } else {
-                    $('#tryit_status_panel').css("display", "none");
-                    $('#tryit_terms_panel').css("display", "none");
-                    $('#tryit_start_panel').css("display", "none");
                     $('#tryit_maintenance_panel').css("display", "inherit");
                 }
+
+                $('#tryit_status_panel').css("display", "inherit");
 
                 $.ajax({
                     url: "https://"+tryit_server+"/1.0/terms"
@@ -129,23 +121,18 @@ $(document).ready(function() {
                     tryit = data;
                     $('#tryit_terms').html(data.terms);
                     tryit_terms_hash = data.hash;
+                    $('#tryit_terms_panel').css("display", "inherit");
+                    $('#tryit_start_panel').css("display", "inherit");
                 });
+
             },
             error: function(data) {
-                $('#tryit_status_panel').css("display", "none");
-                $('#tryit_terms_panel').css("display", "none");
-                $('#tryit_start_panel').css("display", "none");
                 $('#tryit_unreachable_panel').css("display", "inherit");
             }
         });
     } else {
         $('#tryit_console_panel').css("display", "inherit");
         $('#tryit_examples_panel').css("display", "inherit");
-        $('#tryit_maintenance_panel').css("display", "none");
-        $('#tryit_start_panel').css("display", "none");
-        $('#tryit_status_panel').css("display", "none");
-        $('#tryit_terms_panel').css("display", "none");
-        $('#tryit_unreachable_panel').css("display", "none");
 
         setupConsole(tryit_console)
     }
