@@ -101,6 +101,8 @@ $(document).ready(function() {
         $('#tryit_examples_panel').css("display", "none")
         $('#tryit_progress').css("display", "none")
 
+        var server_ok = false
+
         $.ajax({
             url: "https://"+tryit_server+"/1.0"
         }).then(function(data) {
@@ -109,24 +111,33 @@ $(document).ready(function() {
                 $('#tryit_lxd_row').css("display", "none");
             }
 
-            $('#tryit_protocol').text(data.client_protocol);
-            $('#tryit_address').text(data.client_address);
-            $('#tryit_count').text(data.containers_count);
-            $('#tryit_max').text(data.containers_max);
+            if (data.server_status == 0) {
+                server_ok = true
+                $('#tryit_protocol').text(data.client_protocol);
+                $('#tryit_address').text(data.client_address);
+                $('#tryit_count').text(data.containers_count);
+                $('#tryit_max').text(data.containers_max);
+            }
         });
 
-        $.ajax({
-            url: "https://"+tryit_server+"/1.0/terms"
-        }).then(function(data) {
-            tryit = data;
-            $('#tryit_terms').html(data.terms);
-            tryit_terms_hash = data.hash;
-        });
+        if (server_ok) {
+            $.ajax({
+                url: "https://"+tryit_server+"/1.0/terms"
+            }).then(function(data) {
+                tryit = data;
+                $('#tryit_terms').html(data.terms);
+                tryit_terms_hash = data.hash;
+            });
+        } else {
+            $('#tryit_status_panel').css("display", "none");
+            $('#tryit_terms_panel').css("display", "none");
+            $('#tryit_start_panel').css("display", "none");
+            $('#tryit_maintenance_panel').css("display", "inherit");
+        }
     } else {
         $('#tryit_status_panel').css("display", "none");
         $('#tryit_terms_panel').css("display", "none");
         $('#tryit_start_panel').css("display", "none");
-        $('#tryit_info_panel').css("display", "none");
         $('#tryit_console_panel').css("display", "inherit");
         $('#tryit_examples_panel').css("display", "inherit");
 
