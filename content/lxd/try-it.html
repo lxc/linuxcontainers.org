@@ -4,9 +4,21 @@
 
 <div class="panel panel-success" id="tryit_status_panel" style="display:none">
     <div class="panel-heading">Server status</div>
-    <div class="panel-body">
+    <div class="panel-body" id="tryit_online_message" style="display:none">
         You are connected over: <span id="tryit_protocol"></span> (<span id="tryit_address"></span>)<br/>
         The demo server is currently running <span id="tryit_count"></span> user sessions out of <span id="tryit_max"></span>
+    </div>
+
+    <div class="panel-body" id="tryit_maintenance_message" style="display:none">
+        The demo service is currently down for maintenance and should be
+        back online in a few minutes.
+    </div>
+
+    <div class="panel-body" id="tryit_unreachable_message" style="display:none">
+        Your browser couldn't reach the demo server.<br />
+        This is either (most likely) because of a firewall or proxy
+        issue on your side or because of a network, power or other catastrophic
+        server side failure.
     </div>
 </div>
 
@@ -93,23 +105,5 @@
            may want to read our
            <a href="/lxd/getting-started-cli">Getting started document</a>.
         </p>
-    </div>
-</div>
-
-<div class="panel panel-danger" id="tryit_maintenance_panel" style="display:none">
-    <div class="panel-heading">Maintenance in progress</div>
-    <div class="panel-body">
-        <p>The demo service is currently down for maintenance and should
-           be back online in a few minutes.</p>
-    </div>
-</div>
-
-<div class="panel panel-danger" id="tryit_unreachable_panel" style="display:none">
-    <div class="panel-heading">Unreachable</div>
-    <div class="panel-body">
-        <p>Your browser couldn't reach the demo server. This is either
-           (most likely) because of a firewall or proxy issue on your side or
-           because of a network, power or other catastrophic server side
-           failure.</p>
     </div>
 </div>

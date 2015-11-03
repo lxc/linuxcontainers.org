@@ -1,7 +1,7 @@
 $(document).ready(function() {
     var tryit_terms_hash = "";
     var tryit_console = "";
-    var tryit_server = "lxd-demo.linuxcontainers.org";
+    var tryit_server = "localhost:8080";
     var original_url = window.location.href;
 
     function getUrlParameter(sParam) {
@@ -65,7 +65,7 @@ $(document).ready(function() {
     }
 
     function setupConsole(uuid) {
-        var sock = new WebSocket("wss://"+tryit_server+"/1.0/console?uuid="+uuid);
+        var sock = new WebSocket("ws://"+tryit_server+"/1.0/console?uuid="+uuid);
 
         sock.onopen = function (e) {
             var term = new Terminal({
@@ -97,26 +97,30 @@ $(document).ready(function() {
 
     if (tryit_console == "") {
         $.ajax({
-            url: "https://"+tryit_server+"/1.0",
+            url: "http://"+tryit_server+"/1.0",
             success: function(data) {
                 if (data.server_console_only == true) {
                     $('#tryit_ssh_row').css("display", "none");
                     $('#tryit_lxd_row').css("display", "none");
                 }
 
-                if (data.server_status == 0) {
-                    $('#tryit_protocol').text(data.client_protocol);
-                    $('#tryit_address').text(data.client_address);
-                    $('#tryit_count').text(data.containers_count);
-                    $('#tryit_max').text(data.containers_max);
-                } else {
-                    $('#tryit_maintenance_panel').css("display", "inherit");
+                if (data.server_status == 1) {
+                    $('#tryit_maintenance_message').css("display", "inherit");
+                    $('#tryit_status_panel').css("display", "inherit");
+                    $('#tryit_status_panel').addClass('panel-warning')
+                    $('#tryit_status_panel').removeClass('panel-success')
+                    return
                 }
 
+                $('#tryit_protocol').text(data.client_protocol);
+                $('#tryit_address').text(data.client_address);
+                $('#tryit_count').text(data.containers_count);
+                $('#tryit_max').text(data.containers_max);
+                $('#tryit_online_message').css("display", "inherit");
                 $('#tryit_status_panel').css("display", "inherit");
 
                 $.ajax({
-                    url: "https://"+tryit_server+"/1.0/terms"
+                    url: "http://"+tryit_server+"/1.0/terms"
                 }).then(function(data) {
                     tryit = data;
                     $('#tryit_terms').html(data.terms);
@@ -127,7 +131,11 @@ $(document).ready(function() {
 
             },
             error: function(data) {
-                $('#tryit_unreachable_panel').css("display", "inherit");
+                $('#tryit_unreachable_message').css("display", "inherit");
+                $('#tryit_status_panel').css("display", "inherit");
+                $('#tryit_status_panel').addClass('panel-danger')
+                $('#tryit_status_panel').removeClass('panel-success')
+                return
             }
         });
     } else {
@@ -143,7 +151,7 @@ $(document).ready(function() {
         $('#tryit_progress').css("display", "inherit");
 
         $.ajax({
-            url: "https://"+tryit_server+"/1.0/start?terms="+tryit_terms_hash
+            url: "http://"+tryit_server+"/1.0/start?terms="+tryit_terms_hash
         }).then(function(data) {
             $('.tryit_container_console').html(data.console);
             $('.tryit_container_ip').html(data.ip);

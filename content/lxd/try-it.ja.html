@@ -4,9 +4,27 @@
 
 <div class="panel panel-success" id="tryit_status_panel" style="display:none">
     <div class="panel-heading">サーバの状態 <!-- Server status --></div>
-    <div class="panel-body">
+    <div class="panel-body"  id="tryit_online_message" style="display:none">
         接続元 <!-- You are connected over: --><span id="tryit_protocol"></span> (<span id="tryit_address"></span>)<br/>
         デモサーバは現在 <span id="tryit_count"></span> 台を実行中です (最大 <span id="tryit_max"></span> 台中)<!-- The demo server is currently running <span id="tryit_count"></span> containers out of <span id="tryit_max"></span> -->
+    </div>
+
+    <div class="panel-body" id="tryit_maintenance_message" style="display:none">
+        <!--
+           The demo service is currently down for maintenance and should
+           be back online in a few minutes.
+        -->
+        デモサービスは現在メンテナンスのために停止しています。数分後にはサービスを再開する予定です。
+    </div>
+
+    <div class="panel-body" id="tryit_unreachable_message" style="display:none">
+           <!--
+           Your browser couldn't reach the demo server. This is either
+           (most likely) because of a firewall or proxy issue on your side or
+           because of a network, power or other catastrophic server side
+           failure.
+           -->
+              あなたがお使いのブラウザからデモサーバへアクセスできません。おそらく、あなたのサイトのファイアウォールかプロキシの問題、もしくはサーバ側のネットワーク、電源、その他の深刻な障害のためと思われます。
     </div>
 </div>
 
@@ -109,35 +127,6 @@
            may want to read our
            <a href="/ja/lxd/getting-started-cli">Getting started document</a>.
            -->
-        </p>
-    </div>
-</div>
-
-<div class="panel panel-danger" id="tryit_maintenance_panel" style="display:none">
-    <div class="panel-heading">メンテナンス中 <!-- Maintenance in progress --></div>
-    <div class="panel-body">
-        <p>
-	<!--
-	   The demo service is currently down for maintenance and should
-           be back online in a few minutes.
-	-->
-	デモサービスは現在メンテナンスのために停止しています。数分後にはサービスを再開する予定です。
-        </p>
-    </div>
-</div>
-
-<div class="panel panel-danger" id="tryit_unreachable_panel" style="display:none">
-    <div class="panel-heading">サービスに到達できません <!-- Unreachable --></div>
-    <div class="panel-body">
-        <p>
-	   <!--
-	   Your browser couldn't reach the demo server. This is either
-           (most likely) because of a firewall or proxy issue on your side or
-           because of a network, power or other catastrophic server side
-           failure.
-	   -->
-   	   あなたがお使いのブラウザからデモサーバへアクセスできません。おそらく、あなたのサイトのファイアウォールかプロキシの問題、もしくはサーバ側のネットワーク、電源、その他の深刻な障害のためと思われます。
-
         </p>
     </div>
 </div>
