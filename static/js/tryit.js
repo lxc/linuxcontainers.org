@@ -159,7 +159,7 @@ $(document).ready(function() {
                     return
                 }
 
-                $('#tryit_progress').css("display", "hidden");
+                $('#tryit_start_panel').css("display", "none");
                 if (data.status == 2) {
                     $('#tryit_error_full').css("display", "inherit");
                 }
