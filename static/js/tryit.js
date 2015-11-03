@@ -153,6 +153,29 @@ $(document).ready(function() {
         $.ajax({
             url: "http://"+tryit_server+"/1.0/start?terms="+tryit_terms_hash
         }).then(function(data) {
+            if (data.status && data.status != 0) {
+                if (data.status == 1) {
+                    window.location.href = original_url;
+                    return
+                }
+
+                $('#tryit_progress').css("display", "hidden");
+                if (data.status == 2) {
+                    $('#tryit_error_full').css("display", "inherit");
+                }
+                else if (data.status == 3) {
+                    $('#tryit_error_quota').css("display", "inherit");
+                }
+                else if (data.status == 4) {
+                    $('#tryit_error_banned').css("display", "inherit");
+                }
+                else if (data.status == 5) {
+                    $('#tryit_error_unknown').css("display", "inherit");
+                }
+                $('#tryit_error_panel').css("display", "inherit");
+                return
+            }
+
             $('.tryit_container_console').html(data.console);
             $('.tryit_container_ip').html(data.ip);
             $('.tryit_container_fqdn').text(data.fqdn);
