@@ -1,7 +1,7 @@
 $(document).ready(function() {
     var tryit_terms_hash = "";
     var tryit_console = "";
-    var tryit_server = "localhost:8080";
+    var tryit_server = "lxd-demo.linuxcontainers.org";
     var original_url = window.location.href;
 
     function getUrlParameter(sParam) {
@@ -65,7 +65,7 @@ $(document).ready(function() {
     }
 
     function setupConsole(uuid) {
-        var sock = new WebSocket("ws://"+tryit_server+"/1.0/console?uuid="+uuid);
+        var sock = new WebSocket("wss://"+tryit_server+"/1.0/console?uuid="+uuid);
 
         sock.onopen = function (e) {
             var term = new Terminal({
@@ -97,7 +97,7 @@ $(document).ready(function() {
 
     if (tryit_console == "") {
         $.ajax({
-            url: "http://"+tryit_server+"/1.0",
+            url: "https://"+tryit_server+"/1.0",
             success: function(data) {
                 if (data.server_console_only == true) {
                     $('#tryit_ssh_row').css("display", "none");
@@ -120,7 +120,7 @@ $(document).ready(function() {
                 $('#tryit_status_panel').css("display", "inherit");
 
                 $.ajax({
-                    url: "http://"+tryit_server+"/1.0/terms"
+                    url: "https://"+tryit_server+"/1.0/terms"
                 }).then(function(data) {
                     tryit = data;
                     $('#tryit_terms').html(data.terms);
@@ -151,7 +151,7 @@ $(document).ready(function() {
         $('#tryit_progress').css("display", "inherit");
 
         $.ajax({
-            url: "http://"+tryit_server+"/1.0/start?terms="+tryit_terms_hash
+            url: "https://"+tryit_server+"/1.0/start?terms="+tryit_terms_hash
         }).then(function(data) {
             if (data.status && data.status != 0) {
                 if (data.status == 1) {
