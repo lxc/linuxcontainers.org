@@ -6,25 +6,26 @@
     <div class="panel-heading">サーバの状態 <!-- Server status --></div>
     <div class="panel-body"  id="tryit_online_message" style="display:none">
         接続元 <!-- You are connected over: --><span id="tryit_protocol"></span> (<span id="tryit_address"></span>)<br/>
-        デモサーバは現在 <span id="tryit_count"></span> 台を実行中です (最大 <span id="tryit_max"></span> 台中)<!-- The demo server is currently running <span id="tryit_count"></span> containers out of <span id="tryit_max"></span> -->
+        デモサーバは現在ユーザセッションを <span id="tryit_count"></span> セッション実行中です (最大 <span id="tryit_max"></span> セッション中)<!-- The demo server is currently running <span id="tryit_count"></span> user sessions out of <span id="tryit_max"></span> -->
     </div>
 
     <div class="panel-body" id="tryit_maintenance_message" style="display:none">
         <!--
-           The demo service is currently down for maintenance and should
-           be back online in a few minutes.
+        The demo service is currently down for maintenance and should be
+        back online in a few minutes.
         -->
         デモサービスは現在メンテナンスのために停止しています。数分後にはサービスを再開する予定です。
     </div>
 
     <div class="panel-body" id="tryit_unreachable_message" style="display:none">
-           <!--
-           Your browser couldn't reach the demo server. This is either
-           (most likely) because of a firewall or proxy issue on your side or
-           because of a network, power or other catastrophic server side
-           failure.
-           -->
-              あなたがお使いのブラウザからデモサーバへアクセスできません。おそらく、あなたのサイトのファイアウォールかプロキシの問題、もしくはサーバ側のネットワーク、電源、その他の深刻な障害のためと思われます。
+        <!--
+        Your browser couldn't reach the demo server.<br />
+        This is either (most likely) because of a firewall or proxy
+        issue on your side or because of a network, power or other catastrophic
+        server side failure.
+        -->
+        あなたがお使いのブラウザからデモサーバへアクセスできません。<br />
+        おそらく、あなたのサイトのファイアウォールかプロキシの問題、もしくはサーバ側のネットワーク、電源、その他の深刻な障害のためと思われます。
     </div>
 </div>
 
@@ -128,5 +129,72 @@
            <a href="/ja/lxd/getting-started-cli">Getting started document</a>.
            -->
         </p>
+    </div>
+</div>
+
+<div class="panel panel-danger" id="tryit_error_panel" style="display:none">
+    <div class="panel-heading" id="tryit_error_panel_create" style="display:none">新しいコンテナを作成できません <!-- Unable to create a new container --></div>
+    <div class="panel-heading" id="tryit_error_panel_access" style="display:none">コンテナにアクセスできません <!-- Unable to access the container --></div>
+
+    <div class="panel-body" id="tryit_error_full" style="display:none">
+        サーバが上限に達しています。数分後にもう一度お試しください。<!-- The server is currently full, please try again in a few minutes. -->
+
+        <br /><br />
+
+        <button class="btn btn-default btn-lg tryit_goback" type="button">
+            <span aria-hidden="true" class="glyphicon glyphicon-home"></span>
+            やりなおす <!-- Start over -->
+        </button>
+    </div>
+
+    <div class="panel-body" id="tryit_error_quota" style="display:none">
+        <!--
+        You have reached the maximum number of concurrent sessions,
+        please wait for some to expire before starting more of them.
+        -->
+        同時に実行できるセッションの最大数に達しました。
+        現在実行中のセッションが期限切れになるまでお待ちください。
+        <br /><br />
+
+        <button class="btn btn-default btn-lg tryit_goback" type="button">
+            <span aria-hidden="true" class="glyphicon glyphicon-home"></span>
+            やりなおす <!-- Start over -->
+        </button>
+    </div>
+
+    <div class="panel-body" id="tryit_error_banned" style="display:none">
+        <!--
+        You have been banned from this service due to a failure to
+        respect the terms of service.
+        -->
+        あなたはサービス利用規約を守らなかったため、サービスの使用を禁止されています。
+    </div>
+
+    <div class="panel-body" id="tryit_error_unknown" style="display:none">
+        <!--
+        An unknown error occured. Please try again in a few minutes.
+        -->
+        原因不明のエラーが起きました。数分後にもう一度お試しください。
+
+        <br /><br />
+
+        <button class="btn btn-default btn-lg tryit_goback" type="button">
+            <span aria-hidden="true" class="glyphicon glyphicon-home"></span>
+            やりなおす <!-- Start over -->
+        </button>
+    </div>
+
+    <div class="panel-body" id="tryit_error_missing" style="display:none">
+        <!--
+        The container you're trying to connect to doesn't exist anymore.
+        -->
+        あなたが接続しようとしているコンテナが存在しません。
+
+        <br /><br />
+
+        <button class="btn btn-default btn-lg tryit_goback" type="button">
+            <span aria-hidden="true" class="glyphicon glyphicon-home"></span>
+            やりなおす <!-- Start over -->
+        </button>
     </div>
 </div>
