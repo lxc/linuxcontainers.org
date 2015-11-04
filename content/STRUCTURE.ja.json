@@ -116,8 +116,8 @@
               "input": "lxd/downloads.ja.md"}},
 
     {"path": "/lxd/try-it",
-     "title": "LXD - オンラインでの試用 (BETA)",
-     "menu": ["LXD", "オンラインでの試用 (BETA)"],
+     "title": "LXD - オンラインでの試用",
+     "menu": ["LXD", "オンラインでの試用"],
      "generator": "html",
      "meta": {"input": "lxd/try-it.ja.html"}},
 

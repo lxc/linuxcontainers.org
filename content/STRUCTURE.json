@@ -148,8 +148,8 @@
               "input": "lxd/downloads.md"}},
 
     {"path": "/lxd/try-it",
-     "title": "LXD - Try it online (BETA)",
-     "menu": ["LXD", "Try it online (BETA)"],
+     "title": "LXD - Try it online",
+     "menu": ["LXD", "Try it online"],
      "generator": "html",
      "meta": {"input": "lxd/try-it.html"}},
 
