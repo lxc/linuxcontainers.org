@@ -109,7 +109,8 @@
 </div>
 
 <div class="panel panel-danger" id="tryit_error_panel" style="display:none">
-    <div class="panel-heading">Unable to create a new container</div>
+    <div class="panel-heading" id="tryit_error_panel_create" style="display:none">Unable to create a new container</div>
+    <div class="panel-heading" id="tryit_error_panel_access" style="display:none">Unable to access the container</div>
 
     <div class="panel-body" id="tryit_error_full" style="display:none">
         The server is currently full, please try again in a few minutes.
@@ -127,5 +128,9 @@
 
     <div class="panel-body" id="tryit_error_unknown" style="display:none">
         An unknown error occured. Please try again in a few minutes.
+    </div>
+
+    <div class="panel-body" id="tryit_error_missing" style="display:none">
+        The container you're trying to connect to doesn't exist anymore.
     </div>
 </div>

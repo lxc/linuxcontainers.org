@@ -64,8 +64,8 @@ $(document).ready(function() {
         var timeinterval = setInterval(updateClock, 1000);
     }
 
-    function setupConsole(uuid) {
-        var sock = new WebSocket("wss://"+tryit_server+"/1.0/console?uuid="+uuid);
+    function setupConsole(id) {
+        var sock = new WebSocket("wss://"+tryit_server+"/1.0/console?id="+id);
 
         sock.onopen = function (e) {
             var term = new Terminal({
@@ -139,10 +139,43 @@ $(document).ready(function() {
             }
         });
     } else {
-        $('#tryit_console_panel').css("display", "inherit");
-        $('#tryit_examples_panel').css("display", "inherit");
+        $.ajax({
+            url: "http://"+tryit_server+"/1.0/info?id="+tryit_console,
+            success: function(data) {
+                if (data.status && data.status != 0) {
+                    $('#tryit_start_panel').css("display", "none");
+                    $('#tryit_error_missing').css("display", "inherit");
+                    $('#tryit_error_panel_access').css("display", "inherit");
+                    $('#tryit_error_panel').css("display", "inherit");
+                    return
+                }
 
-        setupConsole(tryit_console)
+                $('.tryit_container_id').text(data.id);
+                $('.tryit_container_ip').text(data.ip);
+                $('.tryit_container_fqdn').text(data.fqdn);
+                $('.tryit_container_username').text(data.username);
+                $('.tryit_container_password').text(data.password);
+
+                initializeClock('tryit_clock', data.expiry);
+
+                $('#tryit_status_panel').css("display", "none");
+                $('#tryit_start_panel').css("display", "none");
+                $('#tryit_info_panel').css("display", "inherit");
+                $('#tryit_console_panel').css("display", "inherit");
+                $('#tryit_examples_panel').css("display", "inherit");
+
+                tryit_console = data.id
+                window.history.pushState("", "", "?id="+tryit_console);
+                setupConsole(tryit_console)
+            },
+            error: function(data) {
+                $('#tryit_start_panel').css("display", "none");
+                $('#tryit_error_missing').css("display", "inherit");
+                $('#tryit_error_panel_access').css("display", "inherit");
+                $('#tryit_error_panel').css("display", "inherit");
+                return
+            }
+        });
     }
 
     $('#tryit_accept').click(function() {
@@ -172,15 +205,16 @@ $(document).ready(function() {
                 else if (data.status == 5) {
                     $('#tryit_error_unknown').css("display", "inherit");
                 }
+                $('#tryit_error_panel_create').css("display", "inherit");
                 $('#tryit_error_panel').css("display", "inherit");
                 return
             }
 
-            $('.tryit_container_console').html(data.console);
-            $('.tryit_container_ip').html(data.ip);
+            $('.tryit_container_console').text(data.id);
+            $('.tryit_container_ip').text(data.ip);
             $('.tryit_container_fqdn').text(data.fqdn);
-            $('.tryit_container_username').html(data.username);
-            $('.tryit_container_password').html(data.password);
+            $('.tryit_container_username').text(data.username);
+            $('.tryit_container_password').text(data.password);
             initializeClock('tryit_clock', data.expiry);
 
             $('#tryit_status_panel').css("display", "none");
@@ -189,7 +223,7 @@ $(document).ready(function() {
             $('#tryit_console_panel').css("display", "inherit");
             $('#tryit_examples_panel').css("display", "inherit");
 
-            tryit_console = data.console
+            tryit_console = data.id
             window.history.pushState("", "", "?id="+tryit_console);
             setupConsole(tryit_console)
         });
