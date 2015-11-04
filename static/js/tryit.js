@@ -140,7 +140,7 @@ $(document).ready(function() {
         });
     } else {
         $.ajax({
-            url: "http://"+tryit_server+"/1.0/info?id="+tryit_console,
+            url: "https://"+tryit_server+"/1.0/info?id="+tryit_console,
             success: function(data) {
                 if (data.status && data.status != 0) {
                     $('#tryit_start_panel').css("display", "none");
