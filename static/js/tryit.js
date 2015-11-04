@@ -2,7 +2,7 @@ $(document).ready(function() {
     var tryit_terms_hash = "";
     var tryit_console = "";
     var tryit_server = "lxd-demo.linuxcontainers.org";
-    var original_url = window.location.href;
+    var original_url = window.location.href.split("?")[0];
 
     function getUrlParameter(sParam) {
         var sPageURL = decodeURIComponent(window.location.search.substring(1)),
