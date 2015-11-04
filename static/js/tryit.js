@@ -31,10 +31,10 @@ $(document).ready(function() {
 
     function getTimeRemaining(endtime){
         var current = Math.floor(new Date() / 1000);
-        var remaining = endtime - current
+        var remaining = endtime - current;
 
         if (remaining < 0) {
-            remaining = 0
+            remaining = 0;
         }
 
         return remaining
@@ -48,7 +48,7 @@ $(document).ready(function() {
         function updateClock() {
             var t = getTimeRemaining(endtime);
 
-            var minutes = Math.floor(t / 60)
+            var minutes = Math.floor(t / 60);
             var seconds = t - minutes * 60;
 
             minutesSpan.innerHTML = ('0' + minutes).slice(-2);
@@ -75,7 +75,7 @@ $(document).ready(function() {
                 screenKeys: false
             });
 
-            $('#tryit_console_reconnect').css("display", "none")
+            $('#tryit_console_reconnect').css("display", "none");
             term.open(document.getElementById("tryit_console"))
 
             term.on('data', function(data) {
@@ -93,6 +93,10 @@ $(document).ready(function() {
         };
     }
 
+    $('.tryit_goback').click(function() {
+        window.location.href = original_url;
+    });
+
     tryit_console = getUrlParameter("id");
 
     if (tryit_console == "") {
@@ -107,8 +111,8 @@ $(document).ready(function() {
                 if (data.server_status == 1) {
                     $('#tryit_maintenance_message').css("display", "inherit");
                     $('#tryit_status_panel').css("display", "inherit");
-                    $('#tryit_status_panel').addClass('panel-warning')
-                    $('#tryit_status_panel').removeClass('panel-success')
+                    $('#tryit_status_panel').addClass('panel-warning');
+                    $('#tryit_status_panel').removeClass('panel-success');
                     return
                 }
 
@@ -133,8 +137,8 @@ $(document).ready(function() {
             error: function(data) {
                 $('#tryit_unreachable_message').css("display", "inherit");
                 $('#tryit_status_panel').css("display", "inherit");
-                $('#tryit_status_panel').addClass('panel-danger')
-                $('#tryit_status_panel').removeClass('panel-success')
+                $('#tryit_status_panel').addClass('panel-danger');
+                $('#tryit_status_panel').removeClass('panel-success');
                 return
             }
         });
@@ -164,9 +168,9 @@ $(document).ready(function() {
                 $('#tryit_console_panel').css("display", "inherit");
                 $('#tryit_examples_panel').css("display", "inherit");
 
-                tryit_console = data.id
+                tryit_console = data.id;
                 window.history.pushState("", "", "?id="+tryit_console);
-                setupConsole(tryit_console)
+                setupConsole(tryit_console);
             },
             error: function(data) {
                 $('#tryit_start_panel').css("display", "none");
@@ -223,13 +227,13 @@ $(document).ready(function() {
             $('#tryit_console_panel').css("display", "inherit");
             $('#tryit_examples_panel').css("display", "inherit");
 
-            tryit_console = data.id
+            tryit_console = data.id;
             window.history.pushState("", "", "?id="+tryit_console);
-            setupConsole(tryit_console)
+            setupConsole(tryit_console);
         });
     });
 
     $('#tryit_console_reconnect').click(function() {
-        setupConsole(tryit_console)
+        setupConsole(tryit_console);
     });
 });
