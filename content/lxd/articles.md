@@ -9,6 +9,7 @@
  * [Container Camp London 2015: Introduction to LXD by Stéphane Graber](https://www.youtube.com/watch?v=yEr_EIZG0ZM)
  * [Container Summit 2015: LXD by Dustin Kirkland](https://player.vimeo.com/video/140220196?api=1&player_id=140220196)
  * [ODS Vancouver 2015: LXD vs KVM by Ryan Harper & James Page](https://www.youtube.com/watch?v=90oxad2r8_E)
+ * [UOS May 2015: LXD basic usage by Tycho Andersen](https://www.youtube.com/watch?v=oF-xGkwki6Y)
  * [Fosdem 2015: LXD: The Container Hypervisor by Serge Hallyn](http://video.fosdem.org/2015/devroom-virtualisation/lxd.mp4)
  * [linux.conf.au 2015: LXD by Tycho Andersen](https://www.youtube.com/watch?v=5MNy9OoiJ70)
 
