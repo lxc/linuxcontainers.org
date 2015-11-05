@@ -41,6 +41,12 @@
      "generator": "markdown",
      "meta": {"input": "lxc/contribute.ja.md"}},
 
+    {"path": "/lxc/security",
+     "title": "LXC - セキュリティ",
+     "menu": ["LXC", "セキュリティ"],
+     "generator": "markdown",
+     "meta": {"input": "lxc/security.ja.md"}},
+
     {"path": "/lxc/downloads",
      "title": "LXC - ダウンロード",
      "menu": ["LXC", "ダウンロード"],
