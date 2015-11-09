@@ -1,6 +1,44 @@
 ![Download icon](/static/img/containers.png)
 # News
+## LXC 1.1.5 release announcement<span class="text-muted">9th of November 2015</span>
+This is the fifth bugfix release for LXC 1.1.
+
+Core:
+
+ * Fix handling of process title rename (now only on >= 3.19 kernels)
+ * Several improvements to overlayfs/aufs handling
+    * Needed directories are created if missing
+    * Better handling of absolute paths
+    * Better handling of cloning overlayfs containers
+ * Ignore trailing /init.scope in cgroup paths (needed for newer systemd)
+ * Allow checkpoint/restore of containers using non-bridged veth devices
+ * Properly initialize error\_num (exit code tracking for the container)
+ * lxc-usernsexec: Re-open fds 0,1,2 separately (only if stdin is a tty)
+
+Init scripts:
+
+ * lxc-net: Start after network-online.target
+
+Commands:
+
+ * lxc-start: Allow preserving the PID namespace too
+
+Templates:
+
+ * archlinux: Fix systemd-sysctl service
+ * ubuntu-cloud: Use tar.xz tarballs by default (as tar.gz will soon be discontinued)
+ * ubuntu-cloud: Always exit 1 on error
+
+### Downloads
+The release tarballs may be found on our [download page](/lxc/downloads) and we expect most distributions  
+will very soon ship a packaged version of LXC 1.1.5.
+
+Should you be interested in individual changes or just looking at the detailed development history,  
+our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-1.1).
+
+
 ## LXC 1.1.4 release announcement<span class="text-muted">6th of October 2015</span>
+This is the fourth bugfix release for LXC 1.1.
 
 Important:
 
@@ -11,9 +49,9 @@ Core:
  * Check for NULL pointers before calling setenv()
  * Factorize handle of create=dir and create=file
  * Refactor and factorize mount entries
- * Split handle of lxc.mount* with 3 functions
+ * Split handle of lxc.mount\* with 3 functions
  * init: Support older apparmor
- * Make LXC_CLONE_KEEPNAME work
+ * Make LXC\_CLONE\_KEEPNAME work
  * Fix automatic mounts without a rootfs
  * Fix container creation without a rootfs
  * Fix /dev symlinks without a rootfs
@@ -22,27 +60,27 @@ Core:
  * When creating container, save configuration if rootfs already exists
  * Fix verification of start hook without a rootfs
  * Tear down network devices during container halt
- * coverity: fix mount_entry_create_dir_file
+ * coverity: fix mount\_entry\_create\_dir\_file
  * Add a nesting.conf which can be included to support nesting containers
  * Fix reallocation calculation
- * Add bdev_destroy() and bdev_destroy_wrapper()
- * overlayfs_clone: rsync the mounted rootfs
- * lxc_rmdir_onedev: don't fail if path doesn't exist
- * overlayfs_mount: create delta dir if it doesn't exist
- * ovl_rsync: make sure to umount
- * Destroy bdevs using bdev_destroy() from bdev.h
+ * Add bdev\_destroy() and bdev\_destroy\_wrapper()
+ * overlayfs\_clone: rsync the mounted rootfs
+ * lxc\_rmdir\_onedev: don't fail if path doesn't exist
+ * overlayfs\_mount: create delta dir if it doesn't exist
+ * ovl\_rsync: make sure to umount
+ * Destroy bdevs using bdev\_destroy() from bdev.h
  * Fix indentation
  * cmds: fix abstract socket length problem
  * coverity: drop second (redundant) block
- * Check return value of snprintf in mount_proc_if_needed()
- * Add CAP_AUDIT_READ
- * Add CAP_BLOCK_SUSPEND
+ * Check return value of snprintf in mount\_proc\_if\_needed()
+ * Add CAP\_AUDIT\_READ
+ * Add CAP\_BLOCK\_SUSPEND
  * Free allocated memory on failure (v2)
- * Define O_PATH and O_NOFOLLOW for Android
+ * Define O\_PATH and O\_NOFOLLOW for Android
  * seccomp: add aarch64 support
  * lxc-test-symlink: add a test using absolute symlink
- * lxc_mount_auto_mounts: fix weirdness
- * Fix the type of i in lxc_mount_auto_mounts
+ * lxc\_mount\_auto\_mounts: fix weirdness
+ * Fix the type of i in lxc\_mount\_auto\_mounts
 
 Tools:
 
