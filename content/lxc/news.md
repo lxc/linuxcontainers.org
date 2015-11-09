@@ -1,6 +1,213 @@
 ![Download icon](/static/img/containers.png)
 # News
-## LXC 1.1.5 release announcement<span class="text-muted">9th of November 2015</span>
+## LXC 1.0.8 release announcement <span class="text-muted">9th of November 2015</span>
+This is the eight bugfix release for LXC 1.0.
+
+Important:
+
+ * Security fix for CVE-2015-1331
+ * Security fix for CVE-2015-1334
+
+Core:
+
+ * Add a nesting.conf which can be included to support nesting containers
+ * Add support for CAP\_AUDIT\_READ andCAP\_BLOCK\_SUSPEND
+ * Allow autodev without a rootfs
+ * Also drop caps in unpriv containers
+ * apparmor: Block access to /proc/kcore
+ * apparmor: Fix slave bind mounts
+ * apparmor: Sync with current git master
+ * attach: use \_exit() instead of exit() in the intermediate child process
+ * aufs: Support unprivileged clone, mount
+ * Call /lib/apparmor/profile-load directly instead of the wrapper
+ * cgmanager: attach: never use 'all' controller
+ * cgmanager: free line at end of check\_supports\_multiple\_controllers
+ * cgmanager: put unprivileged containers under $(curcgroup)/lxc/$(container0
+ * Change lxc-clone to use 'rsync -aH' instead of just 'rsync -a' for cloning to fix Launchpad Bug #1441307.
+ * clone\_paths: use 'rootfs' for destination directory
+ * config: add miscellaneous signals for lxc.\*signal
+ * daemonized start: exit children on failure, don't return
+ * Define MS\_REC and MS\_SLAVE for Android in bdev.c
+ * Define MS\_RELATIME for Android
+ * Define O\_PATH and O\_NOFOLLOW for Android
+ * detect whether cgmanager\_list\_controllers is available
+ * doc: Add the note related mount in Japanese lxc.container.conf(5)
+ * do\_lxcap\_stop: wait until container is stopped
+ * don't close std\* fd if opentty fails
+ * Enable seccomp by default for unprivileged users.
+ * Factorize handle of create=dir and create=file
+ * Fix Android build due to missing constant
+ * Fix automatic mounts without a rootfs
+ * fix build on mpc85xx
+ * Fix clearing IPv4/IPv6 addresses
+ * Fix container creation without a rootfs
+ * Fix control tty issues on attach
+ * Fix /dev symlinks without a rootfs
+ * Fix dropped fs caps when cloning a container
+ * Fix error message when cannot find an lxc-init
+ * Fix incomplete destruction of unprivileged ephemeral containers
+ * Fix instantiation of multiple vlan interfaces with same id
+ * Fix reversed args in mount call
+ * Fix verification of start hook without a rootfs
+ * Ignore trailing /init.scope in init cgroups
+ * Init error\_num to 1
+ * init: Support older apparmor
+ * In lxc.mount.auto, skip on ENONENT
+ * lxc\_monitor: fix memory leak on @fds and close fds
+ * lxc\_monitor: free @preg on error
+ * lxc\_mount\_auto\_mounts: fix weirdness
+ * make cgmanager follow lxc.cgroup.use
+ * Make LXC\_CLONE\_KEEPNAME work
+ * Make mount\_entry\_create\_\*\_dirs() more robust
+ * Make overlayfs mounts work directly
+ * Only mount /proc if needed, even without a rootfs
+ * only re-open fds if stdin is a tty
+ * Only use LOGPATH if lxcpath is unset or default
+ * overlay: create workdir if it doesn't exist
+ * pass on reboot flag and delete old veth on reboot
+ * Prevent from error on umount /proc if userns are used.
+ * Remove btrfs subvolumes
+ * rpm: added dependency to lxc-libs to lxc package
+ * seccomp: add aarch64 support
+ * seccomp: add ppc support
+ * seccomp: add rule to reject umount -f
+ * seccomp: simplify and fix rule parsing
+ * Skip control tty code for non-ttys
+ * Sort the cgroup memory settings before applying
+ * Support unprivileged ephemeral container using aufs
+ * Tear down network devices during container halt
+ * Uniformly nullify std fds
+ * Use /dev/loop-control if it exists
+ * Use 'overlay' as fs name when needed
+ * use poll instead of select when possible
+ * Use POSIX-compliant function names in bash completion
+ * Use rdepends when non-thinpool LVM container is cloned
+ * When creating container, save configuration if rootfs already exists
+
+Documentation:
+
+ * Add about zfs, aufs, overlayfs to '-s' option of lxc-clone(1)
+ * Add doc for optional, create=dir and create=file in lxc.container.conf man
+ * Add long option for -P in documentation
+ * Add LXC-specific mount option in Japanese lxc.container.conf(5)
+ * Add options of 'loop' backingstore to lxc-create(1)
+ * Add -P lxcpath and --version to lxc-ls manpage
+ * Add '--storage-type' option to lxc-start-ephemeral(1)
+ * Add the description for -P and --version to English and Japanese lxc-ls(1)
+ * Add the description for --version to English and Japanese common\_options
+ * Add the use of 'attach' to lxc-start-ephemeral(1)
+ * clarify the description of the veth network type in the  manpage.
+ * Fix the mistranslation about lxc.group in Japanese lxc.container.conf(5)
+ * Fresh CONTRIBUTING
+ * Remove unnecessary common options from lxc-user-nic(1)
+ * Translate untranslated section titles in Japanese man pages
+ * Update MAINTAINERS
+ * Update the description of -L option in lxc-autostart(1)
+ * Update the description of the veth in the Japanese lxc.container.conf(5)
+
+Bindings:
+
+ * lua: Fix 5.3 compatibility code.
+ * lua: fix crash on missing blkio
+ * lua: Small fix for 5.3 compatibility.
+
+Tests:
+
+ * enable cgmanager support for Travis CI
+ * lxc-test-apparmor: flush the pipe before exiting child
+ * lxc-test-symlink: add a test using absolute symlink
+ * Update Travis configuration
+ * Use 'cgm listcontrollers' list rather than /proc/self/cgroups
+
+Config:
+
+ * lxc-net.conf: use +e at teardown
+
+Templates:
+
+ * lxc-alpine: avoid GNU BRE extensions for better portability
+ * lxc-alpine: create /dev/shm before mounting
+ * lxc-alpine: fix verification of apk.static binary
+ * lxc-alpine: use getopt to parse options
+ * lxc-alpine: use yaml for detection of latest release
+ * lxc-altlinux: fix parsing of option "--clean": it takes no argument
+ * lxc-altlinux: protect possibly unset variable with quotes for -z check
+ * lxc-archlinux: Fix systemd-sysctl service
+ * lxc-busybox: fix unprivileged containers
+ * lxc-centos: Added a more reliable test for yum --releasever
+ * lxc-{centos|fedora}: Respect --rootfs
+ * lxc-centos: fix big big login delays in Centos 7
+ * lxc-centos: Fix booting a Centos 6 container
+ * lxc-centos: fix parsing of option "--clean": it takes no argument
+ * lxc-centos: fix tab/space mixup in help text.
+ * lxc-centos: pass releasever parameter to yum
+ * lxc-centos: protect possibly unset variable with quotes for -z check
+ * lxc-centos: use `hostname` for DHCP\_HOSTNAME in ifcfg-eth0
+ * lxc-debian: Alternative test for dpkg multiarch support
+ * lxc-debian: debootstrap failed when $GREP\_OPTIONS is set
+ * lxc-debian: document "--clean" in the usage.
+ * lxc-debian: Fixed errors if dbus is not installed
+ * lxc-debian: fix parsing of option "--clean": it takes no argument.
+ * lxc-debian: improve help text
+ * lxc-debian: protect possibly unset variable with quotes for -z check
+ * lxc-debian: reconfigure locales
+ * lxc-debian: skip security updates for unstable/sid
+ * lxc-debian: support stretch (Debian 9) images
+ * lxc-debian: Test dpkg for multiarch support
+ * lxc-download: fix typo in help text.
+ * lxc-download: improve help text.
+ * lxc-download: make --list more useful.
+ * lxc-fedora: Add support for "--mask-tmp"
+ * lxc-fedora: Default to 22 but use 20 squashfs
+ * lxc-fedora: Default to Fedora 21 as 22 no longer uses yum
+ * lxc-fedora: fix parsing of option "--clean": it takes no argument
+ * lxc-fedora: In fedora21, the fedora-repos package is needed.
+ * lxc-fedora: let help text fit into 80 columns
+ * lxc-fedora: manage secondary architectures
+ * lxc-fedora: protect possibly unset variable with quotes for -z check
+ * lxc-fedora: when using systemd, set lxc.kmsg = 0 in the config
+ * lxc-gentoo: Add a hwaddr if there is only one veth
+ * lxc-gentoo: Add /dev/shm tmpfs mount entry
+ * lxc-gentoo: Fix creation of dev/mqueue and dev/shm
+ * lxc-gentoo: Fix the --auth-key flag
+ * lxc-gentoo: Fix wget
+ * lxc-openmandriva: fix parsing of option "--clean": it takes no argument
+ * lxc-openmandriva: protect possibly unset variable with quotes in -z check
+ * lxc-opensuse: default release changed to 13.1, as 12.3 reaches  end-of-life soon
+ * lxc-opensuse: Disable building openSUSE containers on 13.2/Tumbleweed only if wrong version of build package is installed
+ * lxc-opensuse: fix parsing of option "--clean": it takes no argument
+ * lxc-opensuse: protect possibly unset variable with quotes in -z check
+ * lxc-opensuse: use rpm to determine build version
+ * lxc-oracle: Fix /dev/shm
+ * lxc-ubuntu-cloud: Never exit 0 when no container is created
+ * lxc-ubuntu-cloud: Replace .tar.gz by .tar.xz and don't auto-generate missing tarballs
+ * lxc-ubuntu: Drop lucid support and refresh releases list
+
+Commands:
+
+ * Fix grammar in some of the executables "NAME for name of the container" becomes "NAME of the container"
+ * lxc-autostart: Fix broken output
+ * lxc-checkconfig: Update to work with kernel versions > 3
+ * lxc-create: Fix -h with absolute template path
+ * lxc-create: Require --template be passed
+ * lxc-destroy: actually work if underlying fs is overlayfs
+ * lxc-start: added pid parameter
+ * lxc-start-ephemeral: fix pep-8 and pyflakes3
+ * lxc-start-ephemeral: handle the overlayfs workdir option (v2)
+ * lxc-start-ephemeral: Parse passwd directly
+ * lxc-usernsexec: reopen fds 0,1,2 separately
+
+Those stable fixes were brought to you by 59 individual contributors.
+
+### Downloads
+The release tarballs may be found on our [download page](/lxc/downloads) and we expect most distributions  
+will very soon ship a packaged version of LXC 1.0.8.
+
+Should you be interested in individual changes or just looking at the detailed development history,  
+our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-1.0).
+
+
+## LXC 1.1.5 release announcement <span class="text-muted">9th of November 2015</span>
 This is the fifth bugfix release for LXC 1.1.
 
 Core:
@@ -37,7 +244,7 @@ Should you be interested in individual changes or just looking at the detailed d
 our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-1.1).
 
 
-## LXC 1.1.4 release announcement<span class="text-muted">6th of October 2015</span>
+## LXC 1.1.4 release announcement <span class="text-muted">6th of October 2015</span>
 This is the fourth bugfix release for LXC 1.1.
 
 Important:
@@ -117,7 +324,7 @@ Should you be interested in individual changes or just looking at the detailed d
 our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-1.1).
 
 
-## LXC 1.1.3 release announcement<span class="text-muted">14th of August 2015</span>
+## LXC 1.1.3 release announcement <span class="text-muted">14th of August 2015</span>
 This is the third bugfix release for LXC 1.1.
 
 ### Changes
@@ -194,7 +401,7 @@ Should you be interested in individual changes or just looking at the detailed d
 our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-1.1).
 
 
-## LXC 1.1.2 release announcement<span class="text-muted">10th of April 2015</span>
+## LXC 1.1.2 release announcement <span class="text-muted">10th of April 2015</span>
 This is the second bugfix release for LXC 1.1.
 
 ### Changes
@@ -221,7 +428,7 @@ Should you be interested in individual changes or just looking at the detailed d
 our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-1.1).
 
 
-## LXC 1.1.1 release announcement<span class="text-muted">16th of March 2015</span>
+## LXC 1.1.1 release announcement <span class="text-muted">16th of March 2015</span>
 This is the first bugfix release for LXC 1.1.
 
 ### Changes
@@ -250,7 +457,7 @@ Should you be interested in individual changes or just looking at the detailed d
 our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-1.1).
 
 
-## LXC 1.1.0 release announcement<span class="text-muted">30th of January 2015</span>
+## LXC 1.1.0 release announcement <span class="text-muted">30th of January 2015</span>
 The LXC team is pleased to announce the release of LXC 1.1.
 
 This release will be supported until January 2016 or 2 months after the next release of LXC,  
@@ -331,7 +538,7 @@ Should you be interested in individual changes or just looking at the detailed d
 our master branch is on [Github](https://github.com/lxc/lxc/tree/master).
 
 
-## LXC 1.0.7 release announcement<span class="text-muted">5th of December 2014</span>
+## LXC 1.0.7 release announcement <span class="text-muted">5th of December 2014</span>
 This is the seventh bugfix release for the LXC 1.0 series.
 
 ### Changes
@@ -429,7 +636,7 @@ Should you be interested in individual changes or just looking at the detailed d
 our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-1.0).
 
 
-## LXC 1.0.6 release announcement<span class="text-muted">24th of September 2014</span>
+## LXC 1.0.6 release announcement <span class="text-muted">24th of September 2014</span>
 This is the sixth bugfix release for the LXC 1.0 series.
 
 To make supporting both LXC 1.0 and the future LXC 1.1 easier, this version introduces the -F argument to lxc-start.  
@@ -544,7 +751,7 @@ Should you be interested in individual changes or just looking at the detailed d
 our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-1.0).
 
 
-## LXC 1.0.5 release announcement<span class="text-muted">14th of July 2014</span>
+## LXC 1.0.5 release announcement <span class="text-muted">14th of July 2014</span>
 This is the fifth bugfix release for the LXC 1.0 series.
 
 ### seccomp profile
@@ -627,7 +834,7 @@ Should you be interested in individual changes or just looking at the detailed d
 our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-1.0).
 
 
-## LXC 1.0.4 release announcement<span class="text-muted">13th of June 2014</span>
+## LXC 1.0.4 release announcement <span class="text-muted">13th of June 2014</span>
 This is the fourth bugfix release for the LXC 1.0 series.
 
 ### Changes
@@ -739,7 +946,7 @@ Should you be interested in individual changes or just looking at the detailed d
 our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-1.0).
 
 
-## LXC 1.0.3 release announcement<span class="text-muted">8th of April 2014</span>
+## LXC 1.0.3 release announcement <span class="text-muted">8th of April 2014</span>
 This is the third bugfix release for the LXC 1.0 series.
 
 ### Changes
@@ -793,7 +1000,7 @@ our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-1.0).
 
 
 
-## LXC 1.0.2 release announcement<span class="text-muted">27th of March 2014</span>
+## LXC 1.0.2 release announcement <span class="text-muted">27th of March 2014</span>
 This is the second bugfix release for the LXC 1.0 series.
 
 ### Changes
@@ -853,7 +1060,7 @@ Should you be interested in individual changes or just looking at the detailed d
 our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-1.0).
 
 
-## LXC 1.0.1 release announcement<span class="text-muted">6th of March 2014</span>
+## LXC 1.0.1 release announcement <span class="text-muted">6th of March 2014</span>
 This is the first bugfix release for the LXC 1.0 series.
 
 ### Changes
@@ -899,7 +1106,7 @@ will very soon ship a packaged version of LXC 1.0.1.
 Should you be interested in individual changes or just looking at the detailed development history,  
 our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-1.0).
 
-## LXC 1.0.0 release announcement<span class="text-muted">20th of February 2014</span>
+## LXC 1.0.0 release announcement <span class="text-muted">20th of February 2014</span>
 ### Introduction
 It's with great pleasure that the LXC team is announcing the release of LXC 1.0!
 
