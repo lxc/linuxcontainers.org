@@ -1,0 +1,326 @@
+[
+    {"path": "/",
+     "title": "",
+     "menu": ["홈"],
+     "generator": "html",
+     "meta": {"input": "index.ko.html"}},
+
+
+
+    {"path": "/lxc",
+     "generator": "alias",
+     "meta": {"target": "/lxc/introduction"}},
+
+    {"path": "/lxc/introduction",
+     "title": "LXC - 소개",
+     "menu": ["LXC", "소개"],
+     "generator": "markdown",
+     "meta": {"input": "lxc/introduction.ko.md"}},
+
+    {"path": "/lxc/news",
+     "title": "LXC - 소식",
+     "menu": ["LXC", "소식"],
+     "generator": "markdown",
+     "meta": {"input": "lxc/news.md"}},
+
+    {"path": "/lxc/getting-started",
+     "title": "LXC - 시작하기",
+     "menu": ["LXC", "시작하기"],
+     "generator": "markdown",
+     "meta": {"input": "lxc/getting-started.ko.md"}},
+
+    {"path": "/lxc/documentation",
+     "title": "LXC - 문서",
+     "menu": ["LXC", "문서"],
+     "generator": "markdown",
+     "meta": {"input": "lxc/documentation.ko.md"}},
+
+    {"path": "/lxc/apidoc",
+     "generator": "directory",
+     "meta": {"input": "lxc/apidoc"}},
+
+    {"path": "/lxc/manpages",
+     "title": "LXC - 사용법",
+     "menu": ["LXC", "사용법"],
+     "generator": "manpages",
+     "meta": {"dir": "/manpages/lxc/ko"}},
+
+    {"path": "/lxc/contribute",
+     "title": "LXC - 기여하기",
+     "menu": ["LXC", "기여하기"],
+     "generator": "markdown",
+     "meta": {"input": "lxc/contribute.ko.md"}},
+
+    {"path": "/lxc/security",
+     "title": "LXC - 보안",
+     "menu": ["LXC", "보안"],
+     "generator": "markdown",
+     "meta": {"input": "lxc/security.ko.md"}},
+
+    {"path": "/lxc/downloads",
+     "title": "LXC - 내려받기",
+     "menu": ["LXC", "내려받기"],
+     "generator": "downloads",
+     "meta": {"dir": "/downloads/lxc",
+              "input": "lxc/downloads.ko.md"}},
+
+    {"path": "/lxc/external-resources",
+     "menu": ["LXC", "외부 자료"]},
+
+    {"path": "/lxc/articles",
+     "title": "LXC - 기사",
+     "menu": ["LXC", "기사"],
+     "generator": "markdown",
+     "meta": {"input": "lxc/articles.md"}},
+
+    {"path": "/lxc/mailing-lists",
+     "menu": ["LXC", "메일링 리스트"],
+     "generator": "link",
+     "meta": {"url": "https://lists.linuxcontainers.org"}},
+
+    {"path": "/lxc/irc",
+     "menu": ["LXC", "IRC"],
+     "generator": "link",
+     "meta": {"url": "https://webchat.freenode.net/?channels=#lxcontainers"}},
+
+    {"path": "/lxc/github",
+     "menu": ["LXC", "Github"],
+     "generator": "link",
+     "meta": {"url": "https://github.com/lxc/lxc"}},
+
+    {"path": "/lxc/jenkins-ci",
+     "menu": ["LXC", "Jenkins CI"],
+     "generator": "link",
+     "meta": {"url": "https://jenkins.linuxcontainers.org/view/LXC/"}},
+
+    {"path": "/lxc/travis-ci",
+     "menu": ["LXC", "Travis CI"],
+     "generator": "link",
+     "meta": {"url": "https://travis-ci.org/lxc/lxc"}},
+
+
+
+    {"path": "/lxd",
+     "generator": "alias",
+     "meta": {"target": "/lxd/introduction"}},
+
+    {"path": "/lxd/introduction",
+     "title": "LXD - 소개",
+     "menu": ["LXD", "소개"],
+     "generator": "markdown",
+     "meta": {"input": "lxd/introduction.md"}},
+
+    {"path": "/lxd/news",
+     "title": "LXD - 소식",
+     "menu": ["LXD", "소식"],
+     "generator": "markdown",
+     "meta": {"input": "lxd/news.md"}},
+
+    {"path": "/lxd/getting-started-cli",
+     "title": "LXD - 시작하기 - 명령어",
+     "menu": ["LXD", "시작하기 - 명령어"],
+     "generator": "markdown",
+     "meta": {"input": "lxd/getting-started-cli.md"}},
+
+    {"path": "/lxd/getting-started-openstack",
+     "title": "LXD - 시작하기 - 오픈스택",
+     "menu": ["LXD", "시작하기 - 오픈스택"],
+     "generator": "markdown",
+     "meta": {"input": "lxd/getting-started-openstack.md"}},
+
+    {"path": "/lxd/rest-api",
+     "title": "LXD - REST API",
+     "menu": ["LXD", "REST API"],
+     "generator": "markdown",
+     "meta": {"input": "lxd/rest-api.md"}},
+
+    {"path": "/lxd/contribute",
+     "title": "LXD - 기여하기",
+     "menu": ["LXD", "기여하기"],
+     "generator": "markdown",
+     "meta": {"input": "lxd/contribute.md"}},
+
+    {"path": "/lxd/downloads",
+     "title": "LXD - 내려받기",
+     "menu": ["LXD", "내려받기"],
+     "generator": "downloads",
+     "meta": {"dir": "/downloads/lxd",
+              "input": "lxd/downloads.md"}},
+
+    {"path": "/lxd/try-it",
+     "title": "LXD - 체험하기",
+     "menu": ["LXD", "체험하기"],
+     "generator": "html",
+     "meta": {"input": "lxd/try-it.html"}},
+
+    {"path": "/lxd/external-resources",
+     "menu": ["LXD", "외부 자료"]},
+
+    {"path": "/lxd/product",
+     "menu": ["LXD", "제품 페이지"],
+     "generator": "link",
+     "meta": {"url": "http://www.ubuntu.com/cloud/tools/lxd"}},
+
+    {"path": "/lxd/articles",
+     "title": "LXD - 기사",
+     "menu": ["LXD", "기사"],
+     "generator": "markdown",
+     "meta": {"input": "lxd/articles.md"}},
+
+    {"path": "/lxd/mailing-lists",
+     "menu": ["LXD", "메일링 리스트"],
+     "generator": "link",
+     "meta": {"url": "https://lists.linuxcontainers.org"}},
+
+    {"path": "/lxd/irc",
+     "menu": ["LXD", "IRC"],
+     "generator": "link",
+     "meta": {"url": "https://webchat.freenode.net/?channels=#lxcontainers"}},
+
+    {"path": "/lxd/github",
+     "menu": ["LXD", "Github"],
+     "generator": "link",
+     "meta": {"url": "https://github.com/lxc/lxd"}},
+
+    {"path": "/lxd/travis-ci",
+     "menu": ["LXD", "Travis CI"],
+     "generator": "link",
+     "meta": {"url": "https://travis-ci.org/lxc/lxd"}},
+
+
+    {"path": "/lxcfs",
+     "generator": "alias",
+     "meta": {"target": "/lxcfs/introduction"}},
+
+    {"path": "/lxcfs/introduction",
+     "title": "LXCFS - 소개",
+     "menu": ["LXCFS", "소개"],
+     "generator": "markdown",
+     "meta": {"input": "lxcfs/introduction.md"}},
+
+    {"path": "/lxcfs/news",
+     "title": "LXCFS - 소식",
+     "menu": ["LXCFS", "소식"],
+     "generator": "markdown",
+     "meta": {"input": "lxcfs/news.md"}},
+
+    {"path": "/lxcfs/getting-started",
+     "title": "LXCFS - 시작하기",
+     "menu": ["LXCFS", "시작하기"],
+     "generator": "markdown",
+     "meta": {"input": "lxcfs/getting-started.md"}},
+
+    {"path": "/lxcfs/manpages",
+     "title": "LXCFS - 사용법",
+     "menu": ["LXCFS", "사용법"],
+     "generator": "manpages",
+     "meta": {"dir": "/manpages/lxcfs"}},
+
+    {"path": "/lxcfs/contribute",
+     "title": "LXCFS - 기여하기",
+     "menu": ["LXCFS", "기여하기"],
+     "generator": "markdown",
+     "meta": {"input": "lxcfs/contribute.md"}},
+
+    {"path": "/lxcfs/downloads",
+     "title": "LXCFS - 내려받기",
+     "menu": ["LXCFS", "내려받기"],
+     "generator": "downloads",
+     "meta": {"dir": "/downloads/lxcfs",
+              "input": "lxcfs/downloads.md"}},
+
+    {"path": "/lxcfs/external-resources",
+     "menu": ["LXCFS", "외부 자료"]},
+
+    {"path": "/lxcfs/mailing-lists",
+     "menu": ["LXCFS", "메일링 리스트"],
+     "generator": "link",
+     "meta": {"url": "https://lists.linuxcontainers.org"}},
+
+    {"path": "/lxcfs/irc",
+     "menu": ["LXCFS", "IRC"],
+     "generator": "link",
+     "meta": {"url": "https://webchat.freenode.net/?channels=#lxcontainers"}},
+
+    {"path": "/lxcfs/github",
+     "menu": ["LXCFS", "Github"],
+     "generator": "link",
+     "meta": {"url": "https://github.com/lxc/lxcfs"}},
+
+
+    {"path": "/cgmanager",
+     "generator": "alias",
+     "meta": {"target": "/cgmanager/introduction"}},
+
+    {"path": "/cgmanager/introduction",
+     "title": "CGManager - 소개",
+     "menu": ["CGManager", "소개"],
+     "generator": "markdown",
+     "meta": {"input": "cgmanager/introduction.md"}},
+
+    {"path": "/cgmanager/news",
+     "title": "CGManager - 소식",
+     "menu": ["CGManager", "소식"],
+     "generator": "markdown",
+     "meta": {"input": "cgmanager/news.md"}},
+
+    {"path": "/cgmanager/getting-started",
+     "title": "CGManager - 시작하기",
+     "menu": ["CGManager", "시작하기"],
+     "generator": "markdown",
+     "meta": {"input": "cgmanager/getting-started.md"}},
+
+    {"path": "/cgmanager/dbus-api",
+     "title": "CGManager - D-Bus API",
+     "menu": ["CGManager", "D-Bus API"],
+     "generator": "markdown",
+     "meta": {"input": "cgmanager/dbus-api.md"}},
+
+    {"path": "/cgmanager/manpages",
+     "title": "CGManager - 사용법",
+     "menu": ["CGManager", "사용법"],
+     "generator": "manpages",
+     "meta": {"dir": "/manpages/cgmanager"}},
+
+    {"path": "/cgmanager/contribute",
+     "title": "CGManager - 기여하기",
+     "menu": ["CGManager", "기여하기"],
+     "generator": "markdown",
+     "meta": {"input": "cgmanager/contribute.md"}},
+
+    {"path": "/cgmanager/downloads",
+     "title": "CGManager - 내려받기",
+     "menu": ["CGManager", "내려받기"],
+     "generator": "downloads",
+     "meta": {"dir": "/downloads/cgmanager",
+              "input": "cgmanager/downloads.md"}},
+
+    {"path": "/cgmanager/external-resources",
+     "menu": ["CGManager", "외부 자료"]},
+
+    {"path": "/cgmanager/articles",
+     "title": "CGManager - 기사",
+     "menu": ["CGManager", "기사"],
+     "generator": "markdown",
+     "meta": {"input": "cgmanager/articles.md"}},
+
+    {"path": "/cgmanager/mailing-lists",
+     "menu": ["CGManager", "메일링 리스트"],
+     "generator": "link",
+     "meta": {"url": "https://lists.linuxcontainers.org"}},
+
+    {"path": "/cgmanager/irc",
+     "menu": ["CGManager", "IRC"],
+     "generator": "link",
+     "meta": {"url": "https://webchat.freenode.net/?channels=#lxcontainers"}},
+
+    {"path": "/cgmanager/github",
+     "menu": ["CGManager", "Github"],
+     "generator": "link",
+     "meta": {"url": "https://github.com/lxc/cgmanager"}},
+
+    {"path": "/cgmanager/travis-ci",
+     "menu": ["CGManager", "Travis CI"],
+     "generator": "link",
+     "meta": {"url": "https://travis-ci.org/lxc/cgmanager"}}
+]

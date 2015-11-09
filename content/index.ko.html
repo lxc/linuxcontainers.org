@@ -1,0 +1,73 @@
+<h2>LinuxContainers.org <span class="text-muted">컨테이너 프로젝트들을 위한 인프라스트럭처</span></h2>
+<div class="large_content">
+    <p><img src="/static/img/containers.png"
+            alt="logo"/>
+       linuxcontainers.org는 LXC, LXD, LXCFS, CGManager를 모두 아우르는
+       프로젝트 입니다.</p>
+
+    <p>목표는 배포판과 벤더(vender) 중립적인 리눅스 컨테이너 기술 개발 환경을
+       제공하는 것입니다.</p>
+
+    <p>우리의 주안점은 시스템 컨테이너입니다. 즉, 독립적인 커널을 구동하거나
+       하드웨어를 시뮬레이션하는 오버헤드 없이 가상머신과 유사한 환경을
+       제공해 주는 것입니다.</p>
+
+    <p>이는 네임스페이스, 강제적 접근 제어(MAC), 컨트롤 그룹과 같은 여러
+       커널 보안 요소의 조합으로 이룰 수 있습니다.</p>
+</div>
+
+<hr/>
+<h2>프로젝트. <span class="text-muted">흥미로운 것들.</span></h2>
+<div class="row">
+    <div class="col-md-4">
+        <h3>LXC</h3>
+        <p>LXC는 도구, 템플릿, 라이브러리, 프로그래밍 언어 바인딩으로 구성된
+           잘 알려진 세트입니다.
+           매우 저레벨이고 유연하며, 최신 커널이 지원하는 모든 컨테이너
+           기능 들을 다루고 있습니다.</p>
+        <p>production ready를 위해, LXC 1.0는 향후 5년동안 보안업데이트와 버그 수정이 이루어집니다 (2019년 4월까지).</p>
+        <p><a class="btn btn-primary" href="/lxc/introduction" role="button">더 알아보기 &raquo;</a></p>
+    </div>
+
+    <div class="col-md-4">
+        <h3>LXD</h3>
+        <p>LXD는 새로운 LXC 사용 환경입니다.
+           컨테이너 관리를 위해 단 하나의 명령어 도구를 사용하며,
+           이를 통해 완전히 새롭고 직관적인 사용자 경험을 제공합니다.
+           컨테이너는 네트워크 위에서 REST API를 통해 투명한 방법으로 관리될 수
+           있습니다. 오픈스택과 함께 통합되어, 매우 큰 규모의 배포시스템에서도
+           동작 가능합니다.</p>
+
+        <p>LXD는 2014년 11월 초에 발표되었습니다. 그리고 현재까지도 활발하게 개발이 이루어지고 있습니다.</p>
+
+        <p><a class="btn btn-primary" href="/lxd/introduction" role="button">더 알아보기 &raquo;</a></p>
+    </div>
+
+    <div class="col-md-4">
+        <h3>CGManager</h3>
+        <p>CGManager는 우리의 컨트롤 그룹 관리자 데몬입니다.
+           중첩된(nested) 비특권 컨테이너에게도 DBus API를 통해  그들의
+           컨트롤 그룹을 생성/관리할 수 있게 해줍니다.</p>
+
+        <p>CGManager는 2014년 4월부터 우분투에서 LXC가 기본으로 사용하고
+           있습니다. 그리고 비특권 컨테이너가 동작해야하는 다른 배포판들에서도
+           사용되고 있습니다.</p>
+
+        <p><a class="btn btn-primary" href="/cgmanager/introduction" role="button">더 알아보기 &raquo;</a></p>
+    </div>
+
+    <div class="col-md-6">
+        <h3>LXCFS</h3>
+        <p>아래 두가지를 제공하는 사용자영역 파일시스템 (FUSE) 입니다.
+            <ul>
+                <li>cpuinfo, meminfo, stat, uptime를 위한 오버레이 파일시스템.</li>
+                <li>비특권 상태에서도 쓰기가 가능한 cgroupfs 호환 트리</li>
+            </ul>
+        </p>
+
+        <p>시스템 컨테이너 사용자가 기대하는 정보들을 내보내서,
+           procfs, sysfs, cgroupfs의 단점을 보완하도록 만들어졌습니다.</p>
+
+        <p><a class="btn btn-primary" href="/lxcfs/introduction" role="button">더 알아보기 &raquo;</a></p>
+    </div>
+</div>
