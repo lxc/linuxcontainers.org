@@ -236,4 +236,13 @@ $(document).ready(function() {
     $('#tryit_console_reconnect').click(function() {
         setupConsole(tryit_console);
     });
+
+    $('#tryit_intro').on('shown.bs.collapse', function (e) {
+        var offset = $('.panel.panel-default > .panel-collapse.in').offset();
+        if(offset) {
+            $('html,body').animate({
+                scrollTop: $('.panel-collapse.in').siblings('.panel-heading').offset().top - 50
+            }, 500);
+        }
+    });
 });
