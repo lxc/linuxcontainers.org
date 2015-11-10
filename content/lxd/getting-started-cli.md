@@ -24,6 +24,14 @@ You can install it with:
 
 After that, LXD can be interacted with through the "lxc" and "lxd-images" commands.
 
+Users of older version of Snappy (current rpi2 image at least) may have to do:
+
+    sudo ln -sf $(find /var/lib/apps/lxd/ -maxdepth 1 -type d | tail -1) /var/lib/apps/lxd/current
+    sudo systemctl restart lxd_lxd_0.21-1.service
+
+If you end up having to do the above, note that you likely will have to do so with every subsequent update of LXD  
+until the snappy tools are updated on your device through a new system image.
+
 ## Other distributions
 There are currently packages for multiple distributions including Gentoo and, of course, Ubuntu.  
 Users of other distributions might find it in their package manager too.
