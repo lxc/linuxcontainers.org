@@ -1,6 +1,44 @@
 ![Download icon](/static/img/containers.png)
 # News
-## LXD 0.21 release announcement<span class="text-muted">27th of October 2015</span>
+## LXD 0.22 release announcement <span class="text-muted">10th of November 2015</span>
+
+### The main changes for this release are
+
+ * Freeze containers before killing them (helps with fork bombs)
+ * Configurable image compression algorithm (also supports no compression)
+ * Support using an HTTP proxy when downloading a remote image
+ * Initial implementation of the events interface and minimal client for it (lxc monitor)
+
+### Bugfixes
+
+ * Don't remove the main LXD socket when starting a second daemon
+ * On failure to add a remote, cleanup the cached certificate
+ * LXD no longer requires a client certificate to talk to public endpoints
+ * Better error and debug messages for checkpoint/restore and container startup
+ * Fixed a race condition during container startup
+ * Update the busybox test image to avoid an occasional hang
+ * lvm-setup: Update to work on older Ubuntu releases
+ * Fix extraction of bz2 compressed images
+ * Fix a number of fd leaks
+ * Fix shmount handling to avoid creating an extra mount everytime LXD starts
+ * lxd-images: Fallback to the daily stream if an image can't be found in the releases stream
+ * Fix a uid/gid mapping issue on container copy
+ * Fix a LXD hang on invalid LXC configuration key
+
+### Upgrade notes
+
+This LXD version corrects a problem in the implementation of the images API,  
+as a result, some actions against older servers or using older clients may fail.
+
+### Try it for yourself
+
+This new LXD release is already available for you to try on our [demo service](/lxd/try-it).
+
+### Downloads
+The release tarballs can be found on our [download page](/lxd/downloads).
+
+
+## LXD 0.21 release announcement <span class="text-muted">27th of October 2015</span>
 
 The main changes for this release are:
 
@@ -20,7 +58,7 @@ Additionally:
 The release tarballs can be found on our [download page](/lxd/downloads).
 
 
-## LXD 0.20 release announcement<span class="text-muted">14th of October 2015</span>
+## LXD 0.20 release announcement <span class="text-muted">14th of October 2015</span>
 
 The main changes for this release are:
 
@@ -44,7 +82,7 @@ Additionally:
 The release tarballs can be found on our [download page](/lxd/downloads).
 
 
-## LXD 0.19 release announcement<span class="text-muted">29th of September 2015</span>
+## LXD 0.19 release announcement <span class="text-muted">29th of September 2015</span>
 
 The main changes for this release are:
 
@@ -71,7 +109,7 @@ will fail to interact with LXD 0.19's image store. Such clients should be upgrad
 The release tarballs can be found on our [download page](/lxd/downloads).
 
 
-## LXD 0.18 release announcement<span class="text-muted">15th of September 2015</span>
+## LXD 0.18 release announcement <span class="text-muted">15th of September 2015</span>
 
 The main changes for this release are:
 
@@ -93,7 +131,7 @@ The main changes for this release are:
 The release tarballs can be found on our [download page](/lxd/downloads).
 
 
-## LXD 0.17 release announcement<span class="text-muted">1st of September 2015</span>
+## LXD 0.17 release announcement <span class="text-muted">1st of September 2015</span>
 
 The main changes for this release are:
 
@@ -133,7 +171,7 @@ Now becomes:
 The release tarballs can be found on our [download page](/lxd/downloads).
 
 
-## LXD 0.16 release announcement<span class="text-muted">18th of August 2015</span>
+## LXD 0.16 release announcement <span class="text-muted">18th of August 2015</span>
 
 The main changes for this release are:
 
@@ -151,7 +189,7 @@ The main changes for this release are:
 The release tarballs can be found on our [download page](/lxd/downloads).
 
 
-## LXD 0.15 release announcement<span class="text-muted">4th of August 2015</span>
+## LXD 0.15 release announcement <span class="text-muted">4th of August 2015</span>
 
 The main changes for this release are:
 
@@ -186,7 +224,7 @@ to change the address and port LXD binds to. Changes are now applied immediately
 The release tarballs can be found on our [download page](/lxd/downloads).
 
 
-## LXD 0.14 release announcement<span class="text-muted">21st of July 2015</span>
+## LXD 0.14 release announcement <span class="text-muted">21st of July 2015</span>
 
 The main changes for this release are:
 
@@ -216,7 +254,7 @@ To import one of those images into your LXD image store, run:
 The release tarballs can be found on our [download page](/lxd/downloads).
 
 
-## LXD 0.13 release announcement<span class="text-muted">7th of July 2015</span>
+## LXD 0.13 release announcement <span class="text-muted">7th of July 2015</span>
 
 The main changes for this release are:
 
@@ -237,7 +275,7 @@ other Unix may work too but haven't been tested.
 The release tarballs can be found on our [download page](/lxd/downloads).
 
 
-## LXD 0.12 release announcement<span class="text-muted">23rd of June 2015</span>
+## LXD 0.12 release announcement <span class="text-muted">23rd of June 2015</span>
 
 The main changes for this release are:
 
@@ -260,7 +298,7 @@ The main changes for this release are:
 The release tarballs can be found on our [download page](/lxd/downloads).
 
 
-## LXD 0.11 release announcement<span class="text-muted">9th of June 2015</span>
+## LXD 0.11 release announcement <span class="text-muted">9th of June 2015</span>
 
 The main changes for this release are:
 
@@ -284,7 +322,7 @@ On first startup of LXD 0.11, all the old supported names will be converted to t
 The release tarballs can be found on our [download page](/lxd/downloads).
 
 
-## LXD 0.10 release announcement<span class="text-muted">26th of May 2015</span>
+## LXD 0.10 release announcement <span class="text-muted">26th of May 2015</span>
 
 The main changes for this release are:
 
@@ -311,7 +349,7 @@ The main changes for this release are:
 The release tarballs can be found on our [download page](/lxd/downloads).
 
 
-## LXD 0.9 release announcement<span class="text-muted">12th of May 2015</span>
+## LXD 0.9 release announcement <span class="text-muted">12th of May 2015</span>
 
 The main changes for this release are:
 
@@ -337,7 +375,7 @@ The main changes for this release are:
 The release tarballs can be found on our [download page](/lxd/downloads).
 
 
-## LXD 0.8.1 release announcement<span class="text-muted">29th of April 2015</span>
+## LXD 0.8.1 release announcement <span class="text-muted">29th of April 2015</span>
 
 Bugfix only release on top of 0.8 fixing some regressions:
 
@@ -348,7 +386,7 @@ Bugfix only release on top of 0.8 fixing some regressions:
 The release tarballs can be found on our [download page](/lxd/downloads).
 
 
-## LXD 0.8 release announcement<span class="text-muted">28th of April 2015</span>
+## LXD 0.8 release announcement <span class="text-muted">28th of April 2015</span>
 
 The major changes for this release are:
 
@@ -364,7 +402,7 @@ The major changes for this release are:
 The release tarballs can be found on our [download page](/lxd/downloads).
 
 
-## LXD 0.7 release announcement<span class="text-muted">14th of April 2015</span>
+## LXD 0.7 release announcement <span class="text-muted">14th of April 2015</span>
 
 The major changes for this release are:
 
@@ -382,7 +420,7 @@ for production use and comes with no support statement from upstream.
 The release tarballs can be found on our [download page](/lxd/downloads).
 
 
-## LXD 0.6 release announcement<span class="text-muted">7th of April 2015</span>
+## LXD 0.6 release announcement <span class="text-muted">7th of April 2015</span>
 
 The major changes for this release are:
 
@@ -406,7 +444,7 @@ for production use and comes with no support statement from upstream.
 The release tarballs can be found on our [download page](/lxd/downloads).
 
 
-## LXD 0.5 release announcement<span class="text-muted">24th of March 2015</span>
+## LXD 0.5 release announcement <span class="text-muted">24th of March 2015</span>
 
 The major changes for this release are:
 
@@ -432,7 +470,7 @@ the expected options over the next couple of releases.
 The release tarballs can be found on our [download page](/lxd/downloads).
 
 
-## LXD 0.4 release announcement<span class="text-muted">17th of March 2015</span>
+## LXD 0.4 release announcement <span class="text-muted">17th of March 2015</span>
 
 The major changes for this release are:
 
@@ -456,7 +494,7 @@ the expected options over the next couple of releases.
 The release tarballs can be found on our [download page](/lxd/downloads).
 
 
-## LXD 0.3 release announcement<span class="text-muted">10th of March 2015</span>
+## LXD 0.3 release announcement <span class="text-muted">10th of March 2015</span>
 
 The major changes for this release are:
 
@@ -496,7 +534,7 @@ the expected options over the next couple of releases.
 The release tarballs can be found on our [download page](/lxd/downloads).
 
 
-## LXD 0.2 release announcement<span class="text-muted">27th of February 2015</span>
+## LXD 0.2 release announcement <span class="text-muted">27th of February 2015</span>
 
 The major changes for this release are:
 
@@ -520,7 +558,7 @@ We are still busy working on container migration, proper container configuration
 The release tarballs can be found on our [download page](/lxd/downloads).
 
 
-## LXD 0.1 release announcement<span class="text-muted">13th of February 2015</span>
+## LXD 0.1 release announcement <span class="text-muted">13th of February 2015</span>
 This is the initial LXD release.
 
 With this first release of LXD, it is possible to:
