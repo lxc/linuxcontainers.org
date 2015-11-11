@@ -11,7 +11,7 @@ Important:
 Core:
 
  * Add a nesting.conf which can be included to support nesting containers
- * Add support for CAP\_AUDIT\_READ andCAP\_BLOCK\_SUSPEND
+ * Add support for CAP\_AUDIT\_READ and CAP\_BLOCK\_SUSPEND
  * Allow autodev without a rootfs
  * Also drop caps in unpriv containers
  * apparmor: Block access to /proc/kcore
