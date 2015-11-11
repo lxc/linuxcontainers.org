@@ -417,7 +417,8 @@ lxc exec first -- apt-get autoremove --purge -y</pre>
                            <a href="/lxd/try-it" target="_blank">here</a></p>
 
                         <p>Copy/paste the "lxc remote add" command from
-                           the top of the page.
+                           the top of the page of that new session into
+                           the shell of your old session.
                            <br />
                            Then confirm the server fingerprint and enter
                            the password of the remote server.</p>
@@ -458,7 +459,7 @@ lxc exec sixth -- bash</pre>
                         <p>Then clean everything up:
                            <pre>lxc delete sixth
 lxc delete tryit:fourth
-lxc image delete ubuntu-clean</pre>
+lxc image delete clean-ubuntu</pre>
                     </div>
                 </div>
             </div>
