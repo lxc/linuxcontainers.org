@@ -12,32 +12,27 @@
       <!--
        The goal is to offer a distro and vendor neutral environment
        for the development of Linux container technologies.
-       The project provides resources such as build machines, CI
-       infrastructure, mailing-lists, website, e-mail, ...
-       to the various projects under it.
        -->
-      このプロジェクトの目的は、Linux のコンテナ技術を開発するための、ディストリビューションやベンダから中立の環境を提供することです。プロジェクトは傘下のプロジェクトに対して、ビルドのためのマシン、CI環境、メーリングリスト、ウェブサイト、メールなどのリソースを提供します。
+      このプロジェクトの目的は、Linux のコンテナ技術を開発するための、ディストリビューションやベンダから中立の環境を提供することです。
     </p>
 
     <p>
       <!--
-      Current project sponsors are:
+      Our main focus is system containers. That is, containers which
+      offer an environment as close to possible as the one you'd get from a
+      VM but without the overhead that comes with running a separate
+      kernel and simulating all the hardware.
       -->
-      現在のプロジェクトのスポンサーは:
-        <ul>
-            <li>Stéphane Graber
-                <ul>
-                    <li><!-- domain names and SSL certificates -->ドメイン名と SSL 証明書</li>
-                    <li><!-- public server (websites, downloads, e-mails, DNS) -->公開サーバ (webサイト、ダウンロード、メール、DNS)</li>
-                    <li><!-- test (jenkins) and build infrastructure (i386, amd64 and armhf builders) -->テスト (jenkins) とビルドのための環境 (jenkins、i386、amd64、armhf のビルド環境)</li>
-                </ul>
-            </li>
-            <li>Canonical Ltd.
-                <ul>
-                    <li><!-- build infrastructure (arm64 and ppc64el builders) -->ビルドのための環境 (arm64、ppc64el のビルド環境)</li>
-                </ul>
-            </li>
-        </ul>
+      私たちは主にシステムコンテナにフォーカスを当てています。つまり、VM の環境に可能な限り近い環境でありながら、VM のように環境ごとに別々のカーネルを実行したり、ハードウェアをシミュレートすることによるオーバーヘッドがない環境を提供するコンテナです。
+    </p>
+
+    <p>
+      <!--
+      This is achieved through a combination of kernel security
+      features such as namespaces, mandatory access control and control
+      groups.
+      -->
+      このようなコンテナは、名前空間 (Namespace)、強制アクセスコントロール、Cgroup といったカーネルのセキュリティ関連の機能の組み合わせで実現されています。
     </p>
 </div>
 
