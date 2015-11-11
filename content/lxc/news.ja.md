@@ -1,5 +1,55 @@
 # News
+## LXC 1.1.5 リリースのお知らせ <!-- LXC 1.1.5 release announcement --><span class="text-muted">2015 年 11 月 9 日<!-- 9th of November 2015 --></span>
+<!--
+This is the fifth bugfix release for LXC 1.1.
+-->
+このリリースは LXC 1.1 の 5 回目のバグフィックスリリースです。
+
+コア<!-- Core -->:
+
+ * プロセスタイトルのリネームの扱いを修正しました (3.19 カーネル以上でのみ有効です)<!-- Fix handling of process title rename (now only on >= 3.19 kernels) -->
+ * overlayfs/aufs の扱いをいくつか改良しました <!-- Several improvements to overlayfs/aufs handling -->
+    * 必要なディレクトリが存在しない場合に作成するようにしました <!-- Needed directories are created if missing -->
+    * 絶対パスの処理を改良しました <!-- Better handling of absolute paths -->
+    * overlayfs を使ったコンテナのクローンの処理を改良しました <!-- Better handling of cloning overlayfs containers -->
+ * cgroup パス末尾の /init.scope を無視するようにしました (新しい systemd 対応です) <!-- Ignore trailing /init.scope in cgroup paths (needed for newer systemd) -->
+ * ブリッジに接続されていない veth デバイスを持つコンテナを Checkpoint/Restore できるようになりました <!-- Allow checkpoint/restore of containers using non-bridged veth devices -->
+ * error\_num (コンテナをトラッキングする終了コード) を適切に初期化するようになりました <!-- Properly initialize error\_num (exit code tracking for the container) -->
+ * lxc-usernsexec: ファイルディスクリプタ 0,1,2 を別々に再オープンするようになりました (標準入力が tty の時のみ) <!-- Re-open fds 0,1,2 separately (only if stdin is a tty) -->
+
+Init スクリプト<!-- Init scripts -->:
+
+ * lxc-net: network-online.target の後で起動するようになりました <!-- Start after network-online.target -->
+
+コマンド <!-- Commands -->:
+
+ * lxc-start: PID 名前空間も保持できるようになりました <!-- Allow preserving the PID namespace too -->
+
+テンプレート <!-- Templates -->:
+
+ * archlinux: systemd-sysctl サービスの修正を行いました <!-- Fix systemd-sysctl service -->
+ * ubuntu-cloud: デフォルトで tar.xz tarball を使うようになりました (tar.gz はすぐに廃止される予定です) <!-- Use tar.xz tarballs by default (as tar.gz will soon be discontinued) -->
+ * ubuntu-cloud: エラー時は常に終了コード 1 で終了するようになりました <!-- Always exit 1 on error -->
+
+### ダウンロード <!-- Downloads -->
+<!--
+The release tarballs may be found on our [download page](/lxc/downloads) and we expect most distributions  
+will very soon ship a packaged version of LXC 1.1.5.
+-->
+このリリースの tarball は [ダウンロードページ](/lxc/downloads) から取得できます。そして、各ディストリビューションがすぐに LXC 1.1.5 のパッケージをリリースするでしょう。
+
+<!--
+Should you be interested in individual changes or just looking at the detailed development history,  
+our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-1.1).
+-->
+個々の変更点に興味がある場合、そして開発の履歴を見たい場合、stable ブランチ (stable-1.1) は [Github](https://github.com/lxc/lxc/tree/stable-1.1) にあります。
+
+
 ## LXC 1.1.4 リリースのお知らせ <!-- LXC 1.1.4 release announcement --><span class="text-muted">2015 年 10 月 6 日<!-- 6th of October 2015 --></span>
+<!--
+This is the fourth bugfix release for LXC 1.1.
+-->
+このリリースは LXC 1.1 の 4 回目のバグフィックスリリースです。
 
 重要な変更<!-- Important -->:
 
@@ -10,9 +60,9 @@
  * setenv() を呼ぶ前に NULL ポインタのチェックを行うようにしました <!-- Check for NULL pointers before calling setenv() -->
  * (lxc.mount.entry に指定する) create=dir と create=file を処理する関数を分けました (訳注: 以下のふたつの項目とセットで lxc.mount* で設定されたマウントエントリを処理する関数のリファクタリングを行っています)<!-- Factorize handle of create=dir and create=file -->
  * マウント用のエントリを処理する関数の分割と再構築を行いました <!-- Refactor and factorize mount entries -->
- * lxc.mount* を扱う関数を 3 つに分割しました <!-- Split handle of lxc.mount* with 3 functions -->
+ * lxc.mount\* を扱う関数を 3 つに分割しました <!-- Split handle of lxc.mount\* with 3 functions -->
  * init: 古いバージョンの apparmor をサポートしました <!-- Support older apparmor -->
- * LXC_CLONE_KEEPNAME の指定が正常に動作するようになりました <!-- Make LXC_CLONE_KEEPNAME work -->
+ * LXC\_CLONE\_KEEPNAME の指定が正常に動作するようになりました <!-- Make LXC\_CLONE\_KEEPNAME work -->
  * rootfs が指定されない場合の自動マウントの不具合を修正しました <!-- Fix automatic mounts without a rootfs -->
  * rootfs が指定されない場合のコンテナ作成の不具合を修正しました <!-- rootfs Fix container creation without a rootfs -->
  * rootfs が指定されない場合の /dev のシンボリックリンクの不具合を修正しました <!-- Fix /dev symlinks without a rootfs -->
@@ -21,27 +71,27 @@
  * コンテナ作成時、rootfs が既に存在している場合も設定を保存するようになりました <!-- When creating container, save configuration if rootfs already exists -->
  * rootfs が指定されない場合の start フックの検証を修正しました <!-- Fix verification of start hook without a rootfs -->
  * コンテナの停止時にネットワークデバイスを確実に削除するようにしました <!-- Tear down network devices during container halt -->
- * coverity: mount_entry_create_dir_file の修正を行いました <!-- fix mount_entry_create_dir_file -->
+ * coverity: mount\_entry\_create\_dir\_file の修正を行いました <!-- fix mount\_entry\_create\_dir\_file -->
  * ネストしたコンテナをサポートするために include する nesting.conf を追加しました <!-- Add a nesting.conf which can be included to support nesting containers -->
  * realloc() のサイズの計算を修正しました <!-- Fix reallocation calculation -->
- * bdev_destroy() と bdev_destroy_wrapper() を追加しました <!-- Add bdev_destroy() and bdev_destroy_wrapper() -->
- * overlayfs_clone: rootfs をマウントして rsync を行うようにしました (訳注: overlayfs の非特権コンテナのクローンが行えるように修正しました)<!-- rsync the mounted rootfs -->
- * lxc_rmdir_onedev: パスが存在しない場合でも失敗しなくなりました (訳注: 作成が不十分なコンテナの削除時にエラーがでないようになりました)<!-- don't fail if path doesn't exist -->
- * overlayfs_mount: delta ディレクトリが存在しない場合に作成するようにしました <!-- create delta dir if it doesn't exist -->
- * ovl_rsync: umount を確実に行うようにしました <!-- make sure to umount -->
- * bdev.h の bdev_destroy() を使って bdev を削除するようにしました <!-- Destroy bdevs using bdev_destroy() from bdev.h -->
+ * bdev\_destroy() と bdev\_destroy\_wrapper() を追加しました <!-- Add bdev\_destroy() and bdev\_destroy\_wrapper() -->
+ * overlayfs\_clone: rootfs をマウントして rsync を行うようにしました (訳注: overlayfs の非特権コンテナのクローンが行えるように修正しました)<!-- rsync the mounted rootfs -->
+ * lxc\_rmdir\_onedev: パスが存在しない場合でも失敗しなくなりました (訳注: 作成が不十分なコンテナの削除時にエラーがでないようになりました)<!-- don't fail if path doesn't exist -->
+ * overlayfs\_mount: delta ディレクトリが存在しない場合に作成するようにしました <!-- create delta dir if it doesn't exist -->
+ * ovl\_rsync: umount を確実に行うようにしました <!-- make sure to umount -->
+ * bdev.h の bdev\_destroy() を使って bdev を削除するようにしました <!-- Destroy bdevs using bdev\_destroy() from bdev.h -->
  * インデントの修正を行いました <!-- Fix indentation -->
  * cmds: abstract socket の長さの問題を修正しました <!-- fix abstract socket length problem -->
  * coverity: 冗長な処理ブロックを削除しました <!-- drop second (redundant) block -->
- * mount_proc_if_needed() で snprintf の返り値のチェックを行うようにしました <!-- Check return value of snprintf in mount_proc_if_needed() -->
- * CAP_AUDIT_READ を追加しました <!-- Add CAP_AUDIT_READ -->
- * CAP_BLOCK_SUSPEND を追加しました <!-- Add CAP_BLOCK_SUSPEND -->
+ * mount\_proc\_if\_needed() で snprintf の返り値のチェックを行うようにしました <!-- Check return value of snprintf in mount\_proc\_if\_needed() -->
+ * CAP\_AUDIT\_READ を追加しました <!-- Add CAP\_AUDIT\_READ -->
+ * CAP\_BLOCK\_SUSPEND を追加しました <!-- Add CAP\_BLOCK\_SUSPEND -->
  * 処理の失敗時に確保されたメモリを解放するようにしました <!-- Free allocated memory on failure (v2) -->
- * Android 用に O_PATH と O_NOFOLLOW を定義しました <!-- Define O_PATH and O_NOFOLLOW for Android -->
+ * Android 用に O\_PATH と O\_NOFOLLOW を定義しました <!-- Define O\_PATH and O\_NOFOLLOW for Android -->
  * seccomp: aarch64 のサポートを追加しました <!-- add aarch64 support -->
  * lxc-test-symlink: 絶対パスのシンボリックリンクを使ったテストを追加しました <!-- add a test using absolute symlink -->
- * lxc_mount_auto_mounts: NULL 判定をきちんと行った後に処理を行うようにしました <!-- fix weirdness -->
- * lxc_mount_auto_mounts 内の変数の型がおかしかったので修正しました <!-- Fix the type of i in lxc_mount_auto_mounts -->
+ * lxc\_mount\_auto\_mounts: NULL 判定をきちんと行った後に処理を行うようにしました <!-- fix weirdness -->
+ * lxc\_mount\_auto\_mounts 内の変数の型がおかしかったので修正しました <!-- Fix the type of i in lxc\_mount\_auto\_mounts -->
 
 ツール <!-- Tools -->:
 
