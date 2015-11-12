@@ -101,7 +101,7 @@
      "title": "LXD - はじめに - OpenStack",
      "menu": ["LXD", "はじめに - OpenStack"],
      "generator": "markdown",
-     "meta": {"input": "lxd/getting-started-openstack.ja.md"}},
+     "meta": {"input": "lxd/getting-started-openstack.md"}},
 
     {"path": "/lxd/rest-api",
      "title": "LXD - REST API",
@@ -136,8 +136,8 @@
      "meta": {"url": "http://www.ubuntu.com/cloud/tools/lxd"}},
 
     {"path": "/lxd/articles",
-     "title": "LXD - 記事",
-     "menu": ["LXD", "記事"],
+     "title": "LXD - 記事と動画",
+     "menu": ["LXD", "記事と動画"],
      "generator": "markdown",
      "meta": {"input": "lxd/articles.ja.md"}},
 
