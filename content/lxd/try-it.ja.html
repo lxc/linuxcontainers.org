@@ -128,7 +128,7 @@
                            option.
                            <br />
                            Or you can follow this step by step tutorial
-                           instead which will get you throught LXD's
+                           instead which will get you through LXD's
                            main features. -->
                            自由に色々やってみて、man ページや --help オプションを使って LXD について発見してみてください。
                            <br />
@@ -199,19 +199,19 @@ lxc config show first</pre>
                         <p><!-- By default your container comes with no
                            resource limitation and inherits from its
                            parent environment. You can confirm it with: -->
-			   デフォルトでは、あなたの作成したコンテナはリソース制限がなく、自身の親環境のリソースをそのまま引き継いでいます。これは以下のように確認できます。
+                           デフォルトでは、あなたの作成したコンテナはリソース制限がなく、自身の親環境のリソースをそのまま引き継いでいます。これは以下のように確認できます。
                            <pre>free -m
 lxc exec first -- free -m</pre>
                         </p>
 
                         <p><!-- To apply a memory limit to your container, do: -->
-			   あなたが作成したコンテナに制限を追加するには以下のよう実行します。
+                           あなたが作成したコンテナに制限を追加するには以下のよう実行します。
                            <pre>lxc config set first limits.memory 64M
 lxc restart first</pre>
                         </p>
 
                         <p><!-- And confirm that it's been applied with: -->
-			   そして、制限が適用されたことを確認するには以下のように実行します。
+                           そして、制限が適用されたことを確認するには以下のように実行します。
                            <pre>lxc exec first -- free -m</pre>
                         </p>
                     </div>
@@ -238,9 +238,9 @@ lxc restart first</pre>
                            <br />
                            Before making a snapshot, lets do some
                            changes to the container, for example, updating it: -->
-			   LXD はスナップショットの取得とコンテナのスナップショットからのリストアをサポートしています。
-			   <br />
-			   スナップショットを作成する前に、コンテナに少し変更を加えてみましょう。例えば、以下のようにアップデートします。
+                           LXD はスナップショットの取得とコンテナのスナップショットからのリストアをサポートしています。
+                           <br />
+                           スナップショットを作成する前に、コンテナに少し変更を加えてみましょう。例えば、以下のようにアップデートします。
                            <pre>lxc exec first -- apt-get update
 lxc exec first -- apt-get dist-upgrade -y
 lxc exec first -- apt-get autoremove --purge -y</pre>
@@ -248,27 +248,27 @@ lxc exec first -- apt-get autoremove --purge -y</pre>
 
                         <p><!-- Now that the container is all updated and
                            cleaned, let's make a snapshot called "clean": -->
-			   今、コンテナはすべてアップデートされ、クリーンな状態になりました。このスナップショットを "clean" と名づけましょう。
+                           今、コンテナはすべてアップデートされ、クリーンな状態になりました。このスナップショットを "clean" と名づけましょう。
                            <pre>lxc snapshot first clean</pre>
                         </p>
 
                         <p><!-- Let's break our container: -->
-			   ここでコンテナを破壊してみましょう。
+                           ここでコンテナを破壊してみましょう。
                            <pre>lxc exec first -- rm -Rf /etc /usr</pre>
                         </p>
 
-                        <p><!-- Confirm the breakage with: -->
-			   壊れたことを以下のように確認してみます。
+                        <p><!-- Confirm the breakage with (then exit): -->
+                           壊れたことを以下のように確認してみます (実行後に exit してください)。
                            <pre>lxc exec first -- bash</pre>
                         </p>
 
                         <p><!-- And restore everything to the snapshotted state: -->
-			   そして、スナップショットの状態へすべてリストアしてみましょう。
+                           そして、スナップショットの状態へすべてリストアしてみましょう。
                            <pre>lxc restore first clean</pre>
                         </p>
 
-                        <p><!-- And confirm everything's back to normal: -->
-			   すべて普通の状態に戻っていることを確認してみましょう。
+                        <p><!-- And confirm everything's back to normal (then exit): -->
+                           すべて普通の状態に戻っていることを確認してみましょう (実行後に exit してください)。
                            <pre>lxc exec first -- bash</pre>
                         </p>
                     </div>
@@ -294,28 +294,28 @@ lxc exec first -- apt-get autoremove --purge -y</pre>
                            image based, that is, all containers must be
                            created from either a copy of an existing
                            container or from an image. -->
-			   すでにお分かりのように、LXD はイメージベースです。つまり、すべてのコンテナはイメージか既存のコンテナのコピーのどちらかから作られます。</p>
+                           すでにお分かりのように、LXD はイメージベースです。つまり、すべてのコンテナはイメージか既存のコンテナのコピーのどちらかから作られます。</p>
 
                         <p><!-- You can create new images from an existing
                            container or a container snapshot.-->
-			   あなたは既存のコンテナか、コンテナのスナップショットから新たにイメージを作成できます。</p>
+                           あなたは既存のコンテナか、コンテナのスナップショットから新たにイメージを作成できます。</p>
 
                         <p><!-- To publish our "clean" snapshot from earlier
                            as a new image with a user friendly alias of
                            "clean-ubuntu", run: -->
-			   ユーザフレンドリーな "clean-ubuntu" というエイリアスを持つ新しいイメージとして、先の "clean" という名前のスナップショットをイメージ化するには、以下のように実行します。
+                           "clean-ubuntu" というユーザフレンドリーなエイリアスを持つ新しいイメージとして、先の "clean" という名前のスナップショットをイメージ化するには、以下のように実行します。
                            <pre>lxc publish first/clean --alias clean-ubuntu</pre>
                         </p>
 
                         <p><!-- At which point we won't need our "first"
                            container, so just delete it with: -->
-			   最初の "first" コンテナが不要であることを示すため、以下のように削除してみましょう。
+                           最初の "first" コンテナが不要であることを示すため、以下のように削除してみましょう。
                            <pre>lxc delete first</pre>
                         </p>
 
                         <p><!-- And lastly we can start a new container from
                            our image with: -->
-			   最後に、作成したイメージから新しいコンテナを起動してみましょう。
+                           最後に、作成したイメージから新しいコンテナを起動してみましょう。
                            <pre>lxc launch clean-ubuntu second</pre>
                         </p>
                     </div>
@@ -339,28 +339,28 @@ lxc exec first -- apt-get autoremove --purge -y</pre>
                     <div class="panel-body">
                         <p><!-- To pull a file from the container you can use
                            the "lxc file pull" command: -->
-			   コンテナからファイルを取得するには、"lxc file pull" コマンドが使えます。
+                           コンテナからファイルを取得するには、"lxc file pull" コマンドが使えます。
                            <pre>lxc file pull second/etc/hosts .</pre>
                         </p>
 
                         <p><!-- Lets add an entry to it: -->
-			   取得したファイルにエントリを追加しましょう。
+                           取得したファイルにエントリを追加しましょう。
                            <pre>echo "1.2.3.4 my-example" &gt;&gt; hosts</pre>
                         </p>
 
                         <p><!-- And push it back where it came from: -->
-			   以下のようにしてファイルをコンテナに戻します。
+                           以下のようにしてファイルをコンテナに戻します。
                            <pre>lxc file push hosts second/etc/hosts</pre>
                         </p>
 
                         <p><!-- You can also use this mechanism to access log files: -->
-			   以下のような方法でログファイルにアクセスすることもできます。
+                           以下のような方法でログファイルにアクセスすることもできます。
                            <pre>lxc file pull second/var/log/syslog - | less</pre>
                         </p>
 
                         <p><!-- We won't be needing that container anymore,
                            so delete it with: -->
-			   もうこのコンテナが不要であれば、以下のようにして削除しましょう。
+                           もうこのコンテナが不要であれば、以下のようにして削除しましょう。
                            <pre>lxc delete second</pre>
                         </p>
                     </div>
@@ -385,43 +385,43 @@ lxc exec first -- apt-get autoremove --purge -y</pre>
                         <p><!-- The lxc client tool supports multiple
                            "remotes", those remotes can be read-only
                            image servers or other LXD hosts. -->
-			   クライアントツール lxc からは複数の "リモートホスト" が使えます。これらのリモートホストは、読み取り専用のイメージサーバか、他の LXD ホストのどちらかです。</p>
+                           クライアントツール lxc からは複数の "リモートホスト" が使えます。これらのリモートホストは、読み取り専用のイメージサーバか、他の LXD ホストのどちらかです。</p>
 
-                        <p><!-- LXC usptream runs one such server at
+                        <p><!-- LXC upstream runs one such server at
                            <a href="https://images.linuxcontainers.org">https://images.linuxcontainers.org</a>
                            which serves a set of automatically generated
                            images for various Linux distributions. -->
-			   LXC 開発元はこのようなサーバを <a href="https://images.linuxcontainers.org">https://images.linuxcontainers.org</a> で運用しています。ここでは、色々な Linux ディストリビューションのイメージを自動的に作成して提供しています。
+                           LXC 開発元はこのようなサーバを <a href="https://images.linuxcontainers.org">https://images.linuxcontainers.org</a> で運用しています。ここでは、色々な Linux ディストリビューションのイメージを自動的に作成して提供しています。
                         </p>
 
                         <p><!-- To connect to that image server, do: -->
-			   このイメージサーバに接続するには、以下のように実行します。
+                           このイメージサーバに接続するには、以下のように実行します。
                            <pre>lxc remote add images images.linuxcontainers.org</pre>
                         </p>
 
                         <p><!-- You can list the available images with: -->
-			   利用可能なイメージのリストは以下のように取得できます。
+                           利用可能なイメージのリストは以下のように取得できます。
                            <pre>lxc image list images: | less</pre>
                         </p>
 
                         <p><!-- And spawn a new Centos 7 container with: -->
-			   そして、CentOS 7 コンテナを起動するには、以下のように実行します。
+                           そして、CentOS 7 コンテナを起動するには、以下のように実行します。
                            <pre>lxc launch images:centos/7/amd64 third</pre>
                         </p>
 
                         <p><!-- Confirm it's indeed Centos 7 with: -->
-			   コンテナが CentOS 7 かどうか確認するには、以下のように実行します。
+                           コンテナが CentOS 7 かどうか確認するには、以下のように実行します。
                            <pre>lxc exec third -- cat /etc/redhat-release</pre>
                         </p>
 
                         <p><!-- And delete it: -->
-			   そしてコンテナを削除します。
+                           そしてコンテナを削除します。
                            <pre>lxc delete third</pre>
                         </p>
 
                         <p><!-- The list of all configured remotes can be
                            obtained with: -->
-			   設定されたリモートホストの一覧は以下のように取得できます。
+                           設定されたリモートホストの一覧は以下のように取得できます。
                            <pre>lxc remote list</pre>
                         </p>
                     </div>
@@ -446,7 +446,7 @@ lxc exec first -- apt-get autoremove --purge -y</pre>
                         <p><!-- For this step, you'll need a second demo
                            session, so open a new one
                            <a href="/lxd/try-it" target="_blank">here</a> -->
-			   このステップでは、2 回目のデモセッションが必要となります。そこで新しいセッションを <a href="/lxd/try-it" target="_blank">ここから</a> 開いてください。</p>
+                           このステップでは、2 回目のデモセッションが必要となります。そこで新しいセッションを <a href="/lxd/try-it" target="_blank">ここから</a> 開いてください。</p>
 
                         <p><!-- Copy/paste the "lxc remote add" command from
                            the top of the page of that new session into
@@ -454,54 +454,54 @@ lxc exec first -- apt-get autoremove --purge -y</pre>
                            <br />
                            Then confirm the server fingerprint and enter
                            the password of the remote server. -->
-			   その新しいセッションページのトップにある「コンテナの情報」の "LXD" 部分から以前のセッションのシェルへ "lxc remote add" コマンドをコピー＆ペーストしてください。
-			   <br />
-			   そしてサーバのフィンガープリントを確認し、リモートサーバのパスワードを入力します。
-			   </p>
+                           その新しいセッションページのトップにある「コンテナの情報」の "LXD" 部分から以前のセッションのシェルへ "lxc remote add" コマンドをコピー＆ペーストしてください。
+                           <br />
+                           そしてサーバのフィンガープリントを確認し、リモートサーバのパスワードを入力します。
+                           </p>
 
                         <p><!-- At this point you can list the remote
                            containers with: -->
-			   この時点で、あなたは以下のようにリモートのコンテナをリスト表示できます。
-			   <pre>lxc list tryit:</pre></p>
+                           この時点で、あなたは以下のようにリモートのコンテナをリスト表示できます。
+                           <pre>lxc list tryit:</pre></p>
 
                         <p><!-- And its images with: -->
-			   そして、リモートのイメージをリスト表示できます。
+                           そして、リモートのイメージをリスト表示できます。
                            <pre>lxc image list tryit:</pre>
                         </p>
 
                         <p><!-- Now, lets start a new container on the remote
                            LXD using the local image we created earlier. -->
-			   さあ、先に作成したローカルイメージを使って、リモートの LXD 上で新しいコンテナを起動してみましょう。
+                           さあ、先に作成したローカルイメージを使って、リモートの LXD 上で新しいコンテナを起動してみましょう。
                            <pre>lxc launch clean-ubuntu tryit:fourth</pre>
                         </p>
 
                         <p><!-- You now have a container called "fourth"
                            running on the remote host "tryit". You can
-                           spawn a shell inside it with: -->
-			   これであなたはリモートホスト "tryit" 上で "fourth" という名前で実行中のコンテナを持っていることになります。以下のようにリモートのコンテナ内でシェルを起動できます。
+                           spawn a shell inside it with (then exit): -->
+                           これであなたはリモートホスト "tryit" 上で "fourth" という名前で実行中のコンテナを持っていることになります。以下のようにリモートのコンテナ内でシェルを起動できます (実行後に exit してください)。
                            <pre>lxc exec tryit:fourth bash</pre>
                         </p>
 
                         <p><!-- Now let's copy that container into a new one
                            called "fifth": -->
-			   このコンテナを新しい "fifth" というコンテナにコピーしてみましょう。
+                           このコンテナを新しい "fifth" というコンテナにコピーしてみましょう。
                            <pre>lxc copy tryit:fourth tryit:fifth</pre>
                         </p>
 
                         <p><!-- And just for fun, move it back to our local
                            lxd while renaming it to "sixth": -->
-			   お遊び感覚で、それをローカルの LXD に "sixth" という名前に変更して移動してみましょう。
+                           お遊び感覚で、それをローカルの LXD に "sixth" という名前に変更して移動してみましょう。
                            <pre>lxc move tryit:fifth sixth</pre>
                         </p>
 
-                        <p><!-- And confirm it's all still working: -->
-			   そして、それがすべて実行中であることを確認しましょう。
+                        <p><!-- And confirm it's all still working (then exit): -->
+                           そして、それがすべて実行中であることを確認しましょう (実行後に exit してください)。
                            <pre>lxc start sixth
 lxc exec sixth -- bash</pre>
                         </p>
 
                         <p><!-- Then clean everything up: -->
-			   そして、すべてをクリーンアップするには、以下のように実行します。
+                           そして、すべてをクリーンアップするには、以下のように実行します。
                            <pre>lxc delete sixth
 lxc delete tryit:fourth
 lxc image delete clean-ubuntu</pre>
@@ -527,13 +527,13 @@ lxc image delete clean-ubuntu</pre>
                         <p><!-- We hope this gave you a good introduction to
                            LXD, its capabilities and how easy it is to
                            use. -->
-			   この入門が LXD について、LXD でできること、LXD が簡単に使えることを理解するのに役立つ良い入門となれば幸いです。</p>
+                           この入門が LXD について、LXD でできること、LXD が簡単に使えることを理解するのに役立つ良い入門となれば幸いです。</p>
 
                         <p><!-- You're welcome to use the demo service as
                            long as you want to try LXD and play with the
                            latest features. -->
-			   あなたが LXD を使い、最新の機能を体験したいということであれば、このデモサービスを使うことを歓迎します。
-			   </p>
+                           あなたが LXD を使い、最新の機能を体験したいということであれば、このデモサービスを使うことを歓迎します。
+                           </p>
 
                         <p>楽しんでください!</p>
                     </div>
