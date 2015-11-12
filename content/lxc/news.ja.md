@@ -33,7 +33,6 @@ This is the eight bugfix release for LXC 1.0.
  * Android 向けに MS\_RELATIME を定義しました <!-- Define MS\_RELATIME for Android -->
  * Android 向けに O\_PATH と O\_NOFOLLOW を定義しました <!-- Define O\_PATH and O\_NOFOLLOW for Android -->
  * cgmanager\_list\_controllers が利用できるかどうか検出するようになりました <!-- detect whether cgmanager\_list\_controllers is available -->
- * doc: 日本語の lxc.container.conf(5) に LXC が行うマウントに関する注意を追記しました <!-- Add the note related mount in Japanese lxc.container.conf(5) -->
  * do\_lxcap\_stop: コンテナが停止するまで待つようになりました <!-- wait until container is stopped -->
  * opentty が失敗した場合、std\* ファイルディスクリプタをクローズしないようにしました <!-- don't close std\* fd if opentty fails -->
  * 非特権ユーザに対してデフォルトで seccomp を有効にしました <!-- Enable seccomp by default for unprivileged users. -->
@@ -88,6 +87,7 @@ This is the eight bugfix release for LXC 1.0.
 
 ドキュメント <!-- Documentation -->:
 
+* 日本語の lxc.container.conf(5) に LXC が行うマウントに関する注意を追記しました <!-- Add the note related mount in Japanese lxc.container.conf(5) -->
 * lxc-clone(1) の '-s' オプションの説明に zfs, aufs, overlayfs について追加しました <!-- Add about zfs, aufs, overlayfs to '-s' option of lxc-clone(1) -->
  * lxc.container.conf の man に create=dir と create=file についての説明を追加しました <!-- Add doc for optional, create=dir and create=file in lxc.container.conf man -->
  * -P のロングオプションをドキュメントに追加しました <!-- Add long option for -P in documentation -->

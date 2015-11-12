@@ -31,7 +31,6 @@ Core:
  * Define MS\_RELATIME for Android
  * Define O\_PATH and O\_NOFOLLOW for Android
  * detect whether cgmanager\_list\_controllers is available
- * doc: Add the note related mount in Japanese lxc.container.conf(5)
  * do\_lxcap\_stop: wait until container is stopped
  * don't close std\* fd if opentty fails
  * Enable seccomp by default for unprivileged users.
@@ -86,6 +85,7 @@ Core:
 
 Documentation:
 
+ * Add the note related mount in Japanese lxc.container.conf(5)
  * Add about zfs, aufs, overlayfs to '-s' option of lxc-clone(1)
  * Add doc for optional, create=dir and create=file in lxc.container.conf man
  * Add long option for -P in documentation
