@@ -135,7 +135,7 @@
                            option.
                            <br />
                            Or you can follow this step by step tutorial
-                           instead which will get you throught LXD's
+                           instead which will get you through LXD's
                            main features.
                         </p>
                     </div>
@@ -247,7 +247,7 @@ lxc exec first -- apt-get autoremove --purge -y</pre>
                            <pre>lxc exec first -- rm -Rf /etc /usr</pre>
                         </p>
 
-                        <p>Confirm the breakage with:
+                        <p>Confirm the breakage with (then exit):
                            <pre>lxc exec first -- bash</pre>
                         </p>
 
@@ -255,7 +255,7 @@ lxc exec first -- apt-get autoremove --purge -y</pre>
                            <pre>lxc restore first clean</pre>
                         </p>
 
-                        <p>And confirm everything's back to normal:
+                        <p>And confirm everything's back to normal (then exit):
                            <pre>lxc exec first -- bash</pre>
                         </p>
                     </div>
@@ -324,7 +324,7 @@ lxc exec first -- apt-get autoremove --purge -y</pre>
                            <pre>lxc file pull second/etc/hosts .</pre>
                         </p>
 
-                        <p>Lets add an entry to it:
+                        <p>Let's add an entry to it:
                            <pre>echo "1.2.3.4 my-example" &gt;&gt; hosts</pre>
                         </p>
 
@@ -363,7 +363,7 @@ lxc exec first -- apt-get autoremove --purge -y</pre>
                            "remotes", those remotes can be read-only
                            image servers or other LXD hosts.</p>
 
-                        <p>LXC usptream runs one such server at
+                        <p>LXC upstream runs one such server at
                            <a href="https://images.linuxcontainers.org">https://images.linuxcontainers.org</a>
                            which serves a set of automatically generated
                            images for various Linux distributions.
@@ -430,14 +430,14 @@ lxc exec first -- apt-get autoremove --purge -y</pre>
                            <pre>lxc image list tryit:</pre>
                         </p>
 
-                        <p>Now, lets start a new container on the remote
+                        <p>Now, let's start a new container on the remote
                            LXD using the local image we created earlier.
                            <pre>lxc launch clean-ubuntu tryit:fourth</pre>
                         </p>
 
                         <p>You now have a container called "fourth"
                            running on the remote host "tryit". You can
-                           spawn a shell inside it with:
+                           spawn a shell inside it with (then exit):
                            <pre>lxc exec tryit:fourth bash</pre>
                         </p>
 
@@ -451,7 +451,7 @@ lxc exec first -- apt-get autoremove --purge -y</pre>
                            <pre>lxc move tryit:fifth sixth</pre>
                         </p>
 
-                        <p>And confirm it's all still working:
+                        <p>And confirm it's all still working (then exit):
                            <pre>lxc start sixth
 lxc exec sixth -- bash</pre>
                         </p>

@@ -27,6 +27,7 @@
  * [Where we're going with LXD by Dustin Kirkland](http://blog.dustinkirkland.com/2014/11/where-were-going-with-lxd.html)
 
 # External blogs and reviews
+ * [Finally, a private cloud platform for the SME](https://www.linkedin.com/pulse/finally-private-cloud-platform-sme-jamie-brown)
  * [Using LXD with ZFS by Dean Henrichsmeyer](http://blog.beret.net/8kpahtrgn)
  * [A Quick Introduction to LXD BY Scott Lowe](http://blog.scottlowe.org/2015/05/06/quick-intro-lxd/)
  * [Hands on With LXD on Tutum Blog](http://blog.tutum.co/2014/12/09/hands-on-with-lxd)
