@@ -165,7 +165,7 @@ This is the eight bugfix release for LXC 1.0.
  * lxc-fedora: "--clean" オプションのパースで引数を取らないように修正を行いました <!-- fix parsing of option "\-\-clean": it takes no argument -->
  * lxc-fedora: fedora21 では fedora-repos パッケージが必要なので追加しました <!-- In fedora21, the fedora-repos package is needed. -->
  * lxc-fedora: ヘルプテキストを 80 カラムに揃えました <!-- let help text fit into 80 columns -->
- * lxc-fedora: アーキテクチャも扱えるようにしました <!-- manage secondary architectures -->
+ * lxc-fedora: セカンダリアーキテクチャも扱えるようにしました (訳注：セカンダリアーキテクチャについては[FedoraProjectのWikiを参照](https://fedoraproject.org/wiki/Architectures))<!-- manage secondary architectures -->
  * lxc-fedora: -z オプションでのチェックの際に、変数が未設定の場合に備えてクオートするようにしました <!-- protect possibly unset variable with quotes for -z check -->
  * lxc-fedora: systemd を使っている場合、lxc.kmsg = 0 を設定するようにしました <!-- when using systemd, set lxc.kmsg = 0 in the config -->
  * lxc-gentoo: veth をひとつだけ持っている場合は hwaddr を追加するようにしました <!-- Add a hwaddr if there is only one veth -->
