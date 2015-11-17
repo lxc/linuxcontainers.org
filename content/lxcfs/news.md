@@ -1,6 +1,17 @@
 ![Download icon](/static/img/containers.png)
 # News
 
+## LXCFS 0.12 release announcement <span class="text-muted">17th of November 2015</span>
+Critical bug/security fix update for LXCFS.
+
+ * This fixes two critical CVEs.
+ * Also switches to using cgroup filesystem natively instead of using
+   cgmanager, resulting in dramatic speedup.
+ * Several improvements in uptime, cpuinfo, and meminfo virtualization
+ * Enable tests at code checkin
+ * Set FUSE attr caching to half a second, and ship lxc stop hook to wait half
+   a second before reboot.
+
 ## LXCFS 0.11 release announcement <span class="text-muted">26th of October 2015</span>
 
  * Switch from libnih and dbus to glib and GDbus.  Since these are
