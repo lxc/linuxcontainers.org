@@ -3,6 +3,8 @@ $(document).ready(function() {
     var tryit_console = "";
     var tryit_server = "lxd-demo.linuxcontainers.org";
     var original_url = window.location.href.split("?")[0];
+    var console_width = 150
+    var console_height = 20
 
     function getUrlParameter(sParam) {
         var sPageURL = decodeURIComponent(window.location.search.substring(1)),
@@ -64,13 +66,13 @@ $(document).ready(function() {
         var timeinterval = setInterval(updateClock, 1000);
     }
 
-    function setupConsole(id) {
-        var sock = new WebSocket("wss://"+tryit_server+"/1.0/console?id="+id);
+    function setupConsole(id, width, height) {
+        var sock = new WebSocket("wss://"+tryit_server+"/1.0/console?id="+id+"&width="+width+"&height="+height);
 
         sock.onopen = function (e) {
             var term = new Terminal({
-                cols: 150,
-                rows: 20,
+                cols: width,
+                rows: height,
                 useStyle: true,
                 screenKeys: false
             });
@@ -170,7 +172,7 @@ $(document).ready(function() {
 
                 tryit_console = data.id;
                 window.history.pushState("", "", "?id="+tryit_console);
-                setupConsole(tryit_console);
+                setupConsole(tryit_console, console_width, console_height);
             },
             error: function(data) {
                 $('#tryit_start_panel').css("display", "none");
@@ -229,12 +231,12 @@ $(document).ready(function() {
 
             tryit_console = data.id;
             window.history.pushState("", "", "?id="+tryit_console);
-            setupConsole(tryit_console);
+            setupConsole(tryit_console, console_width, console_height);
         });
     });
 
     $('#tryit_console_reconnect').click(function() {
-        setupConsole(tryit_console);
+        setupConsole(tryit_console, console_width, console_height);
     });
 
     $('#tryit_intro').on('shown.bs.collapse', function (e) {
