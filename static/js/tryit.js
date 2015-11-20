@@ -65,8 +65,9 @@ $(document).ready(function() {
     }
 
     function setupConsole(id) {
-        var width = Math.min(Math.round(($("#tryit_console_panel").width() - 30) / 7.15), 155)
-        var height = Math.round(window.innerHeight / 50)
+        var emSize = getEmPixels(document.getElementById("tryit_console_panel"));
+        var width = Math.min(Math.round(($("#tryit_console_panel").width() - 40) / (emSize / 2)), 155);
+        var height = Math.round(window.innerHeight / 50);
         var sock = new WebSocket("wss://"+tryit_server+"/1.0/console?id="+id+"&width="+width+"&height="+height);
 
         sock.onopen = function (e) {
@@ -79,6 +80,11 @@ $(document).ready(function() {
 
             $('#tryit_console_reconnect').css("display", "none");
             term.open(document.getElementById("tryit_console"))
+
+            $(window).resize(function() {
+                term.destroy();
+                $('#tryit_console_reconnect').css("display", "inherit");
+            });
 
             term.on('data', function(data) {
                 sock.send(data);
