@@ -65,9 +65,13 @@ $(document).ready(function() {
     }
 
     function setupConsole(id) {
-        var emSize = getEmPixels(document.getElementById("tryit_console"));
-        var width = Math.round(($("#tryit_console_panel .panel-body").width()) / (emSize / 1.7));
+        var element = document.getElementById('tryit_console');
+        var cell = createCell(element);
+        var size = getSize(element, cell);
+
         var height = Math.round(window.innerHeight / 50);
+        var width = size.cols - 1;
+
         var sock = new WebSocket("wss://"+tryit_server+"/1.0/console?id="+id+"&width="+width+"&height="+height);
 
         sock.onopen = function (e) {
@@ -94,6 +98,39 @@ $(document).ready(function() {
                 $('#tryit_console_reconnect').css("display", "inherit");
             };
         };
+    }
+
+    function getSize(element, cell) {
+        var wSubs   = element.offsetWidth - element.clientWidth,
+            w       = element.clientWidth - wSubs,
+
+            hSubs   = element.offsetHeight - element.clientHeight,
+            h       = element.clientHeight - hSubs,
+
+            x       = cell.clientWidth,
+            y       = cell.clientHeight,
+
+            cols    = Math.max(Math.floor(w / x), 10),
+            rows    = Math.max(Math.floor(h / y), 10),
+
+            size    = {
+                cols: cols,
+                rows: rows
+            };
+
+        return size;
+    }
+
+    function createCell(element) {
+        var cell            = document.createElement('div');
+
+        cell.innerHTML      = '&nbsp';
+        cell.style.position = 'absolute';
+        cell.style.top      = '-1000px';
+
+        element.appendChild(cell);
+
+        return cell;
     }
 
     $('.tryit_goback').click(function() {
