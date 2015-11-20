@@ -81,11 +81,6 @@ $(document).ready(function() {
             $('#tryit_console_reconnect').css("display", "none");
             term.open(document.getElementById("tryit_console"))
 
-            $(window).resize(function() {
-                term.destroy();
-                $('#tryit_console_reconnect').css("display", "inherit");
-            });
-
             term.on('data', function(data) {
                 sock.send(data);
             });
