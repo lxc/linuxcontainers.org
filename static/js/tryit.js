@@ -65,8 +65,8 @@ $(document).ready(function() {
     }
 
     function setupConsole(id) {
-        var emSize = getEmPixels(document.getElementById("tryit_console_panel"));
-        var width = Math.min(Math.round(($("#tryit_console_panel").width() - 40) / (emSize / 2)), 155);
+        var emSize = getEmPixels(document.getElementById("tryit_console"));
+        var width = Math.round(($("#tryit_console_panel .panel-body").width()) / (emSize / 1.7));
         var height = Math.round(window.innerHeight / 50);
         var sock = new WebSocket("wss://"+tryit_server+"/1.0/console?id="+id+"&width="+width+"&height="+height);
 

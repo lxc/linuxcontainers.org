@@ -135,4 +135,6 @@ h3:hover a.headerlink {
 #tryit_console {
     display: table;
     margin: 0 auto;
+    font-family: "DejaVu Sans Mono", "Liberation Mono", monospace;
+    font-size: 11px;
 }
