@@ -131,3 +131,8 @@ h3:hover a.headerlink {
         width: 500px;
     }
 }
+
+#tryit_console {
+    display: table;
+    margin: 0 auto;
+}
