@@ -1,5 +1,19 @@
 # News
 
+## LXCFS 0.12 リリースのお知らせ <!-- LXCFS 0.12 release announcement --><span class="text-muted">2015 年 11 月 17 日<!-- 17th of November 2015 --></span>
+<!--
+Critical bug/security fix update for LXCFS.
+-->
+LXCFS の重大なバグとセキュリティの修正を行いました。
+
+ * 重大な CVE を 2 つ修正しました <!-- This fixes two critical CVEs. -->
+ * 今まで cgmanager 経由で cgroup を扱っていましたが、cgroup ファイルシステムをネイティヴに使うように変更しました。これにより、劇的にスピードアップしました <!-- Also switches to using cgroup filesystem natively instead of using
+   cgmanager, resulting in dramatic speedup. -->
+ * uptime, cpuinfo, meminfo の仮想化でいくつかの改良を行いました <!-- Several improvements in uptime, cpuinfo, and meminfo virtualization -->
+ * コードのコミットの際のテストが有効になりました <!-- Enable tests at code checkin -->
+ * FUSE オプションでキャッシングの時間を 0.5 秒に設定しました。LXC がリブートする前にも 0.5 秒待つように stop hook で設定するようにしました <!-- Set FUSE attr caching to half a second, and ship lxc stop hook to wait half
+   a second before reboot. -->
+
 ## LXCFS 0.11 リリースのお知らせ <!-- LXCFS 0.11 release announcement --><span class="text-muted">2015 年 10 月 26 日<!-- 26th of October 2015 --></span>
 
  * libnih と dbus から glib と GDbus の使用に切り替えました。glib と GDbus はスレッドセーフですので、デフォルトでスレッディングが有効になります。 <!-- Switch from libnih and dbus to glib and GDbus.  Since these are thread-safe, enable threading by default. -->
