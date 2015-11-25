@@ -1,6 +1,15 @@
 ![Download icon](/static/img/containers.png)
 # News
 
+## LXCFS 0.13 release announcement <span class="text-muted">25th of November 2015</span>
+Bugfix release.
+
+ * This fixes several bugs which prevented newer systemd-based containers from
+   starting, and some more general bugs.
+
+### Downloads
+The release tarballs can be found on our [download page](/lxcfs/downloads).
+
 ## LXCFS 0.12 release announcement <span class="text-muted">17th of November 2015</span>
 Critical bug/security fix update for LXCFS.
 
@@ -11,6 +20,9 @@ Critical bug/security fix update for LXCFS.
  * Enable tests at code checkin
  * Set FUSE attr caching to half a second, and ship lxc stop hook to wait half
    a second before reboot.
+
+### Downloads
+The release tarballs can be found on our [download page](/lxcfs/downloads).
 
 ## LXCFS 0.11 release announcement <span class="text-muted">26th of October 2015</span>
 
