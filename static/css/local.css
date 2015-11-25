@@ -145,6 +145,11 @@ h3:hover a.headerlink {
     -ms-text-size-adjust: none;
 }
 
+.tryit_run:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
 .btn {
     white-space: normal;
 }
