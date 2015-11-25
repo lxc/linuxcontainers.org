@@ -1,5 +1,46 @@
 ![Download icon](/static/img/containers.png)
 # News
+## LXD 0.23 release announcement <span class="text-muted">24th of November 2015</span>
+
+### The main changes for this release are
+
+ * A new "lxd init" command is available to help setup storage, network and password on new LXD installations
+ * Log messages are now sent over the events API
+ * New process count metric available in the containers API and in "lxc info"
+ * Console color support on Windows
+ * Rewritten operations handling, now includes events for each changes and includes download status
+ * "lxc image import" can now take the URL to an https webserver advertising a LXD image through HTTP headers
+ * The minimal HTTP proxy shipped by LXD has been rewritten to be even lighter
+
+### Bugfixes
+
+ * "lxc config get \<server-config-key\>" now works as expected
+ * lxd-images: Much lower memory usage when importing an image
+ * More readable log entries over the events API
+ * Event filtering in "lxc monitor" now works properly
+ * Container architectures are now properly tracked
+ * LXD now ensures that published containers will always have metadata in their image
+ * Container copy now copies devices and config properly
+ * Image import failure now result in proper error messages
+ * "lxc info --show-log" is now also suggested on "lxc launch" failures
+
+### Upgrade notes
+
+Users of the operations API may have to update their code to suit the new operation code.  
+The new implementation is now specification-compliant, meaning that all operation queries  
+always return a full operation object wrapped in an Async reply and with operation-specific  
+properties inside the metadata.
+
+The "lxc" client was updated to be backward compatible when possible.
+
+### Try it for yourself
+
+This new LXD release is already available for you to try on our [demo service](/lxd/try-it).
+
+### Downloads
+The release tarballs can be found on our [download page](/lxd/downloads).
+
+
 ## LXD 0.22 release announcement <span class="text-muted">10th of November 2015</span>
 
 ### The main changes for this release are
