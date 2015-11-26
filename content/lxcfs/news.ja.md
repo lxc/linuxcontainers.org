@@ -1,4 +1,18 @@
 # News
+## LXCFS 0.13 リリースのお知らせ <!-- LXCFS 0.13 release announcement --><span class="text-muted">2015 年 11 月 25 日<!-- 25th of November 2015 --></span>
+<!--
+Bugfix release.
+-->
+バグフィックスのためのリリースです。
+
+ * 新しいバージョンの systemd ベースのコンテナが起動しないバグをいくつか修正しました。加えて他にもバグを修正しています。 <!-- This fixes several bugs which prevented newer systemd-based containers from
+   starting, and some more general bugs. -->
+
+### ダウンロード <!-- Downloads -->
+<!--
+The release tarballs can be found on our [download page](/lxcfs/downloads).
+-->
+このリリースの tarball は [ダウンロードページ](/lxcfs/downloads) から取得できます。
 
 ## LXCFS 0.12 リリースのお知らせ <!-- LXCFS 0.12 release announcement --><span class="text-muted">2015 年 11 月 17 日<!-- 17th of November 2015 --></span>
 <!--
@@ -13,6 +27,12 @@ LXCFS の重大なバグとセキュリティの修正を行いました。
  * コードのコミットの際のテストが有効になりました <!-- Enable tests at code checkin -->
  * FUSE オプションでキャッシングの時間を 0.5 秒に設定しました。LXC がリブートする前にも 0.5 秒待つように stop hook で設定するようにしました <!-- Set FUSE attr caching to half a second, and ship lxc stop hook to wait half
    a second before reboot. -->
+
+### ダウンロード <!-- Downloads -->
+<!--
+The release tarballs can be found on our [download page](/lxcfs/downloads).
+-->
+このリリースの tarball は [ダウンロードページ](/lxcfs/downloads) から取得できます。
 
 ## LXCFS 0.11 リリースのお知らせ <!-- LXCFS 0.11 release announcement --><span class="text-muted">2015 年 10 月 26 日<!-- 26th of October 2015 --></span>
 
