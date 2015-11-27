@@ -10,7 +10,7 @@ Nova LXD プロジェクトは OpenStack クラウドの一部として、LXD �
 <!--
 Nova LXD is available in Ubuntu 15.10;  The Nova LXD driver is installed on Nova Compute servers only:
 -->
-Nova LXD は Ubuntu 15.10 で利用できます。Nova LXD ドライバは Nova Compute サーバに以下のように実行するだけでインストールできます:
+Nova LXD は Ubuntu 15.10 で利用できます。Nova LXD ドライバは Nova Compute サーバだけにインストールされます。
 
     sudo apt-get install nova-compute-lxd
 
