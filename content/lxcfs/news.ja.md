@@ -10,9 +10,9 @@ Bugfix release.
 
 ### ダウンロード <!-- Downloads -->
 <!--
-The release tarballs can be found on our [download page](/lxcfs/downloads).
+The release tarballs can be found on our [download page](/lxcfs/downloads/).
 -->
-このリリースの tarball は [ダウンロードページ](/lxcfs/downloads) から取得できます。
+このリリースの tarball は [ダウンロードページ](/lxcfs/downloads/) から取得できます。
 
 ## LXCFS 0.12 リリースのお知らせ <!-- LXCFS 0.12 release announcement --><span class="text-muted">2015 年 11 月 17 日<!-- 17th of November 2015 --></span>
 <!--
@@ -30,9 +30,9 @@ LXCFS の重大なバグとセキュリティの修正を行いました。
 
 ### ダウンロード <!-- Downloads -->
 <!--
-The release tarballs can be found on our [download page](/lxcfs/downloads).
+The release tarballs can be found on our [download page](/lxcfs/downloads/).
 -->
-このリリースの tarball は [ダウンロードページ](/lxcfs/downloads) から取得できます。
+このリリースの tarball は [ダウンロードページ](/lxcfs/downloads/) から取得できます。
 
 ## LXCFS 0.11 リリースのお知らせ <!-- LXCFS 0.11 release announcement --><span class="text-muted">2015 年 10 月 26 日<!-- 26th of October 2015 --></span>
 
@@ -41,9 +41,9 @@ The release tarballs can be found on our [download page](/lxcfs/downloads).
 
 ### ダウンロード <!-- Downloads -->
 <!--
-The release tarballs can be found on our [download page](/lxcfs/downloads).
+The release tarballs can be found on our [download page](/lxcfs/downloads/).
 -->
-このリリースの tarball は [ダウンロードページ](/lxcfs/downloads) から取得できます。
+このリリースの tarball は [ダウンロードページ](/lxcfs/downloads/) から取得できます。
 
 ## LXCFS 0.10 リリースのお知らせ <!-- LXCFS 0.10 release announcement --><span class="text-muted">2015 年 9 月 3 日<!-- 3rd of September 2015 --></span>
 <!--
@@ -59,9 +59,9 @@ Bugfix release.
 
 ### ダウンロード <!-- Downloads -->
 <!--
-The release tarballs can be found on our [download page](/lxcfs/downloads).
+The release tarballs can be found on our [download page](/lxcfs/downloads/).
 -->
-このリリースの tarball は [ダウンロードページ](/lxcfs/downloads) から取得できます。
+このリリースの tarball は [ダウンロードページ](/lxcfs/downloads/) から取得できます。
 
 ## LXCFS 0.9 リリースのお知らせ<!-- LXCFS 0.9 release announcement --><span class="text-muted">2015 年 6 月 3 日 <!-- 3rd of June 2015 --></span>
 <!--
@@ -73,9 +73,9 @@ Bugfix release.
 
 ### ダウンロード <!-- Downloads -->
 <!--
-The release tarballs can be found on our [download page](/lxcfs/downloads).
+The release tarballs can be found on our [download page](/lxcfs/downloads/).
 -->
-このリリースの tarball は [ダウンロードページ](/lxcfs/downloads) から取得できます。
+このリリースの tarball は [ダウンロードページ](/lxcfs/downloads/) から取得できます。
 
 ## LXCFS 0.8 リリースのお知らせ <!-- LXCFS 0.8 release announcement --><span class="text-muted">2015 年 5 月 7 日<!-- 7th of May 2015 --></span>
 
@@ -88,9 +88,9 @@ The release tarballs can be found on our [download page](/lxcfs/downloads).
 
 ### ダウンロード <!-- Downloads -->
 <!--
-The release tarballs can be found on our [download page](/lxcfs/downloads).
+The release tarballs can be found on our [download page](/lxcfs/downloads/).
 -->
-このリリースの tarball は [ダウンロードページ](/lxcfs/downloads) から取得できます。
+このリリースの tarball は [ダウンロードページ](/lxcfs/downloads/) から取得できます。
 
 ## LXCFS 0.7 リリースのお知らせ <!-- LXCFS 0.7 release announcement --><span class="text-muted">2015 年 4 月 3 日<!-- 3rd of April 2015 --></span>
 バグリックスのリリースです。
@@ -103,9 +103,9 @@ Bugfix release.
 
 ### ダウンロード <!-- Downloads -->
 <!--
-The release tarballs can be found on our [download page](/lxcfs/downloads).
+The release tarballs can be found on our [download page](/lxcfs/downloads/).
 -->
-このリリースの tarball は [ダウンロードページ](/lxcfs/downloads) から取得できます。
+このリリースの tarball は [ダウンロードページ](/lxcfs/downloads/) から取得できます。
 
 
 ## LXCFS 0.6 リリースのお知らせ <!-- LXCFS 0.6 release announcement --><span class="text-muted">2015 年 2 月 16 日 <!-- 16th of February 2015 --></span>
@@ -119,9 +119,9 @@ Bugfix release.
 
 ### ダウンロード <!-- Downloads -->
 <!--
-The release tarballs can be found on our [download page](/lxcfs/downloads).
+The release tarballs can be found on our [download page](/lxcfs/downloads/).
 -->
-このリリースの tarball は [ダウンロードページ](/lxcfs/downloads) から取得できます。
+このリリースの tarball は [ダウンロードページ](/lxcfs/downloads/) から取得できます。
 
 ## LXCFS 0.5 リリースのお知らせ <!-- LXCFS 0.5 release announcement --><span class="text-muted">2015 年 1 月 28 日 <!-- 28th of January 2015 --></span>
 <!--
@@ -136,9 +136,9 @@ This tweaks configure.ac to detect cgmanager version and tweak the LXC hook.
 
 ### ダウンロード <!-- Downloads -->
 <!--
-The release tarballs can be found on our [download page](/lxcfs/downloads).
+The release tarballs can be found on our [download page](/lxcfs/downloads/).
 -->
-このリリースの tarball は [ダウンロードページ](/lxcfs/downloads) から取得できます。
+このリリースの tarball は [ダウンロードページ](/lxcfs/downloads/) から取得できます。
 
 ## LXCFS 0.4 リリースのお知らせ <!-- LXCFS 0.4 release announcement --><span class="text-muted">2015 年 1 月 23 日 <!-- 23rd of January 2015 --></span>
 <!--
@@ -159,9 +159,9 @@ This release includes ONLY this bugfix and should be immediately deployed by any
 
 ### ダウンロード <!-- Downloads -->
 <!--
-The release tarballs can be found on our [download page](/lxcfs/downloads).
+The release tarballs can be found on our [download page](/lxcfs/downloads/).
 -->
-このリリースの tarball は [ダウンロードページ](/lxcfs/downloads) から取得できます。
+このリリースの tarball は [ダウンロードページ](/lxcfs/downloads/) から取得できます。
 
 ## LXCFS 0.3 リリースのお知らせ <!-- LXCFS 0.3 release announcement --><span class="text-muted">2015 年 1 月 21 日 <!-- 21st of January 2015 --></span>
 <!--
@@ -171,9 +171,9 @@ This release is identical to 0.2 except for a fixed installation path of the LXC
 
 ### ダウンロード <!-- Downloads -->
 <!--
-The release tarballs can be found on our [download page](/lxcfs/downloads).
+The release tarballs can be found on our [download page](/lxcfs/downloads/).
 -->
-このリリースの tarball は [ダウンロードページ](/lxcfs/downloads) から取得できます。
+このリリースの tarball は [ダウンロードページ](/lxcfs/downloads/) から取得できます。
 
 ## LXCFS 0.2 リリースのお知らせ <!-- LXCFS 0.2 release announcement --><span class="text-muted">2015 年 1 月 20 日 <!-- 20th of January 2015 --></span>
 <!--
@@ -194,9 +194,9 @@ Additionally this release also includes some fixes to the testsuite.
 
 ### ダウンロード <!-- Downloads -->
 <!--
-The release tarballs can be found on our [download page](/lxcfs/downloads).
+The release tarballs can be found on our [download page](/lxcfs/downloads/).
 -->
-このリリースの tarball は [ダウンロードページ](/lxcfs/downloads) から取得できます。
+このリリースの tarball は [ダウンロードページ](/lxcfs/downloads/) から取得できます。
 
 
 ## LXCFS 0.1 リリースのお知らせ <!-- LXCFS 0.1 release announcement --><span class="text-muted">2015 年 1 月 9 日 <!-- 9th of January 2015 --></span>
@@ -220,6 +220,6 @@ LXCFS の最初のリリースですので、まだ非常に未完成である�
 
 ### ダウンロード <!-- Downloads -->
 <!--
-The release tarballs can be found on our [download page](/lxcfs/downloads).
+The release tarballs can be found on our [download page](/lxcfs/downloads/).
 -->
-このリリースの tarball は [ダウンロードページ](/lxcfs/downloads) から取得できます。
+このリリースの tarball は [ダウンロードページ](/lxcfs/downloads/) から取得できます。

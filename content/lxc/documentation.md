@@ -1,5 +1,5 @@
 # Command line tools
-For the command line tools, please refer to the [man pages.](/lxc/manpages)
+For the command line tools, please refer to the [man pages.](/lxc/manpages/)
 
 # API
 LXC ships with a stable C API and a bunch of bindings. That API is stable and properly versioned.  

@@ -3,7 +3,7 @@ LXC의 현재 배포 버전은 아래 명령어를 통해 Github에서 클론할
 
     git clone git://github.com/lxc/lxc
 
-소스코드 tar 압축 파일은 [내려받기](/ko/lxc/downloads) 섹션에 여러 버전이 올려져 있습니다.
+소스코드 tar 압축 파일은 [내려받기](/ko/lxc/downloads/) 섹션에 여러 버전이 올려져 있습니다.
 
 안정화 버전에만 있는 버그가 아니라면, 업스트림에 보낸 리뷰는 안정화 버전이 아닌 현재 git 트리를 기준으로 해야 합니다. 
 

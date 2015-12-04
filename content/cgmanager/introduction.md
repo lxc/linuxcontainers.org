@@ -42,7 +42,7 @@ Instead, simply assume that talking to /sys/fs/cgroup/cgmanager/sock will always
 The cgmanager API is only available on that separate D-Bus socket, cgmanager itself doesn't attach  
 to the system bus and so a running dbus daemon isn't a requirement of cgmanager/cgproxy.
 
-You can read more about the D-Bus API [here](/cgmanager/dbus-api).
+You can read more about the D-Bus API [here](/cgmanager/dbus-api/).
 
 # Licensing
 CGManager is free software, most of the code is released under the terms of the GNU LGPLv2.1+ license,  

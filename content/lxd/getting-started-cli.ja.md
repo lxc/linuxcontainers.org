@@ -67,9 +67,9 @@ If it is not there yet please download and build LXD from git or use our latest 
 もし存在しない場合は、git リポジトリからダウンロードしてビルドするか、最新のリリース tarball を使ってください。
 
 <!--
-Instructions for both are available [here](/lxd/downloads).
+Instructions for both are available [here](/lxd/downloads/).
 -->
-方法は両方とも[ダウンロードページ](/lxd/downloads)に載っています。
+方法は両方とも[ダウンロードページ](/lxd/downloads/)に載っています。
 
 # イメージのインポート <!-- Importing some images -->
 <!--

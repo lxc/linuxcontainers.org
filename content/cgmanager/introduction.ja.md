@@ -80,9 +80,9 @@ to the system bus and so a running dbus daemon isn't a requirement of cgmanager/
 cgmanager API は独立した D-Bus ソケット上でのみ利用可能です。cgmanager 自身はシステムのバスには接続しません。なので、 dbus デーモンの実行は cgmanager/cgproxy に必須ではありません。
 
 <!--
-You can read more about the D-Bus API [here](/cgmanager/dbus-api).
+You can read more about the D-Bus API [here](/cgmanager/dbus-api/).
 -->
-D-Bus API の更に詳しい情報は [こちら](/cgmanager/dbus-api) で読むことができます。
+D-Bus API の更に詳しい情報は [こちら](/cgmanager/dbus-api/) で読むことができます。
 
 # ライセンス <!-- Licensing -->
 <!--
