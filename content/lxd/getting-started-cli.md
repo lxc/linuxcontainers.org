@@ -32,6 +32,9 @@ Users of older version of Snappy (current rpi2 image at least) may have to do:
 If you end up having to do the above, note that you likely will have to do so with every subsequent update of LXD  
 until the snappy tools are updated on your device through a new system image.
 
+It should be noted that the server certificate generation can take a long time if you're working on a device like the rpi2
+so it might be a few minutes before lxd will respond to lxc and lxd-images commands
+
 ## Other distributions
 There are currently packages for multiple distributions including Gentoo and, of course, Ubuntu.  
 Users of other distributions might find it in their package manager too.
