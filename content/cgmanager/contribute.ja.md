@@ -8,9 +8,9 @@ CGManager の最新の開発バージョンは Github からクローンでき�
 
 <!--
 Source tarballs from the various stable releases are also available in
-the [downloads](/cgmanager/downloads) section.
+the [downloads](/cgmanager/downloads/) section.
 -->
-stable リリースの各バージョンのソース tarball は [ダウンロードページ](/cgmanager/downloads) から取得できます。
+stable リリースの各バージョンのソース tarball は [ダウンロードページ](/cgmanager/downloads/) から取得できます。
 
 <!--
 Patches sent upstream for review must be based on the current git tree  

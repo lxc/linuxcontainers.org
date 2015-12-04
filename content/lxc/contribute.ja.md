@@ -9,9 +9,9 @@ LXC の現時点の開発バージョンは Github からクローンできま�
 
 <!--
 Source tarballs from the various stable releases are also available in
-the [downloads](/lxc/downloads) section.
+the [downloads](/lxc/downloads/) section.
 -->
-stable リリースの各バージョンのソース tarball は [ダウンロードページ](/lxc/downloads) から取得できます。
+stable リリースの各バージョンのソース tarball は [ダウンロードページ](/lxc/downloads/) から取得できます。
 
 <!--
 Patches sent upstream for review must be based on the current git tree  

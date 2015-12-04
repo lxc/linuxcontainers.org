@@ -41,7 +41,7 @@ Users of other distributions might find it in their package manager too.
 
 If it is not there yet please download and build LXD from git or use our latest release tarball.
 
-Instructions for both are available [here](/lxd/downloads).
+Instructions for both are available [here](/lxd/downloads/).
 
 # Importing some images
 LXD is image based. Containers must be created from an image and so the image store  

@@ -200,7 +200,7 @@ Commands:
 Those stable fixes were brought to you by 59 individual contributors.
 
 ### Downloads
-The release tarballs may be found on our [download page](/lxc/downloads) and we expect most distributions  
+The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions  
 will very soon ship a packaged version of LXC 1.0.8.
 
 Should you be interested in individual changes or just looking at the detailed development history,  
@@ -237,7 +237,7 @@ Templates:
  * ubuntu-cloud: Always exit 1 on error
 
 ### Downloads
-The release tarballs may be found on our [download page](/lxc/downloads) and we expect most distributions  
+The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions  
 will very soon ship a packaged version of LXC 1.1.5.
 
 Should you be interested in individual changes or just looking at the detailed development history,  
@@ -317,7 +317,7 @@ Templates:
 Those stable fixes were brought to you by 14 individual contributors.
 
 ### Downloads
-The release tarballs may be found on our [download page](/lxc/downloads) and we expect most distributions  
+The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions  
 will very soon ship a packaged version of LXC 1.1.4.
 
 Should you be interested in individual changes or just looking at the detailed development history,  
@@ -394,7 +394,7 @@ Templates:
 Those stable fixes were brought to you by 31 individual contributors.
 
 ### Downloads
-The release tarballs may be found on our [download page](/lxc/downloads) and we expect most distributions  
+The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions  
 will very soon ship a packaged version of LXC 1.1.3.
 
 Should you be interested in individual changes or just looking at the detailed development history,  
@@ -421,7 +421,7 @@ This is the second bugfix release for LXC 1.1.
 Those stable fixes were brought to you by 9 individual contributors.
 
 ### Downloads
-The release tarballs may be found on our [download page](/lxc/downloads) and we expect most distributions  
+The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions  
 will very soon ship a packaged version of LXC 1.1.2.
 
 Should you be interested in individual changes or just looking at the detailed development history,  
@@ -450,7 +450,7 @@ This is the first bugfix release for LXC 1.1.
 Those stable fixes were brought to you by 13 individual contributors.
 
 ### Downloads
-The release tarballs may be found on our [download page](/lxc/downloads) and we expect most distributions  
+The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions  
 will very soon ship a packaged version of LXC 1.1.1.
 
 Should you be interested in individual changes or just looking at the detailed development history,  
@@ -509,7 +509,7 @@ This release was made possible by contributions from 84 developers.
  * API: Addition of attach\_interface and detach\_interface
  * lxc-device: Now a C binary installed by default (was a python3 script)
  * lxc-config: Now supports querying lxc.cgroup.(use|pattern)
- * core: Add new lxc.init\_cmd config option to override the default init command (/sbin/init)
+ * core: Add new lxc.init\_cmd config option to override the default init command (/sbin/init/)
  * lxc-start-ephemeral: Add new --cdir option (copy-on-write mounts)
  * opensuse: Support multiple releases
  * core: lxc.include now allows including directories (includes all the files with a .conf suffix)
@@ -531,7 +531,7 @@ This release was made possible by contributions from 84 developers.
  * templates: All templates now use lxc.mount.auto = cgroup:mixed proc:mixed sys:mixed (safe default configuration)
 
 ### Downloads
-The release tarballs may be found on our [download page](/lxc/downloads) and we expect most distributions  
+The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions  
 will very soon ship a packaged version of LXC 1.1.0, unless they decide to stick to the long term 1.0 release.
 
 Should you be interested in individual changes or just looking at the detailed development history,  
@@ -629,7 +629,7 @@ Documentation:
 Those stable fixes were brought to you by 27 individual contributors.
 
 ### Downloads
-The release tarballs may be found on our [download page](/lxc/downloads) and we expect most distributions  
+The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions  
 will very soon ship a packaged version of LXC 1.0.7.
 
 Should you be interested in individual changes or just looking at the detailed development history,  
@@ -744,7 +744,7 @@ Documentaiton:
 Those stable fixes were brought to you by 24 individual contributors.
 
 ### Downloads
-The release tarballs may be found on our [download page](/lxc/downloads) and we expect most distributions  
+The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions  
 will very soon ship a packaged version of LXC 1.0.6.
 
 Should you be interested in individual changes or just looking at the detailed development history,  
@@ -827,7 +827,7 @@ Bindings:
 Those stable fixes were brought to you by 11 individual contributors.
 
 ### Downloads
-The release tarballs may be found on our [download page](/lxc/downloads) and we expect most distributions  
+The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions  
 will very soon ship a packaged version of LXC 1.0.5.
 
 Should you be interested in individual changes or just looking at the detailed development history,  
@@ -939,7 +939,7 @@ Tests:
 Those stable fixes were brought to you by 14 individual contributors.
 
 ### Downloads
-The release tarballs may be found on our [download page](/lxc/downloads) and we expect most distributions  
+The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions  
 will very soon ship a packaged version of LXC 1.0.4.
 
 Should you be interested in individual changes or just looking at the detailed development history,  
@@ -992,7 +992,7 @@ Tests:
  * tests: Always propagate http\_proxy and https\_proxy.
 
 ### Downloads
-The release tarballs may be found on our [download page](/lxc/downloads) and we expect most distributions  
+The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions  
 will very soon ship a packaged version of LXC 1.0.3.
 
 Should you be interested in individual changes or just looking at the detailed development history,  
@@ -1053,7 +1053,7 @@ Templates:
  * opensuse template: Fix syntax error
 
 ### Downloads
-The release tarballs may be found on our [download page](/lxc/downloads) and we expect most distributions  
+The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions  
 will very soon ship a packaged version of LXC 1.0.2.
 
 Should you be interested in individual changes or just looking at the detailed development history,  
@@ -1100,7 +1100,7 @@ Other:
  * upstart: Don't forward requests for LXC\_DOMAIN (dnsmasq)
 
 ### Downloads
-The release tarballs may be found on our [download page](/lxc/downloads) and we expect most distributions  
+The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions  
 will very soon ship a packaged version of LXC 1.0.1.
 
 Should you be interested in individual changes or just looking at the detailed development history,  
@@ -1120,7 +1120,7 @@ cellphones and cloud instances. And we are confident that with LXC 1.0, we will 
 and be used for a lot of new and exciting projects.
 
 ### Downloads
-The release tarballs may be found on our [download page](/lxc/downloads) and we expect most distributions  
+The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions  
 will very soon ship a packaged version of LXC 1.0.
 
 Should you be interested in individual changes or just looking at the detailed development history,  

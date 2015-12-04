@@ -1,8 +1,8 @@
 # コマンドラインツール <!-- Command line tools -->
 <!--
-For the command line tools, please refer to the [man pages.](/lxc/manpages)
+For the command line tools, please refer to the [man pages.](/lxc/manpages/)
 -->
-コマンドラインツールの使い方は [Man ページ](/ja/lxc/manpages) を参照してください。
+コマンドラインツールの使い方は [Man ページ](/ja/lxc/manpages/) を参照してください。
 
 # API
 <!--
