@@ -53,6 +53,12 @@ until the snappy tools are updated on your device through a new system image.
 -->
 上記を行っても、デバイス上で Snappy ツールが新しいシステムイメージ経由で更新されるまでは、LXD の更新ごとに上記を実行する必要があるでしょう。
 
+<!--
+It should be noted that the server certificate generation can take a long time if you're working on a device like  
+the rpi2 so it might be a few minutes before LXD will respond to lxc and lxd-images commands.
+-->
+もし、rpi2 のようなデバイス上で実行している場合は、サーバ証明書の生成には長い時間がかかる可能性があることに注意が必要です。lxc と lxd-images コマンドから応答が帰るまで数分かかるかもしれません。
+
 ## 他のディストリビューション <!-- Other distributions -->
 <!--
 There are currently packages for multiple distributions including Gentoo and, of course, Ubuntu.
