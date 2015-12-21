@@ -16,6 +16,11 @@ and re-open your user session or use the "newgrp lxd" command in the shell you'r
 
     newgrp lxd
 
+Note that for maximum performance, it's recommended to have /var/lib/lxd on a btrfs filesystem or setup ZFS or LVM  
+and configure LXD to use a ZFS pool or LVM VG. The "lxd init" command can help you help you setup LXD (only for ZFS so far):
+
+    sudo lxd init
+
 ## Ubuntu Core (snappy)
 LXD is available for Ubuntu Core as a Snap package in the store.  
 You can install it with:
