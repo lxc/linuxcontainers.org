@@ -1,5 +1,84 @@
 ![Download icon](/static/img/containers.png)
 # News
+## LXD 0.25 リリースのお知らせ <!-- LXD 0.25 release announcement --><span class="text-muted">2015 年 12 月 21 日 <!-- 21st of December 2015 --></span>
+
+### このリリースの主な変更点 <!-- The main changes for this release are -->
+
+ * "lxc exec" コマンドに新たに --mode オプションが追加されました。これにより対話的でないモードを強制できます <!-- New \-\-mode argument to "lxc exec", makes it possible to force non-interactive mode. -->
+ * s390x アーキテクチャ (IBM z/series 64bit) のフルサポート <!-- Full support of the s390x architecture (IBM z/series 64bit) -->
+ * @ARGS@ キーワードを使用することで、コマンドエイリアス中にコマンド引数を指定できるようになりました <!-- Command aliases can now move the command arguments by using the @ARGS@ keyword -->
+ * CPU 制限のフルサポート (デフォルト値は全ての CPU、最大優先度、時間制限なしです): <!-- Full support for CPU limits (defaults to all CPUs, maximum priority and no time limit): -->
+    * limits.cpu: CPU の数 (e.g. 2) またはコアの範囲 (e.g. 0,2-3) <!-- Number of CPUs (e.g. 2) or range of core (e.g. 0,2-3) -->
+    * limits.cpu.allowance: 負荷がかかっている場合の CPU 時間の割合 (e.g. 50%) または絶対時間指定 (e.g. 10ms/50ms) <!-- Percentage of CPU time under load (e.g. 50%) or hard time limit (10ms/50ms) -->
+    * limits.cpu.priority: ホストに負荷がかかっている場合のコンテナの優先度。1 (最低) から 10 (最高) の間の値で指定します (e.g. 5)<!-- Container priority when host is under load as a value between 1 (lowest) and 10 (highest) (e.g. 5) -->
+ * メモリ制限のフルサポート (デフォルト値はメモリ制限なし、hard 使用、スワップ有効、priority 最大値): <!-- Full support for memory limits (defaults to all memory, hard enforcement, swap enabled and maximum priority): -->
+    * limits.memory: バイト指定での制限 (kB, MB, GB, TB, PB, EB を使用可能) (e.g. 256MB) またはホスト搭載メモリに対する割合 (e.g. 20%) <!-- Limit in bytes (kB, MB, GB, TB, PB, EB suffixes supported) (e.g. 256MB) or in percentage of the host memory (e.g. 20%) -->
+    * limits.memory.enforce: hard (コンテナは割当以上のメモリを使えない)もしくは soft (高負荷時のみ制限が適用) <!-- hard (container cannot use more memory than allocated) or soft (limit only applies under load) -->
+    * limits.memory.swap: true または false。コンテナがスワップを使えるかどうかを指定します <!-- true or false, indicates whether the container may use the swap -->
+    * limits.memory.swap.priority: スワップ使用の優先度。1 から 10 の値で指定します。1 を指定するとほとんどのデータがディスクにスワップアウトします <!-- Priority for swap usage, from 1 to 10, with 1 causing the most data to be swapped out to disk -->
+ * CPU とメモリに対する制限は指定した時点で適用されます <!-- All CPU and memory limits are now applied live. -->
+ * 最適化された (send/receive) ZFS コンテナとスナップショットのマイグレーションのサポートを追加しました <!-- Support for optimized (send/receive) ZFS container & snapshot migration -->
+
+### バグ修正 <!-- Bugfixes -->
+
+ * 新しいテストで特定されたストレージの様々な境界条件に関する修正を行いました <!-- Fix a variety of storage race conditions as identified by new tests -->
+ * lxd-images: エラーメッセージをより明確に出力するようになりました <!-- Give clearer error messages -->
+ * イメージの expire ロジックの修正を行いました <!-- Fix image expiry logic -->
+ * ロギングのコードのリファクタリングを行いました <!-- Refactor logging code -->
+ * マイグレーションのコードを仕様に準拠させるように修正しました <!-- Fix migration code to be spec-compliant -->
+ * 使用可能な CGroup コントローラの検出を行うようになりました <!-- Detect available CGroup controllers -->
+ * zfs: 最新ではない古いスナップショットからのリストアを防ぐようになりました <!-- Prevent restoring from old (not latest) snapshosts -->
+ * デバイスをコンテナに追加した際により明確にエラーを報告するようになりました <!-- Report clearer errors when adding devices to containers -->
+ * zfs: コンテナのリネームに関する修正を行いました <!-- Fix container rename -->
+ * lvm: コンテナのリネームに関する修正を行いました <!-- Fix container rename -->
+ * lvm: 古いバージョンの LVM 上での不具合を回避するようにしました <!-- Workaround failure on older LVM versions -->
+ * lvm: fdleak のメッセージを隠すようにしました <!-- Hide fdleak messages -->
+ * 整合性を保つためにディレクトリをいくつか移動するようになりました <!-- Move some directories around for consistency -->
+ * exec: 排他的な書き込みのために fds map をロックするようにしました <!-- lock fds map for exclusive writes -->
+ * lvm: スナップショットのリネームの処理を修正しました <!-- Fix snapshot rename handling -->
+ * lvm: コンテナのスナップショットのマイグレーションの修正を行いました <!-- Fix container snapshot migration -->
+ * コンテナ DB の (余分なレコードの) クリーンアップに関する修正を行いました <!-- Fix container DB cleanup (leftover records) -->
+ * イメージの (余分なレコードの) クリーンアップに関する修正を行いました <!-- Fix image cleanup (leftover records) -->
+ * コンテナの arch == 0 の際にホストのアーキテクチャを使うようにしました <!-- Use the host architecture when container arch == 0 -->
+ * 設定とデバイスのバリデーションを (DBへのInsert時でなく) コンテナの作成、設定の更新時に行うようにしました <!-- Do config & device validation upstream -->
+ * DB の余分なレコードのクリーンアップを行うようにしました <!-- Cleanup DB leftovers -->
+ * イメージが存在する場合により明確なエラーメッセージを返すようにしました <!-- Return a clear error message when an image already exists -->
+ * 設定されている場合だけ remote\_cache\_expiry を返すようにしました <!-- Only return remote\_cache\_expiry if set -->
+ * volatile を適用しない場合に flush するようにしました <!-- Flush volatile when they don't apply -->
+
+### テスト <!-- Testsuite -->
+
+ * テストが全てのストレージバックエンドで実行できるようになりました <!-- The testsuite can now be run with all storage backends -->
+ * 境界条件がいくつか除去されました <!-- Several race conditions have been eliminated -->
+ * テストでファイルシステム構造がクリーンかどうかをチェックするようになりました <!-- The testsuite now checks that the filesystem structure is clean -->
+ * テストでデータベースのテーブルがクリーンかどうかチェックするようになりました <!-- The testsuite now checks that the database tables are clean -->
+ * 失敗が無視されていたテストをいくつか修正しました <!-- Fix a couple of tests whose failure was being ignored -->
+ * --force-local を使うことでテストが劇的にスピードアップするようになりました <!-- Dramatically speed up testsuite by using \-\-force-local -->
+ * shutdown と waitready コマンドを使うようになりました <!-- Use shutdown and waitready commands -->
+
+### アップグレードの注意 <!-- Upgrade notes -->
+
+ * limits.memory で使用する単位は kB, MB, GB, TB, EB, PB になりました。古い単位は初回の LXD 起動時に一度だけ更新されます。
+ <!-- limits.memory suffixes are now kB, MB, GB, TB, EB and PB. Old
+   suffixes are upgraded as a one-time operation on the next LXD startup. -->
+ * migrate REST API の呼び出しは secret に対する wss URL でなく、ソースオペレーションに対する https URL を使うようになりました。これは仕様に合わせるための変更です。
+ <!--  The migrate REST API call now takes a https URL to the source
+   operation rather than a wss URL to the secrets. This was changed to
+   match the specification. -->
+
+### 試用環境 <!-- Try it for yourself -->
+<!--
+This new LXD release is already available for you to try on our [demo service](/lxd/try-it/).
+-->
+この新しい LXD のリリースが、すでに私たちの [デモサービス](/ja/lxd/try-it/) で利用できます。
+
+### ダウンロード <!-- Downloads -->
+<!--
+The release tarballs can be found on our [download page](/lxd/downloads/).
+-->
+このリリースの tarball は [ダウンロードページ](/lxd/downloads/) から取得できます。
+
+
 ## LXD 0.24 リリースのお知らせ <!-- LXD 0.24 release announcement --><span class="text-muted">2015 年 12 月 8 日 <!-- 8th of December 2015 --></span>
 
 ### このリリースの主な変更点 <!-- The main changes for this release are -->
