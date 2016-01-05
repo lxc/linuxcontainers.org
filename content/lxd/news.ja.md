@@ -1,5 +1,39 @@
 ![Download icon](/static/img/containers.png)
 # News
+## LXD 0.26 リリースのお知らせ <!-- LXD 0.26 release announcement --><span class="text-muted">2016 年 1 月 4 日 <!-- 4th of January 2016 --></span>
+
+### このリリースの主な変更点 <!-- The main changes for this release are -->
+
+ * veth デバイスのホスト側の名前を指定するためのネットワークインターフェースのプロパティである "host\_name" が新たに追加されました <!-- New "host\_name" network interface property that specifies the name of the host side veth device -->
+ * 停止しているコンテナのファイルに対する pull/push/edit が可能になりました <!-- It is now possible to pull/push/edit files of a stopped container -->
+ * "lxc list" コマンドでどのカラムを表示するかを指定できるようになりました (さらに、新たに PID が表示できるようになりました) <!-- It's now possible to specify what "lxc list" columns to show (including a new PID column) -->
+
+### バグ修正 <!-- Bugfixes -->
+
+ * すべての CPU が使用できると仮定するのでなく、適切にアクティブな CPU マップを継承するようになりました <!-- Properly inherit the active CPU map rather than assuming all CPUs are usable -->
+ * zfs: いくつかの境界条件の問題を修正しました <!-- Fix a couple of race conditions -->
+ * lvm: イメージからのコンテナの作成に関する修正を行いました <!-- Fix creation of container from an image -->
+ * 毎回 Finger() を呼ぶことをやめ、ネットワークのラウンドトリップタイムを半減させました <!-- Cut down network round trips in half by not calling Finger() every time -->
+ * コンテナの shmounts とデバイスディレクトリの不正なパーミッションを修正しました <!-- Fix invalid permissions on container shmounts and devices directories -->
+ * コンテナの停止時に常にデバイスとマウントがクリーンアップされていなかった問題を修正しました <!-- Fix container teardown not always cleaning up devices & mounts -->
+ * ホストがトリガーとなるコンテナの停止・再起動のパフォーマンスを改善しました (5 秒早くなりました) <!-- Improve performance of host-triggered container stop/restart (5s faster) -->
+ * LXD のコールフックのタイムアウトを 30 秒に設定しました (失敗時に無限にハングアップしたままになる代わりに)<!-- Make lxd callhook timeout after 30s (instead of hanging indefinitely on failure) -->
+ * テストのクリーンアップとドキュメントの追加を行いました <!-- Cleanup and document the testsuite -->
+ * add/rename/remove 時のリモートの証明書の扱いに関する修正を行いました <!-- Fix remote certificate handling on add/rename/remove -->
+
+### 試用環境 <!-- Try it for yourself -->
+<!--
+This new LXD release is already available for you to try on our [demo service](/lxd/try-it/).
+-->
+この新しい LXD のリリースが、すでに私たちの [デモサービス](/ja/lxd/try-it/) で利用できます。
+
+### ダウンロード <!-- Downloads -->
+<!--
+The release tarballs can be found on our [download page](/lxd/downloads/).
+-->
+このリリースの tarball は [ダウンロードページ](/lxd/downloads/) から取得できます。
+
+
 ## LXD 0.25 リリースのお知らせ <!-- LXD 0.25 release announcement --><span class="text-muted">2015 年 12 月 21 日 <!-- 21st of December 2015 --></span>
 
 ### このリリースの主な変更点 <!-- The main changes for this release are -->
