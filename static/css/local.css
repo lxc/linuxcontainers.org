@@ -145,6 +145,17 @@ h3:hover a.headerlink {
     -ms-text-size-adjust: none;
 }
 
+#tryit_console_measurement {
+    color: white;
+    display: block;
+    float: left;
+    border-color:black;
+    border-style:solid;
+    border-width:5px 5px 5px 5px;
+    position:absolute;
+    top:-1000px;
+}
+
 .tryit_run:hover {
     text-decoration: underline;
     cursor: pointer;

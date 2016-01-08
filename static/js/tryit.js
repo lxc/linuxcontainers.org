@@ -108,7 +108,7 @@ $(document).ready(function() {
             hSubs   = element.offsetHeight - element.clientHeight,
             h       = element.clientHeight - hSubs,
 
-            x       = cell.clientWidth,
+            x       = cell.clientWidth / 21,
             y       = cell.clientHeight,
 
             cols    = Math.max(Math.floor(w / x), 10),
@@ -125,9 +125,8 @@ $(document).ready(function() {
     function createCell(element) {
         var cell            = document.createElement('div');
 
-        cell.innerHTML      = '&nbsp';
-        cell.style.position = 'absolute';
-        cell.style.top      = '-1000px';
+        cell.innerHTML = 'root@tryit-session:~#';
+        cell.id = "tryit_console_measurement";
 
         element.appendChild(cell);
 
