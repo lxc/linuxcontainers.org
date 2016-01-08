@@ -1,6 +1,14 @@
 ![Download icon](/static/img/containers.png)
 # News
 
+## LXCFS 0.15 release announcement <span class="text-muted">7th of January 2016</span>
+Bugfix release.
+
+ * Fixing a critical memory allocation bug which makes 0.14 unusable.
+
+### Downloads
+The release tarballs can be found on our [download page](/lxcfs/downloads).
+
 ## LXCFS 0.14 release announcement <span class="text-muted">7th of January 2016</span>
 
  * Listen to hint from lxc regarding cgroup namespaces.
