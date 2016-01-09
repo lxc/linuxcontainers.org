@@ -1,6 +1,14 @@
 ![Download icon](/static/img/containers.png)
 # News
 
+## LXCFS 0.16 release announcement <span class="text-muted">8th of January 2016</span>
+Bugfix release.
+
+ * This provides a fix for the memory allocation bugs in the last two releases.
+
+### Downloads
+The release tarballs can be found on our [download page](/lxcfs/downloads).
+
 ## LXCFS 0.15 release announcement <span class="text-muted">7th of January 2016</span>
 Bugfix release.
 
