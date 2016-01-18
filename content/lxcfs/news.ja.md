@@ -1,4 +1,47 @@
 # News
+
+## LXCFS 0.16 リリースのお知らせ <!-- LXCFS 0.16 release announcement --><span class="text-muted">2016 年 1 月 8 日<!-- 8th of January 2016 --></span>
+<!--
+Bugfix release.
+-->
+バグフィックスのためのリリースです。
+
+ * 先の 2 つのリリースにあるメモリアロケーションに関するバグの修正のためのリリースです <!-- This provides a fix for the memory allocation bugs in the last two releases. -->
+
+### ダウンロード <!-- Downloads -->
+<!--
+The release tarballs can be found on our [download page](/lxcfs/downloads).
+-->
+このリリースの tarball は [ダウンロードページ](/lxcfs/downloads) から取得できます。
+
+## LXCFS 0.15 リリースのお知らせ <!-- LXCFS 0.15 release announcement --><span class="text-muted">2016 年 1 月 7 日<!-- 7th of January 2016 --></span>
+<!--
+Bugfix release.
+-->
+バグフィックスのためのリリースです。
+
+ * 深刻なメモリアロケーションに関するバグの修正を行いました。このバグがあるので 0.14 は使用に適しません <!-- Fixing a critical memory allocation bug which makes 0.14 unusable. -->
+
+### ダウンロード <!-- Downloads -->
+<!--
+The release tarballs can be found on our [download page](/lxcfs/downloads).
+-->
+このリリースの tarball は [ダウンロードページ](/lxcfs/downloads) から取得できます。
+
+## LXCFS 0.14 リリースのお知らせ <!-- LXCFS 0.14 release announcement --><span class="text-muted">2016 年 1 月 7 日<!-- 7th of January 2016 --></span>
+
+ * cgroup namespace を LXC が扱えるかどうかをチェックするようになりました <!-- Listen to hint from lxc regarding cgroup namespaces. -->
+ * libnih からの移行時に混入したいくつかの重要なバグの修正を行いました <!-- Several important bugfixes in code introduced during the switch from libnih. -->
+ * swap 使用量のレポートの修正を行いました <!-- Fix to swap usage reporting. -->
+ * root cgroup 内のタスクに対する過度な可視性のチェックを修正しました <!-- Fix overly strict visibility checks for tasks in root cgroup. -->
+ * テストの多数のバグ修正を行いました <!-- Many fixes to the tests. -->
+
+### ダウンロード <!-- Downloads -->
+<!--
+The release tarballs can be found on our [download page](/lxcfs/downloads/).
+-->
+このリリースの tarball は [ダウンロードページ](/lxcfs/downloads/) から取得できます。
+
 ## LXCFS 0.13 リリースのお知らせ <!-- LXCFS 0.13 release announcement --><span class="text-muted">2015 年 11 月 25 日<!-- 25th of November 2015 --></span>
 <!--
 Bugfix release.
