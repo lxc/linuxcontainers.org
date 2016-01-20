@@ -1,5 +1,55 @@
 ![Download icon](/static/img/containers.png)
 # News
+## LXD 0.27 release announcement <span class="text-muted">19th of January 2016</span>
+
+### The main changes for this release are
+
+ * Support for container disk quota (zfs and btrfs only)
+ * Download progress during image copy and container launch
+ * Initial work on a LXC to LXD script (supports almost every configuration except for unprivileged containers)
+ * New linux.kernel\_modules container property (list of modules to load before starting the container)
+ * New core.https\_allowed\_origin server property (controls the Access-Control-Allow-Origin header)
+ * Profile changes are now live-applied to all affected containers
+ * "lxc config edit" now works against servers too
+ * Changes to security.nesting are now live-applied
+ * Support for xfs with the lvm backend
+ * "lxc image list" now supports filtering (by name, hash and properties)
+ * Improved bash completion profile
+ * The default remote is now visible in "lxc remote list"
+ * "lxc info" now indicates whether a container is ephemeral or persistent
+ * Various improvement to help messages
+
+### Bugfixes
+
+ * Set a default http timeout of 10s
+ * Don't crash during publish when metadata.yaml is missing
+ * Improve error reporting during migration
+ * Improve error reporting during copy
+ * Make sure containers are only removed from the database once removed from disk
+ * Make sure images are only removed from the database once removed from disk
+ * Fix LVM backend on LVM > 2.02.99
+ * Improve DB performance when under heavy load
+ * Correctly uidshift unprivileged CRIU images
+ * Fix a race in forkmigrate
+ * Fix race condition in event interface
+ * Fix screen corruption when lxd-images hits an error
+ * Don't ignore provided devices at create time
+ * Fix web server to support all URLs with and without trailing slash
+ * Make it possible to unset the zfs pool
+ * lxd-setup-lvm-storage: Add default size of 10G
+ * api: {Save|Load}Config should take a path as an argument
+ * Fix automatically adding veth interface to the host bridge
+ * Fix unsetting zfs pool when snapshots used to exist
+
+### Try it for yourself
+
+This new LXD release is already available for you to try on our [demo service](/lxd/try-it/).
+
+### Downloads
+The release tarballs can be found on our [download page](/lxd/downloads/).
+
+
+
 ## LXD 0.26 release announcement <span class="text-muted">4th of January 2016</span>
 
 ### The main changes for this release are
