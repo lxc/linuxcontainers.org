@@ -1,5 +1,19 @@
 # News
 
+## LXCFS 0.17 リリースのお知らせ <!-- LXCFS 0.17 release announcement --><span class="text-muted">2016 年 1 月 26 日 <!-- 8th of January 2016 --></span>
+
+ * PAM モジュールを追加しました <!-- Add a PAM module -->
+ * ユーザが自身の init のすべての cgroup ディレクトリを見ることができるようになりました <!-- Allow users to see all cgroup directories under their init's. -->
+ * タスク自身の制限でなく、タスクの init プロセスの cgroup の使用量＋制限を使うようになりました <!-- Use a task's init process' cgroup usage+limits to virtualize procfiles,
+   rather than the task's own limits. -->
+ * スワップの計算の改良を行いました <!-- Improve swap accounting -->
+
+### ダウンロード <!-- Downloads -->
+<!--
+The release tarballs can be found on our [download page](/lxcfs/downloads).
+-->
+このリリースの tarball は [ダウンロードページ](/lxcfs/downloads) から取得できます。
+
 ## LXCFS 0.16 リリースのお知らせ <!-- LXCFS 0.16 release announcement --><span class="text-muted">2016 年 1 月 8 日<!-- 8th of January 2016 --></span>
 <!--
 Bugfix release.
