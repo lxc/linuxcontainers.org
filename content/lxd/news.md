@@ -1,5 +1,45 @@
 ![Download icon](/static/img/containers.png)
 # News
+## LXD 2.0.0.beta1 release announcement <span class="text-muted">26th of January 2016</span>
+
+### The main changes for this release are
+
+ * "lxc config edit" now works to edit the local server configuration
+ * Add support for block I/O limits
+ * Add support for network I/O limits
+
+### Bugfixes
+
+ * error out on deleting nonexistent alias
+ * Fix LXC config rendering
+ * Improve detection of text editor
+ * Fix "lxc file edit"
+ * Add network limits
+ * Fix IPv6 handling in daemon code
+ * Update specs and documentation on file pull/push
+ * Better deal with broken LXC
+ * Update README to avoid setting a mountpoint for zfs
+ * Print message on sucessfull copy of image
+ * Fix small typo s/sucessfully/successfully
+ * Improve forkstart debugging
+ * Always call Rename() when not migrating
+ * Use a tempfile for image uploads
+ * report errors if the restore call's start command fails
+ * Truncate the target on file transfer
+ * Mention that raw keys are risky
+ * Allow writes to /dev/tty in privileged containers
+ * implement stateful snapshot restore
+ * don't fail to delete when deleting snapshots fails
+
+### Try it for yourself
+
+This new LXD release is already available for you to try on our [demo service](/lxd/try-it/).
+
+### Downloads
+The release tarballs can be found on our [download page](/lxd/downloads/).
+
+
+
 ## LXD 0.27 release announcement <span class="text-muted">19th of January 2016</span>
 
 ### The main changes for this release are
