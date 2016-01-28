@@ -31,7 +31,7 @@
  * ステートフルなスナップショットとリストアを実装しました <!-- implement stateful snapshot restore -->
  * スナップショットの削除が失敗しても delete が失敗しないようにしました <!-- don't fail to delete when deleting snapshots fails -->
 
-### 試用環境 <!-- Try it for yourself -->
+###p 試用環境 <!-- Try it for yourself -->
 <!--
 This new LXD release is already available for you to try on our [demo service](/lxd/try-it/).
 -->
@@ -90,7 +90,7 @@ The release tarballs can be found on our [download page](/lxd/downloads/).
 <!--
 This new LXD release is already available for you to try on our [demo service](/lxd/try-it/).
 -->
-この新しい LXD のリリースが、すでに私たちの [デモサービス](/ja/lxd/try-it/) で利用できます。
+この新しい LXD のリリースは、すでに私たちの [デモサービス](/ja/lxd/try-it/) で利用できます。
 
 ### ダウンロード <!-- Downloads -->
 <!--
@@ -124,7 +124,7 @@ The release tarballs can be found on our [download page](/lxd/downloads/).
 <!--
 This new LXD release is already available for you to try on our [demo service](/lxd/try-it/).
 -->
-この新しい LXD のリリースが、すでに私たちの [デモサービス](/ja/lxd/try-it/) で利用できます。
+この新しい LXD のリリースは、すでに私たちの [デモサービス](/ja/lxd/try-it/) で利用できます。
 
 ### ダウンロード <!-- Downloads -->
 <!--
@@ -203,7 +203,7 @@ The release tarballs can be found on our [download page](/lxd/downloads/).
 <!--
 This new LXD release is already available for you to try on our [demo service](/lxd/try-it/).
 -->
-この新しい LXD のリリースが、すでに私たちの [デモサービス](/ja/lxd/try-it/) で利用できます。
+この新しい LXD のリリースは、すでに私たちの [デモサービス](/ja/lxd/try-it/) で利用できます。
 
 ### ダウンロード <!-- Downloads -->
 <!--
@@ -248,7 +248,7 @@ The release tarballs can be found on our [download page](/lxd/downloads/).
 <!--
 This new LXD release is already available for you to try on our [demo service](/lxd/try-it/).
 -->
-この新しい LXD のリリースが、すでに私たちの [デモサービス](/ja/lxd/try-it/) で利用できます。
+この新しい LXD のリリースは、すでに私たちの [デモサービス](/ja/lxd/try-it/) で利用できます。
 
 ### ダウンロード <!-- Downloads -->
 <!--
@@ -302,7 +302,7 @@ The "lxc" client was updated to be backward compatible when possible.
 <!--
 This new LXD release is already available for you to try on our [demo service](/lxd/try-it/).
 -->
-この新しい LXD のリリースが、すでに私たちの [デモサービス](/ja/lxd/try-it/) で利用できます。
+この新しい LXD のリリースは、すでに私たちの [デモサービス](/ja/lxd/try-it/) で利用できます。
 
 ### ダウンロード <!-- Downloads -->
 <!--
@@ -349,7 +349,7 @@ as a result, some actions against older servers or using older clients may fail.
 <!--
 This new LXD release is already available for you to try on our [demo service](/lxd/try-it/).
 -->
-この新しい LXD のリリースが、すでに私たちの [デモサービス](/ja/lxd/try-it/) で利用できます。
+この新しい LXD のリリースは、すでに私たちの [デモサービス](/ja/lxd/try-it/) で利用できます。
 
 ### ダウンロード <!-- Downloads -->
 <!--
