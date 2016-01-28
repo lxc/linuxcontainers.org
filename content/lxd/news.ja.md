@@ -31,7 +31,7 @@
  * ステートフルなスナップショットとリストアを実装しました <!-- implement stateful snapshot restore -->
  * スナップショットの削除が失敗しても delete が失敗しないようにしました <!-- don't fail to delete when deleting snapshots fails -->
 
-###p 試用環境 <!-- Try it for yourself -->
+### 試用環境 <!-- Try it for yourself -->
 <!--
 This new LXD release is already available for you to try on our [demo service](/lxd/try-it/).
 -->
