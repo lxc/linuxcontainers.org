@@ -19,7 +19,7 @@
  * Update specs and documentation on file pull/push
  * Better deal with broken LXC
  * Update README to avoid setting a mountpoint for zfs
- * Print message on sucessfull copy of image
+ * Print message on successful copy of image
  * Fix small typo s/sucessfully/successfully
  * Improve forkstart debugging
  * Always call Rename() when not migrating
