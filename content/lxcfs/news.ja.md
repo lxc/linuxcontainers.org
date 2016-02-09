@@ -1,5 +1,18 @@
 # News
 
+
+## LXCFS 0.18 リリースのお知らせ <!-- LXCFS 0.18 release announcement --><span class="text-muted">2016 年 2 月 4 日<!-- 4th of February 2016 --></span>
+
+ * ほとんどの場合で lxcfs の再起動がサポートされました。ほとんどの機能をライブラリに移動させたためです。このライブラリは SIGUSR1 でリロードされます。
+   <!-- Support restarting lxcfs in most cases, by moving most functionality
+        into a library which is reloaded on SIGUSR1 -->
+
+### ダウンロード <!-- Downloads -->
+<!--
+The release tarballs can be found on our [download page](/lxcfs/downloads).
+-->
+このリリースの tarball は [ダウンロードページ](/lxcfs/downloads) から取得できます。
+
 ## LXCFS 0.17 リリースのお知らせ <!-- LXCFS 0.17 release announcement --><span class="text-muted">2016 年 1 月 26 日 <!-- 8th of January 2016 --></span>
 
  * PAM モジュールを追加しました <!-- Add a PAM module -->
