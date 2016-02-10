@@ -1,5 +1,16 @@
 # News
 
+## LXCFS 2.0.0.beta1 リリースのお知らせ <!-- LXCFS 2.0.0.beta1 release announcement --><span class="text-muted">2016 年 2 月 9 日 <!-- 9th of February 2016 --></span>
+
+ * /proc/swaps がサポートされました <!-- Add support for /proc/swaps -->
+ * 要求があれば systemd cgroup の作成と chown を行うようになりました <!-- Create or chown systemd cgroups if asked -->
+ * liblxcfs.so を /usr/lib/lxcfs へ移動しました <!-- Move liblxcfs.so to /usr/lib/lxcfs. -->
+
+### ダウンロード <!-- Downloads -->
+<!--
+The release tarballs can be found on our [download page](/lxcfs/downloads).
+-->
+このリリースの tarball は [ダウンロードページ](/lxcfs/downloads) から取得できます。
 
 ## LXCFS 0.18 リリースのお知らせ <!-- LXCFS 0.18 release announcement --><span class="text-muted">2016 年 2 月 4 日<!-- 4th of February 2016 --></span>
 
