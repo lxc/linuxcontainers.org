@@ -311,7 +311,8 @@ lxc exec first -- apt-get autoremove --purge -y</pre>
                         <p><!-- At which point we won't need our "first"
                            container, so just delete it with: -->
                            最初の "first" コンテナが不要であることを示すため、以下のように削除してみましょう。
-                           <pre>lxc delete first</pre>
+                           <pre>lxc stop first
+lxc delete first</pre>
                         </p>
 
                         <p><!-- And lastly we can start a new container from
@@ -362,7 +363,7 @@ lxc exec first -- apt-get autoremove --purge -y</pre>
                         <p><!-- We won't be needing that container anymore,
                            so delete it with: -->
                            もうこのコンテナが不要であれば、以下のようにして削除しましょう。
-                           <pre>lxc delete second</pre>
+                           <pre>lxc delete --force second</pre>
                         </p>
                     </div>
                 </div>
@@ -417,7 +418,7 @@ lxc exec first -- apt-get autoremove --purge -y</pre>
 
                         <p><!-- And delete it: -->
                            そしてコンテナを削除します。
-                           <pre>lxc delete third</pre>
+                           <pre>lxc delete -f third</pre>
                         </p>
 
                         <p><!-- The list of all configured remotes can be
@@ -503,8 +504,8 @@ lxc exec sixth -- bash</pre>
 
                         <p><!-- Then clean everything up: -->
                            そして、すべてをクリーンアップするには、以下のように実行します。
-                           <pre>lxc delete sixth
-lxc delete tryit:fourth
+                           <pre>lxc delete -f sixth
+lxc delete -f tryit:fourth
 lxc image delete clean-ubuntu</pre>
                     </div>
                 </div>

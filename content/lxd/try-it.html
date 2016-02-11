@@ -293,7 +293,8 @@ lxc exec first -- apt-get autoremove --purge -y</pre>
 
                         <p>At which point we won't need our "first"
                            container, so just delete it with:
-                           <pre>lxc delete first</pre>
+                           <pre>lxc stop first
+lxc delete first</pre>
                         </p>
 
                         <p>And lastly we can start a new container from
@@ -337,8 +338,8 @@ lxc exec first -- apt-get autoremove --purge -y</pre>
                         </p>
 
                         <p>We won't be needing that container anymore,
-                           so delete it with:
-                           <pre>lxc delete second</pre>
+                           so stop and delete it with:
+                           <pre>lxc delete --force second</pre>
                         </p>
                     </div>
                 </div>
@@ -386,7 +387,7 @@ lxc exec first -- apt-get autoremove --purge -y</pre>
                         </p>
 
                         <p>And delete it:
-                           <pre>lxc delete third</pre>
+                           <pre>lxc delete -f third</pre>
                         </p>
 
                         <p>The list of all configured remotes can be
@@ -457,8 +458,8 @@ lxc exec sixth -- bash</pre>
                         </p>
 
                         <p>Then clean everything up:
-                           <pre>lxc delete sixth
-lxc delete tryit:fourth
+                           <pre>lxc delete -f sixth
+lxc delete -f tryit:fourth
 lxc image delete clean-ubuntu</pre>
                     </div>
                 </div>
