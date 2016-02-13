@@ -21,7 +21,7 @@
  * 新しいコンテナルートにスナップショットをコピーする際の問題を修正しました <!-- Fix copying snapshot as new container root -->
  * マイグレーションの失敗時にスナップショットの停止が失敗する問題を修正しました <!-- Fix failure to stop snapshots on migration failure -->
  * rsync を使ったスナップショットのマイグレーションの問題を修正しました <!-- Fix migration of snapshots using rsync -->
- * rsync に対するマイグレーションのフォールバックを実装しました <!-- Implement migration fallback to rsync -->
+ * マイグレーションのフォールバックとして rsync を使うようになりました <!-- Implement migration fallback to rsync -->
  * ShiftIfNecessary を起動時のシフトに変更しました (訳注：マイグレーション時のスナップショットの[u|g]idのマッピングの変更をコンテナ起動時に行うようにした、だと思う)<!-- Change ShiftIfNecessary to shift on startup -->
  * info 中の i18n メッセージカタログの (再) 作成 <!-- make i18n for profiles output in info -->
  * ヘルプ出力をより効率的にするために冗長な言い回しを減らしました <!-- reduce verbiage to fit help text more efficiently -->
