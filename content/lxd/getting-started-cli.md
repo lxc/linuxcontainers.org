@@ -56,7 +56,9 @@ There are three ways to feed that image store:
 
  1. Use a remote LXD as an image server
  2. Use the lxd-images script to import an image from a non-LXD source
- 3. Manually import one using "lxc image import \<file\> --alias \<name\>"
+ 3. Manually import one using
+
+        lxc image import <file> --alias <name>
 
 ## Using a remote LXD as an image server
 Using a remote image server is as simple as adding it as a remote and just using it:
