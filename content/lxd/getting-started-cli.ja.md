@@ -99,7 +99,9 @@ There are three ways to feed that image store:
 
  1. イメージサーバとしてリモートの LXD を使う <!-- Use a remote LXD as an image server -->
  2. lxd-images スクリプトを使って、LXD 用でないものからイメージをインポートする <!-- Use the lxd-images script to import an image from a non-LXD source -->
- 3. "lxc image import &lt;file&gt; --alias &lt;name&gt;" のように手動でインポートする <!-- Manually import one using "lxc image import \<file\> &#045;&#045;alias \<name\>" -->
+ 3. 以下のように手動でインポートする <!-- Manually import one using -->
+
+        lxc image import <file> --alias <name>
 
 ## イメージサーバとしてリモートサーバを使う <!-- Using a remote LXD as an image server -->
 <!--
