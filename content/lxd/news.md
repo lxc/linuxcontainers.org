@@ -25,10 +25,10 @@
     * Syncronous replies no longer contain an empty "operation" field
  * Extra security now applies for cross-server communication:
     * Unless a certificate is passed along with the query, the following operations now require the remote certificate to be valid according to system CA:
-       * Container creation from migration (copy, move & live migration)
-       * Container creation from remote image
-       * Image copy from other LXD server
-       * Image import from https
+         * Container creation from migration (copy, move & live migration)
+         * Container creation from remote image
+         * Image copy from other LXD server
+         * Image import from https
     * The command client will automatically set the necessary "certificate" field for you for those requests
  * Starting with this release, Go 1.3 is no longer supported by LXD.
 

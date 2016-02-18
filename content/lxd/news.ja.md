@@ -1,5 +1,77 @@
 ![Download icon](/static/img/containers.png)
 # News
+
+## LXD 2.0.0.beta3 リリースのお知らせ <!-- LXD 2.0.0.beta3 release announcement --><span class="text-muted">2016 年 2 月 18 日<!-- 18th of February 2016 --></span>
+
+### このリリースの主な変更点 <!-- The main changes for this release are -->
+
+ * "lxc publish" で実行中のコンテナに対して実行を強制することができるようになりました (一時的にコンテナは停止します) <!-- "lxc publish" can now be forced to publish running containers (it will temporarily stop them) -->
+ * "lxc image list" が description によってソートされて表示されるようになりました <!-- "lxc image list" now shows images sorted by description -->
+ * REST API を完全に見直し、すべて仕様にマッチするように更新しました <!-- Complete review of the REST API and update to make it all match the specification. -->
+    * GET /1.0 は "public" フィールドを表示します <!-- GET /1.0 now shows the "public" field -->
+    * GET /1.0/certificates はエンドポイントの有効なリストを返します <!-- GET /1.0/certificates now returns a valid list of endpoints -->
+    * GET /1.0/containers/NAME はパフォーマンスの問題のために、詳細なコンテナの実行ステータス ("status" キー) を返さなくなりました。詳細な実行ステータスを取得するためには /1.0/containers/NAME/state という別のクエリが必要です <!-- GET /1.0/containers/NAME for performance reasons no longer returns the detailed container runtime status ("status" key), a separate query to /1.0/containers/NAME/state is now needed -->
+    * GET /1.0/containers/NAME/logs はエンドポイントの有効なリストを返します <!-- GET /1.0/containers/NAME/logs now returns a valid list of endpoints -->
+    * POST /1.0/containers/NAME/snapshots は "stateful" フィールドを設定する必要があります (デフォルトは false) <!-- POST /1.0/containers/NAME/snapshots now longer requires the "stateful" field to be set (defaults to false) -->
+    * POST /1.0/images を使って、すべてのサポートされている入力タイプで "properties" と "filename" を上書きできます <!-- POST /1.0/images now lets you override "properties" and "filename" for all supported input types -->
+    * GET /1.0/images/aliases/NAME が正しいデータを返すようになりました ("name" と "target" フィールドが入れ替わりました) <!-- GET /1.0/images/aliases/NAME now returns valid data (the "name" and "target" fields were swapped) -->
+    * POST /1.0/images/aliases/NAME を実装しました <!-- POST /1.0/images/aliases/NAME has been implemented -->
+    * PUT /1.0/images/aliases/NAME を実装しました <!-- PUT /1.0/images/aliases/NAME has been implemented -->
+    * GET /1.0/images/FINGERPRINT は空の "target" フィールドを alias に表示しません <!-- GET /1.0/images/FINGERPRINT no longer shows an empty "target" field for aliases -->
+    * GET /1.0/networks/NAME を再設計しました <!-- GET /1.0/networks/NAME has been re-designed -->
+    * GET /1.0/operations/UUID/wait?timeout=X が実際にタイムアウトするようになりました <!-- GET /1.0/operations/UUID/wait?timeout=X now actually times out -->
+    * POST /1.0/profiles/NAME を実装しました <!-- POST /1.0/profiles/NAME has been implemented -->
+    * タイムスタンプがすべて RFC3339 文字列となり、一貫して名付けられるようになりました  (created\_at, updated\_at, expires\_at, uploaded\_at) <!-- All timestamps are now RFC3339 strings and consistently named (created\_at, updated\_at, expires\_at, uploaded\_at) -->
+    * 同期操作の応答では、空の "operation" フィールドを含まなくなりました <!-- Syncronous replies no longer contain an empty "operation" field -->
+ * サーバ間の通信に追加のセキュリティが適用されるようになりました: <!-- Extra security now applies for cross-server communication: -->
+    * 問い合わせと同時に証明書が渡された場合をのぞいて、以下の操作ではシステムの CA によって有効であるとされたリモートの証明書が必要になりました: <!-- Unless a certificate is passed along with the query, the following operations now require the remote certificate to be valid according to system CA: -->
+         * マイグレーションによるコンテナ作成 (copy, move, ライブマイグレーション) <!-- Container creation from migration (copy, move & live migration) -->
+         * リモートイメージによるコンテナの作成 <!-- Container creation from remote image -->
+         * 他の LXD サーバからのイメージコピー <!-- Image copy from other LXD server -->
+         * https でのイメージのインポート <!-- Image import from https -->
+    * コマンドラインクライアントは自動的に必要な "certificate" フィールドを上記の要求に対して設定します <!-- The command client will automatically set the necessary "certificate" field for you for those requests -->
+ * このバージョンから、LXD は Go 1.3 をサポートしません <!-- Starting with this release, Go 1.3 is no longer supported by LXD. -->
+
+### バグ修正 <!-- Bugfixes -->
+
+ * lxc file で不正なコンテナ名を修正しました <!-- Fix invalid container name in lxc file -->
+ * tests: スラッシュを含むエイリアスのテストを追加しました <!-- Add test for aliases with slashes -->
+ * ephemeral と architecture フラグの更新の問題を修正しました <!-- Fix updating ephemeral and architecture flags -->
+ * publish のエラーメッセージを少しわかりやすくしました <!-- Clarify publish error message a bit -->
+ * 最後が / (スラッシュ) で終わるエイリアスの操作の問題を修正しました <!-- Fix interacting with aliases with a trailing slash -->
+ * specs: REST API を実際に合うように更新しました <!-- Update rest-api to match reality -->
+ * イメージのパースが終わるまで、イメージを所定の場所に移動しなくなりました <!-- Don't move the image into place until it's been parsed -->
+ * 確実に正しい Dialer と Proxy を使うようにしました <!-- Make sure we always use the right dialer and proxy -->
+ * specs: キー名が間違っていたのを修正しました <!-- Fix wrong key name -->
+ * Windows 上の lxc file の問題を修正しました <!-- Fix lxc file on Windows -->
+ * LXD 0.27 以前からのアップグレードで DB のマイグレーションが失敗していたのを修正しました <!-- Fix broken DB migration when upgrading from LXD 0.27 or older -->
+ * クライアントツールでグローバル変数の使用を止めました <!-- Avoid global variables in client tool -->
+ * 接続の初期の失敗によるエラーの修正を行いました <!-- Fix errors due to early failure to connect -->
+ * 転送時に常にファイルサイズを出力するようにしました <!-- Always export the file size on transfer -->
+ * いくつか Typo を修正しました <!-- Fixed some typos -->
+ * lxd-images: init 時に atexit を register するようにしました <!-- Register atexit at init time -->
+ * specs: btrfs send/receive に関してストレージの仕様を更新しました <!-- Update storage spec for btrfs send/receive -->
+ * 開発元の go-systemd を使うようになりました (これは Go 1.3 に対する後方互換性がありません) <!-- Use upstream go-systemd (this breaks backward compatibility with Go 1.3) -->
+
+### アップグレードの注意 <!-- Upgrade notes -->
+
+ * このリリースは、古い LXD のバージョンに対する後方互換性がありません。<!-- This release breaks backward compatibility with older LXD versions. -->
+   クライアントとサーバを同じバージョンで実行するようにしてください <!-- Please make sure all your clients and servers run the same version. -->
+ * REST API とセキュリティポリシーの変更に関する前述の記載をご覧ください <!-- See notes above for changes to the REST API and security policies. -->
+
+### 試用環境 <!-- Try it for yourself -->
+<!--
+This new LXD release is already available for you to try on our [demo service](/lxd/try-it/).
+-->
+この新しい LXD のリリースが、すでに私たちの [デモサービス](/ja/lxd/try-it/) で利用できます。
+
+### ダウンロード <!-- Downloads -->
+<!--
+The release tarballs can be found on our [download page](/lxd/downloads/).
+-->
+このリリースの tarball は [ダウンロードページ](/lxd/downloads/) から取得できます。
+
+
 ## LXD 2.0.0.beta2 リリースのお知らせ <!-- LXD 2.0.0.beta2 release announcement --><span class="text-muted">2016 年 2 月 10 日<!-- 10th of February 2016 --></span>
 
 ### このリリースの主な変更点 <!-- The main changes for this release are -->
