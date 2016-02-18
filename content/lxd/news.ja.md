@@ -25,10 +25,10 @@
     * 同期操作の応答では、空の "operation" フィールドを含まなくなりました <!-- Syncronous replies no longer contain an empty "operation" field -->
  * サーバ間の通信に追加のセキュリティが適用されるようになりました: <!-- Extra security now applies for cross-server communication: -->
     * 問い合わせと同時に証明書が渡された場合をのぞいて、以下の操作ではシステムの CA によって有効であるとされたリモートの証明書が必要になりました: <!-- Unless a certificate is passed along with the query, the following operations now require the remote certificate to be valid according to system CA: -->
-       * マイグレーションによるコンテナ作成 (copy, move, ライブマイグレーション) <!-- Container creation from migration (copy, move & live migration) -->
-       * リモートイメージによるコンテナの作成 <!-- Container creation from remote image -->
-       * 他の LXD サーバからのイメージコピー <!-- Image copy from other LXD server -->
-       * https でのイメージのインポート <!-- Image import from https -->
+         * マイグレーションによるコンテナ作成 (copy, move, ライブマイグレーション) <!-- Container creation from migration (copy, move & live migration) -->
+         * リモートイメージによるコンテナの作成 <!-- Container creation from remote image -->
+         * 他の LXD サーバからのイメージコピー <!-- Image copy from other LXD server -->
+         * https でのイメージのインポート <!-- Image import from https -->
     * コマンドラインクライアントは自動的に必要な "certificate" フィールドを上記の要求に対して設定します <!-- The command client will automatically set the necessary "certificate" field for you for those requests -->
  * このバージョンから、LXD は Go 1.3 をサポートしません <!-- Starting with this release, Go 1.3 is no longer supported by LXD. -->
 
