@@ -12,7 +12,7 @@
     * GET /1.0/certificates now returns a valid list of endpoints
     * GET /1.0/containers/NAME for performance reasons no longer returns the detailed container runtime status ("status" key), a separate query to /1.0/containers/NAME/state is now needed
     * GET /1.0/containers/NAME/logs now returns a valid list of endpoints
-    * POST /1.0/containers/NAME/snapshots now longer requires the "stateful" field to be set (defaults to false)
+    * POST /1.0/containers/NAME/snapshots no longer requires the "stateful" field to be set (defaults to false)
     * POST /1.0/images now lets you override "properties" and "filename" for all supported input types
     * GET /1.0/images/aliases/NAME now returns valid data (the "name" and "target" fields were swapped)
     * POST /1.0/images/aliases/NAME has been implemented
