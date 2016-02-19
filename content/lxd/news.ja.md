@@ -12,7 +12,7 @@
     * GET /1.0/certificates はエンドポイントの有効なリストを返します <!-- GET /1.0/certificates now returns a valid list of endpoints -->
     * GET /1.0/containers/NAME はパフォーマンスの問題のために、詳細なコンテナの実行ステータス ("status" キー) を返さなくなりました。詳細な実行ステータスを取得するためには /1.0/containers/NAME/state という別のクエリが必要です <!-- GET /1.0/containers/NAME for performance reasons no longer returns the detailed container runtime status ("status" key), a separate query to /1.0/containers/NAME/state is now needed -->
     * GET /1.0/containers/NAME/logs はエンドポイントの有効なリストを返します <!-- GET /1.0/containers/NAME/logs now returns a valid list of endpoints -->
-    * POST /1.0/containers/NAME/snapshots は "stateful" フィールドを設定する必要があります (デフォルトは false) <!-- POST /1.0/containers/NAME/snapshots now longer requires the "stateful" field to be set (defaults to false) -->
+    * POST /1.0/containers/NAME/snapshots は "stateful" フィールドを設定しなくても良くなりました (デフォルトで false に設定されます) (訳注: 翻訳公開当初「設定する必要がありました」と逆の訳になっていました)<!-- POST /1.0/containers/NAME/snapshots no longer requires the "stateful" field to be set (defaults to false) -->
     * POST /1.0/images を使って、すべてのサポートされている入力タイプで "properties" と "filename" を上書きできます <!-- POST /1.0/images now lets you override "properties" and "filename" for all supported input types -->
     * GET /1.0/images/aliases/NAME が正しいデータを返すようになりました ("name" と "target" フィールドが入れ替わりました) <!-- GET /1.0/images/aliases/NAME now returns valid data (the "name" and "target" fields were swapped) -->
     * POST /1.0/images/aliases/NAME を実装しました <!-- POST /1.0/images/aliases/NAME has been implemented -->
