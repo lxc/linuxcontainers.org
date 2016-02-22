@@ -1,5 +1,11 @@
 # News
 
+## LXCFS 2.0.0.beta2 リリースのお知らせ <!-- LXCFS 2.0.0.beta2 release announcement --><span class="text-muted">2016 年 2 月 19 日 <!-- 19th of February 2016 --></span>
+
+ * アンマウントされたコントローラがある場合に PAM モジュールが引き起こすハングアップのバグを修正しました <!-- Fix a bug causing PAM module to hang if there are unmounted controllers -->
+ * setns 後の pid を fork する際、不完全な glibc の assert に起因する、まれではあるが起こりうるバグを回避するようにしました。 <!-- Avoid a rare but not impossible bug due to a faulty glibc assert when
+   forking a pid after setns. -->
+
 ## LXCFS 2.0.0.beta1 リリースのお知らせ <!-- LXCFS 2.0.0.beta1 release announcement --><span class="text-muted">2016 年 2 月 9 日 <!-- 9th of February 2016 --></span>
 
  * /proc/swaps がサポートされました <!-- Add support for /proc/swaps -->
