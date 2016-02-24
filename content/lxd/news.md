@@ -1,6 +1,48 @@
 ![Download icon](/static/img/containers.png)
 # News
 
+## LXD 2.0.0.beta4 release announcement <span class="text-muted">23rd of February 2016</span>
+
+### The main changes for this release are
+
+ * REST API changes
+    * The API versioning data at /1.0 has changed, now includes, api\_status, api\_version and api\_extensions
+    * Architecture fields are now returned as strings instead of obscure integer
+    * GET /1.0/containers/NAME/state has been reworked, now includes more detailed network information, disk usage information as well as memory consumption data.
+ * New --fast mode for "lxc list" which only lists "cheap" fields
+ * The container architecture is now listed in "lxc info"
+ * Add process count limit (pids cgroup)
+
+### Bugfixes
+ * Fix container creation from remote image alias
+ * Fix Content-Type value for errors
+ * Don't stop containers before asking the user
+ * Re-implement terminal functions through cgo (fixes ppc64el)
+ * Allow access to /dev/zero
+ * tests: Keep pprof self-contained
+ * Use iproute2 instead of bridge-utils
+ * lxd-images: Fix sync
+ * allow cgroupfs mounting on cgns kernels
+ * Optimize container process count (use pid cgroup)
+ * Fix file push permissions
+ * list: Query containers by batch of 10
+ * Only re-balance on host network changes
+ * list: Attempt to optimize the go routines slightly
+
+### Upgrade notes
+
+ * This release breaks backward compatibility with older LXD versions.
+   Please make sure all your clients and servers run the same version.
+ * See notes above for changes to the REST API.
+
+### Try it for yourself
+
+This new LXD release is already available for you to try on our [demo service](/lxd/try-it/).
+
+### Downloads
+The release tarballs can be found on our [download page](/lxd/downloads/).
+
+
 ## LXD 2.0.0.beta3 release announcement <span class="text-muted">18th of February 2016</span>
 
 ### The main changes for this release are
