@@ -1,6 +1,11 @@
 ![Download icon](/static/img/containers.png)
 # News
 
+## LXCFS 2.0.0.rc2 release announcement <span class="text-muted">24th of February 2016</span>
+
+ * This is the second release candidate for 2.0.0
+ * This adds the previously missing config/ directory to the release tarball.
+
 ## LXCFS 2.0.0.rc1 release announcement <span class="text-muted">24th of February 2016</span>
 
  * This is the first release candidate for 2.0.0
