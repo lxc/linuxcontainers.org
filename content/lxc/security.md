@@ -57,6 +57,40 @@ to a random unprivileged user and so would be a generic kernel security bug rath
 LXC upstream is happy to help track such security issue and get in touch with the Linux kernel community  
 to have them resolved as quickly as possible.
 
+# Potential DoS attacks
+LXC doesn't pretend to prevent DoS attacks by default. When running
+multiple untrusted containers or when allowing untrusted users to run
+containers, one should keep a few things in mind and update their
+configuration accordingly:
+
+## Cgroup limits
+LXC inherits cgroup limits from its parent, on my Linux distribution, there are no real limits set.  
+As a result, a user in a container can reasonably easily DoS the host by running a fork bomb,  
+by using all the system's memory or creating network interfaces until the kernel runs out of memory.
+
+This can be mitigated by either setting the relevant lxc.cgroup configuration entries (memory, cpu and pids)  
+or by making sure that the parent user is placed in appropriately configured cgroups at login time.
+
+## User limits
+As with cgroups, the parent's limit is inherited so unprivileged containers cannot have ulimits set to values  
+higher than their parent.
+
+However there is one thing that's worth keeping in mind, ulimits are as they name suggest, tied to a uid at the kernel level.  
+That's a global kernel uid, not a uid inside a user namespace.
+
+That means that if two containers share through identical or overlapping id maps, a common kernel uid, then they also share limits,  
+meaning that a user in a first container can effectively DoS the same user in another container.
+
+To prevent this, untrusted users or containers ought to have entirely separate id maps (ideally of 65536 uids and gids each).
+
+## Shared network bridges
+LXC sets up basic level 2 connectivity for its containers. As a convenience it also provides one default bridge on the system.
+
+As a container connected to a bridge can transmit any level 2 traffic that it wishes, it can effectively do MAC or IP spoofing on the bridge.
+
+When running untrusted containers or when allowing untrusted users to run containers, one should ideally create one bridge per user or per  
+group of untrusted containers and configure /etc/lxc/lxc-usernet such that users may only use the bridges that they have been allocated.
+
 # Reporting security issues
 To ensure security issues can be fixed as quickly as possible and simultaneously  
 in all Linux distributions, issues should be reported either:
