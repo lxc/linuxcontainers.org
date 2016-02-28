@@ -75,7 +75,7 @@ or by making sure that the parent user is placed in appropriately configured cgr
 As with cgroups, the parent's limit is inherited so unprivileged containers cannot have ulimits set to values  
 higher than their parent.
 
-However there is one thing that's worth keeping in mind, ulimits are as they name suggest, tied to a uid at the kernel level.  
+However there is one thing that's worth keeping in mind, ulimits are as their name suggest, tied to a uid at the kernel level.  
 That's a global kernel uid, not a uid inside a user namespace.
 
 That means that if two containers share through identical or overlapping id maps, a common kernel uid, then they also share limits,  
