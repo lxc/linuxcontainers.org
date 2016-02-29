@@ -53,7 +53,7 @@ LXC 開発者は、このようなコンテナは root 権限を使った攻撃�
 They are still valuable in an environment where you are running trusted workloads  
 or where no untrusted task is running as root in the container.
 -->
-特権コンテナは、信用できる作業を実行するような環境や、コンテナ内で root 権限で信用できないタスクが実行されていない環境では今でも役に立ちます。
+特権コンテナは、信頼できる作業を実行するような環境や、コンテナ内で root 権限で信用できないタスクが実行されていない環境では今でも役に立ちます。
 
 <!--
 We are aware of a number of exploits which will let you escape such containers and get full root privileges on the host.  
@@ -104,6 +104,70 @@ LXC upstream is happy to help track such security issue and get in touch with th
 to have them resolved as quickly as possible.
 -->
 LXC 開発者は喜んでこのようなセキュリティ上の問題を追跡することを手伝います。そして可能な限り早く問題を解決するために Linux カーネルコミュニティと連絡を取ります。
+
+# DoS 攻撃の可能性 <!-- Potential DoS attacks -->
+<!--
+LXC doesn't pretend to prevent DoS attacks by default. When running
+multiple untrusted containers or when allowing untrusted users to run
+containers, one should keep a few things in mind and update their
+configuration accordingly:
+-->
+LXC はデフォルトでは DoS 攻撃を防ぐことはありません。複数の信頼できないコンテナが実行中であったり、信頼できないユーザに対してコンテナの実行を許可している場合、いくつかの事項を考慮し、適切に設定を更新しておく必要があります:
+
+## Cgroup による制限 <!-- Cgroup limits -->
+<!--
+LXC inherits cgroup limits from its parent, on my Linux distribution, there are no real limits set.  
+As a result, a user in a container can reasonably easily DoS the host by running a fork bomb,  
+by using all the system's memory or creating network interfaces until the kernel runs out of memory.
+-->
+LXC は cgroup による制限を親 cgroup から継承します。Linux ディストリビューションでは、実際には制限は設定されていません。その結果、コンテナ内のユーザが、fork bomb を実行したり、システムのメモリを全て使ったり、カーネルが out of memory になるまでネットワークインターフェースを作成したりすることで、簡単にホストに対して DoS 攻撃を実行できます。
+
+<!--
+This can be mitigated by either setting the relevant lxc.cgroup configuration entries (memory, cpu and pids)  
+or by making sure that the parent user is placed in appropriately configured cgroups at login time.
+-->
+これは、関係する lxc.cgroup エントリ (memory, cpu, pids) を設定したり、ログイン時に親となるユーザが適切に設定された cgroup 内に配置されるようにすることで軽減できます。
+
+## ユーザに対する制限 <!-- User limits -->
+<!--
+As with cgroups, the parent's limit is inherited so unprivileged containers cannot have ulimits set to values  
+higher than their parent.
+-->
+cgroup のように親の制限が継承されるので、非特権コンテナは親よりも高い値の ulimits を設定できません。
+
+<!--
+However there is one thing that's worth keeping in mind, ulimits are as their name suggest, tied to a uid at the kernel level.  
+That's a global kernel uid, not a uid inside a user namespace.
+-->
+しかし、覚えておくべきことがひとつあります。ulimit は名前が表すように、カーネルレベルで uid と結びついています。これはグローバルのカーネル uid であり、ユーザ名前空間内の uid ではありません。
+
+<!--
+That means that if two containers share through identical or overlapping id maps, a common kernel uid, then they also share limits,  
+meaning that a user in a first container can effectively DoS the same user in another container.
+-->
+もし 2 つのコンテナが同一か重複する id のマッピングで、共通のカーネル uid を共有している場合、制限も共有するということを意味します。そして、あるコンテナ内のユーザは他のコンテナの同じユーザに DoS 攻撃を加えることができることを意味します。
+
+<!--
+To prevent this, untrusted users or containers ought to have entirely separate id maps (ideally of 65536 uids and gids each).
+-->
+これを防ぐために、信頼できないユーザやコンテナは完全に別の id マッピングを持つべきです (理想では、65536 個の uid と gid それぞれについて)。
+
+## ネットワークブリッジの共有 <!-- Shared network bridges -->
+<!--
+LXC sets up basic level 2 connectivity for its containers. As a convenience it also provides one default bridge on the system.
+-->
+LXC はコンテナに対して基本的なレイヤー 2 の接続性を設定します。利便性のために、システムでひとつのデフォルトのブリッジも提供します。
+
+<!--
+As a container connected to a bridge can transmit any level 2 traffic that it wishes, it can effectively do MAC or IP spoofing on the bridge.
+-->
+ブリッジに接続するコンテナは、通信したいどんなレイヤー 2 のトラフィックでも送信できるので、ブリッジ上で MAC アドレスや IP アドレスのスプーフィングを行えます。
+
+<!--
+When running untrusted containers or when allowing untrusted users to run containers, one should ideally create one bridge per user or per  
+group of untrusted containers and configure /etc/lxc/lxc-usernet such that users may only use the bridges that they have been allocated.
+-->
+信頼できないコンテナが実行されていたり、信頼できないユーザにコンテナの実行を許可している場合、理想的には信頼できないコンテナのユーザもしくはグループごとにひとつブリッジを作成すべきです。そして、ユーザに対して割り当てられたブリッジだけを使えるように /etc/lxc/lxc-usernet を設定すべきです。
 
 # セキュリティ上の問題の報告 <!-- Reporting security issues -->
 <!--
