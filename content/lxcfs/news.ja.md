@@ -1,5 +1,15 @@
 # News
 
+## LXCFS 2.0.0.rc2 リリースのお知らせ <!-- LXCFS 2.0.0.rc2 release announcement --><span class="text-muted">2016 年 2 月 24 日 <!-- 24th of February 2016 --></span>
+
+ * このリリースは 2.0.0 に対する第 2 のリリース候補版です <!-- This is the second release candidate for 2.0.0 -->
+ * 前のリリースでリリース tarball に欠けていた config/ ディレクトリを追加しました <!-- This adds the previously missing config/ directory to the release tarball. -->
+
+## LXCFS 2.0.0.rc1 リリースのお知らせ <!-- LXCFS 2.0.0.rc1 release announcement --><span class="text-muted">2016 年 2 月 24 日<!-- 24th of February 2016 --></span>
+
+ * このリリースは 2.0.0 に対する最初のリリース候補版です <!-- This is the first release candidate for 2.0.0 -->
+ * sysvinit、upstart、systemd に対する起動スクリプトを追加しました <!-- This adds sysvinit, upstart and systemd jobs. -->
+
 ## LXCFS 2.0.0.beta2 リリースのお知らせ <!-- LXCFS 2.0.0.beta2 release announcement --><span class="text-muted">2016 年 2 月 19 日 <!-- 19th of February 2016 --></span>
 
  * アンマウントされたコントローラがある場合に PAM モジュールが引き起こすハングアップのバグを修正しました <!-- Fix a bug causing PAM module to hang if there are unmounted controllers -->
