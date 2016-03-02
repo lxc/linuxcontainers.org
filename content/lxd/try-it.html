@@ -158,13 +158,26 @@
                 <div class="panel-collapse collapse" id="tryit_intro_b2"
                      role="tabpanel">
                     <div class="panel-body">
-                        <p>LXD is image based, you can list the available
-                           local images: <pre>lxc image list</pre>
+                        <p>LXD is image based, however by default no
+                           images are loaded into the image store as can
+                           be seen with: <pre>lxc image list</pre>
                         </p>
 
-                        <p>Then launch a first container called "first"
-                           using the "ubuntu" image:
-                           <pre>lxc launch ubuntu first</pre>
+                        <p>LXD knows about 3 default image servers:
+                           <ul>
+                             <li>ubuntu: (for Ubuntu stable images)</li>
+                             <li>ubuntu-daily: (for Ubuntu daily images)</li>
+                             <li>images: (for a bunch of other distributions)</li>
+                           </ul>
+                        </p>
+
+                        <p>The stable Ubuntu images can be listed with:
+                           <pre>lxc image list ubuntu: | less</li>
+                        </p>
+
+                        <p>To launch a first container called "first"
+                           using the Ubuntu 14.04 image, use:
+                           <pre>lxc launch ubuntu:14.04 first</pre>
                         </p>
 
                         <p>Your new container will now be visible in:

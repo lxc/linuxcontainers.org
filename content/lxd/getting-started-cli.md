@@ -55,7 +55,7 @@ must get some images before you can do much with LXD.
 There are three ways to feed that image store:
 
  1. Use a remote LXD as an image server
- 2. Use the lxd-images script to import an image from a non-LXD source
+ 2. Use the built-in image remotes
  3. Manually import one using
 
         lxc image import <file> --alias <name>
@@ -63,31 +63,25 @@ There are three ways to feed that image store:
 ## Using a remote LXD as an image server
 Using a remote image server is as simple as adding it as a remote and just using it:
 
-    lxc remote add images images.linuxcontainers.org
-    lxc launch images:centos/7/amd64 centos
+    lxc remote add images 1.2.3.4
+    lxc launch images:image-name your-container
 
 An image list can be obtained with:
 
     lxc image list images:
 
-## Using lxd-images to import an image
-lxd-images is a python script which knows about non-LXD image servers
-and can pull and import images for you.
+## Using the built-in image remotes
+LXD comes with 3 default remotes providing images:
 
-It currently supports two sources:
+ 1. ubuntu: (for stable Ubuntu images)
+ 2. ubuntu-daily: (for daily Ubuntu images)
+ 3. images: (for a bunch of other distros)
 
- 1. A local busybox image made from your existing busybox binary (used for testing)
- 2. Ubuntu cloud images taken from the official simplestream feed
+To start a container from them, simply do:
 
-Importing a new image can be done with:
-
-    lxd-images import busybox --alias busybox
-    lxd-images import ubuntu --alias ubuntu
-
-And then simply using the image to start containers:
-
-    lxc launch busybox my-busybox
-    lxc launch ubuntu my-ubuntu
+    lxc launch ubuntu:14.04 my-ubuntu
+    lxc launch ubuntu-daily:16.04 my-ubuntu-dev
+    lxc launch images:centos/6/amd64 my-centos
 
 ## Manually importing an image
 If you already have a lxd-compatible image file, you can import it with:
