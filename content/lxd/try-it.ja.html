@@ -156,16 +156,30 @@
                 <div class="panel-collapse collapse" id="tryit_intro_b2"
                      role="tabpanel">
                     <div class="panel-body">
-                        <p><!-- LXD is image based, you can list the available
-                           local images: -->
-                           LXD はイメージベースです。ローカルのイメージリストを以下のように取得できます。
-                           <pre>lxc image list</pre> 
+                        <p><!-- LXD is image based, however by default no
+                           images are loaded into the image store as can
+                           be seen with: -->
+                           LXD はイメージベースです。しかし、デフォルトでは以下のコマンドの結果のように、イメージはロードされていません: <pre>lxc image list</pre>
                         </p>
 
-                        <p><!-- Then launch a first container called "first"
-                           using the "ubuntu" image: -->
-                           それでは "ubuntu" イメージを使って "first" という名前の最初のコンテナを起動してみましょう。
-                           <pre>lxc launch ubuntu first</pre>
+                        <p><!-- LXD knows about 3 default image servers: -->
+                           LXD はデフォルトでイメージサーバが 3 つ登録されています:
+                           <ul>
+                             <li>ubuntu: (Ubuntu stable イメージ用 <!-- for Ubuntu stable images -->)</li>
+                             <li>ubuntu-daily: (Ubuntu daily イメージ用 <!-- for Ubuntu daily images -->)</li>
+                             <li>images: (その他多数のディストリビューション用 <!-- for a bunch of other distributions -->)</li>
+                           </ul>
+                        </p>
+
+                        <p><!-- The stable Ubuntu images can be listed with: -->
+                           stable の Ubuntu イメージは以下のようにリスト表示できます:
+                           <pre>lxc image list ubuntu: | less</pre>
+                        </p>
+
+                        <p><!-- To launch a first container called "first"
+                           using the Ubuntu 14.04 image, use: -->
+                           "first" という名前の最初のコンテナを起動するには、以下のようにします:
+                           <pre>lxc launch ubuntu:14.04 first</pre>
                         </p>
 
                         <p><!-- Your new container will now be visible in: -->
@@ -396,9 +410,9 @@ lxc delete first</pre>
                            LXC 開発元はこのようなサーバを <a href="https://images.linuxcontainers.org">https://images.linuxcontainers.org</a> で運用しています。ここでは、色々な Linux ディストリビューションのイメージを自動的に作成して提供しています。
                         </p>
 
-                        <p><!-- To connect to that image server, do: -->
-                           このイメージサーバに接続するには、以下のように実行します。
-                           <pre>lxc remote add images images.linuxcontainers.org</pre>
+                        <p><!-- It comes pre-added with default LXD but you
+                           can remove it or change it if you don't want it. -->
+                           このサーバはデフォルトで LXD に登録されています。もしこのサーバを使わない場合は、デフォルトの登録を変更したり、削除したりできます。
                         </p>
 
                         <p><!-- You can list the available images with: -->

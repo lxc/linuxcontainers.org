@@ -98,7 +98,7 @@ There are three ways to feed that image store:
 イメージストアにイメージを取得する方法は 3 つあります:
 
  1. イメージサーバとしてリモートの LXD を使う <!-- Use a remote LXD as an image server -->
- 2. lxd-images スクリプトを使って、LXD 用でないものからイメージをインポートする <!-- Use the lxd-images script to import an image from a non-LXD source -->
+ 2. ビルトインされているイメージ用リモートサーバを使う <!-- Use the built-in image remotes -->
  3. 以下のように手動でインポートする <!-- Manually import one using -->
 
         lxc image import <file> --alias <name>
@@ -109,8 +109,8 @@ Using a remote image server is as simple as adding it as a remote and just using
 -->
 リモートのイメージサーバを使うと、リモートサーバとして追加してそれを使うだけですので、とても簡単です:
 
-    lxc remote add images images.linuxcontainers.org
-    lxc launch images:centos/7/amd64 centos
+    lxc remote add images 1.2.3.4
+    lxc launch images:image-name your-container
 
 <!--
 An image list can be obtained with:
@@ -119,36 +119,24 @@ An image list can be obtained with:
 
     lxc image list images:
 
-## lxd-images を使ってイメージをインポートする <!-- Using lxd-images to import an image -->
+## ビルトインされているイメージ用リモートサーバを使う <!-- Using the built-in image remotes -->
 <!--
-lxd-images is a python script which knows about non-LXD image servers
-and can pull and import images for you.
+LXD comes with 3 default remotes providing images:
 -->
-lxd-images は python スクリプトで、LXD 用でないイメージサーバからイメージを取得してインポートできます。
+LXD にはデフォルトでイメージを提供するリモートサーバが 3 つ登録されています:
 
-<!--
-It currently supports two sources:
--->
-現時点では、2 つのソースをサポートしています:
-
- 1. 手元に存在する busyboxy バイナリから busybox イメージを作成する (テスト用) <!-- A local busybox image made from your existing busybox binary (used for testing) -->
- 2. 公式の feed から取得した Ubuntu クラウドイメージ <!-- Ubuntu cloud images taken from the official simplestream feed -->
+ 1. ubuntu: (stable Ubuntu イメージ用 <!-- for stable Ubuntu images -->)
+ 2. ubuntu-daily: (daily Ubuntu イメージ用 <!-- for daily Ubuntu images -->)
+ 3. images: (その他の多数のディストリビューション用 <!-- for a bunch of other distros -->)
 
 <!--
-Importing a new image can be done with:
+To start a container from them, simply do:
 -->
-新しいイメージの取得は以下のように行います:
+これらのビルトインのリモートサーバからコンテナを起動するには、以下のように実行します:
 
-    lxd-images import busybox --alias busybox
-    lxd-images import ubuntu --alias ubuntu
-
-<!--
-And then simply using the image to start containers:
--->
-その後、コンテナを起動するために単にそのイメージを使うだけです:
-
-    lxc launch busybox my-busybox
-    lxc launch ubuntu my-ubuntu
+    lxc launch ubuntu:14.04 my-ubuntu
+    lxc launch ubuntu-daily:16.04 my-ubuntu-dev
+    lxc launch images:centos/6/amd64 my-centos
 
 ## 手動でイメージをインポートする <!-- Manually importing an image -->
 <!--
