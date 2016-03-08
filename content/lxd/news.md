@@ -1,5 +1,34 @@
 ![Download icon](/static/img/containers.png)
 # News
+## LXD 2.0.0.rc2 release announcement <span class="text-muted">7th of March 2016</span>
+
+### The main changes for this release are
+
+ * Add configuration keys for the rest of the CORS headers
+ * Get one step closer to dropping lxd-images, lxd-images is now just a shim
+ * Deprecate support for Go < 1.5 as some of our dependencies dropped 1.4 support
+
+### Bugfixes
+
+ * Fix image import from remote lxd using aliases
+ * Fix creation of extra volatile entries
+ * Fix testsuite for when stdout is a file
+ * Initialize the storage driver before messing with images
+ * Restrict lxd init to root
+ * Only attempt to load containers AFTER the socket is setup
+ * Fix default protocol in image download
+ * Only setup forwarding when an IP is set
+ * client: add default config in NewClientFromInfo
+ * Fix incorrect device type in dbUpdateFromV26
+
+### Try it for yourself
+
+This new LXD release is already available for you to try on our [demo service](/lxd/try-it/).
+
+### Downloads
+The release tarballs can be found on our [download page](/lxd/downloads/).
+
+
 
 ## LXD 2.0.0.rc1 release announcement <span class="text-muted">2nd of March 2016</span>
 
@@ -66,7 +95,6 @@ This new LXD release is already available for you to try on our [demo service](/
 
 ### Downloads
 The release tarballs can be found on our [download page](/lxd/downloads/).
-
 
 
 ## LXD 2.0.0.beta4 release announcement <span class="text-muted">23rd of February 2016</span>
