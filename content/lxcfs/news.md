@@ -5,8 +5,8 @@
 
  * This is the third release candidate for 2.0.0
  * Fixes in this release:
-   * Not mounting lxcfs procfiles when /sys/fs/cgroup is not mounted in container.
-   * Occasional corrupted output in free -m.
+     * Not mounting lxcfs procfiles when /sys/fs/cgroup is not mounted in container.
+     * Occasional corrupted output in free -m.
 
 ## LXCFS 2.0.0.rc2 release announcement <span class="text-muted">24th of February 2016</span>
 
