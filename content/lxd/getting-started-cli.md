@@ -27,18 +27,10 @@ You can install it with:
 
     sudo snappy install lxd.stgraber
 
-After that, LXD can be interacted with through the "lxc" and "lxd-images" commands.
-
-Users of older version of Snappy (current rpi2 image at least) may have to do:
-
-    sudo ln -sf $(find /var/lib/apps/lxd/ -maxdepth 1 -type d | tail -1) /var/lib/apps/lxd/current
-    sudo systemctl restart $(systemctl -a | grep lxd_lxd.*service | awk '{print $1}')
-
-If you end up having to do the above, note that you likely will have to do so with every subsequent update of LXD  
-until the snappy tools are updated on your device through a new system image.
+After that, LXD can be interacted with through the "lxc" command.
 
 It should be noted that the server certificate generation can take a long time if you're working on a device like  
-the rpi2 so it might be a few minutes before LXD will respond to lxc and lxd-images commands.
+the rpi2 so it might be a few minutes before LXD will respond to the lxc command.
 
 ## Other distributions
 There are currently packages for multiple distributions including Gentoo and, of course, Ubuntu.  
