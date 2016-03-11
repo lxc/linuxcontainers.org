@@ -23,7 +23,7 @@
  * profiles: don't mask error message when not found
  * mounting: only block devices hold filesystems
  * Rework event locking
- * Fix panic due to concurent read/edit of container lock
+ * Fix panic due to concurrent read/edit of container lock
  * zfs: Skip the pool header line
  * Make it clear that the init arguments only apply in auto mode
  * Fix error message when snapshotting with existing name

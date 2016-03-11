@@ -1,6 +1,54 @@
 ![Download icon](/static/img/containers.png)
 # News
 
+## LXD 2.0.0.rc3 リリースのお知らせ <!-- LXD 2.0.0.rc3 release announcement --><span class="text-muted">2016 年 3 月 11 日 <!-- 11th of March 2016 --></span>
+
+### このリリースの主な変更点 <!-- The main changes for this release are -->
+
+ * GET /1.0/containers/NAME/snapshots/SNAPNAME はスナップショットに含まれる設定とデバイスを返すようになりました <!-- GET /1.0/containers/NAME/snapshots/SNAPNAME now returns the configuration and devices included in the snapshot -->
+ * デーモンの使う HTTP プロキシに関する 3 つの新たな設定項目が導入されました <!-- Three new configuration options have been introduced to configure the daemon to use an HTTP proxy -->
+    * core.proxy\_https (設定されていない場合は HTTPS\_PROXY 環境変数を使用します <!-- if not set, uses HTTPS\_PROXY env variable -->)
+    * core.proxy\_http (設定されていない場合は HTTP\_PROXY 環境変数を使用します <!-- if not set, uses HTTP\_PROXY env variable -->)
+    * core.proxy\_ignore\_hosts (設定されていない場合は NO\_PROXY 環境変数を使用します <!-- if not set, uses NO\_PROXY env variable -->)
+ * simplestream のデータを 1 時間キャッシュするようになりました。リモートサーバに何度もアクセスを行うことがありません <!-- Cache remote simplestream data for an hour in the daemon so we don't hammer the remote server -->
+ * LXD サーバから取得したイメージが自動で更新できるようになりました <!-- Allow for auto-update of images coming from a LXD server -->
+
+### バグ修正 <!-- Bugfixes -->
+
+ * ConnectInfo が RemoteConfig を使うように変更しました <!-- Change ConnectInfo to take a RemoteConfig. -->
+ * カーネルの多重マウントを防ぐ回避策を講じました <!-- Workaround kernel overmounting protection -->
+ * migration: ファイルシステムの移動を少しスマートにするようにしました (訳注: ライブマイグレーション時、コンテナの稼働中にコンテナのファイルシステムやスナップショットを移動したあとにチェックポイントと最後の同期を行うようにした)<!-- attempt to be slightly smart about moving filesystems -->
+ * tests: UTC で比較を行うことでエラーを防ぐようにしました <!-- disarm the gremlins by comparing things in UTC -->
+ * zfs: スナップショットだけを send する場合の処理を修正しました <!-- fix handling of the "snapshot only" send case -->
+ * LVM LV サイズを減らせるようになりました。そのテストを追加しました <!-- Allow reducing the LVM LV size and update tests -->
+ * profiles: 見つからない場合のエラーメッセージをマスクしないようにしました <!-- don't mask error message when not found -->
+ * mounting: ブロックデバイスの時だけファイルシステムをマウントするようにしました <!-- only block devices hold filesystems -->
+ * イベントロッキングを作りなおしました <!-- Rework event locking -->
+ * コンテナロックの同時読み書きによるパニックを修正しました <!-- Fix panic due to concurent read/edit of container lock -->
+ * zfs: pool のヘッダ行をスキップするようにしました <!-- Skip the pool header line -->
+ * auto モードの時だけ適用される init 引数を明確にしました <!-- Make it clear that the init arguments only apply in auto mode -->
+ * 存在する名前でスナップショットを取得しようとした場合のエラーメッセージを修正しました <!-- Fix error message when snapshotting with existing name -->
+ * lvm: エラーをエラーとしてログに書くようにしました <!-- make errors log as errors -->
+ * NewClient が呼ばれた時はクライアント証明書を生成しないようにしました <!-- Don't generate client certificates when calling NewClient -->
+ * イメージ名の解析を修正しました <!-- Fix parsing image names -->
+ * forkgetfile と forkputfile からのエラーをフォワードするようにしました <!-- Forward errors from forkgetfile and forkputfile -->
+ * https\_address の変更をより信頼性が高くなるようにしました <!-- Make changing https\_address more reliable -->
+ * migration: スナップショット送信のクリーンアップを defer しないようにしました <!-- don't defer cleanup of sending snapshots -->
+
+### 試用環境 <!-- Try it for yourself -->
+
+<!--
+This new LXD release is already available for you to try on our [demo service](/lxd/try-it/).
+-->
+この新しい LXD のリリースが、すでに私たちの [デモサービス](/ja/lxd/try-it/) で利用できます。
+
+### ダウンロード <!-- Downloads -->
+<!--
+The release tarballs can be found on our [download page](/lxd/downloads/).
+-->
+このリリースの tarball は [ダウンロードページ](/lxd/downloads/) から取得できます。
+
+
 ## LXD 2.0.0.rc2 リリースのお知らせ <!-- LXD 2.0.0.rc2 release announcement -><span class="text-muted">2016 年 3 月 7 日<!-- 7th of March 2016 --></span>
 
 ### このリリースの主な変更点 <!-- The main changes for this release are -->
