@@ -43,29 +43,15 @@ LXD はストア内の Snap パッケージとして Ubuntu Core で利用でき
     sudo snappy install lxd.stgraber
 
 <!--
-After that, LXD can be interacted with through the "lxc" and "lxd-images" commands.
+After that, LXD can be interacted with through the "lxc" command.
 -->
-インストール後は、LXD は "lxc" と "lxd-images" コマンド経由で操作できます。
-
-<!--
-Users of older version of Snappy (current rpi2 image at least) may have to do:
--->
-古いバージョンの Snappy (少なくとも最新の rpi2 イメージ) のユーザは以下のように実行する必要があります。
-
-    sudo ln -sf $(find /var/lib/apps/lxd/ -maxdepth 1 -type d | tail -1) /var/lib/apps/lxd/current
-    sudo systemctl restart $(systemctl -a | grep lxd_lxd.*service | awk '{print $1}')
-
-<!--
-If you end up having to do the above, note that you likely will have to do so with every subsequent update of LXD  
-until the snappy tools are updated on your device through a new system image.
--->
-上記を行っても、デバイス上で Snappy ツールが新しいシステムイメージ経由で更新されるまでは、LXD の更新ごとに上記を実行する必要があるでしょう。
+インストール後、LXD は "lxc" コマンド経由で操作できます。
 
 <!--
 It should be noted that the server certificate generation can take a long time if you're working on a device like  
-the rpi2 so it might be a few minutes before LXD will respond to lxc and lxd-images commands.
+the rpi2 so it might be a few minutes before LXD will respond to the lxc command.
 -->
-もし、rpi2 のようなデバイス上で実行している場合は、サーバ証明書の生成には長い時間がかかる可能性があることに注意が必要です。lxc と lxd-images コマンドから応答が返るまで数分かかるかもしれません。
+もし、rpi2 のようなデバイス上で実行している場合は、サーバ証明書の生成には長い時間がかかる可能性があることに注意が必要です。lxc コマンドから応答が返るまで数分かかるかもしれません。
 
 ## 他のディストリビューション <!-- Other distributions -->
 <!--
