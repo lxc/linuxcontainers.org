@@ -1,6 +1,11 @@
 ![Download icon](/static/img/containers.png)
 # News
 
+## LXCFS 2.0.0.rc4 release announcement <span class="text-muted">11th of March 2016</span>
+
+ * This is the fourth release candidate for 2.0.0
+ * Fix from stgraber to the mount hook and upstart job.
+
 ## LXCFS 2.0.0.rc3 release announcement <span class="text-muted">7th of March 2016</span>
 
  * This is the third release candidate for 2.0.0
