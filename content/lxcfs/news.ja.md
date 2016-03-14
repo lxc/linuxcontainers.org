@@ -1,5 +1,10 @@
 # News
 
+## LXCFS 2.0.0.rc4 リリースのお知らせ <!-- LXCFS 2.0.0.rc4 release announcement --><span class="text-muted">2016 年 3 月 11 日 <!-- 11th of March 2016 --></span>
+
+ * このリリースは 2.0.0 に対する第 4 のリリース候補版です <!-- This is the fourth release candidate for 2.0.0 -->
+ * Stéphane Graber 氏によるマウントフックと upstart ジョブファイルの修正 <!-- Fix from stgraber to the mount hook and upstart job. -->
+
 ## LXCFS 2.0.0.rc3 リリースのお知らせ <!-- LXCFS 2.0.0.rc3 release announcement --><span class="text-muted">2016 年 3 月 7 日 <!-- 7th of March 2016 --></span>
 
  * このリリースは 2.0.0 に対する第 3 のリリース候補版です <!-- This is the third release candidate for 2.0.0 -->
