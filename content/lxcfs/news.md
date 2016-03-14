@@ -1,6 +1,11 @@
 ![Download icon](/static/img/containers.png)
 # News
 
+## LXCFS 2.0.0.rc5 release announcement <span class="text-muted">14th of March 2016</span>
+
+ * This is the fifth release candidate for 2.0.0
+ * Fixes libpam-cgfs mis-chowning systemd cgroups when running (for instance) 'sudo'.
+
 ## LXCFS 2.0.0.rc4 release announcement <span class="text-muted">11th of March 2016</span>
 
  * This is the fourth release candidate for 2.0.0
