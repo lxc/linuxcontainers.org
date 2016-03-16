@@ -9,4 +9,4 @@ LXD はまだ非常に活発に開発されている途中で、REST API は sta
 The current API design can be found here:
 -->
 最新の API の設計は以下でご覧いただけます:  
-[https://github.com/lxc/lxd/blob/master/specs/rest-api.md](https://github.com/lxc/lxd/blob/master/specs/rest-api.md)
+[https://github.com/lxc/lxd/blob/master/doc/rest-api.md](https://github.com/lxc/lxd/blob/master/doc/rest-api.md)

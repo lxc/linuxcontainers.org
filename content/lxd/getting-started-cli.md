@@ -84,7 +84,7 @@ And then start a container using:
 
     lxc launch my-alias my-container
 
-See the [image specification for more details](https://github.com/lxc/lxd/blob/master/specs/image-handling.md).
+See the [image specification for more details](https://github.com/lxc/lxd/blob/master/doc/image-handling.md).
 
 # Creating and using your first container
 Assuming that you imported an Ubuntu cloud image using the "ubuntu" alias, you can create your first container with:

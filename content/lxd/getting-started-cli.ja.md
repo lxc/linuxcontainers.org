@@ -140,9 +140,9 @@ And then start a container using:
     lxc launch my-alias my-container
 
 <!--
-See the [image specification for more details](https://github.com/lxc/lxd/blob/master/specs/image-handling.md).
+See the [image specification for more details](https://github.com/lxc/lxd/blob/master/doc/image-handling.md).
 -->
-詳しくは[イメージの仕様](https://github.com/lxc/lxd/blob/master/specs/image-handling.md)をご覧ください。
+詳しくは[イメージの仕様](https://github.com/lxc/lxd/blob/master/doc/image-handling.md)をご覧ください。
 
 # コンテナの作成と使用 <!-- Creating and using your first container -->
 <!--
