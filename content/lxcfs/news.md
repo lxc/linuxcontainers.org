@@ -1,6 +1,11 @@
 ![Download icon](/static/img/containers.png)
 # News
 
+## LXCFS 2.0.0.rc6 release announcement <span class="text-muted">17th of March 2016</span>
+
+ * This is the sixth release candidate for 2.0.0
+ * Adds support for the systemd cgroup naming scheme used in 14.04.
+
 ## LXCFS 2.0.0.rc5 release announcement <span class="text-muted">14th of March 2016</span>
 
  * This is the fifth release candidate for 2.0.0
