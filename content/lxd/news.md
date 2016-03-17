@@ -1,5 +1,46 @@
 ![Download icon](/static/img/containers.png)
 # News
+## LXD 2.0.0.rc4 release announcement <span class="text-muted">16th of March 2016</span>
+
+### The main changes for this release are
+
+ * Support for recursive bind-mounts (recursive property on disk entries)
+ * Add a new "ERROR" state for containers, used to indicate a communication problem with LXC
+ * Make it possible to have templates only apply for non-existing files (create\_only property)
+ * All the specifications have been updated and moved to the doc/ directory
+ * /dev/lxd access is now restricted to uid 0 in the container
+
+### Bugfixes
+
+ * devices client: only print success message when successful
+ * Fix devlxd failing to detect container
+ * Have "device show" print yaml
+ * specs: Clarify image handling
+ * specs: Remove command-line-user-experience
+ * specs: Remove dia database diagram
+ * specs: Clarify the daemon spec
+ * specs: Update /dev/lxd spec to match current state
+ * specs: Update environment variables list
+ * specs: Update SSL spec to match current state
+ * specs: Re-format the migration document
+ * specs: Update requirements
+ * specs: Update storage backend spec
+ * specs: Update userns to match reality
+ * docker profile: add the apparmor enabled overmount
+ * More strictly parse remote URLs
+ * Fix devlxd access outside of an exec session
+ * Return better errors for public and simplestream remotes
+ * Block sys\_rawio by default
+
+
+### Try it for yourself
+
+This new LXD release is already available for you to try on our [demo service](/lxd/try-it/).
+
+### Downloads
+The release tarballs can be found on our [download page](/lxd/downloads/).
+
+
 ## LXD 2.0.0.rc3 release announcement <span class="text-muted">11th of March 2016</span>
 
 ### The main changes for this release are
