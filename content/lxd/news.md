@@ -1,5 +1,37 @@
 ![Download icon](/static/img/containers.png)
 # News
+## LXD 2.0.0.rc5 release announcement <span class="text-muted">21st of March 2016</span>
+
+### The main changes for this release are
+
+ * Fix DELETE /1.0/images/<fingerprint> to actually be Async. This is a
+   minor API change to match the specification and will break backward
+   compatibility with older clients (only when performing image deletion).
+ * The deprecated lxd-images script has now been entirely removed.
+
+### Bugfixes
+
+ * Improve error reporting on image POST
+ * Fix error handling logic around snapshots
+ * Fix container shutdown to actually happen in parallel
+ * Document 'auto\_update' parameter for 'POST /1.0/images'
+ * stateful start: rework behavior
+ * stateful snapshots: rework behavior
+ * Bind-mount mqueue if unprivileged
+ * update documentation on using docker in containers
+ * bump the monitor timeout to 5s
+ * lxd-bridge: Some tweaks
+
+
+### Try it for yourself
+
+This new LXD release is already available for you to try on our [demo service](/lxd/try-it/).
+
+### Downloads
+The release tarballs can be found on our [download page](/lxd/downloads/).
+
+
+
 ## LXD 2.0.0.rc4 release announcement <span class="text-muted">16th of March 2016</span>
 
 ### The main changes for this release are
@@ -31,7 +63,6 @@
  * Fix devlxd access outside of an exec session
  * Return better errors for public and simplestream remotes
  * Block sys\_rawio by default
-
 
 ### Try it for yourself
 
