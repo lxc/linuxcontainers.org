@@ -1,6 +1,12 @@
 ![Download icon](/static/img/containers.png)
 # News
 
+## LXCFS 2.0.0.rc7 release announcement <span class="text-muted">21st of March 2016</span>
+
+ * This is the seventh release candidate for 2.0.0
+ * This includes some important fixes to the upstart jobs and mount hooks
+ * Makes the reload handler async-safe, and a few more posix compliancy fixes.
+
 ## LXCFS 2.0.0.rc6 release announcement <span class="text-muted">17th of March 2016</span>
 
  * This is the sixth release candidate for 2.0.0
