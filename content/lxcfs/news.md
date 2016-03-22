@@ -1,6 +1,11 @@
 ![Download icon](/static/img/containers.png)
 # News
 
+## LXCFS 2.0.0.rc8 release announcement <span class="text-muted">21st of March 2016</span>
+
+ * This is the eight release candidate for 2.0.0
+ * This implements access(2) which is required by the lxcfs cgfsng driver.
+
 ## LXCFS 2.0.0.rc7 release announcement <span class="text-muted">21st of March 2016</span>
 
  * This is the seventh release candidate for 2.0.0
