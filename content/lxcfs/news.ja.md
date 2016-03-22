@@ -1,5 +1,16 @@
 # News
 
+## LXCFS 2.0.0.rc8 release announcement <span class="text-muted">21st of March 2016</span>
+
+ * このリリースは 2.0.0 に対する第 8 のリリース候補版です <!-- This is the eight release candidate for 2.0.0 -->
+ * lxcfs cgfsng ドライバで使う access(2) を実装しました <!-- This implements access(2) which is required by the lxcfs cgfsng driver. -->
+
+## LXCFS 2.0.0.rc7 release announcement <span class="text-muted">21st of March 2016</span>
+
+ * このリリースは 2.0.0 に対する第 7 のリリース候補版です <!-- This is the seventh release candidate for 2.0.0 -->
+ * このリリースには、upstart job と (LXC 用の) マウントフックに関する重要な修正がいくつか含まれています <!-- This includes some important fixes to the upstart jobs and mount hooks -->
+ * リロードハンドラを async セーフにしました。また、posix 互換に関する修正をいくつか行いました <!-- Makes the reload handler async-safe, and a few more posix compliancy fixes. -->
+
 ## LXCFS 2.0.0.rc6 release announcement <span class="text-muted">17th of March 2016</span>
 
  * このリリースは 2.0.0 に対する第 6 のリリース候補版です <!-- This is the sixth release candidate for 2.0.0 -->
