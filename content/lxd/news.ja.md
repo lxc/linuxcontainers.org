@@ -1,6 +1,47 @@
 ![Download icon](/static/img/containers.png)
 # News
 
+## LXD 2.0.0.rc6 リリースのお知らせ <!-- LXD 2.0.0.rc6 release announcement --><span class="text-muted">2016 年 3 月 23 日 <!-- 23rd of March 2016 --></span>
+
+### このリリースの主な変更点 <!-- The main changes for this release are -->
+
+* 新たにデーモンに "setup mode" が追加されました。これは LXD デーモンが起動した後、コンテナが起動し始める前に、LXD デーモンに対して設定を行う間に使う状態です
+   <!-- New daemon "setup mode" to be used to feed configuration to the LXD
+   daemon after startup and before it starts spawning containers. -->
+ * "lxc config device" と "lxc profile device" コマンドに "get"、"set"、"unset" コマンドを追加しました <!-- The "get", "set" and "unset" commands have been added to "lxc config device" and "lxc profile device" -->
+ * "lxc list" で壊れたコンテナを表示しないのではなく "ERROR" と表示するようになりました <!-- Broken containers are now marked as "ERROR" in "lxc list" rather than being hidden -->
+
+
+### バグ修正 <!-- Bugfixes -->
+
+ * lxd init: サーバアドレスの指定にはポートは不要であることを表示するようにしました <!-- clarify no port is wanted with server address -->
+ * lxd init: 空のパスワードを受け付けるようになりました <!-- accept empty trust password -->
+ * lxd init: 8443 番ポートを推奨するように表示するようにしました <!-- recommend port 8843 -->
+ * README: docker と default プロファイルを適用するようにドキュメントに記載しました (訳注: LXD コンテナ内部で docker を動作させる場合) <!-- document composing docker and default profiles. -->
+ * IsMock を MockMode にリネームしました (訳注: プログラム内部の変数の名前の話) <!-- Rename IsMock to MockMode -->
+ * デーモン初期化処理をきれいに整理しました <!-- Cleanup daemon initialization -->
+ * startDaemon 関数を消去しました <!-- Remove the startDaemon function -->
+ * main.go 内の関数名を整えました <!-- Cleanup function names in main.go -->
+ * waitready の改良を行いました (訳注: デーモンが内部的にきちんと処理可能状態になるのを待つようになった)<!-- Improve waitready -->
+ * 新しいデバイスノードのパーミッションの問題を修正しました <!-- Fix permissions of new devices nodes -->
+ * ブリッジが無効化されていても停止できるようになりました <!-- Allow the bridge to be brought down even if disabled -->
+ * いくつか lxd-bridge の修正を行いました <!-- Some more lxd-bridge fixes -->
+ * lxd-bridge: shellcheck の結果が良くなるように修正しました <!-- Make shellcheck happy -->
+
+### 試用環境 <!-- Try it for yourself -->
+
+<!--
+This new LXD release is already available for you to try on our [demo service](/lxd/try-it/).
+-->
+この新しい LXD のリリースが、すでに私たちの [デモサービス](/ja/lxd/try-it/) で利用できます。
+
+### ダウンロード <!-- Downloads -->
+<!--
+The release tarballs can be found on our [download page](/lxd/downloads/).
+-->
+このリリースの tarball は [ダウンロードページ](/lxd/downloads/) から取得できます。
+
+
 ## LXD 2.0.0.rc5 リリースのお知らせ <!-- LXD 2.0.0.rc5 release announcement --><span class="text-muted">2016 年 3 月 21 日 <!-- 21st of March 2016 --></span>
 
 ### このリリースの主な変更点 <!-- The main changes for this release are -->
