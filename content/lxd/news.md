@@ -14,7 +14,7 @@
 
  * lxd init: clarify no port is wanted with server address
  * lxd init: accept empty trust password
- * lxd init: recommend port 8843
+ * lxd init: recommend port 8443
  * README: document composing docker and default profiles.
  * Rename IsMock to MockMode
  * Cleanup daemon initialization
