@@ -1,5 +1,33 @@
 ![Download icon](/static/img/containers.png)
 # News
+## LXD 2.0.0.rc7 release announcement <span class="text-muted">28th of March 2016</span>
+
+### The main changes for this release are
+
+ * "lxc info" now reports resource consumption
+ * Improved bash completions
+ * Implement container creation from image properties
+
+### Bugfixes
+
+ * exec: remove dead code path
+ * exec: send initial window size
+ * exec: client: don't always send window size
+ * exec: only access terminal size in interactive mode
+ * docs: s/initial/Initial
+ * Tests: Don't translate lxc output for parsing it.
+ * Workaround a URL parser issue
+ * Clarify the ZFS restore error
+ * lxd-bridge: Don't fail due to missing IPv6
+
+### Try it for yourself
+
+This new LXD release is already available for you to try on our [demo service](/lxd/try-it/).
+
+### Downloads
+The release tarballs can be found on our [download page](/lxd/downloads/).
+
+
 ## LXD 2.0.0.rc6 release announcement <span class="text-muted">23rd of March 2016</span>
 
 ### The main changes for this release are
