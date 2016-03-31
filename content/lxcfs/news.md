@@ -1,6 +1,10 @@
 ![Download icon](/static/img/containers.png)
 # News
 
+## LXCFS 2.0.0 release announcement <span class="text-muted">31st of March 2016</span>
+
+ * We are happy to release version 2.0.0 of lxcfs.
+
 ## LXCFS 2.0.0.rc9 release announcement <span class="text-muted">29st of March 2016</span>
 
  * This is the ninth release candidate for 2.0.0
