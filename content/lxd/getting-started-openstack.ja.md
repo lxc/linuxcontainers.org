@@ -8,16 +8,16 @@ Nova LXD プロジェクトは OpenStack クラウドの一部として、LXD �
 ## マニュアルインストール <!-- Manual installation --> - Ubuntu server
 
 <!--
-Nova LXD is available in Ubuntu 15.10;  The Nova LXD driver is installed on Nova Compute servers only:
+Nova LXD is available in Ubuntu 16.10;  The Nova LXD driver is installed on Nova Compute servers only:
 -->
-Nova LXD は Ubuntu 15.10 で利用できます。Nova LXD ドライバは Nova Compute サーバだけにインストールされます。
+Nova LXD は Ubuntu 16.10 で利用できます。Nova LXD ドライバは Nova Compute サーバだけにインストールされます。
 
-    sudo apt-get install nova-compute-lxd
+    sudo apt-get install nova-lxd
 
 <!--
-The 'nova-compute-lxd' package ensures that the nova-compute daemon is started with the correct hypervisor driver for LXD; however the 'nova' user must have group membership of the 'lxd' group to have access to manage LXD containers:
+The 'nova-lxd' package ensures that the nova-compute daemon is started with the correct hypervisor driver for LXD; however the 'nova' user must have group membership of the 'lxd' group to have access to manage LXD containers:
 -->
-'nova-compute-lxd' パッケージは、nova-compute デーモンが LXD に対する正しいハイパーバイザードライバとともに起動することを保証します。しかし、LXD コンテナ管理に必要なアクセス権を持つために 'lxd' グループのメンバーである必要があります。
+'nova-lxd' パッケージは、nova-compute デーモンが LXD に対する正しいハイパーバイザードライバとともに起動することを保証します。しかし、LXD コンテナ管理に必要なアクセス権を持つために 'lxd' グループのメンバーである必要があります。
 
     sudo usermod -G lxd -a nova
     sudo service nova-compute restart
@@ -52,14 +52,12 @@ Bundle が LVM を使ってコンテナルートファイルシステム用の�
 ## OpenStack 用の LXD イメージ <!-- LXD images for OpenStack -->
 
 <!--
-LXD does not support the use of the qcow2 image format used for KVM; LXD requires use of root filesystem archive based images. Canonical publish Ubuntu images of the required format:
+LXD does not support the use of the qcow2 image format used for KVM; LXD requires use of "raw" filesystem archive based images. Canonical publish Ubuntu images of the required format:
 -->
-LXD は KVM で使われる qcow2 イメージフォーマットの使用はサポートしていません。LXD にはイメージベースのルートファイルシステムのアーカイヴの使用が必要です。Canonical は必要なフォーマットの Ubuntu イメージを公開しています。
+LXD は KVM で使われる qcow2 イメージフォーマットの使用はサポートしていません。LXD にはイメージベースの "raw" ファイルシステムのアーカイヴの使用が必要です。Canonical は必要なフォーマットの Ubuntu イメージを公開しています。
 
     glance image-create --name="trusty" --public --progress \
-        --container-format=bare --disk-format=root-tar \
-        --property architecture="x86_64" \
-        --property hypervisor_type=lxc \
+        --container-format=bare --disk-format=raw \
         --copy-from http://cloud-images.ubuntu.com/trusty/current/trusty-server-cloudimg-amd64-root.tar.gz
 
 ## コンテナの作成 <!-- Creating containers -->
