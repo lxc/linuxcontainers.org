@@ -10,20 +10,26 @@ Specifically, it's providing two main things
 -->
 具体的には以下の 2 つを提供します。
 
- * CGManager を使って動作する、コンテナ向けの cgroupfs のようなツリー <!-- A cgroupfs-like tree which is container aware and works using CGManager. -->
  * /proc のファイルに重ねてバインドマウントできる、Cgroup を元にした値を提供するファイル群 <!-- A set of files which can be bind-mounted over their /proc originals to provide CGroup-aware values. -->
+ * コンテナ向けの cgroupfs のようなツリー <!-- A cgroupfs-like tree which is container aware. -->
 
 <!--
-The code is pretty simple, written in C using libnih and the CGManager API and the resulting filesystem  
-can be used on any system that supports FUSE and CGManager.
+The code is pretty simple, written in C using libfuse and glib.
 -->
-コードはとてもシンプルで、libnih と CGManager API を使って C 言語で書かれており、提供されるファイルシステムは FUSE と CGManager をサポートするシステムで使えます。
+コードはとてもシンプルで、libfuse と glib を使って C 言語で書かれています。
 
 <!--
 The main driver for this work was the need to run systemd based containers as a regular unprivileged user  
 while still allowing systemd inside the container to interact with cgroups.
 -->
 この動作を行うメインのドライバーは、コンテナ内の systemd が cgroup を扱いながら、通常の非特権ユーザが systemd ベースのコンテナを実行するのに必要でした。
+
+<!--
+Now with the introduction of the cgroup namespace in the Linux kernel, that part is no longer necessary  
+on recent kernels and focus is now on making containers feel more like a real independent system through  
+the proc masking feature.
+-->
+Linux カーネルへの cgroup namespace の導入により、この機能は新しいカーネルでは不要になりました。そして、proc をマスキングする機能により、コンテナを本当の独立したシステムを使っているように見せる機能にフォーカスを当てています。(訳注: 3.15 カーネルの時点では cgroup namespace はまだマージされていません)
 
 # ライセンス <!-- Licensing -->
 
