@@ -1,6 +1,39 @@
 ![Download icon](/static/img/containers.png)
 # News
 
+## LXD 2.0.0.rc8 リリースのお知らせ <!-- LXD 2.0.0.rc8 release announcement --><span class="text-muted">2016 年 3 月 31 日 <!-- 31st of March 2016 --></span>
+
+### このリリースの主な変更点 <!-- The main changes for this release are -->
+
+ * LVM ボリュームサイズが環境変数でなく、設定項目として設定できるようになりました <!-- The LVM volume size is now configurable through configuration rather than environment variables -->
+ * "lxc image alias list" で他のリストコマンドのようなフィルタリングが使えるようになりました <!-- "lxc image alias list" now supports filtering like the other list commands -->
+
+### Bugfixes
+
+ * exec の際の初期サイズ (高さ、幅) の修正を行いました <!-- Fix initial exec size -->
+ * パケット送信数の値が間違っていたのを修正しました <!-- Fix wrong packets sent value -->
+ * 長いパス名で RemoveAll が失敗していたことに対する回避策を採りました <!-- Workaround RemoveAll failures on long paths -->
+ * doc: Markdown の修正 <!-- Fix bad markdown -->
+ * コンテナの開始時に全てのテンプレートを適用するようにしました <!-- Apply all templates at container startup time -->
+ * simplestreams: コードをクリーンアップしました <!-- cleanup -->
+ * コマンドの実行に fork を使うようにしました <!-- Use fork for command execution -->
+ * apparmor プロファイルのアンロードが失敗したことを致命的なエラーではないようにしました <!-- Failure to unload the apparmor profile isn't fatal -->
+ * コンテナの停止が失敗したときのデッドロックを防ぎました <!-- Prevent deadlock on container stop failure -->
+
+### 試用環境 <!-- Try it for yourself -->
+
+<!--
+This new LXD release is already available for you to try on our [demo service](/lxd/try-it/).
+-->
+この新しい LXD のリリースが、すでに私たちの [デモサービス](/ja/lxd/try-it/) で利用できます。
+
+### ダウンロード <!-- Downloads -->
+<!--
+The release tarballs can be found on our [download page](/lxd/downloads/).
+-->
+このリリースの tarball は [ダウンロードページ](/lxd/downloads/) から取得できます。
+
+
 ## LXD 2.0.0.rc7 リリースのお知らせ <!-- LXD 2.0.0.rc7 release announcement --><span class="text-muted">2016 年 3 月 28 日 <!-- 28th of March 2016 --></span>
 
 ### このリリースの主な変更点 <!-- The main changes for this release are -->
