@@ -1,5 +1,32 @@
 ![Download icon](/static/img/containers.png)
 # News
+## LXD 2.0.0.rc8 release announcement <span class="text-muted">31st of March 2016</span>
+
+### The main changes for this release are
+
+ * The LVM volume size is now configurable through configuration rather than environment variables
+ * "lxc image alias list" now supports filtering like the other list commands
+
+### Bugfixes
+
+ * Fix initial exec size
+ * Fix wrong packets sent value
+ * Workaround RemoveAll failures on long paths
+ * doc: Fix bad markdown
+ * Apply all templates at container startup time
+ * simplestreams: cleanup
+ * Use fork for command execution
+ * Failure to unload the apparmor profile isn't fatal
+ * Prevent deadlock on container stop failure
+
+### Try it for yourself
+
+This new LXD release is already available for you to try on our [demo service](/lxd/try-it/).
+
+### Downloads
+The release tarballs can be found on our [download page](/lxd/downloads/).
+
+
 ## LXD 2.0.0.rc7 release announcement <span class="text-muted">28th of March 2016</span>
 
 ### The main changes for this release are
