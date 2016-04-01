@@ -1,5 +1,9 @@
 # News
 
+## LXCFS 2.0.0 release announcement <span class="text-muted">31st of March 2016</span>
+
+* lxcfs バージョン 2.0.0 をリリースできてハッピーです! <!-- We are happy to release version 2.0.0 of lxcfs. -->
+
 ## LXCFS 2.0.0.rc9 release announcement <span class="text-muted">29st of March 2016</span>
 
  * このリリースは 2.0.0 に対する第 9 のリリース候補版です <!-- This is the ninth release candidate for 2.0.0 -->
