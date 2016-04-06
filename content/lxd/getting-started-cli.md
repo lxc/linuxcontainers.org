@@ -16,8 +16,8 @@ and re-open your user session or use the "newgrp lxd" command in the shell you'r
 
     newgrp lxd
 
-Note that for maximum performance, it's recommended to have /var/lib/lxd on a btrfs filesystem or setup ZFS or LVM  
-and configure LXD to use a ZFS pool or LVM VG. The "lxd init" command can help you setup LXD (only for ZFS so far):
+Then to do the initial configuration of the LXD daemon, including, if you want to, setting up optimized storage (ZFS),  
+making the deamon visible on the network and configuring networking for the containers:
 
     sudo lxd init
 
