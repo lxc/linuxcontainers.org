@@ -53,7 +53,7 @@ This release was made possible by contributions (720 commits) from a total of 96
     * config: lxc.network.macvlan.mode: Added support for the "passthru" mode
     * config: lxc.rootfs.backend: Allows to override the storage backend (bypasses auto-detection)
     * config: New nesting.conf configuration file to setup container nesting
-    * hooks: New LXC\_CGNS\_AWARE environment variable, set to 1 if the kernel supports the cgroup namespace
+    * hooks: New LXC\_CGNS\_AWARE environment variable, set to 1 if LXC supports the cgroup namespace (the kernel however may not)
     * hooks: New LXC\_SRC\_NAME environment variable is set in clone hook with the original container name
     * hooks: New LXC\_TARGET environment variable is set with the container goal (stop or reboot)
     * logging: Updated logging timestamps to be a bit more readable
