@@ -58,7 +58,7 @@ This release was made possible by contributions (720 commits) from a total of 96
     * hooks: New LXC\_TARGET environment variable is set with the container goal (stop or reboot)
     * logging: Updated logging timestamps to be a bit more readable
     * lxc-usernet: Support for containers usning a veth interface without bridging
-    * lxc-usernet: Support for group-based quotas (use the % prefix)
+    * lxc-usernet: Support for group-based quotas (use the @ prefix)
     * network: The bridge interface MTU is now used as the default container interface MTU
     * start: The process title is now renamed to be easier to read
     * storage: New Ceph RBD storage backend
