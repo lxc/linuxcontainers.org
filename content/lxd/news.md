@@ -1,5 +1,43 @@
 ![Download icon](/static/img/containers.png)
 # News
+## LXD 2.0.0.rc9 release announcement <span class="text-muted">6th of April 2016</span>
+
+### The main changes for this release are
+
+ * The 1.0 API is now considered stable
+ * A new lxd-benchmark tool has been added as part of the testsuite
+ * The client has been translated into Japanese
+
+### Bugfixes
+
+ * core: Check that the target is set on alias update
+ * core: Don't use the cpu map from /proc/self/status
+ * core: Fix all non-gzip compression algorithms
+ * core: Improve ZFS reliability and performance
+ * core: lxcbr0 is no more, replace it by lxdbr0
+ * core: Prevent container actions while in setup mode
+ * core: Set lxc.rootfs.bdev (performance improvement)
+ * core: Stop the storage code after we're done remapping
+ * core: Support holes in CPU usage (disabled CPUs)
+ * core: Throttle the event listeners
+ * core: Workaround bad go-lxc Start() behavior
+ * extra: Update bash completion to use --fast (performance improvement)
+ * list: Don't crash on missing disk or network info
+ * lxd-bridge: Don't set link-local without a proxy
+ * lxd-bridge-proxy: Bump port number to 13128
+ * lxd-bridge: Run dnsmasq as the lxd user instead of the non-existing lxd-dnsmasq user
+ * main: Have ActiveIfNeeded trigger if we have running containers
+ * specs: Images are auto-updated every 6 hours
+ * tests: Don't rely on the filesystem so much
+
+### Try it for yourself
+
+This new LXD release is already available for you to try on our [demo service](/lxd/try-it/).
+
+### Downloads
+The release tarballs can be found on our [download page](/lxd/downloads/).
+
+
 ## LXD 2.0.0.rc8 release announcement <span class="text-muted">31st of March 2016</span>
 
 ### The main changes for this release are
