@@ -2,7 +2,7 @@
 
 The Nova LXD project provides a Nova driver for managing full system containers using LXD as part of an OpenStack cloud.
 
-## Manual installation - Ubuntu server
+## Manual installation - Ubuntu server (Ubuntu 16.10)
 
 Nova LXD is available in Ubuntu 16.10;  The Nova LXD driver is installed on Nova Compute servers only:
 
