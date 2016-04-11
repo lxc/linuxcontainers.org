@@ -1,9 +1,15 @@
 ![Download icon](/static/img/download.png)
-# Distribution packages
-Currently only Ubuntu includes lxd and that's only in the current development release.  
-We expect it to be soon picked up by the other distributions who already ship recent LXC today.
 
-For Ubuntu users, we have an official PPA for LXD:
+# Distribution packages
+Ubuntu 16.04 LTS users can install LXD with:
+
+    apt-get install lxd
+
+Ubuntu 14.04 LTS users can install it from backports with:
+
+    apt-get -t trusty-backports install lxd
+
+For Ubuntu users wishing newer upstream releases, we also have an official PPA for LXD:
 
  * [lxd-stable](https://launchpad.net/~ubuntu-lxc/+archive/lxd-stable): Latest stable release
 

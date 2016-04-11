@@ -1,4 +1,5 @@
-![Download icon](/static/img/containers.png)
+![Logo](/static/img/containers.png)
+
 # News
 ## LXD 2.0.0.rc9 release announcement <span class="text-muted">6th of April 2016</span>
 

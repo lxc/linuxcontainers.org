@@ -1,4 +1,4 @@
-![Download icon](/static/img/containers.png)
+![Logo](/static/img/containers.png)
 
 # What's LXD?
 LXD is a container "hypervisor" and a new user experience for LXC.

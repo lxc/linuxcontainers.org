@@ -1,6 +1,16 @@
+![Logo](/static/img/containers.png)
+
 # Installing LXD and the command line tool
 ## Ubuntu desktop and Ubuntu server
-As LXD evolves quite rapidly, we recommend Ubuntu users use our PPA:
+Ubuntu 16.04 LTS users can install LXD with:
+
+    apt-get install lxd
+
+Ubuntu 14.04 LTS users can also install LXD using backports:
+
+    apt-get -t trusty-backports install lxd
+
+Alternatively, to get the latest upstream release, a PPA is available:
 
     add-apt-repository ppa:ubuntu-lxc/lxd-stable
     apt-get update
