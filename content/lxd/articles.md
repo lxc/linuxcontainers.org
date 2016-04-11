@@ -14,6 +14,13 @@
  * [linux.conf.au 2015: LXD by Tycho Andersen](https://www.youtube.com/watch?v=5MNy9OoiJ70)
 
 # Blog posts by the LXD team
+ * [Docker in LXD by Serge Hallyn](https://s3hh.wordpress.com/2016/04/09/docker-in-lxd/)
+ * [LXD networking: lxdbr0 explained by Tycho Andersen](http://tycho.ws/blog/2016/04/lxdbr0.html)
+ * [LXD 2.0: Image management by Stéphane Graber](https://www.stgraber.org/2016/03/30/lxd-2-0-image-management-512/)
+ * [LXD 2.0: Resource control by Stéphane Graber](https://www.stgraber.org/2016/03/26/lxd-2-0-resource-control-412/)
+ * [LXD 2.0: Your first LXD container by Stéphane Graber](https://www.stgraber.org/2016/03/19/lxd-2-0-your-first-lxd-container-312/)
+ * [LXD 2.0: Installing and configuring LXD by Stéphane Graber](https://www.stgraber.org/2016/03/15/lxd-2-0-installing-and-configuring-lxd-212/)
+ * [LXD 2.0: Introduction to LXD by Stéphane Graber](https://www.stgraber.org/2016/03/11/lxd-2-0-introduction-to-lxd-112/)
  * [LXD in the Sky with Diamonds](http://blog.dustinkirkland.com/2015/11/lxd-in-sky-with-diamonds.html)
  * [Nested containers in LXD by Serge Hallyn](https://s3hh.wordpress.com/2015/10/30/nested-containers-in-lxd/)
  * [Publishing LXD images by Serge Hallyn](https://s3hh.wordpress.com/2015/06/30/publishing-lxd-images/)
