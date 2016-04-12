@@ -1,6 +1,60 @@
 ![Download icon](/static/img/containers.png)
 # News
 
+## LXD 2.0.0 リリースのお知らせ <!-- LXD 2.0.0 release announcement --><span class="text-muted">2016 年 4 月 11 日 <!-- 11th of April 2016 --></span>
+
+<!--
+This is the final release of LXD 2.0!
+-->
+LXD 2.0 を正式にリリースしました!
+
+<!--
+LXD 2.0 is a Long Term Support release, similar to LXC 2.0 and LXCFS 2.0 and so comes  
+with a 5 years support commitment from upstream, ending on 1st of June 2021.
+-->
+LXD 2.0 は LXC 2.0、LXCFS 2.0 と同様に、長期サポート対象のリリースです。開発元が 5 年間のサポート、つまり 2021 年の 6 月 1 日までのサポートを約束します。
+
+<!--
+A walkthrough of the LXD 2.0 features can be found here: [LXD 2.0: Blog post series](https://www.stgraber.org/2016/03/11/lxd-2-0-blog-post-series-012/)
+-->
+LXD 2.0 の機能の説明はこちらでご覧いただけます: [LXD 2.0: Blog post series](https://www.stgraber.org/2016/03/11/lxd-2-0-blog-post-series-012/)
+
+<!--
+Packages for LXD 2.0 should be available in Ubuntu and other Linux distributions shortly.
+-->
+LXD 2.0 のパッケージが Ubuntu や他の Linux ディストリビューションですぐに利用可能になるでしょう。
+
+<!--
+Until then, you can just try it online using our [demo service](/lxd/try-it/)
+-->
+それまでは、オンラインで[デモサービス](/lxd/try-it/)を使ってお試しください。
+
+### LXD 2.0.0 rc9 からの主な変更点 <!-- The main changes since LXD 2.0.0 rc9 are -->
+
+ * client: "lxc list" に json フォーマットによる出力オプションを追加しました <!-- Add a json format option to "lxc list". -->
+ * client: (LXD の初期化が済んでない) 初回実行時に lxd init を実行するようにメッセージを出力するようにしました <!-- Recommend running lxd init -->
+ * lxd: ネストしている場合に security.privileged を設定できるようになりました <!-- Allow setting security.privileged when nested -->
+
+### LXD 2.0.0 rc9 以降のバグ修正 <!-- The bugfixes since LXD 2.0.0 rc9 are -->
+
+ * client: ローカルの設定でなく展開された設定をフィルタするようにしました <!-- Filter on expanded config rather than local config -->
+ * client: file push が与える間違ったファイルモードを修正しました <!-- Fix wrong mode being passed by file push -->
+ * client: パスの代わりにスナップショット名を表示するようにしました <!-- Show the snapshot name instead of the path -->
+ * client: ヘルプメッセージを調整しました <!-- Tweak help messages -->
+ * client: 日本語メッセージを更新しました <!-- Update Japanese translation -->
+ * core: ファイルモードを umask させないようにしました <!-- Don't let umask mess with modes -->
+ * core: 取得するファイルの uid、gid、モードを修正しました <!-- Fix uid, gid and mode of retrieved files -->
+ * core: zfs: 残ったスナップショットを削除するようにしました <!-- Clean any leftover snapshot -->
+ * core: zfs: LXD と関係のないパスを無視するようにしました <!-- Ignore non-LXD paths in user count -->
+ * doc: API を stable としました <!-- Mark API as stable for release -->
+
+
+### ダウンロード <!-- Downloads -->
+<!--
+The release tarballs can be found on our [download page](/lxd/downloads/).
+-->
+このリリースの tarball は [ダウンロードページ](/lxd/downloads/) から取得できます。
+
 ## LXD 2.0.0.rc9 リリースのお知らせ <!-- LXD 2.0.0.rc9 release announcement --><span class="text-muted">2016 年 4 月 6 日 <!-- 6th of April 2016 --></span>
 
 ### このリリースの主な変更点 <!-- The main changes for this release are -->
