@@ -462,7 +462,7 @@ lxc delete first</pre>
                         <p><!-- For this step, you'll need a second demo
                            session, so open a new one
                            <a href="/lxd/try-it/" target="_blank">here</a> -->
-                           このステップでは、2 回目のデモセッションが必要となります。そこで新しいセッションを <a href="/lxd/try-it/" target="_blank">ここから</a> 開いてください。</p>
+                           このステップでは、2 つ目のデモセッションが必要となります。そこで新しいセッションを <a href="/lxd/try-it/" target="_blank">ここから</a> 開いてください。</p>
 
                         <p><!-- Copy/paste the "lxc remote add" command from
                            the top of the page of that new session into
@@ -474,6 +474,11 @@ lxc delete first</pre>
                            <br />
                            そしてサーバのフィンガープリントを確認し、リモートサーバのパスワードを入力します。
                            </p>
+
+                        <p><!-- Note that it may take a few seconds for the
+                           new LXD daemon to listen to the network, just
+                           retry the command until it answers. -->
+                           新しい LXD デーモンは、応答があるまでコマンドをリトライして、ネットワークを LISTEN するまでに数秒かかることがあるかもしれないことに注意してください。</p>
 
                         <p><!-- At this point you can list the remote
                            containers with: -->

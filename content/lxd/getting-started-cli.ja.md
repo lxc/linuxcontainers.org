@@ -1,9 +1,25 @@
+![Logo](/static/img/containers.png)
+
 # LXD とコマンドラインツールのインストール <!-- Installing LXD and the command line tool -->
 ## Ubuntu デスクトップと Ubuntu サーバ
 <!--
-As LXD evolves quite rapidly, we recommend Ubuntu users use our PPA:
+Ubuntu 16.04 LTS users can install LXD with:
 -->
-LXD は非常に急速に開発が進んでいますので、Ubuntu ユーザは我々の PPA を使うことをおすすめします。
+Ubuntu 16.04 LTS のユーザは、以下のように LXD をインストールできます:
+
+    apt-get install lxd
+
+<!--
+Ubuntu 14.04 LTS users can also install LXD using backports:
+-->
+Ubuntu 14.04 LTS のユーザは、以下のように backports から LXD をインストールできます:
+
+    apt-get -t trusty-backports install lxd
+
+<!--
+Alternatively, to get the latest upstream release, a PPA is available:
+-->
+代わりに、最新の開発元からのリリースを取得するために、PPA が利用できます:
 
     add-apt-repository ppa:ubuntu-lxc/lxd-stable
     apt-get update

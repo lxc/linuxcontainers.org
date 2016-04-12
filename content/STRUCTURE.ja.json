@@ -139,7 +139,7 @@
      "title": "LXD - 記事と動画",
      "menu": ["LXD", "記事と動画"],
      "generator": "markdown",
-     "meta": {"input": "lxd/articles.ja.md"}},
+     "meta": {"input": "lxd/articles.md"}},
 
     {"path": "/lxd/mailing-lists/",
      "menu": ["LXD", "メーリングリスト"]},
