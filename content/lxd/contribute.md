@@ -13,7 +13,7 @@ and not on stable releases, unless the bug only affects a stable release.
 
 Contributions to LXD must be submitted as Github pull-requests and we require them to be signed-off.
 
-More details on contribution guidelines may be found [here](https://github.com/lxc/lxd/blob/master/doc/rest-api.md)
+More details on contribution guidelines may be found [here](https://github.com/lxc/lxd/blob/master/CONTRIBUTING.md)
 
 # Stable release backports
 
