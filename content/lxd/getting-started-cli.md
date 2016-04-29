@@ -138,7 +138,7 @@ It defaults to talking to the local one using a local UNIX socket.
 
 Remote operations require the following two commands having been run on the remote server:
 
-    lxc config set core.https_address [::]
+    lxc config set core.https_address "[::]"
     lxc config set core.trust_password some-password
 
 The first tells LXD to bind all addresses on port 8443.  
