@@ -23,8 +23,8 @@ LXC is currently made of a few separate components:
 
  * The liblxc library
  * Several language bindings for the API:
-    * python3 (in-tree, long term support in 1.0.x)
-    * lua (in tree, long term support in 1.0.x)
+    * python3 (in-tree, long term support in 1.0.x and 2.0.x)
+    * lua (in tree, long term support in 1.0.x and 2.0.x)
     * [Go](https://github.com/lxc/go-lxc)
     * [ruby](https://github.com/lxc/ruby-lxc)
     * [python2](https://github.com/lxc/python2-lxc)
@@ -52,9 +52,9 @@ typically means until the next stable release is out.
 Commercial support for LXC on Ubuntu LTS releases can be obtained from [Canonical Ltd](http://www.canonical.com).
 
 ## Extended support
-At this time, the only such release is LXC 1.0 which was released in  
-February 2014 and will be supported until April 2019 (a bit over 5 years).
+LXC 1.0 and LXC 2.0 are long term support releases.  
+LXC 1.0 will be supported until June 1st 2019 and LXC 2.0 until June 1st 2021.
 
-This is thanks to [Canonical Ltd](http://www.canonical.com) and Ubuntu who included  
-LXC 1.0 in Ubuntu 14.04 LTS (Long Term Support) and work closely with LXC upstream  
-to maintain the stable 1.0 branch.
+This is thanks to [Canonical Ltd](http://www.canonical.com) and Ubuntu who include  
+the long term support releases of LXC into their own LTS releases and work closely  
+with LXC upstream to maintain our stable branches.
