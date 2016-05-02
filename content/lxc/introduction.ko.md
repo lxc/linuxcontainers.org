@@ -20,8 +20,8 @@ LXC는 현재 아래의 몇몇 요소들로 구성되어 있습니다.
 
  * liblxc 라이브러리
  * API의 프로그래밍 언어 바인딩 :
-    * python3 (lxc 내, 1.0.x에서 장기 지원 (LTS, long term support))
-    * lua (lxc 내, 1.0.x에서 장기 지원)
+    * python3 (lxc 내, 1.0.x와 2.0.x에서 장기 지원 (LTS, long term support))
+    * lua (lxc 내, 1.0.x와 2.0.x에서 장기 지원)
     * [Go](https://github.com/lxc/go-lxc)
     * [ruby](https://github.com/lxc/ruby-lxc)
     * [python2](https://github.com/lxc/python2-lxc)
@@ -46,6 +46,7 @@ LXC의 안정화 버전 공개는 각 리눅스 배포판 안정화 버전의 �
 우분투 LTS 버전의 LXC에 대한 상업적인 지원은 [Canonical Ltd](http://www.canonical.com)에서 얻을 수 있습니다.
 
 ## 부가 지원
-지금 현재, LXC 1.0이 2014년 2월부터 시작하여 2019년 4월까지 (5년이 약간 넘는 기간) 지원을 받는 유일한 버전입니다.
+LXC 1.0와 2.0은 장기 지원되는 버전입니다.
+LXC 1.0은 2019년 6월 1일까지, LXC 2.0은 2021년 6월 1일까지입니다.
 
-이는 [Canonical Ltd](http://www.canonical.com)와 우분투가 LXC 1.0을 우분투 14.04 LTS (장기 지원)에 포함시켰고 안정적인 1.0 브랜치를 유지하기 위해 LXC upstream과 긴밀하게 협력하는 덕분입니다.
+[Canonical Ltd](http://www.canonical.com)와 LXC의 장기 지원 버전을 자신의 장기지원 버전에 포함시킨 우분투에게 감사드리며, 안정적인 브랜치를 유지하기 위해 LXC upstream과 긴밀하게 협력하고 있습니다.
