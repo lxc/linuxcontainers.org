@@ -39,8 +39,8 @@ LXC はいくつかのコンポーネントから構成されています。
 
  * liblxc ライブラリ <!-- The liblxc library -->
  * API に対するいくつかの言語のバインディング <!-- Several language bindings for the API: -->
-    * python3 (ツリー内、1.0.x での長期サポート) <!-- python3 (in-tree, long term support in 1.0.x) -->
-    * lua (ツリー内、1.0.x での長期サポート) <!-- lua (in tree, long term support in 1.0.x) -->
+    * python3 (ツリー内、1.0.x、2.0.x での長期サポート) <!-- python3 (in-tree, long term support in 1.0.x and 2.0.x) -->
+    * lua (ツリー内、1.0.x、2.0.x での長期サポート) <!-- lua (in tree, long term support in 1.0.x and 2.0.x) -->
     * [Go](https://github.com/lxc/go-lxc)
     * [ruby](https://github.com/lxc/ruby-lxc)
     * [python2](https://github.com/lxc/python2-lxc)
@@ -90,14 +90,15 @@ Ubuntu LTS リリースに含まれる LXC に対する商用サポートは [Ca
 ## 延長サポート <!-- Extended support -->
 
 <!--
-At this time, the only such release is LXC 1.0 which was released in  
-February 2014 and will be supported until April 2019 (a bit over 5 years).
+LXC 1.0 and LXC 2.0 are long term support releases.  
+LXC 1.0 will be supported until June 1st 2019 and LXC 2.0 until June 1st 2021.
 -->
-現時点で、2014 年 2 月にリリースされた LXC 1.0 だけがサポート対象のリリースとなります。LXC 1.0 は 2019 年 4 月まで 5 年ほどサポートされる予定です。
+LXC 1.0 と 2.0 は長期サポート版のリリースです。
+LXC 1.0 は 2019 年 6 月 1 日までサポートされます。そして LXC 2.0 は 2021 年 6 月 1 日までサポートされます。
 
 <!--
-This is thanks to [Canonical Ltd](http://www.canonical.com) and Ubuntu who included
-LXC 1.0 in Ubuntu 14.04 LTS (Long Term Support) and work closely with LXC upstream
-to maintain the stable 1.0 branch.
+This is thanks to [Canonical Ltd](http://www.canonical.com) and Ubuntu who include  
+the long term support releases of LXC into their own LTS releases and work closely  
+with LXC upstream to maintain our stable branches.
 -->
-これは、[Canonical Ltd](http://www.canonical.com) と Ubuntu が Ubuntu 14.04 LTS (長期サポート版) に LXC 1.0 を含めているためであり、stable である 1.0 ブランチをメンテナンスするために LXC の upstream と密接に連携しているためです。
+これは、[Canonical Ltd](http://www.canonical.com) と Ubuntu が LTS (長期サポート版) に LXC の LTS を含めているためであり、stable ブランチをメンテナンスするために LXC の開発元と密接に連携しているためです。

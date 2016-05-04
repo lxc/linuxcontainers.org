@@ -235,7 +235,7 @@ Remote operations require the following two commands having been run on the remo
 -->
 リモート操作には、リモートサーバ上で以下の 2 つのコマンドを実行しておく必要があります:
 
-    lxc config set core.https_address [::]
+    lxc config set core.https_address "[::]"
     lxc config set core.trust_password some-password
 
 <!--
