@@ -37,3 +37,4 @@ are neither supported nor endorsed by the LXD project.
 以下の API クライアントはサードパーティのコントリビュータが提供しているものです。これらは LXD プロジェクトがサポートしているわけでも、承認しているわけでもありません。
 
 * Ruby: [Hyperkit](http://jeffshantz.github.io/hyperkit)
+* Node.js: [node-lxd](http://github.com/alandoherty/node-lxd)
