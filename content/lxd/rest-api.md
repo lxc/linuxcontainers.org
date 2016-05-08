@@ -16,6 +16,11 @@ This means that newer clients can detect whether a given target server supports 
 
 ## API clients
 
+The following API clients are developed by the LXD project.
+
+* Go [lxd.Client](https://github.com/lxc/lxd/blob/master/client.go)
+* Python [pylxd](https://github.com/lxc/pylxd)
+
 The following API clients have been submitted by third-party contributors.  They
 are neither supported nor endorsed by the LXD project.
 
