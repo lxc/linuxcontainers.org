@@ -39,3 +39,5 @@
  * [Using LXD with ZFS by Dean Henrichsmeyer](http://blog.beret.net/8kpahtrgn)
  * [A Quick Introduction to LXD BY Scott Lowe](http://blog.scottlowe.org/2015/05/06/quick-intro-lxd/)
  * [Hands on With LXD on Tutum Blog](http://blog.tutum.co/2014/12/09/hands-on-with-lxd)
+ * [LXD, ZFS and bridged networking on Ubuntu 16.04 LTS - Jason Bayton](https://bayton.org/2016/05/lxd-zfs-and-bridged-networking-on-ubuntu-16-04-lts/)
+ * [Mount CIFS/SMB shares RW in LXD containers - Jason Bayton](https://bayton.org/2016/05/mount-cifssmb-shares-rw-in-lxd-containers/)
