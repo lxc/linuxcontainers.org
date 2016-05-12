@@ -102,7 +102,7 @@
      "title": "LXD - Введение",
      "menu": ["LXD", "Введение"],
      "generator": "markdown",
-     "meta": {"input": "lxd/introduction.md"}},
+     "meta": {"input": "lxd/introduction.ru.md"}},
 
     {"path": "/lxd/news/",
      "title": "LXD - Новости",
