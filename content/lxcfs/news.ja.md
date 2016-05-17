@@ -1,26 +1,44 @@
 # News
+## LXCFS 2.0.1 リリースのお知らせ <!-- LXCFS 2.0.1 release announcement --><span class="text-muted">2016 年 5 月 16 日<!-- 16th of May 2016 --></span>
 
-## LXCFS 2.0.0 release announcement <span class="text-muted">31st of March 2016</span>
+<!--
+This is the first bugfix release for LXCFS 2.0.0.
+-->
+これは LXCFS 2.0.0 に対する最初のバグフィックスとなるリリースです。
+
+<!--
+This includes the following bugfixes:
+-->
+このリリースでは以下のバグが修正されています。
+
+ * s390x での cpuinfo の修正 <!-- Fix cpuinfo on s390x. -->
+ * diskstats で cgroup の値として recursive ファイルを使うようにしました <!-- Use recursive cgroup values in diskstats. -->
+ * コントローラのディレクトリへの traversal (rx) が可能になりました <!-- Allow traversal (rx) to controller directories. -->
+ * do\_mount\_cgroups() が失敗時にクラッシュするのを修正しました <!-- Fix do\_mount\_cgroups() crash on failure. -->
+ * パスを処理する関数のエラーハンドリングを改良しました <!-- Better error handling in a number of path processing functions. -->
+ * スワップの計算でのエラーハンドリングを改良しました <!-- Better error handling in swap calculation. -->
+
+## LXCFS 2.0.0 リリースのお知らせ <!-- LXCFS 2.0.0 release announcement --><span class="text-muted">2016 年 3 月 31 日 <!-- 31st of March 2016 --></span>
 
 * lxcfs バージョン 2.0.0 をリリースできてハッピーです! <!-- We are happy to release version 2.0.0 of lxcfs. -->
 
-## LXCFS 2.0.0.rc9 release announcement <span class="text-muted">29st of March 2016</span>
+## LXCFS 2.0.0.rc9 リリースのお知らせ <!-- LXCFS 2.0.0.rc9 release announcement --><span class="text-muted">2016 年 3 月 29 日<!-- 29st of March 2016 --></span>
 
  * このリリースは 2.0.0 に対する第 9 のリリース候補版です <!-- This is the ninth release candidate for 2.0.0 -->
  * fuse file info を複数回解放する可能性からの保護を行いました <!-- This guards against potential double-releasing of fuse file info. -->
 
-## LXCFS 2.0.0.rc8 release announcement <span class="text-muted">21st of March 2016</span>
+## LXCFS 2.0.0.rc8 リリースのお知らせ <!-- LXCFS 2.0.0.rc8 release announcement --><span class="text-muted">2016 年 3 月 21 日<!-- 21st of March 2016 --></span>
 
  * このリリースは 2.0.0 に対する第 8 のリリース候補版です <!-- This is the eight release candidate for 2.0.0 -->
  * lxcfs cgfsng ドライバで使う access(2) を実装しました <!-- This implements access(2) which is required by the lxcfs cgfsng driver. -->
 
-## LXCFS 2.0.0.rc7 release announcement <span class="text-muted">21st of March 2016</span>
+## LXCFS 2.0.0.rc7 リリースのお知らせ <!-- LXCFS 2.0.0.rc7 release announcement --><span class="text-muted">2016 年 3 月 21 日 <!-- 21st of March 2016 --></span>
 
  * このリリースは 2.0.0 に対する第 7 のリリース候補版です <!-- This is the seventh release candidate for 2.0.0 -->
  * このリリースには、upstart job と (LXC 用の) マウントフックに関する重要な修正がいくつか含まれています <!-- This includes some important fixes to the upstart jobs and mount hooks -->
  * リロードハンドラを async セーフにしました。また、posix 互換に関する修正をいくつか行いました <!-- Makes the reload handler async-safe, and a few more posix compliancy fixes. -->
 
-## LXCFS 2.0.0.rc6 release announcement <span class="text-muted">17th of March 2016</span>
+## LXCFS 2.0.0.rc6 リリースのお知らせ <!-- LXCFS 2.0.0.rc6 release announcement --><span class="text-muted">2016 年 3 月 17 日<!-- 17th of March 2016 --></span>
 
  * このリリースは 2.0.0 に対する第 6 のリリース候補版です <!-- This is the sixth release candidate for 2.0.0 -->
  * 14.04 で使用する systemd の cgroup 命名方式のサポートを追加しました <!-- Adds support for the systemd cgroup naming scheme used in 14.04. -->
