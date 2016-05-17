@@ -12,7 +12,7 @@ The main bugfixes in this release are:
  * attach: switch console pty to raw mode (fixes ncurses-based programs)
  * attach: use raw settings of ssh for pty
  * bindings: fixed python-lxc reference to var before assignment in create()
- * bindings: set PyErr when Container.__init__ fails
+ * bindings: set PyErr when Container.\_\_init\_\_ fails
  * cgfsng: defer to cgfs if needed subsystems are not available
  * cgfsng: don't require that systemd subsystem be mounted
  * core: Added missing `type` to keys in lxc\_list\_nicconfigs
