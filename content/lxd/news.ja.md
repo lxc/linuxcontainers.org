@@ -1,6 +1,77 @@
 ![Logo](/static/img/containers.png)
 
 # News
+## LXD 2.0.1 リリースのお知らせ <!-- LXD 2.0.1 release announcement --><span class="text-muted">2016 年 5 月 16 日<!-- 16th of May 2016 --></span>
+
+<!--
+This is the first bugfix release for LXD 2.0.
+-->
+このリリースは LXD 2.0 に対する最初のバグフィックスリリースです。
+
+### LXD 2.0.0 以降修正されたバグは以下の通りです <!-- The bugfixes since LXD 2.0.0 are -->
+
+ * shmounts がマウントできなくてもコンテナの起動が失敗しなくなりました <!-- Don't fail to start when shmounts can't be mounted, instead fail container startup -->
+ * プロキシが変更されたときに simplestream のキャッシュを無効化するようにしました <!-- Invalidate the simplestreams cache on proxy change -->
+ * コンテナの起動時に、設定ファイルをログ保存ディレクトリに直接書くようになりました <!-- Write the container's config file on start to the log path directly -->
+ * list で空のレスポンスが原因でクラッシュするバグを修正しました <!-- Fix crash in list due to empty responses -->(Issue #1903)
+ * 存在しないプロファイルを消去しようとした際に失敗するようになりました <!-- Fail when removing non-existent profiles -->(Issue #1886)
+ * image import のヘルプに --alias を追加しました <!-- Document --alias to image import -->(Issue #1900)
+ * "lxc start" と "lxc stop" のオプション (stateful/stateless) を修正しました <!-- Fix "lxc start" and "lxc stop" options (stateful/stateless) -->
+ * 不正なソースストリームな場合にわかりやすいエラーメッセージを出力するようにしました <!-- Give better error on invalid source stream -->(simplestreams)
+ * 基本的な REST API の使用例を README.md に追加しました <!-- Add basic REST API usage example to README.md -->
+ * lxc stop --help の typo を修正しました <!-- Fix typo in lxc stop \-\-help -->
+ * lxc-to-lxd を stable な pylxd API を使うように変換しました <!-- Convert lxc-to-lxd to stable supported pylxd API -->(Issue #1901)
+ * イメージの更新が失敗した場合に適切にログが出力されるようになりました <!-- Properly log image update failures -->
+ * イメージの検証を改良し、不正なイメージの場合はロールバックするようになりました <!-- Better validate and rollback bad images -->(Issue #1913)
+ * send 操作が SmartError 経由で値を返すようになりました <!-- Send operation return value through SmartError -->
+ * lxc list の基本的なフィルタリングを修正しました <!-- Fix basic filtering in lxc list -->(Issue #1917)
+ * 初めての起動時にユーザにコンテナの起動方法を案内するようになりました <!-- Tell the user how to launch a container on first start -->(Issue #1931)
+ * ローカルイメージの名前と一致しない場合は "remote" を "remote:" と認識するようになりました <!-- Redirect "remote" to "remote:" when not conflicting -->(Issue #1931)
+ * スナップショットに対して LXC の設定をロードしないようにしました <!-- Don't load the LXC config for snapshots -->(Issue #1935)
+ * list: 値が設定されていないキーでフィルタリングできるようになりました <!-- Allow filtering by unset key -->(Issue #1917)
+ * `lxc launch` の例を修正しました <!-- Fix example in `lxc launch` -->
+ * 日本語メッセージの更新とその他の言語の po ファイルの更新を行いました <!-- Update Japanese translation and other po files -->
+ * 古いカーネルでは cpuset.cpus にフォールバックするようにしました <!-- Fall back to cpuset.cpus on older kernels -->(Issue #1929)
+ * サーバの設定キーを適切に検証するようになりました <!-- Properly validate the server configuration keys -->(Issue #1939)
+ * ストレージの daemonConfig の扱いを修正しました <!-- Fix daemonConfig handling of storage -->
+ * forkmigrate 時に設定ファイルを消去しないようにしました <!-- Don't remove config file on forkmigrate -->
+ * 設定の検証が変わったので、設定の処理を修正しました <!-- Fix config handling following config validation change -->
+ * ドキュメントの Markdown の文法を修正しました <!-- Fixed Markdown syntax in documentation -->
+ * ディスクを消去しているとき、すぐに失敗とならないようにしました <!-- Don't fail early when removing disks -->(Issue #1964)
+ * 再帰的にデバイスを消去しなくなりました <!-- Don't recursively delete devices -->
+ * unix デバイスで消去に失敗したものがあっても失敗しなくなりました <!-- Don't fail when some unix devices fail to be deleted -->
+ * unix-char、unix-block デバイスに対する設定チェックとして同じチェックを使うようにしました <!-- Use the same config checks for unix-char and unix-block -->
+ * fs オブジェクトが存在しない場合でも (コンテナパスが) 消去できるようになりました <!-- Allow removing when fs object no longer exists -->(Issue #1967)
+ * ログファイルを適切に expire するようになりました <!-- Do proper logfile expiry -->(Issue #1966)
+ * ロギングをより一貫性があるようにしました <!-- Make logging a bit more consistent -->
+ * zfs のエラーを無視しなくなりました <!-- Don't ignore zfs errors -->
+ * すでに存在するファイルのモード、uid、gid を適切に更新するようになりました <!-- Properly update the mode, uid and gid on existing files -->(Issue #1975)
+ * 不正な証明書ファイルを検出するようになりました <!-- Detect invalid certificate files -->(Issue #1977)
+ * 壊れた apparmor のステータスチェックを修正しました <!-- Fix broken apparmor status check -->
+ * boolean 文字列として on/off が使えるようになりました <!-- Allow on/off as boolean strings -->
+ * コンテナの設定キーを適切に検証するようになりました <!-- Properly validate the container configuration keys -->(Issue #1940)
+ * rsync の転送エラーを表示するようにしました <!-- Don't mask rsync transfer errors -->
+ * execPath をグローバル変数に移動しました <!-- Move execPath to a global variable -->
+ * websocket 上の rsync の際、nc -U の代わりにカスタムの netcat を使うようになりました <!-- Use custom netcat instead of nc -U for rsync over websocket -->(Issue #1944)
+ * マイグレーション中の間違った state ディレクトリパスを修正しました <!-- Fix wrong state dir path in migration -->
+ * ストレージの削除が失敗したときもイメージの削除が失敗しなくなりました <!-- Don't fail deleting images when the storage delete fails -->
+ * 日本語メッセージの改良を行いました <!-- Improve messages in the Japanese translation -->
+ * いくつかの処理で criu コマンドの存在チェックを行うようになりました <!-- Add more checks for the criu binary -->
+ * (ライヴ) マイグレーションのテストを作り替えました <!-- Rework (live) migration tests -->
+ * create 時の devices はオプショナルであることを明確にドキュメントに記載しました <!-- Make it explicit in documentation that devices on create are optional -->
+ * すべてのイメージのコピーの取得元を適切に記録するようになりました <!-- Properly record the source of all image copies -->(Issue #2010)
+ * コンテナが作成中の場合に ERROR 状態にならないようにしました <!-- Don't mark containers as ERROR while being created -->(Issue #1988)
+ * operations に対して送られるイベントをクリーンアップするようになりました <!-- Cleanup events sent for operations -->(Issue #1992)
+ * ZFS の refcounting に関する問題を修正しました <!-- Fix ZFS refcounting issues -->(Issue #1916 and Issue #2013)
+ * スナップショットをコピーした際、スナップショットの設定もコピーするようにしました <!-- Propagate snapshot config when copying a snapshot -->(Issue #2017)
+ * スナップショットに対する `lxc config show` コマンドを実装しました <!-- Implement `lxc config show` for snapshots -->
+ * REST API の使い方に Unix ドメインソケット経由のサンプルを追加しました <!-- Add Unix socket example to REST API usage. -->
+
+### ダウンロード <!-- Downloads -->
+<!--
+The release tarballs can be found on our [download page](/lxd/downloads/).
+-->
+このリリースの tarball は [ダウンロードページ](/lxd/downloads/) から取得できます。
 
 ## LXD 2.0.0 リリースのお知らせ <!-- LXD 2.0.0 release announcement --><span class="text-muted">2016 年 4 月 11 日 <!-- 11th of April 2016 --></span>
 
