@@ -27,13 +27,13 @@
      "title": "LXC - Начинаем",
      "menu": ["LXC", "Начинаем"],
      "generator": "markdown",
-     "meta": {"input": "lxc/getting-started.md"}},
+     "meta": {"input": "lxc/getting-started.ru.md"}},
 
     {"path": "/lxc/documentation/",
      "title": "LXC - Документация",
      "menu": ["LXC", "Документация"],
      "generator": "markdown",
-     "meta": {"input": "lxc/documentation.md"}},
+     "meta": {"input": "lxc/documentation.ru.md"}},
 
     {"path": "/lxc/apidoc/",
      "generator": "directory",
@@ -49,14 +49,14 @@
      "title": "LXC - Контрибьют",
      "menu": ["LXC", "Контрибьют"],
      "generator": "markdown",
-     "meta": {"input": "lxc/contribute.md"}},
+     "meta": {"input": "lxc/contribute.ru.md"}},
 
     {"path": "/lxc/downloads/",
      "title": "LXC - Скачать",
      "menu": ["LXC", "Скачать"],
      "generator": "downloads",
      "meta": {"dir": "/downloads/lxc",
-              "input": "lxc/downloads.md"}},
+              "input": "lxc/downloads.ru.md"}},
 
     {"path": "/lxc/external-resources/",
      "menu": ["LXC", "Внешние ресурсы"]},
@@ -184,7 +184,7 @@
      "title": "LXCFS - Введение",
      "menu": ["LXCFS", "Введение"],
      "generator": "markdown",
-     "meta": {"input": "lxcfs/introduction.md"}},
+     "meta": {"input": "lxcfs/introduction.ru.md"}},
 
     {"path": "/lxcfs/news/",
      "title": "LXCFS - Новости",
@@ -196,7 +196,7 @@
      "title": "LXCFS - Введение",
      "menu": ["LXCFS", "Введение"],
      "generator": "markdown",
-     "meta": {"input": "lxcfs/getting-started.md"}},
+     "meta": {"input": "lxcfs/getting-started.ru.md"}},
 
     {"path": "/lxcfs/manpages/",
      "title": "LXCFS - Руководства",
@@ -208,14 +208,14 @@
      "title": "LXCFS - Контрибьют",
      "menu": ["LXCFS", "Контрибьют"],
      "generator": "markdown",
-     "meta": {"input": "lxcfs/contribute.md"}},
+     "meta": {"input": "lxcfs/contribute.ru.md"}},
 
     {"path": "/lxcfs/downloads/",
      "title": "LXCFS - Скачать",
      "menu": ["LXCFS", "Скачать"],
      "generator": "downloads",
      "meta": {"dir": "/downloads/lxcfs",
-              "input": "lxcfs/downloads.md"}},
+              "input": "lxcfs/downloads.ru.md"}},
 
     {"path": "/lxcfs/external-resources/",
      "menu": ["LXCFS", "Внешние ресурсы"]},
@@ -256,7 +256,7 @@
      "title": "CGManager - Начинаем",
      "menu": ["CGManager", "Начинаем"],
      "generator": "markdown",
-     "meta": {"input": "cgmanager/getting-started.md"}},
+     "meta": {"input": "cgmanager/getting-started.ru.md"}},
 
     {"path": "/cgmanager/dbus-api/",
      "title": "CGManager - D-Bus API",
@@ -274,14 +274,14 @@
      "title": "CGManager - Контрибьют",
      "menu": ["CGManager", "Контрибьют"],
      "generator": "markdown",
-     "meta": {"input": "cgmanager/contribute.md"}},
+     "meta": {"input": "cgmanager/contribute.ru.md"}},
 
     {"path": "/cgmanager/downloads/",
      "title": "CGManager - Скачать",
      "menu": ["CGManager", "Скачать"],
      "generator": "downloads",
      "meta": {"dir": "/downloads/cgmanager",
-              "input": "cgmanager/downloads.md"}},
+              "input": "cgmanager/downloads.ru.md"}},
 
     {"path": "/cgmanager/external-resources/",
      "menu": ["CGManager", "Внешние ресурсы"]},
