@@ -1,6 +1,57 @@
 ![Logo](/static/img/containers.png)
 
 # News
+## LXD 2.0.2 release announcement <span class="text-muted">30th of May 2016</span>
+
+This is the second bugfix release for LXD 2.0 and its first security update.
+
+## CVE-2016-1581
+
+Robie Basak noticed that after setting up a loop based ZFS pool through "lxd init"  
+the resulting file (/var/lib/lxd/zfs.img) was world readable.
+
+This would allow any user on the system, and a potential attacker to copy and  
+then read the data of any LXD container, regardless of file permissions inside the container.
+
+
+LXD 2.0.2 fixes the "lxd init" logic to always set the mode of zfs.img to 0600.
+
+Additionally a one-time upgrade step will trigger on first run and reset any existing  
+zfs.img mode to be 0600.
+
+
+If you manage an affected system and suspect an unauthorized user may have accessed  
+the zfs.img file, you should consider replacing any secret that was stored in the  
+affected containers (private keys and similar credentials).
+
+## CVE-2016-1582
+
+Robie Basak noticed that when switching an unprivileged container (default, security.privileged=false)  
+into privileged mode (by setting security.privileged to true), the container rootfs is properly  
+remapped but the container directory itself (/var/lib/lxd/containers/XYZ) remains at 0755.
+
+This is a problem because it allows an unprivileged user on the host to access any world readable path  
+under /var/lib/lxd/containers/XYZ which may include setuid binaries.
+
+Such setuid binaries could then be used on the host to access otherwise unaccessible data  
+or to escalate one's privileges.
+
+
+LXD 2.0.2 fixes this behavior by making sure all privileged containers are always root-owned and have  
+their mode set to 0700 to prevent traversal by unprivileged users.
+
+Additionally a one-time upgrade step will trigger on first run and reset any existing privileged containers'  
+ownership and mode to root:root 0700
+
+### Downloads
+The release tarballs can be found on our [download page](/lxd/downloads/).
+
+### Commits
+
+ * CVE-2016-1581: https://github.com/TBD
+ * CVE-2016-1582: https://github.com/TBD
+
+
 ## LXD 2.0.1 release announcement <span class="text-muted">16th of May 2016</span>
 
 This is the first bugfix release for LXD 2.0.
