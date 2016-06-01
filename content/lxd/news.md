@@ -49,7 +49,7 @@ The release tarballs can be found on our [download page](/lxd/downloads/).
 ### Commits
 
  * CVE-2016-1581: [https://github.com/lxc/lxd/commit/7e8afe809284da64277eb080b456ab24ea53b516](https://github.com/lxc/lxd/commit/7e8afe809284da64277eb080b456ab24ea53b516)
- * CVE-2016-1582: [https://github.com/lxc/lxd/commit/f10e1bc47c1b385b396a35e540cb8cd9435783ea](https://github.com/lxc/lxd/commit/7e8afe809284da64277eb080b456ab24ea53b516)
+ * CVE-2016-1582: [https://github.com/lxc/lxd/commit/f10e1bc47c1b385b396a35e540cb8cd9435783ea](https://github.com/lxc/lxd/commit/f10e1bc47c1b385b396a35e540cb8cd9435783ea)
 
 
 ## LXD 2.0.1 release announcement <span class="text-muted">16th of May 2016</span>
