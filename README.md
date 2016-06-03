@@ -15,6 +15,21 @@ linuxcontainers.org website.
 ## Generating the website
 
     ./generate
+    
+## Launching website within container
+
+Make sure that the container has access to the  website folder that you just cloned.
+
+You can use a bind-mount for the folder if necessary (host => container OR container => host)
+
+After generating the website(above), run these commands(Ubuntu-specific) within the container:
+
+    cd output
+    python3 -m http.server 8777
+    
+You now need to obtain the IP address for the specific container. You can now navigate to the site (from the host) with the following example IP address:
+
+> 185.5.3.12:8777
 
 ## Bug reports
 
