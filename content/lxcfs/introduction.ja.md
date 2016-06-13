@@ -29,7 +29,7 @@ Now with the introduction of the cgroup namespace in the Linux kernel, that part
 on recent kernels and focus is now on making containers feel more like a real independent system through  
 the proc masking feature.
 -->
-Linux カーネルへの cgroup namespace の導入により、この機能は新しいカーネルでは不要になりました。そして、proc をマスキングする機能により、コンテナを本当の独立したシステムを使っているように見せる機能にフォーカスを当てています。(訳注: 3.15 カーネルの時点では cgroup namespace はまだマージされていません)
+Linux カーネルへの cgroup namespace の導入により、この機能は新しいカーネルでは不要になりました。そして、proc をマスキングする機能により、コンテナを本当の独立したシステムを使っているように見せる機能にフォーカスを当てています。(訳注: vanilla kernel であれば 4.6 以上、Ubuntu であれば 4.4 以上のカーネルで cgroup namespace が使えます。)
 
 # ライセンス <!-- Licensing -->
 
