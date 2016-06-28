@@ -1,5 +1,56 @@
 ![Download icon](/static/img/containers.png)
 # News
+## LXC 2.0.3 release announcement <span class="text-muted">28th of June 2016</span>
+This is the third bugfix release for LXC 2.0.
+
+LXC 2.0.3 was released just minutes after LXC 2.0.2 as we spotted an incorrect  
+AppArmor profile included in the LXC 2.0.2 release tarball.
+
+The main bugfixes in this release are:
+
+ * apparmor: Refresh generated file
+
+### Downloads
+The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions  
+will very soon ship a packaged version of LXC 2.0.3.
+
+Should you be interested in individual changes or just looking at the detailed development history,  
+our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-2.0).
+
+
+## LXC 2.0.2 release announcement <span class="text-muted">28th of June 2016</span>
+This is the second bugfix release for LXC 2.0.
+
+Please do not use LXC 2.0.2, instead use 2.0.3 which fixes  
+an accidental regression in AppArmor coverage.
+
+The main bugfixes in this release are:
+
+ * apparmor: add make-rslave to usr.bin.lxc-start
+ * apparmor: Allow bind-mounts and {r}shared/{r}private
+ * apparmor: allow mount move
+ * apparmor: Update mount states handling
+ * core: Drop lxc-devsetup as unneeded by current autodev
+ * core: Fix redefinition of struct in6\_addr
+ * core: Include all lxcmntent.h function declarations on Bionic
+ * c/r: c/r: use criu's "full" mode for cgroups
+ * systemd: start containers in foreground when using the lxc@.service
+ * templates: debian: Make sure init is installed
+ * templates: oracle: Fix console login
+ * templates: plamo: Fix various issues
+ * templates: ubuntu: Install apt-transport-https by default
+ * travis: ensure 'make install' doesn't fail
+ * travis: test VPATH builds
+ * upstart: Force lxc-instance to behave like a good Upstart client
+
+### Downloads
+The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions  
+will very soon ship a packaged version of LXC 2.0.2.
+
+Should you be interested in individual changes or just looking at the detailed development history,  
+our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-2.0).
+
+
 ## LXC 2.0.1 release announcement <span class="text-muted">16th of May 2016</span>
 This is the first bugfix release for LXC 2.0.
 
