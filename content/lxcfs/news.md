@@ -1,8 +1,17 @@
 ![Download icon](/static/img/containers.png)
 # News
+## LXCFS 2.0.1 release announcement <span class="text-muted">28th of June 2016</span>
+
+This is the second bugfix release for LXCFS 2.0.
+
+This includes the following bugfixes:
+
+ * Don't build pam/ when --with-pamdir=none
+ * libpam\_cgfs: Don't create new path if we are under /user.slice/user-$uid.slice
+
 ## LXCFS 2.0.1 release announcement <span class="text-muted">16th of May 2016</span>
 
-This is the first bugfix release for LXCFS 2.0.0.
+This is the first bugfix release for LXCFS 2.0.
 
 This includes the following bugfixes:
 
