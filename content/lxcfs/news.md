@@ -1,6 +1,6 @@
 ![Download icon](/static/img/containers.png)
 # News
-## LXCFS 2.0.1 release announcement <span class="text-muted">28th of June 2016</span>
+## LXCFS 2.0.2 release announcement <span class="text-muted">28th of June 2016</span>
 
 This is the second bugfix release for LXCFS 2.0.
 
