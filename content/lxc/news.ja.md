@@ -1,4 +1,85 @@
 # News
+## LXC 2.0.3 リリースのお知らせ <!-- LXC 2.0.3 release announcement --><span class="text-muted">2016 年 6 月 28 日 <!-- 28th of June 2016 --></span>
+<!--
+This is the third bugfix release for LXC 2.0.
+-->
+このリリースは LXC 2.0 の 3 回目のバグフィックスリリースです。
+
+<!--
+LXC 2.0.3 was released just minutes after LXC 2.0.2 as we spotted an incorrect  
+AppArmor profile included in the LXC 2.0.2 release tarball.
+-->
+LXC 2.0.3 は、LXC 2.0.2 に正しくない AppArmor プロファイルが含まれてしまったので、LXC 2.0.2 リリース直後にリリースしました。
+
+<!--
+The main bugfixes in this release are:
+-->
+このリリースのバグフィックスは以下です:
+
+ * apparmor: 生成されたファイルの更新 <!-- Refresh generated file -->
+
+### ダウンロード <!-- Downloads -->
+<!--
+The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions  
+will very soon ship a packaged version of LXC 2.0.3.
+-->
+このリリースの tarball は [ダウンロードページ](/lxc/downloads/) から取得できます。そして、各ディストリビューションがすぐに LXC 2.0.3 のパッケージをリリースするでしょう。
+
+<!--
+Should you be interested in individual changes or just looking at the detailed development history,  
+our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-2.0).
+-->
+個々の変更点に興味がある場合、そして開発の履歴を見たい場合、stable ブランチが [Github](https://github.com/lxc/lxc/tree/stable-2.0) にあります。
+
+
+## LXC 2.0.2 リリースのお知らせ <!-- LXC 2.0.2 release announcement --><span class="text-muted">2016 年 6 月 28 日 <!-- 28th of June 2016 --></span>
+<!--
+This is the second bugfix release for LXC 2.0.
+-->
+このリリースは LXC 2.0 の 2 回目のバグフィックスリリースです。
+
+<!--
+Please do not use LXC 2.0.2, instead use 2.0.3 which fixes  
+an accidental regression in AppArmor coverage.
+-->
+LXC 2.0.2 は使用せず、代わりに 2.0.3 を使用してください。2.0.3 では AppArmor に関する不具合を修正しています。
+
+<!--
+The main bugfixes in this release are:
+-->
+このリリースの主なバグの修正は以下の通りです:
+
+ * apparmor: make-rslave を usr.bin.lxc-start に追加しました <!-- add make-rslave to usr.bin.lxc-start -->
+ * apparmor: bind マウントと {r}shared/{r}private を許可しました <!-- Allow bind-mounts and {r}shared/{r}private -->
+ * apparmor: マウントの移動を許可しました <!-- allow mount move -->
+ * apparmor: マウント状態の扱いを更新しました <!-- Update mount states handling -->
+ * core: 現在の autodev では不要なので lxc-devsetup を削除しました <!-- Drop lxc-devsetup as unneeded by current autodev -->
+ * core: in6\_addr 構造体の多重定義を修正しました <!-- Fix redefinition of struct in6\_addr -->
+ * core: Bionic ではすべての lxcmntent.h の関数宣言を含めるようになりました <!-- Include all lxcmntent.h function declarations on Bionic -->
+ * c/r: criu の cgroup モードとして "full" を使用するようになりました <!-- use criu's "full" mode for cgroups -->
+ * systemd: lxc@.service の使用時は、コンテナを foreground で起動するようになりました <!-- start containers in foreground when using the lxc@.service -->
+ * templates: debian: 確実に init がインストールされるようにしました <!-- Make sure init is installed -->
+ * templates: oracle: コンソールログインに関する修正を行いました <!-- Fix console login -->
+ * templates: plamo: いくつかの問題を修正しました <!-- Fix various issues -->
+ * templates: ubuntu: デフォルトで apt-transport-https をインストールするようになりました <!-- Install apt-transport-https by default -->
+ * travis: 'make install' が確実に失敗しないようにしました <!-- ensure 'make install' doesn't fail -->
+ * travis: VPATH ビルドのテストを行うようにしました <!-- test VPATH builds -->
+ * upstart: lxc-instance を Upstart クライアントとして適した形に変更しました <!-- Force lxc-instance to behave like a good Upstart client -->
+
+### ダウンロード <!-- Downloads -->
+<!--
+The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions  
+will very soon ship a packaged version of LXC 2.0.2.
+-->
+このリリースの tarball は [ダウンロードページ](/lxc/downloads/) から取得できます。そして、各ディストリビューションがすぐに LXC 2.0.2 のパッケージをリリースするでしょう。(訳注: 前述のように 2.0.2 の代わりに 2.0.3 を使用してください)
+
+<!--
+Should you be interested in individual changes or just looking at the detailed development history,  
+our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-2.0).
+-->
+個々の変更点に興味がある場合、そして開発の履歴を見たい場合、stable ブランチが [Github](https://github.com/lxc/lxc/tree/stable-2.0) にあります。
+
+
 ## LXC 2.0.1 リリースのお知らせ <!-- LXC 2.0.1 release announcement --><span class="text-muted">2016 年 5 月 16 日 <!-- 16th of May 2016 --></span>
 
 <!--
