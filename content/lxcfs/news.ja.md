@@ -1,4 +1,19 @@
 # News
+## LXCFS 2.0.2 リリースのお知らせ <!-- LXCFS 2.0.2 release announcement --><span class="text-muted">2016 年 6 月 28 日 <!-- 28th of June 2016 --></span>
+
+<!--
+This is the second bugfix release for LXCFS 2.0.
+-->
+このリリースは LXCFS の 2 回目のバグフィックスリリースです。
+
+<!--
+This includes the following bugfixes:
+-->
+このリリースには以下のバグ修正が含まれます:
+
+ * --with-pamdir=none を指定した場合は pam/ 以下をビルドしないようにしました <!-- Don't build pam/ when --with-pamdir=none -->
+ * libpam\_cgfs: ユーザが /user.slice/user-$uid.slice 以下にいる場合は、新しいパスを作成しなくなりました <!-- Don't create new path if we are under /user.slice/user-$uid.slice -->
+
 ## LXCFS 2.0.1 リリースのお知らせ <!-- LXCFS 2.0.1 release announcement --><span class="text-muted">2016 年 5 月 16 日<!-- 16th of May 2016 --></span>
 
 <!--
