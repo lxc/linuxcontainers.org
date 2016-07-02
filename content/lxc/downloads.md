@@ -4,10 +4,10 @@ LXC is included in most Linux distributions.
 In most cases installing it is as simple as selecting it in your package manager.
 
 Distributions also often provide backports of newer versions of LXC for their stable releases.  
-You may want to look for that, especially if your distribution doesn't include LXC 1.0.
+You may want to look for that, especially if your distribution doesn't include LXC 1.0 or 2.0.
 
-For production environment, try to stick to LXC 1.0.x as this is the long term,  
-stable release which we will support until April 2019.
+For production environment, try to stick to LXC 1.0.x or 2.0.x as these are the long term,  
+stable releases which we will support until April 2019 (1.0.x) or April 2021 (2.0.x).
 
 For Ubuntu users, we have official PPAs for LXC:
 
@@ -22,10 +22,11 @@ And for those who want development snapshots:
 
 # Current development version
 
-LXC has two active git branches:
+LXC has three active git branches:
 
  * **master**: Current development branch
  * **stable-1.0**: Stable update branch for LXC 1.0.x
+ * **stable-2.0**: Stable update branch for LXC 2.0.x
 
 You can clone those directly with:
 
