@@ -1,7 +1,10 @@
 ![Download icon](/static/img/download.png)
 # Distribution packages
-Currently only Ubuntu includes lxcfs and that's only in the current development release.  
-We expect it to be soon picked up by the other distributions who already ship cgmanager today.
+LXCFS is included in many Linux distributions.  
+In most cases installing it is as simple as selecting it in your package manager.
+
+Distributions also often provide backports of newer versions of LXCFS for their stable releases.  
+You may want to look for that, especially if your distribution doesn't include LXCFS at all or not the new 2.0 branch.
 
 For Ubuntu users, we have an official PPA for LXCFS:
 
