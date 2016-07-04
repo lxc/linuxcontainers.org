@@ -10,16 +10,16 @@ LXC は大部分の Linux ディストリビューションに含まれていま
 
 <!--
 Distributions also often provide backports of newer versions of LXC for their stable releases.
-You may want to look for that, especially if your distribution doesn't include LXC 1.0.
+You may want to look for that, especially if your distribution doesn't include LXC 1.0 or 2.0.
 -->
 ディストリビューションでは、ディストリビューションの stable リリースに対する LXC のより新しいバージョンのバックポートが提供されるケースも多いでしょう。
-LXC 1.0 がディストリビューションの stable リリースに含まれない場合は特に、それを使うことも選択肢の一つでしょう。
+LXC 1.0 や 2.0 がディストリビューションの stable リリースに含まれない場合は特に、それを使うことも選択肢の一つでしょう。
 
 <!--
-For production environment, try to stick to LXC 1.0.x as this is the long term,
-stable release which we will support until April 2019.
+For production environment, try to stick to LXC 1.0.x or 2.0.x as these are the long term,  
+stable releases which we will support until April 2019 (1.0.x) or April 2021 (2.0.x).
 -->
-Production 環境では、2019 年 4 月までの長期サポートの Stable リリースである LXC 1.0.x を使い続けることをお勧めします。
+Production 環境では、長期サポート版の stable リリースである LXC 1.0.x もしくは 2.0.x を使い続けることをお勧めします。1.0.x は 2019 年 4 月まで、2.0.x は 2021 年 4 月までサポートします。
 
 <!--
 For Ubuntu users, we have official PPAs for LXC:
@@ -43,10 +43,11 @@ And for those who want development snapshots:
 <!--
 LXC has two active git branches:
 -->
-LXC にはアクティブな git ブランチが 2 つ存在します:
+LXC にはアクティブな git ブランチが 3 つ存在します:
 
  * **master**: 現在の開発ブランチ <!-- Current development branch -->
- * **stable-1.0**: LXC 1.0.x 向けの Stable の更新用ブランチ <!-- Stable update branch for LXC 1.0.x -->
+ * **stable-1.0**: LXC 1.0.x 向けの Stable 更新用ブランチ <!-- Stable update branch for LXC 1.0.x -->
+ * **stable-2.0**: LXC 2.0.x 向けの Stable 更新用ブランチ <!-- Stable update branch for LXC 2.0.x -->
 
 <!--
 You can clone those directly with:
