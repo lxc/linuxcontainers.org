@@ -1,10 +1,16 @@
 ![Download icon](/static/img/download.png)
 # ディストリビューションのパッケージ <!-- Distribution packages -->
 <!--
-Currently only Ubuntu includes lxcfs and that's only in the current development release.  
-We expect it to be soon picked up by the other distributions who already ship cgmanager today.
+LXCFS is included in many Linux distributions.  
+In most cases installing it is as simple as selecting it in your package manager.
 -->
-現時点ではUbuntuの最新の開発リリースにのみlxcfsが含まれています。すでに現時点でcgmanagerパッケージをリリースしている他のディストリビューションでも今後リリースが行われるでしょう。
+LXCFS はたくさんのディストリビューションに含まれています。ほとんどの場合、インストールするには、お使いのパッケージマネージャで LXCFS を選択するだけで簡単です。
+
+<!--
+Distributions also often provide backports of newer versions of LXCFS for their stable releases.  
+You may want to look for that, especially if your distribution doesn't include LXCFS at all or not the new 2.0 branch.
+-->
+ディストリビューションでは、stable リリース向けに新しいバージョンの LXCFS のバックポートを提供することがよくあります。特に、お使いのディストリビューションに LXCFS が含まれていない場合や、新しい 2.0 ブランチでない場合には、探してみる必要があるかもしれません。
 
 <!--
 For Ubuntu users, we have an official PPA for LXCFS:
