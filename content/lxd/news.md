@@ -34,7 +34,7 @@ Bugfixes:
  * client/image: Use the daemon provided fingerprint on image copy (Issue #2162)
  * client: Normalize the URLs in the client (Issue #2112)
  * client/remote: Fix a panic in 'remote add' (Issue #2089)
- * client/remote: Fix parsing of <FQDN>:<PORT>
+ * client/remote: Fix parsing of &lt;FQDN&gt;:&lt;PORT&gt;
  * core: Better handle PEM decoding errors (Issue #2119)
  * core: Check for zero byte send in ReaderToChannel (Issue #2072)
  * core: Fix a concurrent websocket write crash
