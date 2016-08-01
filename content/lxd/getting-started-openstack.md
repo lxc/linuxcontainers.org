@@ -38,8 +38,7 @@ trust passwords and remotes to support migration of containers between LXD hyper
 
 ## LXD images for OpenStack
 
-LXD does not support the use of the qcow2 image format used for KVM; LXD requires use of "raw" filesystem archive based images.  
-Canonical publish Ubuntu images of the required format:
+LXD requires use of 'raw' images that are generally to be installed onto a block device, such as a disk partition or an LVM volume. Canonical publishes raw images of Ubuntu for various arches (arm64, armhf, i386, amd64, ppc64el). These can be imported similarly to the following example, that imports an amd64 Ubuntu trusty image:
 
     glance image-create --name="trusty" --public --progress \
         --container-format=bare --disk-format=raw \
@@ -47,9 +46,9 @@ Canonical publish Ubuntu images of the required format:
 
 ## Creating containers
 
-LXD containers are managed in exactly the same way as a KVM container - either via Horizon or via the Nova CLI:
+LXD containers are managed in the same manner as KVM containers - either via Horizon or via the Nova CLI:
 
     nova boot --image=trusty --flavor=m1.tiny my-first-openstack-lxd-container
 
-You may need to associate a floating ip address and configure appropriate security rules depending on the network and  
+You may need to associate a floating ip address and configure appropriate security rules, depending on the network and  
 security configuration of the OpenStack cloud you are using.
