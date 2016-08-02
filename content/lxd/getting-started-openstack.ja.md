@@ -61,10 +61,9 @@ Bundle が LVM を使ってコンテナルートファイルシステム用の�
 ## OpenStack 用の LXD イメージ <!-- LXD images for OpenStack -->
 
 <!--
-LXD does not support the use of the qcow2 image format used for KVM; LXD requires use of "raw" filesystem archive based images.  
-Canonical publish Ubuntu images of the required format:
+LXD requires use of 'raw' images that are generally to be installed onto a block device, such as a disk partition or an LVM volume. Canonical publishes raw images of Ubuntu for various arches (arm64, armhf, i386, amd64, ppc64el). These can be imported similarly to the following example, that imports an amd64 Ubuntu trusty image:
 -->
-LXD は KVM で使われる qcow2 イメージフォーマットの使用はサポートしていません。LXD にはイメージベースの "raw" ファイルシステムのアーカイヴの使用が必要です。Canonical は必要なフォーマットの Ubuntu イメージを公開しています。
+LXD では、通常ディスクパーティションや LVM ボリュームのようなブロックデバイス上にインストールされる、'raw' イメージの使用が必要です。カノニカルは色々なアーキテクチャの Ubuntu の raw イメージをリリースしています (arm64, armhf, i386, amd64, ppc64el)。これらのイメージは以下のサンプルと同様にインポートできます。このサンプルは amd64 Ubuntu trusty イメージのインポートを行っています。
 
     glance image-create --name="trusty" --public --progress \
         --container-format=bare --disk-format=raw \
@@ -73,14 +72,14 @@ LXD は KVM で使われる qcow2 イメージフォーマットの使用はサ�
 ## コンテナの作成 <!-- Creating containers -->
 
 <!--
-LXD containers are managed in exactly the same way as a KVM container - either via Horizon or via the Nova CLI:
+LXD containers are managed in the same manner as KVM containers - either via Horizon or via the Nova CLI:
 -->
-LXD コンテナは KVM コンテナと全く同じ方法で管理します。Horizon 経由、または Nova CLI 経由で管理します。
+LXD コンテナは KVM コンテナと同じ方法で管理します。Horizon 経由、または Nova CLI 経由で管理します。
 
     nova boot --image=trusty --flavor=m1.tiny my-first-openstack-lxd-container
 
 <!--
-You may need to associate a floating ip address and configure appropriate security rules depending on the network and  
+You may need to associate a floating ip address and configure appropriate security rules, depending on the network and  
 security configuration of the OpenStack cloud you are using.
 -->
 Floating IP アドレスを追加したり、お使いのネットワークと OpenStack クラウドのセキュリティ設定から決まる適切なセキュリティルールを設定する必要があるかもしれません。
