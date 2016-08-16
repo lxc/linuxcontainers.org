@@ -1,6 +1,88 @@
 ![Logo](/static/img/containers.png)
 
 # News
+## LXD 2.0.4 release announcement <span class="text-muted">15th of August 2016</span>
+
+This is the fourth bugfix release for LXD 2.0.
+
+### The changes since LXD 2.0.3 are
+
+Minor improvements:
+
+ * /dev/net/tun is now a default device (always present)
+ * lxd-bridge: dnsmasq is now configured with IPv6 name resolution
+ * lxd-bridge: iptables rules now have a comment (Issue #2125)
+ * "lxd init" now comes with reasonable defaults (Issue #1933)
+ * The "images:" remote now uses simplestreams on new installations
+ * "lxc image export" now always uses the image fingerprint as filename
+ * Import progress is now reported for URL imports in "lxc image import"
+
+Bugfixes:
+
+ * apparmor: Add feature detection and clean things a bit
+ * apparmor: Don't depend on the LXC apparmor profile (Issue #1942)
+ * apparmor: Rename main two chunks of rules (Issue #1942)
+ * apparmor: Setup a more modular apparmor profile (Issue #1942)
+ * client: Don't share http client with go routines (Issue #2186)
+ * client: Error when trying to remove a non-existent device (Issue #2277)
+ * client: Fix API info reporting in "lxc info"
+ * client: Fix spelling: permisson -> permission (Issue #2211)
+ * client: Make client.websocket a public API
+ * client: Make --version option visible (Issue #2171)
+ * client: Relax constraints on WebsocketRecvStream args
+ * client: Use named args for actionCmds
+ * client/finger: Remove unused field from finger cmd (Issue #2170)
+ * client/image: Fix image import from URL (Issue #2272)
+ * client/list: fix concurrent read/write (Issue #2183)
+ * client/list: Fix error handling and race in "lxc list" (Issue #1753)
+ * client/pause: Add some additional help to `lxc pause`
+ * client/profile: Add "lxc profile unset" to help message (Issue #2227)
+ * daemon/container: Actually handle containers list error
+ * daemon/container: Add sanity checks for common problems (Issue #2190)
+ * daemon/container: Alphabetize device processing (Issue #2233)
+ * daemon/container: Better errors when sanity checking devices
+ * daemon/container: Better handle missing or invalid device types (Issue #2210)
+ * daemon/container: Document and validate limits.*.priority values (Issue #2231)
+ * daemon/container: Document image export target behavior and fix bugs (Issue #2205)
+ * daemon/container: Don't unfreeze a container on stop (Issue #2164)
+ * daemon/container: Fix flag name in init error message
+ * daemon/container: Fix limits.disk.priority when set to 0 (Issue #2230)
+ * daemon/container: Fix nic hotplug with openvswitch (Issue #2106)
+ * daemon/container: Fix unix-char/unix-block in nested containers (Issue #2279)
+ * daemon/container: Improve check for invalid physical devices
+ * daemon/container: Remember the return code in the non wait-for-websocket case (Issue #2243)
+ * daemon/container: Remove unused "name" argument from {create,remove}UnixDevice
+ * daemon/container: Return more error information back to the user (Issue #2190)
+ * daemon/container: Sort disk devices by their path before their names (Issue #2249)
+ * daemon/container: Unfreeze frozen container on shutdown (Issue #2164)
+ * daemon/db: Don't fail db upgrade if $LXD\_DIR/containers doesn't exist (LP: #1602025)
+ * daemon/db: remove fuse device from docker profile (Issue #2213)
+ * daemon/migration: fix tempdir handling
+ * daemon/profile: Prevent using invalid profile names (Issue #2274)
+ * daemon/zfs: Fix ZFS volume size on 32bit architectures (Issue #2158)
+ * daemon/zfs: Only delete copy- snapshots on delete (Issue #2127)
+ * daemon/zfs: Remove subvolume in zfs.ImageCreate error flow (Issue #2194)
+ * doc: Add /dev/net/tun and /dev/fuse to docs
+ * doc: Added command to install squashfs-tools in README.md
+ * doc: Document config\_get in pongo templates
+ * doc: Fixed errors on api examples with curl
+ * doc: Initial documentation for production use of LXD (Issue #2256)
+ * doc: Shuffle packages a bit in README.md
+ * lxd-bridge-proxy: Remove unused code
+ * Makefile: Also have "make dist" run multiple go get
+ * scripts: Make lxc-to-lxd work inside virtualenv (Issue #2175)
+ * simplestreams: Fix size reporting (Issue #2223)
+ * simplestreams: Handle images without labels
+ * simplestreams: List images available as both squashfs and tar.xz
+ * simplestreams: Properly deal with unset expiry
+ * simplestreams: Set proper user-agent
+ * simplestreams: Use the hashes in the right order (Issue #2239)
+
+
+### Downloads
+The release tarballs can be found on our [download page](/lxd/downloads/).
+
+
 ## LXD 2.0.3 release announcement <span class="text-muted">28th of June 2016</span>
 
 This is the third bugfix release for LXD 2.0.
@@ -48,7 +130,7 @@ Bugfixes:
  * daemon/container: Better handle bind mounts
  * daemon/container: GET of a nonexistent file now 404s (Issue #2059)
  * daemon/container: Make devices cgroup config more readable
- * daemon/containers: Improve error message on disk setup failure
+ * daemon/container: Improve error message on disk setup failure
  * daemon/container: Use defer to undo changes on failed update
  * daemon/db: Don't try to chmod zfs.img when testing db upgrades
  * daemon/db: Don't try to update /var/lib/lxd/containers in go tests
