@@ -1,5 +1,15 @@
 ![Download icon](/static/img/containers.png)
 # News
+## LXCFS 2.0.3 release announcement <span class="text-muted">15th of August 2016</span>
+
+This is the third bugfix release for LXCFS 2.0.
+
+This includes the following bugfixes:
+
+ * Skip empty entries under /proc/self/cgroup
+ * Setup and use a minimal chroot and mount namespace for cgroup mounts
+ * Code cleanup and minor refactoring
+
 ## LXCFS 2.0.2 release announcement <span class="text-muted">28th of June 2016</span>
 
 This is the second bugfix release for LXCFS 2.0.
