@@ -15,24 +15,24 @@ For production environments, we recommend that you stick to the LXD 2.0 LTS rele
 New features:
 
  * client: Add a `lxc shell` alias by default
- * client: Build unix-like aliases directly into LXC (lxc {cp,ls,mv,rm}, lxc image {cp,ls,rm}, lxc image alias {ls,rm}, lxc remote {ls,mv,rm} and lxc config device {ls,rm})
+ * client: Build unix-like aliases directly into LXC (`lxc {cp,ls,mv,rm}`, `lxc image {cp,ls,rm}`, `lxc image alias {ls,rm}`, `lxc remote {ls,mv,rm}` and `lxc config device {ls,rm}`)
  * client: Generate the client certificate on-demand
  * client/copy: Allow additional profiles and config to be set
  * client/copy: Pick a random name if not specified and same host
  * client/image: Add --format and json output
  * client/image: Allow deleting multiple images at once
- * client/list: Add support for config key columns in 'lxc list' (e.g. "lxc list -c ns,security.privileged:privileged")
- * client/profile: "lxc profile apply" is now "lxc profile assign"
- * client/profile: New "lxc profile add" and "lxc profile remove" commands
+ * client/list: Add support for config key columns (e.g. `lxc list -c ns,security.privileged:privileged`)
+ * client/profile: `lxc profile apply` is now `lxc profile assign`
+ * client/profile: New `lxc profile add` and `lxc profile remove` sub-commands
  * client/version: Do not show the version command by default
  * daemon: Add a global core.https\_allowed\_credentials key
  * daemon: Implement ETag support for all PUT calls
  * daemon: Implement PKI authentication (see doc/lxd-ssl-authentication.md)
  * daemon: Implement the PATCH method for all endpoints already supporting PUT
  * daemon/container: : Add config key for container force shutdown timeout (boot.host\_shutdown\_timeout)
- * daemon/container: Add some seccomp knobs (security.syscalls.blacklist\_default, security.syscalls.blacklist\_compat, security.syscalls.blacklist, security.syscalls.whitelist and raw.seccomp)
+ * daemon/container: Add some seccomp knobs (security.syscalls.{blacklist,blacklist\_default,blacklist\_compat,whitelist} and raw.seccomp)
  * daemon/container: Add support for the "usb" device type (see doc/configuration.md)
- * daemon/container: Record the last used date for containers (also expose in "lxc info" and "lxc list")
+ * daemon/container: Record the last used date for containers (also expose in `lxc info` and `lxc list`)
  * daemon/zfs: Allow forcing snapshot removal through configuration (storage.zfs\_remove\_snapshots)
 
 Bugfixes:
