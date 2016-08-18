@@ -1,4 +1,65 @@
 # News
+## LXC 2.0.4 release announcement <span class="text-muted">15th of August 2016</span>
+<!--
+This is the fourth bugfix release for LXC 2.0.
+-->
+このリリースは LXC 2.0 の 4 回目のバグフィックスリリースです。
+
+<!--
+The main bugfixes in this release are:
+-->
+このリリースの主なバグフィックスは以下です:
+
+ * core: lxc.pc に prefix を追加しました <!-- Add a prefix to the lxc.pc -->
+ * core: mount\_entry 関数に持続的な dev エントリの際に NODEV の指定をスキップするための引数を追加しました <!-- Add flag in mount\_entry to skip NODEV in case of a persistent dev entry -->
+ * core: ns\_info 構造体に欠けていた cgroup namespace を追加しました <!-- Add missing cgroup namespace to ns\_info struct -->
+ * core: attach: lxc-attach で unshare の代わりに setns を使うようにしました <!-- setns instead of unshare in lxc-attach -->
+ * core: bdev: include ファイルのサーチパスにサブディレクトリを追加して、呼び出し時にディレクトリを含めないようにしました <!-- Add subdirectories to search path -->
+ * core: bdev: btrfs の subvolume の検出をよりスマートに行うようにしました <!-- Be smarter about btrfs subvolume detection -->
+ * core: cgfsng: パスを前もって計算しないようにしました <!-- Don't pre-calculate core -->
+ * path: cgfsng: is\_lxcfs() と is\_cgroupfs() を修正しました (訳注: 関数の返り値をきちんと返すようにしました) <!-- Fix is\_lxcfs() and is\_cgroupfs() -->
+ * core: cgroups: cgroup 関連のソースファイルを共通のサブディレクトリに移動させました <!-- Move cgroup files to common subfolder -->
+ * core: conf: free のあとに pty\_info に NULL をセットするようにしました (訳注: リブート時の二重解放を防ぎます) <!-- Set pty\_info to NULL after free -->
+ * core: SIGRTMIN+3 の検出を行うようにしました (訳注: systemd でクリーンなシャットダウンを行うのに必要) <!-- Detect if we should send SIGRTMIN+3 -->
+ * core: readdir\_r() の代わりに readdir() を使うようにしました <!-- Replace readdir\_r() with readdir() -->
+ * core: vlan タイプのインターフェースの際に MTU を設定するようにしました <!-- Set up MTU for vlan-type interfaces. -->
+ * core: tools, tests: リポジトリを再編成しました (訳注: lxc の cli ツールのソースは tools ディレクトリ以下に移動しました)<!-- Reorganize repo -->
+ * c/r: CRIU の --action-script オプションをサポートしました <!-- Add support for CRIU's \-\-action-script -->
+ * c/r: CRIU の --ghost-limit オプションをサポートしました <!-- Add support for ghost-limit in CRIU -->
+ * c/r: CRIU の dump を行っている間は (TCP の) in-flight を落とすようにしました <!-- Drop in-flight connections during CRIU dump -->
+ * c/r: migrate\_opts を適切に初期化するようにしました <!-- Initialize migrate\_opts properly -->
+ * c/r: ローカルな関数を static にしました <!-- Make local function static -->
+ * c/r: tmpnam() を mkstemp() に置き換えました <!-- Replace tmpnam() with mkstemp() -->
+ * c/r: criu のバージョンを保持するようにしました <!-- Store criu version -->
+ * c/r: (訳注: エラー出力の) フォーマット書式に PRIu64 を使うようにしました <!-- Use PRIu64 format specifier -->
+ * doc: lintian で見つかった typo を修正しました <!-- Fix typo found by lintian -->
+ * doc: lxc-attach(1) に記載されていなかったオプションを追加しました <!-- Update lxc-attach(1) -->
+ * lxc-attach: -f/--rcfile オプションを追加しました <!-- Add -f option (rcfile) -->
+ * lxc-attach: ホワイトスペースのクリーンアップを行いました <!-- Cleanup whitespaces -->
+ * lxc-create: 出力時に欠けていた改行を追加しました <!-- Add missing newline in output -->
+ * lxc-ls: 正しいランタイムパスを使うようになりました <!-- Use correct runtime path -->
+ * templates: alpine: 新しいアーキテクチャの追加を行いました <!-- Add support for new arch -->
+ * templates: alpine: /run を tmpfs でマウントするようになりました <!-- Mount tmpfs under /run -->
+ * templates: debian: テンプレート中の変数に対するクオートを追加しました (少なくとも $rootfs はカバーされました)<!-- Add more quotes to variables (at least $rootfs should now be covered) -->
+ * templates: debian: ロケールがないことによるうっとうしい perl の警告出力を防ぐようになりました <!-- Avoid noisy perl warnings caused by missing locales -->
+ * templates: debian: wheezy コンテナを作成した際のバグ再発を修正しました <!-- fix regression when creating wheezy containers -->
+ * templates: debian: shellcheck (Ubuntu: 0.3.7-5 amd64) の結果が良くなるようにしました <!-- Make shellcheck (Ubuntu: 0.3.7-5 amd64) most possible happy -->
+ * tests: lxc\_string\_in\_array() に対するユニットテストを追加しました <!-- Add unit tests for lxc\_string\_in\_array() -->
+ * tests: lxc\_string\_replace() に対するユニットテストを追加しました <!-- Add unit tests for lxc\_string\_replace() -->
+
+### ダウンロード <!-- Downloads -->
+<!--
+The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions  
+will very soon ship a packaged version of LXC 2.0.4.
+-->
+このリリースの tarball は [ダウンロードページ](/lxc/downloads/) から取得できます。そして、各ディストリビューションがすぐに LXC 2.0.4 のパッケージをリリースするでしょう。
+
+<!--
+Should you be interested in individual changes or just looking at the detailed development history,  
+our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-2.0).
+-->
+個々の変更点に興味がある場合、そして開発の履歴を見たい場合、stable ブランチが [Github](https://github.com/lxc/lxc/tree/stable-2.0) にあります。
+
 ## LXC 2.0.3 リリースのお知らせ <!-- LXC 2.0.3 release announcement --><span class="text-muted">2016 年 6 月 28 日 <!-- 28th of June 2016 --></span>
 <!--
 This is the third bugfix release for LXC 2.0.
