@@ -1,4 +1,20 @@
 # News
+## LXCFS 2.0.3 release announcement <span class="text-muted">15th of August 2016</span>
+
+<!--
+This is the third bugfix release for LXCFS 2.0.
+-->
+このリリースは LXCFS 2.0 の 3 回目のバグフィックスリリースです。
+
+<!--
+This includes the following bugfixes:
+-->
+このリリースには以下のバグ修正が含まれます:
+
+ * /proc/self/cgroup の空のエントリをスキップするようにしました (訳注: cgroup v2 をマウントした際に発生するエラーを回避) <!-- Skip empty entries under /proc/self/cgroup -->
+ * cgroup のマウントに対して、最小限の chroot とマウント名前空間を設定し、使用するようにしました <!-- Setup and use a minimal chroot and mount namespace for cgroup mounts -->
+ * コードのクリーンアップと小規模なリファクタリングを行いました <!-- Code cleanup and minor refactoring -->
+
 ## LXCFS 2.0.2 リリースのお知らせ <!-- LXCFS 2.0.2 release announcement --><span class="text-muted">2016 年 6 月 28 日 <!-- 28th of June 2016 --></span>
 
 <!--
