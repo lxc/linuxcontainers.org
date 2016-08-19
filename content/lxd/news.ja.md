@@ -11,6 +11,7 @@ This is the fourth bugfix release for LXD 2.0.
 ### LXD 2.0.3 以降の変更は以下の通りです <!-- The changes since LXD 2.0.3 are -->
 
 細かな改良点 <!-- Minor improvements -->:
+
  * /dev/net/tun はデフォルトのデバイスになりました (常に存在します) <!-- /dev/net/tun is now a default device (always present) -->
  * lxd-bridge: dnsmasq は IPv6 の名前解決をするように設定しました <!-- lxd-bridge: dnsmasq is now configured with IPv6 name resolution -->
  * lxd-bridge: iptables ルールにコメントをつけるようにしました <!-- lxd-bridge: iptables rules now have a comment --> (Issue #2125)
@@ -30,7 +31,7 @@ This is the fourth bugfix release for LXD 2.0.
  * client: "lxc info" で表示される API 情報を修正しました <!-- client: Fix API info reporting in "lxc info" -->
  * client: 綴りを修正しました permisson -> permission <!-- client: Fix spelling: permisson -> permission --> (Issue #2211)
  * client: client.websocket を public API にしました <!-- client: Make client.websocket a public API -->
- * client: --version オプションを見えるようにしました <!-- client: Make --version option visible --> (Issue #2171)
+ * client: --version オプションを見えるようにしました <!-- client: Make \-\-version option visible --> (Issue #2171)
  * client: WebsocketRecvStream の引数の制約を緩和しました <!-- client: Relax constraints on WebsocketRecvStream args -->
  * client: actionCmds で名前付き引数を使うようにしました<!-- client: Use named args for actionCmds -->
  * client/finger: fingerコマンドから使用していないフィールドを削除しました <!-- client/finger: Remove unused field from finger cmd --> (Issue #2170)
