@@ -51,6 +51,12 @@
      "generator": "markdown",
      "meta": {"input": "lxc/contribute.ru.md"}},
 
+    {"path": "/lxc/security/",
+     "title": "LXC - Безопасность",
+     "menu": ["LXC", "Безопасность"],
+     "generator": "markdown",
+     "meta": {"input": "lxc/security.ru.md"}},
+
     {"path": "/lxc/downloads/",
      "title": "LXC - Скачать",
      "menu": ["LXC", "Скачать"],
@@ -244,7 +250,7 @@
      "title": "CGManager - Введение",
      "menu": ["CGManager", "Введение"],
      "generator": "markdown",
-     "meta": {"input": "cgmanager/introduction.md"}},
+     "meta": {"input": "cgmanager/introduction.ru.md"}},
 
     {"path": "/cgmanager/news/",
      "title": "CGManager - Новости",
