@@ -19,7 +19,7 @@
 </div>
 
 <hr/>
-<h2>Projects. <span class="text-muted">The interesting stuff.</span></h2>
+<h2>Active projects</h2>
 <div class="row">
     <div class="col-md-4">
         <h3>LXC</h3>
@@ -54,21 +54,6 @@
     </div>
 
     <div class="col-md-4">
-        <h3>CGManager</h3>
-        <p>CGManager is our cgroup manager daemon. It's
-           designed to allow nested unprivileged containers
-           to still be able to create and manage their
-           cgroups through a DBus API.</p>
-
-        <p>CGManager has been used by default with LXC in
-           Ubuntu since April 2014 and then by other
-           distributions as they start needing working
-           unprivileged containers.</p>
-
-        <p><a class="btn btn-primary" href="/cgmanager/introduction/" role="button">More &raquo;</a></p>
-    </div>
-
-    <div class="col-md-6">
         <h3>LXCFS</h3>
         <p>Userspace (FUSE) filesystem offering two main things:
             <ul>
@@ -82,5 +67,29 @@
            container user would expect.</p>
 
         <p><a class="btn btn-primary" href="/lxcfs/introduction/" role="button">More &raquo;</a></p>
+    </div>
+</div>
+
+<hr/>
+<h2>Deprecated projects</h2>
+<div class="row">
+    <div class="col-md-6">
+        <h3>CGManager</h3>
+        <p>CGManager is our cgroup manager daemon. It's
+           designed to allow nested unprivileged containers
+           to still be able to create and manage their
+           cgroups through a DBus API.</p>
+
+        <p>CGManager was used by default with LXC in
+           Ubuntu since April 2014 and then by other
+           distributions as they started needing working
+           unprivileged containers.</p>
+
+        <p>It has now been deprecated in favor of the CGroup namespace
+           in recent Linux kernels. On older kernels, LXCFS still offers
+           a cgroupfs emulation that can be used instead of cgmanager
+           and is more widely compatible with existing userspace.</p>
+
+        <p><a class="btn btn-primary" href="/cgmanager/introduction/" role="button">More &raquo;</a></p>
     </div>
 </div>
