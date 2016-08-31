@@ -17,7 +17,7 @@
 </div>
 
 <hr/>
-<h2>프로젝트. <span class="text-muted">흥미로운 것들.</span></h2>
+<h2>진행 중인 프로젝트들</span></h2>
 <div class="row">
     <div class="col-md-4">
         <h3>LXC</h3>
@@ -46,19 +46,6 @@
         </p>
     </div>
 
-    <div class="col-md-4">
-        <h3>CGManager</h3>
-        <p>CGManager는 우리의 컨트롤 그룹 관리자 데몬입니다.
-           중첩된(nested) 비특권 컨테이너에게도 DBus API를 통해  그들의
-           컨트롤 그룹을 생성/관리할 수 있게 해줍니다.</p>
-
-        <p>CGManager는 2014년 4월부터 우분투에서 LXC가 기본으로 사용하고
-           있습니다. 그리고 비특권 컨테이너가 동작해야하는 다른 배포판들에서도
-           사용되고 있습니다.</p>
-
-        <p><a class="btn btn-primary" href="/ko/cgmanager/introduction/" role="button">더 알아보기 &raquo;</a></p>
-    </div>
-
     <div class="col-md-6">
         <h3>LXCFS</h3>
         <p>아래 두가지를 제공하는 사용자영역 파일시스템 (FUSE) 입니다.
@@ -72,5 +59,27 @@
            procfs, sysfs, cgroupfs의 단점을 보완하도록 만들어졌습니다.</p>
 
         <p><a class="btn btn-primary" href="/ko/lxcfs/introduction/" role="button">더 알아보기 &raquo;</a></p>
+    </div>
+</div>
+
+<hr/>
+<h2>종료된 프로젝트들</span></h2>
+<div class="row">
+    <div class="col-md-6">
+        <h3>CGManager</h3>
+        <p>CGManager는 우리의 컨트롤 그룹 관리자 데몬입니다.
+           중첩된(nested) 비특권 컨테이너에게도 DBus API를 통해, 각자의
+           컨트롤 그룹을 생성/관리할 수 있게 해줍니다.</p>
+
+        <p>CGManager는 2014년 4월부터 우분투에서 LXC가 기본으로 사용하고
+           있습니다. 그리고 비특권 컨테이너가 동작해야 하는 다른 배포판들에서도
+           사용되고 있습니다.</p>
+
+        <p>최근 리눅스 커널에 들어간 CGroup 네임스페이스로 대체되어
+           본 프로젝트는 더이상 사용되지 않습니다.
+           오래된 커널에서도 CGManager를 대신하여 LXCFS가 cgrou pfs 에뮬레이션을
+           제공해주고 있습니다. 그리고 LXCFS가 더 폭넓게 호환됩니다.</p>
+
+        <p><a class="btn btn-primary" href="/ko/cgmanager/introduction/" role="button">더 알아보기 &raquo;</a></p>
     </div>
 </div>
