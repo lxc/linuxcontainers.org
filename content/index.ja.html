@@ -32,12 +32,12 @@
       features such as namespaces, mandatory access control and control
       groups.
       -->
-      このようなコンテナは、名前空間 (Namespace)、強制アクセスコントロール、Cgroup といったカーネルのセキュリティ関連の機能の組み合わせで実現されています。
+      このようなコンテナは、名前空間 (Namespace)、強制アクセスコントロール、cgroup といったカーネルのセキュリティ関連の機能の組み合わせで実現されています。
     </p>
 </div>
 
 <hr/>
-<h2>プロジェクト <span class="text-muted">The interesting stuff.</span></h2>
+<h2>活動中のプロジェクト <!-- Active projects --></h2>
 <div class="row">
     <div class="col-md-4">
         <h3>LXC</h3>
@@ -89,31 +89,6 @@
             <a class="btn btn-primary" href="/lxd/introduction/" role="button">詳しく見る &raquo;</a>
             <a class="btn btn-primary" href="/lxd/try-it/" role="button">試してみる &raquo;</a>
         </p>
-   </div>
-
-    <div class="col-md-4">
-        <h3>CGManager</h3>
-        <p>
-          <!--
-           CGManager is our cgroup manager daemon. It's
-           designed to allow nested unprivileged containers
-           to still be able to create and manage their
-           cgroups through a DBus API.
-           -->
-          CGManager は cgroup を管理するデーモンです。DBus API を通して、ネストした非特権コンテナであっても、コンテナを作成してそのコンテナの cgroup を管理できるように設計されています。
-        </p>
-
-        <p>
-          <!--
-           CGManager has been used by default with LXC in
-           Ubuntu since April 2014 and then by other
-           distributions as they start needing working
-           unprivileged containers.
-           -->
-          CGManager は 2014 年 4 月から Ubuntu の LXC がデフォルトで使用しています。非特権コンテナの動作が必要な他のディストリビューションでも使用されています。
-        </p>
-
-        <p><a class="btn btn-primary" href="/ja/cgmanager/introduction/" role="button">詳しく見る &raquo;</a></p>
     </div>
 
     <div class="col-md-6">
@@ -145,9 +120,48 @@
            and cgroupfs by exporting files which match what a system
            container user would expect.
           -->
-	  このファイルシステムは、システムコンテナのユーザが期待する情報を書き出すことによって、procfs、sysfs、cgroupfs の欠点を回避するようにデザインされます。
+          このファイルシステムは、システムコンテナのユーザが期待する情報を書き出すことによって、procfs、sysfs、cgroupfs の欠点を回避するようにデザインされます。
         </p>
 
         <p><a class="btn btn-primary" href="/ja/lxcfs/introduction/" role="button">詳しく見る &raquo;</a></p>
+    </div>
+</div>
+
+<hr/>
+<h2>廃止予定のプロジェクト <!-- Deprecated projects --></h2>
+<div class="row">
+    <div class="col-md-6">
+        <h3>CGManager</h3>
+        <p>
+          <!--
+           CGManager is our cgroup manager daemon. It's
+           designed to allow nested unprivileged containers
+           to still be able to create and manage their
+           cgroups through a DBus API.
+           -->
+          CGManager は cgroup を管理するデーモンです。DBus API を通して、ネストした非特権コンテナであっても、コンテナを作成してそのコンテナの cgroup を管理できるように設計されています。
+        </p>
+
+        <p>
+          <!--
+           CGManager has been used by default with LXC in
+           Ubuntu since April 2014 and then by other
+           distributions as they start needing working
+           unprivileged containers.
+           -->
+          CGManager は 2014 年 4 月から Ubuntu の LXC がデフォルトで使用しています。非特権コンテナの動作が必要な他のディストリビューションでも使用されています。
+        </p>
+
+        <p>
+          <!--
+           It has now been deprecated in favor of the CGroup namespace
+           in recent Linux kernels. On older kernels, LXCFS still offers
+           a cgroupfs emulation that can be used instead of cgmanager
+           and is more widely compatible with existing userspace.
+            -->
+          CGManager は最近のカーネルに cgroup namespace が実装されたため廃止予定です。古いカーネルに対しては LXCFS が cgroupfs のエミュレーション機能を提供します。LXCFS のほうが広い環境に対応できます。
+        </p>
+
+        <p><a class="btn btn-primary" href="/ja/cgmanager/introduction/" role="button">詳しく見る &raquo;</a></p>
     </div>
 </div>
