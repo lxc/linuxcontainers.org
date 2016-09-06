@@ -1,5 +1,18 @@
 ![Download icon](/static/img/containers.png)
 # News
+## End of life announcement for LXC 1.1 <span class="text-muted">1st of September 2016</span>
+LXC 1.1 has now reached its end of life.
+
+This means that the stable-1.1 branch is now closed and we will not be  
+doing any more bugfix or security releases for this branch.
+
+Anyone still on LXC 1.1 should upgrade to 2.0 as soon as possible.
+
+As a reminder, we currently support the following releaes:
+
+ * LXC 1.0.x until June 1st 2019
+ * LXC 2.0.x until June 1st 2021
+
 ## LXC 2.0.4 release announcement <span class="text-muted">15th of August 2016</span>
 This is the fourth bugfix release for LXC 2.0.
 
