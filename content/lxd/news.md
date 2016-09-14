@@ -1,6 +1,65 @@
 ![Logo](/static/img/containers.png)
 
 # News
+## LXD 2.2 release announcement <span class="text-muted">14th of September 2016</span>
+
+### The changes in this release include
+
+New features:
+
+ * client: Add a "manpage" command (Issue #2280)
+ * client: Add a "rename" alias (Issue #2320)
+ * client/file: Initial implementation of recursive file push/pull (-r) (Issue #1218)
+ * client/file: Support recursive directory creation (-p) (Issue #2290)
+ * client/info: Add cpu usage (Issue #1867)
+ * client/publish: Allow overriding compression algorithm (Issue #2296)
+ * daemon: Make a database backup on schema updates (Issue #2299)
+ * daemon/container: Expose CPU usage (Issue #1867)
+ * daemon/container: Initial implementation of recursive file push/pull (Issue #1218)
+ * daemon/image: Allow overriding compression algorithm (Issue #2296)
+ * daemon/init: Ask for images.auto\_update\_interval (Issue #2167)
+ * daemon/storage: Add new storage.zfs\_use\_refquota option (Issue #2354)
+
+Bugfixes:
+
+ * client/exec: Use os.LookupEnv from go 1.5 to find environment vars
+ * client/help: Change lxc help to to go to stdout (Issue #2301)
+ * daemon: Consistently handle name conflicts
+ * daemon/container: Allow unsetting any config key
+ * daemon/container: Fix USB transposed major/minor
+ * daemon/container: Handle xattrs on publish
+ * daemon/container: Retry generating petnames on conflict
+ * daemon/container: Return an error on "restart" without force of a paused container (Issue #2311)
+ * daemon/container: Rework container operation locking (Issue #2297)
+ * daemon/container: Try to remove the usb bus dir after device disconnect (Issue #2306)
+ * daemon/container: Various USB hotplug fixes (Issue #2312)
+ * daemon/dir: Copy everything on container copy (Issue #2371)
+ * daemon: Do our own socket activation (Issue #2333)
+ * daemon/image: Fix support for lzma alone file format (Issue #2360)
+ * daemon/init: Change default host to all (::)
+ * daemon/init: Default to "dir" when "zfs" isn't available (Issue #2340)
+ * daemon/init: Fix listed default value for ZFS pool (Issue #2339)
+ * daemon/init: Use more intelligent logic for partition sizing
+ * daemon/profile: Cleaner error on existing profile name
+ * daemon/profile: Properly cleanup on profile removal (Issue #2347)
+ * doc: Add txqueuelen tweak
+ * doc: Clarify that user\_subvol\_rm\_allowed is needed for btrfs nesting (Issue #2338)
+ * doc: Fix typos in production-setup.md
+ * doc: Rename api\_extensions to api-extensions
+ * i18n: Update po files and Japanese translation
+ * lxd-bridge: Fix crash in lxd-bridge-proxy
+ * tests: Fix race in alias test
+ * tests: Make TestReaderToChannel transfer smaller
+ * tests: Only check leftovers on active LXD
+
+### Try it for yourself
+
+This new LXD release is already available for you to try on our [demo service](/lxd/try-it/).
+
+### Downloads
+The release tarballs can be found on our [download page](/lxd/downloads/).
+
+
 ## LXD 2.1 release announcement <span class="text-muted">16th of August 2016</span>
 
 LXD 2.1 is the first feature release following LXD 2.0 LTS.
@@ -94,7 +153,7 @@ Bugfixes:
  * daemon/container: Alphabetize device processing (Issue #2233)
  * daemon/container: Better errors when sanity checking devices
  * daemon/container: Better handle missing or invalid device types (Issue #2210)
- * daemon/container: Document and validate limits.*.priority values (Issue #2231)
+ * daemon/container: Document and validate limits.\*.priority values (Issue #2231)
  * daemon/container: Document image export target behavior and fix bugs (Issue #2205)
  * daemon/container: Don't unfreeze a container on stop (Issue #2164)
  * daemon/container: Fix flag name in init error message
