@@ -12,13 +12,13 @@ New features:
 
  * client: "manpage" コマンドを追加しました <!-- Add a "manpage" command -->(Issue #2280)
  * client: エイリアスとして "rename" を追加しました <!-- Add a "rename" alias -->(Issue #2320)
- * client/file: 再帰的なファイルの push/pull を実装しました <!-- Recursive file push/pull -->(-r) (Issue #1218)
+ * client/file: 再帰的なファイルの push/pull ができるようになりました <!-- Recursive file push/pull -->(-r) (Issue #1218)
  * client/file: 再帰的なディレクトリ作成をサポートしました <!-- Support recursive directory creation -->(-p) (Issue #2290)
  * client/info: CPU 使用率が表示されるようになりました <!-- Add cpu usage -->(Issue #1867)
  * client/publish: 圧縮アルゴリズムをオーバーライドできるようになりました <!-- Allow overriding compression algorithm -->(Issue #2296)
  * daemon: スキーマのアップデート時にデータベースのバックアップを取得するようになりました <!-- Make a database backup on schema updates -->(Issue #2299)
  * daemon/container: CPU の使用率情報が提供できるようになりました <!-- Expose CPU usage -->(Issue #1867)
- * daemon/container: 再帰的なファイルの push/pull <!-- Recursive file push/pull -->(Issue #1218)
+ * daemon/container: 再帰的なファイルの push/pull ができるようになりました <!-- Recursive file push/pull -->(Issue #1218)
  * daemon/image: 圧縮アルゴリズムをオーバーライドできるようになりました <!-- Allow overriding compression algorithm -->(Issue #2296)
  * daemon/init: キャッシュされた古いイメージを自動的に更新するかどうかを尋ねるようになりました <!-- Ask for images.auto\_update\_interval -->(Issue #2167)
  * daemon/storage: 新たに storage.zfs\_use\_refquota オプションを追加しました <!-- Add new storage.zfs\_use\_refquota option -->(Issue #2354)
@@ -35,7 +35,7 @@ Bugfixes:
  * daemon/container: USB デバイス番号の major/minor が入れ替わっていたので修正しました <!-- Fix USB transposed major/minor -->
  * daemon/container: publish の際、xattrs を扱うようになりました <!-- Handle xattrs on publish -->
  * daemon/container: コンフリクトの際、petname の生成をリトライするようになりました <!-- Retry generating petnames on conflict -->
- * daemon/container: pause されたコンテナに対して "restart" を実行するとエラーを返すようになりました <!-- Return an error on "restart" without force of a paused container -->(Issue #2311)
+ * daemon/container: pause されたコンテナに対して force オプションを指定せずに "restart" を実行するとエラーを返すようになりました <!-- Return an error on "restart" without force of a paused container -->(Issue #2311)
  * daemon/container: コンテナ操作のロック処理を見直しました <!-- Rework container operation locking -->(Issue #2297)
  * daemon/container: デバイスの接続が切断されたあと、USB バスディレクトリの削除を試みるようになりました <!-- Try to remove the usb bus dir after device disconnect -->(Issue #2306)
  * daemon/container: USB ホットプラグに関する様々なバグ修正を行いました <!-- Various USB hotplug fixes -->(Issue #2312)
