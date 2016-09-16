@@ -36,7 +36,7 @@ And for those who want development snapshots:
 
  * [lxc-git-master](https://launchpad.net/~ubuntu-lxc/+archive/lxc-git-master): "master" ブランチ <!-- "master" branch -->
  * [lxc-git-stable-1.0](https://launchpad.net/~ubuntu-lxc/+archive/lxc-git-stable-1.0): "stable-1.0" ブランチ <!-- "stable-1.0" branch -->
- * [lxc-git-stable-1.1](https://launchpad.net/~ubuntu-lxc/+archive/lxc-git-stable-1.1): "stable-1.1" ブランチ <!-- "stable-1.1" branch -->
+ * [lxc-git-stable-2.0](https://launchpad.net/~ubuntu-lxc/+archive/lxc-git-stable-2.0): "stable-2.0" ブランチ <!-- "stable-2.0" branch -->
 
 # 現時点の開発バージョン <!-- Current development version -->
 
