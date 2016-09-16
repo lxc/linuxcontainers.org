@@ -1,5 +1,30 @@
 # News
-## LXC 2.0.4 release announcement <span class="text-muted">15th of August 2016</span>
+## LXC 1.1 EOL のお知らせ <!-- End of life announcement for LXC 1.1 --><span class="text-muted">2016 年 9 月 1 日<!-- 1st of September 2016 --></span>
+<!--
+LXC 1.1 has now reached its end of life.
+-->
+LXC 1.1 は EOL となりました。
+
+<!--
+This means that the stable-1.1 branch is now closed and we will not be  
+doing any more bugfix or security releases for this branch.
+-->
+stable-1.1 ブランチはクローズされ、今後このブランチに対するバグ修正やセキュリティ対策のリリースは行われません。
+
+<!--
+Anyone still on LXC 1.1 should upgrade to 2.0 as soon as possible.
+-->
+今でも LXC 1.1 をお使いの場合、なるべく早く 2.0 へアップグレードしてください。
+
+<!--
+As a reminder, we currently support the following releaes:
+-->
+現在、以下のリリースがサポート中です:
+
+ * LXC 1.0.x が 2019 年 6 月 1 日まで <!-- LXC 1.0.x until June 1st 2019 -->
+ * LXC 2.0.x が 2021 年 6 月 1 日まで <!-- LXC 2.0.x until June 1st 2021 -->
+
+## LXC 2.0.4 リリースのお知らせ <!-- LXC 2.0.4 release announcement --><span class="text-muted">2016 年 8 月 15 日 <!-- 15th of August 2016 --></span>
 <!--
 This is the fourth bugfix release for LXC 2.0.
 -->
