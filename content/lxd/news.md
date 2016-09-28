@@ -1,6 +1,71 @@
 ![Logo](/static/img/containers.png)
 
 # News
+## LXD 2.3 release announcement <span class="text-muted">27th of September 2016</span>
+LXD 2.3 includes a few major features we've been working on for months.
+
+The main one is a completely new set of API endpoints, configuration options and commands.  
+This allows creating and configuring bridges through LXD, including IPv4  
+and IPv6 connectivity, Ubuntu FAN support, cross-host tunnels with GRE  
+or VXLAN, various DNS modes, DHCP configuration and MAC filtering.
+
+The other feature we're very excited about is support for AppArmor  
+namespaces and stacking. This will allow containers to load apparmor  
+profiles and further confine their workloads.
+
+### The changes in this release include
+
+New features:
+
+ * Introduce the new network management API
+    * POST to /1.0/networks (see rest-api.md)
+    * PUT to /1.0/networks/NAME (see rest-api.md)
+    * PATCH to /1.0/networks/NAME (see rest-api.md)
+    * DELETE to /1.0/networks/NAME (see rest-api.md)
+    * "lxc network" commands
+    * Network configuration in "lxd init"
+    * The default profile now comes without network configuration
+    * The old lxd-bridge code has been removed
+    * Details of configuration options in configuration.md
+ * Support for AppArmor namespaces and profile stacking
+    * On supported kernels, containers will now be able to use apparmor
+ * Introduce a new storage.lvm\_mount\_options daemon configuration option
+ * Rework log message priorities and add more context to log messages
+ * "lxc info" now shows the remote name in its output
+ * The client now includes the remote name in error messages
+
+Bugfixes:
+
+ * extras: Update bash completion for current options
+ * lxd/init: Enable compression on new zfs pools
+ * shared: Export type checking functions
+ * lxc: Drop unused httpAddr property
+ * lxd/network: Detect openvswitch
+ * lxd/network: Detect bonds
+ * shared: fuidshift: Expand symlinks to last path component
+ * lxd/log: Add wrappers for log functions
+ * lxd/log: Add format wrappers for log functions
+ * lxd/log: Transition to new wrappers
+ * lxd/images: Tweak squashfs for low-memory systems
+ * lxd/migration: Actually support copying across different CoW based backend types
+ * lxd/migration: Preserve snapshot configuration during copy
+ * lxd/db: Don't try to backup the database when running tests
+ * lxd/init: Change validation functions for consistency
+ * lxd/network: Move and rename isOnBridge
+ * lxd/network: Fix networkIsInUse
+ * shared: New RunCommand wrapper function
+ * lxd/db: Fix int64 handling
+ * lxc/file: Make the target directory on recursive pull
+ * doc: Fix the table sytle of environment.md
+ * lxc/exec: Document lxc exec -- args
+ * doc: Fix rest-api for PATCH addition
+ * lxd/migration: Also show warnings on c/r errors
+ * extras: Fixed container convert from LXC to LXD
+ * extras: Containers state checking for start, stop and exec commands in bash completion
+ * apparmor: create an apparmor namespace for each container
+ * snappy: Add /snap/bin to PATH if present
+ * apparmor: Be less restrictive when unprivileged
+
 ## LXD 2.2 release announcement <span class="text-muted">14th of September 2016</span>
 
 ### The changes in this release include
