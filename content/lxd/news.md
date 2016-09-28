@@ -36,35 +36,35 @@ New features:
 
 Bugfixes:
 
- * extras: Update bash completion for current options
- * lxd/init: Enable compression on new zfs pools
- * shared: Export type checking functions
- * lxc: Drop unused httpAddr property
- * lxd/network: Detect openvswitch
- * lxd/network: Detect bonds
- * shared: fuidshift: Expand symlinks to last path component
- * lxd/log: Add wrappers for log functions
- * lxd/log: Add format wrappers for log functions
- * lxd/log: Transition to new wrappers
- * lxd/images: Tweak squashfs for low-memory systems
- * lxd/migration: Actually support copying across different CoW based backend types
- * lxd/migration: Preserve snapshot configuration during copy
- * lxd/db: Don't try to backup the database when running tests
- * lxd/init: Change validation functions for consistency
- * lxd/network: Move and rename isOnBridge
- * lxd/network: Fix networkIsInUse
- * shared: New RunCommand wrapper function
- * lxd/db: Fix int64 handling
- * lxc/file: Make the target directory on recursive pull
- * doc: Fix the table sytle of environment.md
- * lxc/exec: Document lxc exec -- args
- * doc: Fix rest-api for PATCH addition
- * lxd/migration: Also show warnings on c/r errors
- * extras: Fixed container convert from LXC to LXD
- * extras: Containers state checking for start, stop and exec commands in bash completion
- * apparmor: create an apparmor namespace for each container
- * snappy: Add /snap/bin to PATH if present
  * apparmor: Be less restrictive when unprivileged
+ * apparmor: create an apparmor namespace for each container
+ * doc: Fix rest-api for PATCH addition
+ * doc: Fix the table sytle of environment.md
+ * extras: Containers state checking for start, stop and exec commands in bash completion
+ * extras: Fixed container convert from LXC to LXD
+ * extras: Update bash completion for current options
+ * lxc: Drop unused httpAddr property
+ * lxc/exec: Document lxc exec -- args
+ * lxc/file: Make the target directory on recursive pull
+ * lxd/db: Don't try to backup the database when running tests
+ * lxd/db: Fix int64 handling
+ * lxd/images: Tweak squashfs for low-memory systems
+ * lxd/init: Change validation functions for consistency
+ * lxd/init: Enable compression on new zfs pools
+ * lxd/log: Add format wrappers for log functions
+ * lxd/log: Add wrappers for log functions
+ * lxd/log: Transition to new wrappers
+ * lxd/migration: Actually support copying across different CoW based backend types
+ * lxd/migration: Also show warnings on c/r errors
+ * lxd/migration: Preserve snapshot configuration during copy
+ * lxd/network: Detect bonds
+ * lxd/network: Detect openvswitch
+ * lxd/network: Fix networkIsInUse
+ * lxd/network: Move and rename isOnBridge
+ * shared: Export type checking functions
+ * shared: fuidshift: Expand symlinks to last path component
+ * shared: New RunCommand wrapper function
+ * snappy: Add /snap/bin to PATH if present
 
 ## LXD 2.2 release announcement <span class="text-muted">14th of September 2016</span>
 
