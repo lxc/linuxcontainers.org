@@ -1,6 +1,39 @@
 ![Logo](/static/img/containers.png)
 
 # News
+## LXD 2.4 release announcement <span class="text-muted">4th of October 2016</span>
+
+### The changes in this release include
+
+New features:
+
+ * Add API support for push based migration (with a client acting as relay)
+ * Add a new used\_by property to profiles (similar to networks)
+ * Update "lxc profile list" to show a table
+ * Support configuring NAT through "lxd init"
+
+Bugfixes:
+
+ * lxd/init: Actually add new network to profile
+ * lxd/init: Typo fix
+ * lxd/migration: Don't use ActionScript if it's not available
+ * lxd/network: Allow nil network config
+ * lxd/network: Better deal with partially disabled IPv6
+ * lxd/network: Fix automatic nat settings
+ * lxd/network: Fix IPv6 forwarding logic
+ * lxd/network: Fix rare race condition with sysctl
+ * lxd/network: Fix typo discovered by lintian
+ * lxd/zfs: Extra checks and config for ZFS pools
+ * doc: Add AppVeyor badge (Windows testing)
+ * Makefile: Don't recursively include test deps
+ * shared: Add GetOwner stub for Windows
+ * shared: Generate client certificate with proper extended usage info
+ * test: Fix apparmor version check
+ * test: Fix shellcheck warning
+ * test: Force UTC timezone
+ * test: Make container cleanup more reliable
+
+
 ## LXD 2.3 release announcement <span class="text-muted">27th of September 2016</span>
 LXD 2.3 includes a few major features we've been working on for months.
 
