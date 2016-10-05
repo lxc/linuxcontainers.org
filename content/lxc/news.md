@@ -1,5 +1,81 @@
 ![Download icon](/static/img/containers.png)
 # News
+## LXC 2.0.5 release announcement <span class="text-muted">5th of October 2016</span>
+This is the fifth bugfix release for LXC 2.0.
+
+The main bugfixes in this release are:
+
+ * Fix .gitignore after /tools/ split
+ * Add lxc-test-utils to .gitignore
+ * bdev: use correct overlay module name
+ * cleanup: tools: remove --name from lxc-top usage message
+ * cleanup: whitespaces in option alignment for lxc-execute
+ * Use full GPG fingerprint instead of long IDs.
+ * tools: move --rcfile to the common options list
+ * tools: set configfile after load\_config
+ * doc: add --rcfile to common opts
+ * doc: Update Korean lxc-attach(1)
+ * doc: Add --rcfile to Korean common opts
+ * doc: Add --rcfile to Japanese common opts
+ * tools: use exit(EXIT\_\*) everywhere
+ * tools: unify exit() calls outside of main()
+ * utils: Add mips signalfd syscall numbers
+ * seccomp: Implement MIPS seccomp handling
+ * seccomp: Add mips and mips64 entries to lxc\_config\_parse\_arch
+ * seccomp: fix strerror()
+ * confile: add more archs to lxc\_config\_parse\_arch()
+ * seccomp: add support for s390x
+ * seccomp: remove double include and order includes
+ * seccomp: non functional changes
+ * templates: use fd 9 instead of 200
+ * templates: fedora requires openssl binary
+ * tools: use boolean for ret in lxc\_device.c
+ * c/r: use /proc/self/tid/children instead of pidfile
+ * c/r: Fix pid\_t on some arches
+ * templates: Add mips hostarch detection to debian
+ * cleanup: replace tabs wth spaces in usage strings
+ * remove extra 'ret'
+ * c/r: write status only after trying to parse the pid
+ * set FULL\_PATH\_NAMES=NO in doc/api/Doxyfile
+ * templates: rm halt.target -> sigpwr.target symlink
+ * templates: remove creation of bogus directory
+ * console: use correct log name
+ * configure: add --disable-werror
+ * tests: fix get\_item tests
+ * templates: use correct cron version in alpine template
+ * c/r: zero a smaller than known migrate\_opts struct
+ * lxczfs: small fixes
+ * c/r: free valid\_opts if necessary
+ * make rsync deal with sparse files efficiently
+ * lxc-create -t debian fails on ppc64el arch
+ * c/r: fix typo in comment
+ * cgroup: add new functions for interacting with hierachies
+ * utils: add lxc\_deslashify
+ * c/r: pass --cgroup-roots on checkpoint
+ * cgroup: get rid of weird hack in cgfsng\_escape
+ * cgroup: drop cgroup\_canonical\_path
+ * c/r: check that cgroup\_num\_hierarchies > 0
+ * tools: do not add trailing spaces on lxc-ls -1
+ * conf: retrieve mtu from netdev->link
+ * conf: try to retrieve mtu from veth
+ * c/r: detatch from controlling tty on restore
+ * Fix null derefence if attach is called without access to any tty
+ * utils: fix lxc\_string\_split()
+ * tools: lxc\_deslashify() handle special cases
+ * tests: add unit tests for lxc\_deslashify()
+ * Fix for ALTLinux container creation in all branches
+ * utils: lxc\_deslashify() free memory
+ * Fix spelling of CentOS in the templates
+ * Define LXC\_DEVEL to detect development releases
+ * tools: lxc-checkconfig conditionalize devpts check
+
+### Downloads
+The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions  
+will very soon ship a packaged version of LXC 2.0.5.
+
+Should you be interested in individual changes or just looking at the detailed development history,  
+our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-2.0).
+
 ## End of life announcement for LXC 1.1 <span class="text-muted">1st of September 2016</span>
 LXC 1.1 has now reached its end of life.
 
