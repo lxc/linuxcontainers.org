@@ -1,6 +1,97 @@
 ![Logo](/static/img/containers.png)
 
 # News
+## LXD 2.0.4 release announcement <span class="text-muted">5th of October 2016</span>
+
+This is the fifth bugfix release for LXD 2.0.
+
+### The changes since LXD 2.0.4 are
+
+Note that several migration fixes included in this release depend on a newer go-lxc.  
+If building manually, you may need to update your copy of go-lxc.  
+If building for a distribution, you may need to update your packaged version of go-lxc to a newer snapshot.
+
+Minor improvements:
+
+ * Support for AppArmor namespacing and stacking
+ * Rework LXD daemon logging to be cleaner and more generally useful (Issue #1928)
+ * "lxc info CONTAINER" now shows the name of the remote for the container
+ * Client errors now include the remote the container is on
+ * /snap/bin is included to PATH if present in the container
+
+Bugfixes:
+
+ * doc: Add txqueuelen tweak.
+ * doc: Clarify that user\_subvol\_rm\_allowed is needed for btrfs nesting (Issue #2338)
+ * doc: Fix the table style of environment.md (Issue: #2410)
+ * doc: Fix typos in production-setup.md
+ * doc: Remove trailing spaces in production-setup.md
+ * doc: Spacing cleanup
+ * extras: Containers state checking for start, stop and exec commands
+ * extras: Fixed container convert from LXC to LXD
+ * fuidshift: expand symlinks to last path component
+ * lxc: Drop unused httpAddr property
+ * lxc/exec: Document lxc exec -- args
+ * lxc/exec: Use os.LookupEnv from go 1.5 to find environment vars
+ * lxc: Fix spacing alignment in config.go's examples
+ * lxc/help: Send error to stdout (Issue #2301)
+ * lxd/apparmor: Be less restrictive when unprivileged
+ * lxd-bridge: Fail on dnsmasq failure
+ * lxd-bridge: Fix crash in lxd-bridge-proxy
+ * lxd: Consistently handle name conflicts
+ * lxd/container: Allow unsetting any config key
+ * lxd/container\_lxc: handle xattrs
+ * lxd/container: Retry generating petnames
+ * lxd/container: Return an error on "restart" without force of a paused container (Issue #2311)
+ * lxd/container: Rework container operation locking (Issue #2297)
+ * lxd/daemon: Do our own socket activation (Issue #2333)
+ * lxd/db: Fix int64 handling
+ * lxd/db: Make a database backup on schema updates (Issue #2299)
+ * lxd/db: Rework DB schema updates
+ * lxd/image: Fix support for lzma alone file format (Issue #2360)
+ * lxd/image: Tweak squashfs for low-memory systems (Issue #2382)
+ * lxd/init: Change default host to all (::)
+ * lxd/init: Change validation functions for consistency
+ * lxd/init: Default to "dir" when "zfs" isn't available (Issue #2340)
+ * lxd/init: Don't fail when passed "all" as an IP
+ * lxd/init: Enable compression on new zfs pools
+ * lxd/init: Fix listed default value for ZFS pool (Issue #2339)
+ * lxd/init: use more intelligent logic for partition sizing
+ * lxd/migration: Actually support copying across different CoW based backend types (Issue #2359)
+ * lxd/migration: Also show warnings on c/r errors
+ * lxd/migration: Bump ghost limit
+ * lxd/migration: Don't use ActionScript if it's not available
+ * lxd/migration: Preserve snapshot configuration
+ * lxd/migration: Resume dumped container on failed restore
+ * lxd/migration: Use liblxc's new preserves\_inodes feature
+ * lxd/network: Detect bonds
+ * lxd/network: Detect openvswitch
+ * lxd/network: Fix networkIsInUse
+ * lxd/network: Move and rename isOnBridge
+ * lxd/profile: Cleaner error on existing profile name
+ * lxd/profile: Properly cleanup on profile removal (Issue #2347)
+ * lxd/storage: Copy everything on container copy (Issue #2371)
+ * lxd/storage: Extra checks and config for ZFS pools
+ * Makefile: Don't recursively include test deps
+ * README: Add AppVeyor badge (Windows testing)
+ * shared: Add GetOwner stub for Windows (fixes #2438)
+ * shared: Generate client certificate with proper extended usage info
+ * shared: Make TestReaderToChannel transfer smaller
+ * shared: New RunCommand wrapper function
+ * tests: Add a test to make sure we don't accidentally include new deps
+ * tests: add test for GetAllXattr()
+ * tests: Fix apparmor version check
+ * tests: Fix for newer shellcheck
+ * tests: Force UTC timezone
+ * tests: Only check leftovers on active LXD
+ * tests: skip tests when xatts are not supported
+
+
+### Downloads
+The release tarballs can be found on our [download page](/lxd/downloads/).
+
+
+
 ## LXD 2.4 release announcement <span class="text-muted">4th of October 2016</span>
 
 ### The changes in this release include
