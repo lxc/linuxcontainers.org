@@ -1,5 +1,42 @@
 ![Download icon](/static/img/containers.png)
 # News
+## LXCFS 2.0.4 release announcement <span class="text-muted">5th of October 2016</span>
+
+This is the fourth bugfix release for LXCFS 2.0.
+
+This includes the following bugfixes:
+
+ * Fix test\_reload for lxcfs chroot
+ * Virtualize more of the meminfo fields
+ * pam: fix race in cgroup creation
+ * meminfo: don't show negative swapfree
+ * bindings: improve debugging
+ * bindings: use openat fd for fstatat(), unlinkat()
+ * bindings: close open fds on error
+ * bindings: grant access to /var/lib/lxcfs
+ * bindings: enable access to /var/lib/lxcfs/cgroup
+ * bindings: allow access to /var/lib/lxcfs/proc
+ * lxcfs, bindings: show "." and ".." dir entries
+ * lxcfs: better fs behavior on /var/lib/lxcfs
+ * bindings: non functional changes
+ * bindings: set errno in pick\_controller\_from\_path()
+ * bindings: more consistent fs behavior
+ * add pld linux support
+ * don't use argv[0] in usage output
+ * bindings: revert cgroup check
+ * bindings: improve returned errnos
+ * bindings: make rmdir behave more consistently
+ * libtool: do not link lxcfs against liblxcfs
+ * bindings, lxcfs: improve debugging
+ * bindings: fix debug macro
+ * autotools: add -avoid-version
+ * bindings: restore original working directory
+ * bindings: add function to check fs type
+ * bindings: agnostic naming
+ * bindings: use chroot() on ramfs
+ * bindings: fix type weirdness with statfs f\_type
+ * bindings: make pivot\_enter() contain all its code
+
 ## LXCFS 2.0.3 release announcement <span class="text-muted">15th of August 2016</span>
 
 This is the third bugfix release for LXCFS 2.0.
