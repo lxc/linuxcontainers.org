@@ -1,5 +1,49 @@
 # News
-## LXCFS 2.0.3 release announcement <span class="text-muted">15th of August 2016</span>
+## LXCFS 2.0.4 リリースのお知らせ <!-- LXCFS 2.0.4 release announcement --><span class="text-muted">2016 年 10 月 5 日 <!-- 5th of October 2016 --></span>
+
+<!--
+This is the fourth bugfix release for LXCFS 2.0.
+-->
+このリリースは LXCFS 2.0 の 4 回目のバグフィックスリリースです。
+
+<!--
+This includes the following bugfixes:
+-->
+このリリースには以下のバグ修正が含まれます:
+
+ * lxcfs の chroot に対する test\_reload の修正を行いました　<!-- Fix test\_reload for lxcfs chroot -->
+ * meminfo 情報のさらなる仮想化を行いました <!-- Virtualize more of the meminfo fields -->
+ * pam: cgroup 作成時の競合を修正しました <!-- fix race in cgroup creation -->
+ * meminfo: swapfree にマイナスの値を表示しないようにしました <!-- don't show negative swapfree -->
+ * bindings: デバッグの改良を行いました <!-- improve debugging -->
+ * bindings: fstatat(), unlinkat() で openat の fd を使うようにしました <!-- use openat fd for fstatat(), unlinkat() -->
+ * bindings: エラー時にオープンしている fd をクローズするようにしました <!-- close open fds on error -->
+ * bindings: /var/lib/lxcfs にアクセス権を与えました <!-- grant access to /var/lib/lxcfs -->
+ * bindings: /var/lib/lxcfs/cgroup へアクセスできるようにしました <!-- enable access to /var/lib/lxcfs/cgroup -->
+ * bindings: /var/lib/lxcfs/proc へアクセスできるようにしました <!-- allow access to /var/lib/lxcfs/proc -->
+ * lxcfs, bindings: "." と ".." をディレクトリエントリとして表示するようにしました <!-- show "." and ".." dir entries -->
+ * lxcfs: /var/lib/lxcfs のファイルシステムの振る舞いを改良しました <!-- better fs behavior on /var/lib/lxcfs -->
+ * bindings: コード内のホワイトスペースの調整 (機能的な変更はなし) <!-- non functional changes -->
+ * bindings: pick\_controller\_from\_path() 内で errno を設定するようにしました <!-- set errno in pick\_controller\_from\_path() -->
+ * bindings: より一貫性のあるファイルシステムの振る舞いにしました <!-- more consistent fs behavior -->
+ * PLD Linux のサポートを追加しました <!-- add pld linux support -->
+ * 使用法の出力に argv[0] を使わないようにしました <!-- don't use argv[0] in usage output -->
+ * bindings: cgroup のチェックを元に戻しました (訳注: cgroup ディレクトリの権限のチェックを外した) <!-- revert cgroup check -->
+ * bindings: errno を設定するように改良しました <!-- improve returned errnos -->
+ * bindings: rmdir の振る舞いをより一貫性のあるものにしました <!-- make rmdir behave more consistently -->
+ * libtool: liblxcfs に lxcfs をリンクしないようにしました <!-- do not link lxcfs against liblxcfs -->
+ * bindings, lxcfs: デバッグを改良しました <!-- improve debugging -->
+ * bindings: デバッグマクロを修正しました <!-- fix debug macro -->
+ * autotools: -avoid-version を追加しました <!-- add -avoid-version -->
+ * bindings: 元のワーキングディレクトリに戻るようにしました <!-- restore original working directory -->
+ * bindings: ファイルシステムのタイプをチェックする関数を追加しました <!-- add function to check fs type -->
+ * bindings: 非依存性 (agnostic) なネーミングにしました (訳注: 関数名の変更) <!-- agnostic naming -->
+ * bindings: ramfs 上では chroot() を使うようにしました <!-- use chroot() on ramfs -->
+ * bindings: statfs の f\_type の型が様々なコンパイラできちんと使えるように修正しました <!-- fix type weirdness with statfs f\_type -->
+ * bindings: pivot\_enter() 関数が自身内で全て完結するようにしました (訳注: 引数を無くした) <!-- make pivot\_enter() contain all its code -->
+
+
+## LXCFS 2.0.3 リリースのお知らせ <!-- LXCFS 2.0.3 release announcement --><span class="text-muted">2016 年 8 月 15 日<!-- 15th of August 2016 --></span>
 
 <!--
 This is the third bugfix release for LXCFS 2.0.
