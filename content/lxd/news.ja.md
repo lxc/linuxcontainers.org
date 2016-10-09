@@ -1,6 +1,39 @@
 ![Logo](/static/img/containers.png)
 
 # News
+## LXD 2.4 リリースのお知らせ <!-- LXD 2.4 release announcement --><span class="text-muted">2016 年 10 月 4 日<!-- 4th of October 2016 --></span>
+
+### このリリースに含まれる変更点 <!-- The changes in this release include -->
+
+新機能 <!-- New features -->:
+
+ *  (クライアントでリレーを行う) push ベースのマイグレーション用の API サポートを追加しました<!-- Add API support for push based migration (with a client acting as relay) -->
+ * プロファイルに新たに used\_by プロパティを追加しました (networks と同様) <!-- Add a new used\_by property to profiles (similar to networks) -->
+ * "lxc profile list" を表を表示するように更新しました <!-- Update "lxc profile list" to show a table -->
+ * "lxd init" での NAT の設定をサポートしました <!-- Support configuring NAT through "lxd init" -->
+
+バグ修正 <!-- Bugfixes -->:
+
+ * lxd/init: プロファイルに実際に新しいネットワークを追加するようになりました <!-- Actually add new network to profile -->
+ * lxd/init: Typo を修正しました <!-- Typo fix -->
+ * lxd/migration: 利用できない場合は ActionScript を使わないようにしました <!-- Don't use ActionScript if it's not available -->
+ * lxd/network: ネットワークがない設定ができるようになりました <!-- Allow nil network config -->
+ * lxd/network: より適切に部分的に IPv6 を無効化するようになりました <!-- Better deal with partially disabled IPv6 -->
+ * lxd/network: 自動 NAT 設定を修正しました <!-- Fix automatic nat settings -->
+ * lxd/network: IPv6 フォワーディングロジックを修正しました <!-- Fix IPv6 forwarding logic -->
+ * lxd/network: sysctl に関するレアな競合状態を修正しました <!-- Fix rare race condition with sysctl -->
+ * lxd/network: lintian が発見した Typo を修正しました <!-- Fix typo discovered by lintian -->
+ * lxd/zfs: ZFS プールに関する追加のチェックと設定をするようになりました <!-- Extra checks and config for ZFS pools -->
+ * doc: AppVeyor のバッジを追加しました (Windows のテスト) <!-- Add AppVeyor badge (Windows testing) -->
+ * Makefile: テストの依存関係を再帰的に include しないようにしました <!-- Don't recursively include test deps -->
+ * shared: Windows 用に GetOwner スタブを追加しました <!-- Add GetOwner stub for Windows -->
+ * shared: 適切な拡張鍵用途 (Extended Key Usage) を持つクライアント証明書を生成するようになりました <!-- Generate client certificate with proper extended usage info -->
+ * test: apparmor バージョンチェックを修正しました <!-- Fix apparmor version check -->
+ * test: shellcheck の警告を修正しました <!-- Fix shellcheck warning -->
+ * test: UTC タイムゾーンを強制するようにしました <!-- Force UTC timezone -->
+ * test: コンテナのクリーンアップをより信頼性高くしました <!-- Make container cleanup more reliable -->
+
+
 ## LXD 2.3 リリースのお知らせ <!-- LXD 2.3 release announcement --><span class="text-muted">2016 年 9 月 27 日 <!-- 27th of September 2016 --></span>
 <!--
 LXD 2.3 includes a few major features we've been working on for months.
