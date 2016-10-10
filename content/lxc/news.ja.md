@@ -1,4 +1,92 @@
 # News
+## LXC 2.0.5 リリースのお知らせ <!-- LXC 2.0.5 release announcement --><span class="text-muted">2016 年 10 月 5 日 <!-- 5th of October 2016 --></span>
+<!--
+This is the fifth bugfix release for LXC 2.0.
+-->
+このリリースは LXC 2.0 の 5 回目のバグフィックスリリースです。
+
+<!--
+The main bugfixes in this release are:
+-->
+このリリースの主なバグフィックスは以下です:
+
+ * /tools/ に移動したプログラムの .gitignore 内の記載を修正しました <!-- Fix .gitignore after /tools/ split -->
+ * lxc-test-utils を .gitignore に追加しました <!-- Add lxc-test-utils to .gitignore -->
+ * bdev: overlayfs のモジュール名をカーネルの正式な名前にしました <!-- use correct overlay module name -->
+ * cleanup: tools: --name オプションを lxc-top のヘルプから削除しました <!-- remove \-\-name from lxc-top usage message -->
+ * cleanup: lxc-execute のヘルプ出力のオプション部分の出力のホワイトスペースを揃えました <!--  whitespaces in option alignment for lxc-execute -->
+ * 長い ID の代わりにフルの GPG fingerprint を使うようにしました (訳注: lxc-download で使っている KEYID) <!-- Use full GPG fingerprint instead of long IDs. -->
+ * tools: --rcfile を共通オプションに移動しました <!-- move \-\-rcfile to the common options list -->
+ * tools: load\_config のあとに configfile を設定するようにしました <!-- set configfile after load\_config -->
+ * doc: --rcfile が共通オプションになったのをマニュアルに反映させました (日本語、韓国語 man も)<!-- add \-\-rcfile to common opts -->
+ * doc: 韓国語 lxc-attach(1) を更新しました <!-- Update Korean lxc-attach(1) -->
+<!-- * doc: Add \-\-rcfile to Korean common opts -->
+<!-- * doc: Add \-\-rcfile to Japanese common opts -->
+ * tools: exit の際は常に exit(EXIT_*) を使うようにしました <!-- use exit(EXIT\_\*) everywhere -->
+ * tools: main() 外の exit() 呼び出しを統一しました <!-- unify exit() calls outside of main() -->
+ * utils: mips の signalfd システムコール番号を追加しました <!-- Add mips signalfd syscall numbers -->
+ * seccomp: MIPS の seccomp ハンドリングを実装しました <!-- Implement MIPS seccomp handling -->
+ * seccomp: lxc\_config\_parse\_arch に mips と mips64 のエントリを追加しました <!-- Add mips and mips64 entries to lxc\_config\_parse\_arch -->
+ * seccomp: strerror() を修正しました <!-- fix strerror() -->
+ * confile: lxc\_config\_parse\_arch() にさらに arch を追加しました (訳注: ppc や arm など)<!-- add more archs to lxc\_config\_parse\_arch() -->
+ * seccomp: s390x をサポートしました <!-- add support for s390x -->
+ * seccomp: 複数回の include を削除し、include の順序を調整しました <!-- remove double include and order includes -->
+ * seccomp: 機能的な部分以外の変更 (訳注: エラーメッセージの大文字小文字、コードのインデントの調整、コードの書き方の調整など)<!-- non functional changes -->
+ * templates: fd 200 の代わりに 9 を使うようにしました <!-- use fd 9 instead of 200 -->
+ * templates: fedora では openssl パッケージが必要なのでテンプレート中で追加するようにしました <!-- fedora requires openssl binary -->
+ * tools: lxc\_device.c 内の返り値に boolean を使うようにしました <!-- use boolean for ret in lxc\_device.c -->
+ * c/r: pidfile の代わりに /proc/self/tid/children を使うようにしました <!-- use /proc/self/tid/children instead of pidfile -->
+ * c/r: 一部の arch の pid\_t を修正しました <!-- Fix pid\_t on some arches -->
+ * templates: debian でホストの arch 検出に mips を追加しました <!-- Add mips hostarch detection to debian -->
+ * cleanup: ヘルプ文字列の TAB をスペースに置き換えました <!-- replace tabs wth spaces in usage strings -->
+ * 余分な 'ret' を削除しました <!-- remove extra 'ret' -->
+ * c/r: pid のパースを試みたあとステータスを書き込むようにしました <!-- write status only after trying to parse the pid -->
+ * doc/api/Doxyfile で FULL\_PATH\_NAMES=NO に設定するようしました <!-- set FULL\_PATH\_NAMES=NO in doc/api/Doxyfile -->
+ * templates: halt.target -> sigpwr.target へのシンボリックリンクを削除しました <!-- rm halt.target -> sigpwr.target symlink -->
+ * templates: 不要なディレクトリの作成をやめました <!-- remove creation of bogus directory -->
+ * console: ログ出力時に正しい名前を使うようになりました <!-- use correct log name -->
+ * configure: --disable-werror を追加しました <!-- add \-\-disable-werror -->
+ * tests: get\_item テストを修正しました <!-- fix get\_item tests -->
+ * templates: alpine テンプレートで正確なバージョンの cron を使うようになりました <!-- use correct cron version in alpine template -->
+ * c/r: migrate\_opts 構造体のサイズが小さい場合、構造体の最後をゼロで埋めるようにしました <!-- zero a smaller than known migrate\_opts struct -->
+ * lxczfs: 細かい修正を行いました <!-- small fixes -->
+ * c/r: valid\_opts を必要に応じて free するようにしました <!-- free valid\_opts if necessary -->
+ * rsync でスパースファイルをより効率的に扱うようになりました <!-- make rsync deal with sparse files efficiently -->
+ * lxc-create -t debian が ppc64el の時に失敗するのを修正しました <!-- Lxc-create -t debian fails on ppc64el arch -->
+ * c/r: コメントの typo を修正しました <!-- fix typo in comment -->
+ * cgroup: 階層に関係する新しい関数を追加しました <!-- add new functions for interacting with hierachies -->
+ * utils: lxc\_deslashify を追加しました <!-- add lxc\_deslashify -->
+ * c/r: チェックポイントの際に --cgroups-roots　を与えるようになりました <!-- pass --cgroup-roots on checkpoint -->
+ * cgroup: cgfsng\_escape の変な hack を除去しました <!-- get rid of weird hack in cgfsng\_escape -->
+ * cgroup: cgroup\_canonical\_path を削除しました <!-- drop cgroup\_canonical\_path -->
+ * c/r: cgroup\_num\_hierarchies > 0 をチェックするようになりました <!-- check that cgroup\_num\_hierarchies > 0 -->
+ * tools: lxc-ls -1 で末尾にスペースを追加しなくなりました <!-- do not add trailing spaces on lxc-ls -1 -->
+ * conf: netdev->link から mtu を取得するようになりました <!-- retrieve mtu from netdev->link -->
+ * conf: veth から mtu を取得するようになりました <!-- try to retrieve mtu from veth -->
+ * c/r: リストア時にコントロール中の tty からデタッチするようになりました <!-- detatch from controlling tty on restore -->
+ * tty からのアクセスがなく呼ばれる attach の場合、NULL ポインタの値を参照しようとしていた問題を修正しました <!-- Fix null derefence if attach is called without access to any tty -->
+ * utils: lxc\_string\_split() を修正しました (訳注: 初期化されていない領域を返さないように修正)<!-- fix lxc\_string\_split() -->
+ * tools: lxc\_deslashify() が特別な場合を扱うようになりました <!-- lxc\_deslashify() handle special cases -->
+ * tests: lxc\_deslashify() のユニットテストを追加しました <!-- add unit tests for lxc\_deslashify() -->
+ * ALTLinux コンテナの作成をすべてのブランチで修正しました <!-- Fix for ALTLinux container creation in all branches -->
+ * utils: lxc\_deslashify() でメモリを解放するようになりました <!-- lxc\_deslashify() free memory -->
+ * テンプレート中の CentOS 文字列の修正を行いました (訳注: centos -> CentOS の置換) <!-- Fix spelling of CentOS in the templates -->
+ * 開発リリースであることが検出できるように LXC\_DEVEL を定義しました <!-- Define LXC\_DEVEL to detect development releases -->
+ * tools: lxc-checkconfig の devpts のチェックを条件付きとしました (訳注: kernel 4.7 で DEVPTS_MULTIPLE_INSTANCES が削除されたので < 4.7 の時のみチェックするようになった)<!-- lxc-checkconfig conditionalize devpts check -->
+
+### ダウンロード <!-- Downloads -->
+<!--
+The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions  
+will very soon ship a packaged version of LXC 2.0.5.
+-->
+このリリースの tarball は [ダウンロードページ](/lxc/downloads/) から取得できます。そして、各ディストリビューションがすぐに LXC 2.0.5 のパッケージをリリースするでしょう。
+
+<!--
+Should you be interested in individual changes or just looking at the detailed development history,  
+our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-2.0).
+-->
+個々の変更点に興味がある場合、そして開発の履歴を見たい場合、stable ブランチが [Github](https://github.com/lxc/lxc/tree/stable-2.0) にあります。
+
 ## LXC 1.1 EOL のお知らせ <!-- End of life announcement for LXC 1.1 --><span class="text-muted">2016 年 9 月 1 日<!-- 1st of September 2016 --></span>
 <!--
 LXC 1.1 has now reached its end of life.
