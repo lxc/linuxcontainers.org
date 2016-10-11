@@ -8,7 +8,7 @@ This is the fifth bugfix release for LXD 2.0.
 -->
 このリリースは LXD 2.0 の 5 回目のバグフィックスリリースです。
 
-### LXD 2.0.4 以降の変更は以下の通りです <!-- The changes since LXD 2.0.5 are -->
+### LXD 2.0.4 以降の変更は以下の通りです <!-- The changes since LXD 2.0.4 are -->
 
 <!--
 Note that several migration fixes included in this release depend on a newer go-lxc.  

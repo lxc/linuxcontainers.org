@@ -21,7 +21,7 @@ Bugfixes:
 
 This is the fifth bugfix release for LXD 2.0.
 
-### The changes since LXD 2.0.5 are
+### The changes since LXD 2.0.4 are
 
 Note that several migration fixes included in this release depend on a newer go-lxc.  
 If building manually, you may need to update your copy of go-lxc.  
