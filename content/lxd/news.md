@@ -1,8 +1,89 @@
 ![Logo](/static/img/containers.png)
 
 # News
-## LXD 2.4.1 release announcement <span class="text-muted">5th of October 2016</span>
+## LXD 2.5 release announcement <span class="text-muted">25th of October 2016</span>
+### The changes in this release include
+New features:
 
+ * lxc/remote: Allow adding a new remote just by FQDN/IP (without a name)
+ * lxd/containers: Implement exec output recording in the API
+ * lxd/images: Store the simplestreams cache to disk (allows for offline use of those remote images)
+ * lxd/certificates: Add support for PUT/PATCH of certificates
+ * lxd/containers: Support signal forwarding in exec session
+ * lxd/containers: Add support for GPU hotplug ("gpu" device type)
+
+Bugfixes:
+
+ * appveyor: Add appveyor config to git (Issue #2537)
+ * client: Disable keepalives in http.Transports
+ * client: Fix tests of client on Windows/Mac
+ * doc: Add official Windows support to README
+ * doc: Sort API endpoints in rest-api
+ * doc: Use consistent method ordering in rest-api
+ * doc: Use spaces everywhere
+ * doc: We actually require 2.0.0 or higher
+ * doc: Workaround github markdown renderer
+ * examples: Use .yaml as the yaml extension
+ * extra: Added the command network to lxc-client bash-completion
+ * extra: Allow dash in parameters to lxc-client bash-completion
+ * extra: Fix \_lxd\_profiles in lxc-client bash-completion
+ * lxc/copy: Don't use the operation as a marker of success
+ * lxc/copy: Wait on the source operation too
+ * lxc/exec: Set term to "dumb" on windows (Issue #2288)
+ * lxc/file: Fix help typo
+ * lxc/file: Fix mkdir -p /
+ * lxc/file: Normalize paths before sending them to the server (Issue #2557)
+ * lxc/init: Fix typo in nictype value for -n
+ * lxc/list: Fix typo in lxc list help
+ * lxc/push: Fix typo (Issue #2501)
+ * lxc/remote: Fix remote add with Go tip
+ * lxd/certificates: Export all documented certificate fields
+ * lxd/containers: Be more verbose on mkdir failure
+ * lxd/containers: Catch and return more errors in OnStop
+ * lxd/containers: Clean up apparmor stuff in OnStart when something fails
+ * lxd/containers: Don't destroy ephemeral container on restart (Issue #2555)
+ * lxd/containers: Don't show invalid logs
+ * lxd/containers: exec: Remove unused code
+ * lxd/containers: Fix forkmount to work with 4.8 and higher
+ * lxd/containers: Fix wording of seccomp error message
+ * lxd/containers: Improve config validation on update
+ * lxd/containers: Log OnStart/OnStop hook errors
+ * lxd/containers: More reliable container autostart (Issue #2469)
+ * lxd/containers: Only load kernel modules if not loaded
+ * lxd/containers: Properly validate CPU allowance
+ * lxd/containers: Properly validate memory limits (Issue #2483)
+ * lxd/containers: Record the err from go-lxc
+ * lxd/containers: Remove legacy code from OnStop
+ * lxd/containers: Report correct dev type in log
+ * lxd/containers: Set LXC loglevel to match daemon (Issue #2528)
+ * lxd/containers: USB vendorid is mandatory, productid isn't
+ * lxd/devices: Be less optimistic about netlink info
+ * lxd/devices: Use DEVNAME entry of netlink for usb
+ * lxd/images: Detect out of disk space unpack errors (Issue #2201)
+ * lxd/images: Don't make unnecessary image copies (Issue #2508)
+ * lxd/images: Fix invalid filename of metadata on export (Issue #2467)
+ * lxd/init: Detect zfs kernel support
+ * lxd/init: Ignore ZFS if in a container
+ * lxd/migration: Fix a race for collecting logs
+ * lxd/migration: Remove debugging by file creation
+ * lxd/migration: Start migration storage at the right time (Issue #2505)
+ * lxd/networks: Always allow communication with dnsmasq (Issue #2506)
+ * lxd/networks: Always pass --enable-ra with IPv6 (Issue #2481)
+ * lxd/networks: Fill DHCP checksums
+ * lxd/networks: Fix IPv6 DHCP logic
+ * shared/cert: be more thorough when parsing ip addr
+ * shared: Move Linux specific tests away (Issue #2449)
+ * travis: Run the client tests
+ * travis: Update to match Jenkins Go versions
+
+### Try it for yourself
+This new LXD release is already available for you to try on our [demo service](/lxd/try-it/).
+
+### Downloads
+The release tarballs can be found on our [download page](/lxd/downloads/).
+
+
+## LXD 2.4.1 release announcement <span class="text-muted">5th of October 2016</span>
 The primary goal for this release is to publish release tarballs that actually report LXD  
 as "2.4.1" rather than "2.3" as the release ones mistakenly did.
 
@@ -16,13 +97,14 @@ Bugfixes:
  * tests: add a test to make sure we don't accidentally include new deps
  * extras: Added the command shell to lxc-client bash-completion
 
+### Downloads
+The release tarballs can be found on our [download page](/lxd/downloads/).
+
 
 ## LXD 2.0.5 release announcement <span class="text-muted">5th of October 2016</span>
-
 This is the fifth bugfix release for LXD 2.0.
 
 ### The changes since LXD 2.0.4 are
-
 Note that several migration fixes included in this release depend on a newer go-lxc.  
 If building manually, you may need to update your copy of go-lxc.  
 If building for a distribution, you may need to update your packaged version of go-lxc to a newer snapshot.
@@ -102,15 +184,15 @@ Bugfixes:
  * tests: Only check leftovers on active LXD
  * tests: skip tests when xatts are not supported
 
+### Try it for yourself
+This new LXD release is already available for you to try on our [demo service](/lxd/try-it/).
 
 ### Downloads
 The release tarballs can be found on our [download page](/lxd/downloads/).
 
 
 ## LXD 2.4 release announcement <span class="text-muted">4th of October 2016</span>
-
 ### The changes in this release include
-
 New features:
 
  * Add API support for push based migration (with a client acting as relay)
@@ -139,6 +221,12 @@ Bugfixes:
  * test: Force UTC timezone
  * test: Make container cleanup more reliable
 
+### Try it for yourself
+This new LXD release is already available for you to try on our [demo service](/lxd/try-it/).
+
+### Downloads
+The release tarballs can be found on our [download page](/lxd/downloads/).
+
 
 ## LXD 2.3 release announcement <span class="text-muted">27th of September 2016</span>
 LXD 2.3 includes a few major features we've been working on for months.
@@ -153,7 +241,6 @@ namespaces and stacking. This will allow containers to load apparmor
 profiles and further confine their workloads.
 
 ### The changes in this release include
-
 New features:
 
  * Introduce the new network management API
@@ -205,10 +292,15 @@ Bugfixes:
  * shared: New RunCommand wrapper function
  * snappy: Add /snap/bin to PATH if present
 
+### Try it for yourself
+This new LXD release is already available for you to try on our [demo service](/lxd/try-it/).
+
+### Downloads
+The release tarballs can be found on our [download page](/lxd/downloads/).
+
+
 ## LXD 2.2 release announcement <span class="text-muted">14th of September 2016</span>
-
 ### The changes in this release include
-
 New features:
 
  * client: Add a "manpage" command (Issue #2280)
@@ -257,7 +349,6 @@ Bugfixes:
  * tests: Only check leftovers on active LXD
 
 ### Try it for yourself
-
 This new LXD release is already available for you to try on our [demo service](/lxd/try-it/).
 
 ### Downloads
@@ -265,7 +356,6 @@ The release tarballs can be found on our [download page](/lxd/downloads/).
 
 
 ## LXD 2.1 release announcement <span class="text-muted">16th of August 2016</span>
-
 LXD 2.1 is the first feature release following LXD 2.0 LTS.
 
 Note that this release does not have LTS status and as such will not  
@@ -274,7 +364,6 @@ benefit from multi-year support or bugfix releases.
 For production environments, we recommend that you stick to the LXD 2.0 LTS release.
 
 ### The changes in this release include
-
 New features:
 
  * client: Add a `lxc shell` alias by default
@@ -308,7 +397,6 @@ Bugfixes:
  * c/r: bump ghost limit
 
 ### Try it for yourself
-
 This new LXD release is already available for you to try on our [demo service](/lxd/try-it/).
 
 ### Downloads
@@ -317,11 +405,9 @@ The release tarballs can be found on our [download page](/lxd/downloads/).
 
 
 ## LXD 2.0.4 release announcement <span class="text-muted">15th of August 2016</span>
-
 This is the fourth bugfix release for LXD 2.0.
 
 ### The changes since LXD 2.0.3 are
-
 Minor improvements:
 
  * /dev/net/tun is now a default device (always present)
@@ -399,11 +485,9 @@ The release tarballs can be found on our [download page](/lxd/downloads/).
 
 
 ## LXD 2.0.3 release announcement <span class="text-muted">28th of June 2016</span>
-
 This is the third bugfix release for LXD 2.0.
 
 ### The changes since LXD 2.0.2 are
-
 Notes:
 
  * The "unsquashfs" command is now a LXD requirement as it is needed to
@@ -474,11 +558,9 @@ The release tarballs can be found on our [download page](/lxd/downloads/).
 
 
 ## LXD 2.0.2 release announcement <span class="text-muted">30th of May 2016</span>
-
 This is the second bugfix release for LXD 2.0 and its first security update.
 
 ## CVE-2016-1581
-
 Robie Basak noticed that after setting up a loop based ZFS pool through "lxd init"  
 the resulting file (/var/lib/lxd/zfs.img) was world readable.
 
@@ -497,7 +579,6 @@ the zfs.img file, you should consider replacing any secret that was stored in th
 affected containers (private keys and similar credentials).
 
 ## CVE-2016-1582
-
 Robie Basak noticed that when switching an unprivileged container (default, security.privileged=false)  
 into privileged mode (by setting security.privileged to true), the container rootfs is properly  
 remapped but the container directory itself (/var/lib/lxd/containers/XYZ) remains at 0755.
@@ -525,7 +606,6 @@ The release tarballs can be found on our [download page](/lxd/downloads/).
 
 
 ## LXD 2.0.1 release announcement <span class="text-muted">16th of May 2016</span>
-
 This is the first bugfix release for LXD 2.0.
 
 ### The bugfixes since LXD 2.0.0 are
@@ -592,7 +672,6 @@ The release tarballs can be found on our [download page](/lxd/downloads/).
 
 
 ## LXD 2.0.0 release announcement <span class="text-muted">11th of April 2016</span>
-
 This is the final release of LXD 2.0!
 
 LXD 2.0 is a Long Term Support release, similar to LXC 2.0 and LXCFS 2.0 and so comes  
