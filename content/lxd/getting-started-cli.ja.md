@@ -21,7 +21,7 @@ Alternatively, to get the latest upstream release, a PPA is available:
 -->
 代わりに、最新の開発元からのリリースを取得するために、PPA が利用できます:
 
-    add-apt-repository ppa:ubuntu-lxc/lxd-stable
+    apt-add-repository ppa:ubuntu-lxc/lxd-stable
     apt-get update
     apt-get dist-upgrade
     apt-get install lxd

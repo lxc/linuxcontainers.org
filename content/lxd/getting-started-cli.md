@@ -12,7 +12,7 @@ Ubuntu 14.04 LTS users can also install LXD using backports:
 
 Alternatively, to get the latest upstream release, a PPA is available:
 
-    add-apt-repository ppa:ubuntu-lxc/lxd-stable
+    apt-add-repository ppa:ubuntu-lxc/lxd-stable
     apt-get update
     apt-get dist-upgrade
     apt-get install lxd

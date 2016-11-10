@@ -12,7 +12,7 @@
 
 В качестве альтернативы, для получения последнего upstream релиза доступен PPA:
 
-    add-apt-repository ppa:ubuntu-lxc/lxd-stable
+    apt-add-repository ppa:ubuntu-lxc/lxd-stable
     apt-get update
     apt-get dist-upgrade
     apt-get install lxd
