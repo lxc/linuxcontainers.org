@@ -1,5 +1,22 @@
 ![Download icon](/static/img/containers.png)
 # News
+## LXCFS 2.0.5 release announcement <span class="text-muted">23rd of November 2016</span>
+
+This is the fifth bugfix release for LXCFS 2.0.
+
+This includes the following bugfixes:
+
+ * Add Documentation key to systemd unit
+ * bindings: allow getattr on O\_WRONLY files
+ * bindings: remove noop check
+ * fix Active/Inactive /proc/meminfo
+ * macro: add header for shared macros
+ * pam\_cgfs: reimplement and add cgroupfs v2 support
+ * pam\_cgfs: re-use cgroups that already belong to us
+ * pam\_cgfs: handle cgroupfs v1 cpuset controller
+ * pam\_cgfs: improve logging
+ * cgroups: handle non-existent isolcpus file
+
 ## LXCFS 2.0.4 release announcement <span class="text-muted">5th of October 2016</span>
 
 This is the fourth bugfix release for LXCFS 2.0.
