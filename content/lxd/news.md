@@ -1,6 +1,109 @@
 ![Logo](/static/img/containers.png)
 
 # News
+## LXD 2.0.6 release announcement <span class="text-muted">23rd of November 2016</span>
+This is the sixth bugfix release for LXD 2.0.
+
+### The changes since LXD 2.0.5 are
+
+Minor improvements:
+
+ * Support for container specific uid/gid maps (see userns-idmap.md)
+
+Bugfixes:
+
+ * appveyor: Add config to git (Issue #2537)
+ * appveyor: Cleanup appveyor.yml before modifications
+ * appveyor: Create archive with platform specifier in its name
+ * appveyor: Do verbose testing for test names and timings
+ * appveyor: Publish compiled binaries for download
+ * client: Rework progress handling
+ * doc: Add hacking guide (debugging.md)
+ * doc: Add official Windows support in README
+ * doc: Bump liblxc version required in README
+ * doc: Sort API endpoints in rest-api.md
+ * doc: Update README to specify docker installation details
+ * doc: Update requirements, we actually require 2.0.0 or higher
+ * doc: Use consistent method ordering in rest-api.md
+ * extra/bash: Allow dash in parameters to lxc-client bash-completion
+ * extra/bash: Fix \_lxd\_profiles in lxc-client bash-completion
+ * extra/lxc-to-lxd: Better output with no container
+ * extra/lxc-to-lxd: Check that source path exists (disk) (Issue #2572)
+ * extra/lxc-to-lxd: Consistent logging
+ * extra/lxc-to-lxd: Don't fail dry-run with runnning containers
+ * extra/lxc-to-lxd: Drop dependency on pylxd
+ * extra/lxc-to-lxd: Fix lxdpath handling
+ * extra/lxc-to-lxd: Formatting
+ * extra/lxc-to-lxd: Migrate lxc.aa\_profile if set
+ * extra/lxc-to-lxd: Print summary and proper exit code
+ * lxc/copy: Don't use the operation as a marker of success
+ * lxc/copy: Wait on the source operation too
+ * lxc/delete: update help text
+ * lxc/exec: Set term to "dumb" on windows (Issue #2288)
+ * lxc/finger: update help text
+ * lxc: Fix tests on Windows/Mac
+ * lxc/list: Fix typo in help message
+ * lxc/remote: Fix remote add with Go tip
+ * lxc/restore: update help text
+ * lxc: Use .yaml as the yaml extension in examples
+ * lxd/certificates: Export all documented certificate fields
+ * lxd/containers: Add /snap/bin to PATH even if only /snap exists
+ * lxd/containers: Also clean up apparmor stuff in OnStart when something fails
+ * lxd/containers: Attach to userns on file operations
+ * lxd/containers: Be more verbose on mkdir failure
+ * lxd/containers: Better handle concurent stop/shutdown
+ * lxd/containers: Catch and return more errors in OnStop
+ * lxd/containers: Clarify container delete failure error
+ * lxd/containers: Don't destroy ephemeral container on restart (Issue #2555)
+ * lxd/containers: Don't double delete ephemeral containers
+ * lxd/containers: Don't show invalid logs
+ * lxd/containers: Fix forkmount to work with 4.8 and higher
+ * lxd/containers: Fix invalid filename of metadata on export (Issue #2467)
+ * lxd/containers: Improve config validation on update
+ * lxd/containers: Improve container error handling
+ * lxd/containers: Improve container locking mechanism (Issue #2612)
+ * lxd/containers: log OnStart/OnStop hook errors
+ * lxd/containers: More reliable container autostart (Issue #2469)
+ * lxd/containers: Only load kernel modules if not loaded
+ * lxd/containers: Properly validate CPU allowance
+ * lxd/containers: Properly validate memory limits (Issue #2483)
+ * lxd/containers: Record the err from go-lxc
+ * lxd/containers: Remove legacy code from OnStop
+ * lxd/containers: Remove unused code
+ * lxd/containers: Save properties on publish
+ * lxd/containers: Set LXC loglevel to match daemon (Issue #2528)
+ * lxd/containers: Skip leading whitespace in raw.lxc
+ * lxd/containers: Start storage when necessary in stateful start
+ * lxd/containers: Timeout container freeze on stop
+ * lxd/images: Detect out of disk space unpack errors (Issue #2201)
+ * lxd/images: Don't make unnecessary image copies (Issue #2508)
+ * lxd/images: Don't update images at all if interval is 0
+ * lxd/images: Store the simplestreams cache to disk (Issue #2487)
+ * lxd/init: Detect zfs kernel support
+ * lxd/init: Ignore ZFS if in a container
+ * lxd/main: Immediately exit when no DB in activateifneeded
+ * lxd/migration: Fix a race for collecting logs
+ * lxd/migration: Remove debugging by file creation
+ * lxd/migration: Start migration storage at the right time (Issue #2505)
+ * lxd/storage: Fix 10s delay on removing used ZFS images (Issue #2617)
+ * lxd/storage: Freeze before copying in dir backend
+ * lxd/storage: Simplify rsync code
+ * shared/certificates: Be more thorough when parsing ip addr
+ * shared: Disable keepalives in http.Transports
+ * shared: Move Linux specific tests away (Issue #2449)
+ * shared/simplestreams: Cleanup unused properties
+ * tests: Better fix LXD\_DEBUG
+ * tests: Cleanup leftover containers
+ * tests: Don't depend on main.sh for filemanip
+ * tests: Implement LXD\_VERBOSE
+ * tests: Reduce verbosity under LXD\_DEBUG
+ * travis: Run the client tests
+ * travis: Update to match Jenkins Go versions
+
+### Downloads
+The release tarballs can be found on our [download page](/lxd/downloads/).
+
+
 ## LXD 2.6 release announcement <span class="text-muted">22nd of November 2016</span>
 ### The changes in this release include
 New features:
