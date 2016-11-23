@@ -1,5 +1,294 @@
 ![Download icon](/static/img/containers.png)
 # News
+## LXC 2.0.6 release announcement <span class="text-muted">23rd of November 2016</span>
+This is the sixth bugfix release for LXC 2.0.
+
+Important:
+
+ * Security fix for CVE-2016-8649
+
+Bugfixes:
+
+ * utils: make detect\_ramfs\_rootfs() return bool
+ * tests: add test for detect\_ramfs\_rootfs()
+ * add Documentation entries to lxc and lxc@ units
+ * mark the python examples as having utf-8 encoding
+ * log: sanity check the returned value from snprintf()
+ * lxc-alpine: mount /dev/shm as tmpfs
+ * archlinux: Do DHCP on eth0
+ * archlinux: Fix resolving
+ * Drop leftover references to lxc\_strerror()
+ * tests: fix image download for s390x
+ * tools: fix coding style in lxc\_attach
+ * tools: make overlay valid backend
+ * tools: better error reporting for lxc-start
+ * alpine: Fix installing extra packages
+ * lxc-alpine: do not drop setfcap
+ * s390x: Fix seccomp handling of personalities
+ * tools: correct the argument typo in lxc\_copy
+ * Use libtool for liblxc.so
+ * c/r: use --external instead of --veth-pair
+ * c/r: remember to increment netnr
+ * c/r: add checkpoint/restore support for macvlan interfaces
+ * ubuntu: Fix package upgrades requiring proc
+ * c/r: drop duplicate hunk from macvlan case
+ * c/r: use snprintf to compute device name
+ * Tweak libtool handling to work with Android
+ * tests: add lxc\_error() and lxc\_debug()
+ * container start: clone newcgroup immediately
+ * use python3\_sitearch for including the python code
+ * fix rpm build, include all built files, but only once
+ * cgfs: fix invalid free()
+ * find OpenSUSE's build also as obs-build
+ * improve help text for --fancy and --fancy-format
+ * improve wording of the help page for lxc-ls
+ * cgfs: add print\_cgfs\_init\_debuginfo()
+ * cgfs: skip empty entries under /proc/self/cgroup
+ * cgfs: explicitly check for NULL
+ * tools: use correct exit code for lxc-stop
+ * c/r: explicitly emit bind mounts as criu arguments
+ * log: bump LXC\_LOG\_BUFFER\_SIZE to 4096
+ * conf: merge network namespace move & rename on shutdown
+ * c/r: save criu's stdout during dump too
+ * c/r: remove extra \ns from logs
+ * c/r: fix off-by-one error
+ * c/r: check state before doing a checkpoint/restore
+ * start: CLONE\_NEWCGROUP after we have setup cgroups
+ * create symlink for /var/run
+ * utils: add lxc\_append\_string()
+ * cgroups: remove isolated cpus from cpuset.cpus
+ * Update Ubuntu release name: add zesty and remove wily
+ * templates: add squashfs support to lxc-ubuntu-cloud.in
+ * cgroups: skip v2 hierarchy entry
+ * also stop lxc-net in runlevels 0 and 6
+ * add lxc.egg-info to gitignore
+ * install bash completion where pkg-config tells us to
+ * conf: do not use %m format specifier
+ * debian: Don't depend on libui-dialog-perl
+ * cgroups: use %zu format specifier to print size\_t
+ * lxc-checkpoint: automatically detect if --external or --veth-pair
+ * cgroups: prevent segfault in cgfsng
+ * utils: add lxc\_preserve\_ns()
+ * start: add netnsfd to lxc\_handler
+ * conf: use lxc\_preserve\_ns()
+ * attach: use lxc\_preserve\_ns()
+ * lxc\_user\_nic: use lxc\_preserve\_ns()
+ * conf, start: improve log output
+ * conf: explicitly remove veth device from host
+ * conf, start: be smarter when deleting networks
+ * start, utils: improve preserve\_ns()
+ * start, error: improve log + non-functional changes
+ * start, namespace: move ns\_info to namespace.{c,h}
+ * attach, utils: bugfixes
+ * attach: use ns\_info[LXC\_NS\_MAX] struct
+ * namespace: always attach to user namespace first
+ * cgroup: improve isolcpus handling
+ * cgroups: handle non-existent isolcpus file
+ * utils: add lxc\_safe\_uint()
+ * tests: add unit tests for lxc\_safe\_uint()
+ * utils: add lxc\_safe\_int()
+ * tests: add unit tests for lxc\_safe\_int()
+ * conf/ile: get ip prefix via lxc\_safe\_uint()
+ * confile: use lxc\_safe\_u/int in config\_init\_{u,g}id
+ * conf/ile: use lxc\_safe\_uint() in config\_pts()
+ * conf/ile: use lxc\_safe\_u/int() in config\_start()
+ * conf/ile: use lxc\_safe\_uint() in config\_monitor()
+ * conf/ile: use lxc\_safe\_uint() in config\_tty()
+ * conf/ile: use lxc\_safe\_uint() in config\_kmsg()
+ * conf/ile: avoid atoi in config\_lsm\_aa\_incomplete()
+ * conf/ile: use lxc\_safe\_uint() in config\_autodev()
+ * conf/ile: avoid atoi() in config\_ephemeral()
+ * utils: use lxc\_safe\_int()
+ * lxc\_monitord: use lxc\_safe\_int() && use exit()
+ * start: use lxc\_safe\_int()
+ * conf: use lxc\_safe\_{u}int()
+ * tools/lxc\_execute: use lxc\_safe\_uint()
+ * tools/lxc\_stop: use lxc\_safe\_uint()
+ * utils: add lxc\_safe\_long()
+ * tests: add unit tests for lxc\_safe\_long()
+ * tools/lxc\_stop: use lxc\_safe\_long()
+ * tools/lxc\_top: use lxc\_safe\_int()
+ * tools/lxc\_ls: use lxc\_safe\_uint()
+ * tools/lxc\_autostart: use lxc\_safe\_{int,long}()
+ * tools/lxc\_console: use lxc\_safe\_uint()
+ * tools: replace non-standard namespace identifiers
+ * Configure a static MAC address on the LXC bridge
+ * tests: remove overflow tests
+ * attach: do not send procfd to attached process
+
+### Downloads
+The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions  
+will very soon ship a packaged version of LXC 2.0.6.
+
+Should you be interested in individual changes or just looking at the detailed development history,  
+our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-2.0).
+
+
+## LXC 1.0.9 release announcement <span class="text-muted">23rd of November 2016</span>
+This is the ninth bugfix release for LXC 1.0.
+
+Important:
+
+ * Security fix for CVE-2016-8649
+
+Bugfixes:
+
+ * doc: change "-t" option of lxc-create(1) to being required
+ * ubuntu-cloud: Various fixes
+ * coverity: avoid null pointer dereference in cgmanager
+ * Use /usr/bin/env python3 instead of /usr/bin/python3 project-wide
+ * Fetch Debian archive GPG keyrings when they're not available
+ * seccomp: handle inverted arch
+ * Better handle preserve\_ns behavior
+ * Revert "seccomp: handle inverted arch"
+ * lxc\_container struct: add comment about moving member fns
+ * debian: Fix container creation on missing cache
+ * lxc: let lxc-start support wlan phys
+ * apparmor: support lxc.aa\_profile = unchanged
+ * seccomp: support 32-bit arm on arm64, and 32-bit ppc on ppc64
+ * Conditional compilation for ARM and PPC
+ * prune\_init\_cgroup: don't dereference NULL
+ * fix 'lxc.mount.entry' key when clearing unexpanded config
+ * Update get\_item test after the lxc.mount.entry fix
+ * Fix seccomp profile on attach of undefined container
+ * Return immediately in save\_phys\_nics if not run as root Physical nic is not instantiated in lxc\_create\_network
+ * lxc-checkconfig: remove zgrep dependency
+ * Refactoring conditional directives.
+ * Fix swap calculation
+ * python-lxc: Call PyOS\_AfterFork after attaching to a container
+ * fix buffer overflow in ifaddrs.c
+ * Documenting valueless lxc.cap.drop behaviour
+ * NULL pointer deference if nlmsg\_reserve() returns NULL for ifi
+ * Don't try to change aa label if we are already apparmor-confined
+ * coverity: preserve\_ns returns bool, not int
+ * apparmor: recognize 'unconfined' as unconfined.
+ * bash completion: the 'have' command was deprecated in favor of '\_have'
+ * Set the right variable to NULL when unsetting ipv6\_gateway
+ * preserve inherited fds for stop hook
+ * avoid printing null string in error message
+ * Fix Comment inside Fedora Template
+ * doc: Add valueless lxc.cap.drop behaviour to Japanese man page
+ * Document clear behaviour of list options
+ * fix lockpath removal in Python lxc-ls
+ * Document network clear option
+ * open\_without\_symlink: Account when prefix is empty string
+ * lxc\_setup\_fs: Create /dev/shm folder if it doesn't exist
+ * cgmanager: don't make tasks + cgroup.procs +x
+ * cleanup: lxc\_container::want\_\* comment descriptions
+ * Fix echo statement inside fedora template
+ * Use ${utsname} instead of ${UTSNAME} because latter variable is not defined.
+ * Ignore any container with a name starting by '.'
+ * increase /dev size to 500k ( issue #781)
+ * cgfs: prune the init scope from paths
+ * doc: add clear behaviour of list options to Japanese lxc.container.conf(5)
+ * doc: Add network clear option to Japanese lxc.container.conf(5)
+ * apparmor: allow binding /run/{,lock/} -> /var/run/{,lock/}
+ * log.c:\_\_lxc\_log\_set\_file: fname cannot be null
+ * log.c:\_\_lxc\_log\_set\_file: completely close log file when overriding
+ * Allow sysfs remount by mountall
+ * cgroups: do not fail if setting devices cgroup fails due to EPERM
+ * cgfs: also check for EACCES when writing devices
+ * lxc: cgfs: handle lxcfs
+ * Fix typo in lxc manpage
+ * cgfs: make sure we use valid cgroup mountpoints
+ * cgfs: be less verbose
+ * doc: improve Japanese lxc-attach(1)
+ * doc: improve lxc-unshare(1)
+ * open\_without\_symlink: Don't SYSERROR on something else than ELOOP
+ * lxc-busybox: Touch /etc/fstab in the container rootfs
+ * sync: add LXC\_SYNC\_ERROR to report errors from another process.
+ * start: use LXC\_SYNC\_ERROR to report errors.
+ * lxc-busybox: Remove warning for dynamically linked Busybox
+ * Fix installation of out-of-tree (VPATH) builds
+ * use httpredir.debian.org as the default Debian mirror
+ * always provide a default mirror for debootstraping Ubuntu
+ * lxc-ubuntu: Fix building on secondary architectures
+ * update Debian release names
+ * fix btrfs\_recursive\_destroy
+ * store errno immediately after ioctl
+ * fix spelling mistakes spotted by Debian's lintian
+ * netlink\_open: close socket on error
+ * lxc\_mount\_auto\_mounts(): free memory on failure
+ * Ignore temporary files generated by doxygen
+ * nicer date format and support for SOURCE\_DATE\_EPOCH in LXC\_GENERATE\_DATE
+ * drop obsolete syslog.target from lxc.service.in
+ * Update maintainers
+ * Check if stdout is a terminal in lxc-checkconfig
+ * Fixed - set PyErr when Container.\_\_init\_\_ fails
+ * Added `type` to keys in lxc\_list\_nicconfigs
+ * Force DHCP client to send hostname
+ * sync: fail on unexpected message sizes
+ * sync.c: use correct types
+ * Added OR statement for cases of ID = rhel in RHEL 7+
+ * Unshare netns after setting the userns mappings
+ * Allow configuration file values to be quoted
+ * Also allow fstype=fuse for fuse filesystems
+ * Fix hostname in interface config for apline template
+ * Fix redefinition of struct in6\_addr
+ * lxc-debian: make sure init is installed
+ * plamo: Improve Plamo template
+ * AppArmor: add make-rslave to usr.bin.lxc-start
+ * Include all lxcmntent.h function declarations on Bionic
+ * lxc-debian: fix regression when creating wheezy containers
+ * Set up MTU for vlan-type interfaces.
+ * templates: avoid noisy perl warnings caused by missing locales
+ * Add a prefix to the lxc.pc
+ * conf: set pty\_info to NULL after free
+ * apparmor: Refresh generated file
+ * tools: add missing newline in lxc-create output
+ * Use full GPG fingerprint instead of long IDs.
+ * utils: Add mips signalfd syscall numbers
+ * seccomp: Implement MIPS seccomp handling
+ * seccomp: Add mips and mips64 entries to lxc\_config\_parse\_arch
+ * seccomp: fix strerror()
+ * confile: add more archs to lxc\_config\_parse\_arch()
+ * seccomp: add support for s390x
+ * seccomp: remove double include and order includes
+ * seccomp: non functional changes
+ * templates: fedora requires openssl binary
+ * set FULL\_PATH\_NAMES=NO in doc/api/Doxyfile
+ * console: use correct log name
+ * lxczfs: small fixes
+ * make rsync deal with sparse files efficiently
+ * lxc-create -t debian fails on ppc64el arch
+ * utils: fix lxc\_string\_split()
+ * Fix spelling of CentOS in the templates
+ * mark the python examples as having utf-8 encoding
+ * log: sanity check the returned value from snprintf()
+ * archlinux: Do DHCP on eth0
+ * archlinux: Fix resolving
+ * Drop leftover references to lxc\_strerror().
+ * s390x: Fix seccomp handling of personalities
+ * ubuntu: Fix package upgrades requiring proc
+ * use python3\_sitearch for including the python code
+ * cgfs: fix invalid free()
+ * cgfs: add print\_cgfs\_init\_debuginfo()
+ * cgfs: skip empty entries under /proc/self/cgroup
+ * tools: use correct exit code for lxc-stop
+ * conf: merge network namespace move & rename on shutdown
+ * create symlink for /var/run
+ * cgfs: explicitly check for NULL
+ * templates: add squashfs support to lxc-ubuntu-cloud.in
+ * install bash completion where pkg-config tells us to
+ * conf: do not use %m format specifier
+ * debian: Don't depend on libui-dialog-perl
+ * Replace 'index' by 'strchr' for Android build
+ * tree-wide: replace readdir\_r() with readdir()
+ * Merge pull request #1310 from brauner/2016-11-22/tree\_wide\_replace\_readdir\_r
+ * attach: do not send procfd to attached process
+
+### Downloads
+The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions  
+will very soon ship a packaged version of LXC 1.0.9.
+
+Please note that LXC upstream strongly recommends 1.0 users to upgrade to the 2.0 LTS release.  
+The 1.0 branch will keep being supported until June 2019, but at this point,  
+only critical bugfixes and security updates will be backported.
+
+Should you be interested in individual changes or just looking at the detailed development history,  
+our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-1.0).
+
+
 ## LXC 2.0.5 release announcement <span class="text-muted">5th of October 2016</span>
 This is the fifth bugfix release for LXC 2.0.
 
