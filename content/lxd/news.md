@@ -51,7 +51,7 @@ Bugfixes:
  * lxd/containers: Also clean up apparmor stuff in OnStart when something fails
  * lxd/containers: Attach to userns on file operations
  * lxd/containers: Be more verbose on mkdir failure
- * lxd/containers: Better handle concurent stop/shutdown
+ * lxd/containers: Better handle concurrent stop/shutdown
  * lxd/containers: Catch and return more errors in OnStop
  * lxd/containers: Clarify container delete failure error
  * lxd/containers: Don't destroy ephemeral container on restart (Issue #2555)
