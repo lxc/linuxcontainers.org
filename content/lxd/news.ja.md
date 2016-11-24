@@ -1,6 +1,77 @@
 ![Logo](/static/img/containers.png)
 
 # News
+## LXD 2.6 リリースのお知らせ <!-- LXD 2.6 release announcement --><span class="text-muted">2016 年 11 月 22 日 <!-- 22nd of November 2016 --></span>
+### このリリースに含まれる変更点 <!-- The changes in this release include -->
+新機能 <!-- New features-->:
+
+ * コンテナごとに特定の uid/gid マップが使える機能のサポートを追加しました (userns-idmap.md を参照してください) <!-- Support for container specific uid/gid maps (see userns-idmap.md) -->
+ * コンテナのマイグレーション中の進捗を送るようになりました (API のみ)<!-- Send progress notification during container migration (API only) -->
+ * コピー元のイメージプロパティをコンテナのプロパティにコピーするようになりました (image. ネームスペースのプロパティ) <!-- Copy the source image properties into the container properties (image. namespace) -->
+
+バグ修正 <!-- Bugfixes -->:
+
+ * doc: ハッキングガイドを追加しました <!-- Add hacking guide -->(debugging.md)
+ * doc: configuration.md に gpu 向けで抜けていた pci オプションを追加しました <!-- Add missing pci options for gpu in configuration.md -->
+ * doc: README 記載の、必要とされる liblxc のバージョンを上げました <!-- Bump liblxc version required in README -->
+ * doc: user.network-config を文書化しました <!-- Document user.network-config -->
+ * doc: 実行の記録には API 拡張が必要である旨追記しました <!-- Exec recording needs an API extension -->
+ * doc: README に docker のインストールの詳細を追加しました <!-- Specify docker installation details in README -->
+ * lxc/delete: help を更新しました <!-- Update help text -->
+ * lxc/file: Windows での再帰的なファイルの pull/push を修正しました <!-- Fix recursive file pull/push on Windows -->
+ * lxc/finger: help を更新しました <!-- Update help text -->
+ * lxc/restore: help を更新しました <!-- Update help text -->
+ * lxc: 進捗処理を実装し直しました <!-- Rework progress handling -->
+ * lxd/containers: 実際に最後に使われた更新エラーを表示するようになりました <!-- Actually surface the last used update error -->
+ * lxd/containers: /snap が存在するときだけ /snap/bin を PATH に追加するようになりました <!-- Add /snap/bin to PATH even if only /snap exists -->
+ * lxd/containers: file の操作時に userns にアタッチするようになりました <!-- Attach to userns on file operations -->
+ * lxd/containers: 並列の stop/shutdown を改良しました <!-- Better handle concurent stop/shutdown -->
+ * lxd/containers: コンテナの消去を失敗した際のエラー表示をわかりやすくしました <!-- Clarify container delete failure error -->
+ * lxd/containers: --debug モードを指定した場合は liblxc のログレベルを正しく debug に設定するようになりました <!-- Correctly set liblxc loglevel to debug when in \-\-debug mode -->
+ * lxd/containers: 一時的なコンテナを二重に消去しなくなりました <!-- Don't double delete ephemeral containers -->
+ * lxd/containers: コンテナのエラーハンドリングを改良しました <!-- Improve container error handling -->
+ * lxd/containers: コンテナのロックメカニズムを改良しました <!-- Improve container locking mechanism -->(Issue #2612)
+ * lxd/containers: publish の際にプロパティを保存するようになりました <!-- Save properties on publish -->
+ * lxd/containers: raw.lxc の先頭の空白をスキップするようにしました <!-- Skip leading whitespace in raw.lxc -->
+ * lxd/containers: ステートフルスタートの際、必要に応じてストレージを起動するようになりました <!-- Start storage when necessary during stateful start -->
+ * lxd/containers: stop 時のコンテナの freeze にタイムアウトを設定しました <!-- Timeout container freeze on stop -->
+ * lxd/containers: ネットワーク経由の転送時にスピードをトラッキングするようになりました <!-- Track speed during network transfers -->
+ * lxd/images: interval (訳注: images.auto\_update\_interval) が 0 の場合はイメージを更新しないようになりました <!-- Don't update images at all if interval is 0 -->
+ * lxd/main: activateifneeded 関数内で DB が存在しない場合は即座に exit するようになりました <!-- Immediately exit when no DB in activateifneeded -->
+ * lxd/networks: checkNetwork 内でのマイナーな typo を修正しました <!-- Fixed minor typo in checkNetwork -->
+ * lxd/networks: FAN ブリッジ上で dnsmasq を起動するようになりました <!-- Spawn dnsmasq on FAN bridges -->
+ * lxd/storage: ZFS の使用イメージを削除する場合の 10 秒のディレイを修正しました <!-- Fix 10s delay on removing ZFS used images -->(Issue #2617)
+ * lxd/storage: directory バックエンドでコピーの間はコンテナをフリーズするようにしました <!-- Freeze container during copy on directory backend -->
+ * scripts/lxc-to-lxd: コンテナが存在しない場合のエラー表示を行うようにしました <!-- Better output with no container -->
+ * scripts/lxc-to-lxd: 変換元のパスが存在するかどうかチェックするようになりました <!-- Check that source path exists -->(disk) (Issue #2572)
+ * scripts/lxc-to-lxd: 一貫性のあるログ出力をおこなうようにしました <!-- Consistent logging -->
+ * scripts/lxc-to-lxd: 実行中のコンテナに対する dry-run で失敗しないようになりました <!-- Don't fail dry-run with runnning containers -->
+ * scripts/lxc-to-lxd: pylxd への依存をなくしました <!-- Drop dependency on pylxd -->
+ * scripts/lxc-to-lxd: lxdpath の扱いを修正しました <!-- Fix lxdpath handling -->
+ * scripts/lxc-to-lxd: 出力を整えました <!-- Formatting -->
+ * scripts/lxc-to-lxd: lxc.aa\_profile が設定されている場合は設定を移行するようになりました <!-- Migrate lxc.aa\_profile if set -->
+ * scripts/lxc-to-lxd: 結果を表示し、正しい終了コードを返すようになりました <!-- Print summary and proper exit code -->
+ * shared/idmapset: Intersects 関数内の typo を修正しました <!-- Fix typo in Intersects -->
+ * shared/simplestreams: 使っていないプロパティを削除しました <!-- Cleanup unused properties -->
+ * tests: 残っているコンテナを削除するようになりました <!-- Cleanup leftover containers -->
+ * tests: filemanip のテストが main.sh に依存しなくなりました <!-- Don't depend on main.sh for filemanip -->
+ * tests: 冗長な出力を減らす LXD\_VERBOSE を実装しました <!-- Implement LXD\_VERBOSE for reduced verbosity -->
+ * tests: LXD\_DEBUG を設定した状態で冗長な出力を減らしました <!-- Reduce verbosity under LXD\_DEBUG -->
+
+### 試用環境 <!-- Try it for yourself -->
+<!--
+This new LXD release is already available for you to try on our [demo service](/lxd/try-it/).
+-->
+この新しい LXD のリリースが、すでに私たちの [デモサービス](/ja/lxd/try-it/) で利用できます。
+
+
+### ダウンロード <!-- Downloads -->
+<!--
+The release tarballs can be found on our [download page](/lxd/downloads/).
+-->
+このリリースの tarball は [ダウンロードページ](/lxd/downloads/) から取得できます。
+
+
 ## LXD 2.5 リリースのお知らせ <!-- LXD 2.5 release announcement --><span class="text-muted">2016 年 10 月 25 日 <!-- 25th of October 2016 --></span>
 ### このリリースに含まれる変更点 <!-- The changes in this release include -->
 新機能 <!-- New features -->:
