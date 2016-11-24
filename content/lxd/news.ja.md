@@ -7,7 +7,7 @@
 
  * コンテナごとに特定の uid/gid マップが使える機能のサポートを追加しました (userns-idmap.md を参照してください) <!-- Support for container specific uid/gid maps (see userns-idmap.md) -->
  * コンテナのマイグレーション中の進捗を送るようになりました (API のみ)<!-- Send progress notification during container migration (API only) -->
- * コピー元のイメージプロパティをコンテナのプロパティにコピーするようになりました (イメージ、ネームスペース) <!-- Copy the source image properties into the container properties (image. namespace) -->
+ * コピー元のイメージプロパティをコンテナのプロパティにコピーするようになりました (image. ネームスペースのプロパティ) <!-- Copy the source image properties into the container properties (image. namespace) -->
 
 バグ修正 <!-- Bugfixes -->:
 
