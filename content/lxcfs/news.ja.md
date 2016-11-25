@@ -1,4 +1,27 @@
 # News
+## LXCFS 2.0.5 リリースのお知らせ <!-- LXCFS 2.0.5 release announcement --><span class="text-muted">2016 年 11 月 23 日 <!-- 23rd of November 2016 --></span>
+
+<!--
+This is the fifth bugfix release for LXCFS 2.0.
+-->
+このリリースは LXCFS 2.0 の 5 回目のバグフィックスリリースです。
+
+<!--
+This includes the following bugfixes:
+-->
+このリリースには以下のバグ修正が含まれます:
+
+ * systemd 用の unit ファイルに "Documentation" キーと値を追加しました <!-- Add Documentation key to systemd unit -->
+ * bindings: O\_WRONLY ファイルへの getattr を許可しました <!-- allow getattr on O\_WRONLY files -->
+ * bindings: 意味のないチェックを削除しました <!-- remove noop check -->
+ * /proc/meminfo 内の Active と Inactive の項目のコロン (":") が抜けていたので修正しました <!-- fix Active/Inactive /proc/meminfo -->
+ * macro: 共有のマクロ用のヘッダを追加しました <!-- add header for shared macros -->
+ * pam\_cgfs: 再実装して、cgroupfs v2 をサポートしました <!-- reimplement and add cgroupfs v2 support -->
+ * pam\_cgfs: すでに自身に所属する cgroup がある場合は再利用するようになりました <!-- re-use cgroups that already belong to us -->
+ * pam\_cgfs: cgroupfs v1 の cpuset コントローラを扱うようになりました <!-- handle cgroupfs v1 cpuset controller -->
+ * pam\_cgfs: ログ出力を改良しました <!-- improve logging -->
+ * cgroups: isolcpus ファイルが存在しない場合の処理を追加しました <!-- handle non-existent isolcpus file -->
+
 ## LXCFS 2.0.4 リリースのお知らせ <!-- LXCFS 2.0.4 release announcement --><span class="text-muted">2016 年 10 月 5 日 <!-- 5th of October 2016 --></span>
 
 <!--
