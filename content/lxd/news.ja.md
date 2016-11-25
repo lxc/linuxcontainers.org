@@ -1,6 +1,114 @@
 ![Logo](/static/img/containers.png)
 
 # News
+## LXD 2.0.6 リリースのお知らせ <!-- LXD 2.0.6 release announcement --><span class="text-muted">2016 年 11 月 23 日 <!-- 23rd of November 2016 --></span>
+<!--
+This is the sixth bugfix release for LXD 2.0.
+-->
+このリリースは LXD 2.0 の 6 回目のバグフィックスリリースです。
+
+### LXD 2.0.5 以降の変更は以下の通りです <!-- The changes since LXD 2.0.5 are -->
+<!-- Minor improvements -->細かな改良点:
+
+ * コンテナごとに特定の uid/gid マップが使える機能のサポートを追加しました (userns-idmap.md を参照してください) <!-- Support for container specific uid/gid maps (see userns-idmap.md) -->
+
+<!-- Bugfixes -->バグ修正:
+
+ * appveyor: appveyor の設定を追加しました <!-- Add config to git -->(Issue #2537)
+ * appveyor: 修正前にファイルのクリーンアップを行いました <!-- Cleanup appveyor.yml before modifications -->
+ * appveyor: 名前にプラットフォームを示すものを含むアーカイブを作成するようになりました <!-- Create archive with platform specifier in its name -->
+ * appveyor: テスト名と時間を詳細に表示するようにしました <!-- Do verbose testing for test names and timings -->
+ * appveyor: ダウンロード用にコンパイル済みのバイナリを出力するようになりました <!-- Publish compiled binaries for download -->
+ * client: 進捗処理を実装し直しました <!-- Rework progress handling -->
+ * doc: ハッキングガイドを追加しました <!-- Add hacking guide --> (debugging.md)
+ * doc: README に公式に Windows のサポートについて追加しました <!-- Add official Windows support in README -->
+ * doc: README 記載の、必要とされる liblxc のバージョンを上げました <!-- Bump liblxc version required in README -->
+ * doc: rest-api 文書内の API エンドポイントの記載をソートしました <!-- Sort API endpoints in rest-api.md -->
+ * doc: README に docker のインストールの詳細を追加しました <!-- Update README to specify docker installation details -->
+ * doc: 動作環境を更新し、LXC 2.0.0 以上が必要であると記載しました <!-- Update requirements, we actually require 2.0.0 or higher -->
+ * doc: rest-api 文書内でメソッドの並びを統一しました <!-- Use consistent method ordering in rest-api.md -->
+ * extra/bash: クライアントコマンドの bash-completion でパラメータに dash が使えるようになりました <!-- Allow dash in parameters to lxc-client bash-completion -->
+ * extra/bash: クライアントコマンドの \_lxd\_profiles を修正しました <!-- Fix \_lxd\_profiles in lxc-client bash-completion -->
+ * extra/lxc-to-lxd: コンテナが存在しない場合のエラー表示を行うようにしました <!-- Better output with no container -->
+ * extra/lxc-to-lxd: 変換元のパスが存在するかどうかチェックするようになりました <!-- Check that source path exists --> (disk) (Issue #2572)
+ * extra/lxc-to-lxd: 一貫性のあるログ出力をおこなうようにしました <!-- Consistent logging -->
+ * extra/lxc-to-lxd: 実行中のコンテナに対する dry-run で失敗しないようになりました <!-- Don't fail dry-run with runnning containers -->
+ * extra/lxc-to-lxd: pylxd への依存をなくしました <!-- Drop dependency on pylxd -->
+ * extra/lxc-to-lxd: lxdpath の扱いを修正しました <!-- Fix lxdpath handling -->
+ * extra/lxc-to-lxd: 出力を整えました <!-- Formatting -->
+ * extra/lxc-to-lxd: lxc.aa\_profile が設定されている場合は設定を移行するようになりました <!-- Migrate lxc.aa\_profile if set -->
+ * extra/lxc-to-lxd: 結果を表示し、正しい終了コードを返すようになりました <!-- Print summary and proper exit code -->
+ * lxc/copy: 成功したマーカーとして operation を使わないようにしました <!-- Don't use the operation as a marker of success -->
+ * lxc/copy: コピーソース側の操作の完了を待つようにしました <!-- Wait on the source operation too -->
+ * lxc/delete: help を更新しました <!-- update help text -->
+ * lxc/exec: Windows では term を "dumb" に設定するようにしました <!-- Set term to "dumb" on windows -->(Issue #2288)
+ * lxc/finger: help を更新しました <!-- update help text -->
+ * lxc: Windows と Mac でのテストを修正しました <!-- Fix tests on Windows/Mac -->
+ * lxc/list: ヘルプメッセージの typo を修正しました <!-- Fix typo in help message -->
+ * lxc/remote: Go 開発版での remote add を修正しました <!-- Fix remote add with Go tip -->
+ * lxc/restore: help を更新しました <!-- update help text -->
+ * lxc: yaml の拡張子として .yaml を使うようにしました <!-- Use .yaml as the yaml extension in examples -->
+ * lxd/certificates: ドキュメント記載の証明書フィールドをすべて export しました <!-- Export all documented certificate fields -->
+ * lxd/containers: コンテナに /snap/bin が存在する場合は PATH に含めるようになりました <!-- Add /snap/bin to PATH even if only /snap exists -->
+ * lxd/containers: OnStart で何らかのエラーが発生したとき、AppArmor 関連のクリーンアップをするようにしました <!-- Also clean up apparmor stuff in OnStart when something fails -->
+ * lxd/containers: file の操作時に userns にアタッチするようになりました <!-- Attach to userns on file operations -->
+ * lxd/containers: mkdir の失敗をよりわかりやすく表示するようにしました <!-- Be more verbose on mkdir failure -->
+ * lxd/containers: 並列の stop/shutdown を改良しました <!-- Better handle concurrent stop/shutdown -->
+ * lxd/containers: OnStop 内でエラーをキャッチして返すようにしました <!-- Catch and return more errors in OnStop -->
+ * lxd/containers: コンテナの消去を失敗した際のエラー表示をわかりやすくしました <!-- Clarify container delete failure error -->
+ * lxd/containers: 再起動時に一時的な (ephemeral) コンテナを破棄しないようにしました <!--  Don't destroy ephemeral container on restart -->(Issue #2555)
+ * lxd/containers: 一時的なコンテナを二重に消去しなくなりました <!-- Don't double delete ephemeral containers -->
+ * lxd/containers: 正しくないログを表示しなくなりました <!-- Don't show invalid logs -->
+ * lxd/containers: 4.8 以上のカーネルで forkmount が動作するように修正しました <!-- Fix forkmount to work with 4.8 and higher -->
+ * lxd/containers: export 時の不適切なメタデータファイル名を修正しました <!-- Fix invalid filename of metadata on export -->(Issue #2467)
+ * lxd/containers: update 時の設定のバリデーションを改良しました <!-- Improve config validation on update -->
+ * lxd/containers: コンテナのエラーハンドリングを改良しました <!--Improve container error handling -->
+ * lxd/containers: コンテナのロックメカニズムを改良しました <!-- Improve container locking mechanism -->(Issue #2612)
+ * lxd/containers: OnStart/OnStop hook のエラーをログに出力するようにしました <!-- log OnStart/OnStop hook errors -->
+ * lxd/containers: コンテナの自動起動の信頼性を向上させました <!-- More reliable container autostart -->(Issue #2469)
+ * lxd/containers: カーネルモジュールがロードされていない場合のみロードするようにしました <!-- Only load kernel modules if not loaded -->
+ * lxd/containers: CPU 割当 (allowance) を適切にバリデートするようになりました <!-- Properly validate CPU allowance -->
+ * lxd/containers: メモリ制限を適切にバリデートするようになりました <!-- Properly validate memory limits -->(Issue #2483)
+ * lxd/containers: go-lxc のエラーを記録するようになりました <!-- Record the err from go-lxc -->
+ * lxd/containers: OnStop のレガシーなコードを削除しました <!-- Remove legacy code from OnStop -->
+ * lxd/containers: (訳注: exec で) 使っていないコードの削除を行いました <!-- Remove unused code -->
+ * lxd/containers: publish の際にプロパティを保存するようになりました <!-- Save properties on publish -->
+ * lxd/containers: LXC (liblxc) のログレベルをデーモンに合わせるようにしました <!-- Set LXC loglevel to match daemon -->(Issue #2528)
+ * lxd/containers: raw.lxc の先頭の空白をスキップするようにしました <!-- Skip leading whitespace in raw.lxc -->
+ * lxd/containers: ステートフルスタートの際、必要に応じてストレージを起動するようになりました <!-- Start storage when necessary in stateful start -->
+ * lxd/containers: stop 時のコンテナの freeze にタイムアウトを設定しました <!-- Timeout container freeze on stop -->
+ * lxd/images: ディスクスペース超過による unpack のエラーを検出するようになりました <!-- Detect out of disk space unpack errors -->(Issue #2201)
+ * lxd/images: 不必要なイメージのコピーを行わないようにしました <!-- Don't make unnecessary image copies -->(Issue #2508)
+ * lxd/images: interval (訳注: images.auto\_update\_interval) が 0 の場合はイメージを更新しないようになりました <!-- Don't update images at all if interval is 0 -->
+ * lxd/images: simplestream キャッシュをディスクに保存するようになりました (リモートイメージをオフラインで使用できるようになりました) <!-- Store the simplestreams cache to disk -->(Issue #2487)
+ * lxd/init: zfs のカーネルサポートを検出するようになりました <!-- Detect zfs kernel support -->
+ * lxd/init: コンテナ内では ZFS を無視するようにしました <!-- Ignore ZFS if in a container -->
+ * lxd/main: activateifneeded 関数内で DB が存在しない場合は即座に exit するようになりました <!-- Immediately exit when no DB in activateifneeded -->
+ * lxd/migration: ログ収集の競合を修正しました <!-- Fix a race for collecting logs -->
+ * lxd/migration: ファイル作成によるデバッグを削除しました <!-- Remove debugging by file creation -->
+ * lxd/migration: 適切なタイミングでストレージのマイグレーションを開始するようにしました <!-- Start migration storage at the right time -->(Issue #2505)
+ * lxd/storage: ZFS の使用イメージを削除する場合の 10 秒のディレイを修正しました <!-- Fix 10s delay on removing used ZFS images -->(Issue #2617)
+ * lxd/storage: directory バックエンドでコピーの間はコンテナをフリーズするようにしました <!-- Freeze before copying in dir backend -->
+ * lxd/storage: rsync のコードを簡素化しました <!-- Simplify rsync code -->
+ * shared/certificates: IP アドレスをパースする際はより詳細に行うようにしました <!-- Be more thorough when parsing ip addr -->
+ * shared: http.Transports の KeepAlive を無効にしました <!-- Disable keepalives in http.Transports -->
+ * shared: Linux 特有なテストを移動させました <!-- Move Linux specific tests away -->(Issue #2449)
+ * shared/simplestreams: 使っていないプロパティを削除しました <!-- Cleanup unused properties -->
+ * tests: LXD\_DEBUG の修正を改良しました <!-- Better fix LXD\_DEBUG -->
+ * tests: 残っているコンテナを削除するようになりました <!-- Cleanup leftover containers -->
+ * tests: filemanip のテストが main.sh に依存しなくなりました <!-- Don't depend on main.sh for filemanip -->
+ * tests: LXD\_VERBOSE を実装しました <!-- Implement LXD\_VERBOSE -->
+ * tests: LXD\_DEBUG を設定した状態で冗長な出力を減らしました <!-- Reduce verbosity under LXD\_DEBUG -->
+ * travis: クライアントのテストを実行するようにしました <!-- Run the client tests -->
+ * travis: Jenkins Go のバージョンにマッチするように更新しました <!-- Update to match Jenkins Go versions -->
+
+### ダウンロード <!-- Downloads -->
+<!--
+The release tarballs can be found on our [download page](/lxd/downloads/).
+-->
+このリリースの tarball は [ダウンロードページ](/lxd/downloads/) から取得できます。
+
+
 ## LXD 2.6 リリースのお知らせ <!-- LXD 2.6 release announcement --><span class="text-muted">2016 年 11 月 22 日 <!-- 22nd of November 2016 --></span>
 ### このリリースに含まれる変更点 <!-- The changes in this release include -->
 新機能 <!-- New features-->:
