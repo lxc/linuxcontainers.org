@@ -1,6 +1,29 @@
 ![Logo](/static/img/containers.png)
 
 # News
+## LXD 2.0.7 release announcement <span class="text-muted">24th of November 2016</span>
+This is an emergency bugfix release to fix a critical regression in LXD 2.0.6.
+
+The regression was causing pre-existing unpriivleged containers to  
+potentially start as privileged containers upon restart.
+
+### The changes since LXD 2.0.6 are
+
+Bugfixes:
+
+ * extra/bash: Better parse containers list
+ * lxc/copy: Make container copy more robust
+ * lxd/containers: Don't assign idmaps to privileged containers
+ * lxd/containers: Don't break when parsing old containers
+ * lxd/containers: Don't double apply templates
+ * lxd/containers: Fix concurrent map iteration+modification
+ * lxd/containers: Fix idmap handling of pre-idmap containers
+ * tests: Add tests for file templating
+
+### Downloads
+The release tarballs can be found on our [download page](/lxd/downloads/).
+
+
 ## LXD 2.6.1 release announcement <span class="text-muted">24th of November 2016</span>
 This is an emergency bugfix release to fix a critical regression in LXD 2.6.
 
@@ -26,7 +49,6 @@ This new LXD release is already available for you to try on our [demo service](/
 
 ### Downloads
 The release tarballs can be found on our [download page](/lxd/downloads/).
-
 
 
 ## LXD 2.0.6 release announcement <span class="text-muted">23rd of November 2016</span>
