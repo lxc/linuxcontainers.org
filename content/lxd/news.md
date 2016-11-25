@@ -1,6 +1,19 @@
 ![Logo](/static/img/containers.png)
 
 # News
+## LXD 2.0.8 release announcement <span class="text-muted">24th of November 2016</span>
+Follow-up bugfix release to fix a regression introduced by the rushed 2.0.7 release.
+
+### The changes since LXD 2.0.7 are
+
+Bugfixes:
+
+ * Don't grab addresses from public remotes
+
+### Downloads
+The release tarballs can be found on our [download page](/lxd/downloads/).
+
+
 ## LXD 2.6.2 release announcement <span class="text-muted">24th of November 2016</span>
 Follow-up bugfix release to fix a regression introduced by the rushed 2.6.1 release.
 
