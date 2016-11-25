@@ -12,13 +12,13 @@ potentially start as privileged containers upon restart.
 Bugfixes:
 
  * extra/bash: Better parse containers list
- * lxc/copy: Make container copy more robust
+ * lxc/copy: Make container copy more robust (Issue #2640)
  * lxd/containers: Don't assign idmaps to privileged containers
  * lxd/containers: Don't break when parsing old containers
  * lxd/containers: Don't double apply templates
  * lxd/containers: Fix concurrent map iteration+modification
- * lxd/containers: Fix idmap handling of pre-idmap containers
- * tests: Add tests for file templating
+ * lxd/containers: Fix idmap handling of pre-idmap containers (Issue #2644)
+ * tests: Add tests for file templating (Issue #2642)
 
 ### Downloads
 The release tarballs can be found on our [download page](/lxd/downloads/).
