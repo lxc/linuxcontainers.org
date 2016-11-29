@@ -52,7 +52,7 @@ This is an emergency bugfix release to fix a critical regression in LXD 2.0.6.
 このリリースは LXD 2.0.6 における深刻なリグレッションを修正するための緊急のバグフィックスリリースです。
 
 <!--
-The regression was causing pre-existing unpriivleged containers to  
+The regression was causing pre-existing unprivileged containers to  
 potentially start as privileged containers upon restart.
 -->
 このリグレッションによって、既存の非特権コンテナが、再起動時に特権コンテナとして起動してしまう可能性がありました。
