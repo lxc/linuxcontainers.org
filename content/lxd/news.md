@@ -33,7 +33,7 @@ The release tarballs can be found on our [download page](/lxd/downloads/).
 ## LXD 2.0.7 release announcement <span class="text-muted">24th of November 2016</span>
 This is an emergency bugfix release to fix a critical regression in LXD 2.0.6.
 
-The regression was causing pre-existing unpriivleged containers to  
+The regression was causing pre-existing unprivileged containers to  
 potentially start as privileged containers upon restart.
 
 ### The changes since LXD 2.0.6 are
