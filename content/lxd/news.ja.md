@@ -1,6 +1,38 @@
 ![Logo](/static/img/containers.png)
 
 # News
+## LXD 2.0.7 リリースのお知らせ <!-- LXD 2.0.7 release announcement --><span class="text-muted">2016 年 11 月 24 日<!-- 24th of November 2016 --></span>
+<!--
+This is an emergency bugfix release to fix a critical regression in LXD 2.0.6.
+-->
+このリリースは LXD 2.0.6 における深刻なリグレッションを修正するための緊急のバグフィックスリリースです。
+
+<!--
+The regression was causing pre-existing unpriivleged containers to  
+potentially start as privileged containers upon restart.
+-->
+このリグレッションによって、既存の非特権コンテナが、再起動時に特権コンテナとして起動してしまう可能性がありました。
+
+### The changes since LXD 2.0.6 are
+
+Bugfixes:
+
+ * extra/bash: コンテナリストのパースを改善しました <!-- Better parse containers list -->
+ * lxc/copy: コンテナのコピーがより安定するようになりました <!-- Make container copy more robust -->(Issue #2640)
+ * lxd/containers: 特権コンテナに idmap を割り当てないようにしました <!-- Don't assign idmaps to privileged containers -->
+ * lxd/containers: 古いコンテナをパースする際に壊さなくなりました <!-- Don't break when parsing old containers -->
+ * lxd/containers: テンプレートを重複して適用しなくなりました <!-- Don't double apply templates -->
+ * lxd/containers: 並列でのマップのイテレーションと変更を修正しました <!-- Fix concurrent map iteration+modification -->
+ * lxd/containers: 事前に id のマッピングがされていたコンテナの id マッピングの扱いを修正しました <!-- Fix idmap handling of pre-idmap containers -->(Issue #2644)
+ * tests: ファイルテンプレートに対するテストを追加しました <!-- Add tests for file templating -->(Issue #2642)
+
+### ダウンロード <!-- Downloads -->
+<!--
+The release tarballs can be found on our [download page](/lxd/downloads/).
+-->
+このリリースの tarball は [ダウンロードページ](/lxd/downloads/) から取得できます。
+
+
 ## LXD 2.6.1 リリースのお知らせ <!-- LXD 2.6.1 release announcement --><span class="text-muted">2016 年 11 月 24 日<!-- 24th of November 2016 --></span>
 <!--
 This is an emergency bugfix release to fix a critical regression in LXD 2.6.
