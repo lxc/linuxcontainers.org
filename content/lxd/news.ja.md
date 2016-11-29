@@ -1,6 +1,50 @@
 ![Logo](/static/img/containers.png)
 
 # News
+## LXD 2.0.8 リリースのお知らせ <!-- LXD 2.0.8 release announcement --><span class="text-muted">2016 年 11 月 24 日<!-- 24th of November 2016 --></span>
+<!--
+Follow-up bugfix release to fix a regression introduced by the rushed 2.0.7 release.
+-->
+このリリースは、急いでリリースした 2.0.7 で発生したリグレッションを修正するためのバグフィックスリリースです。
+
+### LXD 2.0.7 以降の変更は以下の通りです <!-- The changes since LXD 2.0.7 are -->
+
+バグ修正 <!-- Bugfixes -->:
+
+ * パブリックなリモートホストのアドレスをつかまなくなりました <!-- Don't grab addresses from public remotes -->
+
+### ダウンロード <!-- Downloads -->
+<!--
+The release tarballs can be found on our [download page](/lxd/downloads/).
+-->
+このリリースの tarball は [ダウンロードページ](/lxd/downloads/) から取得できます。
+
+
+## LXD 2.6.2 リリースのお知らせ <!-- LXD 2.6.2 release announcement --><span class="text-muted">2016 年 11 月 24 日 <!-- 24th of November 2016 --></span>
+<!--
+Follow-up bugfix release to fix a regression introduced by the rushed 2.6.1 release.
+-->
+このリリースは、急いでリリースした 2.6.1 で発生したリグレッションを修正するためのバグフィックスリリースです。
+
+### このリリースに含まれる変更点 <!-- The changes in this release include -->
+
+バグ修正 <!-- Bugfixes -->:
+
+ * パブリックなリモートホストのアドレスをつかまなくなりました <!-- Don't grab addresses from public remotes -->
+
+### 試用環境 <!-- Try it for yourself -->
+<!--
+This new LXD release is already available for you to try on our [demo service](/lxd/try-it/).
+-->
+この新しい LXD のリリースが、すでに私たちの [デモサービス](/ja/lxd/try-it/) で利用できます。
+
+### ダウンロード <!-- Downloads -->
+<!--
+The release tarballs can be found on our [download page](/lxd/downloads/).
+-->
+このリリースの tarball は [ダウンロードページ](/lxd/downloads/) から取得できます。
+
+
 ## LXD 2.0.7 リリースのお知らせ <!-- LXD 2.0.7 release announcement --><span class="text-muted">2016 年 11 月 24 日<!-- 24th of November 2016 --></span>
 <!--
 This is an emergency bugfix release to fix a critical regression in LXD 2.0.6.
@@ -13,9 +57,9 @@ potentially start as privileged containers upon restart.
 -->
 このリグレッションによって、既存の非特権コンテナが、再起動時に特権コンテナとして起動してしまう可能性がありました。
 
-### The changes since LXD 2.0.6 are
+### LXD 2.0.6 以降の変更は以下の通りです <!-- The changes since LXD 2.0.6 are -->
 
-Bugfixes:
+バグ修正<!-- Bugfixes -->:
 
  * extra/bash: コンテナリストのパースを改善しました <!-- Better parse containers list -->
  * lxc/copy: コンテナのコピーがより安定するようになりました <!-- Make container copy more robust -->(Issue #2640)
