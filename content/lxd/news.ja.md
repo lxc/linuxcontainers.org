@@ -49,7 +49,7 @@ This is the sixth bugfix release for LXD 2.0.
  * lxc/restore: help を更新しました <!-- update help text -->
  * lxc: yaml の拡張子として .yaml を使うようにしました <!-- Use .yaml as the yaml extension in examples -->
  * lxd/certificates: ドキュメント記載の証明書フィールドをすべて export しました <!-- Export all documented certificate fields -->
- * lxd/containers: コンテナに /snap/bin が存在する場合は PATH に含めるようになりました <!-- Add /snap/bin to PATH even if only /snap exists -->
+ * lxd/containers: コンテナに /snap のみが存在する場合でも、/snap/bin を PATH に含めるようになりました <!-- Add /snap/bin to PATH even if only /snap exists -->
  * lxd/containers: OnStart で何らかのエラーが発生したとき、AppArmor 関連のクリーンアップをするようにしました <!-- Also clean up apparmor stuff in OnStart when something fails -->
  * lxd/containers: file の操作時に userns にアタッチするようになりました <!-- Attach to userns on file operations -->
  * lxd/containers: mkdir の失敗をよりわかりやすく表示するようにしました <!-- Be more verbose on mkdir failure -->
@@ -131,7 +131,7 @@ The release tarballs can be found on our [download page](/lxd/downloads/).
  * lxc/restore: help を更新しました <!-- Update help text -->
  * lxc: 進捗処理を実装し直しました <!-- Rework progress handling -->
  * lxd/containers: 実際に最後に使われた更新エラーを表示するようになりました <!-- Actually surface the last used update error -->
- * lxd/containers: /snap が存在するときだけ /snap/bin を PATH に追加するようになりました <!-- Add /snap/bin to PATH even if only /snap exists -->
+ * lxd/containers: コンテナに /snap のみが存在する場合でも、/snap/bin を PATH に含めるようになりました <!-- Add /snap/bin to PATH even if only /snap exists -->
  * lxd/containers: file の操作時に userns にアタッチするようになりました <!-- Attach to userns on file operations -->
  * lxd/containers: 並列の stop/shutdown を改良しました <!-- Better handle concurent stop/shutdown -->
  * lxd/containers: コンテナの消去を失敗した際のエラー表示をわかりやすくしました <!-- Clarify container delete failure error -->
