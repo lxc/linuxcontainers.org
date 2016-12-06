@@ -26,3 +26,4 @@ are neither supported nor endorsed by the LXD project.
 
 * Ruby: [Hyperkit](http://jeffshantz.github.io/hyperkit)
 * Node.js: [node-lxd](http://github.com/alandoherty/node-lxd)
+* Java: [jlxd](http://github.com/digitalspider/jlxd)
