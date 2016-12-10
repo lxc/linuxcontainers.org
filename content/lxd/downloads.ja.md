@@ -36,7 +36,7 @@ You can clone lxd directly with:
 -->
 以下から直接 clone できます:
 
-    git clone git://github.com/lxc/lxd
+    git clone https://github.com/lxc/lxd
 
 # リリース版 tarball <!-- Release tarballs -->
 

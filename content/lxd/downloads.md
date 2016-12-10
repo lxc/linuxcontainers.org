@@ -21,7 +21,7 @@ And for those who want development snapshots:
 
 You can clone lxd directly with:
 
-    git clone git://github.com/lxc/lxd
+    git clone https://github.com/lxc/lxd
 
 # Release tarballs
 

@@ -2,4 +2,4 @@
 
 lxd peut être cloné directement avec:
 
-    git clone git://github.com/lxc/lxd
+    git clone https://github.com/lxc/lxd
