@@ -21,7 +21,7 @@
 
 Вы можете клонировать lxd напрямую:
 
-    git clone git://github.com/lxc/lxd
+    git clone https://github.com/lxc/lxd
 
 # Релизные tarballs
 
