@@ -13,13 +13,13 @@ Bugfixes:
 
  * client: Commonize update methods and add PATCH
  * extra/lxc-to-lxd: Add more unsupported config keys
- * extra/lxc-to-lxd: All properties must be strings
+ * extra/lxc-to-lxd: All properties must be strings (Issue #2663)
  * extra/lxc-to-lxd: Copy rootfs by default, do not move
  * extra/lxc-to-lxd: Show nicer error on missing python3-lxc
  * extra/lxc-to-lxd: Switch to using whitelist
  * i18n: Update french translation
  * lxc/file: Fix off by one error in push
- * lxc: Improve help messages
+ * lxc: Improve help messages (Issue #2719)
  * lxc/init: Fix example
  * lxc/launch: Just use init.go's flags()
  * lxd: Common codepath for http client
@@ -27,7 +27,7 @@ Bugfixes:
  * lxd: Log daemon version
  * lxd: Make LXD\_DIR 711 by default (needed for unprivileged containers)
  * lxd: Only mark daemon ready once containers are up
- * lxd: Properly validate daemon keys on unset
+ * lxd: Properly validate daemon keys on unset (Issue #2698)
  * lxd: Refactoring of sub-command code
  * lxd: Use our custom http server when updating HTTPS address too
  * lxd/containers: Add basic logging to container creation
@@ -35,18 +35,18 @@ Bugfixes:
  * lxd/containers: Blacklist lxc.syslog and lxc.ephemeral
  * lxd/containers: Cleanup leftover temp file
  * lxd/containers: Detect background tasks to allow clean exit on exec
- * lxd/containers: Do mounts in the right order
+ * lxd/containers: Do mounts in the right order (Issue #2717)
  * lxd/containers: Don't record last\_state.power twice
- * lxd/containers: Fix container state recording
+ * lxd/containers: Fix container state recording (Issue #2686)
  * lxd/containers: Fix device hotplug with major/minor set
  * lxd/containers: Fix file push error handling
  * lxd/containers: Fix logging for file\_manip commands
  * lxd/containers: Move FromLXCState out of shared
- * lxd/containers: Return a clear error when replacing a directory
+ * lxd/containers: Return a clear error when replacing a directory (Issue #2668)
  * lxd/containers: Rework EEXISTS detection on create
  * lxd/networks: Allow for network-specific lease updates
  * lxd/networks: DHCP over TCP has never been implemented
- * lxd/nsexec: Also call setgroups
+ * lxd/nsexec: Also call setgroups (Issue #2724)
  * lxd/seccomp: Fix generated seccomp profile
  * lxd/storage: Change ContainerStart to take the name and path to start
  * Makefile: Rework "make dist"
