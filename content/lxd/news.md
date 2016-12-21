@@ -1,6 +1,80 @@
 ![Logo](/static/img/containers.png)
 
 # News
+## LXD 2.7 release announcement <span class="text-muted">20th of December 2016</span>
+### The changes in this release include
+New features:
+
+ * New "ipv4.firewall" and "ipv6.firewall" network attributes controlling the generation of iptables FORWARD rules
+ * New "ipv4.routes" and "ipv6.routes" network attributes allowing for additional static routes to be set to the network.
+ * New "lxd import" command allowing importing of containers when all that exists is the "containers" directory.
+
+Bugfixes:
+
+ * client: Commonize update methods and add PATCH
+ * extra/lxc-to-lxd: Add more unsupported config keys
+ * extra/lxc-to-lxd: All properties must be strings
+ * extra/lxc-to-lxd: Copy rootfs by default, do not move
+ * extra/lxc-to-lxd: Show nicer error on missing python3-lxc
+ * extra/lxc-to-lxd: Switch to using whitelist
+ * i18n: Update french translation
+ * lxc/file: Fix off by one error in push
+ * lxc: Improve help messages
+ * lxc/init: Fix example
+ * lxc/launch: Just use init.go's flags()
+ * lxd: Common codepath for http client
+ * lxd: Don't set InsecureSkipVerify on daemon's tls config
+ * lxd: Log daemon version
+ * lxd: Make LXD\_DIR 711 by default (needed for unprivileged containers)
+ * lxd: Only mark daemon ready once containers are up
+ * lxd: Properly validate daemon keys on unset
+ * lxd: Refactoring of sub-command code
+ * lxd: Use our custom http server when updating HTTPS address too
+ * lxd/containers: Add basic logging to container creation
+ * lxd/containers: Avoid race condition in network fill function
+ * lxd/containers: Blacklist lxc.syslog and lxc.ephemeral
+ * lxd/containers: Cleanup leftover temp file
+ * lxd/containers: Detect background tasks to allow clean exit on exec
+ * lxd/containers: Do mounts in the right order
+ * lxd/containers: Don't record last\_state.power twice
+ * lxd/containers: Fix container state recording
+ * lxd/containers: Fix device hotplug with major/minor set
+ * lxd/containers: Fix file push error handling
+ * lxd/containers: Fix logging for file\_manip commands
+ * lxd/containers: Move FromLXCState out of shared
+ * lxd/containers: Return a clear error when replacing a directory
+ * lxd/containers: Rework EEXISTS detection on create
+ * lxd/networks: Allow for network-specific lease updates
+ * lxd/networks: DHCP over TCP has never been implemented
+ * lxd/nsexec: Also call setgroups
+ * lxd/seccomp: Fix generated seccomp profile
+ * lxd/storage: Change ContainerStart to take the name and path to start
+ * Makefile: Rework "make dist"
+ * shared: Give Architecture handling its own package
+ * shared: Give IO progress tracker its own package
+ * shared: Give simplestreams client its own package
+ * shared: Give version handling its own package
+ * shared: Introduce our own formatter
+ * shared: Make a helper to compute cert fingerprint
+ * shared: Make PrintStack print at the Error level
+ * shared: Move WebsocketUpgrader to network.go
+ * shared: Rename idmapset\_test\_linux.go to idmapset\_linux\_test.go
+ * shared/idmap: Drop debugging code
+ * shared/idmap: Fix intersection test
+ * shared/simplestreams: Don't depend on custom http handler
+ * shared/simplestreams: Pass UserAgent as argument
+ * tests: Add pki test
+ * tests: Only attach lxdbr0 if it is present on the host
+ * tests: Simplify testsuite spawn code
+ * tests: Test lxd shutdown
+
+### Try it for yourself
+This new LXD release is already available for you to try on our [demo service](/lxd/try-it/).
+
+### Downloads
+The release tarballs can be found on our [download page](/lxd/downloads/).
+
+
 ## LXD 2.0.8 release announcement <span class="text-muted">24th of November 2016</span>
 Follow-up bugfix release to fix a regression introduced by the rushed 2.0.7 release.
 
