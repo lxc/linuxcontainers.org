@@ -7,7 +7,7 @@
 
  * iptables の FORWARD ルールの生成をコントロールするネットワーク属性 "ipv4.firewall"、"ipv6.firewall" を新たに追加しました <!-- New "ipv4.firewall" and "ipv6.firewall" network attributes controlling the generation of iptables FORWARD rules -->
  * 追加の静的ルートをネットワークに設定できるネットワーク属性 "ipv4.routes"、"ipv6.routes" を新たに追加しました <!-- New "ipv4.routes" and "ipv6.routes" network attributes allowing for additional static routes to be set to the network. -->
- * 新たに追加した "lxd import" コマンドにより、"containers" ディレクトリ内のすべてのファイルが存在する場合にコンテナのインポートができます <!-- New "lxd import" command allowing importing of containers when all that exists is the "containers" directory. -->
+ * 新たに追加した "lxd import" コマンドにより、"containers" ディレクトリだけ存在する（訳注：正確には"containers" ディレクトリにバックアップ情報のファイルだけ存在する）ところからコンテナのインポートができます <!-- New "lxd import" command allowing importing of containers when all that exists is the "containers" directory. -->
 
 バグ修正 <!-- Bugfixes -->:
 
