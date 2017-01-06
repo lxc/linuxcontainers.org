@@ -35,9 +35,9 @@ making the deamon visible on the network and configuring networking for the cont
 LXD is available for Ubuntu Core as a Snap package in the store.  
 You can install it with:
 
-    sudo snappy install lxd.stgraber
+    sudo snap install lxd
 
-After that, LXD can be interacted with through the "lxc" command.
+After that, LXD can be interacted with through the "lxd.lxc" command.
 
 It should be noted that the server certificate generation can take a long time if you're working on a device like  
 the rpi2 so it might be a few minutes before LXD will respond to the lxc command.
