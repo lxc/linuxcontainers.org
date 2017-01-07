@@ -56,12 +56,12 @@ You can install it with:
 -->
 LXD はストア内の Snap パッケージとして Ubuntu Core で利用できます。以下のようにインストールできます。
 
-    sudo snappy install lxd.stgraber
+    sudo snap install lxd
 
 <!--
-After that, LXD can be interacted with through the "lxc" command.
+After that, LXD can be interacted with through the "lxd.lxc" command.
 -->
-インストール後、LXD は "lxc" コマンド経由で操作できます。
+インストール後、LXD は "lxd.lxc" コマンド経由で操作できます。
 
 <!--
 It should be noted that the server certificate generation can take a long time if you're working on a device like  
