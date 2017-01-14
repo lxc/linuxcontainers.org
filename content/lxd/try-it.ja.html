@@ -56,46 +56,32 @@
 </div>
 
 <div class="panel panel-success" id="tryit_info_panel" style="display:none">
-    <div class="panel-heading"><a data-toggle="collapse" class="text" href="#tryit_info_collapse">コンテナの情報</a> <!-- Container information --></div>
-    <div class="panel-body collapse in" id="tryit_info_collapse">
-        <table class="table">
-            <tr id="tryit_ssh_row">
-                <th>SSH</th>
-                <td>ssh <span class="tryit_container_username"></span>@<span class="tryit_container_ip"></span></td>
-            </tr>
+    <div class="panel-heading">コンテナの情報 <!-- Container information --></div>
+    <table class="table" style="padding-left: 15px;">
+        <tr id="tryit_lxd_row">
+            <th>LXD</th>
+            <td>lxc remote add tryit <span class="tryit_container_ip"></span> --password=<span class="tryit_container_password"></span></td>
+        </tr>
 
-            <tr id="tryit_lxd_row">
-                <th>LXD</th>
-                <td>lxc remote add tryit <span class="tryit_container_ip"></span></td>
-            </tr>
-
-            <tr id="tryit_password_row">
-                <th>パスワード</th>
-                <td><span class="tryit_container_password"></span></td>
-            </tr>
-
-            <tr id="tryit_clock">
-                <th>残り時間 <!-- Time --></th>
-                <td><span class="minutes"></span> 分<!-- minutes, --> <span class="seconds"></span> 秒<!-- seconds --></td>
-            </tr>
-        </table>
-    </div>
+        <tr id="tryit_clock">
+            <th>残り時間 <!-- Time --></th>
+            <td><span class="minutes"></span> 分<!-- minutes, --> <span class="seconds"></span> 秒<!-- seconds --></td>
+        </tr>
+    </table>
 </div>
 
 <div class="panel panel-primary" id="tryit_console_panel" style="display:none">
     <div class="panel-heading">コンソール <!-- Console --></div>
-    <div class="panel-body">
-        <div id="tryit_console" style="background-color:black;"></div>
+    <div id="tryit_console" style="background-color:black;"></div>
 
-        <button class="btn btn-default btn-lg" id="tryit_console_reconnect" type="button" style="display:none">
-            <span aria-hidden="true" class="glyphicon glyphicon-repeat"></span>
-            再接続 <!-- Reconnect -->
-        </button>
-    </div>
+    <button class="btn btn-default btn-lg" id="tryit_console_reconnect" type="button" style="display:none">
+        <span aria-hidden="true" class="glyphicon glyphicon-repeat"></span>
+        再接続 <!-- Reconnect -->
+    </button>
 </div>
 
-<div class="panel panel-info" id="tryit_examples_panel" style="display:none">
-    <div class="panel-heading"><a data-toggle="collapse" class="text" href="#tryit_examples_collapse">ステップバイステップでの入門</a> <!-- Step by step introduction -->(<a href="#" target="_blank">新しいウィンドウで開きます <!-- click here to open a new window --></a>)</div>
+<div class="panel panel-warning" id="tryit_examples_panel" style="display:none">
+    <div class="panel-heading"><a data-toggle="collapse" class="text" href="#tryit_examples_collapse">ステップバイステップでの入門</a> <!-- Step by step introduction --></div>
     <div class="panel-body collapse in" id="tryit_examples_collapse">
         <div class="panel-group" role="tablist" id="tryit_intro"
              aria-multiselectable="true">
