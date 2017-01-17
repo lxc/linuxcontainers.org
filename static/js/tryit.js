@@ -310,4 +310,12 @@ $(document).ready(function() {
             }, 500);
         }
     });
+
+    $('.tabNext').click(function(){
+        $('.nav-tabs > .active').next('li').find('a').trigger('click');
+    });
+
+    $('.tabPrevious').click(function(){
+        $('.nav-tabs > .active').prev('li').find('a').trigger('click');
+    });
 });

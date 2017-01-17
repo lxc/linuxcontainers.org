@@ -105,6 +105,15 @@ div.manpage {
     border-radius:6px 0 6px 6px;
 }
 
+.tab-pane h3 {
+    margin-top: 0;
+}
+
+.tab-pane nav .pager {
+    margin-top: 5px;
+    margin-bottom: 0;
+}
+
 .panel {
     margin-bottom: 10px;
 }
