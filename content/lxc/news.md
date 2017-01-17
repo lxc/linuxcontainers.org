@@ -274,7 +274,6 @@ Bugfixes:
  * debian: Don't depend on libui-dialog-perl
  * Replace 'index' by 'strchr' for Android build
  * tree-wide: replace readdir\_r() with readdir()
- * Merge pull request #1310 from brauner/2016-11-22/tree\_wide\_replace\_readdir\_r
  * attach: do not send procfd to attached process
 
 ### Downloads
