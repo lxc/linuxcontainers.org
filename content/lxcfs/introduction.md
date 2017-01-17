@@ -8,7 +8,7 @@ Specifically, it's providing two main things
    to provide CGroup-aware values.
  * A cgroupfs-like tree which is container aware.
 
-The code is pretty simple, written in C using libfuse and glib.
+The code is pretty simple, written in C using libfuse.
 
 The main driver for this work was the need to run systemd based containers as a regular unprivileged user  
 while still allowing systemd inside the container to interact with cgroups.
