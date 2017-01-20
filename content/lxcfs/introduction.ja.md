@@ -14,9 +14,9 @@ Specifically, it's providing two main things
  * コンテナ向けの cgroupfs のようなツリー <!-- A cgroupfs-like tree which is container aware. -->
 
 <!--
-The code is pretty simple, written in C using libfuse and glib.
+The code is pretty simple, written in C using libfuse.
 -->
-コードはとてもシンプルで、libfuse と glib を使って C 言語で書かれています。
+コードはとてもシンプルで、libfuse を使って C 言語で書かれています。
 
 <!--
 The main driver for this work was the need to run systemd based containers as a regular unprivileged user  
