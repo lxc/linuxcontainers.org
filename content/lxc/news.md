@@ -1,5 +1,75 @@
 ![Download icon](/static/img/containers.png)
 # News
+## LXC 2.0.7 release announcement <span class="text-muted">23rd of January 2017</span>
+This is the seventh bugfix release for LXC 2.0.
+
+The main bugfixes in this release are:
+
+ * attach: Close lsm label file descriptor
+ * attach: Non-functional changes
+ * attach: Simplify lsm\_openat()
+ * caps: Add lxc\_cap\_is\_set()
+ * conf: attach: Save errno across call to close
+ * conf: Clearly report to either use drop or keep
+ * conf: criu: Add make\_anonymous\_mount\_file()
+ * conf: Fix suggest\_default\_idmap()
+ * configure: Add --enable-gnutls option
+ * configure: Check for memfd\_create()
+ * configure: Check whether gettid() is declared
+ * configure: Do not allow variable length arrays
+ * configure: Remove -Werror=vla
+ * configure: Use AC\_HEADER\_MAJOR to detect major()/minor()/makedev()
+ * conf: Non-functional changes
+ * conf: Remove thread-unsafe strsignal + improve log
+ * init: Add cgroupfs-mount to Should-Start/Stop sysvinit LSB headers
+ * log: Add lxc\_unix\_epoch\_to\_utc()
+ * log: Annotate lxc\_unix\_epoch\_to\_utc()
+ * log: Drop all timezone conversion functions
+ * log: Make sure that date is correctly formatted
+ * log: Use lxc\_unix\_epoch\_to\_utc()
+ * log: Use N/A if getpid() != gettid() when threaded
+ * log: Use thread-safe localtime\_r()
+ * lvm: Supress warnings about leaked files
+ * lxccontainer: Log failure to send sig to init pid
+ * monitor: Add more logging
+ * monitor: Close mainloop on exit if we opened it
+ * monitor: Improve log + set log level to DEBUG
+ * monitor: Log which pipe fd is currently used
+ * monitor: Make lxc-monitord async signal safe
+ * monitor: Non-functional changes
+ * python3-lxc: Fix api\_test.py on s390x
+ * start: Check for CAP\_SETGID before setgroups()
+ * start: Fix execute and improve setgroups() calls
+ * state: Use async signal safe fun in lxc\_wait()
+ * templates: lxc-debian: Don't try to get stuff from /usr/lib/systemd on the host
+ * templates: lxc-debian: Fix getty service startup
+ * templates: lxc-debian: Fix typo in calling dpkg with --print-foreign-architectures option
+ * templates: lxc-debian: Handle ppc hostarch -> powerpc
+ * templates: lxc-opensuse: Change openSUSE default release to Leap 42.2
+ * templates: lxc-opensuse: Remove libgcc\_s1
+ * templates: lxc-opensuse: Remove poweroff.target -> sigpwr.target copy
+ * templates: lxc-opensuse: Set to be unconfined by AppArmor
+ * templates: lxc-opensuse: Update for Leap 42.2
+ * tests; Don't cause test failures on cleanup errors
+ * tests: Skip unpriv tests on broken overlay module
+ * tools: Improve logging
+ * tools: lxc-start: Remove c->is\_defined(c) check
+ * tools: lxc-start: Set configfile after load\_config
+ * tools: Only check for O\_RDONLY
+ * tree-wide: Random macro cleanups
+ * tree-wide: Remove any variable length arrays
+ * tree-wide: Sic semper assertis!
+ * utils: Add macro \_\_LXC\_NUMSTRLEN
+ * utils: Add uid, gid, group convenience wrappers
+
+### Downloads
+The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions  
+will very soon ship a packaged version of LXC 2.0.7.
+
+Should you be interested in individual changes or just looking at the detailed development history,  
+our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-2.0).
+
+
 ## LXC 2.0.6 release announcement <span class="text-muted">23rd of November 2016</span>
 This is the sixth bugfix release for LXC 2.0.
 
