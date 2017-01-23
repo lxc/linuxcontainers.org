@@ -1,5 +1,15 @@
 ![Download icon](/static/img/containers.png)
 # News
+## LXCFS 2.0.6 release announcement <span class="text-muted">23rd of January 2017</span>
+
+This is the sixth bugfix release for LXCFS 2.0.
+
+This includes the following bugfixes:
+
+ * Fix swap values with nested cgroups
+ * tests: Fix run on ppc64el
+ * Fix wrong scanning of memory.stat
+
 ## LXCFS 2.0.5 release announcement <span class="text-muted">23rd of November 2016</span>
 
 This is the fifth bugfix release for LXCFS 2.0.
