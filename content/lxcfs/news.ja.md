@@ -1,4 +1,20 @@
 # News
+## LXCFS 2.0.6 リリースのお知らせ <!-- LXCFS 2.0.6 release announcement --><span class="text-muted">2017 年 1 月 23 日<!-- 23rd of January 2017 --></span>
+
+<!--
+This is the sixth bugfix release for LXCFS 2.0.
+-->
+このリリースは LXCS 2.0 の 6 回目のバグフィックスリリースです。
+
+<!--
+This includes the following bugfixes:
+-->
+このリリースには以下のバグ修正が含まれます:
+
+ * ネストした cgroup の swap の値を修正しました <!-- Fix swap values with nested cgroups -->
+ * tests: ppc64el 上のテストを修正しました <!-- Fix run on ppc64el -->
+ * memory.stat からの誤った値の読み取りを修正しました <!-- Fix wrong scanning of memory.stat -->
+
 ## LXCFS 2.0.5 リリースのお知らせ <!-- LXCFS 2.0.5 release announcement --><span class="text-muted">2016 年 11 月 23 日 <!-- 23rd of November 2016 --></span>
 
 <!--
