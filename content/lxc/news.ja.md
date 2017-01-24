@@ -1,4 +1,86 @@
 # News
+## LXC 2.0.7 リリースのお知らせ <!-- LXC 2.0.7 release announcement --><span class="text-muted">2017 年 1 月 23 日 <!-- 23rd of January 2017 --></span>
+<!--
+This is the seventh bugfix release for LXC 2.0.
+-->
+このリリースは LXC 2.0 の 7 回目のバグフィックスリリースです。
+
+<!--
+The main bugfixes in this release are:
+-->
+このリリースに含まれる主なバグフィックスは以下です:
+
+ * attach: lsm ラベルのファイルディスクリプタを閉じるようしました <!-- Close lsm label file descriptor -->
+ * attach: 機能と関係のない変更を行いました (訳注: ログ出力の改良と関数内の処理の簡素化)<!-- Non-functional changes -->
+ * attach: lsm\_opennat() を簡素化しました (訳注: 関数内の処理の簡素化)<!-- Simplify lsm\_openat() -->
+ * caps: lxc\_cap\_is\_set() 関数を追加しました <!-- Add lxc\_cap\_is\_set() -->
+ * conf: attach: errno を保存して close を呼び出します <!-- Save errno across call to close -->
+ * conf: drop と keep のどちらかだけを使用するようにわかりやすくレポートします (訳注: lxc.cap.(drop|keep)の両方が設定された場合のエラー表示をわかりやすくした)<!-- Clearly report to either use drop or keep -->
+ * conf: criu: make\_anonymous\_mount\_file() 関数を追加しました (訳注: /tmp がないシステムのために tmpfile() の代わりに memfd_create() を使うようになった)<!-- Add make\_anonymous\_mount\_file() -->
+ * conf: suggest\_default\_idmap() 関数を修正しました (訳注: 数値を読み取るときにエラーになるので改行を削除するようにしました)<!-- Fix suggest\_default\_idmap() -->
+ * configure: --enable-gnutls オプションを追加しました <!-- Add \-\-enable-gnutls option -->
+ * configure: memfd\_create() システムコールの有無をチェックするようにしました <!-- Check for memfd\_create() -->
+ * configure: gettid() が宣言されているかどうかチェックするようにしました <!-- Check whether gettid() is declared -->
+<!-- * configure: Do not allow variable length arrays (訳注: 次の行のコミットがこれを取り消すコミット)-->
+<!-- * configure: Remove -Werror=vla-->
+ * configure: major()/minor()/makedev() の検出に AC\_HEADER\_MAJOR を使うようになりました <!-- Use AC\_HEADER\_MAJOR to detect major()/minor()/makedev() -->
+ * conf: 機能と関係のない変更を行いました (訳注: ソースコードのフォーマット)<!-- Non-functional changes -->
+ * conf: スレッドセーフでない strsignal 呼び出しを削除し、ログ出力を改良しました <!-- Remove thread-unsafe strsignal + improve log -->
+ * init: sysvinit の LSB ヘッダの Should-Start/Stop に cgroupfs-mount を追加しました <!-- Add cgroupfs-mount to Should-Start/Stop sysvinit LSB headers -->
+ * log: lxc\_unix\_epoch\_to\_utc() 関数を追加しました (訳注: UNIX Epoch をログ出力用の UTC 時刻文字列に変換)<!-- Add lxc\_unix\_epoch\_to\_utc() -->
+ * log: lxc\_unix\_epoch\_to\_utc() 関数内にコメントを追加しました <!-- Annotate lxc\_unix\_epoch\_to\_utc() -->
+ * log: タイムゾーンを変換する関数をすべて削除しました <!-- Drop all timezone conversion functions -->
+ * log: 日付が確実に正しくフォーマットされるようにしました <!-- Make sure that date is correctly formatted -->
+ * log: lxc\_unix\_epoch\_to\_utc() を使うようにしました <!-- Use lxc\_unix\_epoch\_to\_utc() -->
+ * log: スレッドで getpid() != gettid() の際に日時の代わりに "N/A" という文字列を出力するようにしました <!-- Use N/A if getpid() != gettid() when threaded -->
+ * log: スレッドセーフな localtime\_r() を使うようにしました <!-- Use thread-safe localtime\_r() -->
+ * lvm: ファイルディスクリプタのリークに関する警告を出力しないようにしました <!-- Supress warnings about leaked files -->
+ * lxccontainer: init の pid へのシグナルの送出に失敗したことをログに出力するようになりました <!-- Log failure to send sig to init pid -->
+ * monitor: さらにロギングを行うようにしました <!-- Add more logging -->
+ * monitor: exit 時に mainloop がオープンしていたらクローズするようにしました (訳注: エラー時にきちんと後始末するようになった)<!-- Close mainloop on exit if we opened it -->
+ * monitor: ログの改良を行い、ログレベルを DEBUG に設定しました <!-- Improve log + set log level to DEBUG -->
+ * monitor: パイプのファイルディスクリプタが使用中であることをログ出力するようになりました <!-- Log which pipe fd is currently used -->
+ * monitor: lxc-monitord を async シグナルセーフにしました <!-- Make lxc-monitord async signal safe -->
+ * monitor: 機能と関係のない変更を行いました (訳注: ソースのフォーマットとログの改良など)<!-- Non-functional changes -->
+ * python3-lxc: s390x 上の api\_test.py を修正しました <!-- Fix api\_test.py on s390x -->
+ * start: setgroups() の前に CAP\_SETGID をチェックするようにしました <!-- Check for CAP\_SETGID before setgroups() -->
+ * start: execute(lxc-execute) を修正し、setggroups() の呼び出しを改良しました <!-- Fix execute and improve setgroups() calls -->
+ * state: lxc\_wait() 内で async シグナルセーフな関数を使うようにしました <!-- Use async signal safe fun in lxc\_wait() -->
+ * templates: lxc-debian: ホスト上の /usr/lib/systemd から取得しようとしないようにしました <!-- Don't try to get stuff from /usr/lib/systemd on the host -->
+ * templates: lxc-debian: 起動時の getty サービスを修正しました <!-- Fix getty service startup -->
+ * templates: lxc-debian: dpkg の --print-foreign-architectures オプションの Typo を修正しました <!-- Fix typo in calling dpkg with \-\-print-foreign-architectures option -->
+ * templates: lxc-debian: ppc アーキテクチャを powerpc として扱うようにしました <!-- Handle ppc hostarch -> powerpc -->
+ * templates: lxc-opensuse: openSUSE のデフォルトリリースを Leap 42.2 にしました <!-- Change openSUSE default release to Leap 42.2 -->
+ * templates: lxc-opensuse: libgcc\_s1 を削除しました <!-- Remove libgcc\_s1 -->
+ * templates: lxc-opensuse: poweroff.target から sigpwr.target へのコピーをしないようにしました <!-- Remove poweroff.target -> sigpwr.target copy -->
+ * templates: lxc-opensuse: AppArmor を unconfined に設定するようになりました <!-- Set to be unconfined by AppArmor -->
+ * templates: lxc-opensuse: Leap 42.2 向けの更新を行いました <!-- Update for Leap 42.2 -->
+ * tests; クリーンアップのエラー時にテストを失敗にしなくなりました <!-- Don't cause test failures on cleanup errors -->
+ * tests: 壊れた overlay モジュールでは非特権のテストを行わないようにしました <!-- Skip unpriv tests on broken overlay module -->
+ * tools: ログ出力の改良を行いました <!-- Improve logging -->
+ * tools: lxc-start: c->is\_defined(c) のチェックを削除しました (訳注: volatile コンテナを扱うためにコンテナの存在をチェックしなくなった)<!--  Remove c->is\_defined(c) check -->
+ * tools: lxc-start: load\_config の後に configfile を設定するようにしました <!-- Set configfile after load\_config -->
+ * tools: O\_RDONLY だけをチェックするようになりました (訳注: lxcpath のチェック)<!-- Only check for O\_RDONLY -->
+ * tree-wide: 色々な場所のマクロのクリーンアップを行いました <!-- Random macro cleanups -->
+ * tree-wide: variable length array を削除しました <!-- Remove any variable length arrays -->
+ * tree-wide: Sic semper assertis! (訳注: ?? assert の使用を止めているようです)
+ * utils: \_\_LXC\_NUMSTRLEN マクロを追加しました <!-- Add macro \_\_LXC\_NUMSTRLEN -->
+ * utils: uid, gid, group を扱うのに便利なラッパー関数を追加しました <!-- Add uid, gid, group convenience wrappers -->
+
+### ダウンロード <!-- Downloads -->
+<!--
+The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions  
+will very soon ship a packaged version of LXC 2.0.7.
+-->
+このリリースの tarball は [ダウンロードページ](/lxc/downloads/) から取得できます。そして、各ディストリビューションがすぐに LXC 2.0.6 のパッケージをリリースするでしょう。
+
+<!--
+Should you be interested in individual changes or just looking at the detailed development history,  
+our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-2.0).
+-->
+個々の変更点に興味がある場合、そして開発の履歴を見たい場合、stable-2.0 ブランチが [Github](https://github.com/lxc/lxc/tree/stable-2.0) にあります。
+
+
 ## LXC 2.0.6 リリースのお知らせ <!-- LXC 2.0.6 release announcement --><span class="text-muted">2016 年 11 月 23 日<!-- 23rd of November 2016 --></span>
 <!--
 This is the sixth bugfix release for LXC 2.0.
