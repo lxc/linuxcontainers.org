@@ -29,7 +29,7 @@ The main bugfixes in this release are:
  * log: Use lxc\_unix\_epoch\_to\_utc()
  * log: Use N/A if getpid() != gettid() when threaded
  * log: Use thread-safe localtime\_r()
- * lvm: Supress warnings about leaked files
+ * lvm: Suppress warnings about leaked files
  * lxccontainer: Log failure to send sig to init pid
  * monitor: Add more logging
  * monitor: Close mainloop on exit if we opened it

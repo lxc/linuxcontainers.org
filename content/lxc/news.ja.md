@@ -44,7 +44,7 @@ The main bugfixes in this release are:
  * monitor: 機能と関係のない変更を行いました (訳注: ソースのフォーマットとログの改良など)<!-- Non-functional changes -->
  * python3-lxc: s390x 上の api\_test.py を修正しました <!-- Fix api\_test.py on s390x -->
  * start: setgroups() の前に CAP\_SETGID をチェックするようにしました <!-- Check for CAP\_SETGID before setgroups() -->
- * start: execute(lxc-execute) を修正し、setggroups() の呼び出しを改良しました <!-- Fix execute and improve setgroups() calls -->
+ * start: execute(lxc-execute) を修正し、setgroups() の呼び出しを改良しました <!-- Fix execute and improve setgroups() calls -->
  * state: lxc\_wait() 内で async シグナルセーフな関数を使うようにしました <!-- Use async signal safe fun in lxc\_wait() -->
  * templates: lxc-debian: ホスト上の /usr/lib/systemd から取得しようとしないようにしました <!-- Don't try to get stuff from /usr/lib/systemd on the host -->
  * templates: lxc-debian: 起動時の getty サービスを修正しました <!-- Fix getty service startup -->
