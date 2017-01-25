@@ -25,30 +25,30 @@ Bugfixes:
  * i18n: Update message catalogs and Japanese translation
  * i18n: Update translations from weblate
  * lxc: Better handle timestamps
- * lxc/file: Fix directory permissions on recursive push
+ * lxc/file: Fix directory permissions on recursive push (Issue #2759)
  * lxc/init: Properly replace args list
  * lxc/list: Fix unused variable
  * lxc/list: Sort IP addresses in output
- * lxc/network: Better handle network modifications
+ * lxc/network: Better handle network modifications (Issue #2785)
  * lxc/network: Sort UsedBy list on show
  * lxc: Properly check yaml errors
  * lxc/remote: Update help
  * lxd/containers: Allow passing in-memory buffers to a FileResponse
- * lxd/containers: Don't attempt to read xattrs from symlinks
+ * lxd/containers: Don't attempt to read xattrs from symlinks (Issue #2801)
  * lxd/containers: Improve error handling and reporting during export
  * lxd/containers: Report -1 (255) on signal exit during exec
  * lxd/containers: Report exit code when we got killed by signal
  * lxd/db: Drop unused code from db.go
  * lxd/devices: Don't ignore regexp failures
- * lxd/images: Close race condition in image download
+ * lxd/images: Close race condition in image download (Issue #2739)
  * lxd/init: We need an address in CIDR notation instead of CIDR subnet
  * lxd/migrate: Use the generated snapshot list
- * lxd/network: Clean up leases for static assignments
- * lxd/networks: Handle empty dnsmasq pid file
- * lxd/network: Update permissions of network directories
+ * lxd/network: Clean up leases for static assignments (Issue #2781)
+ * lxd/networks: Handle empty dnsmasq pid file (Issue #2767)
+ * lxd/network: Update permissions of network directories (Issue #2804)
  * lxd/patches: Mark all patches as applied on create
  * lxd/profiles: Fix unusued variable
- * lxd/storage: Don't assume a path is a subvolume
+ * lxd/storage: Don't assume a path is a subvolume (Issue #2748)
  * shared: Add Int64InSlice()
  * shared: Have GetByteSizeString() take a precision argument
  * shared: Improve byte parsing in GetByteSizeString() and ParseByteSizeString()
