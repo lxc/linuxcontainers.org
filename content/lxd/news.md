@@ -1,6 +1,72 @@
 ![Logo](/static/img/containers.png)
 
 # News
+## LXD 2.8 release announcement <span class="text-muted">24th of January 2017</span>
+### The changes in this release include
+New features:
+
+ * Exec sessions being killed by a signal will now report the signal number as part of their exit code.
+ * The first stage of our Go client API rework is now done with a new [api module](https://godoc.org/github.com/lxc/lxd/shared/api) containing all REST API definitions.
+ * The dnsmasq instance used for LXD managed bridges is now running as an unprivileged user.
+ * VLAN device types are now properly reported in the API and client.
+ * The client will now show the date an image was last used at (in lxc image info).
+ * LXD is now using [Weblate](https://hosted.weblate.org/projects/linux-containers/lxd/) for its translations.
+
+Bugfixes:
+
+ * client: Add a done signal to Monitor API
+ * client: Better handle http errors
+ * doc: Add Documentation on Network Configuration via cloud-init
+ * doc: Update README.md for CI and Weblate
+ * doc: Update README.md for godoc
+ * global: Fix typos
+ * global: "gofmt -s" run
+ * i18n: Improved and completed french translation
+ * i18n: Update message catalogs and Japanese translation
+ * i18n: Update translations from weblate
+ * lxc: Better handle timestamps
+ * lxc/file: Fix directory permissions on recursive push
+ * lxc/init: Properly replace args list
+ * lxc/list: Fix unused variable
+ * lxc/list: Sort IP addresses in output
+ * lxc/network: Better handle network modifications
+ * lxc/network: Sort UsedBy list on show
+ * lxc: Properly check yaml errors
+ * lxc/remote: Update help
+ * lxd/containers: Allow passing in-memory buffers to a FileResponse
+ * lxd/containers: Don't attempt to read xattrs from symlinks
+ * lxd/containers: Improve error handling and reporting during export
+ * lxd/containers: Report -1 (255) on signal exit during exec
+ * lxd/containers: Report exit code when we got killed by signal
+ * lxd/db: Drop unused code from db.go
+ * lxd/devices: Don't ignore regexp failures
+ * lxd/images: Close race condition in image download
+ * lxd/init: We need an address in CIDR notation instead of CIDR subnet
+ * lxd/migrate: Use the generated snapshot list
+ * lxd/network: Clean up leases for static assignments
+ * lxd/networks: Handle empty dnsmasq pid file
+ * lxd/network: Update permissions of network directories
+ * lxd/patches: Mark all patches as applied on create
+ * lxd/profiles: Fix unusued variable
+ * lxd/storage: Don't assume a path is a subvolume
+ * shared: Add Int64InSlice()
+ * shared: Have GetByteSizeString() take a precision argument
+ * shared: Improve byte parsing in GetByteSizeString() and ParseByteSizeString()
+ * shared: Move Device/Devices types to lxd package
+ * shared: ParseByteSizeString() deal with bytes
+ * shared: Remove GroupName function and add UserId one
+ * tests: Don't ignore errors in db tests
+ * tests: Fix deadcode to work with new upstream
+ * tests: Fix shellcheck being confused by cd
+ * tests: Use lxc restart whenever possible
+
+### Try it for yourself
+This new LXD release is already available for you to try on our [demo service](/lxd/try-it/).
+
+### Downloads
+The release tarballs can be found on our [download page](/lxd/downloads/).
+
+
 ## LXD 2.7 release announcement <span class="text-muted">20th of December 2016</span>
 ### The changes in this release include
 New features:
