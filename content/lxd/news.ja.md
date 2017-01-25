@@ -1,6 +1,79 @@
 ![Logo](/static/img/containers.png)
 
 # News
+## LXD 2.8 リリースのお知らせ <!-- LXD 2.8 release announcement --><span class="text-muted">2017 年 1 月 24 日 <!-- 24th of January 2017 --></span>
+
+### このリリースに含まれる変更点 <!-- The changes in this release include -->
+新しい機能 <!-- New features -->:
+
+ * シグナルによって kill された exec セッションの exit コードからシグナル番号がわかるようになりました (訳注: 128+シグナル番号が返る)<!-- Exec sessions being killed by a signal will now report the signal number as part of their exit code. -->
+ * 我々の Go クライアント API の改訂の第一段階が終了しました。REST API 定義がすべて含まれる新しい [api モジュール](https://godoc.org/github.com/lxc/lxd/shared/api) となりました <!-- The first stage of our Go client API rework is now done with a new [api module](https://godoc.org/github.com/lxc/lxd/shared/api) containing all REST API definitions. -->
+ * LXD が管理するブリッジで使用する dnsmasq が非特権ユーザで動作するようになりました <!-- The dnsmasq instance used for LXD managed bridges is now running as an unprivileged user. -->
+ * VLAN デバイスのタイプが API とクライアントで正しくレポートされるようになりました <!-- VLAN device types are now properly reported in the API and client. -->
+ * クライアントがイメージの最終利用日を表示するようになりました <!-- The client will now show the date an image was last used at -->(in lxc image info).
+ * LXD の翻訳は [Weblate](https://hosted.weblate.org/projects/linux-containers/lxd/) を使うようになりました<!-- LXD is now using [Weblate](https://hosted.weblate.org/projects/linux-containers/lxd/) for its translations. -->
+
+バグ修正 <!-- Bugfixes -->:
+
+ * client: Monitor API に終了したシグナルを追加しました <!-- Add a done signal to Monitor API -->
+ * client: http のエラーの扱いを改良しました <!-- Better handle http errors -->
+ * doc: cloud-init 経由のネットワーク設定の説明を追加しました <!-- Add Documentation on Network Configuration via cloud-init -->
+ * doc: README.md の CI の記述を更新し、Weblate と godoc を追加しました <!-- Update README.md for CI and Weblate -->
+<!-- * doc: Update README.md for godoc -->
+ * global: Typo を修正しました <!-- Fix typos -->
+ * global: "gofmt -s" を実行しました <!-- run -->
+ * i18n: フランス語翻訳を改良し、すべて翻訳しました <!-- Improved and completed french translation -->
+ * i18n: 日本語翻訳を更新しました <!-- Update message catalogs and Japanese translation -->
+ * i18n: Weblate からの翻訳の更新を行いました <!-- Update translations from weblate -->
+ * lxc: タイムスタンプの扱いを改良しました <!-- Better handle timestamps -->
+ * lxc/file: 再帰的な push でのディレクトリのパーミッションを修正しました <!-- Fix directory permissions on recursive push --> (Issue #2759)
+ * lxc/init: 引数のリストを正しく置き換えるようになりました <!-- Properly replace args list -->
+ * lxc/list: 未使用の変数を修正しました <!-- Fix unused variable -->
+ * lxc/list: 出力の IP アドレスをソートするようになりました <!-- Sort IP addresses in output -->
+ * lxc/network: ネットワークの変更操作の改良を行いました <!-- Better handle network modifications -->(Issue #2785)
+ * lxc/network: show の UsedBy リストをソートするようになりました <!-- Sort UsedBy list on show -->
+ * lxc: yaml のエラーを正確にチェックするようになりました <!-- Properly check yaml errors -->
+ * lxc/remote: ヘルプを更新しました <!-- Update help -->
+ * lxd/containers: FileResponse に in-memory のバッファを与えることが可能になりました <!-- Allow passing in-memory buffers to a FileResponse -->
+ * lxd/containers: シンボリックリンクから xattr を読もうとしなくなりました <!-- Don't attempt to read xattrs from symlinks -->(Issue #2801)
+ * lxd/containers: export 中のエラーハンドリングとレポートを改良しました <!-- Improve error handling and reporting during export -->
+<!-- * lxd/containers: Report -1 (255) on signal exit during exec (Translator's note: 別のコミットで打ち消された変更/This change is overwritten by other commit) -->
+ * lxd/containers: シグナルで kill された場合、終了コードでシグナル番号を返すようになりました <!-- Report exit code when we got killed by signal -->
+ * lxd/db: db.go から使っていないコードを削除しました <!-- Drop unused code from db.go -->
+ * lxd/devices: 正規表現の失敗を無視しなくなりました <!-- Don't ignore regexp failures -->
+ * lxd/images: イメージダウンロードでの競合が起こらないようにしました <!-- Close race condition in image download -->(Issue #2739)
+ * lxd/init: 入力時の問い合わせの文言の修正を行いました。「CIDRサブネット」→「CIDRアドレス」<!-- We need an address in CIDR notation instead of CIDR subnet -->
+ * lxd/migrate: 生成したスナップショットのリストを使うようにしました <!-- Use the generated snapshot list -->
+ * lxd/network: 静的なアドレス割当を行う場合に leases ファイルをクリーンアップするようにしました <!-- Clean up leases for static assignments -->(Issue #2781)
+ * lxd/networks: 空の dnsmasq の pid ファイルを扱えるようにしました <!-- Handle empty dnsmasq pid file -->(Issue #2767)
+ * lxd/network: ネットワークディレクトリのパーミッションを変更しました <!-- Update permissions of network directories -->(Issue #2804)
+ * lxd/patches: すべてのパッチを create 時に適用済みとマークするようにしました <!-- Mark all patches as applied on create -->
+ * lxd/profiles: 未使用の変数を修正しました <!-- Fix unusued variable -->
+ * lxd/storage: パスを subvolume と仮定しなくなりました <!-- Don't assume a path is a subvolume -->(Issue #2748)
+ * shared: Int64InSlice() を追加しました <!-- Add Int64InSlice() -->
+ * shared: GetByteSizeString() 関数が精度を引数として持つようになりました <!-- Have GetByteSizeString() take a precision argument -->
+ * shared: GetByteSizeString() と ParseByteSizeString() の byte のパースを改良しました <!-- Improve byte parsing in GetByteSizeString() and ParseByteSizeString() -->
+ * shared: Device/Devices type を lxd パッケージに移動しました <!-- Move Device/Devices types to lxd package -->
+ * shared: ParseByteSizeString() が byte を扱うようになりました <!-- ParseByteSizeString() deal with bytes -->
+ * shared: GroupName 関数を削除し、UserId 関数を追加しました <!-- Remove GroupName function and add UserId one -->
+ * tests: db テストのエラーを無視しなくなりました <!-- Don't ignore errors in db tests -->
+ * tests: 新しい開発版で動作するように deadcode を修正しました <!-- Fix deadcode to work with new upstream -->
+ * tests: shellcheck が cd で混乱する問題を修正しました <!-- Fix shellcheck being confused by cd -->
+ * tests: 可能であれば lxc restart を使うようになりました <!-- Use lxc restart whenever possible -->
+
+### 試用環境 <!-- Try it for yourself -->
+<!--
+This new LXD release is already available for you to try on our [demo service](/lxd/try-it/).
+-->
+この新しい LXD のリリースが、すでに私たちの [デモサービス](/ja/lxd/try-it/) で利用できます。
+
+### ダウンロード <!-- Downloads -->
+<!--
+The release tarballs can be found on our [download page](/lxd/downloads/).
+-->
+このリリースの tarball は [ダウンロードページ](/lxd/downloads/) から取得できます。
+
+
 ## LXD 2.7 リリースのお知らせ <!-- LXD 2.7 release announcement --><span class="text-muted">2016 年 12 月 20 日<!-- 20th of December 2016 --></span>
 ### このリリースに含まれる変更点 <!-- The changes in this release include -->
 新しい機能 <!-- New features -->:
