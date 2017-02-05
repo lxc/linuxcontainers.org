@@ -1,6 +1,153 @@
 ![Logo](/static/img/containers.png)
 
 # News
+## LXD 2.0.9 リリースのお知らせ <!-- LXD 2.0.9 release announcement --><span class="text-muted">2017 年 1 月 26 日<!-- 26th of January 2017 --></span>
+<!--
+This is the ninth bugfix release for LXD 2.0.
+-->
+このリリースは LXD 2.0 の 9 回目のバグフィックスリリースです。
+
+### LXD 2.0.8 以降の変更は以下の通りです <!-- The changes since LXD 2.0.8 are -->
+
+<!-- Minor improvements -->細かな改良点:
+
+ * シグナルによって kill された exec セッションの exit コードからシグナル番号がわかるようになりました (訳注: 128+シグナル番号が返る) <!-- Exec sessions being killed by a signal will now report the signal number as part of their exit code. -->
+ * VLAN デバイスのタイプが API とクライアントで正しくレポートされるようになりました <!-- VLAN device types are now properly reported in the API and client. -->
+ * クライアントがイメージの最終利用日を表示するようになりました (lxc image info) <!-- The client will now show the date an image was last used at (in lxc image info). -->
+ * 一度に複数のイメージを消去できるようになりました <!-- The client will now let you delete multiple images at once. -->
+ * LXD の翻訳は [Weblate](https://hosted.weblate.org/projects/linux-containers/lxd/) を使うようになりました<!-- LXD is now using [Weblate](https://hosted.weblate.org/projects/linux-containers/lxd/) for its translations. -->
+
+<!-- Bugfixes -->バグ修正:
+
+ * client: Monitor API に終了したシグナルを追加しました <!-- Add a done signal to Monitor API -->
+ * client: http のエラーの扱いを改良しました <!-- Better handle http errors -->
+ * client: 更新のためのメソッドを共通化し、PATCH の追加を行いました <!-- Commonize update methods -->
+ * doc: cloud-init 経由のネットワーク設定の説明を追加しました <!-- Add Documentation on Network Configuration via cloud-init -->
+ * doc: README.md に godoc へのリンクを設置しました <!-- Added reference to godoc to README.md -->
+ * doc: README.md の CI と　Weblate の記述を更新しました <!-- Update README.md for CI and Weblate status -->
+ * extra/lxc-to-lxd: サポートされない (LXCの) 設定項目をさらに追加しました <!-- Add more unsupported config keys -->
+ * extra/lxc-to-lxd: プロパティはすべて文字列でなければならなくなりました <!-- All properties must be strings -->
+ * extra/lxc-to-lxd: デフォルトでは rootfs は移動でなく、コピーするようになりました <!-- Copy the rootfs by default, don't move it -->
+ * extra/lxc-to-lxd: python3-lxc がインストールされていない場合のエラー表示をわかりやすくしました <!-- Show nicer error on missing python3-lxc -->
+ * extra/lxc-to-lxd: (訳注: LXCの設定のうちLXDで使える設定項目のチェックを) ホワイトリストを使うように変更しました <!-- Switch to using a config whitelist -->
+ * global: typo を修正しました <!-- Fix typos -->
+ * global: "gofmt -s" を実行しました <!-- run -->
+ * lxc: タイムスタンプの扱いを改良しました <!-- Better handle timestamps -->
+ * lxc: ヘルプの出力をより一貫性のあるメッセージにしました <!-- Make help messages more consistent -->
+ * lxc: yaml のエラーを正確にチェックするようになりました <!-- Properly check yaml errors -->
+ * lxc/init: 例を修正しました <!-- Fix example -->
+ * lxc/init: 引数のリストを正しく置き換えるようになりました <!-- Properly replace args list -->
+ * lxc/launch: オプションの解析を行うコードを init.go のメソッドを呼び出すだけにしました (重複しているコードの削除) <!-- Just use init.go's flags() -->
+ * lxc/list: IPv4 と IPv6 アドレスの出力をソートするようになりました <!-- Sort IPv4 and IPv6 addresses -->
+ * lxc/remote: ヘルプを更新しました <!-- Update help -->
+ * lxd-bridge: ip6tables のフィルタルールを追加しました <!-- Add ip6tables filter rules -->
+ * lxd-bridge: DHCP は UDP でのみ通信するようになりました <!-- DHCP happens over UDP only -->
+ * lxd-bridge: IPv4 のファイアウォールをオプショナルにしました (デフォルトは有効です) <!-- Make IPv4 firewalling optional (default is enabled) -->
+ * lxd/containers: コンテナ生成時の基本的なログ出力を追加しました <!-- Add basic logging to container creation -->
+ * lxd/containers: FileResponse に in-memory のバッファを与えることが可能になりました <!-- Allow passing in-memory buffers to a FileResponse -->
+ * lxd/containers: コンテナにアタッチする際に (訳注: setuid に加えて) setgroups も実行するようにしました <!-- Also call setgroups when attaching to the container -->
+ * lxd/containers: ネットワークの設定項目を設定する関数の競合状態を避けるようにしました <!-- Avoid race condition in network fill function -->
+ * lxd/containers: raw.lxc で設定する項目のうち、lxc.syslog と lxc.ephemeral をブラックリストに追加しました <!-- Blacklist lxc.syslog and lxc.ephemeral in raw.lxc -->
+ * lxd/containers: exec 実行時にクリーンに exit できるように、バックグラウンドタスクを検出するようになりました <!-- Detect background tasks to allow clean exit on exec -->
+ * lxd/containers: 正しい順序でマウントを行うようになりました <!-- Do mounts in the right order -->
+ * lxd/containers: シンボリックリンクから xattr を読み取らないようにしました <!-- Don't attempt to read xattrs from symlinks -->
+ * lxd/containers: 存在しないパスの解決をブロックしなくなりました <!-- Don't block resolution on non-existing paths -->
+ * lxd/containers: last\_state.power を 2 度記録しないようになりました <!-- Don't record last\_state.power twice -->
+ * lxd/containers: Exec() がアタッチされた PID を返すようになり、引数で bool の値をとるようになりました (訳注: bool はコマンドの終了を待つかどうかを与える)<!-- Exec() return attached PID && take bool arg -->
+ * lxd/containers: コンテナ状態の記録を修正しました <!-- Fix container state recording -->
+ * lxd/containers: major/minor デバイス番号を設定するデバイスのホットプラグを修正しました <!-- Fix device hotplug with major/minor set -->
+ * lxd/containers: ファイルの push のエラーハンドリングを修正しました <!-- Fix file push error handling -->
+ * lxd/seccomp: seccomp プロファイルの修正を行いました (訳注: LXC がプロファイルの空行からシステムコール番号を読もうとしていたので修正) <!-- Fix generated seccomp profile -->
+ * lxd/containers: file\_manip コマンドのロギングを修正しました <!-- Fix logging for file\_manip commands -->
+ * lxd/containers: export 中のエラーハンドリングとレポートを改良しました <!-- Improve error handling and reporting during export -->
+ * lxd/containers: ディレクトリの置換時に明確にエラーを返すようになりました <!-- Return a clear error when replacing a directory -->
+ * lxd: http クライアントのためのコードパスを共通化しました <!-- Common codepath for http client -->
+ * lxd: デーモンの TLS の設定で InsecureSkipVerify を設定しないようにしました <!-- Don't set InsecureSkipVerify on daemon's tls config -->
+ * lxd: デーモンのバージョンをロギングするようにしました <!-- Log daemon version -->
+ * lxd/daemon: より厳密なパーミッションでディレクトリを作成するようにしました <!-- Make directories with stricter permissions -->
+ * lxd/daemon: LXD\_DIR のグループと全ユーザに対して +x を設定するようにしました <!-- Make LXD\_DIR with +x for group and everyone -->
+ * lxd: コンテナが起動した時点でのみデーモンが準備できたとマークするようになりました <!-- Only mark daemon ready once containers are up -->
+ * lxd: 値が削除された場合、デーモンの設定項目を適切に確認するようになりました <!-- Properly validate daemon keys on unset -->
+ * lxd: HTTPS アドレスの更新時にもカスタムの http サーバを使用するようになりました <!-- Use our custom http server when updating HTTPS address too -->
+ * lxd/db: db.go から使われていないコードを削除しました <!-- Drop unused code from db.go -->
+ * lxd/images: イメージダウンロードでの競合が起こらないようにしました <!-- Close race condition in image download -->
+ * lxd/containers: ネットワーク経由の転送時にスピードをトラッキングするようになりました <!-- Track speed during network transfers -->
+ * lxd/main: activateifneeded 関数を自身用のソースファイルに移動させました <!-- Move activateifneeded to own file -->
+ * lxd/main: callhook 関数を自身用のソースファイルに移動させました <!-- Move callhook to own file -->
+ * lxd/main: daemon 用関数を自身用のソースファイルに移動させました <!-- Move daemon to own file -->
+ * lxd/main: forkexec 関数を自身用のソースファイルに移動させました <!-- Move forkexec to own file -->
+ * lxd/main: forkgetnet 関数を自身用のソースファイルに移動させました <!-- Move forkgetnet to own file -->
+ * lxd/main: forkmigrate 関数を自身用のソースファイルに移動させました <!-- Move forkmigrate to own file -->
+ * lxd/main: forkstart 関数を自身用のソースファイルに移動させました <!-- Move forkstart to own file -->
+ * lxd/main: init 関数を自身用のソースファイルに移動させました <!-- Move init to own file -->
+ * lxd/main: migratedumpsuccess 関数を自身用のソースファイルに移動させました <!-- Move migratedumpsuccess to own file -->
+ * lxd/main: netcat 関数を自身用のソースファイルに移動させました <!-- Move netcat to own file -->
+ * lxd/main: ready 関数を自身用のソースファイルに移動させました <!-- Move ready to own file -->
+ * lxd/main: shutdown 関数を自身用のソースファイルに移動させました <!-- Move shutdown to own file -->
+ * lxd/main: waitready 関数を自身用のソースファイルに移動させました <!-- Move waitready to own file -->
+ * lxd/main: nsexec.go を main\_nsexec.go にリネームしました <!-- Rename nsexec.go to main\_nsexec.go -->
+ * lxd/migrate: 生成したスナップショットのリストを使うようにしました <!-- Use the generated snapshot list -->
+ * lxd/patches: すべてのパッチを create 時に適用済みとマークするようにしました <!-- Mark all patches as applied on create -->
+ * lxd/profiles: 未使用の変数を修正しました <!-- Fix unusued variable -->
+ * lxd/storage: パスを subvolume と仮定しなくなりました <!-- Don't assume a path is a subvolume -->
+ * lxd/storage: ContainerStart 関数の引数としてコンテナ名とパスを取るように変更しました (訳注: 以前はコンテナ構造体を取得して内部でコンテナ名とパスを取り出していた)<!-- Change ContainerStart to take the name and path to start -->
+ * lxd/containers: create 時の EEXISTS の検出を書き直しました <!-- Rework EEXISTS detection on create -->
+ * lxd/storage: zfs: デバイスをトラッキングするロジックを簡略化しました <!-- Simplify device tracking logic -->
+ * Makefile: "make dist" をより信頼性が向上するように作りなおしました <!-- Rework "make dist" to be more reliable -->
+ * shared: GetPollRevents() 関数を追加しました (訳注: C の poll の wrapper) <!-- add GetPollRevents() -->
+ * shared: WebsocketExecMirror() 関数を追加しました (訳注: コンテナ内の PTY に接続して実行するコマンドを扱う)<!-- Add WebsocketExecMirror() -->
+ * shared: すべての証明書フィンガープリントの生成を共通化しました <!-- Centralize all cert fingerprint generation -->
+ * shared: TransferProgress に Reader でなく ReadCloser を与えるようになりました <!-- Convert TransferProgress to ReadCloser -->
+ * shared: ExecReaderToChannel() が sync.Once を使うようになりました <!-- ExecReaderToChannel() use sync.Once -->
+ * shared: アーキテクチャを扱う部分をパッケージ化しました <!-- Give Architecture handling its own package -->
+ * shared: IO プログレストラッカー部分をパッケージ化しました <!-- Give IO progress tracker its own package -->
+ * shared: simplestreams クライアントをパッケージ化しました <!-- Give simplestreams client its own package -->
+ * shared: バージョンを扱う部分をパッケージ化しました <!-- Give version handling its own package -->
+ * shared: 書き込みのトラッキングを実装しました <!-- Implement write tracking -->
+ * shared: 証明書のフィンガープリントを計算するヘルパー関数を作成しました <!-- Make a helper to compute cert fingerprint -->
+ * shared: Device/Devices type を lxd パッケージに移動しました <!-- Move Device/Devices types to lxd package -->
+ * shared: FromLXCState 関数 (訳注: LXC コンテナの状態を返す関数) を shared の外 (訳注: LXC コンテナの処理部分) へ移動させました <!-- Move FromLXCState out of shared -->
+ * shared: REST API を新しいパッケージに移動しました <!-- Move REST API to new package -->: certificate
+ * shared: REST API を新しいパッケージに移動しました <!-- Move REST API to new package -->: container
+ * shared: REST API を新しいパッケージに移動しました <!-- Move REST API to new package -->: godoc
+ * shared: REST API を新しいパッケージに移動しました <!-- Move REST API to new package -->: image
+ * shared: REST API を新しいパッケージに移動しました <!-- Move REST API to new package -->: network
+ * shared: REST API を新しいパッケージに移動しました <!-- Move REST API to new package -->: operation
+ * shared: REST API を新しいパッケージに移動しました <!-- Move REST API to new package -->: profile
+ * shared: REST API を新しいパッケージに移動しました <!-- Move REST API to new package -->: response
+ * shared: REST API を新しいパッケージに移動しました <!-- Move REST API to new package -->: server
+ * shared: REST API を新しいパッケージに移動しました <!-- Move REST API to new package -->: status
+ * shared: WebsocketUpgrader を network.go へ移動させました <!-- Move WebsocketUpgrader to network.go -->
+ * shared: GroupName 関数を削除し、UserId 関数を追加しました <!-- Remove GroupName function and add UserId one -->
+ * shared: idmapset\_test\_linux.go を idmapset\_linux\_test.go にリネームしました <!-- Rename idmapset\_test\_linux.go to idmapset\_linux\_test.go -->
+ * shared: ファイル転送のトラッキングの環境依存をなくしました <!-- Support absolute file transfer tracking -->
+ * shared/idmap: デバッグコードを削除しました <!-- Drop debugging code -->
+ * shared/idmapset: intersection テストを修正しました <!-- Fix intersection test -->
+ * shared/logging: 独自のログフォーマッターを導入しました <!-- Introduce our own formatter -->
+ * shared/logging: PrintStack の出力をエラーレベルに変更しました (訳注: runtime.Stack の出力部分を debug から error レベルに変更した)<!-- Make PrintStack print at the Error level -->
+ * shared/simplestreams: 独自の http ハンドラに依存しなくなりました <!-- Don't depend on custom http handler -->
+ * shared/simplestreams: 引数として UserAgent を与えるようにしました <!-- Pass UserAgent as argument -->
+ * shared/util: Int64InSlice() 関数を追加しました <!-- Add Int64InSlice() -->
+ * shared/util: GetByteSizeString() 関数が精度を引数として持つようになりました <!-- Have GetByteSizeString() take a precision argument -->
+ * shared/util: byte のパースを改良しました <!-- Improve byte parsing -->
+ * shared/util: ParseByteSizeString() が byte を扱うようになりました <!-- ParseByteSizeString() deal with bytes -->
+ * tests: db テストのエラーを無視しなくなりました <!-- Don't ignore errors in db tests -->
+ * tests: 不適切な変数名を変更しました <!-- Fix bad variable name -->
+ * tests: 新しい開発版で動作するように deadcode を修正しました <!-- Fix deadcode to work with new upstream -->
+ * tests: shellcheck が cd で混乱する問題を修正しました <!-- Fix shellcheck being confused by cd -->
+ * tests: スタンドアロンの remote のテストを追加しました <!-- Fix standalone remote test -->
+ * tests: Jenkins に合うようにテスト名を短縮しました <!-- Shorten test name to fit on Jenkins -->
+ * tests: テストスイートを起動するコードを簡略化しました <!-- Simplify testsuite spawn code -->
+ * tests: lxd のシャットダウンをテストするようにしました <!-- Test lxd shutdown -->
+ * tests: lxc reboot の代わりに lxc restart を使うようにしました <!-- Use lxc restart instead of reboot -->
+
+### ダウンロード <!-- Downloads -->
+<!--
+The release tarballs can be found on our [download page](/lxd/downloads/).
+-->
+このリリースの tarball は [ダウンロードページ](/lxd/downloads/) から取得できます。
+
+
 ## LXD 2.8 リリースのお知らせ <!-- LXD 2.8 release announcement --><span class="text-muted">2017 年 1 月 24 日 <!-- 24th of January 2017 --></span>
 
 ### このリリースに含まれる変更点 <!-- The changes in this release include -->
