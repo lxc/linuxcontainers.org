@@ -38,7 +38,7 @@ This is the ninth bugfix release for LXD 2.0.
  * lxc/init: 例を修正しました <!-- Fix example -->
  * lxc/init: 引数のリストを正しく置き換えるようになりました <!-- Properly replace args list -->
  * lxc/launch: オプションの解析を行うコードを init.go のメソッドを呼び出すだけにしました (重複しているコードの削除) <!-- Just use init.go's flags() -->
- * lxc/list: IPv4 と IPv6 アドレスの出力をそーとするようになりました <!-- Sort IPv4 and IPv6 addresses -->
+ * lxc/list: IPv4 と IPv6 アドレスの出力をソートするようになりました <!-- Sort IPv4 and IPv6 addresses -->
  * lxc/remote: ヘルプを更新しました <!-- Update help -->
  * lxd-bridge: ip6tables のフィルタルールを追加しました <!-- Add ip6tables filter rules -->
  * lxd-bridge: DHCP は UDP でのみ通信するようになりました <!-- DHCP happens over UDP only -->
