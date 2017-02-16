@@ -42,22 +42,22 @@ New features:
 
 Bugfixes:
 
- * doc: Clarify PUT vs PATCH
+ * doc: Clarify PUT vs PATCH (Issue 2873)
  * doc: Note that LXD assumes full control over its ZFS dataset
  * doc: Update database.md to match current DB schema
  * lxc: Don't include spaces in translated strings
- * lxc/list: Fix regression in json output
- * lxd/containers: Disable IPv6 on host side veth when bridged
+ * lxc/list: Fix regression in json output (Issue 2887)
+ * lxd/containers: Disable IPv6 on host side veth when bridged (issue 2845)
  * lxd/containers: Don't block resolution on non-existing paths
  * lxd/containers: Don't check the image fingerprint twice
- * lxd/containers: Fix concurent read/write to s.conns in exec
+ * lxd/containers: Fix concurent read/write to s.conns in exec (Issue 2862)
  * lxd/containers: Fix error handling on FileRemove
- * lxd/containers: Set default values for USER, HOME and LANG
- * lxd/daemon: Mount a tmpfs under devlxd
+ * lxd/containers: Set default values for USER, HOME and LANG (Issue 2830)
+ * lxd/daemon: Mount a tmpfs under devlxd (Issue 2877)
  * lxd/daemon: Use a tmpfs for shmounts
  * lxd/db: Actually enable foreign keys per connection
- * lxd/db: Raise DB lock timeout to 30s, retry every 30ms
- * lxd/db: Rely on CASCADE
+ * lxd/db: Raise DB lock timeout to 30s, retry every 30ms (Issue 2826)
+ * lxd/db: Rely on CASCADE (Issue 2844)
  * lxd/db: Remove some extra cleanup code
  * lxd/devlxd: Fix extraction of fd from UnixConn with go tip
  * lxd/images: Fix partial image fingerprint matches
@@ -70,8 +70,8 @@ Bugfixes:
  * lxd/storage/btrfs: Fix recursive subvol deletion
  * lxd/storage/zfs: Simplify device tracking logic
  * Makefile: Use system libsqlite3 if available
- * network: Skip ip6tables clear on non-ipv6 hosts
- * shared: Forward user-agent and other headers on redirect
+ * network: Skip ip6tables clear on non-ipv6 hosts (Issue 2842)
+ * shared: Forward user-agent and other headers on redirect (Issue 2805)
  * shared/api: Use consistent json and yaml field names
  * shared/simplestreams: Always prefer squashfs when available
  * shared/utils: Don't do chown on windows
