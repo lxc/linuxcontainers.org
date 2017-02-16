@@ -1,6 +1,97 @@
 ![Logo](/static/img/containers.png)
 
 # News
+## LXD 2.9.1 release announcement <span class="text-muted">16th of January 2017</span>
+### The changes in this release include
+We made this follow-up bugfix release to correct a few regressions introduced by LXD 2.9.
+
+Bugfixes:
+
+ * doc: Document the "pool" property for disk devices
+ * lxc/storage: Fix help output for create
+ * lxc/storage: simplify
+ * lxd/daemon: Allow unsetting the deprecated storage keys
+ * lxd/patches: Add more comments to storage upgrade code
+ * lxd/storage: Improve logging
+ * lxd/storage: Rename and add opcode functions
+ * lxd/storage: Use existing ZFS {pool, dataset} or create it
+ * lxd/storage: Use unified operation ids when locking
+ * tests: Use dataset as pool or existing pool for ZFS
+
+### Try it for yourself
+This new LXD release is already available for you to try on our [demo service](/lxd/try-it/).
+
+### Downloads
+The release tarballs can be found on our [download page](/lxd/downloads/).
+
+
+## LXD 2.9 release announcement <span class="text-muted">15th of January 2017</span>
+### The changes in this release include
+New features:
+
+ * Introduce the LXD storage management API
+    * Allows for multiple storage pools in LXD
+    * Pools can be used to store containers and custom volumes
+    * New /1.0/storage-pools API (see rest-api.md)
+    * New "lxc storage" set of commands
+    * Updated "lxd init" to support creating storage pools
+ * Allow setting network interface name with "lxc network attach"
+ * New "lxc file delete" command and API
+ * Ability to append to rather than overwrite a file through the API
+ * New "ipv4.dhcp.expiry" and "ipv6.dhcp.expiry" config options for DHCP lease time
+
+Bugfixes:
+
+ * doc: Clarify PUT vs PATCH
+ * doc: Note that LXD assumes full control over its ZFS dataset
+ * doc: Update database.md to match current DB schema
+ * lxc: Don't include spaces in translated strings
+ * lxc/list: Fix regression in json output
+ * lxd/containers: Disable IPv6 on host side veth when bridged
+ * lxd/containers: Don't block resolution on non-existing paths
+ * lxd/containers: Don't check the image fingerprint twice
+ * lxd/containers: Fix concurent read/write to s.conns in exec
+ * lxd/containers: Fix error handling on FileRemove
+ * lxd/containers: Set default values for USER, HOME and LANG
+ * lxd/daemon: Mount a tmpfs under devlxd
+ * lxd/daemon: Use a tmpfs for shmounts
+ * lxd/db: Actually enable foreign keys per connection
+ * lxd/db: Raise DB lock timeout to 30s, retry every 30ms
+ * lxd/db: Rely on CASCADE
+ * lxd/db: Remove some extra cleanup code
+ * lxd/devlxd: Fix extraction of fd from UnixConn with go tip
+ * lxd/images: Fix partial image fingerprint matches
+ * lxd/images: Move imagesDownloading out of the daemon struct
+ * lxd/init: Don't check the storage backend twice
+ * lxd/migration: Clarify CRIU related errors
+ * lxd/migration: Don't report migration success on failure
+ * lxd/nsexec: Close \*DIR stream returned by fdopendir()
+ * lxd/nsexec: Free allocated memory
+ * lxd/storage/btrfs: Fix recursive subvol deletion
+ * lxd/storage/zfs: Simplify device tracking logic
+ * Makefile: Use system libsqlite3 if available
+ * network: Skip ip6tables clear on non-ipv6 hosts
+ * shared: Forward user-agent and other headers on redirect
+ * shared/api: Use consistent json and yaml field names
+ * shared/simplestreams: Always prefer squashfs when available
+ * shared/utils: Don't do chown on windows
+ * shared/utils: FileCopy should also keep owner
+ * shared/utils: FileCopy should keep the same mode
+ * tests: Add golint for shared/api
+ * tests: Avoid a zfs race
+ * tests: Empty and validate network tables
+ * tests: Fix typo
+ * tests: Properly cleanup in template testsuite
+ * tests: Switch to use gofmt instead of "go fmt"
+ * tests: The monitor can exit on its own (ignore kill failure)
+
+### Try it for yourself
+This new LXD release is already available for you to try on our [demo service](/lxd/try-it/).
+
+### Downloads
+The release tarballs can be found on our [download page](/lxd/downloads/).
+
+
 ## LXD 2.0.9 release announcement <span class="text-muted">26th of January 2017</span>
 This is the ninth bugfix release for LXD 2.0.
 
