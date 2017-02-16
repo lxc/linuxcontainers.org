@@ -1,7 +1,7 @@
 ![Logo](/static/img/containers.png)
 
 # News
-## LXD 2.9.1 release announcement <span class="text-muted">16th of January 2017</span>
+## LXD 2.9.1 release announcement <span class="text-muted">16th of February 2017</span>
 ### The changes in this release include
 We made this follow-up bugfix release to correct a few regressions introduced by LXD 2.9.
 
@@ -25,7 +25,7 @@ This new LXD release is already available for you to try on our [demo service](/
 The release tarballs can be found on our [download page](/lxd/downloads/).
 
 
-## LXD 2.9 release announcement <span class="text-muted">15th of January 2017</span>
+## LXD 2.9 release announcement <span class="text-muted">15th of February 2017</span>
 ### The changes in this release include
 New features:
 
