@@ -1,6 +1,104 @@
 ![Logo](/static/img/containers.png)
 
 # News
+## LXD 2.9.1 release announcement <span class="text-muted">16th of February 2017</span>
+### The changes in this release include
+We made this follow-up bugfix release to correct a few regressions introduced by LXD 2.9.
+
+Bugfixes:
+
+ * doc: Document the "pool" property for disk devices
+ * lxc/storage: Fix help output for create
+ * lxc/storage: simplify
+ * lxd/daemon: Allow unsetting the deprecated storage keys
+ * lxd/patches: Add more comments to storage upgrade code
+ * lxd/storage: Improve logging
+ * lxd/storage: Rename and add opcode functions
+ * lxd/storage: Use existing ZFS {pool, dataset} or create it
+ * lxd/storage: Use unified operation ids when locking
+ * tests: Use dataset as pool or existing pool for ZFS
+
+### Try it for yourself
+This new LXD release is already available for you to try on our [demo service](/lxd/try-it/).
+
+### Downloads
+The release tarballs can be found on our [download page](/lxd/downloads/).
+
+
+## LXD 2.9 リリースのお知らせ <!-- LXD 2.9 release announcement --><span class="text-muted">2017 年 2 月 15 日 <!-- 15th of February 2017 --></span>
+### このリリースに含まれる変更点 <!-- The changes in this release include -->
+新機能 <!-- New features -->:
+
+ * LXD ストレージ管理 API を導入しました <!-- Introduce the LXD storage management API -->
+    * LXD で複数のストレージプールが使えます <!-- Allows for multiple storage pools in LXD -->
+    * プールはコンテナやカスタムボリュームを保存するのに使えます <!-- Pools can be used to store containers and custom volumes -->
+    * 新たな /1.0/storage-pools API を追加しました (rest-api.md をご覧ください) <!-- New /1.0/storage-pools API (see rest-api.md) -->
+    * 新たな "lxc storage" コマンドセットを追加しました <!-- New "lxc storage" set of commands -->
+    * "lxd init" コマンドは新たにストレージプールの作成をサポートしました <!-- Updated "lxd init" to support creating storage pools -->
+ * "lxc network attach" でネットワークインターフェースの設定ができるようになりました <!-- Allow setting network interface name with "lxc network attach" -->
+ * 新たに "lxc file delete" コマンドと API を追加しました <!-- New "lxc file delete" command and API -->
+ * API を使ってファイルを上書きするのでなく、追加する機能を追加しました <!-- Ability to append to rather than overwrite a file through the API -->
+ * DHCPのリース時間を設定するオプションとして新たに "ipv4.dhcp.expiry" と "ipv6.dhcp.expiry" を追加しました <!-- New "ipv4.dhcp.expiry" and "ipv6.dhcp.expiry" config options for DHCP lease time -->
+
+バグ修正 <!-- Bugfixes -->:
+
+ * doc: PUT と PATCH の違いについて説明を追加しました <!-- Clarify PUT vs PATCH -->(Issue 2873)
+ * doc: LXD が ZFS データセットを完全に制御下に置くことに対する注意を追加しました <!-- Note that LXD assumes full control over its ZFS dataset -->
+ * doc: 最新の DB スキーマに合致するように database.md を更新しました <!-- Update database.md to match current DB schema -->
+ * lxc: 翻訳用の文字列からスペースを削除しました <!-- Don't include spaces in translated strings -->
+ * lxc/list: json 出力のリグレッションを修正しました <!-- Fix regression in json output -->(Issue 2887)
+ * lxd/containers: ブリッジに接続される veth のホスト側で IPv6 を無効化しました <!-- Disable IPv6 on host side veth when bridged -->(issue 2845)
+ * lxd/containers: 存在しないパスの解決をブロックしなくなりました <!-- Don't block resolution on non-existing paths -->
+ * lxd/containers: イメージのフィンガープリントを 2 度チェックしないようにしました <!-- Don't check the image fingerprint twice -->
+ * lxd/containers: exec で s.conn (訳注: WebSocket接続) への並列の読み書きを修正しました <!-- Fix concurent read/write to s.conns in exec -->(Issue 2862)
+ * lxd/containers: FileRemove でのエラーハンドリングを修正しました <!-- Fix error handling on FileRemove -->
+ * lxd/containers: USER, HOME, LANG のデフォルト値を設定しました <!-- Set default values for USER, HOME and LANG -->(Issue 2830)
+ * lxd/daemon: devlxd を tmpfs でマウントするようにしました <!-- Mount a tmpfs under devlxd -->(Issue 2877)
+ * lxd/daemon: shmounts に tmpfs を使うようにしました <!-- Use a tmpfs for shmounts -->
+ * lxd/db: 接続ごとに外部キーを有効化するようにしました <!-- Actually enable foreign keys per connection -->
+ * lxd/db: DB ロックのタイムアウトを 30 秒に上げ、30ms ごとにリトライするようにしました <!-- Raise DB lock timeout to 30s, retry every 30ms -->(Issue 2826)
+ * lxd/db: CASCADE に頼るようにしました <!-- Rely on CASCADE -->(Issue 2844)
+ * lxd/db: 余分なクリーンアップコードを削除しました <!-- Remove some extra cleanup code -->
+ * lxd/devlxd: Go 開発版での UnixConn からの fd の展開を修正しました <!-- Fix extraction of fd from UnixConn with go tip -->
+ * lxd/images: 部分的なイメージのフィンガープリントのマッチを修正しました <!-- Fix partial image fingerprint matches -->
+ * lxd/images: imagesDownloading 変数をデーモン構造体の外に出しました <!-- Move imagesDownloading out of the daemon struct -->
+ * lxd/init: ストレージバックエンドのチェックを 2 度行わないようにしました <!-- Don't check the storage backend twice -->
+ * lxd/migration: CRIUに関連したエラー出力をわかりやすくしました <!-- Clarify CRIU related errors -->
+ * lxd/migration: 失敗時にマイグレーションの成功を報告しなくなりました <!-- Don't report migration success on failure -->
+ * lxd/nsexec: fdopendir() が返す \*DIR ストリームをクローズするようにしました <!-- Close \*DIR stream returned by fdopendir() -->
+ * lxd/nsexec: 割り当てたメモリを開放するようにしました <!-- Free allocated memory -->
+ * lxd/storage/btrfs: 再帰的なサブボリュームの削除を修正しました <!-- Fix recursive subvol deletion -->
+ * lxd/storage/zfs: デバイスをトラッキングするロジックを簡素化しました <!-- Simplify device tracking logic -->
+ * Makefile: 使用可能な場合はシステムの libsqlite3 を使うようにしました <!-- Use system libsqlite3 if available -->
+ * network: IPv6 を使っていないホストでは ip6tables のクリアをスキップするようにしました <!-- Skip ip6tables clear on non-ipv6 hosts -->(Issue 2842)
+ * shared: リダイレクトの際には User-Agent と他のヘッダをフォワードするようにしました <!-- Forward user-agent and other headers on redirect -->(Issue 2805)
+ * shared/api: 一貫性のある json と yaml のフィールド名を使うようにしました <!-- Use consistent json and yaml field names -->
+ * shared/simplestreams: 利用可能な場合は常に squashfs を選択するようにしました <!-- Always prefer squashfs when available -->
+ * shared/utils: Windows では chown を実行しなくなりました <!-- Don't do chown on windows -->
+ * shared/utils: FileCopy が常にオーナーを保持するようにしました <!-- FileCopy should also keep owner -->
+ * shared/utils: FileCopy が常にファイルのモードを維持するようになりました <!-- FileCopy should keep the same mode -->
+ * tests: shared/api に対して golint を追加しました <!-- Add golint for shared/api -->
+ * tests: zfs の競合を避けました <!-- Avoid a zfs race -->
+ * tests: ネットワーク関連のテーブルを空にして確認するテストを追加しました <!-- Empty and validate network tables -->
+ * tests: typo を修正しました <!-- Fix typo -->
+ * tests: テンプレートのテストスイートで適切にクリーンアップするようにしました <!-- Properly cleanup in template testsuite -->
+ * tests: "go fmt" の代わりに gofmt を使うように変更しました <!-- Switch to use gofmt instead of "go fmt" -->
+ * tests: モニタは自身で exit するので kill の失敗を無視するようにしました <!-- The monitor can exit on its own (ignore kill failure) -->
+
+### 試用環境 <!-- Try it for yourself -->
+
+<!--
+This new LXD release is already available for you to try on our [demo service](/lxd/try-it/).
+-->
+この新しい LXD のリリースが、すでに私たちの [デモサービス](/ja/lxd/try-it/) で利用できます。
+
+### ダウンロード <!-- Downloads -->
+<!--
+The release tarballs can be found on our [download page](/lxd/downloads/).
+-->
+このリリースの tarball は [ダウンロードページ](/lxd/downloads/) から取得できます。
+
+
 ## LXD 2.0.9 リリースのお知らせ <!-- LXD 2.0.9 release announcement --><span class="text-muted">2017 年 1 月 26 日<!-- 26th of January 2017 --></span>
 <!--
 This is the ninth bugfix release for LXD 2.0.
