@@ -1,28 +1,39 @@
 ![Logo](/static/img/containers.png)
 
 # News
-## LXD 2.9.1 release announcement <span class="text-muted">16th of February 2017</span>
-### The changes in this release include
+
+## LXD 2.9.1 リリースのお知らせ <!-- LXD 2.9.1 release announcement --><span class="text-muted">2017 年 2 月 16 日 <!-- 16th of February 2017 --></span>
+### このリリースに含まれる変更点 <!-- The changes in this release include -->
+<!--
 We made this follow-up bugfix release to correct a few regressions introduced by LXD 2.9.
+-->
+LXD 2.9 で混入したいくつかのリグレッションを修正するために、このバグフィックスリリースを行いました。
 
-Bugfixes:
+バグ修正 <!-- Bugfixes -->:
 
- * doc: Document the "pool" property for disk devices
- * lxc/storage: Fix help output for create
- * lxc/storage: simplify
- * lxd/daemon: Allow unsetting the deprecated storage keys
- * lxd/patches: Add more comments to storage upgrade code
- * lxd/storage: Improve logging
- * lxd/storage: Rename and add opcode functions
- * lxd/storage: Use existing ZFS {pool, dataset} or create it
- * lxd/storage: Use unified operation ids when locking
- * tests: Use dataset as pool or existing pool for ZFS
+ * doc: ディスクデバイスの "pool" プロパティをドキュメントに追加しました <!-- Document the "pool" property for disk devices -->
+ * lxc/storage: create のヘルプを修正しました <!-- Fix help output for create -->
+ * lxc/storage: 処理を簡素化しました <!-- simplify -->
+ * lxd/daemon: 廃止されたストレージのキーを削除できるようになりました <!-- Allow unsetting the deprecated storage keys -->
+ * lxd/patches: ストレージをアップグレードするコードにコメントを追加しました <!-- Add more comments to storage upgrade code -->
+ * lxd/storage: ロギングの改良を行いました <!-- Improve logging -->
+ * lxd/storage: 操作コードのリネームと追加を行いました <!-- Rename and add opcode functions -->
+ * lxd/storage: ZFS {pool, dataset} が存在すれば使い、そうでなければ作成するようにしました <!-- Use existing ZFS {pool, dataset} or create it -->
+ * lxd/storage: ロックの際に単一の操作 ID を使うようにしました <!-- Use unified operation ids when locking -->
+ * tests: ZFSで、プールとしてデータセットを使うか、そうでなければ存在するプールを使うようにしました <!-- Use dataset as pool or existing pool for ZFS -->
 
-### Try it for yourself
+### 試用環境 <!-- Try it for yourself -->
+
+<!--
 This new LXD release is already available for you to try on our [demo service](/lxd/try-it/).
+-->
+この新しい LXD のリリースが、すでに私たちの [デモサービス](/ja/lxd/try-it/) で利用できます。
 
-### Downloads
+### ダウンロード <!-- Downloads -->
+<!--
 The release tarballs can be found on our [download page](/lxd/downloads/).
+-->
+このリリースの tarball は [ダウンロードページ](/lxd/downloads/) から取得できます。
 
 
 ## LXD 2.9 リリースのお知らせ <!-- LXD 2.9 release announcement --><span class="text-muted">2017 年 2 月 15 日 <!-- 15th of February 2017 --></span>
