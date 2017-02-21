@@ -1,6 +1,50 @@
 ![Logo](/static/img/containers.png)
 
 # News
+## LXD 2.9.2 リリースのお知らせ <!-- LXD 2.9.2 release announcement --><span class="text-muted">2017 年 2 月 20 日 <!-- 20th of February 2017 --></span>
+### このリリースに含まれる変更点 <!-- The changes in this release include -->
+<!--
+This is another bugfix release for LXD 2.9, fixing migration issues reported by our users.
+-->
+このリリースは LXD 2.9 に含まれる、ユーザから報告されたマイグレーションの問題を修正するためのリリースです。
+
+バグ修正 <!-- Bugfixes -->:
+
+ * lxd/containers: root ディスクデバイスを検出する関数を追加しました <!-- Add fun to detect root disk device -->
+ * lxd/containers: 適切な root ディスクデバイスを保証するようにしました <!-- Ensure proper root disk device -->
+ * lxd/containers: デバイスからプールを取得する処理を追加しました <!-- Helper to retrieve pool from devices -->
+ * lxd/containers: パスを 1 つのディスクでのみ使用するようにしました <!-- Path may only be used by one disk -->
+ * lxd/init: ストレージ関連の処理で発生したリグレッションを修正しました <!-- Fix regressions caused by storage work -->
+ * lxd/init: 細かな修正を行いました <!-- Small fixes -->
+ * lxd/migration:有効なストレージプールを検出するヘルパを呼ぶようにしました <!--  Call helper to detect valid storage pool -->
+ * lxd/migration: ストレージ API を使ったコンテナの移動を修正しました <!-- Fix moving containers with storage api -->
+ * lxd/patches: 部分的なアップグレードを扱い、プールを修正するようにしました <!-- Handle partial upgrades + pool fixes -->
+ * lxd/patches: btrfs のアップグレードを改良しました <!-- Improve btrfs upgrade -->
+ * lxd/patches: dir のアップグレードを改良しました <!-- Improve dir upgrade -->
+ * lxd/patches: (訳注: 2 度目のアップグレードの実行では) プールの更新のみを再実行するようにしました <!-- Only rerun pool updates -->
+ * lxd/profiles: root ディスクデバイスを確認するようにしました <!-- Verify root disk devices -->
+ * lxd/storage/btrfs: 作成したプール上で quota を有効にしました <!-- Enable quotas on the pools we create -->
+ * lxd/storage/dir: データベースからイメージを削除するようにしました <!-- Delete image from database -->
+ * Makefile: 常に gorilla/context を include するようにしました <!-- Always include gorilla/context -->
+ * Makefile: "go get" を 1 度だけ呼ぶようにしました <!-- Drop repeated calls to "go get" -->
+ * tests: lxd init --auto のテストを追加しました <!-- Add lxd init --auto tests -->
+ * tests: プロファイル中の root ディスクデバイスに対するテストを追加しました <!-- Add test for root disk devices in profiles -->
+ * tests: 使用可能なツールに基づいたテストを実行するようにしました <!-- Execute tests based on available tools -->
+ * tests: タブとスペースの混在を再度修正しました <!-- Fix mixed tab/spaces again -->
+
+### 試用環境 <!-- Try it for yourself -->
+
+<!--
+This new LXD release is already available for you to try on our [demo service](/lxd/try-it/).
+-->
+この新しい LXD のリリースが、すでに私たちの [デモサービス](/ja/lxd/try-it/) で利用できます。
+
+### ダウンロード <!-- Downloads -->
+<!--
+The release tarballs can be found on our [download page](/lxd/downloads/).
+-->
+このリリースの tarball は [ダウンロードページ](/lxd/downloads/) から取得できます。
+
 
 ## LXD 2.9.1 リリースのお知らせ <!-- LXD 2.9.1 release announcement --><span class="text-muted">2017 年 2 月 16 日 <!-- 16th of February 2017 --></span>
 ### このリリースに含まれる変更点 <!-- The changes in this release include -->
