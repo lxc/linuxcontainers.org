@@ -36,15 +36,15 @@
  * lxd/daemon: 競合をいくつか修正しました <!-- Fix some race conditions -->
  * lxd/events: events API 中のログ出力を改良しました <!-- Improve formatting in events API -->
  * lxd/images: 最適化されていないストアを適切に扱うようになりました <!-- Properly handled non-optimized stores -->
- * lxd/init: uid/gid が不足している場合のみユーザ名前空間に関する警告メッセージを表示するようにしました <!-- Only show userns message if lacking uid/gid -->
+ * lxd/init: uid/gid が不足している場合にはユーザ名前空間に関する警告メッセージを表示するだけにしました <!-- Only show userns message if lacking uid/gid -->
  * lxd/patches: ボリュームグループと論理ボリュームを有効化するようにしました <!-- Activate volume group and logical volumes -->
  * lxd/patches: lvm の volume.size をパースしないようにしました <!-- Do not parse volume.size for lvm -->
- * lxd/patches: 既存のデータセットからの zfs upgrade の問題を修正しましたFix zfs upgrade from existing dataset
+ * lxd/patches: 既存のデータセットからの zfs upgrade の問題を修正しました <!-- Fix zfs upgrade from existing dataset -->
  * lxd/storage: 適切なログ出力を追加しました <!-- Add proper logging -->
  * lxd/storage: プロファイルでボリュームが使われているかどうかをチェックするようにしました <!-- Check if profiles use pool or volume -->
  * lxd/storage: loop デバイス用のファイルが使われているかどうかを検出するようにしました <!-- Detect if loop file is already in use -->
  * lxd/storage: ストレージボリュームのアタッチを改良しました <!-- Improve storage volume attachment -->
- * lxd/storage: フラグ引数を設定できるようにしました ()<!-- Make flag argument configurable -->
+ * lxd/storage: フラグ引数を設定できるようにしました (訳注: ループバックデバイスを準備する時にioctlに渡すフラグを引数として与えられるようにした)<!-- Make flag argument configurable -->
  * lxd/storage: ストレージドライバのキャッシュ処理を storage.go に移動させました <!-- Move storage drivers cache to storage.go -->
  * lxd/storage: 使っていない関数の引数を削除しました <!-- Remove unused function argument -->
  * lxd/storage: 正しいエラーメッセージを返すようにしました <!-- Return correct error messages -->
