@@ -18,7 +18,7 @@ Bugfixes:
  * lxc: Move common functions/types to utils.go
  * lxc/action: Improve batch mode (Issue #2966)
  * lxc/file: Detect and fail to transfer symlinks (Issue #2970)
- * lxc/publish: Wait for the conainer to be running
+ * lxc/publish: Wait for the container to be running
  * lxd/containers: Clarify uid/gid error
  * lxd/containers: Don't parse id ranges as int32
  * lxd/containers: Fix override of Devices during copy (Issue #2872)
