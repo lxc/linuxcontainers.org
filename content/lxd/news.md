@@ -1,6 +1,36 @@
 ![Logo](/static/img/containers.png)
 
 # News
+## LXD 2.10.1 release announcement <span class="text-muted">2nd of March 2017</span>
+### The changes in this release include
+This is a bugfix release for LXD 2.10, fixing a number of issues reported after release.
+
+Bugfixes:
+
+ * global: Fix error handling in all filepath.Walk calls
+ * lxd/images: Fix base image tracking (Issue #2999)
+ * lxd/init: Allow running as non-root
+ * lxd/storage: Add set\_autoclear\_loop\_device()
+ * lxd/storage/lvm: Allow loop-backed lvm storage pools
+ * lxd/storage/lvm: Fix defer calls
+ * lxd/storage/lvm: Make sure loop devices stays around on volume delete
+ * lxd/storage/lvm: Set LO\_FLAGS\_AUTOCLEAR before file removal
+ * lxd/storage/lvm: Use lvmized container name for LV
+ * lxd/storage/zfs: Do not revert on success
+ * lxd/storage/zfs: Import loop-backed storage pools on startup
+ * shared/simplestreams: Improve error handling
+ * shared/util: Check for err in {UUID, BlockDev} lookup
+ * tests: Fix yet another LVM pool's volume size
+ * tests: Give more time to reboot
+ * tests: Rely on "lxc storage" create only for lvm
+
+### Try it for yourself
+This new LXD release is already available for you to try on our [demo service](/lxd/try-it/).
+
+### Downloads
+The release tarballs can be found on our [download page](/lxd/downloads/).
+
+
 ## LXD 2.10 release announcement <span class="text-muted">28th of February 2017</span>
 ### The changes in this release include
 New features:
