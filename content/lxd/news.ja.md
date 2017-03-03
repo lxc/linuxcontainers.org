@@ -1,6 +1,46 @@
 ![Logo](/static/img/containers.png)
 
 # News
+## LXD 2.10.1 リリースのお知らせ <!-- LXD 2.10.1 release announcement --><span class="text-muted">2017 年 3 月 2 日<!-- 2nd of March 2017 --></span>
+### このリリースに含まれる変更点 <!-- The changes in this release include -->
+<!--
+This is a bugfix release for LXD 2.10, fixing a number of issues reported after release.
+-->
+このリリースは LXD 2.10 に対するバグフィックスのためのリリースです。2.10 リリース後に報告された問題をいくつか修正しています。
+
+バグ修正 <!-- Bugfixes -->:
+
+ * global: すべての filepath.Walk 呼び出しでのエラーハンドリングを修正しました <!-- Fix error handling in all filepath.Walk calls -->
+ * lxd/images: ベースイメージのトラッキングの不具合を修正しました <!-- Fix base image tracking -->(Issue #2999)
+ * lxd/init: root 以外での実行ができるようになりました <!-- Allow running as non-root -->
+ * lxd/storage: set\_autoclear\_loop\_device() を追加しました (訳注: loop デバイスに LO\_FLAGS\_AUTOCLEAR フラグを設定する関数)<!-- Add set\_autoclear\_loop\_device() -->
+ * lxd/storage/lvm: loop デバイスを使った lvm ストレージプールが使えるようになりました <!-- Allow loop-backed lvm storage pools -->
+ * lxd/storage/lvm: defer 呼び出しを修正しました <!-- Fix defer calls -->
+ * lxd/storage/lvm: ボリューム delete 時に loop device が確実に存在しているようにしました <!-- Make sure loop devices stays around on volume delete -->
+ * lxd/storage/lvm: ファイルを削除する前に LO\_FLAGS\_AUTOCLEAR を設定するようにしました <!-- Set LO\_FLAGS\_AUTOCLEAR before file removal -->
+ * lxd/storage/lvm: LV に対してはコンテナ名を元に LVM で使用可能な名前を使うようにしました <!-- Use lvmized container name for LV -->
+ * lxd/storage/zfs: 成功時に元の状態に戻さないようにしました <!-- Do not revert on success -->
+ * lxd/storage/zfs: 起動時に loop デバイスを使ったストレージプールをインポートするようにしました <!-- Import loop-backed storage pools on startup -->
+ * shared/simplestreams: エラーハンドリングを改良しました <!-- Improve error handling -->
+ * shared/util: UUID と BlockDev の探索中にエラーをチェックするようにしました <!-- Check for err in {UUID, BlockDev} lookup -->
+ * tests: さらに別の LVM プールのボリュームサイズを修正しました <!-- Fix yet another LVM pool's volume size -->
+ * tests: リブートにもう少し時間を与えるようにしました <!-- Give more time to reboot -->
+ * tests: LVM の作成は "lxc storage" にのみ依存するようになりました <!-- Rely on "lxc storage" create only for lvm -->
+
+### 試用環境 <!-- Try it for yourself -->
+
+<!--
+This new LXD release is already available for you to try on our [demo service](/lxd/try-it/).
+-->
+この新しい LXD のリリースが、すでに私たちの [デモサービス](/ja/lxd/try-it/) で利用できます。
+
+### ダウンロード <!-- Downloads -->
+<!--
+The release tarballs can be found on our [download page](/lxd/downloads/).
+-->
+このリリースの tarball は [ダウンロードページ](/lxd/downloads/) から取得できます。
+
+
 ## LXD 2.10 リリースのお知らせ <!-- LXD 2.10 release announcement --><span class="text-muted">2017 年 2 月 28 日<!-- 28th of February 2017 --></span>
 
 ### このリリースに含まれる変更点 <!-- The changes in this release include -->
