@@ -1,6 +1,55 @@
 ![Logo](/static/img/containers.png)
 
 # News
+## LXD 2.12 release announcement <span class="text-muted">20th of March 2017</span>
+### The changes in this release include
+New features:
+
+ * lxc/exec: Implement ssh-style -t/-T/-n
+ * lxd/init: Support all storage drivers
+
+Bugfixes:
+
+ * doc: Add a note about restricting access to kernel ring buffer
+ * doc: Document backup strategies
+ * doc: Document that X-LXD-type is valid for POST
+ * lxc: Properly clear transfer stats on error
+ * lxc/copy: Don't attempt to live migration on copy
+ * lxc/list: Add a simple list formatting example
+ * lxd/backup: Improve backup handling
+ * lxd/backup: Record container's storage volume
+ * lxd/backup: Record storage pool struct
+ * lxd/containers: Find max value currently used
+ * lxd/daemon: Allow unsetting deprecated keys with default
+ * lxd/daemon: Skip StoragePoolCheck() broken patch
+ * lxd/images: Record the server certificate in the cache
+ * lxd/init: Better render available storage backends
+ * lxd/internal: Check for container storage volume
+ * lxd/patches: Check if config is empty before update
+ * lxd/patches: Ensure existing pool config is kept
+ * lxd/storage: Adapt SetupStorageDriver()
+ * lxd/storage: Fix container\_lxc to match shared/api
+ * lxd/storage: Make Storage{Start,Stop}() return bool and error
+ * lxd/storage/btrfs: Add isBtrfsFilesystem()
+ * lxd/storage/lvm: Force lvmetad cache update
+ * lxd/storage/zfs: Create a volume entry for re-used images
+ * lxd/storage/zfs: Load kernel module in case it isn't
+ * lxd/storage/zfs: Prevent removal of the snapshot mountpoint
+ * lxd/storage/zfs: Try lazy umount if zfs umount fails
+ * scripts/lxc-to-lxd: Typo in description of --move-rootfs
+ * shared/api: Update storage.go to cover POST too
+ * shared/simplestreams: Export image file list
+ * tests: Add tests for lxd import
+ * tests: Fix btrfs detection code
+ * tests/lxd-benchmark: Fix --help and --version handling
+
+### Try it for yourself
+This new LXD release is already available for you to try on our [demo service](/lxd/try-it/).
+
+### Downloads
+The release tarballs can be found on our [download page](/lxd/downloads/).
+
+
 ## LXD 2.11 release announcement <span class="text-muted">8th of March 2017</span>
 ### The changes in this release include
 New features:
