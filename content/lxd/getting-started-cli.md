@@ -110,7 +110,7 @@ just calling "lxc launch ubuntu" without a name.
 
 Now that your container is running, you can get a shell inside it with:
 
-    lxc exec first -- /bin/bash
+    lxc exec first -- /bin/sh
 
 Or just run a command directly:
 
