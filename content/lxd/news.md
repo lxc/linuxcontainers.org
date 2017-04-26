@@ -10,7 +10,7 @@ New features:
  * client: New, better designed, [client library](https://godoc.org/github.com/lxc/lxd/client) available for testing
  * lxd/containers: unix-char/unix-block devices can now be mapped to a different name in the container (set "source" and "path" keys)
  * lxd/containers: AppArmor namespacing is now enabled for privileged containers too
- * lxd/storage/lvm: implement non-thinpool LVM storage pools (set "lvm.use\_thinpool" to "false")
+ * lxd/storage/lvm: Implement non-thinpool LVM storage pools (set "lvm.use\_thinpool" to "false")
  * lxc/list: Support for CSV as an output format
  * lxd/init: Support for creating a subvolume in an existing btrfs environment
  * lxd/storage: Implement the "rsync.bwlimit" pool property to restrict rsync bandwidth
