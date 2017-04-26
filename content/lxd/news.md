@@ -1,6 +1,110 @@
 ![Logo](/static/img/containers.png)
 
 # News
+## LXD 2.13 release announcement <span class="text-muted">25th of April 2017</span>
+### The changes in this release include
+New features:
+
+ * lxd: allow container only migration
+ * lxc: allow container only migration
+ * zfs: introduce zfs.clone\_copy property
+ * client: New client library
+ * lxc/config: Add new config handling code
+ * Make "unix" devices renamable.
+ * Enable stacking for privileged containers
+ * lvm: implement non-thinpool lvm storage pools
+ * Add CSV format to list output (fixes #2363)
+ * lxd init: allow to create subvolume for btrfs pool
+ * storage pools: implement rsync.bwlimit property
+ * Allow overriding the VXLAN multicast interface
+
+Bugfixes:
+
+ * client: Add basic logging code
+ * client: Fix file push path handling (Issue #3153)
+ * doc/api-extensions: Properly escape markdown
+ * doc/configuration: Drop deprecated config options
+ * doc/configuration: Extract containers documentation to containers.md
+ * doc/configuration: Extract networking documentation to networks.md
+ * doc/configuration: Extract profiles documentation to profiles.md
+ * doc/configuration: Extract server documentation to server.md
+ * doc/configuration: Extract storage documentation to storage.md
+ * doc/configuration: Fix storage volume configuration (Issue #3140)
+ * doc/configuration: Update with links to other documents
+ * doc/lxd-ssl-authentication: Drop mention of PKI CRL (not implemented)
+ * doc/production-setup: Fix broken table
+ * doc/README: Update for new API client
+ * doc/storage: Add note about escaping btrfs qgroups (Issue #3135)
+ * doc/storage: Re-format a bit
+ * i18n: Update translations from weblate
+ * lxc/copy: Return the source error too (Issue #3086)
+ * lxc/copy: Wait for operations asynchronously
+ * lxc/list: Document list format options
+ * lxc/manpage: Show all commands in "man lxc" (Issue #3214)
+ * lxd/containers: Add containerGetParentAndSnapshotName()
+ * lxd/containers: Added soft memory limit even when hard is selected
+ * lxd/containers: Allow for stable host interface names (Issue #3143)
+ * lxd/containers: Fix handling of devices with minor>255
+ * lxd/containers: Fix typo in securtiy.syscalls.blacklist
+ * lxd/containers: Fix unix device removal (bad cgroup.deny entry) (Issue #3107)
+ * lxd/containers: Improve storage error messages on creation (issue #3110)
+ * lxd/containers: Properly invalidate the idmap cache
+ * lxd/daemon: Improve PKI certificate handling (Issue #3162)
+ * lxd/db: Deal with the case where no updates exist
+ * lxd/images: Drop leftover debug statement
+ * lxd/init: Add all storage options
+ * lxd/main\_activateifneeded: Port to new client code
+ * lxd/main\_callhook: Port to new client code
+ * lxd/main\_daemon: Port to new client code
+ * lxd/main\_forkexec: Remove use of os.FindProcess (Issue #3037)
+ * lxd/main\_import: Handle non-existing snapshots path (Issue #3198)
+ * lxd/main\_import: Port to new client code
+ * lxd/main\_init: Port to new client code
+ * lxd/main\_migratedumpsuccess: Port to new client code
+ * lxd/main\_netcat: Implement logging (Issue #2494)
+ * lxd/main\_netcat: Switch to new helper
+ * lxd/main\_ready: Port to new client code
+ * lxd/main\_shutdown: Port to new client code
+ * lxd/main\_waitready: Port to new client code
+ * lxd/migration: Fix stateful restore
+ * lxd/operations: Remove useless for loops
+ * lxd/profiles: Fix ETag handling
+ * lxd/rsync: Make our netcat handle EAGAIN (Issue #3168)
+ * lxd/storage: Check that pool exists on profile changes (Issue #3137)
+ * lxd/storage: Fix and improve config validation
+ * lxd/storage/lvm: Improve snapshot handling
+ * lxd/storage/lvm: Tweak {Try}RunCommand() calls
+ * shared/api: Add the Stateful field to ContainerPut
+ * shared/api: Properly define the image creation source
+ * shared/gnuflag: Fix golint
+ * shared/i18n: Simplify and make golint clean
+ * shared/ioprogress: Simplify and make golint clean
+ * shared/logger: Add line number logging
+ * shared/logger: Add pretty formatting
+ * shared/logger: Create new package for logger
+ * shared/util\_linux: Add function to detect errno (Issue #2494)
+ * shared/version: Make golint clean
+ * tests/lxd-benchmark: Port to new client code
+ * tests: Add additional "file push -p" tests
+ * tests: Add additional import tests (Issue #3198)
+ * tests: Add additional storage pool tests
+ * tests: Add migration tests for copy and move (Issue #3006)
+ * tests: Keep testsuite non-executable (they're sourced)
+ * tests: Make sure a client certificate is generated
+ * tests: Make sure we also delete dependent records in import tests
+ * tests: Record how long the tests take
+ * tests: Run golint on client/ and lxc/config/
+ * tests: Stop containers before modifying the DB
+ * tests: Use flake8 instead of separate pyflakes and pep8
+ * tests: Use shutdown/respawn helpers to simplify import tests
+
+### Try it for yourself
+This new LXD release is already available for you to try on our [demo service](/lxd/try-it/).
+
+### Downloads
+The release tarballs can be found on our [download page](/lxd/downloads/).
+
+
 ## LXD 2.12 release announcement <span class="text-muted">20th of March 2017</span>
 ### The changes in this release include
 New features:
