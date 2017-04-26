@@ -5,18 +5,16 @@
 ### The changes in this release include
 New features:
 
- * lxd: allow container only migration
- * lxc: allow container only migration
- * zfs: introduce zfs.clone\_copy property
- * client: New client library
- * lxc/config: Add new config handling code
- * Make "unix" devices renamable.
- * Enable stacking for privileged containers
- * lvm: implement non-thinpool lvm storage pools
- * Add CSV format to list output (fixes #2363)
- * lxd init: allow to create subvolume for btrfs pool
- * storage pools: implement rsync.bwlimit property
- * Allow overriding the VXLAN multicast interface
+ * lxc/copy: Allow copying a container without its snapshots (--container-only)
+ * lxd/storage/zfs: Introduce a new "zfs.clone\_copy" property (will make a full copy rather than using a clone)
+ * client: New, better designed, [client library](https://godoc.org/github.com/lxc/lxd/client) available for testing
+ * lxd/containers: unix-char/unix-block devices can now be mapped to a different name in the container (set "source" and "path" keys)
+ * lxd/containers: AppArmor namespacing is now enabled for privileged containers too
+ * lxd/storage/lvm: implement non-thinpool LVM storage pools (set "lvm.use\_thinpool" to "false")
+ * lxc/list: Support for CSV as an output format
+ * lxd/init: Support for creating a subvolume in an existing btrfs environment
+ * lxd/storage: Implement the "rsync.bwlimit" pool property to restrict rsync bandwidth
+ * lxd/network: Allow overriding the VXLAN multicast interface (set "tunnel.NAME.interface")
 
 Bugfixes:
 
