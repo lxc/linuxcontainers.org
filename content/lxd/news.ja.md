@@ -1,6 +1,115 @@
 ![Logo](/static/img/containers.png)
 
 # News
+## LXD 2.13 リリースのお知らせ <!-- LXD 2.13 release announcement --><span class="text-muted">2017 年 ４月 25 日 <!-- 25th of April 2017 --></span>
+### このリリースに含まれる変更点 <!-- The changes in this release include -->
+新機能 <!-- New features -->:
+
+ * lxc/copy: スナップショットを含まない形でコンテナのコピーができるようになりました <!-- Allow copying a container without its snapshots -->(--container-only)
+ * lxd/storage/zfs: 新たに "zfs.clone\_copy" プロパティが追加されました (クローンでなく完全なコピーを作ります) <!-- Introduce a new "zfs.clone\_copy" property (will make a full copy rather than using a clone) -->
+ * client: 新たに、より良いデザインの [クライアントライブラリ](https://godoc.org/github.com/lxc/lxd/client) がテスト向けに利用可能になりました <!-- New, better designed, [client library](https://godoc.org/github.com/lxc/lxd/client) available for testing -->
+ * lxd/containers: UNIXキャラクタ/ブロックデバイスを、コンテナ内の異なった名前にマップできるようになりました ("source" と "path" キーを設定してください)<!-- unix-char/unix-block devices can now be mapped to a different name in the container (set "source" and "path" keys) -->
+ * lxd/containers: 特権コンテナでも AppArmor 名前空間が有効になりました <!-- AppArmor namespacing is now enabled for privileged containers too -->
+ * lxd/storage/lvm: Thinpool でない LVM ストレージプールを実装しました ("lvm.use\_thinpool" を "false" に設定してください)<!-- Implement non-thinpool LVM storage pools (set "lvm.use\_thinpool" to "false") -->
+ * lxc/list: 出力フォーマットに CSV が選べるようになりました <!-- Support for CSV as an output format -->
+ * lxd/init: 既存の btrfs 環境内でのサブボリュームの作成をサポートしました <!-- Support for creating a subvolume in an existing btrfs environment -->
+ * lxd/storage: rsync の帯域幅を制限するために "rsync.bwlimit" を追加しました <!-- Implement the "rsync.bwlimit" pool property to restrict rsync bandwidth -->
+ * lxd/network: VXLAN のマルチキャストインターフェースを上書きできるようになりました ("tunnel.NAME.interface" を設定してください)<!-- Allow overriding the VXLAN multicast interface (set "tunnel.NAME.interface") -->
+
+バグ修正 <!-- Bugfixes -->:
+
+ * client: 基本的なログ出力を追加しました <!-- Add basic logging code -->
+ * client: file push のパスの扱いを修正しました <!-- Fix file push path handling -->(Issue #3153)
+ * doc/api-extensions: 適切にマークダウンをエスケープしました <!-- Properly escape markdown -->
+ * doc/configuration: 廃止になった設定オプションを削除しました <!-- Drop deprecated config options -->
+ * doc/configuration: ドキュメントを分割し、コンテナの文書は containers.md に移しました <!-- Extract containers documentation to containers.md -->
+ * doc/configuration: ドキュメントを分割し、ネットワークの文書は networks.md に移しました <!-- Extract networking documentation to networks.md -->
+ * doc/configuration: ドキュメントを分割し、プロファイルの文書は profiles.md に移しました <!-- Extract profiles documentation to profiles.md -->
+ * doc/configuration: ドキュメントを分割し、サーバの文書は server.md に移しました <!-- Extract server documentation to server.md -->
+ * doc/configuration: ドキュメントを分割し、ストレージの文書は storage.md に移しました <!-- Extract storage documentation to storage.md -->
+ * doc/configuration: ストレージボリュームの設定の説明を修正しました <!-- Fix storage volume configuration -->(Issue #3140)
+ * doc/configuration: configuration.md に他の分割した文書へのリンクを置きました <!-- Update with links to other documents -->
+ * doc/lxd-ssl-authentication: PKI の CRL に関する注意書きを削除しました (実装されてないので) <!-- Drop mention of PKI CRL (not implemented) -->
+ * doc/production-setup: 表が崩れていたのを修正しました <!-- Fix broken table -->
+ * doc/README: 新しいクライアント API 文書へのリンクに書き換えました <!-- Update for new API client -->
+ * doc/storage: btrfs の qgroups のエスケープについての注意書きを追加しました <!-- Add note about escaping btrfs qgroups -->(Issue #3135)
+ * doc/storage: 少しフォーマットを調整しました <!-- Re-format a bit -->
+ * i18n: weblate から翻訳を更新しました <!-- Update translations from weblate -->
+ * lxc/copy: ソース側 (コピー元) のエラーも返すようにしました <!-- Return the source error too -->(Issue #3086)
+ * lxc/copy: 非同期に操作を待つようにしました <!-- Wait for operations asynchronously -->
+ * lxc/list: リストのフォーマットオプションのヘルプを追加しました <!-- Document list format options -->
+ * lxc/manpage: すべてのコマンドが "man lxc" で表示されるようになりました <!-- Show all commands in "man lxc" -->(Issue #3214)
+ * lxd/containers: containerGetParentAndSnapshotName() 関数を追加しました (訳注: 親コンテナ名、スナップショット名を取得するヘルパー関数)<!-- Add containerGetParentAndSnapshotName() -->
+ * lxd/containers: メモリの hard limit が設定される際にも soft limit を (hard limit の 90% に) 設定するようにしました <!-- Added soft memory limit even when hard is selected -->
+ * lxd/containers: (訳注: veth ペアの) ホスト側のインターフェース名を変わらないように指定できるようになりました <!-- Allow for stable host interface names -->(Issue #3143)
+ * lxd/containers: minor 番号が 255 より大きなデバイスの扱いを修正しました <!-- Fix handling of devices with minor>255 -->
+ * lxd/containers: securtiy.syscalls.blacklist の typo を修正しました <!-- Fix typo in securtiy.syscalls.blacklist -->
+ * lxd/containers: unix デバイスの削除の問題を修正しました (不正な cgroup.deny 指定)<!-- Fix unix device removal (bad cgroup.deny entry) -->(Issue #3107)
+ * lxd/containers: 作成時のストレージのエラーメッセージを改良しました <!-- Improve storage error messages on creation -->(issue #3110)
+ * lxd/containers: 適切に idmap のキャッシュを無効化するようにしました <!-- Properly invalidate the idmap cache -->
+ * lxd/daemon: PKI 証明書の扱いを改良しました <!-- Improve PKI certificate handling -->(Issue #3162)
+ * lxd/db: 更新がない場合を扱えるようにしました <!-- Deal with the case where no updates exist -->
+ * lxd/images: 残っていた不要なデバッグ用の処理を削除しました <!-- Drop leftover debug statement -->
+ * lxd/init: --storage-backend の説明にすべてのストレージオプションを追加しました <!-- Add all storage options -->
+ * lxd/main\_activateifneeded: 新しいクライアントコードへのポーティングを行いました <!-- Port to new client code -->
+ * lxd/main\_callhook: 新しいクライアントコードへのポーティングを行いました <!-- Port to new client code -->
+ * lxd/main\_daemon: 新しいクライアントコードへのポーティングを行いました <!-- Port to new client code -->
+ * lxd/main\_forkexec: os.FindProcess の使用を止めました <!-- Remove use of os.FindProcess -->(Issue #3037)
+ * lxd/main\_import: 存在しないスナップショットパスを扱うようにしました <!-- Handle non-existing snapshots path -->(Issue #3198)
+ * lxd/main\_import: 新しいクライアントコードへのポーティングを行いました <!-- Port to new client code -->
+ * lxd/main\_init: 新しいクライアントコードへのポーティングを行いました <!-- Port to new client code -->
+ * lxd/main\_migratedumpsuccess: 新しいクライアントコードへのポーティングを行いました <!-- Port to new client code -->
+ * lxd/main\_netcat: ログ出力を実装しました <!-- Implement logging -->(Issue #2494)
+ * lxd/main\_netcat: 新しいヘルパーに移行しました <!-- Switch to new helper -->
+ * lxd/main\_ready: 新しいクライアントコードへのポーティングを行いました <!-- Port to new client code -->
+ * lxd/main\_shutdown: 新しいクライアントコードへのポーティングを行いました <!-- Port to new client code -->
+ * lxd/main\_waitready: 新しいクライアントコードへのポーティングを行いました <!-- Port to new client code -->
+ * lxd/migration: ステートフルなりストアの問題を修正しました <!-- Fix stateful restore -->
+ * lxd/operations: 使われないループを削除しました <!-- Remove useless for loops -->
+ * lxd/profiles: ETag の扱いを修正しました <!-- Fix ETag handling -->
+ * lxd/rsync: netcat が EAGAIN を扱うようにしました <!-- Make our netcat handle EAGAIN -->(Issue #3168)
+ * lxd/storage: プロファイル変更の際、プールの存在をチェックするようにしました <!-- Check that pool exists on profile changes -->(Issue #3137)
+ * lxd/storage: 設定のバリデーションを修正し、改良しました <!-- Fix and improve config validation -->
+ * lxd/storage/lvm: スナップショットの扱いを改良しました <!-- Improve snapshot handling -->
+ * lxd/storage/lvm: {Try}RunCommand() の呼び出しを調整しました (訳注: LVM関係で外部コマンドを実行する部分の調整) <!-- Tweak {Try}RunCommand() calls -->
+ * shared/api: ContainerPut 構造体に stateful フィールドを追加しました <!-- Add the Stateful field to ContainerPut -->
+ * shared/api: イメージ作成のソースを適切に定義するようにしました <!-- Properly define the image creation source -->
+ * shared/gnuflag: golint 向けの修正を行いました <!-- Fix golint -->
+ * shared/i18n: 簡素化と golint がクリーンに実行できるようにしました <!-- Simplify and make golint clean -->
+ * shared/ioprogress: 簡素化と golint がクリーンに実行できるようにしました <!-- Simplify and make golint clean -->
+ * shared/logger: ログ出力に行番号を追加しました <!-- Add line number logging -->
+ * shared/logger: フォーマットをきれいに行えるようにしました <!-- Add pretty formatting -->
+ * shared/logger: ログ出力のための新しいパッケージを作成しました <!-- Create new package for logger -->
+ * shared/util\_linux: errno を検出するための関数を追加しました <!-- Add function to detect errno -->(Issue #2494)
+ * shared/version: golint がクリーンに実行できるようにしました <!-- Make golint clean -->
+ * tests/lxd-benchmark: 新しいクライアントコードへのポーティングを行いました <!-- Port to new client code -->
+ * tests: 追加の "file push -p" テストを追加しました <!-- Add additional "file push -p" tests -->
+ * tests: 追加のインポートテストを追加しました <!-- Add additional import tests -->(Issue #3198)
+ * tests: 追加のストレージプールテストを追加しました <!-- Add additional storage pool tests -->
+ * tests: copy と move の際のマイグレーションテストを追加しました <!-- Add migration tests for copy and move  -->(Issue #3006)
+ * tests: テストスイートの実行権を落としました (source で読まれるため)<!-- Keep testsuite non-executable (they're sourced) -->
+ * tests: 確実にクライアント証明書が生成されるようにしました <!-- Make sure a client certificate is generated -->
+ * tests: インポートテストで依存するレコードも確実に削除するようにしました <!-- Make sure we also delete dependent records in import tests -->
+ * tests: テストにかかった時間を記録するようにしました <!-- Record how long the tests take -->
+ * tests: client/ と lxc/config/ に対して golint を実行するようにしました <!-- Run golint on client/ and lxc/config/ -->
+ * tests: DB を変更する前にコンテナを停止させるようにしました <!-- Stop containers before modifying the DB -->
+ * tests: pyflakes と pep8 を別々に呼ぶ代わりに flake8 を使うようにしました <!-- Use flake8 instead of separate pyflakes and pep8 -->
+ * tests: インポートテストを簡略化するために shutdown/respawn ヘルパーを使うようにしました <!-- Use shutdown/respawn helpers to simplify import tests -->
+
+### 試用環境 <!-- Try it for yourself -->
+
+<!--
+This new LXD release is already available for you to try on our [demo service](/lxd/try-it/).
+-->
+この新しい LXD のリリースが、すでに私たちの [デモサービス](/ja/lxd/try-it/) で利用できます。
+
+### ダウンロード <!-- Downloads -->
+<!--
+The release tarballs can be found on our [download page](/lxd/downloads/).
+-->
+このリリースの tarball は [ダウンロードページ](/lxd/downloads/) から取得できます。
+
+
 ## LXD 2.12 リリースのお知らせ <!-- LXD 2.12 release announcement --><span class="text-muted">2017 年 3 月 20 日<!-- 20th of March 2017 --></span>
 ### このリリースに含まれる変更点 <!-- The changes in this release include -->
 新機能 <!-- New features -->:
