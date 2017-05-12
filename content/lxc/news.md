@@ -1,10 +1,15 @@
 ![Download icon](/static/img/containers.png)
 # News
 ## LXC 2.0.8 release announcement <span class="text-muted">11th of May 2017</span>
+This is the eighth bugfix release for LXC 2.0.
 
 Important:
 
  * Security fix for CVE-2017-5985
+ * All templates have been updated to not set default passwords anymore,  
+   instead requiring lxc-attach be used to configure users.  
+   This may affect some automated environments that were relying on our  
+   default (very much insecure) users.
 
 Bugfixes:
 
