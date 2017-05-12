@@ -1,6 +1,219 @@
 ![Logo](/static/img/containers.png)
 
 # News
+## LXD 2.0.10 release announcement <span class="text-muted">11th of May 2017</span>
+This is the tenth bugfix release for LXD 2.0.
+
+### The changes since LXD 2.0.9 are
+
+Minor improvements:
+
+ * client: Backported the new client library and ported some of the internal commands over to it
+ * lxc: Add a manpage command
+ * lxc: Allow --version to be passed with any command
+ * lxc: Reworked all help messages in the client to be compatible with help2man
+ * lxd: AppArmor namespacing is now also enabled for privileged containers
+
+Bugfixes:
+
+ * build: Add debug logging
+ * client: Fix profile list
+ * client: Remove unneeded condition
+ * doc: Add instructions to grow ZFS loop
+ * doc: Add note about escaping btrfs qgroups
+ * doc: Add note about restricting access to kernel ring buffer
+ * doc: Extract containers documentation to containers.md
+ * doc: Extract profiles documentation to profiles.md
+ * doc: Extract server documentation to server.md
+ * doc: Fix badly named example device
+ * doc: Fix broken table
+ * doc: Note that LXD assumes full control over the pool
+ * doc: Update configuration.md with links to other documents
+ * doc: Update README.md for new API client
+ * extra/lxc-to-lxd: Don't crash on missing mount file
+ * extra/lxc-to-lxd: Typo in description of --move-rootfs
+ * extra/vagrant: Trailing whitespace
+ * global: Fix error handling in all filepath.Walk calls
+ * global: Fix a number of typos
+ * global: Forward user-agent and other headers on redirect
+ * global: Replace file Chmod() with os.Chmod()
+ * global: Use containerGetParentAndSnapshotName()
+ * global: Use RunCommand everywhere
+ * lxc: Don't include spaces in translated strings
+ * lxc: Improve batch mode
+ * lxc: Make help/usage a bit more consistent
+ * lxc: Move common functions/types to utils.go
+ * lxc: Properly clear transfer stats on error
+ * lxc: Rework for better manpages
+ * lxc/config: Add new config handling code
+ * lxc/config: Always use "simplestreams" for images:
+ * lxc/config: Fix path handling
+ * lxc/config: Fix SaveConfig's DeepCopy call
+ * lxc/copy: Improve error handling
+ * lxc/copy: Return the source error too
+ * lxc/copy: Simplify
+ * lxc/copy: Wait asynchronously
+ * lxc/image: Show the alias description
+ * lxc/image: Trailing whitespace
+ * lxc/init: Drop unnecessary else statement
+ * lxc/list: Document list format options
+ * lxc/list: Fix regression in json output
+ * lxc/list: Move common data extraction to a helper function
+ * lxc/profile: Properly implement "profile unset"
+ * lxc/publish: Wait for the conainer to be running
+ * lxc/remote: Show the fingerprint as string not hex
+ * lxc/utils: Implement progress tracking for operations
+ * lxd: Drop use of logger.Log when not needed
+ * lxd/apparmor: Fix AppArmor stack handling with nesting
+ * lxd/containers: Add containerGetParentAndSnapshotName()
+ * lxd/containers: Added soft limit in initLXD()
+ * lxd/containers: Added soft memory limit even when hard is selected
+ * lxd/containers: Add extra validation for unix-block/unix-char
+ * lxd/containers: Add function to detect root disk device
+ * lxd/containers: Allow for stable host interface names
+ * lxd/containers: Clarify uid/gid error
+ * lxd/containers: Cleanup root device validation
+ * lxd/containers: Disable IPv6 on host side veth when bridged
+ * lxd/containers: Don't ignore snapshot deletion failures
+ * lxd/containers: Don't parse id ranges as int32
+ * lxd/containers: Don't report migration success on failure
+ * lxd/containers: Don't use FindProcess, just pass exec.Cmd
+ * lxd/containers: Find current max snapshot value
+ * lxd/containers: Fix bad root device detection code
+ * lxd/containers: Fix base image tracking
+ * lxd/containers: Fix concurent read/write to s.conns in exec
+ * lxd/containers: Fix error handling on FileRemove
+ * lxd/containers: Fix handling of devices with minor>255
+ * lxd/containers: Fix override of Devices during copy
+ * lxd/containers: Fix soft limit logic to use float64
+ * lxd/containers: Initialize idmap on demand
+ * lxd/containers: Kill forkexec on abnormal websocket closure
+ * lxd/containers: Path may only be used by one disk
+ * lxd/containers: Properly invalidate the idmap cache
+ * lxd/containers: Properly revert memory limits on failure
+ * lxd/containers: Properly validate architectures
+ * lxd/containers: Set default values for USER, HOME and LANG
+ * lxd/containers: This condition has already been deal
+ * lxd/containers: Use int64 for uid and gid everywhere
+ * lxd/containers: Validate container idmap as early as possible
+ * lxd/containers: Validate expanded configuration after root setup
+ * lxd/containers: Validate the expanded config at container create
+ * lxd/daemon: Check for the validity of the id maps at startup
+ * lxd/daemon: Fix some race conditions
+ * lxd/daemon: Mount a tmpfs under devlxd
+ * lxd/daemon: s/Default map/Available map/
+ * lxd/daemon: Set ServerFingerprint
+ * lxd/daemon: Use a tmpfs for shmounts
+ * lxd/db: Actually enable foreign keys per connection
+ * lxd/db: Deal with the case where no updates exist
+ * lxd/db: Detect downgrades with newer DB and fail
+ * lxd/db: Raise DB lock timeout to 30s, retry every 30ms
+ * lxd/db: Rely on CASCADE
+ * lxd/db: Remove some extra cleanup code
+ * lxd/devlxd: Fix extraction of fd from UnixConn with go tip
+ * lxd/events: Improve formatting in events API
+ * lxd/images: Check if the image already exists
+ * lxd/images: Drop leftover debug statement
+ * lxd/images: Fix partial image fingerprint matches
+ * lxd/images: Move imagesDownloading out of the daemon struct
+ * lxd/images: Properly return the alias description
+ * lxd/images: Record the server certificate in the cache
+ * lxd/images: Refactor code a bit
+ * lxd/images: Save image source certificate and pass it to the download
+ * lxd/images: Split autoUpdateImage function
+ * lxd/init: Only show userns message if lacking uid/gid
+ * lxd/init: The 'storageBackend' has already been checked
+ * lxd/main: Fix comment in activateifneeded
+ * lxd/main\_forkexec: Remove os.FindProcess
+ * lxd/main\_netcat: Implement logging
+ * lxd/main\_netcat: Switch to new helper
+ * lxd/main\_nsexec: cgo: Free allocated memory
+ * lxd/main: Restrict daemon and activateifneeded to root
+ * lxd/migration: Better handle rsync errors (subprocesses)
+ * lxd/migration: Clarify CRIU related errors
+ * lxd/migration: Handle EAGAIN properly
+ * lxd/migration: Make our netcat handle EAGAIN
+ * lxd/migration: Tweak rsync logging a bit
+ * lxd/operations: Remove useless for loops
+ * lxd/profiles: Verify root disk devices
+ * lxd/storage/btrfs: Always use the recursive subvol functions
+ * lxd/storage/btrfs: Cleanup empty migration dirs
+ * lxd/storage/btrfs: Fix recursive subvol deletion
+ * lxd/storage/btrfs: Properly handle nested subvolumes
+ * lxd/storage: Ensure the container directory has the right permission
+ * lxd/storage: Move mount helpers to storage utils
+ * lxd/storage: Optimize containerGetRootDiskDevice a bit
+ * Makefile: Always include gorilla/context
+ * Makefile: Drop repeated calls to "go get"
+ * Makefile: Use system libsqlite3 if available
+ * shared: coding-style pedantry
+ * shared/api: Add the Stateful field to ContainerPut
+ * shared/api: Properly define the image creation source
+ * shared/api: Use consistent json and yaml field names
+ * shared/cmd: Add a new shared/cmd package with initial command I/O logic
+ * shared/cmd: Complete cmd.Context support for various AskXXX methods
+ * shared/gnuflag: Fix golint
+ * shared/i18n: Simplify and make golint clean
+ * shared/idmap: DefaultIdmapSet is always for root
+ * shared/idmap: Drop GetOwner
+ * shared/idmap: Fix various issues
+ * shared/idmap: Implement parsing of kernel id maps
+ * shared/idmap: Implement Usable() functions
+ * shared/idmap: Improve parsing of the shadow id files
+ * shared/idmap: Make more of an effort to find a default
+ * shared/idmap: Remove debugging during idmap changes
+ * shared/ioprogress: Simplify and make golint clean
+ * shared/logger: Add pretty formatting
+ * shared/logger: Create new package for logger
+ * shared/logger: Make golint clean
+ * shared/logger: Replace PrintStack with GetStack
+ * shared/logging: Export LogfmtFormat
+ * shared/logging: Make golint clean
+ * shared/simplestreams: Always prefer squashfs when available
+ * shared/simplestreams: Export image file list
+ * shared/simplestreams: Improve error handling
+ * shared/simplestreams: Properly handle image rebuilds
+ * shared/termios: Make golint clean
+ * shared/util: Add function to detect errno
+ * shared/util: Add yaml-mode marker in template for "lxc edit" actions.
+ * shared/util: Don't do chown on windows
+ * shared/util: FileCopy should also keep owner
+ * shared/util: FileCopy should keep the same mode
+ * shared/version: Make golint clean
+ * tests: Add a testify test suite for db tests, rework existing tests
+ * tests: Add golint
+ * tests: Add lxd init --auto tests
+ * tests: Allow random storage backend selection
+ * tests: Also unmount the devlxd path
+ * tests: Always cleanup loop devices
+ * tests: Avoid a zfs race
+ * tests: Don't leak zpools in "lxd init" test
+ * tests: Explicitly pass shell type to shellcheck
+ * tests: Fix lxd auto init test suite
+ * tests: Fix typo
+ * tests: Give more time to reboot test
+ * tests: Honor the LXD\_BACKEND environment variable in storage tests
+ * tests: Improve performance of deadcode test
+ * tests: Make sure a client certificate is generated
+ * tests: Make sure storage volume is mounted
+ * tests: Properly cleanup in template testsuite
+ * tests: Record how long the tests take
+ * tests: Remove invalid test for Jenkins
+ * tests: Run golint on client/ and lxc/config/
+ * tests: Switch to use gofmt instead of "go fmt"
+ * tests: Testsuites are sourced, not executed
+ * tests: The monitor can exit on its own
+ * tests: Trailing whitespaces
+ * tests: Update for new client
+ * tests: Update init test for stable branch
+ * tests: Use flake8 instead of separate pyflakes and pep8
+ * tests/deps: Make golint clean
+ * tests/lxd-benchmark: Fix --help and --version handling
+
+### Downloads
+The release tarballs can be found on our [download page](/lxd/downloads/).
+
+
 ## LXD 2.13 release announcement <span class="text-muted">25th of April 2017</span>
 ### The changes in this release include
 New features:
