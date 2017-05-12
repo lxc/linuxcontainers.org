@@ -1,10 +1,37 @@
 # News
+## LXCFS 2.0.7 リリースのお知らせ <!-- LXCFS 2.0.7 release announcement --><span class="text-muted">2017 年 5 月 11 日 <!-- 11th of May 2017 --></span>
+
+<!--
+This is the seventh bugfix release for LXCFS 2.0.
+-->
+このリリースは LXCFS 2.0 の 7 回目のバグフィックスリリースです。
+
+<!--
+This includes the following bugfixes:
+-->
+このリリースには以下のバグ修正が含まれます:
+
+ * 使われていない変数を削除しました <!-- Remove unused variable -->
+ * cg\_rmdir 関数内の変数 (next) の NULL チェックを行うようにしました <!-- Also check next variable for NULL on cg\_rmdir -->
+ * /proc/stat 内の 'btime' フィールドの仮想化を行うようにしました <!-- virtualize the 'btime' field of /proc/stat -->
+ * cleanup: 返り値が bool と宣言された関数で NULL の代わりに false を返すようにしました <!-- return false instead of NULL as bool -->
+ * memswlimit の値を SwapTotal で制限するようにしました <!-- Limit memswlimit by TotalSwap -->
+ * pam\_cgfs: 意味のない変数割り当てを削除しました (訳注: プラス、char のサイズをちゃんと sizeof で求めるように修正されている)<!-- remove dead assignment -->
+ * pam\_cgfs: created 変数を直接返すようにしました (訳注: 無駄な条件判断処理を削除しました) <!-- return created directly -->
+ * pam\_cgfs: \*\*p が NULL にならないように確認するようにしました (訳注: ポインタを使う前に NULL チェックを入れました)<!-- make sure that \*\*p is not NULL -->
+ * bindings: int の領域が必要? なら sizeof(int) を呼ぼう! (訳注: int の配列の領域を確保するのに sizeof(int*) としていたのを修正) <!-- Want space for ints? Call sizeof(int)! -->
+ * pam\_cgfs: trim() 関数を安全にしました (訳注: 文字列の長さが1以上のときだけtrimするようにした)<!-- make trim() safer -->
+ * pam\_cgfs: cgv2\_init() が失敗したときにエラーで抜けるようにしました <!-- error out on failure in cgv2\_init() -->
+ * pam\_cgfs: 意味のない変数割り当てを削除しました (訳注: CPU 数を求める際の意味のない条件文を削除)<!-- remove dead assignment -->
+ * bindings: guest_nice を実装しました (訳注: /proc/stat の cpu 行の guest\_nice 値)<!-- implement guest nice -->
+ * bindings: 確保するバッファサイズを増やしました <!-- increase reserved buffer size a little -->
+
 ## LXCFS 2.0.6 リリースのお知らせ <!-- LXCFS 2.0.6 release announcement --><span class="text-muted">2017 年 1 月 23 日<!-- 23rd of January 2017 --></span>
 
 <!--
 This is the sixth bugfix release for LXCFS 2.0.
 -->
-このリリースは LXCS 2.0 の 6 回目のバグフィックスリリースです。
+このリリースは LXCFS 2.0 の 6 回目のバグフィックスリリースです。
 
 <!--
 This includes the following bugfixes:
