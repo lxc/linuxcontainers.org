@@ -1,4 +1,79 @@
 # News
+## LXC 1.0.10 リリースのお知らせ <!-- LXC 1.0.10 release announcement --><span class="text-muted">2017 年 5 月 11 日 <!-- 11th of May 2017 --></span>
+<!--
+This is the tenth bugfix release for LXC 1.0.
+-->
+このリリースは LXC 1.0 の 10 回目のバグフィックスリリースです。
+
+重要な変更<!-- Important -->:
+
+ * セキュリティホール <!-- Security fix for --> CVE-2016-10124 の修正
+ * セキュリティホール <!-- Security fix for --> CVE-2017-5985 の修正
+
+バグ修正 <!-- Bugfixes -->:
+
+ * attach: lsm\_openat() 関数の実装を簡素化しました <!-- simplify lsm\_openat() -->
+ * commands: ロギングの改良を行いました <!-- improve logging -->
+ * utils: <!-- add macro -->\_\_LXC\_NUMSTRLEN マクロを定義しました
+ * tests; クリーンアップのエラーではテストが失敗とならないようにしました <!-- Don't cause test failures on cleanup errors -->
+ * conf: lxc.cap.drop と keep の同時使用ができない旨、きちんとエラー出力するようにしました <!-- clearly report to either use drop or keep -->
+ * attach: lsm ラベルのファイルディスクリプタを close するようにしました <!-- close lsm label file descriptor -->
+ * conf, attach: errno を保存して close を呼び出すようにしました <!-- save errno across call to close -->
+ * templates/lxc-debian.in: dpkg --print-foreign-architectures 実行の Typo を修正しました <!-- Fix typo in calling dpkg with \-\-print-foreign-architectures option -->
+ * templates/lxc-debian.in: ホストのアーキテクチャ ppc を powerpc として扱うようにしました <!-- handle ppc hostarch -> powerpc -->
+ * cherry-pick した際の errno の regression を修正しました <!-- Fix regression in errno handling cherry-pick -->
+ * ホストの /usr/lib/systemd からコンテナ内のファイルを生成しないようにしました (訳注: opensuse テンプレート)<!-- don't try to get stuff from /usr/lib/systemd on the host -->
+ * lxc-opensuse: poweroff.target を sigpwr.target にコピーする処理を削除しました <!-- rm poweroff.target -> sigpwr.target copy -->
+ * (訳注: ビルド時の) --enable-gnutls オプションを追加しました <!-- Add \-\-enable-gnutls option -->
+ * tests: 不具合のある overlay モジュールでの非特権テストをスキップするようにしました (訳注: カーネルマージ前の Ubuntu の 3.13 カーネルの overlayfs)<!-- skip unpriv tests on broken overlay module -->
+ * major()/minor()/makedev() の検出に AC\_HEADER\_MAJOR を使うようにしました <!-- Use AC\_HEADER\_MAJOR to detect major()/minor()/makedev() -->
+ * lxc-start-ephemeral を Python 3.2 互換にしました <!-- Make lxc-start-ephemeral Python 3.2-compatible -->
+ * systemd: service ファイルで Delegate を有効にしました <!-- enable delegate in service file -->
+ * confile: lxc.network.<n>.ipv{4,6} が空の時、設定をクリアするようにしました <!-- clear lxc.network.<n>.ipv{4,6} when empty -->
+ * seccomp: amd64 ホスト上で x32 ゲストを許可するようにしました <!-- allow x32 guests on amd64 hosts. -->
+ * squeeze はサポート外のリリースとなったのでキーを削除しました <!-- squeeze is not a supported release anymore, drop the key -->
+ * seccomp: SCMP\_FLTATR\_ATL\_TSKIP が利用可能であれば設定するようにしました <!-- set SCMP\_FLTATR\_ATL\_TSKIP if available -->
+ * lxc-checkconfig: new[ug]idmap が setuid root されているか確認するようになりました <!-- verify new[ug]idmap are setuid-root -->
+ * python3: char\* が NULL になる可能性がある場合の対処を行いました <!-- Deal with potential NULL char\* -->
+ * lxc-download.in / 鍵サーバ (keyserver) が環境変数で設定できるようなりました <!--allow setting keyserver from env -->
+ * lxc-download.in / 鍵サーバの変更をヘルプに追加しました <!-- Document keyserver change in help -->
+ * 変数チェックを既存のスタイルに合わせるように変更しました <!-- Change variable check to match existing style -->
+ * tests: IPv6 ネットワーク上の実行をサポートしました <!-- Support running on IPv6 networks -->
+ * tests: コンテナを kill するようにしました (shutdown を待たなくなりました) <!-- Kill containers (don't wait for shutdown) -->
+ * suggest\_default\_idmap で間違ったファイルを open していたのを修正しました <!-- Fix opening wrong file in suggest\_default\_idmap -->
+ * lxc\_setup\_tios(): SIGTTOU と SIGTTIN シグナルを無視するようにしました <!-- Ignore SIGTTOU and SIGTTIN signals -->
+ * print\_stats() のバッファサイズを増やしました <!-- Increased buffer length in print\_stats() -->
+ * APIの不変性に関する注意書きを削除しました (訳注: 1.0 より前の記述があった)<!-- remove obsolete note about api stability -->
+ * conf: ポインタアクセスでよりエラーになりにくくしました <!-- less error prone pointer access -->
+ * ISSUE\_TEMPLATE.md を作成しました <!-- create ISSUE\_TEMPLATE.md -->
+ * issue template: Typo の修正を行いました <!-- fix typo -->
+ * conf: マウントオプションを昇順で並べ直しました <!-- order mount options -->
+ * commands: NULL ポインタへの参照をしないようにしました <!-- avoid NULL pointer dereference -->
+ * commands: 機能と関係のない変更を行いました (訳注: デバッグログの追加、int -> size\_t への修正)<!-- non-functional changes -->
+ * lxccontainer: NULL ポインタへの参照をしないようにしました <!-- avoid NULL pointer dereference -->
+
+### ダウンロード <!-- Downloads -->
+<!--
+The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions  
+will very soon ship a packaged version of LXC 1.0.10.
+-->
+このリリースの tarball は [ダウンロードページ](/lxc/downloads/) から取得できます。そして、各ディストリビューションがすぐに LXC 1.0.10 のパッケージをリリースするでしょう。
+
+<!--
+Please note that LXC upstream strongly recommends 1.0 users to upgrade to the 2.0 LTS release.  
+The 1.0 branch will keep being supported until June 2019, but at this point,  
+only critical bugfixes and security updates will be backported.
+-->
+LXC 開発元として、1.0 ユーザには 2.0 LTS リリースへのアップグレードを強くおすすめします。
+1.0 ブランチは 2019 年 6 月までサポートが続きます。しかし現時点では、重大なバグフィックスとセキュリティホール対策のみがバックポートされます。
+
+<!--
+Should you be interested in individual changes or just looking at the detailed development history,  
+our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-1.0).
+-->
+個々の変更点に興味がある場合、そして開発の履歴を見たい場合、stable-1.0 ブランチが [Github](https://github.com/lxc/lxc/tree/stable-1.0) にあります。
+
+
 ## LXC 2.0.7 リリースのお知らせ <!-- LXC 2.0.7 release announcement --><span class="text-muted">2017 年 1 月 23 日 <!-- 23rd of January 2017 --></span>
 <!--
 This is the seventh bugfix release for LXC 2.0.
