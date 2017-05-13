@@ -2059,4 +2059,4 @@ LXC 1.0 is also the first release after the change of project maintainers which 
 We'd like to thank Daniel Lezcano for all the great work and efforts he's put in LXC over the years  
 and wish him the best of luck in his new projects!
 
-The current projects maintainers are [Serge Hallyn](https://s3hh.wordpress.com) and [Stéphane Graber](https://www.stgraber.org).
+The current projects maintainers are [Serge Hallyn](https://s3hh.wordpress.com), [Stéphane Graber](https://www.stgraber.org) and [Christian Brauner](https://cbrauner.wordpress.com/)

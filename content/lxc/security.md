@@ -95,7 +95,7 @@ group of untrusted containers and configure /etc/lxc/lxc-usernet such that users
 To ensure security issues can be fixed as quickly as possible and simultaneously  
 in all Linux distributions, issues should be reported either:
 
- * By e-mail to both serge.hallyn (at) ubuntu (dot) com AND stgraber (at) ubuntu (dot) com
+ * By e-mail to all serge.hallyn (at) ubuntu (dot) com AND stgraber (at) ubuntu (dot) com AND christian.brauner (at) ubuntu (dot) com
  * By opening a private security bug at [https://launchpad.net/ubuntu/+source/lxc/+filebug](https://launchpad.net/ubuntu/+source/lxc/+filebug)
 
 We will then confirm the security issue, come up with fixes against all supported releases,  
