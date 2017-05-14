@@ -1,7 +1,19 @@
 ![Logo](/static/img/containers.png)
 
 # Installing LXD and the command line tool
-## Ubuntu desktop and Ubuntu server
+
+The simplest way to get the latest version of LXD is to install the snap
+package. This will work regardless of what operating system release you have
+installed. Just check that [snap support is installed](https://snapcraft.io/docs/core/install),
+then run:
+
+    sudo snap install lxd
+
+It should be noted that the server certificate generation can take a long time
+if you're working on a device like the rpi2 so it might be a few minutes before
+LXD will respond to the lxc command.
+
+## Classic packages for Ubuntu desktop and server
 Ubuntu 16.04 LTS users can install LXD with:
 
     apt-get install lxd
@@ -31,18 +43,7 @@ making the deamon visible on the network and configuring networking for the cont
 
     sudo lxd init
 
-## Ubuntu Core (snappy)
-LXD is available for Ubuntu Core as a Snap package in the store.  
-You can install it with:
-
-    sudo snap install lxd
-
-After that, LXD can be interacted with through the "lxd.lxc" command.
-
-It should be noted that the server certificate generation can take a long time if you're working on a device like  
-the rpi2 so it might be a few minutes before LXD will respond to the lxc command.
-
-## Other distributions
+## Classic packages for other distributions
 There are currently packages for multiple distributions including Gentoo and, of course, Ubuntu.  
 Users of other distributions might find it in their package manager too.
 
