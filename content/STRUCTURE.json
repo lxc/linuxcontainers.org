@@ -73,6 +73,11 @@
      "generator": "markdown",
      "meta": {"input": "lxc/articles.md"}},
 
+    {"path": "/lxc/forum/",
+     "menu": ["LXC", "Forum"],
+     "generator": "link",
+     "meta": {"url": "https://discuss.linuxcontainers.org"}},
+
     {"path": "/lxc/mailing-lists/",
      "menu": ["LXC", "Mailing lists"],
      "generator": "link",
@@ -167,6 +172,11 @@
      "generator": "markdown",
      "meta": {"input": "lxd/articles.md"}},
 
+    {"path": "/lxd/forum/",
+     "menu": ["LXD", "Forum"],
+     "generator": "link",
+     "meta": {"url": "https://discuss.linuxcontainers.org"}},
+
     {"path": "/lxd/mailing-lists/",
      "menu": ["LXD", "Mailing lists"],
      "generator": "link",
@@ -231,6 +241,11 @@
 
     {"path": "/lxcfs/external-resources/",
      "menu": ["LXCFS", "External resources"]},
+
+    {"path": "/lxcfs/forum/",
+     "menu": ["LXCFS", "Forum"],
+     "generator": "link",
+     "meta": {"url": "https://discuss.linuxcontainers.org"}},
 
     {"path": "/lxcfs/mailing-lists/",
      "menu": ["LXCFS", "Mailing lists"],
