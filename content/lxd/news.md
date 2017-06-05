@@ -15,6 +15,7 @@ New features:
  * "lxd init" can now be preseeded with "--preseed" and a yaml config file
  * Introduce a new btrfs.mount\_options pool property
  * Implement volume resizing for LVM (grow/shrink for ext4, grow only for xfs)
+ * LXD doesn't create a "docker" profile anymore as it's not needed with current Docker and AppArmor.
 
 Bugfixes:
 
@@ -80,7 +81,6 @@ Bugfixes:
  * lxd/init: Properly set the default port (Issue #3341)
  * lxd/networks: Fix ETag regression
  * lxd/patches: Drop unused variable
- * lxd/profiles: Remove the Docker profile
  * lxd/storage: Add helper to detect if pool is in use
  * lxd/storage: Add lxdResolveMountoptions()
  * lxd/storage: Add MS\_LAZYTIME to mount options
