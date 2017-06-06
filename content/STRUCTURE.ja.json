@@ -62,6 +62,9 @@
      "generator": "markdown",
      "meta": {"input": "lxc/articles.ja.md"}},
 
+    {"path": "/lxc/forum/",
+     "menu": ["LXC", "フォーラム"]},
+
     {"path": "/lxc/mailing-lists/",
      "menu": ["LXC", "メーリングリスト"]},
 
@@ -141,6 +144,9 @@
      "generator": "markdown",
      "meta": {"input": "lxd/articles.md"}},
 
+    {"path": "/lxd/forum/",
+     "menu": ["LXD", "フォーラム"]},
+
     {"path": "/lxd/mailing-lists/",
      "menu": ["LXD", "メーリングリスト"]},
 
@@ -194,6 +200,9 @@
 
     {"path": "/lxcfs/external-resources/",
      "menu": ["LXCFS", "外部リソース"]},
+
+    {"path": "/lxcfs/forum/",
+     "menu": ["LXCFS", "フォーラム"]},
 
     {"path": "/lxcfs/mailing-lists/",
      "menu": ["LXCFS", "メーリングリスト"],
