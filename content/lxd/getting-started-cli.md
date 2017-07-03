@@ -1,112 +1,88 @@
 ![Logo](/static/img/containers.png)
+# Installation
+## Choose your release
+LXD upstream maintains two release branches in parallel:
 
-# Installing LXD and the command line tool
-## Ubuntu desktop and Ubuntu server
-Ubuntu 16.04 LTS users can install LXD with:
+ * LTS release (LXD 2.0.x)
+ * Feature releases (LXD 2.x)
 
-    apt-get install lxd
+LTS releases are recommended for production environments as they will benefit from regular bugfix  
+and security updates but will not see new features added or any kind of behavioral change.
 
-Ubuntu 14.04 LTS users can also install LXD using backports:
+To get all the latest features and monthly updates to LXD, use the feature release branch instead.
 
-    apt-get -t trusty-backports install lxd
+## Getting the packages
+### Alpine Linux
+To install the feature branch of LXD, run:
 
-Alternatively, to get the latest upstream release, a PPA is available:
+    apk add lxd
 
-    add-apt-repository ppa:ubuntu-lxc/lxd-stable
-    apt-get update
-    apt-get dist-upgrade
-    apt-get install lxd
+### Fedora
+Instructions on how to use the COPR repository for LXD can be [found here](https://copr.fedorainfracloud.org/coprs/ganto/lxd/).
 
-The package creates a new "lxd" group which contains all users allowed to talk to  
-lxd over the local unix socket. All members of the "admin" and "sudoers" groups are automatically added.  
-If your user isn't a member of one of these groups, you'll need to manually add your user to the "lxd" group.
+Alternatively, the snap package can also be used on Fedora (see below).
 
-Because group membership is only applied at login, you then either need to close  
-and re-open your user session or use the "newgrp lxd" command in the shell you're going to interact with lxd from.
+### Gentoo
+To install the feature branch of LXD, run:
 
-    newgrp lxd
+    emerge --ask lxd
 
-Then to do the initial configuration of the LXD daemon, including, if you want to, setting up optimized storage (ZFS),  
-making the deamon visible on the network and configuring networking for the containers:
+### Ubuntu 14.04 LTS
+To install the LTS branch of LXD, run:
+
+    apt install -t trusty-backports lxd lxd-client
+
+### Ubuntu 16.04 LTS
+To install the LTS branch of LXD, run:
+
+    apt install lxd lxd-client
+
+To install the feature branch of LXD, run:
+
+    apt install -t xenial-backports lxd lxd-client
+
+### Snap package (ArchLinux, Debian, Fedora, OpenSUSE and Ubuntu)
+LXD upstream publishes and tests a snap package which works for a number of Linux distributions.
+
+The list of Linux distributions we currently test our snap for can be [found here](https://jenkins.linuxcontainers.org/job/lxd-test-snap-stable/).
+
+For those distributions, you should first install snapd using [those instructions](https://snapcraft.io/docs/core/install).
+
+After that, you can install LXD with:
+
+    snap install lxd
+
+### Installing from source
+Instructions on building and installing LXD from source [can be found here](https://github.com/lxc/lxd/).
+
+# Initial configuration
+Before you can create containers, you need to tell LXD a little bit about your storage and network needs.
+
+This is all done with:
 
     sudo lxd init
 
-## Ubuntu Core (snappy)
-LXD is available for Ubuntu Core as a Snap package in the store.  
-You can install it with:
+## Access control
+Access control for LXD is based on group membership.  
+The root user as well as members of the "lxd" group can interact with the local daemon.
 
-    sudo snap install lxd
+If the "lxd" group is missing on your system, create it, then restart the LXD daemon.  
+You can then add trusted users to it. Anyone added to this group will have full control over LXD.
 
-After that, LXD can be interacted with through the "lxd.lxc" command.
-
-It should be noted that the server certificate generation can take a long time if you're working on a device like  
-the rpi2 so it might be a few minutes before LXD will respond to the lxc command.
-
-## Other distributions
-There are currently packages for multiple distributions including Gentoo and, of course, Ubuntu.  
-Users of other distributions might find it in their package manager too.
-
-If it is not there yet please download and build LXD from git or use our latest release tarball.
-
-Instructions for both are available [here](/lxd/downloads/).
-
-# Importing some images
-LXD is image based. Containers must be created from an image and so the image store  
-must get some images before you can do much with LXD.
-
-There are three ways to feed that image store:
-
- 1. Use a remote LXD as an image server
- 2. Use the built-in image remotes
- 3. Manually import one using
-
-        lxc image import <file> --alias <name>
-
-## Using a remote LXD as an image server
-Using a remote image server is as simple as adding it as a remote and just using it:
-
-    lxc remote add images 1.2.3.4
-    lxc launch images:image-name your-container
-
-An image list can be obtained with:
-
-    lxc image list images:
-
-## Using the built-in image remotes
-LXD comes with 3 default remotes providing images:
-
- 1. ubuntu: (for stable Ubuntu images)
- 2. ubuntu-daily: (for daily Ubuntu images)
- 3. images: (for a bunch of other distros)
-
-To start a container from them, simply do:
-
-    lxc launch ubuntu:14.04 my-ubuntu
-    lxc launch ubuntu-daily:16.04 my-ubuntu-dev
-    lxc launch images:centos/6/amd64 my-centos
-
-## Manually importing an image
-If you already have a lxd-compatible image file, you can import it with:
-
-    lxc image import \<file\> --alias my-alias
-
-And then start a container using:
-
-    lxc launch my-alias my-container
-
-See the [image specification for more details](https://github.com/lxc/lxd/blob/master/doc/image-handling.md).
+Because group membership is normally only applied at login, you may need to either re-open your user session  
+or use the "newgrp lxd" command in the shell you're going to use to talk to LXD.
 
 # Creating and using your first container
-Assuming that you imported an Ubuntu cloud image using the "ubuntu" alias, you can create your first container with:
+Creating your first container is as simple as:
 
-    lxc launch ubuntu first
+    lxc launch ubuntu:16.04 first
 
-That will create and start a new ubuntu container as can be confirmed with:
+That will create and start a new Ubuntu 16.04 container as can be confirmed with:
 
     lxc list
 
 Your container here is called "first". You also could let LXD give it a random name by  
-just calling "lxc launch ubuntu" without a name.
+just calling "lxc launch ubuntu:16.04" without a name.
 
 Now that your container is running, you can get a shell inside it with:
 
@@ -132,17 +108,59 @@ And to remove it entirely:
 
     lxc delete first
 
+# Container images
+LXD is image based. Containers must be created from an image and so the image store  
+must get some images before you can do much with LXD.
+
+There are three ways to feed that image store:
+
+ 1. Use one of the the built-in image remotes
+ 2. Use a remote LXD as an image server
+ 3. Manually import an image tarball
+
+## Using the built-in image remotes
+LXD comes with 3 default remotes providing images:
+
+ 1. ubuntu: (for stable Ubuntu images)
+ 2. ubuntu-daily: (for daily Ubuntu images)
+ 3. images: (for a [bunch of other distros](https://images.linuxcontainers.org))
+
+To start a container from them, simply do:
+
+    lxc launch ubuntu:14.04 my-ubuntu
+    lxc launch ubuntu-daily:16.04 my-ubuntu-dev
+    lxc launch images:centos/6/amd64 my-centos
+
+## Using a remote LXD as an image server
+Using a remote image server is as simple as adding it as a remote and just using it:
+
+    lxc remote add my-images 1.2.3.4
+    lxc launch my-images:image-name your-container
+
+An image list can be obtained with:
+
+    lxc image list my-images:
+
+## Manually importing an image
+If you already have a lxd-compatible image file, you can import it with:
+
+    lxc image import <file> --alias my-alias
+
+And then start a container using:
+
+    lxc launch my-alias my-container
+
+See the [image specification for more details](https://github.com/lxc/lxd/blob/master/doc/image-handling.md).
+
 # Multiple hosts
-The "lxc" command line tool can talk to multiple LXD servers.  
-It defaults to talking to the local one using a local UNIX socket.
+The "lxc" command line tool can talk to multiple LXD servers and defaults to talking to the local one.
 
 Remote operations require the following two commands having been run on the remote server:
 
     lxc config set core.https_address "[::]"
     lxc config set core.trust_password some-password
 
-The first tells LXD to bind all addresses on port 8443.  
-The latter sets a trust password to be used when contacting that server.
+The former tells LXD to bind all addresses on port 8443. The latter sets a trust password to be used by new clients.
 
 Now to talk to that remote LXD, you can simply add it with:
 
