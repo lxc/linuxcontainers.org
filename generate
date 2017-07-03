@@ -277,8 +277,9 @@ def gen_page(entry, override, prefix, **variables):
                                          "%s/%s" % (man_path, entry)],
                                         stdout=subprocess.PIPE,
                                         universal_newlines=True)
-            man2html.wait()
+
             soup = bs4.BeautifulSoup(man2html.stdout.read(), "lxml")
+            man2html.wait()
 
             # Remove all broken links
             for link in soup.findAll("a"):
