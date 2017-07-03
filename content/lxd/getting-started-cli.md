@@ -52,6 +52,16 @@ After that, you can install LXD with:
 
     snap install lxd
 
+### MacOS builds
+LXD upstream publishes builds of the LXD client for macOS through [Homebrew](https://brew.sh/).
+
+To install the feature branch of LXD, run:
+
+    brew install lxc
+
+### Windows builds
+Native builds of the LXD client for Windows can be [found here](https://ci.appveyor.com/project/lxc/lxd/branch/master/artifacts).
+
 ### Installing from source
 Instructions on building and installing LXD from source [can be found here](https://github.com/lxc/lxd/).
 
