@@ -25,11 +25,11 @@ Bugfixes:
  * doc: Tweak storage formatting (Issue #3376)
  * lxc/file: Clean source path for recursive push
  * lxc/file: Properly read file permissions on Windows (Issue #3363)
- * lxd/containers: Also support lxc.net.<n>.\* configuration keys on newer LXC
+ * lxd/containers: Also support lxc.net.&lt;n&gt;.\* configuration keys on newer LXC
  * lxd/containers: Check whether the disk device exists on the host before unmount
  * lxd/containers: Detect POLLNVAL when polling during exec (Issue #2964)
  * lxd/containers: Fail if we get EBUSY during startup (Issue #3412)
- * lxd/containers: Use the lxc.network.<n>.\* configuration keys
+ * lxd/containers: Use the lxc.network.&lt;n&gt;.\* configuration keys
  * lxd/db: Replace some uses of InternalError with SmartError
  * lxd/images: Always expand the fingerprint (Issue #3424)
  * lxd/images: If multiple cache hits, pick the latest
