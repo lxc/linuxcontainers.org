@@ -37,7 +37,7 @@
  * lxd/images: 複数のキャッシュにヒットした場合は一番最近のものを使うようにしました <!-- If multiple cache hits, pick the latest -->
  * lxd/images: プロトコルが direct の場合に適切にイメージの情報を初期化するようにしました <!-- Properly initialize image info in direct case -->
  * lxd/images: 自動更新でないキャッシュされたイメージはスキップするようにしました <!-- Skip cached images without auto-update -->
- * lxd/networks: 常に dndmasq に --conf-file オプションを与えるようにしました <!-- Always pass \-\-conf-file to dnsmasq -->(Issue #3367)
+ * lxd/networks: 常に dnsmasq に --conf-file オプションを与えるようにしました <!-- Always pass \-\-conf-file to dnsmasq -->(Issue #3367)
  * lxd/networks: DHCP を使う場合だけ DHCP のファイアウォールルールを生成するようにしました <!-- Only generate DHCP fw rules if enabled -->(Issue #3432)
  * lxd/networks: コンテナの消去時に IPv6 のリースを消去するようにしました <!-- Remove IPv6 leases on container delete -->
  * lxd/networks: サブネットの自動検出のエラーを調整しました <!-- Tweak error in subnet auto detection -->
