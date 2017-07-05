@@ -1,6 +1,82 @@
 ![Logo](/static/img/containers.png)
 
 # News
+## LXD 2.15 リリースのお知らせ <!-- LXD 2.15 release announecment --><span class="text-muted">2017 年 6 月 27 日 <!-- 27th of June 2017 --></span>
+新機能 <!-- New features -->:
+
+ * "lxc image list" でカラムのカスタマイズができるようになりました <!-- "lxc image list" now support column customization. -->
+ * "lxc list" と "lxc image list" の両方のコマンドで、出力フォーマットとして表、json、yaml、csv が選べるようになりました <!-- "lxc list" and "lxc image list" now both support table, json, yaml and csv as output formats. -->
+ * コンテンツをダウンロードしている途中で、いくつかの操作がキャンセル (DELETE) できるようになりました <!-- It's now possible to cancel (DELETE) some background operations while they're downloading content. -->
+ * "lxc" コマンドラインツールが、古いクライアントコードから新しいクライアントパッケージに移植されました。
+   これは移植に必要なコードの最後の部分です。LXD 2.16 ではツリーから古いクライアントパッケージを削除する予定です。
+ <!-- The "lxc" command line tool was ported from our old client code to the new client package. 
+   This was the last bit of code which needed porting and we're now
+   planning on removing the old client package from our tree with LXD 2.16. -->
+ * CopyContainer と CopyContainerSnapshot 関数がクライアントパッケージに追加されました <!-- New CopyContainer and CopyContainerSnapshot functions were added to the client package. -->
+ * LXD はカスタムストレージボリュームをコンテナにアタッチした際、動的に再マッピングするようになりました (訳注: id を)<!-- LXD will now dynamically remap custom storage volumes when attached to containers. -->
+
+バグ修正 <!-- Bugfixes -->:
+
+ * client: I/O の間操作をブロックする追加の実行オプションを追加しました <!-- Add extra exec option to block on I/O -->
+ * client: イメージサーバがネットワーク経由待ち受けてない場合、コピーが失敗するようにしました <!-- Fail copy if the source isn't listening on network -->
+ * client: イベントハンドラのセットアップで競合が起きる可能性があった問題を修正しました <!-- Fix potential race in event handler setup -->
+ * client: 値がある場合だけファイルに関するヘッダを設定するようにしました <!-- Only set file headers if value is provided -->
+ * doc: blkio 制限に関する注意書きを追加しました <!-- Add a note for blkio limits -->(Issue #3378)
+ * doc: イメージのリフレッシュ API 呼び出しの説明を追加しました <!-- Document image refresh API call -->
+ * doc: markdown のエスケープ忘れを修正しました <!-- Fix missing markdown escaping -->
+ * doc: storage.md のフォーマットの調整を行いました <!-- Tweak storage formatting -->(Issue #3376)
+ * lxc/file: 再帰 push の際、ソースパスを正規化するようにしました (訳注: filepath.Clean 使用) <!-- Clean source path for recursive push -->
+ * lxc/file: Windows で適切にファイルのパーミッションを読み取るようになりました <!-- Properly read file permissions on Windows -->(Issue #3363)
+ * lxd/containers: 新しい LXC でサポートされる lxc.net.&lt;n&gt;.\* 形式の設定キーをサポートしました <!-- Also support lxc.net.<n>.\* configuration keys on newer LXC -->
+ * lxd/containers: umount 前にホストでディスクデバイスが存在するかどうかチェックするようにしました <!-- Check whether the disk device exists on the host before unmount -->
+ * lxd/containers: exec 中の poll で POLLNVAL を検出するようにしました <!-- Detect POLLNVAL when polling during exec -->(Issue #2964)
+ * lxd/containers: 起動時に EBUSY を受け取ったら失敗するようにしました <!-- Fail if we get EBUSY during startup -->(Issue #3412)
+ * lxd/containers: 設定キーとして lxc.network.&lt;n&gt;.\* 形式を使うようにしました <!-- Use the lxc.network.<n>.\* configuration keys -->
+ * lxd/db: 何箇所か InternalError が使われているところを SmartError に置き換えました <!-- Replace some uses of InternalError with SmartError -->
+ * lxd/images: 常にフィンガープリントを展開するようになりました <!-- Always expand the fingerprint -->(Issue #3424)
+ * lxd/images: 複数のキャッシュにヒットした場合は一番最近のものを使うようにしました <!-- If multiple cache hits, pick the latest -->
+ * lxd/images: プロトコルが direct の場合に適切にイメージの情報を初期化するようにしました <!-- Properly initialize image info in direct case -->
+ * lxd/images: 自動更新でないキャッシュされたイメージはスキップするようにしました <!-- Skip cached images without auto-update -->
+ * lxd/networks: 常に dnsmasq に --conf-file オプションを与えるようにしました <!-- Always pass \-\-conf-file to dnsmasq -->(Issue #3367)
+ * lxd/networks: DHCP を使う場合だけ DHCP のファイアウォールルールを生成するようにしました <!-- Only generate DHCP fw rules if enabled -->(Issue #3432)
+ * lxd/networks: コンテナの消去時に IPv6 のリースを消去するようにしました <!-- Remove IPv6 leases on container delete -->
+ * lxd/networks: サブネットの自動検出のエラーを調整しました <!-- Tweak error in subnet auto detection -->
+ * lxd/patches: ZFS プールに対する問題のあるアップグレードを修正しました <!-- Fix bad upgrade for ZFS pools -->(Issue #3386)
+ * lxd/patches: 確実にローカルのデバイスが適切に更新されるようにしました <!-- Make sure localdevices are properly updated -->(Issue #3169) 
+ * lxd/shutdown: 指定された場合だけタイムアウトを待つようにしました <!-- Only timeout if told to -->(Issue #3434)
+ * lxd/storage: プールに対する ETag の計算の問題を修正しました <!-- Fix ETag calculation for pools -->
+ * lxd/storage: 正しくドライバ名を DB に保存するようにしました <!-- Insert driver correctly -->(Issue #3386)
+ * lxd/storage/btrfs: タイプを検出する前にデフォルトのマウントフラグを適用するようにしました <!-- Apply default flags BEFORE detecting type -->(Issue #3409)
+ * lxd/storage/btrfs: 要求に応じてファイルシステムの quota を有効にするようにしました <!-- Enable filesystem quotas on demand -->
+ * lxd/storage/dir: freeze が失敗したときでも必要なシンボリックリンクを作成するようにしました <!-- Still create the needed symlinks on freeze failure -->
+ * lxd/storage/dir: rsync がエラーになった際に unfreeze するようにしました <!-- Unfreeze on rsync errors -->
+ * lxd/storage/lvm: thinpool が存在する場合は、空でないボリュームグループが使えるようになりました <!-- Allow non-empty VGs when thinpool exists -->(Issue #3456)
+ * lxd/storage/rsync: rsync の際、sparse ファイルを扱えるようになりました <!-- Handle sparse files when rsyncing -->(Issue #3287)
+ * lxd/storage/zfs: コンテナのスナップショットコピーの際の問題を修正しました <!-- Fix container snapshot copy -->(Issue #3395)
+ * lxd/storage/zfs: ダミーのデータセットの作成を改良しました <!-- Improve dummy dataset creation -->(Issue #3399)
+ * Makefile: po ファイル更新前の pot ファイルの更新 <!-- Update pot before po -->
+ * shared/api: API 拡張は構造体の一番最後に移動しました <!-- API extensions go at the bottom -->
+ * tests: コピー、マイグレーションのテストを更に追加しました <!-- Add more copy/migration tests -->
+ * tests: カスタムボリュームのアタッチのテストを追加しました <!-- Add tests for custom storage volume attach -->
+ * tests: <!-- Add tests for --> "lxc file push -r ./" のテストを追加しました
+ * tests: パブリックなリモートに対する finger を実行しないようにしました <!-- Don't attempt to finger public remotes -->
+ * tests: バックエンドがランダムの際、LVM のマイグレーションテストを再実行しないようにしました <!-- Don't run migration tests again on LVM when backend is random -->
+ * tests: テストの場合はイン・メモリデータベースを使うようにしました <!-- Use in-memory database for tests -->
+
+### 試用環境 <!-- Try it for yourself -->
+
+<!--
+This new LXD release is already available for you to try on our [demo service](/lxd/try-it/).
+-->
+この新しい LXD のリリースが、すでに私たちの [デモサービス](/ja/lxd/try-it/) で利用できます。
+
+### ダウンロード <!-- Downloads -->
+<!--
+The release tarballs can be found on our [download page](/lxd/downloads/).
+-->
+このリリースの tarball は [ダウンロードページ](/lxd/downloads/) から取得できます。
+
+
 ## LXD 2.14 リリースのお知らせ <!-- LXD 2.14 release announcement --><span class="text-muted">2017 年 5 月 30 日 <!-- 30th of May 2017 --></span>
 新機能<!-- New features -->:
 
