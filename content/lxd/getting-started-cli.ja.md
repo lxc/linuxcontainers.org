@@ -29,6 +29,22 @@ LXD のフィーチャーブランチをインストールするには、以下�
 
     apk add lxd
 
+### ArchLinux
+<!--
+Instructions on how to use the AUR package for LXD can be [found here](https://wiki.archlinux.org/index.php/LXD)
+-->
+LXD の AUR パッケージの使い方については [こちら](https://wiki.archlinux.org/index.php/LXD) をご覧ください。
+
+<!--
+Alternatively, the snap package can also be used on ArchLinux (see below).
+-->
+もしくは、snap パッケージを ArchLinux 上で使うこともできます (後述)。
+
+<!--
+Note that in both cases, you will need to build and install the linux-userns kernel.
+-->
+いずれの場合でも、linux-userns カーネルをビルドしてインストールする必要があります。
+
 ### Fedora
 <!--
 Instructions on how to use the COPR repository for LXD can be [found here](https://copr.fedorainfracloud.org/coprs/ganto/lxd/).
