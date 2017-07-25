@@ -3,6 +3,7 @@
 # News
 ## LXD 2.16 release announcement <span class="text-muted">25th of July 2017</span>
 New features:
+
  * Ceph RBD can now be used as a LXD storage backend (including "lxd init" support).
  * A new security.idmap.base key has been added to control what base uid/gid to use on the host when using security.idmap.isolated.
  * Image downloads can now be interrupted.
