@@ -106,6 +106,13 @@ Bugfixes:
  * tests: Validate that the right busybox is present
  * zfs: Use tryMount when mounting filesystem
 
+### Try it for yourself
+This new LXD release is already available for you to try on our [demo service](/lxd/try-it/).
+
+### Downloads
+The release tarballs can be found on our [download page](/lxd/downloads/).
+
+
 ## LXD 2.15 release announcement <span class="text-muted">27th of June 2017</span>
 New features:
 
