@@ -152,6 +152,13 @@
      "meta": {"dir": "/downloads/lxd",
               "input": "lxd/downloads.md"}},
 
+    {"path": "/lxd/downloads/lts/",
+     "title": "LXD - Downloads (LTS)",
+     "generator": "downloads",
+     "meta": {"dir": "/downloads/lxd",
+              "filter": "2.0.",
+              "input": "lxd/downloads.md"}},
+
     {"path": "/lxd/try-it/",
      "title": "LXD - Try it online",
      "menu": ["LXD", "Try it online"],

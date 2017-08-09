@@ -37,9 +37,11 @@
         <div class="container">
             <ol class="breadcrumb">
                 <li><img id="breadcrumb-logo" src="/static/img/containers.png"/></li>
-{% for entry in page_menu %}
+{% if page_menu %}
+    {% for entry in page_menu %}
                 <li>{{ entry }}</li>
-{% endfor %}
+    {% endfor %}
+{% endif %}
             </ol>
 {% block content %}{% endblock %}
 

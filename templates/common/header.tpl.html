@@ -15,7 +15,7 @@
                 <li><a href="{{ entry[0] }}">{{ entry[1] }}</a></li>
             {% endif %}
         {% else %}
-            {% if page_menu[0] == entry[1] %}
+            {% if page_menu and page_menu[0] == entry[1] %}
                 <li class="dropdown active">
             {% else %}
                 <li class="dropdown">

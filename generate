@@ -237,6 +237,10 @@ def gen_page(entry, override, prefix, **variables):
             if entry.startswith(".") or entry.endswith(".asc"):
                 continue
 
+            if "filter" in item['meta']:
+                if item['meta']['filter'] not in entry:
+                    continue
+
             fs_path = "%s/%s" % (download_path, entry)
 
             download = {}
@@ -345,7 +349,7 @@ def gen_page(entry, override, prefix, **variables):
             template.render(page_path=item['path'],
                             page_raw_path=page_raw_path,
                             page_title=item['title'],
-                            page_menu=item['menu'],
+                            page_menu=item['menu'] if "menu" in item else None,
                             content=content,
                             **variables))
 
