@@ -1,6 +1,108 @@
 ![Logo](/static/img/containers.png)
 
 # News
+## LXD 2.17 リリースのお知らせ <!-- LXD 2.17 release announcement -><span class="text-muted">2017 年 8 月 22 日<!-- 22nd of August 2017 --></span>
+新機能<!-- Features -->:
+
+ * Ceph のユーザを指定できるようになりました ("ceph.user.name" プロパティで指定) <!-- Add support for specifying the ceph user (using the "ceph.user.name" property) -->
+ * 制限を簡単に指定できる「インスタンスタイプ」を実装しました (例: "lxc launch ubuntu:16.04 -t t2.micro")<!-- Implement "instance types" as an easy way to specify limits (e.g. "lxc launch ubuntu:16.04 -t t2.micro") -->
+ * LXD API の低レベルでの問い合わせができる "lxc query" コマンドを追加しました(curl を使うのと同様だが LXD の知識が必要) <!-- Add a new "lxc query" command as a low level query tool for the LXD API (similar to curl but with LXD knowledge) -->
+ * コンテナが uid/gid マッピングを変更したとき、ファイルシステムの ACL を書き換えるようになりました <!-- Filesystem ACLs are now rewritten when the container changes uid/gid map -->
+ * LXD は、デイリーのイメージを更新する際にバイナリの差分が使えるようになりました <!-- LXD now supports using binary deltas when refreshing daily images -->
+ * "lxc image info" コマンドは LXD が自動的にキャッシュしたイメージかどうかを表示するようになりました <!-- "lxc image info" now shows whether an image was automatically cached by LXD -->
+
+バグ修正 <!-- Bugfixes -->:
+
+ * client: イメージをダウンロードする関数内でのコードの重複をなくしました <!-- Cleanup code duplication in image download function -->
+ * client: 廃止されたクライアントのコードを削除しました <!-- Remove deprecated client code -->
+ * client: ConnectPublicLXD のロジックを簡素化しました <!-- Simplify ConnectPublicLXD logic -->
+ * doc: ストレージのドキュメントに volatile.pool.pristine を追加しました <!-- Add storage documentation for volatile.pool.pristine -->
+ * doc: volatile.initial\_source キーを追加しました <!-- Add the volatile.initial\_source key -->
+ * doc: rest-api.md 内の不適切な JSON を修正しました <!-- Fix bad JSON in rest-api.md -->(Issue #3654)
+ * doc: 文書中で適切にエスケープするようにしました <!-- Properly escape path params -->
+ * extra/lxc-to-lxd: デフォルトでドロップされるケーパビリティを無視するようにしました <!-- Ignore capabilities that are dropped by default -->
+ * extra/lxc-to-lxd: sysfs と proc のマウントを無視するようになりました <!-- Ignore sysfs/proc mounts -->
+ * extra/lxc-to-lxd: lxc.seccomp を適切に扱うようになりました <!-- Properly handle lxc.seccomp -->
+ * i18n: weblate から翻訳の更新を行いました <!-- Update translations from weblate -->
+ * lxc: 進捗レポートの競合を修正しました <!-- Fix race in progress reporter -->
+ * lxc: リモートのプロトコル変換を再導入しました <!-- Re-introduce remote protocol migration -->
+ * lxc/config: 追加の証明書関数を公開としました <!-- Expose extra certificate functions -->(Issue #3606)
+ * lxc/image: イメージエイリアスのコピーの問題を修正しました <!-- Fix copy of image aliases -->
+ * lxc/image: リフレッシュが完全に終わるのを待つようにしました <!-- Wait for the refresh to complete -->
+ * lxc/remote: パブリックなリモートサーバでは証明書が必要でなくなりました <!-- Don't require a crt for public remotes -->(Issue #3627)
+ * lxd: lxd/util.go を自身 lxd/util のサブパッケージに移動しました <!-- Move lxd/util.go into its own lxd/util/ sub-package -->
+ * lxd/containers: LXD snap にディスクデバイスを与えられるようになりました <!-- Allow passing disk devices with the LXD snap -->(Issue #3660)
+ * lxd/containers: さらに LXC 2.1 でのキー名の変更に対応しました: lxc.idmap <!-- Another LXC 2.1 key rename, lxc.idmap -->
+ * lxd/containers: Typo の修正 <!-- Fix a typo-->: now -> know
+ * lxd/containers: GPU ベンダーが混在する際の GPU のアタッチを修正しました <!-- Fix gpu attach when mixing GPU vendors -->(Issue #3642)
+ * lxd/containers: デバイスのソート順を修正しました <!-- Fix sorting order of devices -->(Issue #2895)
+ * lxd/containers: ホストで isolcpu が設定されている場合の問題を修正しました(isolcpuが設定されている場合の動作をサポート) <!-- Fix support for isolcpu in CPU scheduler -->(Issue #3624)
+ * lxd/containers: 再度ステートフルスナップショットのリストアを動作するようにしました <!-- Make stateful snapshot restores work again -->
+ * lxd/daemon: 初期の lxd/sys サブパッケージと OperationSystem 構造体を追加しました <!-- Add initial lxd/sys sub-package and OperatingSystem structure -->
+ * lxd/daemon: d.os.Init の実行をすべてのパスが作られた後に行われるようにしました <!-- d.os.Init must be run after all paths are created -->
+ * lxd/daemon: Daemon.ExpireLogs を独立した関数にしました <!-- Extract Daemon.ExpireLogs into a standalone function -->
+ * lxd/daemon: Daemon.GetListeners を独立した関数にしました <!-- Extract Daemon.GetListeners into a standalone function -->
+ * lxd/daemon: Daemon.httpClient を独立した関数にしました <!-- Extract Daemon.httpClient into a standalone HTTPClient function -->
+ * lxd/daemon: Daemon.ListenAddresses を独立した関数にしました <!-- Extract Daemon.ListenAddresses into a standalone function -->
+ * lxd/daemon: Daemon.PasswordCheck を独立した関数にしました <!-- Extract Daemon.PasswordCheck into a standalone function -->
+ * lxd/daemon: Daemon.SetupStorageDriver を独立した関数にしました <!-- Extract Daemon.SetupStorageDriver into a standalone function -->
+ * lxd/daemon: 定義されていない設定キーの使用時にログ出力後、クラッシュしなくなりました <!-- Log a warning for unknown config keys instead of crashing -->
+ * lxd/daemon: Daemon.BackingFs を OS 構造体に移動させました <!-- Move Daemon.BackingFs to the OS struct -->
+ * lxd/daemon: Daemon.IdmapSet を OS.IdmapSet に移動させました <!-- Move Daemon.IdmapSet to OS.IdmapSet -->
+ * lxd/daemon: Daemon.isRecursionRequest を lxd/util サブパッケージに移動させました <!-- Move Daemon.isRecursionRequest to the lxd/util sub-package -->
+ * lxd/daemon: Daemon.lxcpath を OS.LxcPath に移動させました <!-- Move Daemon.lxcpath to OS.LxcPath -->
+ * lxd/daemon: Daemon.MockMode を OS.MockMode に移動させました <!-- Move Daemon.MockMode to OS.MockMode -->
+ * lxd/daemon: Deamon.CheckTrustState と Deamon.isTrustedClient を lxd/util に移動させました <!-- Move Deamon.CheckTrustState and Deamon.isTrustedClient to lxd/util -->
+ * lxd/daemon: filesystemDetect 関数を lxd/util サブパッケージに移動させました <!-- Move filesystemDetect function into lxd/util subpackage -->
+ * lxd/daemon: すべてのモデルエンティティの Daemon を State に置き換えました <!-- Replace Daemon with State in all model entities -->
+ * lxd/daemon: select を使用し、いくつかの goroutine を保存するようにしました <!-- Use select and save a few goroutines -->
+ * lxd/daemon: 可能な場合は Daemon の代わりに sql.DB、sys.OS を使うようにしました <!-- Use sql.DB or sys.OS instead of Daemon where possible -->
+ * lxd/db: db.go 内では Daemon に対する依存を削除しました <!-- Drop dependencies on Daemon in db.go -->
+ * lxd/db: db\*.go ファイルを db/ サブパッケージに移動しました <!-- Move db\*.go files into their own db/ sub-package -->
+ * lxd/images: リフレッシュ時に古い "cached" という値も渡すようにしました <!-- Carry old "cached" value on refresh -->(Issue #3698)
+ * lxd/import: 初期化されていない構造体は使わないようにしました <!-- Don't use un-initialized structs -->
+ * lxd/networks: dnsmasq なしでも LXD が起動するようにしました <!-- Allow starting LXD without dnsmasq -->(Issue #3678)
+ * lxd/networks: ip{6}tables がない場合の networkIptablesClear の動作を修正しました <!-- Fix networkIptablesClear with missing ip{6}tables -->(Issue #3688)
+ * lxd/networks: ネットワーク名として "dev" が使えるようになりました <!-- Make "dev" work as a network name -->
+ * lxd/networks: dnsmasq.raw を 0644 に設定するようにしました <!-- Set dnsmasq.raw to be 0644 -->(Issue #3652)
+ * lxd/networks: クリーンシャットダウン時にネットワークを停止するようにしました <!-- Stop networks on clean shutdown -->
+ * lxd/patches: canmount=noauto パッチの不具合を修正しました <!-- Fix canmount=noauto patch -->(Issue #3594)
+ * lxd/patches: ZFS コンテナとイメージの "size" を削除するようにしました <!-- Unset "size" for ZFS containers + images -->(Issue #3679)
+ * lxd/storage: pool の UsedBy でカスタムボリュームをカウントするようになりました <!-- Count custom volumes in pool UsedBy -->
+ * lxd/storage: btrfs,zfs で "volume.size" が有効になりました <!-- Enable "volume.size" for {btrfs,zfs} -->
+ * lxd/storage: "size" プロパティの修正を行いました <!-- Fix "size" property -->
+ * lxd/storage: ログ出力時に間違ったドライバー名で出力される問題を修正しました <!-- Fix wrong driver name for log output -->
+ * lxd/storage: 動作に影響のない変更 <!-- Non-functional changes -->
+ * lxd/storage/ceph: --cluster を複数指定していたので修正しました <!-- Fix double \-\-cluster -->
+ * lxd/storage/ceph: EINVAL になるまで unmap するようにしました  <!-- Unmap until EINVAL -->
+ * lxd/storage/ceph: sysfs 経由で "/dev/rbd<idx>" を使うようにしました <!-- Use "/dev/rbd<idx>" via sysfs -->
+ * lxd/storage/ceph: クローンの際は最小のイメージフィーチャーセットを使うようにしました <!-- Use minimal image feature set for clones -->
+ * lxd/storage/dir: ディレクトリが空かどうかチェックするようにしました <!-- Check if directory is empty -->(Issue #3680)
+ * lxd/storage/zfs: 常に既存のデータセットは空である必要があるようにしました <!-- Always require existing datasets to be empty -->(Issue #3657)
+ * lxd/storage/zfs: リファクタリングを行いました <!-- Refactoring -->
+ * shared: ホストのパスを変換するラッパーを追加しました <!-- Add wrapper to translate host paths -->
+ * shared: GetRemoteCertificate を lxc/remote から (sharedに) 移動しました <!-- Move GetRemoteCertificate from lxc/remote -->(Issue #3606)
+ * tests: ストレージバックエンドのヘルパを include するための関数を追加しました <!-- function to include storage backends helpers -->
+ * tests: 関数のリファクタリングとクリーンアップを行いました <!-- Refactor cleanup functions -->
+ * tests: スクリプトを lxc と lxd それぞれに関連したヘルパ関数に分離しました <!-- Split out lxc and lxd related helper functions -->
+ * tests: ネットワーク関連のヘルパ関数を分離しました <!-- Split out network-related helper functions -->
+ * tests: ストレージ関連のヘルパ関数を分離しました <!-- Split out storage-related helper functions -->
+ * tests: テストのセットアップ関連のヘルパ関数を分離しました <!-- Split out test setup related helper functions -->
+ * tests: $storage\_backends 変数を使うようにしました <!-- Use $storage\_backends variable -->
+
+### 試用環境 <!-- Try it for yourself -->
+<!--
+This new LXD release is already available for you to try on our [demo service](/lxd/try-it/).
+-->
+この新しい LXD のリリースが、すでに私たちの [デモサービス](/ja/lxd/try-it/) で利用できます。
+
+### ダウンロード <!-- Downloads -->
+<!--
+The release tarballs can be found on our [download page](/lxd/downloads/).
+-->
+このリリースの tarball は [ダウンロードページ](/lxd/downloads/) から取得できます。
+
+
 ## LXD 2.16 リリースのお知らせ <!-- LXD 2.16 release announcement --><span class="text-muted">2017 年 7 月 25 日<!-- 25th of July 2017 --></span>
 新機能<!-- New features -->:
 
