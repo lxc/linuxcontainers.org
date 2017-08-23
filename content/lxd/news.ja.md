@@ -6,7 +6,7 @@
 
  * Ceph のユーザを指定できるようになりました ("ceph.user.name" プロパティで指定) <!-- Add support for specifying the ceph user (using the "ceph.user.name" property) -->
  * 制限を簡単に指定できる「インスタンスタイプ」を実装しました (例: "lxc launch ubuntu:16.04 -t t2.micro")<!-- Implement "instance types" as an easy way to specify limits (e.g. "lxc launch ubuntu:16.04 -t t2.micro") -->
- * LXD API の低レベルでの問い合わせができる "lxc query" コマンドを追加しました(curl を使うのと同様だが LXD の知識が必要) <!-- Add a new "lxc query" command as a low level query tool for the LXD API (similar to curl but with LXD knowledge) -->
+ * LXD API の低レベルでの問い合わせができる "lxc query" コマンドを追加しました(curl を使うのと同様ですが LXD 独自の処理は実装済みなので curl よりは容易に利用できます) <!-- Add a new "lxc query" command as a low level query tool for the LXD API (similar to curl but with LXD knowledge) -->
  * コンテナが uid/gid マッピングを変更したとき、ファイルシステムの ACL を書き換えるようになりました <!-- Filesystem ACLs are now rewritten when the container changes uid/gid map -->
  * LXD は、デイリーのイメージを更新する際にバイナリの差分が使えるようになりました <!-- LXD now supports using binary deltas when refreshing daily images -->
  * "lxc image info" コマンドは LXD が自動的にキャッシュしたイメージかどうかを表示するようになりました <!-- "lxc image info" now shows whether an image was automatically cached by LXD -->
@@ -55,7 +55,7 @@
  * lxd/daemon: Deamon.CheckTrustState と Deamon.isTrustedClient を lxd/util に移動させました <!-- Move Deamon.CheckTrustState and Deamon.isTrustedClient to lxd/util -->
  * lxd/daemon: filesystemDetect 関数を lxd/util サブパッケージに移動させました <!-- Move filesystemDetect function into lxd/util subpackage -->
  * lxd/daemon: すべてのモデルエンティティの Daemon を State に置き換えました <!-- Replace Daemon with State in all model entities -->
- * lxd/daemon: select を使用し、いくつかの goroutine を保存するようにしました <!-- Use select and save a few goroutines -->
+ * lxd/daemon: select を使用し、goroutine を少し節約するようにしました <!-- Use select and save a few goroutines -->
  * lxd/daemon: 可能な場合は Daemon の代わりに sql.DB、sys.OS を使うようにしました <!-- Use sql.DB or sys.OS instead of Daemon where possible -->
  * lxd/db: db.go 内では Daemon に対する依存を削除しました <!-- Drop dependencies on Daemon in db.go -->
  * lxd/db: db\*.go ファイルを db/ サブパッケージに移動しました <!-- Move db\*.go files into their own db/ sub-package -->
