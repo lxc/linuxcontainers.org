@@ -1,7 +1,7 @@
 ![Logo](/static/img/containers.png)
 
 # News
-## LXD 2.17 リリースのお知らせ <!-- LXD 2.17 release announcement -><span class="text-muted">2017 年 8 月 22 日<!-- 22nd of August 2017 --></span>
+## LXD 2.17 リリースのお知らせ <!-- LXD 2.17 release announcement --><span class="text-muted">2017 年 8 月 22 日<!-- 22nd of August 2017 --></span>
 新機能<!-- Features -->:
 
  * Ceph のユーザを指定できるようになりました ("ceph.user.name" プロパティで指定) <!-- Add support for specifying the ceph user (using the "ceph.user.name" property) -->
