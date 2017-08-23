@@ -1,6 +1,102 @@
 ![Logo](/static/img/containers.png)
 
 # News
+## LXD 2.17 release announcement <span class="text-muted">22nd of August 2017</span>
+Features:
+
+ * Add support for specifying the ceph user (using the "ceph.user.name" property)
+ * Implement "instance types" as an easy way to specify limits (e.g. "lxc launch ubuntu:16.04 -t t2.micro")
+ * Add a new "lxc query" command as a low level query tool for the LXD API (similar to curl but with LXD knowledge)
+ * Filesystem ACLs are now rewritten when the container changes uid/gid map
+ * LXD now supports using binary deltas when refreshing daily images
+ * "lxc image info" now shows whether an image was automatically cached by LXD
+
+Bugfixes:
+
+ * client: Cleanup code duplication in image download function
+ * client: Remove deprecated client code
+ * client: Simplify ConnectPublicLXD logic
+ * doc: Add storage documentation for volatile.pool.pristine
+ * doc: Add the volatile.initial\_source key
+ * doc: Fix bad JSON in rest-api.md (Issue #3654)
+ * doc: Properly escape path params
+ * extra/lxc-to-lxd: Ignore capabilities that are dropped by default
+ * extra/lxc-to-lxd: Ignore sysfs/proc mounts
+ * extra/lxc-to-lxd: Properly handle lxc.seccomp
+ * i18n: Update translations from weblate
+ * lxc: Fix race in progress reporter
+ * lxc: Re-introduce remote protocol migration
+ * lxc/config: Expose extra certificate functions (Issue #3606)
+ * lxc/image: Fix copy of image aliases
+ * lxc/image: Wait for the refresh to complete
+ * lxc/remote: Don't require a crt for public remotes (Issue #3627)
+ * lxd: Move lxd/util.go into its own lxd/util/ sub-package
+ * lxd/containers: Allow passing disk devices with the LXD snap (Issue #3660)
+ * lxd/containers: Another LXC 2.1 key rename, lxc.idmap
+ * lxd/containers: Fix a typo: now -> know
+ * lxd/containers: Fix gpu attach when mixing GPU vendors (Issue #3642)
+ * lxd/containers: Fix sorting order of devices (Issue #2895)
+ * lxd/containers: Fix support for isolcpu in CPU scheduler (Issue #3624)
+ * lxd/containers: Make stateful snapshot restores work again
+ * lxd/daemon: Add initial lxd/sys sub-package and OperatingSystem structure
+ * lxd/daemon: d.os.Init must be run after all paths are created
+ * lxd/daemon: Extract Daemon.ExpireLogs into a standalone function
+ * lxd/daemon: Extract Daemon.GetListeners into a standalone function
+ * lxd/daemon: Extract Daemon.httpClient into a standalone HTTPClient function
+ * lxd/daemon: Extract Daemon.ListenAddresses into a standalone function
+ * lxd/daemon: Extract Daemon.PasswordCheck into a standalone function
+ * lxd/daemon: Extract Daemon.SetupStorageDriver into a standalone function
+ * lxd/daemon: Log a warning for unknown config keys instead of crashing
+ * lxd/daemon: Move Daemon.BackingFs to the OS struct
+ * lxd/daemon: Move Daemon.IdmapSet to OS.IdmapSet
+ * lxd/daemon: Move Daemon.isRecursionRequest to the lxd/util sub-package
+ * lxd/daemon: Move Daemon.lxcpath to OS.LxcPath
+ * lxd/daemon: Move Daemon.MockMode to OS.MockMode
+ * lxd/daemon: Move Deamon.CheckTrustState and Deamon.isTrustedClient to lxd/util
+ * lxd/daemon: Move filesystemDetect function into lxd/util subpackage
+ * lxd/daemon: Replace Daemon with State in all model entities
+ * lxd/daemon: Use select and save a few goroutines
+ * lxd/daemon: Use sql.DB or sys.OS instead of Daemon where possible
+ * lxd/db: Drop dependencies on Daemon in db.go
+ * lxd/db: Move db\*.go files into their own db/ sub-package
+ * lxd/images: Carry old "cached" value on refresh (Issue #3698)
+ * lxd/import: Don't use un-initialized structs
+ * lxd/networks: Allow starting LXD without dnsmasq (Issue #3678)
+ * lxd/networks: Fix networkIptablesClear with missing ip{6}tables (Issue #3688)
+ * lxd/networks: Make "dev" work as a network name
+ * lxd/networks: Set dnsmasq.raw to be 0644 (Issue #3652)
+ * lxd/networks: Stop networks on clean shutdown
+ * lxd/patches: Fix canmount=noauto patch (Issue #3594)
+ * lxd/patches: Unset "size" for ZFS containers + images (Issue #3679)
+ * lxd/storage: Count custom volumes in pool UsedBy
+ * lxd/storage: Enable "volume.size" for {btrfs,zfs}
+ * lxd/storage: Fix "size" property
+ * lxd/storage: Fix wrong driver name for log output
+ * lxd/storage: Non-functional changes
+ * lxd/storage/ceph: Fix double --cluster
+ * lxd/storage/ceph: Unmap until EINVAL
+ * lxd/storage/ceph: Use "/dev/rbd<idx>" via sysfs
+ * lxd/storage/ceph: Use minimal image feature set for clones
+ * lxd/storage/dir: Check if directory is empty (Issue #3680)
+ * lxd/storage/zfs: Always require existing datasets to be empty (Issue #3657)
+ * lxd/storage/zfs: Refactoring
+ * shared: Add wrapper to translate host paths
+ * shared: Move GetRemoteCertificate from lxc/remote (Issue #3606)
+ * tests: function to include storage backends helpers
+ * tests: Refactor cleanup functions
+ * tests: Split out lxc and lxd related helper functions
+ * tests: Split out network-related helper functions
+ * tests: Split out storage-related helper functions
+ * tests: Split out test setup related helper functions
+ * tests: Use $storage\_backends variable
+
+### Try it for yourself
+This new LXD release is already available for you to try on our [demo service](/lxd/try-it/).
+
+### Downloads
+The release tarballs can be found on our [download page](/lxd/downloads/).
+
+
 ## LXD 2.16 release announcement <span class="text-muted">25th of July 2017</span>
 New features:
 
