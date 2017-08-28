@@ -51,7 +51,7 @@ To install the feature branch of LXD, run:
 ### Snap package (ArchLinux, Debian, Fedora, OpenSUSE and Ubuntu)
 LXD upstream publishes and tests a snap package which works for a number of Linux distributions.
 
-The list of Linux distributions we currently test our snap for can be [found here](https://jenkins.linuxcontainers.org/job/lxd-test-snap-stable/).
+The list of Linux distributions we currently test our snap for can be [found here](https://jenkins.linuxcontainers.org/job/lxd-test-snap-latest-stable/).
 
 For those distributions, you should first install snapd using [those instructions](https://snapcraft.io/docs/core/install).
 

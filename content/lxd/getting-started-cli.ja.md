@@ -94,9 +94,9 @@ LXD upstream publishes and tests a snap package which works for a number of Linu
 LXD 開発元では、多数の Linux ディストリビューションで動作する snap パッケージを作成し、テストしています。
 
 <!--
-The list of Linux distributions we currently test our snap for can be [found here](https://jenkins.linuxcontainers.org/job/lxd-test-snap-stable/).
+The list of Linux distributions we currently test our snap for can be [found here](https://jenkins.linuxcontainers.org/job/lxd-test-snap-latest-stable/).
 -->
-開発元で現在、snap パッケージをテストしている Linux ディストリビューションのリストは [こちら](https://jenkins.linuxcontainers.org/job/lxd-test-snap-stable/) にあります。
+開発元で現在、snap パッケージをテストしている Linux ディストリビューションのリストは [こちら](https://jenkins.linuxcontainers.org/job/lxd-test-snap-latest-stable/) にあります。
 
 <!--
 For those distributions, you should first install snapd using [those instructions](https://snapcraft.io/docs/core/install).
