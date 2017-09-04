@@ -118,8 +118,9 @@
     {"path": "/lxd/news/",
      "title": "LXD - News",
      "menu": ["LXD", "News"],
-     "generator": "markdown",
-     "meta": {"input": "lxd/news.md"}},
+     "generator": "news",
+     "meta": {"dir": "/content/lxd/news/",
+              "input": "lxd/news.md"}},
 
     {"path": "/lxd/getting-started-cli/",
      "title": "LXD - Getting started - command line",
