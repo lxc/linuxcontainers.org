@@ -15,6 +15,7 @@
 
 # Required imports
 import bs4
+import datetime
 import jinja2
 import json
 import markdown
@@ -25,6 +26,7 @@ import os
 import re
 import shutil
 import subprocess
+import yaml
 
 # Variables
 CONTENT_PATH = "content"
@@ -140,7 +142,7 @@ def gen_menu(structure, override, prefix):
     return menu
 
 
-def md2html(path):
+def md2html(content):
     """
         Given path to Markdown file, return rendered HTML content.
     """
@@ -153,8 +155,7 @@ def md2html(path):
     anchors = markdown.extensions.toc.TocExtension(
         configs=[("permalink", 1)])
 
-    with open(path, "r") as fd:
-        return markdown.markdown(fd.read(), extensions=[codehilite, anchors])
+    return markdown.markdown(content, extensions=[codehilite, anchors])
 
 
 def download_sort_key(download_name):
@@ -221,11 +222,13 @@ def gen_page(entry, override, prefix, **variables):
         with open(content_path(item['meta']['input']), "r") as fd:
             content = fd.read()
     elif item['generator'] == "markdown":
-        content = md2html(content_path(item['meta']['input']))
+        with open(content_path(item['meta']['input']), "r") as fd:
+            content = md2html(fd.read())
     elif item['generator'] == "downloads":
         # Support a markdown description before the download table
         if "input" in item['meta']:
-            content = md2html(content_path(item['meta']['input']))
+            with open(content_path(item['meta']['input']), "r") as fd:
+                content = md2html(fd.read())
 
         downloads = []
         download_path = item['meta']['dir'].lstrip("/")
@@ -341,6 +344,51 @@ def gen_page(entry, override, prefix, **variables):
             content += "<li><a href=\"%s\">%s</a></li>" % (entry_link,
                                                            entry)
         content += "</ul>"
+    elif item["generator"] == "news":
+        # Get the prefix
+        with open(content_path(item['meta']['input']), "r") as fd:
+            content = fd.read()
+
+        # Load all articles
+        articles = []
+        news_path = item["meta"]["dir"].lstrip("/")
+        for entry in os.listdir(news_path):
+            with open(os.path.join(news_path, entry), "r") as fd:
+                article = yaml.safe_load(fd)
+                if not article:
+                    raise Exception("Bad news article: %s", entry)
+
+                articles.append(article)
+
+        # Sort the articles
+        articles = sorted(articles, key=lambda article: article["date"],
+                          reverse=True)
+
+        # Generate the page
+        for article in articles:
+            date = datetime.datetime.strptime(article["date"],
+                                              "%Y/%m/%d %H:%M")
+
+            if 4 <= date.day <= 20 or 24 <= date.day <= 30:
+                suffix = "th"
+            else:
+                suffix = ["st", "nd", "rd"][date.day % 10 - 1]
+
+            title = article["title"]
+            if "origin" in article:
+                title = "<a href=\"%s\">%s</a>" % (article["origin"], title)
+
+            content += "\n\n\n## %s <span class=\"text-muted\">%s</span>\n" % \
+                (title, date.strftime("%%-d%s of %%B %%Y" % suffix))
+
+            content += article["content"]
+
+        with open("/tmp/test.md", "w+") as fd:
+            fd.write(content)
+
+        content = md2html(content)
+    else:
+        raise Exception("Unknown generator: %s" % item["generator"])
 
     # Pass all the variables to the template and generate the html
     template = env.get_template(template)
