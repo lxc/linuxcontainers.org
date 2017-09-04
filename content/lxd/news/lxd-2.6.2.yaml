@@ -1,0 +1,15 @@
+title: LXD 2.6.2 release announcement
+date: 2016/11/24 02:00
+content: |-
+  Follow-up bugfix release to fix a regression introduced by the rushed 2.6.1 release.
+
+  ### The changes in this release include
+  Bugfixes:
+
+   * Don't grab addresses from public remotes
+
+  ### Try it for yourself
+  This new LXD release is already available for you to try on our [demo service](/lxd/try-it/).
+
+  ### Downloads
+  The release tarballs can be found on our [download page](/lxd/downloads/).

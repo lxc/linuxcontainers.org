@@ -1,0 +1,10 @@
+title: LXD 0.8.1 release announcement
+date: 2015/04/29 00:00
+content: |-
+  Bugfix only release on top of 0.8 fixing some regressions:
+
+   * Fix building on all architectures
+   * Change the go-protobuf repository URL
+
+  ### Downloads
+  The release tarballs can be found on our [download page](/lxd/downloads/).

@@ -1,0 +1,140 @@
+title: LXD 2.0.9 release announcement
+date: 2017/01/26 00:00
+content: |-
+  This is the ninth bugfix release for LXD 2.0.
+
+  ### The changes since LXD 2.0.8 are
+  Minor improvements:
+
+   * Exec sessions being killed by a signal will now report the signal number as part of their exit code.
+   * VLAN device types are now properly reported in the API and client.
+   * The client will now show the date an image was last used at (in lxc image info).
+   * The client will now let you delete multiple images at once.
+   * LXD is now using [Weblate](https://hosted.weblate.org/projects/linux-containers/lxd/) for its translations.
+
+  Bugfixes:
+
+   * client: Add a done signal to Monitor API
+   * client: Better handle http errors
+   * client: Commonize update methods
+   * doc: Add Documentation on Network Configuration via cloud-init
+   * doc: Added reference to godoc to README.md
+   * doc: Update README.md for CI and Weblate status
+   * extra/lxc-to-lxd: Add more unsupported config keys
+   * extra/lxc-to-lxd: All properties must be strings
+   * extra/lxc-to-lxd: Copy the rootfs by default, don't move it
+   * extra/lxc-to-lxd: Show nicer error on missing python3-lxc
+   * extra/lxc-to-lxd: Switch to using a config whitelist
+   * global: Fix typos
+   * global: "gofmt -s" run
+   * lxc: Better handle timestamps
+   * lxc: Make help messages more consistent
+   * lxc: Properly check yaml errors
+   * lxc/init: Fix example
+   * lxc/init: Properly replace args list
+   * lxc/launch: Just use init.go's flags()
+   * lxc/list: Sort IPv4 and IPv6 addresses
+   * lxc/remote: Update help
+   * lxd-bridge: Add ip6tables filter rules
+   * lxd-bridge: DHCP happens over UDP only
+   * lxd-bridge: Make IPv4 firewalling optional (default is enabled)
+   * lxd/containers: Add basic logging to container creation
+   * lxd/containers: Allow passing in-memory buffers to a FileResponse
+   * lxd/containers: Also call setgroups when attaching to the container
+   * lxd/containers: Avoid race condition in network fill function
+   * lxd/containers: Blacklist lxc.syslog and lxc.ephemeral in raw.lxc
+   * lxd/containers: Detect background tasks to allow clean exit
+   * lxd/containers: Do mounts in the right order
+   * lxd/containers: Don't attempt to read xattrs from symlinks
+   * lxd/containers: Don't block resolution on non-existing paths
+   * lxd/containers: Don't record last\_state.power twice
+   * lxd/containers: Exec() return attached PID && take bool arg
+   * lxd/containers: Fix container state recording
+   * lxd/containers: Fix device hotplug with major/minor set
+   * lxd/containers: Fix file push error handling
+   * lxd/containers: Fix generated seccomp profile
+   * lxd/containers: Fix logging for file\_manip commands
+   * lxd/containers: Improve error handling and reporting during export
+   * lxd/containers: Return a clear error when replacing a directory
+   * lxd/daemon: Common codepath for http client
+   * lxd/daemon: Don't set InsecureSkipVerify on daemon's tls config
+   * lxd/daemon: Log daemon version
+   * lxd/daemon: Make directories with stricter permissions
+   * lxd/daemon: Make LXD\_DIR with +x for group and everyone
+   * lxd/daemon: Only mark ready once containers are up
+   * lxd/daemon: Properly validate daemon keys on unset
+   * lxd/daemon: Use our custom http server when updating HTTPS address too
+   * lxd/db: Drop unused code from db.go
+   * lxd/images: Close race condition in image download
+   * lxd/images: Track speed during network transfers
+   * lxd/main: Move activateifneeded to own file
+   * lxd/main: Move callhook to own file
+   * lxd/main: Move daemon to own file
+   * lxd/main: Move forkexec to own file
+   * lxd/main: Move forkgetnet to own file
+   * lxd/main: Move forkmigrate to own file
+   * lxd/main: Move forkstart to own file
+   * lxd/main: Move init to own file
+   * lxd/main: Move migratedumpsuccess to own file
+   * lxd/main: Move netcat to own file
+   * lxd/main: Move ready to own file
+   * lxd/main: Move shutdown to own file
+   * lxd/main: Move waitready to own file
+   * lxd/main: Rename nsexec.go to main\_nsexec.go
+   * lxd/migrate: Use the generated snapshot list
+   * lxd/patches: Mark all patches as applied on create
+   * lxd/profiles: Fix unusued variable
+   * lxd/storage: btrfs: Don't assume a path is a subvolume
+   * lxd/storage: Change ContainerStart to take the name and path to start
+   * lxd/storage: Rework EEXISTS detection on create
+   * lxd/storage: zfs: Simplify device tracking logic
+   * Makefile: Rework "make dist" to be more reliable
+   * shared: add GetPollRevents()
+   * shared: Add WebsocketExecMirror()
+   * shared: Centralize all cert fingerprint generation
+   * shared: Convert TransferProgress to ReadCloser
+   * shared: ExecReaderToChannel() use sync.Once
+   * shared: Give Architecture handling its own package
+   * shared: Give IO progress tracker its own package
+   * shared: Give simplestreams client its own package
+   * shared: Give version handling its own package
+   * shared: Implement write tracking
+   * shared: Make a helper to compute cert fingerprint
+   * shared: Move Device/Devices types to lxd package
+   * shared: Move FromLXCState out of shared
+   * shared: Move REST API to new package: certificate
+   * shared: Move REST API to new package: container
+   * shared: Move REST API to new package: godoc
+   * shared: Move REST API to new package: image
+   * shared: Move REST API to new package: network
+   * shared: Move REST API to new package: operation
+   * shared: Move REST API to new package: profile
+   * shared: Move REST API to new package: response
+   * shared: Move REST API to new package: server
+   * shared: Move REST API to new package: status
+   * shared: Move WebsocketUpgrader to network.go
+   * shared: Remove GroupName function and add UserId one
+   * shared: Rename idmapset\_test\_linux.go to idmapset\_linux\_test.go
+   * shared: Support absolute file transfer tracking
+   * shared/idmapset: Drop debugging code
+   * shared/idmapset: Fix intersection test
+   * shared/logging: Introduce our own formatter
+   * shared/logging: Make PrintStack print at the Error level
+   * shared/simplestreams: Don't depend on custom http handler
+   * shared/simplestreams: Pass UserAgent as argument
+   * shared/util: Add Int64InSlice()
+   * shared/util: GetByteSizeString() take precision argument
+   * shared/util: Improve byte parsing
+   * shared/util: ParseByteSizeString() deal with bytes
+   * tests: Don't ignore errors in db tests
+   * tests: Fix bad variable name
+   * tests: Fix deadcode to work with new upstream
+   * tests: Fix shellcheck being confused by cd
+   * tests: Fix standalone remote test
+   * tests: Shorten test name to fit on Jenkins
+   * tests: Simplify testsuite spawn code
+   * tests: Test lxd shutdown
+   * tests: Use lxc restart instead of reboot
+
+  ### Downloads
+  The release tarballs can be found on our [download page](/lxd/downloads/).

@@ -1,0 +1,66 @@
+title: LXD 2.0.1 release announcement
+date: 2016/05/16 00:00
+content: |-
+  This is the first bugfix release for LXD 2.0.
+
+  ### The bugfixes since LXD 2.0.0 are
+
+   * Don't fail to start when shmounts can't be mounted, instead fail container startup
+   * Invalidate the simplestreams cache on proxy change
+   * Write the container's config file on start to the log path directly
+   * Fix crash in list due to empty responses (Issue #1903)
+   * Fail when removing non-existent profiles (Issue #1886)
+   * Document --alias to image import (Issue #1900)
+   * Fix "lxc start" and "lxc stop" options (stateful/stateless)
+   * Give better error on invalid source stream (simplestreams)
+   * Add basic REST API usage example to README.md
+   * Fix typo in lxc stop --help
+   * Convert lxc-to-lxd to stable supported pylxd API (Issue #1901)
+   * Properly log image update failures
+   * Better validate and rollback bad images (Issue #1913)
+   * Send operation return value through SmartError
+   * Fix basic filtering in lxc list (Issue #1917)
+   * Tell the user how to launch a container on first start (Issue #1931)
+   * Redirect "remote" to "remote:" when not conflicting (Issue #1931)
+   * Don't load the LXC config for snapshots (Issue #1935)
+   * list: Allow filtering by unset key (Issue #1917)
+   * Fix example in `lxc launch`
+   * Update Japanese translation and other po files
+   * Fall back to cpuset.cpus on older kernels (Issue #1929)
+   * Properly validate the server configuration keys (Issue #1939)
+   * Fix daemonConfig handling of storage
+   * Don't remove config file on forkmigrate
+   * Fix config handling following config validation change
+   * Fixed Markdown syntax in documentation
+   * Don't fail early when removing disks (Issue #1964)
+   * Don't recursively delete devices
+   * Don't fail when some unix devices fail to be deleted
+   * Use the same config checks for unix-char and unix-block
+   * Allow removing when fs object no longer exists (Issue #1967)
+   * Do proper logfile expiry (Issue #1966)
+   * Make logging a bit more consistent
+   * Don't ignore zfs errors
+   * Properly update the mode, uid and gid on existing files (Issue #1975)
+   * Detect invalid certificate files (Issue #1977)
+   * Fix broken apparmor status check
+   * Allow on/off as boolean strings
+   * Properly validate the container configuration keys (Issue #1940)
+   * Don't mask rsync transfer errors
+   * Move execPath to a global variable
+   * Use custom netcat instead of nc -U for rsync over websocket (Issue #1944)
+   * Fix wrong state dir path in migration
+   * Don't fail deleting images when the storage delete fails
+   * Improve messages in the Japanese translation
+   * Add more checks for the criu binary
+   * Rework (live) migration tests
+   * Make it explicit in documentation that devices on create are optional
+   * Properly record the source of all image copies (Issue #2010)
+   * Don't mark containers as ERROR while being created (Issue #1988)
+   * Cleanup events sent for operations (Issue #1992)
+   * Fix ZFS refcounting issues (Issue #1916 and Issue #2013)
+   * Propagate snapshot config when copying a snapshot (Issue #2017)
+   * Implement `lxc config show` for snapshots
+   * Add Unix socket example to REST API usage.
+
+  ### Downloads
+  The release tarballs can be found on our [download page](/lxd/downloads/).

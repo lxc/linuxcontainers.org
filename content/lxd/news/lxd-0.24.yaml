@@ -1,0 +1,40 @@
+title: LXD 0.24 release announcement
+date: 2015/12/08 00:00
+content: |-
+  ### The main changes for this release are
+
+   * Support for macvlan network interfaces
+   * Support for physical network interfaces
+   * Support for building on s390x
+   * Snapshots are now transfered along with their parent container on copy/move
+   * A CPU scheduler for limits.cpu has been implemented
+   * "lxc config unset/set" now works against a remote server
+
+  ### Bugfixes
+
+   * Improved IP rendering in "lxc list"
+   * Fix apparmor handling in nested containers
+   * Fix various hangs and failures during device hotplug
+   * Image publishing from a snapshot now produces the exact same output every time
+   * Fix publishing of snapshots
+   * Fix our translation layer by switching to an alternative gettext implementation
+   * Switch UUID implementation to an alternative implementation
+   * Drop migratable profile (current CRIU can migrate a standard container)
+   * Create missing directories when mounting a disk into a container
+   * Serialize image creation (reduces overall load)
+   * Various ZFS bugfixes (load kernel module when missing, re-try destroys and better handle mounts)
+   * Completely rework the LXC container driver to be simpler and more reliable
+   * Prevent setting volatile keys on profiles
+   * Automatically cleanup stale volatile keys
+   * Fix launching un-named (randomly named) containers
+
+  ### Upgrade notes
+
+   * Older lxc clients will hang on exec against a newer server, make sure to update the client.
+   * limits.cpus is now called limits.cpu, a one-time migration is done at LXD startup.
+
+  ### Try it for yourself
+  This new LXD release is already available for you to try on our [demo service](/lxd/try-it/).
+
+  ### Downloads
+  The release tarballs can be found on our [download page](/lxd/downloads/).

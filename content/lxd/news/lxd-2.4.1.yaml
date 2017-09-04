@@ -1,0 +1,17 @@
+title: LXD 2.4.1 release announcement
+date: 2016/10/05 01:00
+content: |-
+  The primary goal for this release is to publish release tarballs that actually report LXD  
+  as "2.4.1" rather than "2.3" as the release ones mistakenly did.
+
+  We're including a couple of bugfixes in the process too.
+
+  ### The changes in this release include
+  Bugfixes:
+
+   * shared: Remove logging import
+   * tests: add a test to make sure we don't accidentally include new deps
+   * extras: Added the command shell to lxc-client bash-completion
+
+  ### Downloads
+  The release tarballs can be found on our [download page](/lxd/downloads/).

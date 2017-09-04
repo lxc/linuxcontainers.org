@@ -1,0 +1,137 @@
+title: LXD 2.14 release announcement
+date: 2017/05/30 00:00
+origin: https://discuss.linuxcontainers.org/t/lxd-2-14-has-been-released/157
+content: |-
+  New features:
+
+   * New client library
+      * Add a CreateContainerFromImage function
+      * Implement image upload
+      * Implement remote operations
+   * API additions
+      * New "description" field for containers, networks, storage pools and storage volumes
+      * Allow for image refreshes (lxc image refresh)
+   * When launching containers, an existing cached image is now preferred over downloading a refreshed one
+   * "lxd init" can now be preseeded with "--preseed" and a yaml config file
+   * Introduce a new btrfs.mount\_options pool property
+   * Implement volume resizing for LVM (grow/shrink for ext4, grow only for xfs)
+   * LXD doesn't create a "docker" profile anymore as it's not needed with current Docker and AppArmor.
+
+  Bugfixes:
+
+   * client: Add image\_create\_aliases backward compat
+   * client: Always pass pointer to queryStruct
+   * client: Don't return cache on GetServer
+   * client: Fill the server fingerprint if missing
+   * client: Fix private image handling
+   * client: Fix race condition in operation handler
+   * client: Improve error on image copy
+   * client: Keep track of protocol
+   * client: Move CopyImage to the target server
+   * client: Remove unneeded condition
+   * client: Require the volume type for storage volume
+   * client: Support partial fingerprints
+   * client: Track the server certificate, not client
+   * client: Use RemoteOperation for CopyImage
+   * doc: Add documentation about the init preseed feature
+   * doc: Correct typo in device type name
+   * doc: Fix markdown escaping
+   * doc: Update README.md Docker instructions
+   * doc/network: Add section on macvlan vs bridge (Issue #3273)
+   * doc/storage: Correct grammer
+   * doc/storage: Document zfs quota vs refquota (Issue #2959)
+   * doc/storage: Fix ordering
+   * extra/lxc-to-lxd: Don't crash on missing mount file (Issue #3237)
+   * global: Fix typos
+   * global: Replace file Chmod() with os.Chmod() (Issue #3275)
+   * global: Use containerGetParentAndSnapshotName() everywhere
+   * i18n: Pre-release update
+   * i18n: Update translations from weblate
+   * lxc: Fix obscure error on missing object name (Issue #3230)
+   * lxc: Implement progress tracking for operations
+   * lxc/copy: Improve error handling (Issue #3243)
+   * lxc/copy: Simplify the code
+   * lxc/file: Fix broken file push on Windows
+   * lxc/file: Fix recursive file push on Windows
+   * lxc/init: Drop unnecessary else statement
+   * lxc/remote: Show the fingerprint as string not hex (Issue #3293)
+   * lxc/storage: Don't ignore yaml errors
+   * lxd: Support running individual testify test suites
+   * lxd/containers: Also clear the host\_name volatile key
+   * lxd/containers: Cleanup volatile keys on update (Issue #3231)
+   * lxd/containers: Disable IPv6 on created macvlan parents
+   * lxd/containers: fillNetworkDevice is only for nic
+   * lxd/containers: Use networkSysctl whenever possible
+   * lxd/daemon: Fix ETag handling for /1.0
+   * lxd/daemon: Actually set ServerFingerprint
+   * lxd/db: Add a testify test suite for db tests, rework existing tests
+   * lxd/db: Clear database state in the mock daemon after each lxdSuiteTest
+   * lxd/db: Don't special-case mock mode unnecessarily in db patches
+   * lxd/db: Return NoSuchObjectError on missing storage pools (Issue #3257)
+   * lxd/db: Separate db-level update logic from daemon-level one
+   * lxd/images: Check if the image already exists on upload
+   * lxd/images: Fix potential double unlock
+   * lxd/images: Fix regression in image auto-update logic
+   * lxd/images: Save image source certificate and pass it to the download
+   * lxd/images: Split autoUpdateImage function
+   * lxd/import: Error on out missing name
+   * lxd/init: Extract validation of --auto args into a separate method
+   * lxd/init: Move state-changing inline functions to own methods
+   * lxd/init: Rollback to initial state if anything goes wrong
+   * lxd/init: Properly set the default port (Issue #3341)
+   * lxd/networks: Fix ETag regression
+   * lxd/patches: Drop unused variable
+   * lxd/storage: Add helper to detect if pool is in use
+   * lxd/storage: Add lxdResolveMountoptions()
+   * lxd/storage: Add MS\_LAZYTIME to mount options
+   * lxd/storage: Add permission helpers
+   * lxd/storage: Avoid an infinite loop
+   * lxd/storage: Fix bad internal types
+   * lxd/storage: Move mount helpers to storage utils
+   * lxd/storage: Only delete custom volumes
+   * lxd/storage: Pass container struct to ContainerMount()
+   * lxd/storage: Re-order storage pool checks
+   * lxd/storage/btrfs: Add getBtrfsPoolMountOptions()
+   * lxd/storage/btrfs: Handle migration on different LXDs (Issue #3323)
+   * lxd/storage/btrfs: Remove unused variable
+   * lxd/storage/btrfs: Use lxdResolveMountoptions()
+   * lxd/storage/lvm: Allow re-using existing thinpools (Issue #3351)
+   * lxd/storage/lvm: Check whether volume group is already in use
+   * lxd/storage/lvm: Disallow using non-empty volume groups (Issue #3351)
+   * lxd/storage/lvm: Only delete VG when empty (Issue #3351)
+   * lxd/storage/lvm: Resolve mount options properly (Issue #3284)
+   * lxd/storage/lvm: Simplify and improve pool creation
+   * lxd/storage/zfs: Create image dataset with mountpoint=none (Issue #3359)
+   * lxd/storage/zfs: Fix folder permissions after dataset creation (Issue #3090)
+   * lxd/storage/zfs: Try to work around zfs EBUSY bug (Issue #3228)
+   * Makefile: Add update-po to i18n target
+   * Makefile: Fix static-analysis target
+   * shared: Add yaml-mode marker in template for "lxc edit" actions
+   * shared/cmd: Add new package with initial command I/O logic
+   * shared/cmd: Complete cmd.Context support for various AskXXX methods
+   * shared/cmd: Don't depend on testify
+   * shared/cmd: Make the log cmdInit unit-testable
+   * shared/logger: Make golint clean
+   * shared/logger: Replace PrintStack with GetStack
+   * shared/logging: Export LogfmtFormat
+   * shared/logging: Make golint clean
+   * shared/termios: Make golint clean
+   * tests: Add btrfs.mount\_options test (Issue #3264)
+   * tests: Add LV resizing tests
+   * tests: Add mount option test for LVM (Issue #3284)
+   * tests: Add quota tests
+   * tests: Allow random storage backend selection
+   * tests: Don't rely on busybox shutting down nicely
+   * tests: Drop jenkins-specific check again
+   * tests: Explicitly pass shell type to shellcheck
+   * tests: Honor the LXD\_BACKEND environment variable in storage tests
+   * tests: Make sure storage volume is mounted
+   * tests: Remove invalid test for Jenkins
+   * tests: Test suites use space indent
+   * tests/deps: Make golint clean
+
+  ### Try it for yourself
+  This new LXD release is already available for you to try on our [demo service](/lxd/try-it/).
+
+  ### Downloads
+  The release tarballs can be found on our [download page](/lxd/downloads/).

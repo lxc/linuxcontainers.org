@@ -1,0 +1,58 @@
+title: LXD 2.11 release announcement
+date: 2017/03/08 00:00
+content: |-
+  ### The changes in this release include
+  New features:
+
+   * New "aliases" field in POST /1.0/images allowing for an initial set of aliases to be passed.
+   * Reworked help messages and "lxc manpage" command to generate manpages for the client.
+   * New "vlan" nic property for "macvlan" devices, allowing to connect to a particular VLAN on the host device.
+
+  Bugfixes:
+
+   * doc: Add instructions to grow ZFS loop
+   * doc: Improve storage doc (Issue #3013)
+   * global: Use RunCommand everywhere
+   * i18n: Refresh templates
+   * i18n: Update translations from weblate
+   * i18n: Update translation templates
+   * lxc: Allow --version to be passed with any command
+   * lxc: Make help/usage a bit more consistent
+   * lxc: Rework for better manpages
+   * lxc/image: Show the alias description
+   * lxc/profile: Properly implement "profile unset"
+   * lxd/containers: Don't use FindProcess, just pass exec.Cmd (Issue #3037)
+   * lxd/containers: Properly revert memory limits on failure (Issue #3017)
+   * lxd/images: Properly return the alias description
+   * lxd/images: Refactor code a bit
+   * lxd/migration: Actually unset the storage pool if unavailable (Issue #3036)
+   * lxd/migration: Better handle rsync errors (subprocesses)
+   * lxd/migration: Set correct pool property for btrfs (Issue #3036)
+   * lxd/migration: Set correct pool property for zfs (Issue #3036)
+   * lxd/migration: Tweak rsync logging a bit
+   * lxd/patches: Call tryMount() if not already mounted (Issue #3026)
+   * lxd/patches: Conditionalize lvrename (Issue #3026)
+   * lxd/patches: Delete image db entry if LV is missing (Issue #3026)
+   * lxd/patches: Detect the logical volume size
+   * lxd/patches: Fix incorrect btrfs source properties (Issue #3020)
+   * lxd/patches: Handle mixed-storage <lvm,dir> upgrade (Issue #3026)
+   * lxd/patches: Use MNT\_DETACH for lvm (Issue #3026)
+   * lxd/patches: Use RemoveAll() for lvm snapshots dir (Issue #3026)
+   * lxd/storage/btrfs: Correctly handle loop-backed pools (Issue #3020)
+   * lxd/storage/btrfs: Handle custom subvolume paths (Issue #3020)
+   * lxd/storage/dir: Limit valid pool source paths (Issue #3023)
+   * lxd/storage/lvm: Call {pv,vg}scan
+   * lxd/storage/lvm: Dumb down functions from methods to functions (Issue #3026)
+   * lxd/storage: Deal with source not being btrfs (Issue #3024)
+   * lxd/storage: Ensure correct pool for snapshots (Issue #3036)
+   * lxd/storage: Harden the btrfs migration code (Issue #3024)
+   * lxd/storage: Report prepareLoopDev() error directly
+   * shared/idmap: Fix various issues
+   * tests: Add more dir and btrfs tests (Issue #3023)
+   * tests: Improve lvm part of storage tests
+
+  ### Try it for yourself
+  This new LXD release is already available for you to try on our [demo service](/lxd/try-it/).
+
+  ### Downloads
+  The release tarballs can be found on our [download page](/lxd/downloads/).

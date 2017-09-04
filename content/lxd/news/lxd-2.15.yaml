@@ -1,0 +1,68 @@
+title: LXD 2.15 release announcement
+date: 2017/06/27 00:00
+origin: https://discuss.linuxcontainers.org/t/lxd-2-15-has-been-released/239
+content: |-
+  New features:
+
+   * "lxc image list" now support column customization.
+   * "lxc list" and "lxc image list" now both support table, json, yaml and csv as output formats.
+   * It's now possible to cancel (DELETE) some background operations while they're downloading content.
+   * The "lxc" command line tool was ported from our old client code to the new client package.
+     This was the last bit of code which needed porting and we're now
+     planning on removing the old client package from our tree with LXD 2.16.
+   * New CopyContainer and CopyContainerSnapshot functions were added to the client package.
+   * LXD will now dynamically remap custom storage volumes when attached to containers.
+
+  Bugfixes:
+
+   * client: Add extra exec option to block on I/O
+   * client: Fail copy if the source isn't listening on network
+   * client: Fix potential race in event handler setup
+   * client: Only set file headers if value is provided
+   * doc: Add a note for blkio limits (Issue #3378)
+   * doc: Document image refresh API call
+   * doc: Fix missing markdown escaping
+   * doc: Tweak storage formatting (Issue #3376)
+   * lxc/file: Clean source path for recursive push
+   * lxc/file: Properly read file permissions on Windows (Issue #3363)
+   * lxd/containers: Also support lxc.net.&lt;n&gt;.\* configuration keys on newer LXC
+   * lxd/containers: Check whether the disk device exists on the host before unmount
+   * lxd/containers: Detect POLLNVAL when polling during exec (Issue #2964)
+   * lxd/containers: Fail if we get EBUSY during startup (Issue #3412)
+   * lxd/containers: Use the lxc.network.&lt;n&gt;.\* configuration keys
+   * lxd/db: Replace some uses of InternalError with SmartError
+   * lxd/images: Always expand the fingerprint (Issue #3424)
+   * lxd/images: If multiple cache hits, pick the latest
+   * lxd/images: Properly initialize image info in direct case
+   * lxd/images: Skip cached images without auto-update
+   * lxd/networks: Always pass --conf-file to dnsmasq (Issue #3367)
+   * lxd/networks: Only generate DHCP fw rules if enabled (Issue #3432)
+   * lxd/networks: Remove IPv6 leases on container delete
+   * lxd/networks: Tweak error in subnet auto detection
+   * lxd/patches: Fix bad upgrade for ZFS pools (Issue #3386)
+   * lxd/patches: Make sure localdevices are properly updated (Issue #3169)
+   * lxd/shutdown: Only timeout if told to (Issue #3434)
+   * lxd/storage: Fix ETag calculation for pools
+   * lxd/storage: Insert driver correctly (Issue #3386)
+   * lxd/storage/btrfs: Apply default flags BEFORE detecting type (Issue #3409)
+   * lxd/storage/btrfs: Enable filesystem quotas on demand
+   * lxd/storage/dir: Still create the needed symlinks on freeze failure
+   * lxd/storage/dir: Unfreeze on rsync errors
+   * lxd/storage/lvm: Allow non-empty VGs when thinpool exists (Issue #3456)
+   * lxd/storage/rsync: Handle sparse files when rsyncing (Issue #3287)
+   * lxd/storage/zfs: Fix container snapshot copy (Issue #3395)
+   * lxd/storage/zfs: Improve dummy dataset creation (Issue #3399)
+   * Makefile: Update pot before po
+   * shared/api: API extensions go at the bottom
+   * tests: Add more copy/migration tests
+   * tests: Add tests for custom storage volume attach
+   * tests: Add tests for "lxc file push -r ./"
+   * tests: Don't attempt to finger public remotes
+   * tests: Don't run migration tests again on LVM when backend is random
+   * tests: Use in-memory database for tests
+
+  ### Try it for yourself
+  This new LXD release is already available for you to try on our [demo service](/lxd/try-it/).
+
+  ### Downloads
+  The release tarballs can be found on our [download page](/lxd/downloads/).

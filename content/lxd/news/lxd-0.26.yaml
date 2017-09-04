@@ -1,0 +1,27 @@
+title: LXD 0.26 release announcement
+date: 2016/01/04 00:00
+content: |-
+  ### The main changes for this release are
+
+   * New "host\_name" network interface property that specifies the name of the host side veth device
+   * It is now possible to pull/push/edit files of a stopped container
+   * It's now possible to specify what "lxc list" columns to show (including a new PID column)
+
+  ### Bugfixes
+
+   * Properly inherit the active CPU map rather than assuming all CPUs are usable
+   * zfs: Fix a couple of race conditions
+   * lvm: Fix creation of container from an image
+   * Cut down network round trips in half by not calling Finger() every time
+   * Fix invalid permissions on container shmounts and devices directories
+   * Fix container teardown not always cleaning up devices & mounts
+   * Improve performance of host-triggered container stop/restart (5s faster)
+   * Make lxd callhook timeout after 30s (instead of hanging indefinitely on failure)
+   * Cleanup and document the testsuite
+   * Fix remote certificate handling on add/rename/remove
+
+  ### Try it for yourself
+  This new LXD release is already available for you to try on our [demo service](/lxd/try-it/).
+
+  ### Downloads
+  The release tarballs can be found on our [download page](/lxd/downloads/).

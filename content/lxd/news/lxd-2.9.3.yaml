@@ -1,0 +1,70 @@
+title: LXD 2.9.3 release announcement
+date: 2017/02/24 00:00
+content: |-
+  ### The changes in this release include
+  This is another bugfix release for LXD 2.9, fixing migration issues reported by our users.
+
+  Bugfixes:
+
+   * client: Always use "simplestreams" for the images: remote
+   * doc: Add client tool examples to storage.md
+   * doc: Add lvm.{thinpool,vg}\_name pool properties
+   * lxd: Cleanup root device validation
+   * lxd/containers: Add extra validation for unix-block/unix-char
+   * lxd/containers: Check whether storage is ready before applying quota
+   * lxd/containers: Don't ignore snapshot deletion failures
+   * lxd/daemon: s/Default map/Available map/
+   * lxd/init: "lxd init" can now be run as a normal user
+   * lxd/main: Fix comment in activateifneeded
+   * lxd/main: Restrict daemon and activateifneeded to root
+   * lxd/patches: Fix pool and volume configuration on upgrade
+   * lxd/patches: Move to lvm.thinpool\_name pool key
+   * lxd/storage: Add ContainerStorageReady()
+   * lxd/storage: Call storageVolumeFillDefault() on demand
+   * lxd/storage: Don't modify configuration during config check
+   * lxd/storage: Ensure image is wiped from DB on error
+   * lxd/storage: Fill in default configuration for images
+   * lxd/storage: Implement correct config inheritance for pools and volumes
+   * lxd/storage: Only fill in defaults on creation
+   * lxd/storage: Only set size property on lvm
+   * lxd/storage: Properly report UsedBy
+   * lxd/storage: Store size values as given to us
+   * lxd/storage/btrfs: Always pass the mount options
+   * lxd/storage/btrfs: Always use the recursive subvol functions
+   * lxd/storage/btrfs: Drop dead code
+   * lxd/storage/btrfs: Improve upgrade
+   * lxd/storage/btrfs: Only use size in the loop case
+   * lxd/storage/btrfs: Properly handle nested subvolumes
+   * lxd/storage/btrfs: Set loop file if "source" is empty
+   * lxd/storage/dir: Handle cross-device upgrade
+   * lxd/storage/lvm: Add lvm.thinpool\_name and lvm.vg\_name
+   * lxd/storage/lvm: Allow to reuse existing volume groups
+   * lxd/storage/lvm: Always set lvm.thinpool\_name
+   * lxd/storage/lvm: Don't unmount the container twice on delete
+   * lxd/storage/lvm: Handle "i" in sizes
+   * lxd/storage/lvm: Parse "volume.size" not "size" property
+   * lxd/storage/lvm: Remove volume.lvm.thinpool\_name
+   * lxd/storage/lvm: Lock during StoragePoolVolume{M,Um}ount
+   * lxd/storage/zfs: Lock during StoragePoolVolume{M,Um}ount
+   * lxd/storage/zfs: Correctly handle configuration keys
+   * lxd/storage/zfs: Only use size property in the loop case
+   * lxd/storage/zfs: Remove very repetitive log message
+   * lxd/storage/zfs: Set mountpoint=none on old images
+   * shared/idmap: DefaultIdmapSet is always for root
+   * shared/idmap: Implement parsing of kernel id maps
+   * shared/idmap: Improve parsing of the shadow id files
+   * shared/simplestreams: Properly handle image rebuilds
+   * tests: Adapt to command line unification
+   * tests: Add LVM specific storage pool tests
+   * tests: Also unmount the devlxd path
+   * tests: Always cleanup loop devices
+   * tests: Always use 25MB volumes for LVM
+   * tests: Fix lxd auto init test suite
+   * tests: Improve performance of deadcode test
+   * tests: Test custom storage volume creation
+
+  ### Try it for yourself
+  This new LXD release is already available for you to try on our [demo service](/lxd/try-it/).
+
+  ### Downloads
+  The release tarballs can be found on our [download page](/lxd/downloads/).
