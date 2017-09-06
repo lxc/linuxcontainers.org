@@ -186,7 +186,7 @@ The following table lists the legacy configuration keys on the left side and the
     Legacy Key                           | New Key                       | Comments
     -------------------------------------|-------------------------------|---------
     lxc.aa_profile                       | lxc.apparmor.profile          |
-    lxc.aa_allow_incomplete              | lxc.apparmot.allow_incomplete |
+    lxc.aa_allow_incomplete              | lxc.apparmor.allow_incomplete |
     lxc.console                          | lxc.console.path              |
     lxc.devttydir                        | lxc.tty.dir                   |
     lxc.haltsignal                       | lxc.signal.halt               |
