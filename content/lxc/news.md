@@ -1,5 +1,415 @@
 ![Download icon](/static/img/containers.png)
 # News
+## LXC 2.1 release announcement <span class="text-muted">5th of September 2017</span>
+The LXC team is proud to announce the release of LXC 2.1.  
+This release contains a lot of new features introduced since the release of LXC 2.0.
+
+Note that this isn't a LTS release and we'll therefore only be supporting LXC 2.1 for a year.  
+Production environments that require longer term support should remain on LXC 2.0 which is supported until June 2021.
+
+## New features
+### Resource limit support
+Similar to requesting specific cgroup limits users can specify any limits for any resource  
+the underlying kernel is ware of by prefixing the name of the limit with "lxc.prlimit."  
+in the container's configuration file. For example, to request a limit on the number of processes  
+and a specific nice value the configuration file for the container should contain the entries:
+
+    lxc.prlimit.nproc = unlimited
+    lxc.prlimit.nice = 4
+
+### Support for unprivileged openvswitch networks
+It is now possible to define openvswitch networks as an unprivileged user:
+
+    lxc.net.0.type = veth
+    lxc.net.0.link = ovsbr0
+    lxc.net.0.flags = up
+    lxc.net.0.name = eth0
+
+LXC 2.1. will take care to properly delete the host-side veth device from the  
+openvswitch database on shutdown.
+
+### New `lxc.cgroup.dir` key
+The `lxc.cgroup.dir` key lets users specify the name of the parent cgroup under  
+which the container's cgroup will be created. Setting `lxc.cgroup.dir` will  
+override the system-wide setting for `lxc.cgroup.pattern`.
+
+For example, setting `lxc.cgroup.dir = mycontainers` for a container with `lxc.uts.name = c1`  
+will cause LXC to create the cgroups `mycontainers/c1` for all controllers in the cgroup hierarchy.
+
+### Support for hybrid cgroup layout
+Since the advent of cgroup v2 some init systems have decided to allow for a hybrid mode in which  
+cgroup v1 per-controller hierarchies can be used simultaneously with an empty cgroup v2 hierarchy.  
+Systems that use this hybrid mode usually have a cgroup layout similar to this one:
+
+      /sys/fs/cgroup/blkio
+      /sys/fs/cgroup/devices
+      /sys/fs/cgroup/memory
+      /sys/fs/cgroup/unified
+
+Where the mountpoint `/sys/fs/cgroup/unified` usually indicates the presence of a cgroup v2 hierarchy.  
+This can be confirmed by testing whether `findmnt | grep cgroup2` returns a matching line.  
+LXC 2.1 supports this hybrid mode.
+
+### Limiting the number of ptys a container can allocate
+Setting `lxc.pty.max` will cause LXC to mount the container's devpts with the requested limit  
+on the number of useable ptys. For example, setting `lxc.pty.max = 10` will only allow  
+the container to allocate `10` ptys. The default setting is `1024`.
+
+### `bool lxc_config_item_is_supported(const char *key)` API extension
+This function let's users query the liblxc whether a specific configuration item is supported for this library.  
+This is particularly useful for embedded users that running versions of liblxc that come with significantly  
+less configuration options than the standard liblxc library or liblxc's that have backported new configuration items.
+
+### New log API extension
+
+    struct lxc_log {
+        const char *name;
+        const char *lxcpath;
+        const char *file;
+        const char *level;
+        const char *prefix;
+        bool quiet;
+    };
+
+    /*!
+     *\brief Initialize the log
+     *
+     *\param log lxc log configuration.
+     */
+    int lxc_log_init(struct lxc_log *log);
+
+    /*!
+     * \brief Close log file.
+     */
+    void lxc_log_close(void);
+
+These types and functions let users initialize LXC logging. This is useful for users who use the liblxc API directly.
+
+### Deprecation of `lxc-monitord`
+Starting with LXC 2.1 the `lxc-monitord` binary is marked as deprecated.  
+It is not required anymore to start daemonized containers. Instead, LXC 2.1 switches to an implementation using  
+an abstract unix domain socketpair. This has the advantage of spawning one less processes on container startup which is  
+important for highly threaded users such as `LXD`.
+
+Also, testing the new implementation on heavy workloads has shown this solution to be more robust and reliable in every way.
+
+### `lxc-copy` create snapshots on `tmpfs`
+Place an ephemeral container started with -e flag on a tmpfs.  
+Restrictions are that you cannot request the data to be kept while placing the container on a tmpfs,  
+that either overlay or aufs backing storage must be used, and that the storage backend of the original  
+container must be a directory.
+
+For ephemeral snapshots backed by overlay or aufs filesystems, a fresh tmpfs is mounted over the containers directory  
+if the user requests it. This should be the easiest options. Anything else would require us to change the current  
+mount-layout of overlay and aufs snapshots. A standard overlay or aufs snapshot clone currently has the layout:
+
+            /var/lib/lxc/CLONE_SNAPSHOT/delta0      <-- upperdir
+            /var/lib/lxc/CLONE_SNAPSHOT/rootfs
+            /var/lib/lxc/CLONE_SNAPSHOT/olwork
+            /var/lib/lxc/CLONE_SNAPSHOT/olwork/work <-- workdir
+
+    with the lowerdir being
+
+            /var/lib/lxc/CLONE_PARENT/rootfs
+
+The fact that upperdir and workdir are not placed in a common subfolder under the container directory  
+has the consequence that we cannot simply mount a fresh tmpfs under upperdir and workdir  
+because overlay expects them to be on the same filesystem.
+
+Because we mount a fresh tmpfs over the directory of the container the updated /etc/hostname file created  
+during the clone residing in the upperdir (currently named "delta0" by default) will be hidden.
+
+Hence, if the user requests that the old name is not to be kept for the clone, we recreate this file on the tmpfs.  
+This should be all that is required to restore the exact behaviour we would get with a normal clone.  
+NOTE: If the container is rebooted all changes made to it are lost. This is not easy to prevent since each reboot remounts the rootfs again.
+
+## Configuration changes
+A lot of configuration keys have been renamed to make the experience of configuring a container much more consistent.  
+LXC 2.1 ensures that all keys that have subkeys are properly namespaces via the "." syntax.
+
+### Network configuration
+The network configuration keys have all been given a new prefix. Some of them  have also been renamed.  
+From LXC 2.1. onwards network configuration keys using the "lxc.network" prefix are considered deprecated.  
+They are replaced by network configuration keys using the new "lxc.net" prefix.  
+Furthermore, defining network without indices is marked deprecated.  
+Consider the following *legacy* network configuration:
+
+    lxc.network.type = veth
+    lxc.network.flags = up
+    lxc.network.link = lxcbr0
+    lxc.network.name = wlp2s0
+
+    lxc.network.type = veth
+    lxc.network.flags = up
+    lxc.network.link = lxcbr0
+    lxc.network.name = eno1
+
+Would define two distinct networks. Starting with LXC 2.1 this should be replaced with:
+
+    lxc.net.0.type = veth
+    lxc.net.0.flags = up
+    lxc.net.0.link = lxcbr0
+    lxc.net.0.name = wlp2s0
+
+    lxc.net.1.type = veth
+    lxc.net.1.flags = up
+    lxc.net.1.link = lxcbr0
+    lxc.net.1.name = eno1
+
+Defining networks only in this manner has the advantage of being consistent and order independent.  
+This means an equivalent configuration for the two networks would be:
+
+    lxc.net.1.link = lxcbr0
+    lxc.net.0.name = wlp2s0
+    lxc.net.0.type = veth
+
+    lxc.net.1.type = veth
+    lxc.net.1.flags = up
+    lxc.net.0.flags = up
+    lxc.net.0.link = lxcbr0
+    lxc.net.1.name = eno1
+
+
+Note that when using multiple definitions of the same key with the same index only the last one  
+will be considered by LXC. This is in line with prior LXC version. For example:
+
+    lxc.net.2.link = lxcbr0
+    lxc.net.2.link = lxdbr0
+    lxc.net.2.link = br0
+    lxc.net.2.link = virbr0
+
+Wwould lead to LXC associating the network with `virbr0` since it is the last key in the configuration.
+
+### Table of changed configuration keys
+The following table lists the legacy configuration keys on the left side and their corresponding new keys on the right side. Keys that have been entirely removed will have "-" as entry in the "New Key" column and a comment saying "removed" in the "Comments" table.
+
+    Legacy Key                           | New Key                       | Comments
+    -------------------------------------|-------------------------------|---------
+    lxc.aa_profile                       | lxc.apparmor.profile          |
+    lxc.aa_allow_incomplete              | lxc.apparmot.allow_incomplete |
+    lxc.console                          | lxc.console.path              |
+    lxc.devttydir                        | lxc.tty.dir                   |
+    lxc.haltsignal                       | lxc.signal.halt               |
+    lxc.id_map                           | lxc.idmap                     |
+    lxc.init_cmd                         | lxc.init.cmd                  |
+    lxc.init_gid                         | lxc.init.gid                  |
+    lxc.init_uid                         | lxc.init.uid                  |
+    lxc.kmsg                             | -                             | removed
+    lxc.limit                            | lxc.prlimit                   |
+    lxc.logfile                          | lxc.log.file                  |
+    lxc.loglevel                         | lxc.log.level                 |
+    lxc.mount                            | lxc.mount.fstab               |
+    lxc.network                          | lxc.net                       |
+    lxc.network.                         | lxc.net.[i].                  |
+    lxc.network.flags                    | lxc.net.[i].flags             |
+    lxc.network.hwaddr                   | lxc.net.[i].hwaddr            |
+    lxc.network.ipv4                     | lxc.net.[i].ipv4.address      |
+    lxc.network.ipv4.gateway             | lxc.net.[i].ipv4.gateway      |
+    lxc.network.ipv6                     | lxc.net.[i].ipv6.address      |
+    lxc.network.ipv6.gateway             | lxc.net.[i].ipv6.gateway      |
+    lxc.network.link                     | lxc.net.[i].link              |
+    lxc.network.macvlan.mode             | lxc.net.[i].macvlan.mode      |
+    lxc.network.mtu                      | lxc.net.[i].mtu               |
+    lxc.network.name                     | lxc.net.[i].name              |
+    lxc.network.script.down              | lxc.net.[i].script.down       |
+    lxc.network.script.up                | lxc.net.[i].script.up         |
+    lxc.network.type                     | lxc.net.[i].type              |
+    lxc.network.veth.pair                | lxc.net.[i].veth.pair         |
+    lxc.network.vlan.id                  | lxc.net.[i].vlan.id           |
+    lxc.pivotdir                         | -                             | removed
+    lxc.pts                              | lxc.pty.max                   |
+    lxc.rebootsignal                     | lxc.signal.reboot             |
+    lxc.rootfs                           | lxc.rootfs.path               |
+    lxc.se_context                       | lxc.selinux.context           |
+    lxc.seccomp                          | lxc.seccomp.profile           |
+    lxc.stopsignal                       | lxc.signal.stop               |
+    lxc.syslog                           | lxc.log.syslog                |
+    lxc.tty                              | lxc.tty.max                   |
+    lxc.utsname                          | lxc.uts.name                  |
+
+### `lxc-update-config` script
+LXC 2.1 comes with a new script `lxc-update-config` which can be used to upgrade existing legacy  
+LXC configurations to valid LXC 2.1 configurations by simply passing
+
+    lxc-update-config -c /path/to/config
+
+The script will create a backup of the legacy configuration file first.  
+The name of the backup config file will by `<original-config-file-name>.backup`.  
+The backup is made in case the upgrade does not yield a useable LXC 2.1 config file.  
+After creating the backup the script will replace all legacy configuration keys with their new counterparts.
+
+## Deprecation warnings
+LXC 2.1 intends to be fully backward compatible with respect to pre-2.1 configuration files.  
+This specifically means that the presence of any deprecated keys should not prevent the container from being useable.  
+However, LXC 2.1 will warn about the presence of any deprecated configuration keys.  
+On container startup LXC 2.1 will warn *once* with the message:
+
+    The configuration file contains legacy configuration keys.
+    Please update your configuration file.
+
+All users are advised to use the aforementioned `lxc-update-config` script to update their configuration files.  
+If the container has logging enabled the log will contain warnings for each detected legacy configuration key.  
+This is mostly useful for users who prefer to update their configuration files manually.
+
+# Changelog
+
+ * Core:
+    * af unix: allow for maximum socket name
+    * af\_unix: abstract lxc\_abstract\_unix\_{send,recv}\_fd
+    * android: add prlimit implementation for 32bit
+    * API: expose function lxc\_log\_init
+    * API: add lxc\_config\_item\_is\_supported()
+    * caps: add lxc\_{proc,file}\_cap\_is\_set()
+    * cgroups: handle hybrid cgroup layouts
+    * commands: handle EINTR
+    * commands: add lxc\_cmd\_state\_server()
+    * commands: switch api to new callback system
+    * conf: implement resource limits
+    * conf: check for {filecaps,setuid} on new{g,u}idmap
+    * conf: use bind-mount for /dev/ptmx
+    * conf: add MS\_LAZYTIME to mount options
+    * conf: don't send ttys when none are configured
+    * conf: send ttys in batches of 2
+    * conf: log lxc-user-nic output
+    * conf: refactor network deletion
+    * conf: rework core functions
+    * conf: improve lxc\_map\_ids()
+    * conf: use minimal {g,u}id map
+    * conf: allow writing uid mappings with euid != 0
+    * conf: unstack all mounts atop /dev/console
+    * conf{,ile}: warn user once about legacy config
+    * confile: add lxc\_get\_idmaps()
+    * confile: rework + extend callback system
+    * confile: performance tweaks
+    * confile: add "lxc.cgroup.dir"
+    * confile: list namespaced keys
+    * confile: lxc\_getconfig() -> lxc\_get\_config()
+    * confile: improve get\_network\_config\_ops()
+    * confile: move lxc\_list\_net()
+    * confile: lxc\_listconfigs -> lxc\_list\_config\_items
+    * confile: rework lxc\_list\_net()
+    * confile: lxc.seccomp --> lxc.seccomp.profile
+    * confile: lxc.pts --> lxc.pty.max
+    * confile: lxc.tty --> lxc.tty.max
+    * confile: lxc.net.ipv6 --> lxc.net.ipv6.address
+    * confile: lxc.net.ipv4 --> lxc.net.ipv4.address
+    * confile: lxc.mount --> lxc.mount.fstab
+    * confile: lxc.console --> lxc.console.path
+    * confile: lxc.rootfs --> lxc.rootfs.path
+    * confile: deprecate lxc.rootfs.backend
+    * confile: rename lxc.utsname to lxc.uts.name
+    * confile: rename lxc.devttydir to lxc.tty.dir
+    * confile: namespace lxc.signal keys
+    * confile: namespace lxc.log keys
+    * confile: namespace lxc.init keys
+    * confile: rename lxc.limit to lxc.prlimit
+    * confile: remove lxc.pivotdir
+    * confile: remove lxc.kmsg
+    * confile: properly namespace security keys
+    * doc: adapt to new configuration keys
+    * devpts: use max=<count> option on mount
+    * lsm/AppArmor: Allow containers to start in AppArmor namespaces
+    * lxccontainer: clear whole indexed networks
+    * lxccontainer: switch api to new callback system
+    * lxc-init: report exec\*() failure
+    * lxc-user-nic: keep lines from other {users,links}
+    * lxc-user-nic: fix adding database entries
+    * lxc-user-nic: check db before trying to delete
+    * lxc-user-nic: test privilege over netns on delete
+    * lxc-user-nic: rework renaming net devices
+    * lxc-user-nic: add new {create,delete} subcommands
+    * monitor: simplify abstract socket logic
+    * network: don't delete net devs we didn't create
+    * network: remove allocation from lxc\_mkifname()
+    * network: remove netpipe
+    * network: use correct network device name
+    * network: stop recording saved physical net devices
+    * network: retrieve correct names and ifindices
+    * network: use static memory for net device names
+    * network: retrieve the host's veth device ifindex
+    * network: rework network creation
+    * network: delete ovs for unprivileged networks
+    * network: log ifindex
+    * network: send ifindex for unpriv networks
+    * network: return negative idx for legacy networks
+    * network: test new network configuration parser
+    * network: add new network parser
+    * network: preserve backwards compatibility
+    * network: add test-suite for configuration items
+    * openvswitch: delete ports intelligently
+    * README: add CII Best Practices badge to README
+    * seccomp: set SCMP\_FLTATR\_ATL\_TSKIP if available
+    * start: generalize lxc\_check\_inherited()
+    * start: use separate socket on daemonized start
+    * start: switch from SOCK\_DGRAM to SOCK\_STREAM
+    * start: don't let data\_sock users close the fd
+    * start: ensure cgroups are cleaned up
+    * start: remove utmp watch
+    * start: lxc\_setup() after unshare(CLONE\_NEWCGROUP)
+    * start: dup std{in,out,err} to pty slave
+    * start: add lxc\_init\_handler()
+    * start: add lxc\_free\_handler()
+    * start: pin rootfs when privileged
+    * storage: add lxc\_storage\_get\_path()
+    * storage: add storage\_utils.{c.h}
+    * storage: add overlay as valid backend
+    * storage: rename files "bdev" -> "storage"
+    * storage/aufs: mark deprecated
+    * storage/btrfs: rework btrfs storage driver
+    * storage/loop: rework loop storage driver
+    * storage/lvm: rework lvm backend
+    * storage/overlay: rework overlay storage driver
+    * storage/overlay: correctly restore from snapshot
+    * storage/overlay: correctly handle dependency tracking
+    * storage/rbd: rework rbd storage driver
+    * storage/zfs: rework zfs storage driver
+    * tests: add tests for lxc.cgroup.dir
+    * test: add test to get subkeys
+    * tests: add unit tests for idmap parser
+    * tests: enforce all methods for config items
+    * tree-wide: struct bdev -> struct lxc\_storage
+    * utils: add lxc\_nic\_exists()
+    * utils: switch to has\_fs\_type()
+    * utils: add has\_fs\_type() + is\_fs\_type()
+    * utils: rework lxc\_deslashify()
+    * utils: lxc\_make\_abstract\_socket\_name()
+    * utils: add lxc\_safe\_ulong()
+    * utils: add lxc\_unstack\_mountpoint()
+
+ * Template:
+    * templates/Alpine: Add support for ppc64le
+    * templates/Alpine: use dl-cdn.a.o as default mirror instead of random one
+    * templates/Alpine: add community repository to default repositories
+    * templates/CentOS: use altarch mirror for CentOS on arches other than i386 and x86\_64
+    * templates/CentOS: default to CentOS 7
+    * templates/debian: Use deb.debian.org as the default Debian mirror
+    * templates/debian: jessie and stretch keyring support
+    * templates/debian: Add buster as a valid release
+    * templates/opensuse: support leap 42.3
+    * templates/opensuse: fix tumbleweed software selection
+    * templates/opensuse: add Tumbleweed as supported release
+    * templates/ubuntu: support netplan in newer releases by default
+    * templates/ubuntu: conditionally move upstart ssh job, as it is now optional.
+    * userns.conf: remove obsolete bind-mounts
+
+ * Tools:
+    * lxc-execute: print error message when failed
+    * lxc-update-config: handle legacy networks
+    * tools: add additional cgroup checks
+    * tools: add lxc-update-config.in
+    * tools/lxc-attach: allow for situations without /dev/tty
+    * tools/lxc-checkconfig: Add CONFIG\_NETFILTER\_XT\_MATCH\_COMMENT
+    * tools/lxc-checkconfig: verify new[ug]idmap are setuid-root
+    * tools/lxc-ls: return all containers by default, new filter - list only defined containers.
+
+# Downloads
+The release tarballs may be found on our [download page](https://linuxcontainers.org/lxc/downloads/) and we expect most distributions  
+will very soon ship a packaged version of LXC 2.1.
+
+Should you be interested in individual changes or just looking at the detailed development history,  
+our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-2.1).
+
+
 ## LXC 2.0.8 release announcement <span class="text-muted">11th of May 2017</span>
 This is the eighth bugfix release for LXC 2.0.
 
