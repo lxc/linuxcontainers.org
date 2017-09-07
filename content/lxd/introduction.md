@@ -57,7 +57,7 @@ It's basically an alternative to LXC's tools and distribution template system
 with the added features that come from being controllable over the network.
 
 # Language, licensing and contributions
-LXD is written in GO, it's free software and is developed under the Apache 2 license.
+LXD is written in Go, it's free software and is developed under the Apache 2 license.
 
 There are no CLA or similar legal agreements required to contribute to LXD,  
 however we do require commits be signed-off (following the DCO - Developer Certificate of Ownership).
