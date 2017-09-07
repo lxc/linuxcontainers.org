@@ -1,4 +1,522 @@
+![Download icon](/static/img/containers.png)
 # News
+## LXC 2.1 リリースのお知らせ <!-- LXC 2.1 release announcement --><span class="text-muted">2017 年 9 月 5 日<!-- 5th of September 2017 --></span>
+<!--
+The LXC team is proud to announce the release of LXC 2.1.  
+This release contains a lot of new features introduced since the release of LXC 2.0.
+-->
+LXC チームは LXC 2.1 のリリースをお知らせすることを誇りに思います。
+このリリースには LXC 2.0 以降に追加されたたくさんの機能が含まれています。
+
+<!--
+Note that this isn't a LTS release and we'll therefore only be supporting LXC 2.1 for a year.  
+Production environments that require longer term support should remain on LXC 2.0 which is supported until June 2021.
+-->
+このリリースは LTS リリースではないことに注意してください。LTS リリースではありませんので、LXC 2.1 のサポートは 1 年間のみです。長い期間のサポートが必要なプロダクション環境では 2021 年 6 月までサポートされる LXC 2.0 を使い続けてください。
+
+## 新機能 <!-- New features -->
+### リソース制限のサポート<!-- Resource limit support -->
+<!--
+Similar to requesting specific cgroup limits users can specify any limits for any resource  
+the underlying kernel is ware of by prefixing the name of the limit with "lxc.prlimit."  
+in the container's configuration file. For example, to request a limit on the number of processes  
+and a specific nice value the configuration file for the container should contain the entries:
+-->
+cgroupを使った制限を指定するのと同じように、コンテナの設定ファイル内で、制限名に "lxc.prlimit." というプレフィックスをつけて、カーネルが対応しているすべてのリソースの制限を設定できます。例えば、プロセス数の制限を設定し、同時に nice 値を指定するには、コンテナの設定ファイルで次のように指定します:
+
+    lxc.prlimit.nproc = unlimited
+    lxc.prlimit.nice = 4
+
+### 非特権での Open vSwitch ネットワークのサポート <!-- Support for unprivileged openvswitch networks -->
+<!--
+It is now possible to define openvswitch networks as an unprivileged user:
+-->
+非特権ユーザで次のように openvswitch ネットワークを定義できるようになりました:
+
+    lxc.net.0.type = veth
+    lxc.net.0.link = ovsbr0
+    lxc.net.0.flags = up
+    lxc.net.0.name = eth0
+
+<!--
+LXC 2.1. will take care to properly delete the host-side veth device from the  
+openvswitch database on shutdown.
+-->
+LXC 2.1 は、シャットダウン時に openvswitch からホスト側の veth デバイスを適切に削除する処理を行います。
+
+### 新たな設定項目 `lxc.cgroup.dir` <!-- New `lxc.cgroup.dir` key -->
+<!--
+The `lxc.cgroup.dir` key lets users specify the name of the parent cgroup under  
+which the container's cgroup will be created. Setting `lxc.cgroup.dir` will  
+override the system-wide setting for `lxc.cgroup.pattern`.
+-->
+`lxc.cgroup.dir` を設定することで、コンテナ用の cgroup を作成する親となる cgroup 名を指定できるようになりました。`lxc.cgroup.dir` はシステムワイドの設定である `lxc.cgroup.pattern` を上書きします。
+
+<!--
+For example, setting `lxc.cgroup.dir = mycontainers` for a container with `lxc.uts.name = c1`  
+will cause LXC to create the cgroups `mycontainers/c1` for all controllers in the cgroup hierarchy.
+-->
+例えば、`lxc.uts.name = c1` と設定されたコンテナに `lxc.cgroup.dir = mycontainers` と設定すると、LXC は cgroup 階層内のすべてのコントローラで、`mycontainers/c1` という cgroup を作ります。
+
+### hybrid cgroup レイアウトのサポート <!-- Support for hybrid cgroup layout -->
+<!--
+Since the advent of cgroup v2 some init systems have decided to allow for a hybrid mode in which  
+cgroup v1 per-controller hierarchies can be used simultaneously with an empty cgroup v2 hierarchy.  
+Systems that use this hybrid mode usually have a cgroup layout similar to this one:
+-->
+cgroup v2 が導入されてから、一部の init システムでは cgroup v1 のコントローラごとの階層と、空の cgroup v2 階層を同時に使える hybrid モードが使えるようになりました。hybrid モードを使うシステムは、通常は次と同じような cgroup レイアウトになります:
+
+      /sys/fs/cgroup/blkio
+      /sys/fs/cgroup/devices
+      /sys/fs/cgroup/memory
+      /sys/fs/cgroup/unified
+
+<!--
+Where the mountpoint `/sys/fs/cgroup/unified` usually indicates the presence of a cgroup v2 hierarchy.  
+This can be confirmed by testing whether `findmnt | grep cgroup2` returns a matching line.  
+LXC 2.1 supports this hybrid mode.
+-->
+マウントポイント `/sys/fs/cgroup/unified` は、通常は cgroup v2 階層の存在を示します。これは `findmnt | grep cgroup2` が一致する行を返すかどうかをテストすることで確認できます。LXC 2.1 はこの hybrid モードをサポートします。
+
+### コンテナが割り当てることができる pty の数を制限する <!-- Limiting the number of ptys a container can allocate -->
+<!--
+Setting `lxc.pty.max` will cause LXC to mount the container's devpts with the requested limit  
+on the number of useable ptys. For example, setting `lxc.pty.max = 10` will only allow  
+the container to allocate `10` ptys. The default setting is `1024`.
+-->
+`lxc.pty.max` を設定すると、LXC は、使える pty の数に指定した制限を設定した上で、コンテナの devpts をマウントします。例えば、`lxc.pty.max = 10` と設定すると、コンテナは `10` 個の pty だけしか割り当てられません。デフォルト値は `1024` です。
+
+### `bool lxc_config_item_is_supported(const char *key)` API 拡張 <!-- extension -->
+<!--
+This function let's users query the liblxc whether a specific configuration item is supported for this library.  
+This is particularly useful for embedded users that running versions of liblxc that come with significantly  
+less configuration options than the standard liblxc library or liblxc's that have backported new configuration items.
+-->
+この関数は、特定の設定項目がライブラリでサポートされているかどうかをユーザが問い合わせるための関数です。この関数は、標準的な liblxc ライブラリや、新しい設定項目がバックポートされた liblxc よりもはるかに少ない設定オプションを持つ liblxc のバージョンを実行する組み込みユーザに特に役に立つでしょう。
+
+
+### 新しいログ API 拡張 <!-- New log API extension -->
+
+    struct lxc_log {
+        const char *name;
+        const char *lxcpath;
+        const char *file;
+        const char *level;
+        const char *prefix;
+        bool quiet;
+    };
+
+    /*!
+     *\brief Initialize the log
+     *
+     *\param log lxc log configuration.
+     */
+    int lxc_log_init(struct lxc_log *log);
+
+    /*!
+     * \brief Close log file.
+     */
+    void lxc_log_close(void);
+
+<!--
+These types and functions let users initialize LXC logging. This is useful for users who use the liblxc API directly.
+-->
+上記の構造体や関数は、ユーザが LXC のロギングを初期化できるようにするためのものです。liblxc の API を直接使うユーザには役に立つでしょう。
+
+### `lxc-monitord` が廃止予定に <!-- Deprecation of `lxc-monitord` -->
+<!--
+Starting with LXC 2.1 the `lxc-monitord` binary is marked as deprecated.  
+It is not required anymore to start daemonized containers. Instead, LXC 2.1 switches to an implementation using  
+an abstract unix domain socketpair. This has the advantage of spawning one less processes on container startup which is  
+important for highly threaded users such as `LXD`.
+-->
+LXC 2.1 から `lxc-monitord` バイナリは廃止予定になりました。デーモン化されたコンテナの起動には `lxc-monitord` はもう不要です。代わりに、LXC 2.1 では abstract unix ドメインソケットペアを使った実装に切り替えました。これは、`LXD` のような高度にスレッド化されたコンテナの起動において、起動するプロセスがひとつ少なくなるという利点があります。
+
+<!--
+Also, testing the new implementation on heavy workloads has shown this solution to be more robust and reliable in every way.
+-->
+また、重い負荷で行った新しい実装のテストで、このソリューションがより堅牢で信頼性が高いことがわかりました。
+
+### `lxc-copy` は `tmpfs` 上にスナップショットを作ります <!-- `lxc-copy` create snapshots on `tmpfs` -->
+<!--
+Place an ephemeral container started with -e flag on a tmpfs.  
+Restrictions are that you cannot request the data to be kept while placing the container on a tmpfs,  
+that either overlay or aufs backing storage must be used, and that the storage backend of the original  
+container must be a directory.
+-->
+`-e` オプションを付けて起動した一時的 (ephemeral) なコンテナは tmpfs 上に置かれます。
+tmpfs 上にコンテナを置きながらデータの保存は要求できません。そして、バッキングストアとして overlay か aufs を使わなければならず、オリジナルのコンテナは directory でなくてはいけません。
+
+<!--
+For ephemeral snapshots backed by overlay or aufs filesystems, a fresh tmpfs is mounted over the containers directory  
+if the user requests it. This should be the easiest options. Anything else would require us to change the current  
+mount-layout of overlay and aufs snapshots. A standard overlay or aufs snapshot clone currently has the layout:
+-->
+overlay もしくは aufs ファイルシステムを使った一時的なスナップショットのために、ユーザの要求に応じて新しい tmpfs がコンテナディレクトリ上にマウントされます。これは最も簡単なオプションです。それ以外の場合は、現在の overlay と aufs スナップショットのマウントレイアウトを変更する必要があります。標準では overlay と aufs のスナップショットクローンのレイアウトは次のようになります:
+
+            /var/lib/lxc/CLONE_SNAPSHOT/delta0      <-- upperdir
+            /var/lib/lxc/CLONE_SNAPSHOT/rootfs
+            /var/lib/lxc/CLONE_SNAPSHOT/olwork
+            /var/lib/lxc/CLONE_SNAPSHOT/olwork/work <-- workdir
+
+    with the lowerdir being
+
+            /var/lib/lxc/CLONE_PARENT/rootfs
+
+<!--
+The fact that upperdir and workdir are not placed in a common subfolder under the container directory  
+has the consequence that we cannot simply mount a fresh tmpfs under upperdir and workdir  
+because overlay expects them to be on the same filesystem.
+-->
+upperdir と workdir がコンテナディレクトリ以下の共通のサブディレクトリ内に置かれていないということは、新しい tmpfs を単純に upperdir と workdir の下にマウントできないということになります。なぜなら overlayfs はこのふたつが同じファイルシステム上にあることを期待しているからです。
+
+<!--
+Because we mount a fresh tmpfs over the directory of the container the updated /etc/hostname file created  
+during the clone residing in the upperdir (currently named "delta0" by default) will be hidden.
+-->
+コンテナディレクトリ上に新しい tmpfs をマウントするので、upperdir (現在はデフォルトで "delta0" という名前) 内にクローン中に作成される、更新された `/etc/hostname` ファイルが隠されてしまいます。
+
+<!--
+Hence, if the user requests that the old name is not to be kept for the clone, we recreate this file on the tmpfs.  
+This should be all that is required to restore the exact behaviour we would get with a normal clone.  
+NOTE: If the container is rebooted all changes made to it are lost. This is not easy to prevent since each reboot remounts the rootfs again.
+-->
+したがって、ユーザが古い名前をクローンで保存しないように要求した場合は、このファイルを tmpfs 上に再作成します。
+これで、通常のクローン処理での正確な動作をリストアするために必要なことすべてのはずです。
+注: もしコンテナを再起動した場合、すべての変更は失われます。リブートごとに rootfs が再度マウントされますので、これを防ぐのは容易ではありません。
+
+## 設定項目名の変更 <!-- Configuration changes -->
+<!--
+A lot of configuration keys have been renamed to make the experience of configuring a container much more consistent.  
+LXC 2.1 ensures that all keys that have subkeys are properly namespaces via the "." syntax.
+-->
+コンテナの設定がより一貫性を持って行えるように、多数の設定項目の名前が変わりました。
+LXC 2.1 では、すべての設定項目が "." で分けられた適切なネームスペースから構成されるサブキーを持つようになりました。
+
+### ネットワーク設定 <!-- Network configuration -->
+<!--
+The network configuration keys have all been given a new prefix. Some of them  have also been renamed.  
+From LXC 2.1. onwards network configuration keys using the "lxc.network" prefix are considered deprecated.  
+They are replaced by network configuration keys using the new "lxc.net" prefix.  
+Furthermore, defining network without indices is marked deprecated.  
+Consider the following *legacy* network configuration:
+-->
+ネットワークの設定で、新しいプレフィックスを導入しました。いくつかの項目はリネームされました。
+LXC 2.1 からは、(以前の) "lxc.network" を使ったネットワークの設定項目は廃止予定という扱いになります。
+これは "lxc.net" プレフィックスを使った設定に置き換えられます。
+さらにインデックスを使わないネットワーク定義は廃止予定とマークされます。次のようなネットワーク設定は *legacy* なネットワーク設定であるとみなされます:
+
+    lxc.network.type = veth
+    lxc.network.flags = up
+    lxc.network.link = lxcbr0
+    lxc.network.name = wlp2s0
+
+    lxc.network.type = veth
+    lxc.network.flags = up
+    lxc.network.link = lxcbr0
+    lxc.network.name = eno1
+
+<!--
+Would define two distinct networks. Starting with LXC 2.1 this should be replaced with:
+-->
+上の設定は 2 つの異なったネットワークを定義しています。LXC 2.1 以降は、次のように置き換えてください:
+
+    lxc.net.0.type = veth
+    lxc.net.0.flags = up
+    lxc.net.0.link = lxcbr0
+    lxc.net.0.name = wlp2s0
+
+    lxc.net.1.type = veth
+    lxc.net.1.flags = up
+    lxc.net.1.link = lxcbr0
+    lxc.net.1.name = eno1
+
+<!--
+Defining networks only in this manner has the advantage of being consistent and order independent.  
+This means an equivalent configuration for the two networks would be:
+-->
+この方法だけで定義を行うと、定義する順序には依存しない、一貫性のある定義になる利点があります。
+つまり、次のような 2 つのネットワークの設定と同等となります:
+
+    lxc.net.1.link = lxcbr0
+    lxc.net.0.name = wlp2s0
+    lxc.net.0.type = veth
+
+    lxc.net.1.type = veth
+    lxc.net.1.flags = up
+    lxc.net.0.flags = up
+    lxc.net.0.link = lxcbr0
+    lxc.net.1.name = eno1
+
+<!--
+Note that when using multiple definitions of the same key with the same index only the last one  
+will be considered by LXC. This is in line with prior LXC version. For example:
+-->
+同じインデックスの同じ設定が複数ある場合は、LXC は最後の設定を採用することに注意が必要です。これはこれまでのバージョンの LXC と同じ動作です。例えば:
+
+    lxc.net.2.link = lxcbr0
+    lxc.net.2.link = lxdbr0
+    lxc.net.2.link = br0
+    lxc.net.2.link = virbr0
+
+<!--
+would lead to LXC associating the network with `virbr0` since it is the last key in the configuration.
+-->
+上のような設定では、LXC は、最後の設定が `virbr0` に設定されているため、ネットワークは `virbr0` に関連付けられます。
+
+### 変更された設定項目一覧 <!-- Table of changed configuration keys -->
+<!--
+The following table lists the legacy configuration keys on the left side and their corresponding new keys on the right side. Keys that have been entirely removed will have "-" as entry in the "New Key" column and a comment saying "removed" in the "Comments" table.
+-->
+次の表は左の列に以前の設定項目 ("Legacy Key") を、右の列に変更後の設定項目 ("New Key") を一覧したものです。完全に削除された項目は、"New Key" に "-" と表記し、"Comments" 欄に "removed" と書いています。
+
+    Legacy Key                           | New Key                       | Comments
+    -------------------------------------|-------------------------------|---------
+    lxc.aa_profile                       | lxc.apparmor.profile          |
+    lxc.aa_allow_incomplete              | lxc.apparmor.allow_incomplete |
+    lxc.console                          | lxc.console.path              |
+    lxc.devttydir                        | lxc.tty.dir                   |
+    lxc.haltsignal                       | lxc.signal.halt               |
+    lxc.id_map                           | lxc.idmap                     |
+    lxc.init_cmd                         | lxc.init.cmd                  |
+    lxc.init_gid                         | lxc.init.gid                  |
+    lxc.init_uid                         | lxc.init.uid                  |
+    lxc.kmsg                             | -                             | removed
+    lxc.limit                            | lxc.prlimit                   |
+    lxc.logfile                          | lxc.log.file                  |
+    lxc.loglevel                         | lxc.log.level                 |
+    lxc.mount                            | lxc.mount.fstab               |
+    lxc.network                          | lxc.net                       |
+    lxc.network.                         | lxc.net.[i].                  |
+    lxc.network.flags                    | lxc.net.[i].flags             |
+    lxc.network.hwaddr                   | lxc.net.[i].hwaddr            |
+    lxc.network.ipv4                     | lxc.net.[i].ipv4.address      |
+    lxc.network.ipv4.gateway             | lxc.net.[i].ipv4.gateway      |
+    lxc.network.ipv6                     | lxc.net.[i].ipv6.address      |
+    lxc.network.ipv6.gateway             | lxc.net.[i].ipv6.gateway      |
+    lxc.network.link                     | lxc.net.[i].link              |
+    lxc.network.macvlan.mode             | lxc.net.[i].macvlan.mode      |
+    lxc.network.mtu                      | lxc.net.[i].mtu               |
+    lxc.network.name                     | lxc.net.[i].name              |
+    lxc.network.script.down              | lxc.net.[i].script.down       |
+    lxc.network.script.up                | lxc.net.[i].script.up         |
+    lxc.network.type                     | lxc.net.[i].type              |
+    lxc.network.veth.pair                | lxc.net.[i].veth.pair         |
+    lxc.network.vlan.id                  | lxc.net.[i].vlan.id           |
+    lxc.pivotdir                         | -                             | removed
+    lxc.pts                              | lxc.pty.max                   |
+    lxc.rebootsignal                     | lxc.signal.reboot             |
+    lxc.rootfs                           | lxc.rootfs.path               |
+    lxc.se_context                       | lxc.selinux.context           |
+    lxc.seccomp                          | lxc.seccomp.profile           |
+    lxc.stopsignal                       | lxc.signal.stop               |
+    lxc.syslog                           | lxc.log.syslog                |
+    lxc.tty                              | lxc.tty.max                   |
+    lxc.utsname                          | lxc.uts.name                  |
+
+### `lxc-update-config` スクリプト <!-- script -->
+<!--
+LXC 2.1 comes with a new script `lxc-update-config` which can be used to upgrade existing legacy  
+LXC configurations to valid LXC 2.1 configurations by simply passing
+-->
+LXC 2.1 には新しく `lxc-update-config` スクリプトが付属します。これは、以前の設定項目名を LXC 2.1 で有効な設定にアップグレードするのに使えます。次のように実行します
+
+    lxc-update-config -c /path/to/config
+
+<!--
+The script will create a backup of the legacy configuration file first.  
+The name of the backup config file will by `<original-config-file-name>.backup`.  
+The backup is made in case the upgrade does not yield a useable LXC 2.1 config file.  
+After creating the backup the script will replace all legacy configuration keys with their new counterparts.
+-->
+このスクリプトは、最初に現在の設定ファイルのバックアップを取得します。
+バックアップファイルの名前は `<original-config-file-name>.backup です。
+バックアップファイルは、万が一、アップグレードで生成した設定ファイルが LXC 2.1 で使えないのに備えて作成します。
+バックアップを生成したあと、スクリプトが以前の設定が新しい設定に置き換えます。
+
+## 廃止予定の警告 <!-- Deprecation warnings -->
+<!--
+LXC 2.1 intends to be fully backward compatible with respect to pre-2.1 configuration files.  
+This specifically means that the presence of any deprecated keys should not prevent the container from being useable.  
+However, LXC 2.1 will warn about the presence of any deprecated configuration keys.  
+On container startup LXC 2.1 will warn *once* with the message:
+-->
+LXC 2.1 は 2.1 より前の設定ファイルとの完全な下位互換性を持っています。
+つまり、いかなる廃止予定の設定であっても、コンテナが使えなくなるようにはなりません。しかし、LXC 2.1 は廃止予定の設定があると警告を行います。コンテナの起動時に、LXC 2.1 は *一度だけ* 次のような警告メッセージを出力します:
+
+    The configuration file contains legacy configuration keys.
+    Please update your configuration file.
+
+<!--
+All users are advised to use the aforementioned `lxc-update-config` script to update their configuration files.  
+If the container has logging enabled the log will contain warnings for each detected legacy configuration key.  
+This is mostly useful for users who prefer to update their configuration files manually.
+-->
+すべてのユーザは、前述の `lxc-update-config` スクリプトを使って、設定ファイルを更新することをおすすめします。
+コンテナでロギングが有効な場合、ログには検出された以前の設定項目に関する警告が含まれます。ログを使えば、手動で設定ファイルを更新するほうが好きなユーザの役に立つでしょう。
+
+
+# Changelog
+
+(この部分の翻訳は近日中に公開予定です。/ We are going to release the translation of this part soon.)
+
+ * Core:
+    * af unix: allow for maximum socket name
+    * af\_unix: abstract lxc\_abstract\_unix\_{send,recv}\_fd
+    * android: add prlimit implementation for 32bit
+    * API: expose function lxc\_log\_init
+    * API: add lxc\_config\_item\_is\_supported()
+    * caps: add lxc\_{proc,file}\_cap\_is\_set()
+    * cgroups: handle hybrid cgroup layouts
+    * commands: handle EINTR
+    * commands: add lxc\_cmd\_state\_server()
+    * commands: switch api to new callback system
+    * conf: implement resource limits
+    * conf: check for {filecaps,setuid} on new{g,u}idmap
+    * conf: use bind-mount for /dev/ptmx
+    * conf: add MS\_LAZYTIME to mount options
+    * conf: don't send ttys when none are configured
+    * conf: send ttys in batches of 2
+    * conf: log lxc-user-nic output
+    * conf: refactor network deletion
+    * conf: rework core functions
+    * conf: improve lxc\_map\_ids()
+    * conf: use minimal {g,u}id map
+    * conf: allow writing uid mappings with euid != 0
+    * conf: unstack all mounts atop /dev/console
+    * conf{,ile}: warn user once about legacy config
+    * confile: add lxc\_get\_idmaps()
+    * confile: rework + extend callback system
+    * confile: performance tweaks
+    * confile: add "lxc.cgroup.dir"
+    * confile: list namespaced keys
+    * confile: lxc\_getconfig() -> lxc\_get\_config()
+    * confile: improve get\_network\_config\_ops()
+    * confile: move lxc\_list\_net()
+    * confile: lxc\_listconfigs -> lxc\_list\_config\_items
+    * confile: rework lxc\_list\_net()
+    * confile: lxc.seccomp --> lxc.seccomp.profile
+    * confile: lxc.pts --> lxc.pty.max
+    * confile: lxc.tty --> lxc.tty.max
+    * confile: lxc.net.ipv6 --> lxc.net.ipv6.address
+    * confile: lxc.net.ipv4 --> lxc.net.ipv4.address
+    * confile: lxc.mount --> lxc.mount.fstab
+    * confile: lxc.console --> lxc.console.path
+    * confile: lxc.rootfs --> lxc.rootfs.path
+    * confile: deprecate lxc.rootfs.backend
+    * confile: rename lxc.utsname to lxc.uts.name
+    * confile: rename lxc.devttydir to lxc.tty.dir
+    * confile: namespace lxc.signal keys
+    * confile: namespace lxc.log keys
+    * confile: namespace lxc.init keys
+    * confile: rename lxc.limit to lxc.prlimit
+    * confile: remove lxc.pivotdir
+    * confile: remove lxc.kmsg
+    * confile: properly namespace security keys
+    * doc: adapt to new configuration keys
+    * devpts: use max=<count> option on mount
+    * lsm/AppArmor: Allow containers to start in AppArmor namespaces
+    * lxccontainer: clear whole indexed networks
+    * lxccontainer: switch api to new callback system
+    * lxc-init: report exec\*() failure
+    * lxc-user-nic: keep lines from other {users,links}
+    * lxc-user-nic: fix adding database entries
+    * lxc-user-nic: check db before trying to delete
+    * lxc-user-nic: test privilege over netns on delete
+    * lxc-user-nic: rework renaming net devices
+    * lxc-user-nic: add new {create,delete} subcommands
+    * monitor: simplify abstract socket logic
+    * network: don't delete net devs we didn't create
+    * network: remove allocation from lxc\_mkifname()
+    * network: remove netpipe
+    * network: use correct network device name
+    * network: stop recording saved physical net devices
+    * network: retrieve correct names and ifindices
+    * network: use static memory for net device names
+    * network: retrieve the host's veth device ifindex
+    * network: rework network creation
+    * network: delete ovs for unprivileged networks
+    * network: log ifindex
+    * network: send ifindex for unpriv networks
+    * network: return negative idx for legacy networks
+    * network: test new network configuration parser
+    * network: add new network parser
+    * network: preserve backwards compatibility
+    * network: add test-suite for configuration items
+    * openvswitch: delete ports intelligently
+    * README: add CII Best Practices badge to README
+    * seccomp: set SCMP\_FLTATR\_ATL\_TSKIP if available
+    * start: generalize lxc\_check\_inherited()
+    * start: use separate socket on daemonized start
+    * start: switch from SOCK\_DGRAM to SOCK\_STREAM
+    * start: don't let data\_sock users close the fd
+    * start: ensure cgroups are cleaned up
+    * start: remove utmp watch
+    * start: lxc\_setup() after unshare(CLONE\_NEWCGROUP)
+    * start: dup std{in,out,err} to pty slave
+    * start: add lxc\_init\_handler()
+    * start: add lxc\_free\_handler()
+    * start: pin rootfs when privileged
+    * storage: add lxc\_storage\_get\_path()
+    * storage: add storage\_utils.{c.h}
+    * storage: add overlay as valid backend
+    * storage: rename files "bdev" -> "storage"
+    * storage/aufs: mark deprecated
+    * storage/btrfs: rework btrfs storage driver
+    * storage/loop: rework loop storage driver
+    * storage/lvm: rework lvm backend
+    * storage/overlay: rework overlay storage driver
+    * storage/overlay: correctly restore from snapshot
+    * storage/overlay: correctly handle dependency tracking
+    * storage/rbd: rework rbd storage driver
+    * storage/zfs: rework zfs storage driver
+    * tests: add tests for lxc.cgroup.dir
+    * test: add test to get subkeys
+    * tests: add unit tests for idmap parser
+    * tests: enforce all methods for config items
+    * tree-wide: struct bdev -> struct lxc\_storage
+    * utils: add lxc\_nic\_exists()
+    * utils: switch to has\_fs\_type()
+    * utils: add has\_fs\_type() + is\_fs\_type()
+    * utils: rework lxc\_deslashify()
+    * utils: lxc\_make\_abstract\_socket\_name()
+    * utils: add lxc\_safe\_ulong()
+    * utils: add lxc\_unstack\_mountpoint()
+
+ * Template:
+    * templates/Alpine: Add support for ppc64le
+    * templates/Alpine: use dl-cdn.a.o as default mirror instead of random one
+    * templates/Alpine: add community repository to default repositories
+    * templates/CentOS: use altarch mirror for CentOS on arches other than i386 and x86\_64
+    * templates/CentOS: default to CentOS 7
+    * templates/debian: Use deb.debian.org as the default Debian mirror
+    * templates/debian: jessie and stretch keyring support
+    * templates/debian: Add buster as a valid release
+    * templates/opensuse: support leap 42.3
+    * templates/opensuse: fix tumbleweed software selection
+    * templates/opensuse: add Tumbleweed as supported release
+    * templates/ubuntu: support netplan in newer releases by default
+    * templates/ubuntu: conditionally move upstart ssh job, as it is now optional.
+    * userns.conf: remove obsolete bind-mounts
+
+ * Tools:
+    * lxc-execute: print error message when failed
+    * lxc-update-config: handle legacy networks
+    * tools: add additional cgroup checks
+    * tools: add lxc-update-config.in
+    * tools/lxc-attach: allow for situations without /dev/tty
+    * tools/lxc-checkconfig: Add CONFIG\_NETFILTER\_XT\_MATCH\_COMMENT
+    * tools/lxc-checkconfig: verify new[ug]idmap are setuid-root
+    * tools/lxc-ls: return all containers by default, new filter - list only defined containers.
+
+# Downloads
+The release tarballs may be found on our [download page](https://linuxcontainers.org/lxc/downloads/) and we expect most distributions  
+will very soon ship a packaged version of LXC 2.1.
+
+Should you be interested in individual changes or just looking at the detailed development history,  
+our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-2.1).
+
+
 ## LXC 2.0.8 リリースのお知らせ <!-- LXC 2.0.8 release announcement --><span class="text-muted">2017 年 5 月 11 日 <!-- 11th of May 2017 --></span>
 <!--
 This is the eighth bugfix release for LXC 2.0.

@@ -178,7 +178,7 @@ will be considered by LXC. This is in line with prior LXC version. For example:
     lxc.net.2.link = br0
     lxc.net.2.link = virbr0
 
-Wwould lead to LXC associating the network with `virbr0` since it is the last key in the configuration.
+would lead to LXC associating the network with `virbr0` since it is the last key in the configuration.
 
 ### Table of changed configuration keys
 The following table lists the legacy configuration keys on the left side and their corresponding new keys on the right side. Keys that have been entirely removed will have "-" as entry in the "New Key" column and a comment saying "removed" in the "Comments" table.
