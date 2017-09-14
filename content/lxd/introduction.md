@@ -64,6 +64,7 @@ however we do require commits be signed-off (following the DCO - Developer Certi
 
 # Support
 LXD has two kind of releases:
+
  * LTS releases
  * Feature releases
 
