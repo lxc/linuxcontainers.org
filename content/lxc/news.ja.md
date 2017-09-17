@@ -358,43 +358,41 @@ This is mostly useful for users who prefer to update their configuration files m
 
 # Changelog
 
-(この部分の翻訳は近日中に公開予定です。/ We are going to release the translation of this part soon.)
-
- * Core:
-    * af unix: allow for maximum socket name
-    * af\_unix: abstract lxc\_abstract\_unix\_{send,recv}\_fd
-    * android: add prlimit implementation for 32bit
-    * API: expose function lxc\_log\_init
-    * API: add lxc\_config\_item\_is\_supported()
-    * caps: add lxc\_{proc,file}\_cap\_is\_set()
-    * cgroups: handle hybrid cgroup layouts
-    * commands: handle EINTR
-    * commands: add lxc\_cmd\_state\_server()
-    * commands: switch api to new callback system
-    * conf: implement resource limits
-    * conf: check for {filecaps,setuid} on new{g,u}idmap
-    * conf: use bind-mount for /dev/ptmx
-    * conf: add MS\_LAZYTIME to mount options
-    * conf: don't send ttys when none are configured
-    * conf: send ttys in batches of 2
-    * conf: log lxc-user-nic output
-    * conf: refactor network deletion
-    * conf: rework core functions
-    * conf: improve lxc\_map\_ids()
-    * conf: use minimal {g,u}id map
-    * conf: allow writing uid mappings with euid != 0
-    * conf: unstack all mounts atop /dev/console
-    * conf{,ile}: warn user once about legacy config
-    * confile: add lxc\_get\_idmaps()
-    * confile: rework + extend callback system
-    * confile: performance tweaks
-    * confile: add "lxc.cgroup.dir"
-    * confile: list namespaced keys
+ * コア <!-- Core -->:
+    * af unix: ソケット名を最大長まで指定できるようになりました (訳注: Abstract unix ソケットの名前)<!-- allow for maximum socket name -->
+    * af\_unix: いくつかの関数で同時に複数の fd を送受信できるようにしました <!-- abstract lxc\_abstract\_unix\_{send,recv}\_fd -->
+    * android: 32bit の prlimit の実装を追加しました <!-- add prlimit implementation for 32bit -->
+    * API: lxc\_log\_init を API として公開しました <!-- expose function lxc\_log\_init -->
+    * API: lxc\_config\_item\_is\_supported() 関数を追加しました <!-- add lxc\_config\_item\_is\_supported() -->
+    * caps: lxc\_{proc,file}\_cap\_is\_set() 関数を追加しました <!-- add lxc\_{proc,file}\_cap\_is\_set() -->
+    * cgroups: hybrid cgroup レイアウトを扱えるようになりました<!-- handle hybrid cgroup layouts -->
+    * commands: EINTR を扱うようになりました <!-- handle EINTR -->
+    * commands: lxc\_cmd\_state\_server() 関数を追加しました <!-- add lxc\_cmd\_state\_server() -->
+    * commands: API を新しいコールバックシステムへ切り替えました <!-- switch api to new callback system -->
+    * conf: リソース制限を実装しました <!-- implement resource limits -->
+    * conf: new{g,u}idmap で必要な特権を持っているかチェックするようになりました <!--  check for {filecaps,setuid} on new{g,u}idmap -->
+    * conf: /dev/ptmx でバインドマウントを使うようになりました <!-- use bind-mount for /dev/ptmx -->
+    * conf: マウントオプションに MS\_LAZYTIME を追加しました <!-- add MS\_LAZYTIME to mount options -->
+    * conf: 設定されていない場合は tty を送らないようになりました <!-- don't send ttys when none are configured -->
+    * conf: tty を 2 つ同時に送るようにしました <!-- send ttys in batches of 2 -->
+    * conf: lxc-user-nic の出力をログするようにしました <!-- log lxc-user-nic output -->
+    * conf: ネットワークの削除を再構築しました <!-- refactor network deletion -->
+    * conf: コア関数を書き直しました <!-- rework core functions -->
+    * conf: lxc\_map\_ids() 関数を改良しました (訳注: コマンドの権限と存在のチェックを追加) <!-- improve lxc\_map\_ids() -->
+    * conf: uid,gidのマッピングは最小限だけ使うようにしました <!-- use minimal {g,u}id map -->
+    * conf: euid != 0 でも uid マッピングが書き込めるようになりました (訳注: 非特権ユーザが自身の id だけをマップできるようになりました)<!-- allow writing uid mappings with euid != 0 -->
+    * conf: /dev/console 上のすべてのマウントをアンマウントするようになりました <!-- unstack all mounts atop /dev/console -->
+    * conf{,ile}: 以前の設定項目の場合、ユーザに一度だけ警告するようになりました <!-- warn user once about legacy config -->
+    * confile: lxc\_get\_idmaps() 関数を追加しました (訳注: コンテナが定義したidmapを取得する)<!-- add lxc\_get\_idmaps() -->
+    * confile: コールバックシステムを作りなおして拡張しました <!-- rework + extend callback system -->
+    * confile: パフォーマンスの調整を行いました <!-- performance tweaks -->
+    * confile: "lxc.cgroup.dir" を追加しました <!-- add "lxc.cgroup.dir" -->
+    * confile: namespace内の設定項目を一覧できる関数を追加しました (訳注: "lxc.net"のようにキーを与えると、そのnamespaceに属する設定項目を一覧する)<!-- list namespaced keys -->
     * confile: lxc\_getconfig() -> lxc\_get\_config()
-    * confile: improve get\_network\_config\_ops()
-    * confile: move lxc\_list\_net()
+    * confile: get\_network\_config\_ops() 関数を改良しました <!-- improve get\_network\_config\_ops() -->
+    * confile: lxc\_list\_net() のファイル内での位置を移動しました <!-- move lxc\_list\_net() -->
     * confile: lxc\_listconfigs -> lxc\_list\_config\_items
-    * confile: rework lxc\_list\_net()
+    * confile: lxc\_list\_net() を作りなおしました <!-- rework lxc\_list\_net() -->
     * confile: lxc.seccomp --> lxc.seccomp.profile
     * confile: lxc.pts --> lxc.pty.max
     * confile: lxc.tty --> lxc.tty.max
@@ -403,118 +401,123 @@ This is mostly useful for users who prefer to update their configuration files m
     * confile: lxc.mount --> lxc.mount.fstab
     * confile: lxc.console --> lxc.console.path
     * confile: lxc.rootfs --> lxc.rootfs.path
-    * confile: deprecate lxc.rootfs.backend
-    * confile: rename lxc.utsname to lxc.uts.name
-    * confile: rename lxc.devttydir to lxc.tty.dir
-    * confile: namespace lxc.signal keys
-    * confile: namespace lxc.log keys
-    * confile: namespace lxc.init keys
-    * confile: rename lxc.limit to lxc.prlimit
-    * confile: remove lxc.pivotdir
-    * confile: remove lxc.kmsg
-    * confile: properly namespace security keys
-    * doc: adapt to new configuration keys
-    * devpts: use max=<count> option on mount
-    * lsm/AppArmor: Allow containers to start in AppArmor namespaces
-    * lxccontainer: clear whole indexed networks
-    * lxccontainer: switch api to new callback system
-    * lxc-init: report exec\*() failure
-    * lxc-user-nic: keep lines from other {users,links}
-    * lxc-user-nic: fix adding database entries
-    * lxc-user-nic: check db before trying to delete
-    * lxc-user-nic: test privilege over netns on delete
-    * lxc-user-nic: rework renaming net devices
-    * lxc-user-nic: add new {create,delete} subcommands
-    * monitor: simplify abstract socket logic
-    * network: don't delete net devs we didn't create
-    * network: remove allocation from lxc\_mkifname()
-    * network: remove netpipe
-    * network: use correct network device name
-    * network: stop recording saved physical net devices
-    * network: retrieve correct names and ifindices
-    * network: use static memory for net device names
-    * network: retrieve the host's veth device ifindex
-    * network: rework network creation
-    * network: delete ovs for unprivileged networks
-    * network: log ifindex
-    * network: send ifindex for unpriv networks
-    * network: return negative idx for legacy networks
-    * network: test new network configuration parser
-    * network: add new network parser
-    * network: preserve backwards compatibility
-    * network: add test-suite for configuration items
-    * openvswitch: delete ports intelligently
-    * README: add CII Best Practices badge to README
-    * seccomp: set SCMP\_FLTATR\_ATL\_TSKIP if available
-    * start: generalize lxc\_check\_inherited()
-    * start: use separate socket on daemonized start
-    * start: switch from SOCK\_DGRAM to SOCK\_STREAM
-    * start: don't let data\_sock users close the fd
-    * start: ensure cgroups are cleaned up
-    * start: remove utmp watch
-    * start: lxc\_setup() after unshare(CLONE\_NEWCGROUP)
-    * start: dup std{in,out,err} to pty slave
-    * start: add lxc\_init\_handler()
-    * start: add lxc\_free\_handler()
-    * start: pin rootfs when privileged
-    * storage: add lxc\_storage\_get\_path()
-    * storage: add storage\_utils.{c.h}
-    * storage: add overlay as valid backend
-    * storage: rename files "bdev" -> "storage"
-    * storage/aufs: mark deprecated
-    * storage/btrfs: rework btrfs storage driver
-    * storage/loop: rework loop storage driver
-    * storage/lvm: rework lvm backend
-    * storage/overlay: rework overlay storage driver
-    * storage/overlay: correctly restore from snapshot
-    * storage/overlay: correctly handle dependency tracking
-    * storage/rbd: rework rbd storage driver
-    * storage/zfs: rework zfs storage driver
-    * tests: add tests for lxc.cgroup.dir
-    * test: add test to get subkeys
-    * tests: add unit tests for idmap parser
-    * tests: enforce all methods for config items
+    * confile: lxc.rootfs.backend は廃止予定になりました (訳注: `lxc.rootfs.path`でパスと同時に設定するようになった。例: `lxc.rootfs.path = btrfs:/path/to/root`)<!-- deprecate lxc.rootfs.backend -->
+    * confile: lxc.utsname --> lxc.uts.name <!-- rename lxc.utsname to lxc.uts.name -->
+    * confile: lxc.devttydir --> lxc.tty.dir <!-- rename lxc.devttydir to lxc.tty.dir -->
+    * confile: シグナル用の namespace である lxc.signal を新設しました <!-- namespace lxc.signal keys -->
+    * confile: ログ用の namespace である lxc.log を新設しました <!-- namespace lxc.log keys -->
+    * confile: コンテナの init 用の namespace である lxc.inet を新設しました <!-- namespace lxc.init keys -->
+    * confile: lxc.limit --> lxc.prlimit <!-- rename lxc.limit to lxc.prlimit -->
+    * confile: lxc.pivotdir を廃止しました <!-- remove lxc.pivotdir -->
+    * confile: lxc.kmsg を廃止しました <!-- remove lxc.kmsg -->
+    * confile: セキュリティ関連の namespace を適切に設定しました (訳注: `lxc.apparmor` と `lxc.selinux`)<!--properly namespace security keys -->
+    * doc: 新しい設定項目に書き換えました <!-- adapt to new configuration keys -->
+    * devpts: マウント時に max=<count> を使うようになりました <!-- use max=<count> option on mount -->
+    * lsm/AppArmor: コンテナが AppArmor namespace 内で起動できるようになりました <!-- Allow containers to start in AppArmor namespaces -->
+    * lxccontainer: インデックスで指定されたネットワークをすべてクリアするようになりました <!-- clear whole indexed networks -->
+    * lxccontainer: 新しいコールバックシステムに API を切り替えました <!-- switch api to new callback system -->
+    * lxc-init: exec\*() の失敗を報告するようになりました <!-- report exec\*() failure -->
+    * lxc-user-nic: 指定したユーザやリンク以外の行を削除しないようにしました <!-- keep lines from other {users,links} -->
+    * lxc-user-nic: データベースにエントリを追加する際の問題を修正しました <!-- fix adding database entries -->
+    * lxc-user-nic: 消去する前にデータベースをチェックするようにしました <!-- check db before trying to delete -->
+    * lxc-user-nic: delete コマンドを実行する際にネットワーク名前空間上で必要な権限があるかどうかチェックするようにしました <!-- test privilege over netns on delete -->
+    * lxc-user-nic: ネットデバイスをリネームする処理を書き換えました <!-- rework renaming net devices -->
+    * lxc-user-nic: 新たに create と delete というサブコマンドを追加しました <!-- add new {create,delete} subcommands -->
+    * monitor: abstract ソケットのロジックを簡素化しました <!-- simplify abstract socket logic -->
+    * network: 作成していないネットワークデバイスを削除しないようにしました <!-- don't delete net devs we didn't create -->
+    * network: lxc\_mkifname() を使う場面ではメモリを確保しないようにしました <!-- remove allocation from lxc\_mkifname() -->
+    * network: netpipe の使用を削除しました <!-- remove netpipe -->
+    * network: 正しいネットワークデバイス名を使うようになりました <!-- use correct network device name -->
+    * network: 保存した物理ネットデバイスの記録を止めました <!-- stop recording saved physical net devices -->
+    * network: 正しいネットワークデバイス名とインターフェースインデックスを取得するようになりました <!-- retrieve correct names and ifindices -->
+    * network: ネットデバイス名にはサイズを静的に割り当てた変数を使うようになりました <!-- use static memory for net device names -->
+    * network: ホスト側の veth デバイスのインターフェースインデックスを取得するようになりました <!-- retrieve the host's veth device ifindex -->
+    * network: ネットワーク作成部分を作り直しました <!-- rework network creation -->
+    * network: 非特権ネットワークのための Open vSwitch を削除しました <!-- delete ovs for unprivileged networks -->
+    * network: インターフェースインデックスをログに記録するようにしました <!-- log ifindex -->
+    * network: 非特権ネットワークでインターフェースインデックスを使うようにしました <!-- send ifindex for unpriv networks -->
+    * network: レガシーネットワークではマイナス値を返すようにしました <!-- return negative idx for legacy networks -->
+    * network: 新しいネットワーク設定パーサをテストするようにしました <!-- test new network configuration parser -->
+    * network: 新しいネットワークパーサを追加しました <!-- add new network parser -->
+    * network: 下位互換性を確保するようにしました <!-- preserve backwards compatibility -->
+    * network: 設定アイテムのテストスイートを追加しました <!-- add test-suite for configuration items -->
+    * openvswitch: ポートをインテリジェントに削除するようにしました <!-- delete ports intelligently -->
+    * README: CII Best Practices のバッヂを追加しました <!-- add CII Best Practices badge to README -->
+    * seccomp: 利用出来る場合は SCMP\_FLTATR\_ATL\_TSKIP をセットするようにしました <!-- set SCMP\_FLTATR\_ATL\_TSKIP if available -->
+    * start: lxc\_check\_inherited() を一般化しました <!-- generalize lxc\_check\_inherited() -->
+    * start: デーモンとして起動する場合は分離したソケットを使うようにしました <!-- use separate socket on daemonized start -->
+    * start: SOCK\_DGRAM から SOCK\_STREAM へ切り替えました <!-- switch from SOCK\_DGRAM to SOCK\_STREAM -->
+    * start: data\_sock を使っている側が fd を close しないようにしました (訳注: fd を作成していない関数内で閉じないようにした)<!-- don't let data\_sock users close the fd -->
+    * start: cgroup が確実にクリーンアップされるようにしました <!-- ensure cgroups are cleaned up -->
+    * start: utmp をウォッチするのをやめました <!-- remove utmp watch -->
+    * start: unshare(CLONE\_NEWCGROUP) のあとで lxc\_setup() するようにしました <!-- lxc\_setup() after unshare(CLONE\_NEWCGROUP) -->
+    * start: pty スレーブに std{in,out,err} を複製するようにしました <!-- dup std{in,out,err} to pty slave -->
+    * start: lxc\_init\_handler() を追加しました <!-- add lxc\_init\_handler() -->
+    * start: lxc\_free\_handler() を追加しました <!-- add lxc\_free\_handler() -->
+    * start: 特権の場合に rootfs を pin するようにしました <!-- pin rootfs when privileged -->
+    * storage: lxc\_storage\_get\_path() 関数を追加しました (訳注: コンテナディレクトリのパスを返す)<!-- add lxc\_storage\_get\_path() -->
+    * storage: storage\_utils.{c.h} を追加しました <!-- add storage\_utils.{c.h} -->
+    * storage: "overlay" という名前も有効なバックエンド名として受け付けるようにしました <!-- add overlay as valid backend -->
+    * storage: ストレージ関係のファイル名やディレクトリ名に付いていた "bdev" という文字列を "storage" に変更しました。 <!-- rename files "bdev" -> "storage" -->
+    * storage/aufs: 廃止予定になりました <!-- mark deprecated -->
+    * storage/btrfs: btrfs ストレージドライバを作りなおしました <!-- rework btrfs storage driver -->
+    * storage/loop: loop ストレージドライバを作りなおしました <!-- rework loop storage driver -->
+    * storage/lvm: lvm バックエンドを作りなおしました <!-- rework lvm backend -->
+    * storage/overlay: overlay ストレージドライバを作りなおしました <!-- rework overlay storage driver -->
+    * storage/overlay: スナップショットから正しくリストアされるようにしました <!-- correctly restore from snapshot -->
+    * storage/overlay: 依存のトラッキングが正しく扱われるようにしました <!-- correctly handle dependency tracking -->
+    * storage/rbd: rbd ストレージドライバを作りなおしました <!-- rework rbd storage driver -->
+    * storage/zfs: zfs ストレージドライバを作りなおしました <!-- rework zfs storage driver -->
+    * tests: lxc.cgroup.dir のテストを追加しました <!-- add tests for lxc.cgroup.dir -->
+    * test: サブキーを取得するテストを追加しました <!-- add test to get subkeys -->
+    * tests: idmap パーサのユニットテストを追加しました <!-- add unit tests for idmap parser -->
+    * tests: すべての設定項目に対してすべてメソッドが実装されているかのチェックを追加しました <!-- enforce all methods for config items -->
     * tree-wide: struct bdev -> struct lxc\_storage
-    * utils: add lxc\_nic\_exists()
-    * utils: switch to has\_fs\_type()
-    * utils: add has\_fs\_type() + is\_fs\_type()
-    * utils: rework lxc\_deslashify()
-    * utils: lxc\_make\_abstract\_socket\_name()
-    * utils: add lxc\_safe\_ulong()
-    * utils: add lxc\_unstack\_mountpoint()
+    * utils: lxc\_nic\_exists() 関数を追加しました <!-- add lxc\_nic\_exists() -->
+    * utils: ファイルシステムタイプを判別する部分は has\_fs\_type() を使うように変更しました <!-- switch to has\_fs\_type() -->
+    * utils: has\_fs\_type() + is\_fs\_type() を追加しました <!-- add has\_fs\_type() + is\_fs\_type() -->
+    * utils: lxc\_deslashify() 関数を作りなおしました <!-- rework lxc\_deslashify() -->
+    * utils: lxc\_make\_abstract\_socket\_name() 関数を追加しました
+    * utils: lxc\_safe\_ulong() 関数を追加しました (訳注: 数値の文字列を unsigned long に変換)<!-- add lxc\_safe\_ulong() -->
+    * utils: lxc\_unstack\_mountpoint() 関数を追加しました (訳注: 与えたパスのマウントをすべてアンマウントする)<!-- add lxc\_unstack\_mountpoint() -->
 
- * Template:
-    * templates/Alpine: Add support for ppc64le
-    * templates/Alpine: use dl-cdn.a.o as default mirror instead of random one
-    * templates/Alpine: add community repository to default repositories
-    * templates/CentOS: use altarch mirror for CentOS on arches other than i386 and x86\_64
-    * templates/CentOS: default to CentOS 7
-    * templates/debian: Use deb.debian.org as the default Debian mirror
-    * templates/debian: jessie and stretch keyring support
-    * templates/debian: Add buster as a valid release
-    * templates/opensuse: support leap 42.3
-    * templates/opensuse: fix tumbleweed software selection
-    * templates/opensuse: add Tumbleweed as supported release
-    * templates/ubuntu: support netplan in newer releases by default
-    * templates/ubuntu: conditionally move upstart ssh job, as it is now optional.
-    * userns.conf: remove obsolete bind-mounts
+ * テンプレート<!-- Template -->:
+    * templates/Alpine: ppc64le のサポートを追加しました <!-- Add support for ppc64le -->
+    * templates/Alpine: ランダムにミラーを選ぶのではなく dl-cdn.a.o をデフォルトのミラーとして使うようになりました <!-- use dl-cdn.a.o as default mirror instead of random one -->
+    * templates/Alpine: デフォルトリポジトリにコミュニティリポジトリを追加しました <!-- add community repository to default repositories -->
+    * templates/CentOS: i386 と x86\_64 以外のアーキの CentOS では AltArch ミラーを使うようになりました <!-- use altarch mirror for CentOS on arches other than i386 and x86\_64 -->
+    * templates/CentOS: デフォルトを CentOS 7 にしました <!-- default to CentOS 7 -->
+    * templates/debian: デフォルトの Debian ミラーとして deb.debian.org を使うようになりました <!-- Use deb.debian.org as the default Debian mirror -->
+    * templates/debian: buster を有効なリリースとして追加しました <!-- Add buster as a valid release -->
+    * templates/opensuse: leap 42.3 をサポートしました <!-- support leap 42.3 -->
+    * templates/opensuse: Tumbleweed でのソフトウェアの選択の問題を修正しました <!-- fix tumbleweed software selection -->
+    * templates/opensuse: Tumbleweed をサポートするリリースに追加しました <!-- add Tumbleweed as supported release -->
+    * templates/ubuntu: 新しいリリースではデフォルトで netplan をサポートするようになりました <!-- support netplan in newer releases by default -->
+    * templates/ubuntu: upstart の ssh ジョブは現在オプショナルなので、条件付きで mv するようにしました。<!-- conditionally move upstart ssh job, as it is now optional. -->
+    * userns.conf: 必要がなくなった bind マウントは削除しました <!-- remove obsolete bind-mounts -->
 
- * Tools:
-    * lxc-execute: print error message when failed
-    * lxc-update-config: handle legacy networks
-    * tools: add additional cgroup checks
-    * tools: add lxc-update-config.in
-    * tools/lxc-attach: allow for situations without /dev/tty
-    * tools/lxc-checkconfig: Add CONFIG\_NETFILTER\_XT\_MATCH\_COMMENT
-    * tools/lxc-checkconfig: verify new[ug]idmap are setuid-root
-    * tools/lxc-ls: return all containers by default, new filter - list only defined containers.
+ * ツール<!-- Tools -->:
+    * lxc-execute: 失敗時にエラーメッセージを表示するようにしました <!-- print error message when failed -->
+    * lxc-update-config: レガシーなネットワークを変換できるようになりました <!-- handle legacy networks -->
+    * tools: 追加の cgroup のチェックを行うようになりました <!-- add additional cgroup checks -->
+    * tools: lxc-update-config を追加しました <!-- add lxc-update-config.in -->
+    * tools/lxc-attach: /dev/tty がない環境でもアタッチできるようになりました <!-- allow for situations without /dev/tty -->
+    * tools/lxc-checkconfig: CONFIG\_NETFILTER\_XT\_MATCH\_COMMENT を追加しました <!-- Add CONFIG\_NETFILTER\_XT\_MATCH\_COMMENT -->
+    * tools/lxc-checkconfig: new[ug]idmap が setuid-root されているかを確認するようになりました <!-- verify new[ug]idmap are setuid-root -->
+    * tools/lxc-ls: デフォルトではすべてのコンテナを返しますが、新しいフィルタとして定義済みのコンテナのみリストできるようになりました <!-- return all containers by default, new filter - list only defined containers. -->
 
 # Downloads
+<!--
 The release tarballs may be found on our [download page](https://linuxcontainers.org/lxc/downloads/) and we expect most distributions  
 will very soon ship a packaged version of LXC 2.1.
+-->
+このリリースの tarball は [ダウンロードページ](https://linuxcontainers.org/lxc/downloads/) から取得できます。そして、各ディストリビューションがすぐに LXC 2.1 のパッケージをリリースするでしょう。
 
+<!--
 Should you be interested in individual changes or just looking at the detailed development history,  
 our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-2.1).
+-->
+個々の変更点に興味がある場合、そして開発の履歴を見たい場合、stable ブランチが [Github](https://github.com/lxc/lxc/tree/stable-2.1) にあります。
 
 
 ## LXC 2.0.8 リリースのお知らせ <!-- LXC 2.0.8 release announcement --><span class="text-muted">2017 年 5 月 11 日 <!-- 11th of May 2017 --></span>
