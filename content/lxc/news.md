@@ -383,7 +383,6 @@ This is mostly useful for users who prefer to update their configuration files m
     * templates/CentOS: use altarch mirror for CentOS on arches other than i386 and x86\_64
     * templates/CentOS: default to CentOS 7
     * templates/debian: Use deb.debian.org as the default Debian mirror
-    * templates/debian: jessie and stretch keyring support
     * templates/debian: Add buster as a valid release
     * templates/opensuse: support leap 42.3
     * templates/opensuse: fix tumbleweed software selection
