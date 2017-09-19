@@ -1,0 +1,105 @@
+title: LXD 2.0.5 リリースのお知らせ
+date: 2016/10/05 00:00
+content: |-
+  <!--
+  This is the fifth bugfix release for LXD 2.0.
+  -->
+  このリリースは LXD 2.0 の 5 回目のバグフィックスリリースです。
+
+  ### LXD 2.0.4 以降の変更は以下の通りです <!-- The changes since LXD 2.0.4 are -->
+
+  <!--
+  Note that several migration fixes included in this release depend on a newer go-lxc.  
+  If building manually, you may need to update your copy of go-lxc.  
+  If building for a distribution, you may need to update your packaged version of go-lxc to a newer snapshot.
+  -->
+  このリリースに含まれるマイグレーションに関する修正のいくつかは、新しい go-lxc に依存していることに注意してください。
+  マニュアルでビルドする場合、go-lxc のコピーも更新する必要があるでしょう。
+  ディストリビューション用のビルドの場合、go-lxc のパッケージバージョンを新しい物に更新する必要があるでしょう。
+
+  細かな改良点 <!-- Minor improvements -->:
+
+   * AppArmor の名前空間とスタッキングをサポートしました <!-- Support for AppArmor namespacing and stacking -->
+   * LXD デーモンのロギングをよりわかりやすく、より一般的に役立つように作りなおしました <!-- Rework LXD daemon logging to be cleaner and more generally useful -->(Issue #1928)
+   * "lxc info CONTAINER" はコンテナが存在するリモートホスト名を表示するようになりました <!-- "lxc info CONTAINER" now shows the name of the remote for the container -->
+   * クライアントのエラーメッセージにコンテナが存在するリモートホスト名を表示するようになりました <!-- Client errors now include the remote the container is on -->
+   * コンテナに /snap/bin が存在する場合は PATH に含めるようになりました <!-- /snap/bin is included to PATH if present in the container -->
+
+  バグ修正 <!-- Bugfixes -->:
+
+   * doc: txqueuelen の調整について追加しました <!-- Add txqueuelen tweak. -->
+   * doc: btrfs のネストの際は user\_subvol\_rm\_allowed オプション付きでマウントする必要があることを追記しました <!-- Clarify that user\_subvol\_rm\_allowed is needed for btrfs nesting -->(Issue #2338)
+   * doc: environment.md の表のスタイルを修正しました <!-- Fix the table style of environment.md -->(Issue: #2410)
+   * doc: production-setup.md の typo の修正 <!-- Fix typos in production-setup.md -->
+   * doc: production-setup.md 内の行末のスペースを削除しました <!-- Remove trailing spaces in production-setup.md -->
+   * doc: スペースのみの行を削除しました <!-- Spacing cleanup -->
+   * extras: (訳注: bash completion で) start、stop、exec コマンドに対してコンテナ状態のチェックを行うようになりました <!-- Containers state checking for start, stop and exec commands -->
+   * extras: LXC から LXD へのコンテナ変換の修正を行いました <!-- Fixed container convert from LXC to LXD -->
+   * fuidshift: パスのシンボリックリンクを展開するようになりました <!-- expand symlinks to last path component -->
+   * lxc: 使っていない httpAddr プロパティを削除しました <!-- Drop unused httpAddr property -->
+   * lxc/exec: lxc exec のヘルプに -- args を追加しました <!-- Document lxc exec \-\- args -->
+   * lxc/exec: 環境変数を取得する際、go 1.5 で導入された os.LookupEnv を使用するようになりました <!-- Use os.LookupEnv from go 1.5 to find environment vars -->
+   * lxc: config.go のヘルプ内の例の出力位置を調整しました <!-- Fix spacing alignment in config.go's examples -->
+   * lxc/help: エラーを stdout に出力するようにしました <!-- Send error to stdout -->(Issue #2301)
+   * lxd/apparmor: 非特権の場合は制限を緩くしました <!-- Be less restrictive when unprivileged -->
+   * lxd-bridge: dnsmasq の実行が失敗したときにエラーになるようになりました <!-- Fail on dnsmasq failure -->
+   * lxd-bridge: lxd-bridge-proxy でクラッシュする問題を修正しました <!-- Fix crash in lxd-bridge-proxy -->
+   * lxd: 名前の衝突を一貫性を持って処理するようになりました <!-- Consistently handle name conflicts -->
+   * lxd/container: あらゆる設定キーを削除できるようになりました <!-- Allow unsetting any config key -->
+   * lxd/container\_lxc: xattrs を扱うようになりました <!-- handle xattrs -->
+   * lxd/container: コンフリクトの際、petname の生成をリトライするようになりました <!-- Retry generating petnames -->
+   * lxd/container: pause されたコンテナに対して force オプションを指定せずに "restart" を実行するとエラーを返すようになりました <!-- Return an error on "restart" without force of a paused container -->(Issue #2311)
+   * lxd/container: コンテナ操作のロック処理を見直しました <!-- Rework container operation locking -->(Issue #2297)
+   * lxd/daemon: ソケットのアクティベーションを自身で行うようにしました <!-- Do our own socket activation -->(Issue #2333)
+   * lxd/db: int64 の扱いを修正しました <!-- Fix int64 handling -->
+   * lxd/db: スキーマのアップデート時にデータベースのバックアップを取得するようになりました <!-- Make a database backup on schema updates -->(Issue #2299)
+   * lxd/db: DB スキーマの更新処理を作りなおしました <!-- Rework DB schema updates -->
+   * lxd/image: lzma alone ファイルフォーマットのサポートに関する修正を行いました <!-- Fix support for lzma alone file format -->(Issue #2360)
+   * lxd/image: メモリの少ないシステムでの squashfs の調整を行いました <!-- Tweak squashfs for low-memory systems -->(Issue #2382)
+   * lxd/init: LXD がバインドするアドレスのデフォルトを all (::) に変更しました <!-- Change default host to all (::) -->
+   * lxd/init: バリデーション関数を一貫性があるように変更しました <!-- Change validation functions for consistency -->
+   * lxd/init: "zfs" が使用できない場合のデフォルトを "dir" にしました <!-- Default to "dir" when "zfs" isn't available -->(Issue #2340)
+   * lxd/init: IP アドレスとして "all" を与えてもエラーにならないようにしました <!-- Don't fail when passed "all" as an IP -->
+   * lxd/init: 新しい zfs pool で圧縮を有効にしました <!-- Enable compression on new zfs pools -->
+   * lxd/init: ZFS プールのデフォルト値として表示していた値を修正しました <!-- Fix listed default value for ZFS pool -->(Issue #2339)
+   * lxd/init: パーティションのサイズ決めをよりインテリジェントなロジックを使うようにしました <!-- use more intelligent logic for partition sizing -->
+   * lxd/migration: 異なる CoW ベースのバックエンドタイプをまたいだコピーを実質的にサポートしました <!-- Actually support copying across different CoW based backend types -->(Issue #2359)
+   * lxd/migration: c/r エラーに警告も表示するようになりました <!-- Also show warnings on c/r errors -->
+   * lxd/migration: ghost limit を増やしました <!-- Bump ghost limit -->
+   * lxd/migration: 利用できない場合は ActionScript を使わないようにしました <!-- Don't use ActionScript if it's not available -->
+   * lxd/migration: スナップショットの設定を保存するようになりました <!-- Preserve snapshot configuration -->
+   * lxd/migration: リストアが失敗した場合にダンプしたコンテナを再開させるようになりました <!-- Resume dumped container on failed restore -->
+   * lxd/migration: liblxc の新しい preserves\_inodes 機能を使うようになりました <!-- Use liblxc's new preserves\_inodes feature -->
+   * lxd/network: ボンディングの検出を行うようになりました <!-- Detect bonds -->
+   * lxd/network: openvswitch の検出を行うようになりました <!-- Detect openvswitch -->
+   * lxd/network: networkIsInUse を修正しました <!-- Fix networkIsInUse -->
+   * lxd/network: isOnBridge の移動とリネームを行いました <!-- Move and rename isOnBridge -->
+   * lxd/profile: プロファイル名が存在する場合のエラーをわかりやすくしました <!-- Cleaner error on existing profile name -->
+   * lxd/profile: プロファイルの消去の際、適切にクリーンアップするようにしました <!-- Properly cleanup on profile removal -->(Issue #2347)
+   * lxd/storage: コンテナのコピーの際、すべてをコピーするようになりました <!-- Copy everything on container copy -->(Issue #2371)
+   * lxd/storage: ZFS プールに関する追加のチェックと設定をするようになりました <!-- Extra checks and config for ZFS pools -->
+   * Makefile: テストの依存関係を再帰的に include しないようにしました <!-- Don't recursively include test deps -->
+   * README: AppVeyor のバッジを追加しました (Windows のテスト) <!-- Add AppVeyor badge (Windows testing) -->
+   * shared: Windows 用に GetOwner スタブを追加しました <!-- Add GetOwner stub for Windows -->(fixes #2438)
+   * shared: 適切な拡張鍵用途 (Extended Key Usage) を持つクライアント証明書を生成するようになりました <!-- Generate client certificate with proper extended usage info -->
+   * shared: TestReaderToChannel の転送を小さくしました <!-- Make TestReaderToChannel transfer smaller -->
+   * shared: 新しいラッパー関数 RunCommand を追加しました <!-- New RunCommand wrapper function -->
+   * tests: 偶然新しい依存関係が生じないようにチェックするテストを追加しました <!-- Add a test to make sure we don't accidentally include new deps -->
+   * tests: GetAllXattr() のテストを追加しました <!-- add test for GetAllXattr() -->
+   * tests: apparmor のバージョンチェックを修正しました <!-- Fix apparmor version check -->
+   * tests: より新しい shellcheck 対応の修正を行いました <!-- Fix for newer shellcheck -->
+   * tests: UTC タイムゾーンを強制するようにしました <!-- Force UTC timezone -->
+   * tests: 現在の LXD の残り物だけをチェックするようにしました <!-- Only check leftovers on active LXD -->
+   * tests: xattr がサポートされていない場合はテストをスキップするようにしました <!-- skip tests when xatts are not supported -->
+
+  ### 試用環境 <!-- Try it for yourself -->
+  <!--
+  This new LXD release is already available for you to try on our [demo service](/lxd/try-it/).
+  -->
+  この新しい LXD のリリースが、すでに私たちの [デモサービス](/ja/lxd/try-it/) で利用できます。
+
+  ### ダウンロード <!-- Downloads -->
+  <!--
+  The release tarballs can be found on our [download page](/lxd/downloads/).
+  -->
+  このリリースの tarball は [ダウンロードページ](/lxd/downloads/) から取得できます。

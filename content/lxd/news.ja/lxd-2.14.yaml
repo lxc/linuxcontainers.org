@@ -1,0 +1,144 @@
+title: LXD 2.14 リリースのお知らせ
+date: 2017/05/30 00:00
+origin: https://discuss.linuxcontainers.org/t/lxd-2-14-has-been-released/157
+content: |-
+  新機能<!-- New features -->:
+
+   * 新しいクライアントライブラリ <!-- New client library -->
+      * CreateContainerFromImage 関数を追加しました <!-- Add a CreateContainerFromImage function -->
+      * イメージのアップロードを実装しました <!-- Implement image upload -->
+      * リモート操作を実装しました <!-- Implement remote operations -->
+   * API の追加 <!-- API additions -->
+      * コンテナ、ネットワーク、ストレージプール、ストレージボリュームに新たに "description" フィールドを追加しました <!-- New "description" field for containers, networks, storage pools and storage volumes -->
+      * イメージのリフレッシュが可能になりました <!-- Allow for image refreshes -->(lxc image refresh)
+   * コンテナを起動する際、リフレッシュされたダウンロードしたイメージより既存のキャッシュされたイメージが優先されるようになりました <!-- When launching containers, an existing cached image is now preferred over downloading a refreshed one -->
+   * "lxd init" に "--preseed" オプションと YAML ファイルを与えることで、あらかじめ準備した設定を与えられるようになりました <!-- "lxd init" can now be preseeded with "\-\-preseed" and a yaml config file -->
+   * 新たに btrfs.mount\_options でプールのプロパティを設定できるようになりました <!-- Introduce a new btrfs.mount\_options pool property -->
+   * LVM のボリュームのリサイズを実装しました (ext4 は拡張・縮小、xfs は拡張のみ)<!-- Implement volume resizing for LVM (grow/shrink for ext4, grow only for xfs) -->
+
+  バグ修正<!-- Bugfixes -->:
+
+   * client: 後方互換性のために image\_create\_aliases を追加しました <!-- Add image\_create\_aliases backward compat -->
+   * client: 常に queryStruct 関数にポインタを渡すようにしました <!-- Always pass pointer to queryStruct -->
+   * client: GetServer ではキャッシュを返さなくなりました <!-- Don't return cache on GetServer -->
+   * client: サーバ証明書のフィンガープリントが設定されていない場合、設定するようにしました <!-- Fill the server fingerprint if missing -->
+   * client: プライベートイメージの扱いの問題を修正しました <!-- Fix private image handling -->
+   * client: オペレーションハンドラの競合問題を修正しました <!-- Fix race condition in operation handler -->
+   * client: イメージコピーの際のエラーを改良しました <!-- Improve error on image copy -->
+   * client: プロトコルを追跡するようにしました <!-- Keep track of protocol -->
+   * client: CopyImage をターゲットサーバへ移動しました (訳注: 処理の重複を防ぎ整合性を取れるように関数が属する構造体を変更した)<!-- Move CopyImage to the target server -->
+   * client: 不要な条件を削除しました <!-- Remove unneeded condition -->
+   * client: ストレージボリュームではボリュームタイプを必須としました <!-- Require the volume type for storage volume -->
+   * client: フィンガープリントの一部でのチェックをサポートしました <!-- Support partial fingerprints -->
+   * client: クライアントでなくサーバの証明書を追跡するようにしました <!-- Track the server certificate, not client -->
+   * client: CopyImage では RemoteOperation を使うようにしました <!-- Use RemoteOperation for CopyImage -->
+   * doc: init に YAML で設定を与える方法を記載しました <!-- Add documentation about the init preseed feature -->
+   * doc: デバイスタイプ名の typo を修正しました <!-- Correct typo in device type name -->
+   * doc: markdown のエスケープを修正しました <!-- Fix markdown escaping -->
+   * doc: README.md の Docker に関する説明を更新しました <!-- Update README.md Docker instructions -->
+   * doc/network: macvlan とブリッジに関するセクションを追加しました <!-- Add section on macvlan vs bridge -->(Issue #3273)
+   * doc/storage: 文法を修正しました <!-- Correct grammer -->
+   * doc/storage: ZFS の quota と refquota に関する記述を追加しました <!-- Document zfs quota vs refquota -->(Issue #2959)
+   * doc/storage: 表内の行の順序の調整を行いました <!-- Fix ordering -->
+   * extra/lxc-to-lxd: mount ファイルがない場合もクラッシュしなくなりました <!-- Don't crash on missing mount file -->(Issue #3237)
+   * global: typo を修正しました <!-- Fix typos -->
+   * global: file の Chmod() を os.Chmod() に置き換えました <!-- Replace file Chmod() with os.Chmod() -->(Issue #3275)
+   * global: containerGetParentAndSnapshotName() を使うようにしました <!-- Use containerGetParentAndSnapshotName() everywhere -->
+   * i18n: リリース前の更新を行いました <!-- Pre-release update -->
+   * i18n: Weblate から翻訳を更新しました <!-- Update translations from weblate -->
+   * lxc: オブジェクト名 (訳注: ネットワーク名やストレージプール名) が指定されていない場合に意味不明なエラーが出るのを修正しました <!-- Fix obscure error on missing object name -->(Issue #3230)
+   * lxc: 操作の進捗トラッキングの処理を実装しました <!-- Implement progress tracking for operations -->
+   * lxc/copy: エラーハンドリングを改良しました <!-- Improve error handling -->(Issue #3243)
+   * lxc/copy: コードを簡素化しました <!-- Simplify the code -->
+   * lxc/file: Windows でのファイルの push の問題を修正しました <!-- Fix broken file push on Windows -->
+   * lxc/file: Windows での再帰的なファイルの push の問題を修正しました <!-- Fix recursive file push on Windows -->
+   * lxc/init: 不要な else ステートメントを削除しました <!-- Drop unnecessary else statement -->
+   * lxc/remote: hex でなく文字列としてフィンガープリントを表示するようにしました <!-- Show the fingerprint as string not hex -->(Issue #3293)
+   * lxc/storage: YAML のエラーを無視しなくなりました <!-- Don't ignore yaml errors -->
+   * lxd: testify で一部のテストを独立して実行できるようにしました <!-- Support running individual testify test suites -->
+   * lxd/containers: 一時的なキーである host\_name もクリアするようにしました <!-- Also clear the host\_name volatile key -->
+   * lxd/containers: update 時に一時的なキーをクリアするようにしました <!-- Cleanup volatile keys on update -->(Issue #3231)
+   * lxd/containers: macvlan インターフェースを作成する際には親インターフェースで IPv6 を無効化するようにしました <!-- Disable IPv6 on created macvlan parents -->
+   * lxd/containers: fillNetworkDevice は nic に対してのみ実行するようにしました <!-- fillNetworkDevice is only for nic -->
+   * lxd/containers: 可能な限り networkSysctl を使うようにしました <!-- Use networkSysctl whenever possible -->
+   * lxd/daemon: /1.0 の際の ETag の扱いを修正しました <!-- Fix ETag handling for /1.0 -->
+   * lxd/daemon: サーバのフィンガープリントを設定するようにしました <!-- Actually set ServerFingerprint -->
+   * lxd/db: db のテストに testify のテストを追加しました。既存のテストを作りなおしました <!-- Add a testify test suite for db tests, rework existing tests -->
+   * lxd/db: lxdSuiteTest が終了するごとにモックデーモンでデータベースの状態をクリアするようにしました <!-- Clear database state in the mock daemon after each lxdSuiteTest -->
+   * lxd/db: db へのパッチで不要である特別なモックモードを実行しないようにしました <!-- Don't special-case mock mode unnecessarily in db patches -->
+   * lxd/db: ストレージプールがない場合に NoSuchObjectError を返すようになりました <!-- Return NoSuchObjectError on missing storage pools -->(Issue #3257)
+   * lxd/db: デーモンレベルのロジックから DB レベルの更新ロジックを分離しました <!-- Separate db-level update logic from daemon-level one -->
+   * lxd/images: アップロード時にイメージが既に存在しているかどうかをチェックするようになりました <!-- Check if the image already exists on upload -->
+   * lxd/images: 複数回アンロックの可能性があったのを修正しました <!-- Fix potential double unlock -->
+   * lxd/images: イメージの自動更新ロジックにあったリグレッションを修正しました <!-- Fix regression in image auto-update logic -->
+   * lxd/images: イメージ取得元の証明書を保存し、ダウンロード時に与えるようにしました <!-- Save image source certificate and pass it to the download -->
+   * lxd/images: autoUpdateImage 関数を分割しました <!-- Split autoUpdateImage function -->
+   * lxd/import: コンテナ名を指定しない場合、エラーになるようにしました <!-- Error on out missing name -->
+   * lxd/init: --auto を与えた場合のバリデーション機能を別メソッドに分けました <!-- Extract validation of \-\-auto args into a separate method -->
+   * lxd/init: 状態を帰るインライン関数を独立したメソッドに移動させました <!-- Move state-changing inline functions to own methods -->
+   * lxd/init: 問題が起こった場合、初期状態にロールバックするようにしました <!-- Rollback to initial state if anything goes wrong -->
+   * lxd/init: デフォルトポートを適切に設定するようにしました <!-- Properly set the default port -->(Issue #3341)
+   * lxd/networks: ETag のリグレッションを修正しました <!-- Fix ETag regression -->
+   * lxd/patches: 使われてない変数を削除しました <!-- Drop unused variable -->
+   * lxd/profiles: Docker プロファイルを削除しました <!-- Remove the Docker profile -->
+   * lxd/storage: プールが使用中かどうかを検出するヘルパーを追加しました <!-- Add helper to detect if pool is in use -->
+   * lxd/storage: lxdResolveMountoptions() を追加しました <!-- Add lxdResolveMountoptions() -->
+   * lxd/storage: MS\_LAZYTIME をマウントオプションに追加しました <!-- Add MS\_LAZYTIME to mount options -->
+   * lxd/storage: 各種のファイルパーミッションの定数を定義しました <!-- Add permission helpers -->
+   * lxd/storage: 無限ループを防ぐように修正しました <!-- Avoid an infinite loop -->
+   * lxd/storage: 問題のある内部の型を修正しました <!-- Fix bad internal types -->
+   * lxd/storage: マウントヘルパーをストレージユーティリティへ移動させました <!-- Move mount helpers to storage utils -->
+   * lxd/storage: カスタムボリュームだけを消去するようにしました <!-- Only delete custom volumes -->
+   * lxd/storage: コンテナ構造体を ContainerMount() に与えるようにしました <!-- Pass container struct to ContainerMount() -->
+   * lxd/storage: ストレージプールチェックの順序を変更しました <!-- Re-order storage pool checks -->
+   * lxd/storage/btrfs: getBtrfsPoolMountOptions() を追加しました <!-- Add getBtrfsPoolMountOptions() -->
+   * lxd/storage/btrfs: 異なるバージョンの LXD 間のマイグレーションが扱えるようになりました <!-- Handle migration on different LXDs -->(Issue #3323)
+   * lxd/storage/btrfs: 使われていない変数を削除しました <!-- Remove unused variable -->
+   * lxd/storage/btrfs: lxdResolveMountoptions() を使うようにしました <!-- Use lxdResolveMountoptions() -->
+   * lxd/storage/lvm: 既存の Thin pool を再利用できるようにしました <!-- Allow re-using existing thinpools -->(Issue #3351)
+   * lxd/storage/lvm: ボリュームグループが使用中かどうかチェックするようにしました <!-- Check whether volume group is already in use -->
+   * lxd/storage/lvm: 空でないボリュームグループは使えないようにしました <!-- Disallow using non-empty volume groups -->(Issue #3351)
+   * lxd/storage/lvm: 空のときだけ VG を削除するようにしました <!-- Only delete VG when empty -->(Issue #3351)
+   * lxd/storage/lvm: 適切にマウントオプションを解決するようになりました <!-- Resolve mount options properly -->(Issue #3284)
+   * lxd/storage/lvm: プールの作成を簡素化し、改良しました <!-- Simplify and improve pool creation -->
+   * lxd/storage/zfs: mountpoint=none を与えてイメージデータセットを作成するようにしました <!-- Create image dataset with mountpoint=none -->(Issue #3359)
+   * lxd/storage/zfs: データセット作成後にフォルダのパーミッションを設定するようにしました <!-- Fix folder permissions after dataset creation -->(Issue #3090)
+   * lxd/storage/zfs: zfs の EBUSY バグを回避しようとするようにしました <!-- Try to work around zfs EBUSY bug  -->(Issue #3228)
+   * Makefile: i18n ターゲットに update-po を追加しました <!-- Add update-po to i18n target -->
+   * Makefile: static-analysis ターゲットを修正しました <!-- Fix static-analysis target -->
+   * shared: "lxc edit" の実行で、テンプレートがエディタの yaml-mode で起動するようにしました <!-- Add yaml-mode marker in template for "lxc edit" actions -->
+   * shared/cmd: 初期コマンドの I/O ロジックを持つ新しい shared/cmd パッケージを追加しました <!-- Add new package with initial command I/O logic -->
+   * shared/cmd: 色々な AskXXX メソッドに対して cmd.Context を完全にサポートしました <!-- Complete cmd.Context support for various AskXXX methods -->
+   * shared/cmd: testify に依存しなくなりました <!-- Don't depend on testify -->
+   * shared/cmd: cmdInit をユニットテスト可能なようにログを生成するようにしました <!-- Make the log cmdInit unit-testable -->
+   * shared/logger: golint がクリーンに実行できるようにしました <!-- Make golint clean -->
+   * shared/logger: PrintStack を GetStack に置き換えました <!-- Replace PrintStack with GetStack -->
+   * shared/logging: LogfmtFormat を export しました <!-- Export LogfmtFormat -->
+   * shared/logging: golint がクリーンに実行できるようにしました <!-- Make golint clean -->
+   * shared/termios: golint がクリーンに実行できるようにしました <!-- Make golint clean -->
+   * tests: btrfs.mount\_options のテストを追加しました <!-- Add btrfs.mount\_options test -->(Issue #3264)
+   * tests: LV リサイズのテストを追加しました <!-- Add LV resizing tests -->
+   * tests: LVM のマウントオプションのテストを追加しました <!--Add mount option test for LVM -->(Issue #3284)
+   * tests: quota のテストを追加しました <!-- Add quota tests -->
+   * tests: ランダムにストレージバックエンドを選択できるようにしました <!-- Allow random storage backend selection -->
+   * tests: busybox がうまくシャットダウンするのに依存しなくなりました <!-- Don't rely on busybox shutting down nicely -->
+   * tests: 再度 jenkins 特有のチェックを削除しました (訳注: 一度削除した処理がどこかのコミットで戻ってた?) <!-- Drop jenkins-specific check again -->
+   * tests: 明確にシェルのタイプを shellcheck に与えるようにしました <!-- Explicitly pass shell type to shellcheck -->
+   * tests: ストレージのテストでは LXD\_BACKEND 環境変数を使うようにしました <!-- Honor the LXD\_BACKEND environment variable in storage tests -->
+   * tests: 確実にストレージボリュームがマウントされるようにしました <!-- Make sure storage volume is mounted -->
+   * tests: Jenkins の無効なテストを削除しました <!-- Remove invalid test for Jenkins -->
+   * tests: テストスイートではインデントにスペースを使うようにしました <!-- Test suites use space indent -->
+   * tests/deps: golint がクリーンに実行できるようにしました <!-- Make golint clean -->
+
+  ### 試用環境 <!-- Try it for yourself -->
+
+  <!--
+  This new LXD release is already available for you to try on our [demo service](/lxd/try-it/).
+  -->
+  この新しい LXD のリリースが、すでに私たちの [デモサービス](/ja/lxd/try-it/) で利用できます。
+
+  ### ダウンロード <!-- Downloads -->
+  <!--
+  The release tarballs can be found on our [download page](/lxd/downloads/).
+  -->
+  このリリースの tarball は [ダウンロードページ](/lxd/downloads/) から取得できます。

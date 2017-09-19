@@ -1,0 +1,120 @@
+title: LXD 2.16 リリースのお知らせ
+date: 2017/07/25 00:00
+origin: https://discuss.linuxcontainers.org/t/lxd-2-16-has-been-released/335
+content: |-
+  新機能<!-- New features -->:
+
+   * LXD のストレージバックエンドとして Ceph RBD が使えるようになりました ("lxd init" でのサポートを含みます) <!-- Ceph RBD can now be used as a LXD storage backend (including "lxd init" support). -->
+   * 新たに security.idmap.base キーが追加されました。これは security.idmap.isolated を使う場合に、ホスト上でのベースとなる uid/gid を指定します <!-- A new security.idmap.base key has been added to control what base uid/gid to use on the host when using security.idmap.isolated. -->
+   * イメージのダウンロードを中断できるようになりました <!-- Image downloads can now be interrupted. -->
+   * ファイルの転送でシンボリックリンクを扱えるようになりました <!--File transfers now support sending symlinks -->
+   * "lxc copy" と "lxc move" で進捗表示をするようになりました <!-- "lxc copy" and "lxc move" will now show progress information -->
+   * "lxc copy" と "lxc move" で firewall と NAT を越えるために "relay" モードと "push" モードをサポートするようになりました (--mode オプション)<!--"lxc copy" and "lxc move" now support "relay" and "push" modes to go around firewalls and NAT (\-\-mode option) -->
+   * カスタムストレージボリュームのサイズを設定したり変更したりできるようになりました <!-- Custom storage volumes can now have their size set and modified -->
+   * "lxc image import" が展開したイメージを含むディレクトリからの読み込みをサポートするようになりました <!-- "lxc image import" now supports reading from a directory containing an unpacked image -->
+   * "vlan" プロパティを "physical" ネットワークインターフェースに設定できるようになりました (以前は "macvlan" に制限されていました)<!-- The "vlan" property can now be set on "physical" network interfaces (was previously restricted to "macvlan") -->
+   * ストレージプールからイメージボリュームを削除できるようになりました。これでイメージストアからイメージを削除することなくストレージプールを削除できるようになりました <!-- It's now possible to delete image volumes from a storage pool. This allows removing a storage pool without having to remove the images from the image store. -->
+   * イメージとしてコンテナを公開する前に、イメージメタデータとテンプレートを API 経由で作成したり変更したりできるようになりました <!-- The image metadata and template files can now be created or modified through the API prior to publish a container as an image. -->
+   * リモートホストで、ステートフルなスナップショットをコンテナとしてリストアできるようになりました <!-- Stateful snapshots can now be restored as a new container on a remote host. -->
+
+  バグ修正<!-- Bugfixes -->:
+
+   * client: ベースとなる http クライアントを指定できるようになりました <!-- Allow specifying base http client -->(Issue #3580)
+   * client: エラーハンドリングの共通化を行いました <!-- Commonize error handling -->
+   * client: 停止しているコンテナのライブマイグレーションを行おうとしないようにしました <!-- Don't live migrate stopped containers -->
+   * client: オペレーションハンドラ内のクラッシュを修正しました <!-- Fix crash in operation handler -->
+   * client: 名前にスペースが含まれたファイルの push/pull の問題を修正しました <!-- Fix file push/pull with names containing spaces -->
+   * client: public な LXD のリモートホストを扱う際の問題を修正しました <!-- Fix handling of public LXD remote -->(Issue #3464)
+   * client: 操作処理中の競合を修正しました <!-- Fix race condition in operation handling -->
+   * client: マイグレーションをリレーするコードを改良しました <!-- Improve migration relay code -->
+   * client: 使用中の HTTP クライアントを取得できるようになりました <!-- Make it possible to retrieve HTTP client -->(Issue #3580)
+   * client: リモートの切断を正しく扱うようにしました <!-- Properly handle remote disconnections -->
+   * client.go: godoc 中で廃止したパッケージの警告を表示するようにしました <!-- Make deprecation warnings visible in godoc -->(Issue #3466)
+   * config: スナップショット名中に ":" が含まれる場合の処理を改良しました <!-- Try to be clever about ":" in snapshots -->
+   * doc: コンテナ作成時のキャッシュに存在する以前のイメージの使用に関する注意書きを追加しました <!-- Add note on use of previous image from cache -->(Issue #3590)
+   * doc: storage\_images\_delete API 拡張の文書に追加しました <!-- Document storage\_images\_delete API extension -->(Issue #3539)
+   * doc: exec セッション中の control API を文書に追加しました <!-- Document the exec control API -->(Issue #3574)
+   * doc: lxd のインポートに関する説明を詳細にしました <!-- Expand lxd import documentation -->
+   * doc: セキュリティに関連する文書を作り直し詳細にしました <!-- Extend/rework security-related documentation. -->
+   * doc: 実際に動作するサンプルを示すように help を修正しました <!-- Fix help to provide sample that actually works -->
+   * doc: 空白、カンマ、クオート、括弧を修正しました <!-- Fix spaces, commas, quotes, brackets where needed -->
+   * doc: コンテナ内の環境についての文書を追加しました <!-- Initial documentation of container env -->(Issue #477)
+   * doc: /1.0/networks/ の "config"."ipv6.nat" の値にクオートを追加しました <!-- Need quotes for /1.0/networks/ "config"."ipv6.nat" -->
+   * doc: 不要なバックスラッシュを削除しました <!-- Remove extraneous backslash -->
+   * doc: containers.md を更新しました (訳注: LXDで扱えるデバイスタイプに usb と gpu を追加) <!-- Update containers.md -->
+   * github: ISSUE\_TEMPLATE.md: lxd.log の場所を修正しました <!-- Fix lxd.log location -->
+   * global: typo をいくつか修正しました <!-- Fix a few typos -->
+   * lxc/config: 一度に複数のデバイスを削除できるようにしました <!-- Removal of multiple devices at once -->
+   * lxc: 存在しない設定ファイル用のディレクトリを作成するようにしました <!-- Create missing config paths -->
+   * lxc: クロスプラットフォームで設定ファイル用のディレクトリを扱えるようにしました <!-- Cross-platform HOME handling -->(Issue #3573)
+   * lxc/exec: Windows でのシグナルハンドラを修正しました <!-- Fix signal handler for Windows -->(Issue #3496)
+   * lxc/file: `push -p` で作成する中間ディレクトリのモードを指定しないようにしました <!-- Don't specify mode for intermediate directories created with `push -p` -->
+   * lxc/image: エクスポートした際のファイル名では、常に長いフィンガープリントを使うようにしました <!-- Always use long fingerprint in exported filenames. -->
+   * lxc/image: "ixc image copy" が取得元を記録していない問題を修正しました <!-- Fix "lxc image copy" not recording the source -->
+   * lxc/image: "lxc image list" のフィルタのハンドリングを改良しました <!-- Improve "lxc image list" filter handling -->(Issue #3555)
+   * lxc/image: エラー時の処理が抜けていたのを修正しました <!-- Missing error handling -->
+   * lxc/image: コピー時にエイリアスのソースを適切に記録するようにしました <!-- Properly record alias source on copy -->(Issue #3586)
+   * lxc/image: イメージにエイリアスが設定されている場合、エイリアスを更新するようにしました <!-- Update image aliases when they already exist -->
+   * lxc/launch: ランダムな名前をつけたコンテナの起動に失敗する問題を修正しました <!-- Fix failure to launch containers with random names -->
+   * lxc/list: --columns と --fast を同時に指定した場合にエラーになっていた問題を修正しました <!-- Error if \-\-columns and \-\-fast are used together -->
+   * lxc/publish: compression\_algorithm を compressionAlgorithm に変更しました (訳注: 変数名の変更) <!-- Change compression\_algorithm to compressionAlgorithm -->
+   * lxc/publish: フィンガープリントの表示の問題を修正しました <!-- Fix fingerprint printing -->
+   * lxc/utils: 進捗表示での競合の可能性をなくしました <!-- Avoid potential progress race condition -->
+   * lxc/utils: エラー表示でフォーマット指定を行う処理が抜けていた問題を修正しました <!-- Println doesn't do format strings -->
+   * lxd/container: エラーハンドリングの問題を修正しました <!-- Fix broken error handling -->
+   * lxd/containers: メモリ使用量の表示の際のエラー処理を改良しました <!-- Better handle errors in memory reporting -->(Issue #3482)
+   * lxd/containers: コンテナの削除が失敗した場合の根本的なエラーを表示するようにしました <!-- Show underlying error when container delete fails -->
+   * lxd/containers: LXC 2.1 の設定キーのサポートを追加しました <!-- Support for LXC 2.1 configuration keys (and fallback) -->
+   * lxd/images: イメージが見つからない場合にエラー表示を行うようにしました <!-- Clear error for image not found -->
+   * lxd/images: フィンガープリントが与えられた場合のイメージのリフレッシュの問題を修正しました <!-- Fix image refresh when fingerprint is passed. -->
+   * lxd/import: 一時的なキーを保持するようにしました <!-- Keep volatile keys -->
+   * lxd/import: コンテナをインポートする際、シンボリックリンクには依存しないようにしました <!-- Remove last dependency on symlink -->
+   * lxd/init: LVM シンプロビジョニングのツールを検出するようにしました <!-- Detect LVM thin provisioning tools -->(Issue #3497)
+   * lxd/networks: プロセスの PID でない場合でも失敗しないようにしました (訳注: dnsmasqのpidファイルに書かれたPIDがdnsmasqでなく、プロセス以外だった場合にエラーになり、dnsmasqプロセスをkillできないバグを修正)<!-- Don't fail on non-process PIDs -->
+   * lxd/storage: アタッチしているコンテナすべての idmap をチェックするようにしました <!-- Check idmaps of all attaching containers -->(Issue #3548)
+   * lxd/storage: ボリュームの ETag の扱いを修正しました <!-- Fix ETag handling of volumes -->
+   * lxd/storage: ディレクトリマウント(訳注: bind マウント) の読み込み専用モードの際の問題を修正しました <!-- Fix readonly mode for directory mount -->
+   * lxd/storage: コンテナとイメージの UsedBy の問題を修正しました <!-- Fix UsedBy for containers and images -->
+   * lxd/storage: ボリュームの設定ロジックを修正しました <!-- Fix volume config logic -->
+   * lxd/storage: storagePoolVolumeUsedByContainersGet 関数を追加しました <!-- Introduce a new storagePoolVolumeUsedByContainersGet function -->
+   * lxd/storage: ストレージプールのエントリを削除する実装を各ドライバに移動しました <!-- Move db deletion to driver implementation -->
+   * lxd/storage: サイズプロパティを設定を制限しました (訳注: サイズプロパティを設定できないストレージの場合にエラーになるようにした)<!-- Restrict size property in pool config -->
+   * lxd/storage/lvm: lvm コマンドの実行を RunCommand 関数で実行するようにしました <!-- Convert to RunCommand -->(Issue #3507)
+   * lxd/storage/lvm: エラーハンドリングの問題を修正しました <!-- Fix broken error handling -->
+   * lxd/storage/lvm: thinpool でないコンテナ作成時の問題を修正しました <!-- Fix non-thinpool container creation -->(Issue #3543)
+   * lxd/storage/lvm: 機能に関係しない変更を行いました <!-- Non-functional changes -->
+   * lxd/storage/zfs: すべてのヘルパ関数を storage\_zfs\_utils.go に移動しました <!-- Moved all the helper functions to storage\_zfs\_utils.go -->(Issue #3471)
+   * lxd/storage/zfs: s.zfsPoolVolumeCreate() を削除し、s.zfsPoolVolumeCreate() をすべて zfsPoolVolumeCreate() に変更しました <!-- Removed s.zfsPoolVolumeCreate() and changed all s.zfsPoolVolumeCreate() to use zfsPoolVolumeCreate() -->
+   * lxd/storage/zfs: マウントできるすべてのデータセットに canmount=noauto を設定するようにしました <!-- Set canmount=noauto on all mountable datasets -->(Issue #3437)
+   * lxd/storage/zfs: s.pool.Name の代わりに s.getOnDiskPoolName() を使うようにしました <!-- Used s.getOnDiskPoolName() instead of s.pool.Name -->
+   * README: リンク切れを修正しました <!-- Fix broken links -->
+   * README: LXD の説明を見直しました <!-- Seriously rework the content -->
+   * shared/cancel: キャンセラーが設定されていない場合にクラッシュする問題を修正しました <!-- Fix crash if no canceler is setup -->
+   * shared/cancel: 返り値の順序を修正しました (訳注: 関数の返り値を受け取る際、間違った変数で受け取っていた)<!-- Fix return value ordering -->
+   * shared/cancel: request のキャンセルチャンネルを使うようにしました <!-- Use request Cancel channel -->
+   * shared: RunCommand のカスタムエラータイプを使うようにしました <!-- Use custom error type for RunCommand -->(issue #3502)
+   * shared/util: sysconf() が -1 を返した時、サイズを推測するようにしました <!-- Guess size when sysconf() returns -1 -->(Issue #3581)
+   * shared: Websocket プロキシ はすべてをプロキシするようにしました <!-- Websocket proxy should proxy everything -->
+   * tests: "lxc storage volume set" のテストを追加しました <!-- Add a test for "lxc storage volume set" -->
+   * tests: 読み込み専用のディスクのテストを追加しました <!-- Add a test for read-only disks -->
+   * tests: シンボリックリンクが削除された場合のインポートテストを追加しました <!-- Add import test when symlink has been removed -->
+   * tests: push と relay モードのテストを追加しました <!-- Add test for push and relay mode -->
+   * tests: lxdbr0 なしでもテストができるようにしました <!-- Allow running tests without lxdbr0 -->
+   * tests: stop/restart の際は常に --force を指定するようにしました <!-- Always pass \-\-force to stop/restart -->
+   * tests: apparmor の存在チェックを行うようにしました <!-- More apparmor presence checking -->
+   * tests: カーネルがサポートしていない場合は apparmor のテストをスキップするようにしました <!-- Skip apparmor tests when no kernel support -->
+   * tests: 正しく busybox がインストールされているかを確認するようにしました <!-- Validate that the right busybox is present -->
+   * zfs: ファイルシステムをマウントする際には tryMount を使うようにしました <!-- Use tryMount when mounting filesystem -->
+
+  ### 試用環境 <!-- Try it for yourself -->
+
+  <!--
+  This new LXD release is already available for you to try on our [demo service](/lxd/try-it/).
+  -->
+  この新しい LXD のリリースが、すでに私たちの [デモサービス](/ja/lxd/try-it/) で利用できます。
+
+  ### ダウンロード <!-- Downloads -->
+  <!--
+  The release tarballs can be found on our [download page](/lxd/downloads/).
+  -->
+  このリリースの tarball は [ダウンロードページ](/lxd/downloads/) から取得できます。

@@ -1,0 +1,66 @@
+title: LXD 2.11 リリースのお知らせ
+date: 2017/03/08 00:00
+content: |-
+  ### このリリースに含まれる変更点 <!-- The changes in this release include -->
+
+  新機能 <!-- New features -->:
+
+   * 初期の 1 つ以上のエイリアスを設定するためのフィールド "aliases" が POST /1.0/images 内に追加されました <!-- New "aliases" field in POST /1.0/images allowing for an initial set of aliases to be passed. -->
+   * ヘルプメッセージとクライアントで manpage を生成するための "lxc manpage" コマンドを改良しました <!-- Reworked help messages and "lxc manpage" command to generate manpages for the client. -->
+   * "macvlan" デバイス向けの "vlan" NIC プロパティを追加しました。ホストデバイスの特定の VLAN に接続できます <!-- New "vlan" nic property for "macvlan" devices, allowing to connect to a particular VLAN on the host device. -->
+
+  バグ修正 <!-- Bugfixes -->:
+
+   * doc: loop デバイスの ZFS を拡張するための方法を追記しました <!-- Add instructions to grow ZFS loop -->
+   * doc: ストレージのドキュメントを改良しました <!-- Improve storage doc -->(Issue #3013)
+   * global: すべての場所で RunCommand を使うようになりました <!-- Use RunCommand everywhere -->
+   * i18n: テンプレートをリフレッシュしました <!-- Refresh templates -->
+   * i18n: weblate から翻訳を更新しました <!-- Update translations from weblate -->
+   * i18n: 翻訳テンプレートを更新しました <!-- Update translation templates -->
+   * lxc: すべてのコマンドで --version オプションを使えるようになりました <!-- Allow \-\-version to be passed with any command -->
+   * lxc: ヘルプやエラー時のメッセージの出力をより一貫性のあるものにしました <!-- Make help/usage a bit more consistent -->
+   * lxc: より良い man を出力するための改良を行いました <!-- Rework for better manpages -->
+   * lxc/image: エイリアスの説明 (description) を表示するようにしました <!-- Show the alias description -->
+   * lxc/profile: "profile unset" を適切に実装しました <!-- Properly implement "profile unset" -->
+   * lxd/containers: FindProcess を使わずに、exec.Cmd を与えるようにしました <!-- Don't use FindProcess, just pass exec.Cmd -->(Issue #3037)
+   * lxd/containers: 失敗時にメモリ制限を適切に元に戻すようにしました <!-- Properly revert memory limits on failure -->(Issue #3017)
+   * lxd/images: エイリアスの説明 (description) を適切に返すようにしました <!-- Properly return the alias description -->
+   * lxd/images: 少しコードをリファクタリングしました <!-- Refactor code a bit -->
+   * lxd/migration: ストレージプールが使用できない場合は設定から削除するようにしました <!-- Actually unset the storage pool if unavailable -->(Issue #3036)
+   * lxd/migration: rsync のエラーの扱いを改良しました <!-- Better handle rsync errors (subprocesses) -->
+   * lxd/migration: btrfs の正しいプールプロパティを設定するようにしました <!-- Set correct pool property for btrfs -->(Issue #3036)
+   * lxd/migration: zfs の正しいプールプロパティを設定するようにしました <!-- Set correct pool property for zfs -->(Issue #3036)
+   * lxd/migration: rsync のログ出力を少し調整しました <!-- Tweak rsync logging a bit -->
+   * lxd/patches: まだマウントされてない場合は tryMount() を呼ぶようにしました <!-- Call tryMount() if not already mounted -->(Issue #3026)
+   * lxd/patches: lvrename コマンドを lvm のデバイスパスの存在を確認してから実行するようにしました <!-- Conditionalize lvrename -->(Issue #3026)
+   * lxd/patches: LV が存在しない場合は image データベースのエントリを削除するようにしました <!-- Delete image db entry if LV is missing -->(Issue #3026)
+   * lxd/patches: 論理ボリュームサイズを検出するようにしました <!-- Detect the logical volume size -->
+   * lxd/patches: 誤った btrfs のソースプロパティを修正しました <!-- Fix incorrect btrfs source properties -->(Issue #3020)
+   * lxd/patches: lvm と dir が混じったストレージの upgrade を扱えるようにしました <!-- Handle mixed-storage <lvm,dir> upgrade -->(Issue #3026)
+   * lxd/patches: lvm で MNT\_DETACH を使うようにしました <!-- Use MNT\_DETACH for lvm -->(Issue #3026)
+   * lxd/patches: lvm スナップショットディレクトリには RemoveAll() を使うようにしました <!-- Use RemoveAll() for lvm snapshots dir -->(Issue #3026)
+   * lxd/storage/btrfs: loop バックエンドのプールを正しく扱うようにしました <!-- Correctly handle loop-backed pools -->(Issue #3020)
+   * lxd/storage/btrfs: 特別なサブボリュームパスを扱うようにしました <!-- Handle custom subvolume paths -->(Issue #3020)
+   * lxd/storage/dir: 有効なプールのソースパスを制限しました <!-- Limit valid pool source paths -->(Issue #3023)
+   * lxd/storage/lvm: {pv,vg}scan を呼ぶようにしました <!-- Call {pv,vg}scan -->
+   * lxd/storage/lvm: メソッドから関数へ関数を書き換えました <!-- Dumb down functions from methods to functions -->(Issue #3026)
+   * lxd/storage: btrfs でない更新元を扱うようにしました <!-- Deal with source not being btrfs -->(Issue #3024)
+   * lxd/storage: スナップショットが確実に正しいプールを持つようにしました <!-- Ensure correct pool for snapshots  -->(Issue #3036)
+   * lxd/storage: btrfs のマイグレーションコードを堅牢にしました <!-- Harden the btrfs migration code -->(Issue #3024)
+   * lxd/storage: prepareLoopDev() がエラーを直接レポートしているのでエラーメッセージを削除しました <!-- Report prepareLoopDev() error directly -->
+   * shared/idmap: 色々問題を修正しました <!-- Fix various issues -->
+   * tests: dir と btrfs のテストをさらに追加しました <!-- Add more dir and btrfs tests -->(Issue #3023)
+   * tests: ストレージテストの LVM 部分を改良しました <!-- Improve lvm part of storage tests -->
+
+  ### 試用環境 <!-- Try it for yourself -->
+
+  <!--
+  This new LXD release is already available for you to try on our [demo service](/lxd/try-it/).
+  -->
+  この新しい LXD のリリースが、すでに私たちの [デモサービス](/ja/lxd/try-it/) で利用できます。
+
+  ### ダウンロード <!-- Downloads -->
+  <!--
+  The release tarballs can be found on our [download page](/lxd/downloads/).
+  -->
+  このリリースの tarball は [ダウンロードページ](/lxd/downloads/) から取得できます。

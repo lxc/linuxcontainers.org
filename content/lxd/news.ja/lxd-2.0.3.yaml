@@ -1,0 +1,80 @@
+title: LXD 2.0.3 リリースのお知らせ
+date: 2016/06/28 00:00
+content: |-
+  <!--
+  This is the third bugfix release for LXD 2.0.
+  -->
+  このリリースは LXD 2.0 の 3 回目のバグフィックスリリースです。
+
+  ### LXD 2.0.2 以降の変更は以下の通りです <!-- The changes since LXD 2.0.2 are -->
+
+  重要な変更点 <!-- Notes -->:
+
+   * LXD には "unsquashfs" コマンドが必要になりました。新しい Ubuntu イメージを展開するために必要なためです <!-- The "unsquashfs" command is now a LXD requirement as it is needed to
+     unpack the newer Ubuntu images. -->
+   * Sync の応答を返すエンドポイントへの POST リクエストに対して、REST API は Location ヘッダ付きの 201 番コードを返すようになりました。これまでは、Location ヘッダなしの 200 番コードが返っている場合がありました <!--  The REST API will now return a 201 code accompanied with a Location
+     header following a POST to an endpoint returning an Sync response. It
+     used to be sometimes returning a 200 without the Location header. -->
+   * デフォルトで、コンテナには /dev/fuse デバイスが作成されるようになりました <!-- Containers now get a /dev/fuse device by default. -->
+
+  細かな改良点 <!-- Minor improvements -->:
+
+   * extras: bash completion を改良しました <!-- Better bash completion coverage -->
+   * client/delete: --force の短縮形として -f が使えるようになりました <!-- Allow -f as a shortcut of --force -->
+   * client/info: サーバ情報が証明書のフィンガープリントを含むようになりました <!-- Include the certificate fingerprint in server info --> (Issue #2098)
+   * client/info: エラー時の --show-log の実行例にリモートホストの名前を表示するようにしました <!-- Show remote in the \-\-show-log example provided on error -->
+   * core: 新しい Ubuntu イメージで必要なので squashfs のサポートを追加しました <!-- Add squashfs support as needed by newer Ubuntu images -->
+   * core: ブラウザが LXD とやりとりできるよう、TLS cipher リストを調整しました <!-- Tweak TLS cipher list a bit to allow browsers to talk to LXD --> (Issue #2034)
+   * daemon/container: デフォルトで /dev/fuse をセットアップするようになりました <!-- Setup /dev/fuse by default -->
+
+  バグ修正 <!-- Bugfixes -->:
+
+   * client: 接続エラーの際の扱いを改良しました <!-- Better handle connection errors -->
+   * client: サブコマンドのエイリアスをサポートするために、すべてのエイリアス引数をチェックするようになりました <!-- Check all alias args to support subcommand aliases --> (Issue #2095)
+   * client/file: edit の際にファイルのパーミッションを変更しなくなりました <!-- Don't modify file permissions on edit -->
+   * client/image: イメージコピーの際にデーモンが提示したフィンガープリントを使うようにしました <!-- Use the daemon provided fingerprint on image copy --> (Issue #2162)
+   * client: クライアントの URL を正規化するようにしました <!-- Normalize the URLs in the client --> (Issue #2112)
+   * client/remote: 'remote add' 時のパニックを修正しました <!-- Fix a panic in 'remote add' --> (Issue #2089)
+   * client/remote: &lt;FQDN&gt;:&lt;PORT&gt; のパースを修正しました <!-- Fix parsing of <FQDN>:<PORT> -->
+   * core: PEM デコードエラーの扱いを改良しました <!-- Better handle PEM decoding errors --> (Issue #2119)
+   * core: ReaderToChannel 内でゼロバイト送出をチェックするようになりました <!-- Check for zero byte send in ReaderToChannel --> (Issue #2072)
+   * core: 並列の Websocket 書き込みの際のクラッシュを修正しました <!-- Fix a concurrent websocket write crash -->
+   * core: WebsocketUpgrader のバッファサイズとしてデフォルト値を使うようになりました <!-- Use default buffer size for WebsocketUpgrader -->
+   * daemon: lxd コマンドのヘルプの改行が抜けていたので追加しました <!-- Add missing linebreak to lxd help -->
+   * daemon/api: sync の POST リクエストの際に Location ヘッダをセットするようにしました <!-- Set Location on sync POST requests --> (Issue #2092)
+   * daemon/btrfs: btrfs でのリストアの失敗を修正しました <!-- Fix failure to restore on btrfs --> (Issue #2058)
+   * daemon/certificate: すでに存在する証明書を追加しようとした場合、失敗するようになりました <!-- Fail to add an existing certificate -->
+   * daemon/config:圧縮アルゴリズムに "none" を設定できるようにしました (再発バグの修正)<!-- Allow "none" as compression algorithm (regression fix) -->
+   * daemon/container: イメージのエクスポート時の rootfs tarball の出力パスを追加しました <!-- Add target path to rootfs tarball in image export --> (Issue #1980)
+   * daemon/container: バインドマウントの扱いを改良しました <!-- Better handle bind mounts -->
+   * daemon/container: 存在しないファイルの GET の際は 404 を返すようになりました <!-- GET of a nonexistent file now 404s --> (Issue #2059)
+   * daemon/container: device cgroup の定義を読みやすくしました <!-- Make devices cgroup config more readable -->
+   * daemon/containers: ディスクのセットアップが失敗した際のエラーメッセージを改良しました <!-- Improve error message on disk setup failure -->
+   * daemon/container: 更新が失敗した際の Undo 処理に defer を使うようにしました <!-- Use defer to undo changes on failed update -->
+   * daemon/db: db のアップグレードのテスト時は zfs.img の chmod しないようにしました <!-- Don't try to chmod zfs.img when testing db upgrades -->
+   * daemon/db: テストモードの際は /var/lib/lxd/containers の更新をしないようにしました <!-- Don't try to update /var/lib/lxd/containers in go tests -->
+   * daemon/init: ストレージキーを unset するようにしました <!-- Actually unset the storage keys -->
+   * daemon/lvm: LVM の最近のバージョンでは lvextend を呼ばなくしました <!-- Don't call lvextend with recent LVM versions -->
+   * daemon/migration: zfs/btrfs の send 時にバッファリングを設定するようにしました <!-- Setup some buffering for zfs/btrfs send -->
+   * daemon/migration: チェックポイント・リストアのコードを全体的にシンプルにしました <!-- Simplify checkpoint/restore code everywhere -->
+   * daemon/migration: LXC の新しいマイグレーション API に切り替えました <!-- switch to the new LXC migrate API -->
+   * daemon/zfs: ブロックデバイスの検出を改良しました <!-- Improve block device detection -->
+   * daemon/zfs: マウントされてない場合はマウントするようにしました <!-- Mount if not mounted --> (Issue #1888)
+   * doc: ZFS スナップショットの欠点について記載しました <!-- Clarify ZFS snapshot shortcomings --> (Issue #2055)
+   * doc: configuration.md から JSON の例を削除しました <!-- Drop JSON example from configuration.md -->
+   * doc: すべてのフィールドをカバーするように証明書の JSON の例を修正しました <!-- Fix certificates JSON examples to cover all fields -->
+   * doc: "unix-block" の説明内の Typo を修正しました <!-- Fix typo in "unix-block" description -->
+   * doc: 共有フォルダの説明を改良しました <!-- Improve shared folder documentation (README) --> (Issue #2123)
+   * lxd/patches: 一度だけ適用するパッチの仕組みのサポートを追加しました (DB スキーマの更新からの分離) <!-- Add support for one-time patches (separate from DB schema updates) -->
+   * Makefile: go get が悪化し、3 回実行する必要が出てきました <!-- go get has become worse, now need 3 runs -->
+   * Makefile: xgettext-go のリポジトリ URL を更新しました <!-- Update repository URL for xgettext-go -->
+   * migration: エラーの際の処理を統合しました <!-- Consolidate error handling -->
+   * test: エイリアス作成の際のリターンコードとして 201 を有効にしました <!-- 201 is a valid return code for alias creation -->
+   * test: ReaderToChannel のテストを追加しました <!-- Add a test for ReaderToChannel -->
+   * test: "lxc file edit" 時の対象のファイルのオーナーとパーミッションのテストを追加しました <!-- Add test for "lxc file edit" target file owner and permission -->
+
+  ### ダウンロード <!-- Downloads -->
+  <!--
+  The release tarballs can be found on our [download page](/lxd/downloads/).
+  -->
+  このリリースの tarball は [ダウンロードページ](/lxd/downloads/) から取得できます。

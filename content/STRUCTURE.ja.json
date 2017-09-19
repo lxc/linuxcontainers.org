@@ -91,8 +91,9 @@
     {"path": "/lxd/news/",
      "title": "LXD - ニュース",
      "menu": ["LXD", "ニュース"],
-     "generator": "markdown",
-     "meta": {"input": "lxd/news.ja.md"}},
+     "generator": "news",
+     "meta": {"dir": "/content/lxd/news.ja/",
+              "input": "lxd/news.md"}},
 
     {"path": "/lxd/getting-started-cli/",
      "title": "LXD - はじめに - コマンドライン",

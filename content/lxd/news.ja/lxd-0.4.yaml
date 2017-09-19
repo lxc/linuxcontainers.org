@@ -1,0 +1,36 @@
+title: LXD 0.4 リリースのお知らせ
+date: 2015/03/17 00:00
+content: |-
+
+  <!--
+  The major changes for this release are:
+  -->
+  このリリースの主な変更点は以下の通りです。
+
+   * リモートにあるイメージからのコンテナの起動がサポートされました <!-- Support for starting a container from a remote image -->
+   * ホスト間のコンテナのコピー／移動がサポートされました <!-- Support for copying/moving containers between hosts -->
+   * コマンドラインが改良されました (リスト、エイリアス、プロファイル、短いハッシュ、など) <!-- Improved command line (listing, aliases, profiles, partial hashes, ...) -->
+   * エラーログが改良されました <!-- Improved error logging -->
+   * 仕様によりきっちり合うように API が修正されました <!-- API fixes to more closely match the spec -->
+   * 多数のバグフィックス <!-- A lot of bugfixes -->
+
+  <!--
+  Please note that it's still early in the LXD development and that current LXD isn't intended  
+  for production use and comes with no support statement from upstream.  
+  (reported bugs and patches will be included in the next release)
+  -->
+  このリリースはまだ LXD 開発の初期であり、現時点の LXD はまだプロダクション用途向きではないことに注意してください。そしてサポートはありません。(報告されたバグ修正やパッチは次のリリースに含まれる予定です)
+
+  <!--
+  At this point, most core LXD features are present but many of the  
+  particular options aren't implemented yet (don't match our  
+  specifications), we expect to make great progress in supporting all of  
+  the expected options over the next couple of releases.
+  -->
+  現時点で、ほとんどの LXD の機能の主要なものが提供されるようになりました。しかし、まだ多数の特定のオプションが実装されていません (仕様と一致していません)。今後の数リリースのうちで、予定しているオプションのすべてがサポートされるように大きく進歩する予定です。
+
+  ### Downloads
+  <!--
+  The release tarballs can be found on our [download page](/lxd/downloads/).
+  -->
+  このリリースの tarball は [ダウンロードページ](/lxd/downloads/) から取得できます。

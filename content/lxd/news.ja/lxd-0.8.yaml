@@ -1,0 +1,21 @@
+title: LXD 0.8 リリースのお知らせ
+date: 2015/04/28 00:00
+content: |-
+  <!--
+  The major changes for this release are:
+  -->
+  このリリースの主な変更点は以下の通りです。
+
+   * lxc file push の uid/gid の問題を修正しました <!-- Fixed uid/gid in lxc file push -->
+   * PROXY 環境変数を使うようになりました <!-- Respect PROXY environment variables -->
+   * データベースのロック問題を修正しました <!-- Fix database locking issues -->
+   * デバッグオプションを更に追加しました <!-- Add more debugging options -->
+   * 一時的なコンテナの様々な問題を修正しました <!-- Various fixes to ephemeral containers -->
+   * スナップショットから新しくコンテナを作成する際の問題を修正しました <!-- Fix creating a new container from a snapshot -->
+   * btrfs のサブボリュームが使用できる場合は、サブボリュームを使ってより速くコンテナを作れるようになりました <!-- When available, use btrfs subvolumes for faster container creation -->
+
+  ### ダウンロード <!-- Downloads -->
+  <!--
+  The release tarballs can be found on our [download page](/lxd/downloads/).
+  -->
+  このリリースの tarball は [ダウンロードページ](/lxd/downloads/) から取得できます。

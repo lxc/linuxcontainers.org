@@ -1,0 +1,88 @@
+title: LXD 2.5 リリースのお知らせ
+date: 2016/10/25 00:00
+content: |-
+  ### このリリースに含まれる変更点 <!-- The changes in this release include -->
+  新機能 <!-- New features -->:
+
+   * lxc/remote: 新しいリモートホストを FQDN/IP で追加できるようになりました (name なしで) <!-- Allow adding a new remote just by FQDN/IP (without a name) -->
+   * lxd/containers: API に exec の出力を記録する機能を実装しました <!-- Implement exec output recording in the API -->
+   * lxd/images: simplestream キャッシュをディスクに保存するようになりました (リモートイメージをオフラインで使用できるようになりました) <!-- Store the simplestreams cache to disk (allows for offline use of those remote images) -->
+   * lxd/certificates: 証明書の PUT/PATCH のサポートを追加しました <!-- Add support for PUT/PATCH of certificates -->
+   * lxd/containers: exec セッション中のシグナルのフォワーディングをサポートしました <!-- Support signal forwarding in exec session -->
+   * lxd/containers: GPU のホットプラグのサポートを追加しました (デバイスタイプ "gpu")<!-- Add support for GPU hotplug ("gpu" device type) -->
+
+  バグ修正 <!-- Bugfixes -->:
+
+   * appveyor: appveyor の設定を追加しました <!-- Add appveyor config to git -->(Issue #2537)
+   * client: http.Transports の KeepAlive を無効にしました <!-- Disable keepalives in http.Transports -->
+   * client: Windows と Mac 上でのクライアントテストを修正しました <!-- Fix tests of client on Windows/Mac -->
+   * doc: README に公式に Windows のサポートについて追加しました <!-- Add official Windows support to README -->
+   * doc: rest-api 文書内の API エンドポイントの記載をソートしました <!-- Sort API endpoints in rest-api -->
+   * doc: rest-api 文書内でメソッドの並びを統一しました <!-- Use consistent method ordering in rest-api -->
+   * doc: すべてスペースを使うようにしました <!-- Use spaces everywhere -->
+   * doc: 動作環境を更新し、LXC 2.0.0 以上が必要であると記載しました <!-- We actually require 2.0.0 or higher -->
+   * doc: github の markdown レンダラ向けに調整を行いました <!-- Workaround github markdown renderer -->
+   * examples: yaml の拡張子として .yaml を使うようにしました <!-- Use .yaml as the yaml extension -->
+   * extra: クライアントコマンドの bash-completion に network コマンドを追加しました <!-- Added the command network to lxc-client bash-completion -->
+   * extra: クライアントコマンドの bash-completion でパラメータに dash が使えるようになりました <!-- Allow dash in parameters to lxc-client bash-completion -->
+   * extra: クライアントコマンドの \_lxd\_profiles を修正しました <!-- Fix \_lxd\_profiles in lxc-client bash-completion -->
+   * lxc/copy: 成功したマーカーとして operation を使わないようにしました <!-- Don't use the operation as a marker of success -->
+   * lxc/copy: コピーソース側の操作の完了を待つようにしました <!-- Wait on the source operation too -->
+   * lxc/exec: Windows では term を "dumb" に設定するようにしました <!-- Set term to "dumb" on windows -->(Issue #2288)
+   * lxc/file: ヘルプのtypoを修正しました <!-- Fix help typo -->
+   * lxc/file: mkdir -p / を修正しました <!-- Fix mkdir -p / -->
+   * lxc/file: ファイルをサーバに送る前にパスを正規化するようにしました <!-- Normalize paths before sending them to the server -->(Issue #2557)
+   * lxc/init: -n に対する nictype の値の typo を修正しました <!-- Fix typo in nictype value for \-n -->
+   * lxc/list: lxc list のヘルプ内の typo を修正しました <!-- Fix typo in lxc list help -->
+   * lxc/push: typo を修正しました <!-- Fix typo -->(Issue #2501)
+   * lxc/remote: Go 開発版での remote add を修正しました <!-- Fix remote add with Go tip -->
+   * lxd/certificates: ドキュメント記載の証明書フィールドをすべて export しました <!-- Export all documented certificate fields -->
+   * lxd/containers: mkdir の失敗をよりわかりやすく表示するようにしました <!-- Be more verbose on mkdir failure -->
+   * lxd/containers: OnStop 内でエラーをキャッチして返すようにしました <!-- Catch and return more errors in OnStop -->
+   * lxd/containers: OnStart で何らかのエラーが発生したとき、AppArmor 関連のクリーンアップをするようにしました <!-- Clean up apparmor stuff in OnStart when something fails -->
+   * lxd/containers: 再起動時に一時的な (ephemeral) コンテナを破棄しないようにしました <!-- Don't destroy ephemeral container on restart -->(Issue #2555)
+   * lxd/containers: 正しくないログを表示しなくなりました <!-- Don't show invalid logs -->
+   * lxd/containers: exec: 使っていないコードの削除を行いました <!-- Remove unused code -->
+   * lxd/containers: 4.8 以上のカーネルで forkmount が動作するように修正しました <!-- Fix forkmount to work with 4.8 and higher -->
+   * lxd/containers: seccomp のエラーメッセージを修正しました <!-- Fix wording of seccomp error message -->
+   * lxd/containers: update 時の設定のバリデーションを改良しました <!-- Improve config validation on update -->
+   * lxd/containers: OnStart/OnStop hook のエラーをログに出力するようにしました <!-- Log OnStart/OnStop hook errors -->
+   * lxd/containers: コンテナの自動起動の信頼性を向上させました <!-- More reliable container autostart -->(Issue #2469)
+   * lxd/containers: カーネルモジュールがロードされていない場合のみロードするようにしました <!-- Only load kernel modules if not loaded -->
+   * lxd/containers: CPU 割当 (allowance) を適切にバリデートするようになりました <!-- Properly validate CPU allowance -->
+   * lxd/containers: メモリ制限を適切にバリデートするようになりました <!-- Properly validate memory limits -->(Issue #2483)
+   * lxd/containers: go-lxc のエラーを記録するようになりました <!-- Record the err from go-lxc -->
+   * lxd/containers: OnStop のレガシーなコードを削除しました <!-- Remove legacy code from OnStop -->
+   * lxd/containers: 正しいデバイスのタイプをログに記録するようになりました <!-- Report correct dev type in log -->
+   * lxd/containers: LXC (liblxc) のログレベルをデーモンに合わせるようにしました <!-- Set LXC loglevel to match daemon -->(Issue #2528)
+   * lxd/containers: USB のベンダー ID が必須で、プロダクト ID は必須でなくなるように修正しました <!-- USB vendorid is mandatory, productid isn't -->
+   * lxd/devices: netlink 情報をもう少し厳しく扱うようにしました <!-- Be less optimistic about netlink info -->
+   * lxd/devices: usb に対してnetlink の DEVNAME エントリを使うようにしました <!-- Use DEVNAME entry of netlink for usb -->
+   * lxd/images: ディスクスペース超過による unpack のエラーを検出するようになりました <!-- Detect out of disk space unpack errors -->(Issue #2201)
+   * lxd/images: 不必要なイメージのコピーを行わないようにしました <!-- Don't make unnecessary image copies -->(Issue #2508)
+   * lxd/images: export 時の不適切なメタデータファイル名を修正しました <!-- Fix invalid filename of metadata on export -->(Issue #2467)
+   * lxd/init: zfs のカーネルサポートを検出するようになりました <!-- Detect zfs kernel support -->
+   * lxd/init: コンテナ内では ZFS を無視するようにしました <!-- Ignore ZFS if in a container -->
+   * lxd/migration: ログ収集の競合を修正しました <!-- Fix a race for collecting logs -->
+   * lxd/migration: ファイル作成によるデバッグを削除しました <!-- Remove debugging by file creation -->
+   * lxd/migration: 適切なタイミングでストレージのマイグレーションを開始するようにしました <!-- Start migration storage at the right time -->(Issue #2505)
+   * lxd/networks: 常に dnsmasq との通信を許可するようにしました <!-- Always allow communication with dnsmasq -->(Issue #2506)
+   * lxd/networks: IPv6 で --enable-ra を常に与えられるようになりました <!-- Always pass \-\-enable-ra with IPv6 -->(Issue #2481)
+   * lxd/networks: DHCP チェックサムを埋めるようにしました <!-- Fill DHCP checksums -->
+   * lxd/networks: IPv6 の DHCP ロジックを修正しました <!-- Fix IPv6 DHCP logic -->
+   * shared/cert: IP アドレスのパースを詳細に行うようにしました <!-- be more thorough when parsing ip addr -->
+   * shared: Linux 特有なテストを移動させました <!-- Move Linux specific tests away -->(Issue #2449)
+   * travis: クライアントのテストを実行するようにしました <!-- Run the client tests -->
+   * travis: Jenkins Go のバージョンにマッチするように更新しました <!-- Update to match Jenkins Go versions -->
+
+  ### 試用環境 <!-- Try it for yourself -->
+  <!--
+  This new LXD release is already available for you to try on our [demo service](/lxd/try-it/).
+  -->
+  この新しい LXD のリリースが、すでに私たちの [デモサービス](/ja/lxd/try-it/) で利用できます。
+
+  ### ダウンロード <!-- Downloads -->
+  <!--
+  The release tarballs can be found on our [download page](/lxd/downloads/).
+  -->
+  このリリースの tarball は [ダウンロードページ](/lxd/downloads/) から取得できます。

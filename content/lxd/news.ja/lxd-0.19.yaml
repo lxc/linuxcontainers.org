@@ -1,0 +1,39 @@
+title: LXD 0.19 リリースのお知らせ
+date: 2015/09/25 00:00
+content: |-
+
+  <!--
+  The main changes for this release are:
+  -->
+  このリリースの主な変更点は以下の通りです。
+
+   * ZFS をサポートしました <!-- ZFS support -->
+   * コンテナのネストをサポートしました <!-- Support for container nesting -->
+   * stdin から読み込む際に複数行の設定キーを指定できるようになりました (値として "-" を使います)<!-- Allow setting multi-line configuration keys by reading from stdin (using "-" as the value) -->
+   * コンテナの一時的なコピーを作れるようになりました (-e/--ephemeral フラグ)<!-- It's now possible to make an ephemeral copy of a container (-e/--ephemeral flag) -->
+   * パブリックな読み取り専用のサーバを自動で検出するようになりました (もう --public は不要です)<!-- Public read-only servers are now auto-detected (no more \-\-public needed) -->
+   * lxd-images が既存のイメージをアップデートできるようになりました (--sync フラグを使います)<!-- lxd-images now supports updating existing images (when using the \-\-sync flag) -->
+   * (edit コマンドを使って) イメージのパブリック指定の設定と解除が行えるようになりました <!-- It is now possible to mark/unmark images as public (through the edit command) -->
+
+  <!--
+  Additionally:
+  -->
+  加えて、
+
+   * テストスイートを完全に再構築しました <!-- A completely reworked testsuite -->
+   * Windows クライアントの準備のためにリファクタリングをいくつか行いました <!-- Some refactoring in preparation for a Windows client -->
+   * ドキュメントと仕様を更新しました <!-- Updated documentation and specifications -->
+   * 多数のバグフィックスを行いました (リリース時点での既知のバグはなくなりました)<!-- A lot of bugfixes (no known bugs left at time of release) -->
+
+  <!--
+  Note that due to an API implementation problem in past releases, older command line clients  
+  will fail to interact with LXD 0.19's image store. Such clients should be upgraded to 0.19.
+  -->
+  過去のリリースの API 実装の問題により、古いコマンドラインクライアントでは、LXD 0.19 のイメージストアの操作が失敗することに注意してください。このような場合は 0.19 へアップグレードする必要があります。
+
+
+  ### ダウンロード<!-- Downloads -->
+  <!--
+  The release tarballs can be found on our [download page](/lxd/downloads/).
+  -->
+  このリリースの tarball は [ダウンロードページ](/lxd/downloads/) から取得できます。

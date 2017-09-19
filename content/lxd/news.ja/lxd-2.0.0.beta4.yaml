@@ -1,0 +1,49 @@
+title: LXD 2.0.0.beta4 リリースのお知らせ
+date: 2016/02/23 00:00
+content: |-
+
+  ### このリリースの主な変更点 <!-- The main changes for this release are -->
+
+   * REST API の変更 <!-- REST API changes -->
+      * /1.0 で返る API バージョンに関するデータが変わりました。api\_status, api\_version and api\_extensions が返ります <!-- The API versioning data at /1.0 has changed, now includes, api\_status, api\_version and api\_extensions -->
+      * アーキテクチャのフィールドで、意味がわかりづらい整数の代わりに文字列が返るようになりました <!-- Architecture fields are now returned as strings instead of obscure integer -->
+      * GET /1.0/containers/NAME/state を作りなおしました。より詳しいネットワーク、ディスク使用量、メモリ消費量の情報を含むようになりました <!-- GET /1.0/containers/NAME/state has been reworked, now includes more detailed network information, disk usage information as well as memory consumption data. -->
+   * "lxc list" に速く表示できるフィールドだけを表示する \-\-fast モードを追加しました <!-- New \-\-fast mode for "lxc list" which only lists "cheap" fields -->
+   * "lxc info" がコンテナのアーキテクチャを表示するようになりました <!-- The container architecture is now listed in "lxc info" -->
+   * プロセス数制限 (pids cgroup) を追加しました <!-- Add process count limit (pids cgroup) -->
+
+  ### バグ修正 <!-- Bugfixes -->
+   * リモートのイメージエイリアスからのコンテナ作成時のバグを修正しました <!-- Fix container creation from remote image alias -->
+   * エラーに対する Content-Type の値を修正しました <!-- Fix Content-Type value for errors -->
+   * コンテナを停止する前にユーザに問い合わせるようになりました <!-- Don't stop containers before asking the user -->
+   * cgo を使ってターミナル機能を再実装しました (ppc64el 上の動作が修正されました)<!-- Re-implement terminal functions through cgo (fixes ppc64el) -->
+   * /dev/zero へのアクセスを許可しました <!-- Allow access to /dev/zero -->
+   * tests: pprof を自己完結するようにしました <!-- Keep pprof self-contained -->
+   * bridge-utils の代わりに iproute2 を使うようになりました <!-- Use iproute2 instead of bridge-utils -->
+   * lxd-images: sync を修正しました <!-- Fix sync -->
+   * cgroup 名前空間が有効なカーネルで cgroupfs をマウントできるようにしました <!-- allow cgroupfs mounting on cgns kernels -->
+   * コンテナのプロセス数取得を pids cgroup を使って最適化しました <!-- Optimize container process count (use pid cgroup) -->
+   * file push 時のパーミッションの問題を修正しました <!-- Fix file push permissions -->
+   * list: 10 並列でコンテナの問い合わせを行うようにしました <!-- Query containers by batch of 10 -->
+   * ホストのネットワークが変化した時だけリバランスするようにしました <!-- Only re-balance on host network changes -->
+   * list: go routines を少し最適化するようにしました <!-- Attempt to optimize the go routines slightly -->
+
+  ### アップグレードの注意 <!-- Upgrade notes -->
+
+   * このリリースは古いバージョンの LXD に対する後方互換性がありません。
+     クライアントとサーバのすべてを同じバージョンで実行するように注意してください。
+     <!-- This release breaks backward compatibility with older LXD versions.
+     Please make sure all your clients and servers run the same version. -->
+   * REST API の変更に関する前述の記載をご覧ください <!-- See notes above for changes to the REST API. -->
+
+  ### 試用環境 <!-- Try it for yourself -->
+  <!--
+  This new LXD release is already available for you to try on our [demo service](/lxd/try-it/).
+  -->
+  この新しい LXD のリリースが、すでに私たちの [デモサービス](/ja/lxd/try-it/) で利用できます。
+
+  ### ダウンロード <!-- Downloads -->
+  <!--
+  The release tarballs can be found on our [download page](/lxd/downloads/).
+  -->
+  このリリースの tarball は [ダウンロードページ](/lxd/downloads/) から取得できます。
