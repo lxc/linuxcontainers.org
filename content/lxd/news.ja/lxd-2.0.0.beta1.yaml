@@ -1,0 +1,38 @@
+title: LXD 2.0.0.beta1 リリースのお知らせ <!-- LXD 2.0.0.beta1 release announcement --><span class="text-muted">2016 年 1 月 26 日<!-- 26th of January 2016 --></span>
+date: 2016/01/26 00:00
+content: |-
+
+  ### このリリースの主な変更点 <!-- The main changes for this release are -->
+
+   * "lxc config edit" がローカルサーバの設定を編集できるようになりました <!-- "lxc config edit" now works to edit the local server configuration -->
+   * Block I/O 制限がサポートされました <!-- Add support for block I/O limits -->
+   * ネットワーク I/O 制限がサポートされました <!-- Add support for network I/O limits -->
+
+  ### バグ修正 <!-- Bugfixes -->
+
+   * 存在しないエイリアスを削除しようとする際にエラーを出すようにしました <!-- error out on deleting nonexistent alias -->
+   * LXC 設定の読みこみを修正しました <!-- Fix LXC config rendering -->
+   * テキストエディタの検出を改良しました <!-- Improve detection of text editor -->
+   * "lxc file edit" を修正しました <!--  Fix "lxc file edit" -->
+   * ネットワーク制限を追加しました <!-- Add network limits -->
+   * デーモンの IPv6 の扱いを修正しました <!-- Fix IPv6 handling in daemon code -->
+   * file pull/push の仕様と文書を更新しました <!-- Update specs and documentation on file pull/push -->
+   * 壊れた LXC をより良く扱うようにしました (訳注：設定の読みこみに失敗するような壊れたコンテナに対して "BROKEN" というステータスを返して対応できるようにした)<!-- Better deal with broken LXC -->
+   * zfs に対するマウントポイントを設定するのを防ぐために README を更新しました <!-- Update README to avoid setting a mountpoint for zfs -->
+   * イメージのコピーに成功した際にメッセージを表示するようにしました <!-- Print message on sucessfull copy of image -->
+   * TYPO を修正しました (sucessfully → successfully) <!-- Fix small typo s/sucessfully/successfully -->
+   * forkstart のデバッグを改良しました <!-- Improve forkstart debugging -->
+   * (訳注：move で) マイグレーションでない場合は常に Rename() を呼ぶようにしました <!-- Always call Rename() when not migrating -->
+   * イメージのアップロードでテンポラリファイルを使うようにしました <!-- Use a tempfile for image uploads -->
+   * restore で start コマンドが失敗した場合にエラーを報告するようにしました <!-- report errors if the restore call's start command fails -->
+   * (訳注：lxc edit file で) ファイル転送時にターゲットのファイルを切り詰めるようにしました <!-- Truncate the target on file transfer -->
+   * 設定の raw キーは危険であることを注意書きしました <!-- Mention that raw keys are risky -->
+   * 特権コンテナの /dev/tty に書きこみを許可しました <!-- Allow writes to /dev/tty in privileged containers -->
+   * ステートフルなスナップショットとリストアを実装しました <!-- implement stateful snapshot restore -->
+   * スナップショットの削除が失敗しても delete が失敗しないようにしました <!-- don't fail to delete when deleting snapshots fails -->
+
+  ### 試用環境 <!-- Try it for yourself -->
+  <!--
+  This new LXD release is already available for you to try on our [demo service](/lxd/try-it/).
+  -->
+  この新しい LXD のリリースが、すでに私たちの [デモサービス](/ja/lxd/try-it/) で利用できます。

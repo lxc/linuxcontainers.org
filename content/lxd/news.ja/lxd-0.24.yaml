@@ -1,0 +1,45 @@
+title: LXD 0.24 リリースのお知らせ
+date: 2015/12/08 00:00
+content: |-
+
+  ### このリリースの主な変更点 <!-- The main changes for this release are -->
+   * macvlan ネットワークインターフェースをサポートしました <!-- Support for macvlan network interfaces -->
+   * 物理ネットワークインターフェースをサポートしました <!-- Support for physical network interfaces -->
+   * s390x 上でのビルドをサポートしました <!-- Support for building on s390x -->
+   * copy/move 時に、スナップショットも元のコンテナと同時に転送されるようになりました <!-- Snapshots are now transfered along with their parent container on copy/move -->
+   * limits.cpu のための CPU スケジューラを実装しました <!-- A CPU scheduler for limits.cpu has been implemented -->
+   * "lxc config unset/set" がリモートサーバに対して動作するようになりました <!-- now works against a remote server -->
+
+  ### バグ修正 <!-- Bugfixes -->
+   * "lxc list" の IP アドレスの表示方法を改良しました <!-- Improved IP rendering in "lxc list" -->
+   * ネストしたコンテナ内の apparmor の扱いに関する修正を行いました <!-- Fix apparmor handling in nested containers -->
+   * デバイスのホットプラグの間に起こる色々なハングアップと不具合の修正を行いました <!-- Fix various hangs and failures during device hotplug -->
+   * スナップショットからのイメージの publish で、毎回全く同じ出力を生成するようになりました <!-- Image publishing from a snapshot now produces the exact same output every time -->
+   * スナップショットの publish に関する修正を行いました <!-- Fix publishing of snapshots -->
+   * 代替の gettext 実装への切り替えを行い、翻訳レイヤーの修正を行いました。<!-- Fix our translation layer by switching to an alternative gettext implementation -->
+   * UUID の実装をこれまでとは違う別の実装に切り替えました <!-- Switch UUID implementation to an alternative implementation -->
+   * migratable プロファイルを削除しました (現時点の CRIU は標準的なコンテナをマイグレーションできます) <!-- Drop migratable profile (current CRIU can migrate a standard container) -->
+   * ディスクをコンテナ内にマウントする際、必要なディレクトリがない場合は作成するようにしました <!-- Create missing directories when mounting a disk into a container -->
+   * イメージの作成を直列化しました (全体的な負荷の減少のため) <!-- Serialize image creation (reduces overall load) -->
+   * 色々な ZFS 関係のバグを修正しました (カーネルモジュールがない場合にロードする、削除のリトライ、マウントの扱いの改良) <!-- Various ZFS bugfixes (load kernel module when missing, re-try destroys and better handle mounts) -->
+   * よりシンプルに、かつ信頼性が向上するように、完全に LXC コンテナドライバを作りなおしました <!-- Completely rework the LXC container driver to be simpler and more reliable -->
+   * volatile なキーがプロファイルに設定されないようにしました <!-- Prevent setting volatile keys on profiles -->
+   * 古くなった volatile キーを自動的にクリーンアップするようにしました <!-- Automatically cleanup stale volatile keys -->
+   * 名前のない (ランダムに名付けられた) コンテナの起動に関する修正を行いました <!-- Fix launching un-named (randomly named) containers -->
+
+  ### アップグレード時の注意 <!-- Upgrade notes -->
+
+   * 古い lxc クライアントを新しいサーバに対して実行するとハングアップすることがあります。必ずクライアントも更新してください <!-- Older lxc clients will hang on exec against a newer server, make sure to update the client. -->
+   * limits.cpus は limits.cpu になりました。最初の LXD の起動時に変換されます <!-- limits.cpus is now called limits.cpu, a one-time migration is done at LXD startup. -->
+
+  ### 試用環境 <!-- Try it for yourself -->
+  <!--
+  This new LXD release is already available for you to try on our [demo service](/lxd/try-it/).
+  -->
+  この新しい LXD のリリースは、すでに私たちの [デモサービス](/ja/lxd/try-it/) で利用できます。
+
+  ### ダウンロード <!-- Downloads -->
+  <!--
+  The release tarballs can be found on our [download page](/lxd/downloads/).
+  -->
+  このリリースの tarball は [ダウンロードページ](/lxd/downloads/) から取得できます。

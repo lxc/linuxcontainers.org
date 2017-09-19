@@ -1,0 +1,34 @@
+title: LXD 2.9.1 リリースのお知らせ
+date: 2017/02/16 00:00
+content: |-
+  ### このリリースに含まれる変更点 <!-- The changes in this release include -->
+  <!--
+  We made this follow-up bugfix release to correct a few regressions introduced by LXD 2.9.
+  -->
+  LXD 2.9 で混入したいくつかのリグレッションを修正するために、このバグフィックスリリースを行いました。
+
+  バグ修正 <!-- Bugfixes -->:
+
+   * doc: ディスクデバイスの "pool" プロパティをドキュメントに追加しました <!-- Document the "pool" property for disk devices -->
+   * lxc/storage: create のヘルプを修正しました <!-- Fix help output for create -->
+   * lxc/storage: 処理を簡素化しました <!-- simplify -->
+   * lxd/daemon: 廃止されたストレージのキーを削除できるようになりました <!-- Allow unsetting the deprecated storage keys -->
+   * lxd/patches: ストレージをアップグレードするコードにコメントを追加しました <!-- Add more comments to storage upgrade code -->
+   * lxd/storage: ロギングの改良を行いました <!-- Improve logging -->
+   * lxd/storage: 操作コードのリネームと追加を行いました <!-- Rename and add opcode functions -->
+   * lxd/storage: ZFS {pool, dataset} が存在すれば使い、そうでなければ作成するようにしました <!-- Use existing ZFS {pool, dataset} or create it -->
+   * lxd/storage: ロックの際に単一の操作 ID を使うようにしました <!-- Use unified operation ids when locking -->
+   * tests: ZFSで、プールとしてデータセットを使うか、そうでなければ存在するプールを使うようにしました <!-- Use dataset as pool or existing pool for ZFS -->
+
+  ### 試用環境 <!-- Try it for yourself -->
+
+  <!--
+  This new LXD release is already available for you to try on our [demo service](/lxd/try-it/).
+  -->
+  この新しい LXD のリリースが、すでに私たちの [デモサービス](/ja/lxd/try-it/) で利用できます。
+
+  ### ダウンロード <!-- Downloads -->
+  <!--
+  The release tarballs can be found on our [download page](/lxd/downloads/).
+  -->
+  このリリースの tarball は [ダウンロードページ](/lxd/downloads/) から取得できます。

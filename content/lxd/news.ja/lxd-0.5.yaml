@@ -1,0 +1,38 @@
+title: LXD 0.5 リリースのお知らせ
+date: 2015/03/24 00:00
+content: |-
+
+  <!--
+  The major changes for this release are:
+  -->
+  このリリースの主な変更点は以下の通りです。
+
+   * IPv6 でリモートサーバを扱えるようになりました <!--  IPv6 support for remote servers -->
+   * リモートサーバがシステムが信頼する証明書を持つようになった場合のチェックを行うようにしました <!-- Check if the remote server happens to have a certificate which is trusted by the system -->
+   * "lxc image copy" コマンドを実装しました <!-- Implemented "lxc image copy" -->
+   * リモートの扱いを改良しました (デフォルトの設定、https:// と unix:// のサポート、多数の使いやすいエイリアス) <!-- Improved remote handling (default configuration, support for https:// and unix:// and a bunch of convenient aliases) -->
+   * key/value の保存に対する API の一貫性を確保しました (常にディレクトリとしてエクスポートするようになりました) <!-- API consistency for key/value storage (always exported as dictionaries) -->
+   * リモートのイメージが長いハッシュでも短いハッシュでも起動できるようになりました <!-- Remote images can now be started by their long or short hash -->
+   * リモートのイメージのプロパティがローカルのキャッシュにきちんとミラーされるようになりました <!-- Remote image properties are now properly mirrored in the local cache -->
+   * 多数のデータベースのロック問題が解決されました <!-- A lot of database locking issues have been resolved -->
+
+  <!--
+  Please note that it's still early in the LXD development and that current LXD isn't intended  
+  for production use and comes with no support statement from upstream.  
+  (reported bugs and patches will be included in the next release)
+  -->
+  このリリースはまだ LXD 開発の初期であり、現時点の LXD はまだプロダクション用途向きではないことに注意してください。そしてサポートはありません。(報告されたバグ修正やパッチは次のリリースに含まれる予定です)
+
+  <!--
+  At this point, most core LXD features are present but many of the  
+  particular options aren't implemented yet (don't match our  
+  specifications), we expect to make great progress in supporting all of  
+  the expected options over the next couple of releases.
+  -->
+  現時点で、ほとんどの LXD の機能の主要なものが提供されるようになりました。しかし、まだ多数の特定のオプションが実装されていません (仕様と一致していません)。今後の数リリースのうちで、予定しているオプションのすべてがサポートされるように大きく進歩する予定です。
+
+  ### ダウンロード <!-- Downloads -->
+  <!--
+  The release tarballs can be found on our [download page](/lxd/downloads/).
+  -->
+  このリリースの tarball は [ダウンロードページ](/lxd/downloads/) から取得できます。

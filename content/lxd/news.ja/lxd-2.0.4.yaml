@@ -1,0 +1,86 @@
+title: LXD 2.0.4 リリースのお知らせ
+date: 2016/08/15 00:00
+content: |-
+  <!--
+  This is the fourth bugfix release for LXD 2.0.
+  -->
+  このリリースは LXD 2.0 の 4 回目のバグフィックスリリースです。
+
+  ### LXD 2.0.3 以降の変更は以下の通りです <!-- The changes since LXD 2.0.3 are -->
+
+  細かな改良点 <!-- Minor improvements -->:
+
+   * /dev/net/tun はデフォルトのデバイスになりました (常に存在します) <!-- /dev/net/tun is now a default device (always present) -->
+   * lxd-bridge: dnsmasq は IPv6 の名前解決をするように設定しました <!-- lxd-bridge: dnsmasq is now configured with IPv6 name resolution -->
+   * lxd-bridge: iptables ルールにコメントをつけるようにしました <!-- lxd-bridge: iptables rules now have a comment --> (Issue #2125)
+   * "lxd init" lxd init は適切なデフォルト値が設定されるようになりました <!-- "lxd init" now comes with reasonable defaults --> (Issue #1933)
+   * 新規インストール時に "images:" のリモートは simplestreamsを使うようになりました <!-- The "images:" remote now uses simplestreams on new installations -->
+   * "lxc image export" は常にイメージのフィンガープリントをファイル名に使うようにしました <!-- "lxc image export" now always uses the image fingerprint as filename -->
+   * "lxc image import" の URL インポートで進捗を表示するようにしました <!-- Import progress is now reported for URL imports in "lxc image import" -->
+
+  ### バグ修正 <!-- Bugfixes -->
+
+   * apparmor: 機能の検知の追加と少しの整理 <!-- apparmor: Add feature detection and clean things a bit -->
+   * apparmor: LXC の apparmor profile に依存しなくなりました <!-- apparmor: Don't depend on the LXC apparmor profile --> (Issue #1942)
+   * apparmor: 主な2つのルール名を変更しました <!-- apparmor: Rename main two chunks of rules --> (Issue #1942)
+   * apparmor: apparmor profile をさらにモジュール化しました <!-- apparmor: Setup a more modular apparmor profile --> (Issue #1942)
+   * client: http client を go routines と共有しないようにしました <!-- client: Don't share http client with go routines --> (Issue #2186)
+   * client: 存在しないデバイスを削除しようとしたときにエラーになるようにしました <!-- client: Error when trying to remove a non-existent device --> (Issue #2277)
+   * client: "lxc info" で表示される API 情報を修正しました <!-- client: Fix API info reporting in "lxc info" -->
+   * client: 綴りを修正しました permisson -> permission <!-- client: Fix spelling: permisson -> permission --> (Issue #2211)
+   * client: client.websocket を public API にしました <!-- client: Make client.websocket a public API -->
+   * client: --version オプションを見えるようにしました <!-- client: Make \-\-version option visible --> (Issue #2171)
+   * client: WebsocketRecvStream の引数の制約を緩和しました <!-- client: Relax constraints on WebsocketRecvStream args -->
+   * client: actionCmds で名前付き引数を使うようにしました<!-- client: Use named args for actionCmds -->
+   * client/finger: fingerコマンドから使用していないフィールドを削除しました <!-- client/finger: Remove unused field from finger cmd --> (Issue #2170)
+   * client/image: URLからのイメージインポートを修正しました <!-- client/image: Fix image import from URL --> (Issue #2272)
+   * client/list: 並行な読み書きを修正しました <!-- client/list: fix concurrent read/write --> (Issue #2183)
+   * client/list: "lxc list" のエラーハンドリングと競合を修正しました <!-- client/list: Fix error handling and race in "lxc list" --> (Issue #1753)
+   * client/pause: `lxc pause` にいくつかのヘルプを追加しました <!-- client/pause: Add some additional help to `lxc pause` -->
+   * client/profile: ヘルプメッセージに "lxc profile unset" を追加しました <!-- client/profile: Add "lxc profile unset" to help message --> (Issue #2227)
+   * daemon/container: 実際に containers list error を処理するようにしました <!-- daemon/container: Actually handle containers list error -->
+   * daemon/container: よくある問題のために整合性チェックをするようにしました <!-- daemon/container: Add sanity checks for common problems --> (Issue #2190)
+   * daemon/container: デバイスの処理をアルファベット順にしました <!-- daemon/container: Alphabetize device processing --> (Issue #2233)
+   * daemon/container: デバイスの整合性チェックのエラーを改善しました <!-- daemon/container: Better errors when sanity checking devices -->
+   * daemon/container: デバイスタイプが存在しないか間違っている場合の処理を改良しました <!-- daemon/container: Better handle missing or invalid device types --> (Issue #2210)
+   * daemon/container: limits.*.priorityの値のドキュメントとバリデーションを追加しました <!-- daemon/container: Document and validate limits.*.priority values --> (Issue #2231)
+   * daemon/container: イメージのエクスポート対象の挙動のドキュメントとバグ修正をしました <!-- daemon/container: Document image export target behavior and fix bugs --> (Issue #2205)
+   * daemon/container: コンテナが停止している時にコンテナの unfreeze を行わないようにしました <!-- daemon/container: Don't unfreeze a container on stop --> (Issue #2164)
+   * daemon/container: 初期化エラーのメッセージのフラグ名を修正しました <!-- daemon/container: Fix flag name in init error message -->
+   * daemon/container: limits.disk.priority が 0 に設定された場合を修正しました <!-- daemon/container: Fix limits.disk.priority when set to 0 --> (Issue #2230)
+   * daemon/container: openvswitch での nic のホットプラグを修正しました <!-- daemon/container: Fix nic hotplug with openvswitch --> (Issue #2106)
+   * daemon/container: ネストしたコンテナの unix-char/unix-block を修正しました <!-- daemon/container: Fix unix-char/unix-block in nested containers --> (Issue #2279)
+   * daemon/container: 無効な物理デバイスのチェックを改良しました <!-- daemon/container: Improve check for invalid physical devices -->
+   * daemon/container: wait-for-websocket が無効の時に戻り値を記憶するようにしました <!-- daemon/container: Remember the return code in the non wait-for-websocket case --> (Issue #2243)
+   * daemon/container: {create,remove}UnixDevice から使われていない"name" 引数を削除しました <!-- daemon/container: Remove unused "name" argument from {create,remove}UnixDevice -->
+   * daemon/container: より多くのエラー情報をユーザに戻すようにしました <!-- daemon/container: Return more error information back to the user --> (Issue #2190)
+   * daemon/container: ディスクデバイスの順序を名前の前にパスでソートするようにしました <!-- daemon/container: Sort disk devices by their path before their names --> (Issue #2249)
+   * daemon/container: シャットダウン時に freeze されているコンテナを unfreeze するようにしました <!-- daemon/container: Unfreeze frozen container on shutdown --> (Issue #2164)
+   * daemon/db: dbアップグレード時に$LXD\_DIR/containers が存在しなくても失敗しないようにしました <!-- daemon/db: Don't fail db upgrade if $LXD\_DIR/containers doesn't exist --> (LP: #1602025)
+   * daemon/db: docker プロファイルから fuse デバイスを削除しました <!-- daemon/db: remove fuse device from docker profile --> (Issue #2213)
+   * daemon/migration: tempdir の取り扱いを修正しました <!-- daemon/migration: fix tempdir handling -->
+   * daemon/profile: 無効なプロファイル名の使用を防止するようにしました <!-- daemon/profile: Prevent using invalid profile names --> (Issue #2274)
+   * daemon/zfs: 32bit 環境下での zfs ボリュームのサイズを修正しました <!-- daemon/zfs: Fix ZFS volume size on 32bit architectures --> (Issue #2158)
+   * daemon/zfs: 削除時に copy- のつくスナップショットのみ削除するようにしました <!-- daemon/zfs: Only delete copy- snapshots on delete --> (Issue #2127)
+   * daemon/zfs: zfs.ImageCreate エラー時にサブボリュームも削除するようにしました <!-- daemon/zfs: Remove subvolume in zfs.ImageCreate error flow --> (Issue #2194)
+   * doc: /dev/net/tun と /dev/fuse をドキュメントに追加しました <!-- doc: Add /dev/net/tun and /dev/fuse to docs -->
+   * doc: README.md に squashfs-tools のインストールのコマンドを追加しました <!-- doc: Added command to install squashfs-tools in README.md -->
+   * doc: pongo テンプレートの config\_get のドキュメントを追加しました <!-- doc: Document config\_get in pongo templates -->
+   * doc: curl での api examples の間違いを修正しました <!-- doc: Fixed errors on api examples with curl -->
+   * doc: LXDの本番利用向けのドキュメントを追加しました <!-- doc: Initial documentation for production use of LXD --> (Issue #2256)
+   * doc: README.md のパッケージを少し並び替えました <!-- doc: Shuffle packages a bit in README.md -->
+   * lxd-bridge-proxy: 使われていないコードを削除しました <!-- lxd-bridge-proxy: Remove unused code -->
+   * Makefile: "make dist" でもgo getを複数走らせるようにしました <!-- Makefile: Also have "make dist" run multiple go get -->
+   * scripts: lxc-to-lxd が virtualenv 下で動くようにしました <!-- scripts: Make lxc-to-lxd work inside virtualenv --> (Issue #2175)
+   * simplestreams: サイズの表示を修正しました <!-- simplestreams: Fix size reporting --> (Issue #2223)
+   * simplestreams: ラベルなしのイメージを処理するようにしました <!-- simplestreams: Handle images without labels -->
+   * simplestreams: squashfs と tar.xz でイメージの一覧が使えるようになりました <!-- simplestreams: List images available as both squashfs and tar.xz -->
+   * simplestreams: 有効期間の終了を適切に処理するようにしました <!-- simplestreams: Properly deal with unset expiry -->
+   * simplestreams: 適切な user-agent をセットするようにしました <!-- simplestreams: Set proper user-agent -->
+   * simplestreams: 正しい順序でハッシュを使用するようにしました <!-- simplestreams: Use the hashes in the right order --> (Issue #2239)
+
+  ### ダウンロード <!-- Downloads -->
+  <!--
+  The release tarballs can be found on our [download page](/lxd/downloads/).
+  -->
+  このリリースの tarball は [ダウンロードページ](/lxd/downloads/) から取得できます。

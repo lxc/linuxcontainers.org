@@ -1,0 +1,35 @@
+title: LXD 2.0.0.rc2 リリースのお知らせ
+date: 2016/03/07 00:00
+content: |-
+
+  ### このリリースの主な変更点 <!-- The main changes for this release are -->
+
+   * REST の CORS ヘッダ用の設定項目を追加しました <!-- Add configuration keys for the rest of the CORS headers -->
+   * lxd-images のドロップに一歩近づきました。lxd-images は単なる shim になりました (訳注: 内部的に lxc コマンド or テスト用のスクリプトに変換して実行するだけのスクリプト)<!-- Get one step closer to dropping lxd-images, lxd-images is now just a shim -->
+   * Go 1.5 未満はサポートされなくなりました。依存関係のために 1.4 をサポートしなくなったためです <!-- Deprecate support for Go < 1.5 as some of our dependencies dropped 1.4 support -->
+
+  ### バグ修正 <!-- Bugfixes -->
+
+   * エイリアスを使ってリモートの lxd からイメージをインポートする際の問題を修正しました <!-- Fix image import from remote lxd using aliases -->
+   * 特別な一時的エントリの作成時の問題を修正しました <!-- Fix creation of extra volatile entries -->
+   * 標準出力がファイルの時のテストを修正しました <!-- Fix testsuite for when stdout is a file -->
+   * イメージを扱う前にストレージドライバを初期化するようにしました <!-- Initialize the storage driver before messing with images -->
+   * lxd init は root でしか実行できなくなりました <!-- Restrict lxd init to root -->
+   * ソケットが準備出来たあとにだけ、コンテナをロードしようとするようにしました <!-- Only attempt to load containers AFTER the socket is setup -->
+   * イメージダウンロードのデフォルトプロトコルを修正しました <!-- Fix default protocol in image download -->
+   * IP アドレスが設定されたときだけ、フォワーディングの設定をするようにしました <!-- Only setup forwarding when an IP is set -->
+   * client: NewClientFromInfo にデフォルトの設定を追加しました <!-- add default config in NewClientFromInfo -->
+   * dbUpdateFromV26 内の間違ったデバイスタイプを修正しました <!-- Fix incorrect device type in dbUpdateFromV26 -->
+
+  ### 試用環境 <!-- Try it for yourself -->
+
+  <!--
+  This new LXD release is already available for you to try on our [demo service](/lxd/try-it/).
+  -->
+  この新しい LXD のリリースが、すでに私たちの [デモサービス](/ja/lxd/try-it/) で利用できます。
+
+  ### ダウンロード <!-- Downloads -->
+  <!--
+  The release tarballs can be found on our [download page](/lxd/downloads/).
+  -->
+  このリリースの tarball は [ダウンロードページ](/lxd/downloads/) から取得できます。

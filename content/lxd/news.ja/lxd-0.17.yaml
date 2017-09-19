@@ -1,0 +1,54 @@
+title: LXD 0.17 リリースのお知らせ
+date: 2015/09/01 00:00
+content: |-
+  <!--
+  The main changes for this release are:
+  -->
+  このリリースの主な変更点は以下の通りです。
+
+   * lxc: 新たに "lxc file edit" コマンドを追加しました <!-- Add a new "lxc file edit" command -->
+   * lxc: パブリックなリモートホストのサポートを追加しました <!-- Add support for public remotes -->
+   * lxc: リモートホストの IPv6 アドレスが追加できるようになりました <!-- Support adding a remote by its IPv6 address -->
+   * lxd/core: Go 1.5 でのビルドの問題を修正しました <!-- Fix building with Go 1.5 -->
+   * lxd/core: スナップショットのリネームができるようになりました <!-- Allow renaming snapshots -->
+   * lxd/core: コンテナに対する REST API に新たに /logs を追加しました <!-- Add a new /logs REST API to containers -->
+   * lxd/core: ストレージバックエンド名とバージョンをエクスポートするようになりました <!-- Export the storage backend name and version -->
+   * lxd/btrfs: 再帰的なサブボリュームのスナップショットと消去をサポートしました <!-- Support for recursive subvolume snapshot and removal -->
+   * lxd/lvm: スナップショットのサポートを追加しました <!-- Add snapshot support -->
+   * lxd/lvm: コンテナのコピーのサポートを追加しました <!-- Add container copy support -->
+   * lxd/lvm: コンテナのリネームのサポートを追加しました <!-- Add container rename support -->
+   * lxd/lvm: プールが使用中の場合は LVM 設定の変更を許可しなくなりました <!-- Disallow changing LVM config if pool is in use. -->
+   * lxd/lvm: 仕様に LVM の設定キーを追加しました <!-- Document LVM config keys in specs -->
+   * lxd-images: "lxd images import lxc" コマンドは廃止になりました <!-- Deprecate "lxd images import lxc" -->
+   * lxd-images: マニフェストの URL を表示するようになりました <!-- Print the manifest URL -->
+   * lxd-images: Ubuntu イメージの "releases" ストリームをデフォルトにしました <!-- Default to the "releases" stream for Ubuntu images -->
+   * vagrant: vmware での起動をサポートしました <!-- Support running in vmware -->
+   * 多数のバグ修正と、テストなどの改良を行いました <!-- A bunch more fixes, tests and other improvements -->
+
+  <!--
+  Note that as of this release, the use of "lxd-images import lxc" is
+  deprecated in favor of using the images.linuxcontainers.org remote.
+  -->
+  このリリース以降、"lxd-images import lxc" コマンドの使用は廃止となりました。代わりにリモートサーバとして images.linuxcontainers.org を使用してください。
+
+  <!--
+  For example:
+  -->
+  例えば、今までは:
+
+      lxd-images import lxc centos 7 amd64 --alias centos
+      lxc launch centos my-container
+
+  <!--
+  Now becomes:
+  -->
+  として実行していた処理は、以下のようになりました:
+
+      lxc remote add images images.linuxcontainers.org    # one-time setup
+      lxc launch images:centos/7/amd64 my-container
+
+  ### ダウンロード <!-- Downloads -->
+  <!--
+  The release tarballs can be found on our [download page](/lxd/downloads/).
+  -->
+  このリリースの tarball は [ダウンロードページ](/lxd/downloads/) から取得できます。

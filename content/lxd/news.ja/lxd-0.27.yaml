@@ -1,0 +1,54 @@
+title: LXD 0.27 リリースのお知らせ
+date: 2016/01/19 00:00
+content: |-
+
+  ### このリリースの主な変更点 <!-- The main changes for this release are -->
+
+   * コンテナの disk quota に対応しました (zfs と btrfs のみです)<!-- Support for container disk quota (zfs and btrfs only) -->
+   * イメージのコピーとコンテナの起動の間の進捗表示を行うようになりました <!-- Download progress during image copy and container launch -->
+   * LXC コンテナを LXD コンテナに移行するスクリプトの初期バージョンを開発しました (非特権コンテナを除くほとんどすべての設定をサポートします) <!-- Initial work on a LXC to LXD script (supports almost every configuration except for unprivileged containers) -->
+   * 新たなコンテナプロパティ linux.kernel\_modules を追加しました (コンテナの起動前にロードするモジュールのリストです) <!-- New linux.kernel\_modules container property (list of modules to load before starting the container) -->
+   * 新たなサーバプロパティ core.https\_allowed\_origin を追加しました (Access-Control-Allow-Origin ヘッダを制御します)<!-- New core.https\_allowed\_origin server property (controls the Access-Control-Allow-Origin header) -->
+   * プロファイルの変更がすべての対象のコンテナに動的に行われるようになりました <!-- Profile changes are now live-applied to all affected containers -->
+   * "lxc config edit" コマンドがサーバに対しても動作するようになりました <!-- "lxc config edit" now works against servers too -->
+   * security.nesting の変更が動的に行われるようになりました <!-- Changes to security.nesting are now live-applied -->
+   * lvm バックエンドでの xfs がサポートされました <!-- Support for xfs with the lvm backend -->
+   * "lxc image list" コマンドでフィルタリングができるようになりました (名前、ハッシュ、プロパティで) <!-- "lxc image list" now supports filtering (by name, hash and properties) -->
+   * bash completion プロファイルの改良を行いました <!-- Improved bash completion profile -->
+   * "lxc remote list" コマンドでデフォルトのリモートサーバが表示されるようになりました <!-- The default remote is now visible in "lxc remote list" -->
+   * "lxc info" コマンドが、コンテナが一時的か永続的かを表示するようになりました <!-- "lxc info" now indicates whether a container is ephemeral or persistent -->
+   * ヘルプメッセージを色々改良しました <!-- Various improvement to help messages -->
+
+  ### バグ修正 <!-- Bugfixes -->
+
+   * デフォルトの http タイムアウトを 10 秒に設定しました <!-- Set a default http timeout of 10s -->
+   * metadata.yaml がない場合でも publish の途中でクラッシュしなくなりました <!-- Don't crash during publish when metadata.yaml is missing -->
+   * マイグレーション中のエラー報告を改良しました <!-- Improve error reporting during migration -->
+   * コピーの間のエラー報告を改良しました <!-- Improve error reporting during copy -->
+   * コンテナがディスクから削除された時点でのみ、コンテナをデータベースから削除するようにしました <!-- Make sure containers are only removed from the database once removed from disk -->
+   * イメージがディスクから削除された時点でのみ、イメージをデータベースから削除するようにしました <!-- Make sure images are only removed from the database once removed from disk -->
+   * LVM > 2.02.99 の場合の LVM バックエンドの修正を行いました <!-- Fix LVM backend on LVM > 2.02.99 -->
+   * 高負荷時の DB パフォーマンスの改良を行いました <!-- Improve DB performance when under heavy load -->
+   * 非特権の CRIU イメージで正しく uidshift するようになりました <!-- Correctly uidshift unprivileged CRIU images -->
+   * forkmigrate 実行時の競合を修正しました <!-- Fix a race in forkmigrate -->
+   * イベントインターフェースの競合状態に関する修正を行いました <!-- Fix race condition in event interface -->
+   * lxd-images コマンドがエラーになった場合に表示が乱れる問題を修正しました <!-- Fix screen corruption when lxd-images hits an error -->
+   * 作成時に与えられたデバイスを無視しないようにしました <!-- Don't ignore provided devices at create time -->
+   * URLの最後に "/" が付いている場合も付いていない場合もサポートするように web サーバを修正しました <!-- Fix web server to support all URLs with and without trailing slash -->
+   * zfs pool の設定を削除することができるようになりました <!-- Make it possible to unset the zfs pool -->
+   * lxd-setup-lvm-storage: デフォルトサイズとして 10G を追加しました <!-- Add default size of 10G -->
+   * api: {Save|Load}Config は引数としてパスを受け取る必要があるようになりました (訳注: 設定ファイルのパスがハードコードされていたのを引数で与えられるようになりました) <!-- {Save|Load}Config should take a path as an argument -->
+   * 自動的に veth インターフェースをホストのブリッジに追加するように修正しました <!-- Fix automatically adding veth interface to the host bridge -->
+   * スナップショットが過去に存在していた場合の zfs pool の設定を削除する際の問題を修正しました <!-- Fix unsetting zfs pool when snapshots used to exist -->
+
+  ### 試用環境 <!-- Try it for yourself -->
+  <!--
+  This new LXD release is already available for you to try on our [demo service](/lxd/try-it/).
+  -->
+  この新しい LXD のリリースは、すでに私たちの [デモサービス](/ja/lxd/try-it/) で利用できます。
+
+  ### ダウンロード <!-- Downloads -->
+  <!--
+  The release tarballs can be found on our [download page](/lxd/downloads/).
+  -->
+  このリリースの tarball は [ダウンロードページ](/lxd/downloads/) から取得できます。

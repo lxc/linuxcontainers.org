@@ -1,0 +1,30 @@
+title: LXD 0.13 リリースのお知らせ
+date: 2015/07/07 00:00
+content: |-
+
+  <!--
+  The main changes for this release are:
+  -->
+  このリリースの主な変更点は以下の通りです。
+
+   * ストレージバックエンドとして LVM thin pool のサポートを追加しました <!-- Add support for LVM thin pools as a storage backend. -->
+   * 基本的な bash 補完を追加しました <!-- Add basic bash completion -->
+   * コンテナをイメージに変換する "publish" コマンドを実装しました <!-- Implement the "publish" command, turning a container into an image -->
+   * ファイルの push/pull の信頼性を改良しました <!-- Improve file push/pull reliability -->
+   * 一度に複数のコンテナを start/stop/restart/delete できるようにしました <!-- Make it possible to start/stop/restart/delete multiple containers at once -->
+   * gccgo を使ったビルドの修正を行いました (現時点ではこの場合には /dev/lxd を無効にします) <!-- Fix build under gccgo (currently disabling /dev/lxd in such case) -->
+   * コンテナのコピー時の btrfs のパフォーマンスを改良しました (訳注: btrfs の場合は rsync でなくスナップショットでコピーを作成します)<!-- Improve btrfs performance during container copy -->
+   * 他にも多数のバグ修正、細かな改良、クリーンアップを行っています <!-- A lot of other bugfixes, minor improvements and cleanups -->
+
+  <!--
+  This is the first release of LXD where the client may be built on operating systems  
+  other than Linux. At the moment, MacOS X has been confirmed to work and Windows is known not to work,  
+  other Unix may work too but haven't been tested.
+  -->
+  このリリースは Linux 以外のオペレーティングシステム上でクライアントがビルドできる LXD の最初のリリースです。今のところ、Mac OS X では動作確認がされています。Windows では動かないことが確認されています。他の Unix では動く可能性が高いですが、テストはされていません。
+
+  ### ダウンロード <!-- Downloads -->
+  <!--
+  The release tarballs can be found on our [download page](/lxd/downloads/).
+  -->
+  このリリースの tarball は [ダウンロードページ](/lxd/downloads/) から取得できます。
