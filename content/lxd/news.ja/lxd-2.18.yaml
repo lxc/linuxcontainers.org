@@ -1,0 +1,103 @@
+title: LXD 2.18 リリースのお知らせ
+date: 2017/09/19 00:00
+content: |-
+  新機能<!-- Features -->:
+
+   * btrfs ファイルシステムが LVM と Ceph ストレージプール上で使用できるようになりました <!-- The btrfs filesystem can now be used on LVM and Ceph storage pools -->
+   * 内部的に使用していた "lxd-benchmark" がファーストクラスのユーティリティとなりました <!-- Our internal "lxd-benchmark" tool is now a first class utility -->
+   * "lxd-benchmark" はパフォーマンスレポートを生成できるようになりました <!-- "lxd-benchmark" can now generate performance reports -->
+   * --stateless オプションを使って、直前にコンテナを停止して、実行中のコンテナをバックグラウンドで移動できるようになりました<!-- It's now possible to move a running container in the background,
+     only stopping it at the last minute (using \-\-stateless option) -->
+   * 使用された Ceph プールの予期しないインポートを制限するために、新たに "ceph.osd.force_reuse" がストレージプロパティに追加されました <!-- A new "ceph.osd.force_reuse" storage pool property was added to
+     limit accidental import of used Ceph pools -->
+
+  バグ修正 <!-- Bugfixes -->:
+
+   * client: リクエストに関するログを Debug レベルにしました <!-- Reduce request logging to Debug level -->
+   * doc: リリースノートとダウンロードへのリンクを追加しました <!-- Link to release notes and downloads -->(Issue #3709)
+   * doc: docker の使用手順を調整しました <!-- Tweak docker instructions -->(Issue #3712)
+   * lxc/delete: --force の使い方を修正しました <!-- Fix the \-\-force description -->
+   * lxc/image: プロパティを追加したとき、インポートがクラッシュする不具合を修正しました <!-- Fix import crash when adding properties -->(Issue #3803)
+   * lxc/move: 強制的に削除するようにしました <!-- Use force on delete -->
+   * lxd-benchmark: 大幅にコードをリファクタリングしました <!-- Big code refactoring -->
+   * lxd/apparmor: 新しい stacking 文法をサポートしました <!-- Support new stacking syntax -->
+   * lxd/containers: コンテナのマウントポイントもチェックするようになりました <!-- Check for container mountpoint too -->
+   * lxd/containers: デバイス ID のメジャーとマイナー番号の扱いを修正しました <!-- Fix handling of major and minor numbers in device IDs -->
+   * lxd/containers: ストレージの作成に失敗した場合には DB から削除するようにしました <!-- Remove from db on storage failure -->(Issue #3782)
+   * lxd/daemon: Stateを別パッケージにしてリファクタリングしました <!-- Refactoring of State as a separate package -->
+   * lxd/daemon: 設定が変わったときはイメージの自動更新ループをリセットするようにしました <!-- Reset the images auto-update loop when configuration changes -->
+   * lxd/db: 共通のクエリヘルパとして db/query サブパッケージを追加しました <!-- Add db/query sub-package with common query helpers -->
+   * lxd/db: データベースのスキーマを管理するための db/schema サブパッケージを追加しました <!-- Add db/schema sub-package for managing database schemas -->
+   * lxd/db: データベース更新から自動的にデータベーススキーマを生成するようになりました <!-- Automatically generate database schema from database updates -->
+   * lxd/events: イベントハンドラ中の競合を修正しました <!-- Fix race condition in event handlers -->(Issue #3770)
+   * lxd: コメントの Typo を修正しました <!-- Fix typo in comment -->
+   * lxd/images: 圧縮コマンドに与える引数の順序を修正しました <!-- Fix ordering of compressor arguments -->
+   * lxd/images: 部分的なフィンガープリントを使ったプライベートイメージのコピーの問題を修正しました <!-- Fix private image copy with partial fp -->
+   * lxd/images: イメージの有効期限を適切に取得するようにしました <!-- Properly extract the image expiry -->
+   * lxd/init: コードのリファクタリングを行いました <!-- Code refactoring -->
+   * lxd/init: btrfs のサブボリューム作成の問題を修正しました <!-- Fix btrfs subvolume creation -->
+   * lxd/init: デフォルトのストレージバックエンドの選択を改良しました <!-- Improve default storage backend selection -->
+   * lxd/init: btrfs に関する質問の順序を変えました <!-- Re-order btrfs questions -->
+   * lxd/main: ログのパスがない場合のエラーメッセージを修正しました <!-- Fix error message when log path is missing -->
+   * lxd/migration: ライブマイグレーションでの不適切な URL の問題を修正しました <!-- Fix live migration (bad URL in dumpsuccess) -->(Issue #3715)
+   * lxd/networks: IP アドレスの重複を許すようになりました <!-- Allow for duplicate IPs -->(Issue #3721)
+   * lxd/networks: ipt_checksum は不要になりました <!-- Don't require ipt_checksum -->
+   * lxd/networks: IPv6 リンクローカルアドレスを持つブリッジの問題を修正しました <!-- Fix bridging devices with IPv6 link-local -->(Issue #3727)
+   * lxd/networks: デバッグモードでないときは dnsmasq の出力を抑制しました <!-- Make dnsmasq quiet when not in debug mode -->
+   * lxd/networks: オプションがサポートされているバージョンの dnsmasq の場合のみ --quiet を付けるようにしました <!-- Only add \-\-quiet options to dnsmasq if version supports them -->
+   * lxd/networks: ディレクトリベースの dhcp-host に変更しました <!-- Switch to a directory based dhcp-host -->(Issue #3694)
+   * lxd/patches: dir プールは bind mount を使うようにしました <!-- Make dir pool use bind-mount -->
+   * lxd/patches: パッチをファイルの正しい位置に移動させました <!-- Move patch to the right part of the file -->
+   * lxd/storage: エラーメッセージをマスクしないようにしました <!-- Don't mask error messages -->
+   * lxd/storage: makeFSType 関数を拡張し、重複していた mkfs.* コードを削除しました <!-- Extend makeFSType, remove duplicated mkfs.* code -->
+   * lxd/storage: ボリュームの作成に失敗した場合は、DB のエントリを削除するようにしました <!-- If volume creation fails, delete DB entry -->
+   * lxd/storage: 設定の変更のみを確認するようにしました <!-- Only validate config changes -->
+   * lxd/storage/ceph: Ceph クラスタ上のファイルシステムについての注意を追加しました <!-- Add note about filesystems for Ceph cluster -->
+   * lxd/storage/ceph: サイズ計算の際の除算のエラーを修正しました <!-- Fix divide error in size calculation -->
+   * lxd/storage/ceph: 新しい xfs の UUID を生成するようにしました <!-- Generate a new xfs UUID -->(Issue #3752)
+   * lxd/storage/ceph: リサイズを実装しました <!-- Implement resizing -->(Issue #3760)
+   * lxd/storage/ceph: rbd map から返されるパスをサニタイズするようにしました <!-- Sanitize path return from rbd map -->(Issue #3726)
+   * lxd/storage/ceph: コンテナコピーの際に ACL を設定するようにしました <!-- Set ACL on container copy -->
+   * lxd/storage/ceph: Storage{Start,Stop}() 関数を使うようにしました <!-- Use Storage{Start,Stop}() -->
+   * lxd/storage/ceph: zombie ストレージボリュームを作成するときは UUID を使うようにしました <!-- Use UUID when creating zombie storage volumes -->(Issue #3780)
+   * lxd/storage/dir: ${LXD_DIR} 外のプールには bind マウントを使うようにしました <!-- Use bind-mount for pools outside ${LXD_DIR} -->
+   * lxd/storage/dir: 正しい関数を使うようにしました <!-- Use correct function -->
+   * lxd/storage/lvm: thinpool のコピーの際に新たに xfs UUID を生成するようにしました <!-- Generate a new xfs UUID on thinpool copy -->
+   * lxd/storage/lvm: 間違ったストレージタイプの場合にエラーを報告するようにしました <!-- Report error on wrong storage type -->
+   * lxd/storage/lvm: リサイズリクエストは少なくとも 1MB 必要としました <!-- Require resize request to be at least 1MB -->
+   * lxd/storage/zfs: zfs.use_refquota=true の場合は "referenced" プロパティを使うようにしました <!-- Use "referenced" property when zfs.use_refquota=true -->
+   * shared: バージョンをパース・比較するヘルパを追加しました <!-- Add helpers to parse/compare versions -->
+   * shared: GroupId 関数で buf が大きくなっていく問題を修正しました <!-- Fix growing of buf in GroupId -->(Issue #3711)
+   * shared: sysconf() が -1 を返した時はサイズを推測するようにしました <!-- Guess size when sysconf() returns*1 -->
+   * shared/api: 新たな golint の警告を修正しました <!-- Fix new golint warning -->
+   * shared/idmap: ホストのidとサブidが交差するのは許可されなくなりました <!-- Disallow hostids intersecting subids -->
+   * shared/idmap: idmap と acl 関数は別パッケージに分離しました <!-- Move idmap/acl functions to a separate package -->
+   * shared/subtest: subtest パッケージを提供するようになりました <!-- Vendor the subtest package -->
+   * tests: さらに ceph のテストを追加しました <!-- Add more ceph tests -->
+   * tests: perf.sh に LXD_TMPFS のサポートを追加しました <!-- Add support for LXD_TMPFS to perf.sh -->
+   * tests: subuid 中に hostid を含めないためのテストを追加しました <!-- Add test for disallowing hostid in subuid -->(Issue #3416)
+   * tests: perf.sh でバッチの開始時刻も計測するようにしました <!-- Also measure batch startup time in perf.sh -->
+   * tests: 自動更新の制限を 20 分に増やしました <!-- Bump image auto update limit to 20min -->
+   * tests: Ceph のボリュームリサイズのテストを追加しました <!-- Ceph test volume resizing -->
+   * tests: コンテナのインポート時の問題を修正しました <!-- Container import fixes -->
+   * tests: 実行中の lvm/ceph コンテナはコピーしないようにしました <!-- Don't copy running lvm/ceph containers -->
+   * tests: イメージの自動更新に LVM を含めるようにしました <!-- Include LVM in image auto update -->
+   * tests: Ceph のボリュームを 25MB に制限するようにしました <!-- Limit ceph volumes to 25MB -->
+   * tests: OSD プールの Placement Group 数を小さくしました <!-- Lower pg number for OSD pools -->
+   * tests: 機能に関係しない変更を行いました <!--  Non-functional changes -->
+   * tests: ブロックサイズを 200MB にリサイズするようにしました <!-- Resize block size to 200MB -->
+   * tests: 停止時には常に "--force" を使うようにしました <!-- Use "\-\-force" everywhere on stop -->
+   * tests: パフォーマンステストには testimage を使うようにしました <!-- Use testimage for perf testing -->
+   * tests: イメージの更新は 2 分まで待つようにしました <!-- Wait up to 2 minutes for image updates -->
+
+  ### 試用環境 <!-- Try it for yourself -->
+  <!--
+  This new LXD release is already available for you to try on our [demo service](/lxd/try-it/).
+  -->
+  この新しい LXD のリリースが、すでに私たちの [デモサービス](/ja/lxd/try-it/) で利用できます。
+  
+  ### ダウンロード <!-- Downloads -->
+  <!--
+  The release tarballs can be found on our [download page](/lxd/downloads/).
+  -->
+  このリリースの tarball は [ダウンロードページ](/lxd/downloads/) から取得できます。
