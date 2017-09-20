@@ -1,0 +1,97 @@
+title: LXD 2.18 release announcement
+date: 2017/09/19 00:00
+content: |-
+  Features:
+
+   * The btrfs filesystem can now be used on LVM and Ceph storage pools
+   * Our internal "lxd-benchmark" tool is now a first class utility
+   * "lxd-benchmark" can now generate performance reports
+   * It's now possible to move a running container in the background,
+     only stopping it at the last minute (using --stateless option)
+   * A new "ceph.osd.force_reuse" storage pool property was added to
+     limit accidental import of used Ceph pools
+
+  Bugfixes:
+
+   * client: Reduce request logging to Debug level
+   * doc: Link to release notes and downloads (Issue #3709)
+   * doc: Tweak docker instructions (Issue #3712)
+   * lxc/delete: Fix the --force description
+   * lxc/image: Fix import crash when adding properties (Issue #3803)
+   * lxc/move: Use force on delete
+   * lxd-benchmark: Big code refactoring
+   * lxd/apparmor: Support new stacking syntax
+   * lxd/containers: Check for container mountpoint too
+   * lxd/containers: Fix handling of major and minor numbers in device IDs
+   * lxd/containers: Remove from db on storage failure (Issue #3782)
+   * lxd/daemon: Refactoring of State as a separate package
+   * lxd/daemon: Reset the images auto-update loop when configuration changes
+   * lxd/db: Add db/query sub-package with common query helpers
+   * lxd/db: Add db/schema sub-package for managing database schemas
+   * lxd/db: Automatically generate database schema from database updates
+   * lxd/events: Fix race condition in event handlers (Issue #3770)
+   * lxd: Fix typo in comment
+   * lxd/images: Fix ordering of compressor arguments
+   * lxd/images: Fix private image copy with partial fp
+   * lxd/images: Properly extract the image expiry
+   * lxd/init: Code refactoring
+   * lxd/init: Fix btrfs subvolume creation
+   * lxd/init: Improve default storage backend selection
+   * lxd/init: Re-order btrfs questions
+   * lxd/main: Fix error message when log path is missing
+   * lxd/migration: Fix live migration (bad URL in dumpsuccess) (Issue #3715)
+   * lxd/networks: Allow for duplicate IPs (Issue #3721)
+   * lxd/networks: Don't require ipt_checksum
+   * lxd/networks: Fix bridging devices with IPv6 link-local (Issue #3727)
+   * lxd/networks: Make dnsmasq quiet when not in debug mode
+   * lxd/networks: Only add --quiet options to dnsmasq if version supports them
+   * lxd/networks: Switch to a directory based dhcp-host (Issue #3694)
+   * lxd/patches: Make dir pool use bind-mount
+   * lxd/patches: Move patch to the right part of the file
+   * lxd/storage: Don't mask error messages
+   * lxd/storage: Extend makeFSType, remove duplicated mkfs.* code
+   * lxd/storage: If volume creation fails, delete DB entry
+   * lxd/storage: Only validate config changes
+   * lxd/storage/ceph: Add note about filesystems for Ceph cluster
+   * lxd/storage/ceph: Fix divide error in size calculation
+   * lxd/storage/ceph: Generate a new xfs UUID (Issue #3752)
+   * lxd/storage/ceph: Implement resizing (Issue #3760)
+   * lxd/storage/ceph: Sanitize path return from rbd map (Issue #3726)
+   * lxd/storage/ceph: Set ACL on container copy
+   * lxd/storage/ceph: Use Storage{Start,Stop}()
+   * lxd/storage/ceph: Use UUID when creating zombie storage volumes (Issue #3780)
+   * lxd/storage/dir: Use bind-mount for pools outside ${LXD_DIR}
+   * lxd/storage/dir: Use correct function
+   * lxd/storage/lvm: Generate a new xfs UUID on thinpool copy
+   * lxd/storage/lvm: Report error on wrong storage type
+   * lxd/storage/lvm: Require resize request to be at least 1MB
+   * lxd/storage/zfs: Use "referenced" property when zfs.use_refquota=true
+   * shared: Add helpers to parse/compare versions
+   * shared: Fix growing of buf in GroupId (Issue #3711)
+   * shared: Guess size when sysconf() returns*1
+   * shared/api: Fix new golint warning
+   * shared/idmap: Disallow hostids intersecting subids
+   * shared/idmap: Move idmap/acl functions to a separate package
+   * shared/subtest: Vendor the subtest package
+   * tests: Add more ceph tests
+   * tests: Add support for LXD_TMPFS to perf.sh
+   * tests: Add test for disallowing hostid in subuid (Issue #3416)
+   * tests: Also measure batch startup time in perf.sh
+   * tests: Bump image auto update limit to 20min
+   * tests: Ceph test volume resizing
+   * tests: Container import fixes
+   * tests: Don't copy running lvm/ceph containers
+   * tests: Include LVM in image auto update
+   * tests: Limit ceph volumes to 25MB
+   * tests: Lower pg number for OSD pools
+   * tests: Non-functional changes
+   * tests: Resize block size to 200MB
+   * tests: Use "--force" everywhere on stop
+   * tests: Use testimage for perf testing
+   * tests: Wait up to 2 minutes for image updates
+
+  ### Try it for yourself
+  This new LXD release is already available for you to try on our [demo service](/lxd/try-it/).
+
+  ### Downloads
+  The release tarballs can be found on our [download page](/lxd/downloads/).
