@@ -18,7 +18,7 @@ Production environments that require longer term support should remain on LXC 2.
 ### リソース制限のサポート<!-- Resource limit support -->
 <!--
 Similar to requesting specific cgroup limits users can specify any limits for any resource  
-the underlying kernel is ware of by prefixing the name of the limit with "lxc.prlimit."  
+the underlying kernel is aware of by prefixing the name of the limit with "lxc.prlimit."  
 in the container's configuration file. For example, to request a limit on the number of processes  
 and a specific nice value the configuration file for the container should contain the entries:
 -->
