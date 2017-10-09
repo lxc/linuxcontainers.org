@@ -26,3 +26,4 @@
 
 * Ruby: [Hyperkit](http://jeffshantz.github.io/hyperkit)
 * Node.js: [node-lxd](http://github.com/alandoherty/node-lxd)
+* Haskell: [lxd-client](https://hackage.haskell.org/package/lxd-client)
