@@ -1,44 +1,48 @@
-<nav class="navbar navbar-inverse navbar-static-top" role="navigation">
-    <div class="container">
-        <div class="navbar-header">
-            <span class="navbar-brand" id="navbar-title">Linux Containers</span>
+<div class="p-navigation">
+    <div class="row">
+        <div class="p-navigation__logo">
+            <a class="p-navigation__link" href="/">Linux Containers</a>
         </div>
 
-        <div id="navbar" class="navbar-collapse">
+        <nav class="p-navigation__nav">
+            <span class="u-off-screen">
+                <a href="#main-content">Jump to main content</a>
+            </span>
 {% if menu %}
-            <ul class="nav navbar-nav">
+            <ul class="p-navigation__links">
     {% for entry in menu %}
         {% if entry[0] is string %}
             {% if page_path == entry[0] %}
-                <li class="active"><a href="#">{{ entry[1] }}</a></li>
+                <li class="p-navigation__link is-active"><a href="#">{{ entry[1] }}</a></li>
             {% else %}
-                <li><a href="{{ entry[0] }}">{{ entry[1] }}</a></li>
+                <li class="p-navigation__link"><a href="{{ entry[0] }}">{{ entry[1] }}</a></li>
             {% endif %}
         {% else %}
             {% if page_menu and page_menu[0] == entry[1] %}
-                <li class="dropdown active">
+            <li class="p-navigation__link is-active">
             {% else %}
-                <li class="dropdown">
+            <li class="p-navigation__link">
             {% endif %}
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ entry[1] }} <span class="caret"></span></a>
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ entry[1] }}</a>
 
-                    <ul class="dropdown-menu" role="menu">
+                <ul class="hover-menu " role="menu">
+
             {% for sub_entry in entry[0] %}
                 {% if not sub_entry[0] %}
-                        <li class="divider"></li>
+                    <li class="divider"></li>
                     {% if sub_entry[1] %}
-                        <li class="dropdown-header">{{ sub_entry[1] }}</li>
+                        <li>{{ sub_entry[1] }}</li>
                     {% endif %}
                 {% else %}
                     {% if sub_entry[0] is string %}
                         {% if page_path == sub_entry[0] %}
-                        <li class="active"><a href="#">{{ sub_entry[1] }}</a></li>
+                        <li><a href="#">{{ sub_entry[1] }}</a></li>
                         {% else %}
                         <li><a href="{{ sub_entry[0] }}">{{ sub_entry[1] }}</a></li>
                         {% endif %}
                     {% else %}
                         {% if page_menu[1] == sub_entry[1] %}
-                        <li class="dropdown-submenu active">
+                        <li class="is-active">
                         {% else %}
                         <li class="dropdown-submenu">
                         {% endif %}
@@ -51,13 +55,12 @@
                         {% endif %}
                         {% for sub_sub_entry in sub_entry[0] %}
                             {% if not sub_sub_entry[0] %}
-                                <li class="divider"></li>
                                 {% if sub_sub_entry[1] %}
                                 <li class="dropdown-header">{{ sub_sub_entry[1] }}</li>
                                 {% endif %}
                             {% else %}
                                 {% if page_path == sub_sub_entry[0] %}
-                                <li class="active"><a href="#">{{ sub_sub_entry[1] }}</a></li>
+                                <li class="is-active"><a href="#">{{ sub_sub_entry[1] }}</a></li>
                                 {% else %}
                                 <li><a href="{{ sub_sub_entry[0] }}">{{ sub_sub_entry[1] }}</a></li>
                                 {% endif %}
@@ -68,15 +71,15 @@
                     {% endif %}
                 {% endif %}
             {% endfor %}
-                    </ul>
-                </li>
+            </ul>
+        </li>
         {% endif %}
     {% endfor %}
             </ul>
 {% endif %}
 
-{% if languages %}
-            <ul class="nav navbar-nav navbar-right">
+{% if not languages %}
+            <ul class="u-align--right">
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ page_language[2] }} <span class="caret"></span></a>
                     <ul class="dropdown-menu" role="menu">

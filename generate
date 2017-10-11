@@ -222,6 +222,7 @@ def gen_page(entry, override, prefix, **variables):
         with open(content_path(item['meta']['input']), "r") as fd:
             content = fd.read()
     elif item['generator'] == "markdown":
+        template = "markdown-page.tpl.html"
         with open(content_path(item['meta']['input']), "r") as fd:
             content = md2html(fd.read())
     elif item['generator'] == "downloads":
