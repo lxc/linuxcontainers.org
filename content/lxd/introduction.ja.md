@@ -18,8 +18,8 @@ LXD は、[多数の Linux ディストリビューション](https://images.lin
 To get a better idea of what LXD is and what it does, you can [try it online](/lxd/try-it/)!  
 Then if you want to run it locally, take a look at our [getting started guide](/lxd/getting-started-cli/).
 -->
-LXD がどのようなもので、何ができるのかをよく理解するために、[オンラインで使ってみる](/lxd/try-it/)ことができます!
-さらに、LXD をローカルで実行したい場合は、[「はじめに」](/lxd/getting-started-cli/) のページをご覧ください。
+LXD がどのようなもので、何ができるのかをよく理解するために、[オンラインで使ってみる](/ja/lxd/try-it/)ことができます!
+さらに、LXD をローカルで実行したい場合は、[「はじめに」](/ja/lxd/getting-started-cli/) のページをご覧ください。
 
 <!--
 The LXD project was founded and is currently led by [Canonical Ltd](https://www.canonical.com)  
@@ -73,7 +73,7 @@ instance type they select. It's completely transparent and works with the regula
 <!--
 To learn more about LXD and OpenStack, take a look at our [getting started with OpenStack](/lxd/getting-started-openstack/) page.
 -->
-LXD と OpenStack について更に知りたい場合は、[「はじめに - OpenStack」](/lxd/getting-started-openstack/) をご覧ください。
+LXD と OpenStack について更に知りたい場合は、[「はじめに - OpenStack」](/ja/lxd/getting-started-openstack/) をご覧ください。
 
 # 可用性 <!-- Availability -->
 <!--
@@ -85,7 +85,7 @@ LXD は最近の Linux ディストリビューションで動作します。LXD
 <!--
 More details can be found on our [getting started](/lxd/getting-started-cli/) page.
 -->
-さらに詳しく知りたい場合は [「はじめに」](/lxd/getting-started-cli/) をご覧ください。
+さらに詳しく知りたい場合は [「はじめに」](/ja/lxd/getting-started-cli/) をご覧ください。
 
 # LXC との関係 <!-- Relationship with LXC -->
 <!--
