@@ -26,6 +26,7 @@ h3:hover a.headerlink {
     border-top: 1px solid #999;
 }
 
+<<<<<<< 50e47ddbf10d8e51e2cfc8a11f556aca69dd7a3a
 .symbol {
   display: inline-block;
   border-radius: 50%;
@@ -40,4 +41,28 @@ h3:hover a.headerlink {
 
 .symbol-filled {
   background-color: black;
+=======
+.dropdown-submenu:hover .dropdown-menu {
+    display: block;
+}
+
+.dropdown-submenu .dropdown-menu {
+    display: none;
+    position: absolute;
+    left: 90%;
+    margin-top: -30px;
+    background: #f7f7f7;
+    border: 1px solid #cdcdcd;
+    border-radius: 10px;
+    box-shadow: 0 2px 2px -1px #cdcdcd;
+}
+
+@media only screen and (min-width: 768px) {
+    .dropdown-menu::after {
+        transform: rotate(-90deg);
+        left: -48px !important;
+        width: 90px !important;
+        top: 0 !important;
+    }
+>>>>>>> Fix nested navigation
 }
