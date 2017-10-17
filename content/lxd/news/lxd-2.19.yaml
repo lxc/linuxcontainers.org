@@ -1,0 +1,125 @@
+title: LXD 2.19 release announcement
+date: 2017/10/17 00:00
+content: |-
+  Features:
+
+   * The LXD documentation is now available at https://lxd.readthedocs.io
+   * A new "resources" API was added allowing to get CPU and memory
+     information as well as storage pool sizes from the API.
+     In the client, this maps to "lxc info --resources" and
+     "lxc storage show NAME --resources".
+   * A new set of limits.kernel.[limit name] container configuration
+     keys are available to tweak the various kernel process limits for the
+     container.
+   * The command line client now has a number of "rename" subcommands,
+     for profiles, networks and image aliases. The toplevel "rename"
+     command was also updated to match.
+   * The LXD API now allows renaming of custom storage volumes. In the
+     client tool, this can be done through "lxc storage volume rename".
+   * Extended the LXD user-agent to include the kernel version,
+     architecture and OS name and release. This will allow LXD image servers
+     to show a filtered image list when applicable.
+   * Added a new insecureSkipVerify flag to ConnectionArgs struct in the
+     client allowing to connect to a LXD host bypassing any kind of TLS
+     validation.
+
+  Bugfixes:
+
+   * doc: Document instance types
+   * doc: Document that squashfs images can also be used
+   * github: Add SUPPORT.md
+   * github: Refresh the issue template
+   * global: Add some more TLS ciphers
+   * lxc/file: Use shared.HostPath for push/pull
+   * lxc/image: Fix regression in exported filename
+   * lxc/image: Use shared.HostPath for import/export
+   * lxc/storage: Fix remote operations
+   * lxd-benchmark: Add "spawn" as equivalent but deprecated to "launch"
+   * lxd-benchmark: Change name of `spawn` command to `launch`
+   * lxd/apparmor: Drop useless apparmor denies
+   * lxd/daemon: Don't update images while pruning
+   * lxd/daemon: Fix handling of config triggers
+   * lxd/daemon: Simplify time channels
+   * lxd/db: Fix bad DB schema update between schema 30 and 31
+   * lxd/images: Actually get the list of images to remove
+   * lxd/images: Fix bad error message
+   * lxd/images: Respect disabled cache expiry
+   * lxd/images: Store UploadedAt as RFC3399
+   * lxd/import: Check for on-disk only snapshots
+   * lxd/import: Re-create mountpoints and symlinks
+   * lxd/import: Rewrite
+   * lxd/init: Only nest btrfs if container is on btrfs
+   * lxd/migration: Fix lvm stateful restores
+   * lxd/migration: Fix stateless incremental containers
+   * lxd/network: Better handle dnsmasq version checks
+   * lxd/network: Do not update limits unconditionally
+   * lxd/networks: Fix renaming networks
+   * lxd/networks: Update dnsmasq on container renames
+   * lxd/patches: Convert UploadedAt to RFC3399
+   * lxd/resources: Deal with missing cpufreq directory
+   * lxd/storage: Add growFileSystem helper
+   * lxd/storage: Add shrinkFileSystem helper
+   * lxd/storage: Add shrinkVolumeFilesystem helper
+   * lxd/storage: Have "usedby" functions return empty slice
+   * lxd/storage: Ignore vanished file warnings during rsync
+   * lxd/storage: Move check for type into api
+   * lxd/storage: Re-import image if volume filesystem has changed
+   * lxd/storage: Rework container volume properties
+   * lxd/storage: Rework storage pool updating
+   * lxd/storage: Rework storage volume updating
+   * lxd/storage: Support resizing btrfs-based volumes
+   * lxd/storage/btrfs: Existence check before container delete
+   * lxd/storage/btrfs: Existence check before custom delete
+   * lxd/storage/btrfs: Existence check before image delete
+   * lxd/storage/btrfs: Existence check before snapshot delete
+   * lxd/storage/btrfs: Remove dependency on symlink
+   * lxd/storage/btrfs: Workaround btrfs bug
+   * lxd/storage/ceph: Check for mountpoint before calling umount
+   * lxd/storage/ceph: Correctly implement (none-)live migration
+   * lxd/storage/ceph: Existence check before container delete
+   * lxd/storage/ceph: Existence check before custom delete
+   * lxd/storage/ceph: Existence check before pool delete
+   * lxd/storage/ceph: Existence check before snapshot delete
+   * lxd/storage/ceph: Handle volume.block.filesystem update
+   * lxd/storage/ceph: Remove size property from OSD pools
+   * lxd/storage/ceph: Use [grow|shrink]FileSystem helpers
+   * lxd/storage/dir: Check whether pool is already mounted
+   * lxd/storage/dir: Make sure pool is mounted
+   * lxd/storage/lvm: Existence check before container delete
+   * lxd/storage/lvm: Existence check before custom delete
+   * lxd/storage/lvm: Existence check before image delete
+   * lxd/storage/lvm: Existence check before pool delete
+   * lxd/storage/lvm: Mount xfs snapshots with "nouuid"
+   * lxd/storage/lvm: Non-functional changes
+   * lxd/storage/lvm: Re-import image on thinpool-based pools if volume filesystem has changed
+   * lxd/storage/lvm: Use DottedVersion for version comparison
+   * lxd/storage/zfs: Existence check before custom delete
+   * lxd/storage/zfs: Existence check before delete for pools
+   * shared: Cleanup use of the log package
+   * shared: Move testhelpers into shared/osarch for now
+   * shared/api: Consistent file names
+   * shared/api: Split storage in separate files for pools and volumes
+   * shared/canceler: Support canceling with parallel downloads
+   * shared/idmap: Fix numerous issues
+   * shared/idmap: Make ACL failures more verbose
+   * shared/logger: Temporary workaround for log15 API breakage
+   * shared/util: Implement mountpoint checking
+   * shared/util: More snap handling logic
+   * tests: Add stateless live migration tests
+   * tests: Add tests for btrfs resize
+   * tests: Add tests using btrfs on LVM and ceph volumes
+   * tests: Fix bad raw.lxc test
+   * tests: Fix dependency check
+   * tests: Fix image expiry test
+   * tests: Fix shell return value masking
+   * tests: Setup basic channel handler for triggers
+   * tests: Test mountpoint and symlink recreation
+   * tests: Update and expand container import tests
+   * tests: Update perf.sh to "lxd-benchmark launch"
+   * tests: Use 50MB as minimal block dev size for xfs
+
+  ### Try it for yourself
+  This new LXD release is already available for you to try on our [demo service](/lxd/try-it/).
+
+  ### Downloads
+  The release tarballs can be found on our [download page](/lxd/downloads/).
