@@ -29,9 +29,9 @@ content: |-
    * doc: Document that squashfs images can also be used
    * github: Add SUPPORT.md
    * github: Refresh the issue template
-   * global: Add some more TLS ciphers
+   * global: Add some more TLS ciphers (Issue #3822)
    * lxc/file: Use shared.HostPath for push/pull
-   * lxc/image: Fix regression in exported filename
+   * lxc/image: Fix regression in exported filename (Issue #3869)
    * lxc/image: Use shared.HostPath for import/export
    * lxc/storage: Fix remote operations
    * lxd-benchmark: Add "spawn" as equivalent but deprecated to "launch"
@@ -40,20 +40,20 @@ content: |-
    * lxd/daemon: Don't update images while pruning
    * lxd/daemon: Fix handling of config triggers
    * lxd/daemon: Simplify time channels
-   * lxd/db: Fix bad DB schema update between schema 30 and 31
+   * lxd/db: Fix bad DB schema update between schema 30 and 31 (Issue #3878) (Issue #3890)
    * lxd/images: Actually get the list of images to remove
    * lxd/images: Fix bad error message
    * lxd/images: Respect disabled cache expiry
    * lxd/images: Store UploadedAt as RFC3399
    * lxd/import: Check for on-disk only snapshots
    * lxd/import: Re-create mountpoints and symlinks
-   * lxd/import: Rewrite
+   * lxd/import: Rewrite (Issue #3682)
    * lxd/init: Only nest btrfs if container is on btrfs
    * lxd/migration: Fix lvm stateful restores
-   * lxd/migration: Fix stateless incremental containers
-   * lxd/network: Better handle dnsmasq version checks
-   * lxd/network: Do not update limits unconditionally
-   * lxd/networks: Fix renaming networks
+   * lxd/migration: Fix stateless incremental containers (Issue #3798)
+   * lxd/network: Better handle dnsmasq version checks (Issue #3837)
+   * lxd/network: Do not update limits unconditionally (Issue #3920)
+   * lxd/networks: Fix renaming networks (Issue #3912)
    * lxd/networks: Update dnsmasq on container renames
    * lxd/patches: Convert UploadedAt to RFC3399
    * lxd/resources: Deal with missing cpufreq directory
@@ -61,49 +61,49 @@ content: |-
    * lxd/storage: Add shrinkFileSystem helper
    * lxd/storage: Add shrinkVolumeFilesystem helper
    * lxd/storage: Have "usedby" functions return empty slice
-   * lxd/storage: Ignore vanished file warnings during rsync
+   * lxd/storage: Ignore vanished file warnings during rsync (Issue #3859)
    * lxd/storage: Move check for type into api
    * lxd/storage: Re-import image if volume filesystem has changed
    * lxd/storage: Rework container volume properties
-   * lxd/storage: Rework storage pool updating
+   * lxd/storage: Rework storage pool updating (Issue #3834)
    * lxd/storage: Rework storage volume updating
    * lxd/storage: Support resizing btrfs-based volumes
-   * lxd/storage/btrfs: Existence check before container delete
-   * lxd/storage/btrfs: Existence check before custom delete
-   * lxd/storage/btrfs: Existence check before image delete
-   * lxd/storage/btrfs: Existence check before snapshot delete
+   * lxd/storage/btrfs: Existence check before container delete (Issue #3775)
+   * lxd/storage/btrfs: Existence check before custom delete (Issue #3775)
+   * lxd/storage/btrfs: Existence check before image delete (Issue #3775)
+   * lxd/storage/btrfs: Existence check before snapshot delete (Issue #3775)
    * lxd/storage/btrfs: Remove dependency on symlink
-   * lxd/storage/btrfs: Workaround btrfs bug
+   * lxd/storage/btrfs: Workaround btrfs bug (Issue #3843)
    * lxd/storage/ceph: Check for mountpoint before calling umount
    * lxd/storage/ceph: Correctly implement (none-)live migration
-   * lxd/storage/ceph: Existence check before container delete
-   * lxd/storage/ceph: Existence check before custom delete
-   * lxd/storage/ceph: Existence check before pool delete
-   * lxd/storage/ceph: Existence check before snapshot delete
+   * lxd/storage/ceph: Existence check before container delete (Issue #3775)
+   * lxd/storage/ceph: Existence check before custom delete (Issue #3775)
+   * lxd/storage/ceph: Existence check before pool delete (Issue #3775)
+   * lxd/storage/ceph: Existence check before snapshot delete (Issue #3775)
    * lxd/storage/ceph: Handle volume.block.filesystem update
    * lxd/storage/ceph: Remove size property from OSD pools
    * lxd/storage/ceph: Use [grow|shrink]FileSystem helpers
-   * lxd/storage/dir: Check whether pool is already mounted
-   * lxd/storage/dir: Make sure pool is mounted
-   * lxd/storage/lvm: Existence check before container delete
-   * lxd/storage/lvm: Existence check before custom delete
-   * lxd/storage/lvm: Existence check before image delete
-   * lxd/storage/lvm: Existence check before pool delete
+   * lxd/storage/dir: Check whether pool is already mounted (Issue #3938)
+   * lxd/storage/dir: Make sure pool is mounted (Issue #3938)
+   * lxd/storage/lvm: Existence check before container delete (Issue #3775)
+   * lxd/storage/lvm: Existence check before custom delete (Issue #3775)
+   * lxd/storage/lvm: Existence check before image delete (Issue #3775)
+   * lxd/storage/lvm: Existence check before pool delete (Issue #3775)
    * lxd/storage/lvm: Mount xfs snapshots with "nouuid"
    * lxd/storage/lvm: Non-functional changes
    * lxd/storage/lvm: Re-import image on thinpool-based pools if volume filesystem has changed
    * lxd/storage/lvm: Use DottedVersion for version comparison
-   * lxd/storage/zfs: Existence check before custom delete
-   * lxd/storage/zfs: Existence check before delete for pools
+   * lxd/storage/zfs: Existence check before custom delete (Issue #3775)
+   * lxd/storage/zfs: Existence check before delete for pools (Issue #3775)
    * shared: Cleanup use of the log package
    * shared: Move testhelpers into shared/osarch for now
    * shared/api: Consistent file names
    * shared/api: Split storage in separate files for pools and volumes
    * shared/canceler: Support canceling with parallel downloads
-   * shared/idmap: Fix numerous issues
+   * shared/idmap: Fix numerous issues (Issue #3946)
    * shared/idmap: Make ACL failures more verbose
    * shared/logger: Temporary workaround for log15 API breakage
-   * shared/util: Implement mountpoint checking
+   * shared/util: Implement mountpoint checking (Issue #3877)
    * shared/util: More snap handling logic
    * tests: Add stateless live migration tests
    * tests: Add tests for btrfs resize
