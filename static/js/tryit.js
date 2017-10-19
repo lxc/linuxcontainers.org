@@ -5,6 +5,7 @@ $(document).ready(function() {
     var original_url = window.location.href.split("?")[0];
     var term = null
     var sock = null
+    var feedback = false
 
     function getUrlParameter(sParam) {
         var sPageURL = decodeURIComponent(window.location.search.substring(1)),
@@ -313,9 +314,38 @@ $(document).ready(function() {
 
     $('.tabNext').click(function(){
         $('.nav-tabs > .active').next('li').find('a').trigger('click');
+
+        if (feedback == false && $('.nav-tabs > .active').find('a').attr('href') == "#conclusion") {
+            $('#tryit_feedback').css("display", "inherit");
+        }
     });
 
     $('.tabPrevious').click(function(){
         $('.nav-tabs > .active').prev('li').find('a').trigger('click');
+    });
+
+    $('#tryit_feedback_submit').submit(function(event) {
+        event.preventDefault();
+
+        feedbackRating = $('#feedbackRating').val();
+        if (feedbackRating == "") {
+            feedbackRating = 0
+        }
+
+        feedbackEmailUse = 0
+        if ($('#feedbackEmailUse').is(':checked')) {
+            feedbackEmailUse = 1
+        }
+
+        data = JSON.stringify({"rating": parseInt(feedbackRating),
+                               "email": $('#feedbackEmail').val(),
+                               "email_use": feedbackEmailUse,
+                               "message": $('#feedbackText').val()})
+        $.ajax({url: "https://"+tryit_server+"/1.0/feedback?id="+tryit_console,
+                type: "POST",
+                data: data,
+                contentType: "application/json"})
+        $('#tryit_feedback').css("display", "none");
+        feedback = true;
     });
 });
