@@ -1,5 +1,24 @@
 ![Download icon](/static/img/containers.png)
 # News
+## LXCFS 2.0.8 release announcement <span class="text-muted">19th of October 2017</span>
+
+This is the eigth bugfix release for LXCFS 2.0.
+
+This includes the following bugfixes:
+
+ * bindings: Add mountpoint for unified hierarchy
+ * bindings: Calculate uptime via proc/<pid>/stat
+ * bindings: Revert virtualization of 'btime' field due to regressions in ps
+ * doc: Update README
+ * init: Add cgroupfs-mount to Should-Start/Stop sysvinit LSB headers
+ * lib: Add common fallback dlopen for liblxcfs.so
+ * lib: Fix the installation directory for liblxcfs to ${libdir}/lxcfs
+ * pam: Add a 'all' option for -c
+ * pam: Chown cgroup.procs file on unified hierarchy
+ * pam: Report back when we find a unified hierarchy
+ * tests: Fix invalid comparison
+ * uptime: Fix a problem with subsequent reads
+
 ## LXCFS 2.0.7 release announcement <span class="text-muted">11th of May 2017</span>
 
 This is the seventh bugfix release for LXCFS 2.0.
