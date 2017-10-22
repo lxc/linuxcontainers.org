@@ -1,0 +1,155 @@
+title: LXD 2.19 リリースのお知らせ
+date: 2017/10/17 00:00
+origin: https://discuss.linuxcontainers.org/t/lxd-2-19-has-been-released/665
+content: |-
+  機能<!-- Features -->:
+
+   * LXD のドキュメントが https://lxd.readthedocs.io で読めるようになりました <!-- The LXD documentation is now available at https://lxd.readthedocs.io -->
+   * 新しい "resources" API を追加しました。この API により CPU やメモリの情報や、ストレージプールのサイズを取得できます。
+     クライアントからは、"lxc info --resources"、"lxc storage show NAME --resources" のように使えます。
+     <!--
+     A new "resources" API was added allowing to get CPU and memory
+     information as well as storage pool sizes from the API.
+     In the client, this maps to "lxc info \-\-resources" and
+     "lxc storage show NAME \-\-resources".
+     -->
+   * 新たにコンテナの設定項目として limits.kernel.[limit name] が使えるようになりました。この設定で、コンテナに対してカーネルのプロセスに対する制限を調整できます。
+     <!--
+     A new set of limits.kernel.[limit name] container configuration
+     keys are available to tweak the various kernel process limits for the
+     container.
+     -->
+   * コマンドクライアントの多数のコマンド、profile、network、image alias に "rename" サブコマンドが加わりました。
+     トップレベルの "rename" コマンドもそれにマッチするように更新しました。
+     <!--
+     The command line client now has a number of "rename" subcommands,
+     for profiles, networks and image aliases. The toplevel "rename"
+     command was also updated to match.
+     -->
+   * LXD API により、カスタムストレージボリュームのリネームができるようになりました。
+     クライアントツールでは、"lxc storage volume rename" を使ってリネームできます。
+     <!--
+     The LXD API now allows renaming of custom storage volumes. In the
+     client tool, this can be done through "lxc storage volume rename".
+     -->
+   * カーネルのバージョン、アーキテクチャ、OS 名とリリースを含むように LXD の user-agent を拡張しました。
+     これにより、LXD イメージサーバは、該当する場合にフィルタリングされたイメージリストを表示できます。
+     <!--
+     Extended the LXD user-agent to include the kernel version,
+     architecture and OS name and release. This will allow LXD image servers
+     to show a filtered image list when applicable.
+     -->
+   * 新たに insecureSkipVerify フラグがクライアントの ConnectionArgs 構造体に追加されました。
+     これにより、あらゆる種類の TLS 検証をバイパスして LXD ホストに接続できます。
+     <!--
+     Added a new insecureSkipVerify flag to ConnectionArgs struct in the
+     client allowing to connect to a LXD host bypassing any kind of TLS
+     validation.
+     -->
+
+  バグ修正 <!-- Bugfixes -->:
+
+   * doc: インスタンスタイプについて追加しました <!-- Document instance types -->
+   * doc: squashfs イメージも使えることを追加しました <!-- Document that squashfs images can also be used -->
+   * github: SUPPORT.md を追加しました <!-- Add SUPPORT.md -->
+   * github: Issue 用のテンプレートを更新しました <!-- Refresh the issue template -->
+   * global: TLS Cipher をさらにいくつか追加しました <!-- Add some more TLS ciphers -->(Issue #3822)
+   * lxc/file: push/pull で shared.HostPath を使うようにしました <!-- Use shared.HostPath for push/pull -->
+   * lxc/image: export した際のファイル名に関するリグレッションを修正しました <!-- Fix regression in exported filename -->(Issue #3869)
+   * lxc/image: import/export で shared.HostPath を使うようにしました <!-- Use shared.HostPath for import/export -->
+   * lxc/storage: リモートに対する操作を修正しました <!-- Fix remote operations -->
+   * lxd-benchmark: "launch" と同等の命令として廃止予定の "spawn" を追加しました <!-- Add "spawn" as equivalent but deprecated to "launch" -->
+   * lxd-benchmark: `spawn` コマンドの名前を `launch` に変更しました <!-- Change name of `spawn` command to `launch` -->
+   * lxd/apparmor: apparmor の使われない deny を削除しました <!-- Drop useless apparmor denies -->
+   * lxd/daemon: prune 中 (訳注: 期限切れのキャッシュの削除中) はイメージを更新しないようにしました <!-- Don't update images while pruning -->
+   * lxd/daemon: config のトリガーの扱いを修正しました <!-- Fix handling of config triggers -->
+   * lxd/daemon: タイマーの処理を簡素化しました <!-- Simplify time channels -->
+   * lxd/db: スキーマバージョン 30 と 31 間の更新の不適切な DB スキーマを修正しました <!-- Fix bad DB schema update between schema 30 and 31 -->(Issue #3878) (Issue #3890)
+   * lxd/images: 実際に消去するイメージのリストを取得するようにしました <!-- Actually get the list of images to remove -->
+   * lxd/images: 不適切なエラーメッセージを修正しました <!-- Fix bad error message -->
+   * lxd/images: キャッシュの期限切れを無効にする設定通りに動作するようにしました <!-- Respect disabled cache expiry -->
+   * lxd/images: RFC3399 形式で UploadedAt を保存するようにしました <!-- Store UploadedAt as RFC3399 -->
+   * lxd/import: ディスク上のスナップショットのみをチェックするようにしました <!-- Check for on-disk only snapshots -->
+   * lxd/import: マウントポイントとシンボリックリンクを再作成するようにしました <!-- Re-create mountpoints and symlinks -->
+   * lxd/import: (訳注: zfs 上のコンテナの import に関する問題を解決するために) 書きなおしました<!-- Rewrite -->(Issue #3682)
+   * lxd/init: コンテナが btrfs 上にあるときだけ btrfs をネストするようにしました <!-- Only nest btrfs if container is on btrfs -->
+   * lxd/migration: lvm のステートフルなリストアの問題を修正しました <!-- Fix lvm stateful restores -->
+   * lxd/migration: ステートレスのインクリメンタルなコンテナコピーの問題を修正しました <!-- Fix stateless incremental containers -->(Issue #3798)
+   * lxd/network: dnsmasq のバージョンチェックの扱いを改良しました <!-- Better handle dnsmasq version checks -->(Issue #3837)
+   * lxd/network: 無条件に制限を更新しないようにしました <!-- Do not update limits unconditionally -->(Issue #3920)
+   * lxd/networks: ネットワークのリネームを修正しました <!-- Fix renaming networks -->(Issue #3912)
+   * lxd/networks: コンテナのリネーム時に dnsmasq (訳注: の lease ファイル) をアップデートするようにしました <!-- Update dnsmasq on container renames -->
+   * lxd/patches: UploadAt を RFC3399 形式に変換するようにしました <!-- Convert UploadedAt to RFC3399 -->
+   * lxd/resources: cpufreq ディレクトリがない場合の問題に対応しました <!-- Deal with missing cpufreq directory -->
+   * lxd/storage: growFileSystem ヘルパを追加しました (訳注: ファイルシステムのサイズを大きくするための関数)<!-- Add growFileSystem helper -->
+   * lxd/storage: shrinkFileSystem ヘルパを追加しました <!-- Add shrinkFileSystem helper -->
+   * lxd/storage: shrinkVolumeFilesystem ヘルパを追加しました <!-- Add shrinkVolumeFilesystem helper -->
+   * lxd/storage: "usedby" 関数が空のスライスを返すようになりました <!-- Have "usedby" functions return empty slice -->
+   * lxd/storage: rsync 中の存在しないファイルの警告を無視するようになりました <!-- Ignore vanished file warnings during rsync -->(Issue #3859)
+   * lxd/storage: 型のチェックを API に移しました <!-- Move check for type into api -->
+   * lxd/storage: ボリュームのファイルシステムが変わった場合は再度イメージをインポートするようにしました <!-- Re-import image if volume filesystem has changed -->
+   * lxd/storage: コンテナボリュームのプロパティの設定を変更しました (訳注: 特定のタイプのボリュームの場合のプロパティ設定方法を変更)<!-- Rework container volume properties -->
+   * lxd/storage: ストレージプールのアップデート部分を改良しました <!-- Rework storage pool updating -->(Issue #3834)
+   * lxd/storage: ストレージボリュームの更新部分を改良しました <!-- Rework storage volume updating -->
+   * lxd/storage: btrfs ベースのボリュームのリサイズをサポートしました <!-- Support resizing btrfs-based volumes -->
+   * lxd/storage/btrfs: コンテナの削除前に存在をチェックするようにしました <!-- Existence check before container delete -->(Issue #3775)
+   * lxd/storage/btrfs: カスタムサブボリュームの削除前に存在をチェックするようにしました<!-- Existence check before custom delete -->(Issue #3775)
+   * lxd/storage/btrfs: イメージの削除前に存在をチェックするようにしました <!-- Existence check before image delete -->(Issue #3775)
+   * lxd/storage/btrfs: スナップショットの削除前に存在をチェックするようにしました <!-- Existence check before snapshot delete -->(Issue #3775)
+   * lxd/storage/btrfs: シンボリックリンクへの依存を削除しました <!-- Remove dependency on symlink -->
+   * lxd/storage/btrfs: btrfs コマンドのバグの回避策を追加しました <!-- Workaround btrfs bug -->(Issue #3843)
+   * lxd/storage/ceph: アンマウント前にマウントポイントのチェックをするようにしました <!-- Check for mountpoint before calling umount -->
+   * lxd/storage/ceph: マイグレーションを正しく実装しました <!-- Correctly implement (none-)live migration -->
+   * lxd/storage/ceph: コンテナの削除前に存在をチェックするようにしました <!-- Existence check before container delete -->(Issue #3775)
+   * lxd/storage/ceph: カスタムサブボリュームの削除前に存在をチェックするようにしました<!-- Existence check before custom delete -->(Issue #3775)
+   * lxd/storage/ceph: プールの削除前に存在をチェックするようにしました<!-- Existence check before pool delete -->(Issue #3775)
+   * lxd/storage/ceph: スナップショットの削除前に存在をチェックするようにしました <!--　Existence check before snapshot delete -->(Issue #3775)
+   * lxd/storage/ceph: volume.block.filesystem の更新を扱うようにしました <!-- Handle volume.block.filesystem update -->
+   * lxd/storage/ceph: OSD プールから size プロパティを削除しました <!-- Remove size property from OSD pools -->
+   * lxd/storage/ceph: [grow|shrink]FileSystem ヘルパを使うようにしました <!-- Use [grow|shrink]FileSystem helpers -->
+   * lxd/storage/dir: プールが既にマウントされているかどうかチェックするようにしました <!-- Check whether pool is already mounted -->(Issue #3938)
+   * lxd/storage/dir: 確実にプールがマウントされるようにしました <!-- Make sure pool is mounted -->(Issue #3938)
+   * lxd/storage/lvm: コンテナの削除前に存在をチェックするようにしました <!-- Existence check before container delete -->(Issue #3775)
+   * lxd/storage/lvm: カスタムサブボリュームの削除前に存在をチェックするようにしました<!-- Existence check before custom delete -->(Issue #3775)
+   * lxd/storage/lvm: イメージの削除前に存在をチェックするようにしました <!-- Existence check before image delete -->(Issue #3775)
+   * lxd/storage/lvm: プールの削除前に存在をチェックするようにしました<!-- Existence check before pool delete -->(Issue #3775)
+   * lxd/storage/lvm: "nouuid" を指定して xfs スナップショットをマウントするようにしました <!-- Mount xfs snapshots with "nouuid" -->
+   * lxd/storage/lvm: 機能に変更のない変更を行いました <!-- Non-functional changes -->
+   * lxd/storage/lvm: ボリュームのファイルシステムが変わった場合は再度イメージをインポートするようにしました <!-- Re-import image on thinpool-based pools if volume filesystem has changed -->
+   * lxd/storage/lvm: バージョンの比較の際にドット入りの文字列を使って比較するようにしました <!-- Use DottedVersion for version comparison -->
+   * lxd/storage/zfs: カスタムサブボリュームの削除前に存在をチェックするようにしました<!-- Existence check before custom delete -->(Issue #3775)
+   * lxd/storage/zfs: プールの削除前に存在をチェックするようにしました<!-- Existence check before delete for pools -->(Issue #3775)
+   * shared: log パッケージの使用部分を削除しました <!-- Cleanup use of the log package -->
+   * shared: 当面 testhelpers を shared/osarch に移動します <!-- Move testhelpers into shared/osarch for now -->
+   * shared/api: ファイル名に一貫性を持たせました <!-- Consistent file names -->
+   * shared/api: ストレージ関連のファイルをプールとボリュームに分けました <!-- Split storage in separate files for pools and volumes -->
+   * shared/canceler: 並行ダウンロードをキャンセルできるようにしました <!-- Support canceling with parallel downloads -->
+   * shared/idmap: 多数の問題を修正しました <!-- Fix numerous issues -->(Issue #3946)
+   * shared/idmap: ACL に関するエラー出力をより冗長にしました <!-- Make ACL failures more verbose -->
+   * shared/logger: log15 API が壊れているのに対する一時的な回避策を取りました <!-- Temporary workaround for log15 API breakage -->
+   * shared/util: マウントポイントのチェックが出来る関数を実装しました <!-- Implement mountpoint checking -->(Issue #3877)
+   * shared/util: さらに snap を扱うロジックを追加しました <!-- More snap handling logic -->
+   * tests: ステートレスのライブマイグレーションテストを追加しました <!-- Add stateless live migration tests -->
+   * tests: btrfs のリサイズのテストを追加しました <!-- Add tests for btrfs resize -->
+   * tests: LVM と Ceph ボリューム上の btrfs を使うテストを追加しました <!-- Add tests using btrfs on LVM and ceph volumes -->
+   * tests: raw.lxc のテストの問題を修正しました <!-- Fix bad raw.lxc test -->
+   * tests: 依存チェックを修正しました <!-- Fix dependency check -->
+   * tests: イメージの有効期限切れのテストを修正しました <!-- Fix image expiry test -->
+   * tests: シェルのリターン値のマスキングを修正しました <!-- Fix shell return value masking -->
+   * tests: トリガー用の基本チャンネルハンドラのセットアップを行うようにしました <!-- Setup basic channel handler for triggers -->
+   * tests: マウントポイントとシンボリックリンクの再作成のテストを追加しました <!-- Test mountpoint and symlink recreation -->
+   * tests: インポートテストを更新し拡張しました <!-- Update and expand container import tests -->
+   * tests: perf.sh 内の "lxd-benchmark spawn" 呼び出しを "lxd-benchmark launch" に更新しました <!-- Update perf.sh to "lxd-benchmark launch" -->
+   * tests: XFS に対しては最小のブロックデバイスサイズとして 50MB を使うようにしました <!-- Use 50MB as minimal block dev size for xfs -->
+
+  ### 試用環境 <!-- Try it for yourself -->
+  <!--
+  This new LXD release is already available for you to try on our [demo service](/lxd/try-it/).
+  -->
+  この新しい LXD のリリースが、すでに私たちの [デモサービス](/ja/lxd/try-it/) で利用できます。
+  
+  ### ダウンロード <!-- Downloads -->
+  <!--
+  The release tarballs can be found on our [download page](/lxd/downloads/).
+  -->
+  このリリースの tarball は [ダウンロードページ](/lxd/downloads/) から取得できます。
