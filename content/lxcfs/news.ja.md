@@ -1,4 +1,30 @@
+![Download icon](/static/img/containers.png)
 # News
+## LXCFS 2.0.8 のリリースのお知らせ <!-- LXCFS 2.0.8 release announcement --><span class="text-muted">2017 年 10 月 19 日<!-- 19th of October 2017 --></span>
+
+<!--
+This is the eigth bugfix release for LXCFS 2.0.
+-->
+このリリースは LXCFS 2.0 の 8 回目のバグフィックスリリースです。
+
+<!--
+This includes the following bugfixes:
+-->
+このリリースには以下のバグ修正が含まれます:
+
+ * bindings: 単一階層構造向けのマウントポイントを追加しました <!-- Add mountpoint for unified hierarchy -->
+ * bindings: proc/<pid>/stat 経由で uptime を計算するようになりました <!-- Calculate uptime via proc/<pid>/stat -->
+ * bindings: ps コマンドで発生したリグレッションのため、'btime' の仮想化を元に戻しました <!-- Revert virtualization of 'btime' field due to regressions in ps -->
+ * doc: README を更新しました <!-- Update README -->
+ * init: sysvinit の LSB ヘッダに Should-Start/Stop として cgroupfs-mount を追加しました <!-- Add cgroupfs-mount to Should-Start/Stop sysvinit LSB headers -->
+ * lib: liblxcfs.so のための dlopen の共通のフォールバックを追加しました <!-- Add common fallback dlopen for liblxcfs.so -->
+ * lib: liblxcfs のインストールディレクトリを ${libdir}/lxcfs に修正しました <!-- Fix the installation directory for liblxcfs to ${libdir}/lxcfs -->
+ * pam: -c オプションに 'all' が指定できるようになりました <!-- Add a 'all' option for \-c -->
+ * pam: 単一階層構造用の cgroup.procs ファイルを chown するようにしました <!-- Chown cgroup.procs file on unified hierarchy -->
+ * pam: 単一階層構造を検出した時はレポートする (訳注: true を返す) ようにしました <!-- Report back when we find a unified hierarchy -->
+ * tests: 正しくない比較を修正しました <!-- Fix invalid comparison -->
+ * uptime: 連続した読みとり時の問題を修正しました <!-- Fix a problem with subsequent reads -->
+
 ## LXCFS 2.0.7 リリースのお知らせ <!-- LXCFS 2.0.7 release announcement --><span class="text-muted">2017 年 5 月 11 日 <!-- 11th of May 2017 --></span>
 
 <!--
