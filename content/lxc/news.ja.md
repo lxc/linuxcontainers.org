@@ -11,7 +11,7 @@ This is the eleventh bugfix release for LXC 1.0.
  * conf: netdev-\>downscript 変数を free するようにしました <!-- Free netdev-\>downscript -->
  * conf: write\_id\_mapping() 関数を改良しました <!-- Improve write\_id\_mapping() -->
  * conf: 機能と関係ない変更を行いました <!-- Non-functional changes -->
- * conf: Refactor most of hte parsing functions
+ * conf: 設定をパースする関数を全体的にリファクタリングしました <!-- Refactor most of the parsing functions -->
  * console: 機能と関係ない変更を行いました <!-- Non-functional change -->
  * core: `__func__` マクロを削除しました <!-- Remove the `__func__` macro -->
  * core: ログのフォーマット文字列として `%m` の代わりに `strerror(errno)` を使うようにしました <!-- Use strerror(errno) instead of %m -->
