@@ -344,7 +344,7 @@ Bugfixes:
 
 ### Downloads
 The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions  
-will very soon ship a packaged version of LXC 1.0.10.
+will very soon ship a packaged version of LXC 1.0.11.
 
 Please note that LXC upstream strongly recommends 1.0 users to upgrade to the 2.0 LTS release.  
 The 1.0 branch will keep being supported until June 2019, but at this point,  
