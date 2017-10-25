@@ -296,7 +296,7 @@ Bugfixes:
  * conf: Free netdev-\>downscript
  * conf: Improve write\_id\_mapping()
  * conf: Non-functional changes
- * conf: Refactor most of hte parsing functions
+ * conf: Refactor most of the parsing functions
  * console: Non-functional change
  * core: Remove the `__func__` macro
  * core: Use strerror(errno) instead of %m
