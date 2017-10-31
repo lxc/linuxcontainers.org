@@ -2,6 +2,7 @@
 {% block content %}
 <div class="row">
     <div class="p-strip">
+        <div class="col-8">
     {{ content }}
 
 {% if downloads %}
@@ -21,6 +22,7 @@
     {% endfor %}
     </table>
 {% endif %}
-</div>
+        </div>
+    </div>
 </div>
 {% endblock %}

@@ -1,4 +1,4 @@
-![Logo](/static/img/containers.png)
+
 
 # Nova LXD のインストールと設定 <!-- Installing and configuring Nova LXD -->
 
@@ -29,7 +29,7 @@ containers:
     sudo service nova-compute restart
 
 <!--
-In order to support migration of containers between Compute hosts, LXD must be configured to listen for network  
+In order to support migration of containers between Compute hosts, LXD must be configured to listen for network
 connections and a trust password must be set:
 -->
 Compute ホスト間のコンテナのマイグレーションをサポートするために、LXD はネットワーク接続を listen するように設定され、パスワードが設定されている必要があります。
@@ -47,13 +47,13 @@ Each Nova LXD instance within your deployment must then be configured with remot
 ## Juju を使った自動デプロイ <!-- Automated deployment using Juju -->
 
 <!--
-Deploying OpenStack is a complex process, for which a number of deployment tools exist; Juju provides a nice way  
+Deploying OpenStack is a complex process, for which a number of deployment tools exist; Juju provides a nice way
 to deploy OpenStack on Ubuntu, and a specific [bundle of charms](https://jujucharms.com/u/openstack-charmers-next/openstack-lxd) can be used to deploy OpenStack cloud using LXD.
 -->
 OpenStack のデプロイは複雑なプロセスが必要で、それを行うためのツールが多数存在しています。Juju は Ubuntu 上で OpenStack をデプロイするのに良い手段を提供しています。LXD を使った OpenStack クラウドのデプロイに、専用の [Charm の Bundle](https://jujucharms.com/u/openstack-charmers-next/openstack-lxd) が使えます。
 
 <!--
-The bundle automatically configures storage for containers root filesystems using LVM and sets up appropriate network configuration,  
+The bundle automatically configures storage for containers root filesystems using LVM and sets up appropriate network configuration,
 trust passwords and remotes to support migration of containers between LXD hypervisors.
 -->
 Bundle が LVM を使ってコンテナルートファイルシステム用のストレージを設定します。そして、適切なネットワークの設定、パスワード、LXD ハイパーバイザ間のコンテナのマイグレーションをサポートするためのリモートホストを設定します。
@@ -79,7 +79,7 @@ LXD コンテナは KVM コンテナと同じ方法で管理します。Horizon 
     nova boot --image=trusty --flavor=m1.tiny my-first-openstack-lxd-container
 
 <!--
-You may need to associate a floating ip address and configure appropriate security rules, depending on the network and  
+You may need to associate a floating ip address and configure appropriate security rules, depending on the network and
 security configuration of the OpenStack cloud you are using.
 -->
 Floating IP アドレスを追加したり、お使いのネットワークと OpenStack クラウドのセキュリティ設定から決まる適切なセキュリティルールを設定する必要があるかもしれません。

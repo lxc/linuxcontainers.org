@@ -1,4 +1,4 @@
-![Download icon](/static/img/download.png)
+
 # ディストリビューションでのインストール <!-- Distribution packages -->
 
 <!--
@@ -16,7 +16,7 @@ You may want to look for that, especially if your distribution doesn't include L
 LXC 1.0 や 2.0 がディストリビューションの stable リリースに含まれない場合は特に、それを使うことも選択肢の一つでしょう。
 
 <!--
-For production environment, try to stick to LXC 1.0.x or 2.0.x as these are the long term,  
+For production environment, try to stick to LXC 1.0.x or 2.0.x as these are the long term,
 stable releases which we will support until April 2019 (1.0.x) or April 2021 (2.0.x).
 -->
 Production 環境では、長期サポート版の stable リリースである LXC 1.0.x もしくは 2.0.x を使い続けることをお勧めします。1.0.x は 2019 年 4 月まで、2.0.x は 2021 年 4 月までサポートします。

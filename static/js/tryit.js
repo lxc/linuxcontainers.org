@@ -235,7 +235,7 @@ $(document).ready(function() {
                 $('#tryit_examples_panel').css("display", "inherit");
 
                 tryit_console = data.id;
-                window.history.pushState("", "", "?id="+tryit_console);
+                window.history.pushState("", "", "?id="+tryit_console+"#introduction");
                 setupConsole(tryit_console);
             },
             error: function(data) {

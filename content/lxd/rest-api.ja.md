@@ -1,4 +1,4 @@
-![Logo](/static/img/containers.png)
+
 
 # LXD の API <!-- The LXD API -->
 
@@ -8,7 +8,7 @@ LXD currently only implements a single version of the API, called "1.0".
 LXD では、現時点で "1.0" と呼ばれる単一のバージョンの API のみが実装されています。
 
 <!--
-Details on that API can be found at:  
+Details on that API can be found at:
 [https://github.com/lxc/lxd/blob/master/doc/rest-api.md](https://github.com/lxc/lxd/blob/master/doc/rest-api.md)
 -->
 API の詳細は以下でご覧いただけます:
@@ -17,7 +17,7 @@ API の詳細は以下でご覧いただけます:
 ## API の後方互換性 <!-- API backward compatibility -->
 
 <!--
-Once an API is marked as "stable", as is the case with the 1.0 API. We commit not to do any backward incompatible changes to it.  
+Once an API is marked as "stable", as is the case with the 1.0 API. We commit not to do any backward incompatible changes to it.
 We will however make API additions which will be accompanied by an identifier which newer clients can look for.
 -->
 1.0 API のように、一度 API が "stable" とマークされた時点で、それに対する後方互換性を壊す変更をしないことを約束します。

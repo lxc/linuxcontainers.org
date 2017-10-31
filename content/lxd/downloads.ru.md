@@ -1,4 +1,4 @@
-![Download icon](/static/img/download.png)
+
 
 # Пакеты для дистрибутивов
 Пользователи Ubuntu 16.04 LTS могут установить LXD с помощью:

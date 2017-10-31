@@ -1,4 +1,4 @@
-![Logo](/static/img/containers.png)
+
 # インストール<!-- Installation -->
 ## リリースを選択する <!-- Choose your release -->
 <!--
@@ -10,7 +10,7 @@ LXD では 2 つのリリースブランチが並行してメンテナンスさ�
  * フィーチャーリリース <!-- Feature releases -->(LXD 2.x)
 
 <!--
-LTS releases are recommended for production environments as they will benefit from regular bugfix  
+LTS releases are recommended for production environments as they will benefit from regular bugfix
 and security updates but will not see new features added or any kind of behavioral change.
 -->
 LTS リリースは本番環境での使用におすすめです。定期的なバグフィックスとセキュリティアップデートが行われますが、新しい機能の追加や動作が変わるような変更は行われないためです。
@@ -150,21 +150,21 @@ This is all done with:
 
 ## アクセスコントロール <!-- Access control -->
 <!--
-Access control for LXD is based on group membership.  
+Access control for LXD is based on group membership.
 The root user as well as members of the "lxd" group can interact with the local daemon.
 -->
 LXD のアクセスコントロールは、グループメンバーシップに基づいて行います。
 root ユーザおよび "lxd" グループのメンバーはローカルデーモンと対話できます。
 
 <!--
-If the "lxd" group is missing on your system, create it, then restart the LXD daemon.  
+If the "lxd" group is missing on your system, create it, then restart the LXD daemon.
 You can then add trusted users to it. Anyone added to this group will have full control over LXD.
 -->
 "lxd" グループがシステムにない場合は、作成した後、LXD デーモンを再起動します。
 そして、信用するユーザを "lxd" グループに追加します。このグループに属するユーザ全員が、LXD を完全に制御できます。
 
 <!--
-Because group membership is normally only applied at login, you may need to either re-open your user session  
+Because group membership is normally only applied at login, you may need to either re-open your user session
 or use the "newgrp lxd" command in the shell you're going to use to talk to LXD.
 -->
 グループメンバーシップはログイン時にのみ追加されるので、追加後にあなたのユーザセッションを閉じて再度開くか、LXD と通信したいシェル上で "newgrp lxd" コマンドを実行する必要があります
@@ -185,7 +185,7 @@ That will create and start a new Ubuntu 16.04 container as can be confirmed with
     lxc list
 
 <!--
-Your container here is called "first". You also could let LXD give it a random name by  
+Your container here is called "first". You also could let LXD give it a random name by
 just calling "lxc launch ubuntu:16.04" without a name.
 -->
 ここで作成し、起動したコンテナは "first" という名前です。"lxc launch ubuntu:16.04" のように名前を指定せずにコマンドを実行し、ランダムな名前になるように LXD を実行することもできます。
@@ -234,7 +234,7 @@ And to remove it entirely:
 
 # コンテナイメージ <!-- Container images -->
 <!--
-LXD is image based. Containers must be created from an image and so the image store  
+LXD is image based. Containers must be created from an image and so the image store
 must get some images before you can do much with LXD.
 -->
 LXD はイメージベースです。コンテナはイメージから作る必要があります。そして LXD で色々な処理を行う前に、イメージストアにイメージを取得していなければいけません。
@@ -335,7 +335,7 @@ This will prompt you to confirm the remote server fingerprint and then ask you f
 このコマンドを実行すると、リモートサーバのフィンガープリントの確認と、パスワードを問い合わせるプロンプトが表示されるはずです。
 
 <!--
-And after that, use all the same command as above but prefixing the container  
+And after that, use all the same command as above but prefixing the container
 and images name with the remote host like:
 -->
 そのあとで、コンテナとイメージの前にリモートホスト名をつけて、先のコマンドと同様に使用します:

@@ -1,9 +1,9 @@
-![Download icon](/static/img/download.png)
+
 # ディストリビューションでのインストール
 
 <!--
-At this time, both Ubuntu and Debian provide cgmanager packages.  
-On those, CGManager will typically come as a dependency of LXC or even be installed by default.  
+At this time, both Ubuntu and Debian provide cgmanager packages.
+On those, CGManager will typically come as a dependency of LXC or even be installed by default.
 If not, just install it using your package manager.
 -->
 

@@ -1,4 +1,3 @@
-![Download icon](/static/img/containers.png)
 # News
 ## LXCFS 2.0.8 release announcement <span class="text-muted">19th of October 2017</span>
 
@@ -345,7 +344,7 @@ The release tarballs can be found on our [download page](/lxcfs/downloads/).
 ## LXCFS 0.4 release announcement <span class="text-muted">23rd of January 2015</span>
 Critical bug/security fix update for LXCFS.
 
-Prior versions of LXCFS would replace the host's /proc with the container's  
+Prior versions of LXCFS would replace the host's /proc with the container's
 when a read to /proc/uptime was done on a system with / mounted rshared (default on systemd).
 
 This release includes ONLY this bugfix and should be immediately deployed by anyone currently using lxcfs.
@@ -364,7 +363,7 @@ The release tarballs can be found on our [download page](/lxcfs/downloads/).
 ## LXCFS 0.2 release announcement <span class="text-muted">20th of January 2015</span>
 Packager-friendly release of LXCFS 0.2.
 
-This release now installs /usr/share/lxcfs/lxc.mount.hook and /usr/share/lxc/common.conf.d/00-lxcfs.conf  
+This release now installs /usr/share/lxcfs/lxc.mount.hook and /usr/share/lxc/common.conf.d/00-lxcfs.conf
 which when combined with LXC 1.1 will automatically enable lxcfs for all containers.
 
 Additionally this release also includes some fixes to the testsuite.
@@ -376,11 +375,11 @@ The release tarballs can be found on our [download page](/lxcfs/downloads/).
 ## LXCFS 0.1 release announcement <span class="text-muted">9th of January 2015</span>
 This is the initial LXCFS release.
 
-It offers a basic cgroupfs-like interface which writes through CGManager as well as  
+It offers a basic cgroupfs-like interface which writes through CGManager as well as
 cgroup-ified versions of the cpuinfo, meminfo, stat and uptime proc files.
 
 
-Note that as the first release of LXCFS, things can still be very rough and we would advice  
+Note that as the first release of LXCFS, things can still be very rough and we would advice
 against using this in production.
 
 ### Downloads

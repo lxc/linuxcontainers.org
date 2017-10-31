@@ -1,4 +1,4 @@
-![Logo](/static/img/containers.png)
+
 
 # Что такое LXD?
 LXD - это гипервизор контейнеров, который базируется на LXC.

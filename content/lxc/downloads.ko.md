@@ -1,4 +1,4 @@
-![Download icon](/static/img/download.png)
+
 # 배포판 패키지
 LXC는 대부분의 리눅스 배포판에 포함이 되어 있습니다.
 설치하려면 패키지 관리자에서 LXC를 선택하기만 하면 됩니다.

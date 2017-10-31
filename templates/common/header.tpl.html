@@ -1,8 +1,10 @@
-<div class="p-navigation">
+<div id="navigation" class="p-navigation">
     <div class="row">
         <div class="p-navigation__logo">
             <a class="p-navigation__link" href="/">Linux Containers</a>
         </div>
+        <a href="#navigation" class="p-navigation__toggle--open" title="menu">Menu</a>
+        <a href="#navigation-closed" class="p-navigation__toggle--close" title="close menu">Close menu</a>
 
         <nav class="p-navigation__nav">
             <span class="u-off-screen">
@@ -42,7 +44,7 @@
                         {% endif %}
                     {% else %}
                         {% if page_menu[1] == sub_entry[1] %}
-                        <li class="is-active">
+                        <li class="is-active dropdown-submenu">
                         {% else %}
                         <li class="dropdown-submenu">
                         {% endif %}

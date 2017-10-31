@@ -1,4 +1,3 @@
-![Download icon](/static/img/containers.png)
 # News
 ## LXC 2.0.9 release announcement <span class="text-muted">19th of October 2017</span>
 This is the nineth bugfix release for LXC 2.0.
@@ -429,17 +428,17 @@ our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-2.1).
 
 
 ## LXC 2.1 release announcement <span class="text-muted">5th of September 2017</span>
-The LXC team is proud to announce the release of LXC 2.1.  
+The LXC team is proud to announce the release of LXC 2.1.
 This release contains a lot of new features introduced since the release of LXC 2.0.
 
-Note that this isn't a LTS release and we'll therefore only be supporting LXC 2.1 for a year.  
+Note that this isn't a LTS release and we'll therefore only be supporting LXC 2.1 for a year.
 Production environments that require longer term support should remain on LXC 2.0 which is supported until June 2021.
 
 ## New features
 ### Resource limit support
-Similar to requesting specific cgroup limits users can specify any limits for any resource  
-the underlying kernel is aware of by prefixing the name of the limit with "lxc.prlimit."  
-in the container's configuration file. For example, to request a limit on the number of processes  
+Similar to requesting specific cgroup limits users can specify any limits for any resource
+the underlying kernel is aware of by prefixing the name of the limit with "lxc.prlimit."
+in the container's configuration file. For example, to request a limit on the number of processes
 and a specific nice value the configuration file for the container should contain the entries:
 
     lxc.prlimit.nproc = unlimited
@@ -453,20 +452,20 @@ It is now possible to define openvswitch networks as an unprivileged user:
     lxc.net.0.flags = up
     lxc.net.0.name = eth0
 
-LXC 2.1. will take care to properly delete the host-side veth device from the  
+LXC 2.1. will take care to properly delete the host-side veth device from the
 openvswitch database on shutdown.
 
 ### New `lxc.cgroup.dir` key
-The `lxc.cgroup.dir` key lets users specify the name of the parent cgroup under  
-which the container's cgroup will be created. Setting `lxc.cgroup.dir` will  
+The `lxc.cgroup.dir` key lets users specify the name of the parent cgroup under
+which the container's cgroup will be created. Setting `lxc.cgroup.dir` will
 override the system-wide setting for `lxc.cgroup.pattern`.
 
-For example, setting `lxc.cgroup.dir = mycontainers` for a container with `lxc.uts.name = c1`  
+For example, setting `lxc.cgroup.dir = mycontainers` for a container with `lxc.uts.name = c1`
 will cause LXC to create the cgroups `mycontainers/c1` for all controllers in the cgroup hierarchy.
 
 ### Support for hybrid cgroup layout
-Since the advent of cgroup v2 some init systems have decided to allow for a hybrid mode in which  
-cgroup v1 per-controller hierarchies can be used simultaneously with an empty cgroup v2 hierarchy.  
+Since the advent of cgroup v2 some init systems have decided to allow for a hybrid mode in which
+cgroup v1 per-controller hierarchies can be used simultaneously with an empty cgroup v2 hierarchy.
 Systems that use this hybrid mode usually have a cgroup layout similar to this one:
 
       /sys/fs/cgroup/blkio
@@ -474,18 +473,18 @@ Systems that use this hybrid mode usually have a cgroup layout similar to this o
       /sys/fs/cgroup/memory
       /sys/fs/cgroup/unified
 
-Where the mountpoint `/sys/fs/cgroup/unified` usually indicates the presence of a cgroup v2 hierarchy.  
-This can be confirmed by testing whether `findmnt | grep cgroup2` returns a matching line.  
+Where the mountpoint `/sys/fs/cgroup/unified` usually indicates the presence of a cgroup v2 hierarchy.
+This can be confirmed by testing whether `findmnt | grep cgroup2` returns a matching line.
 LXC 2.1 supports this hybrid mode.
 
 ### Limiting the number of ptys a container can allocate
-Setting `lxc.pty.max` will cause LXC to mount the container's devpts with the requested limit  
-on the number of useable ptys. For example, setting `lxc.pty.max = 10` will only allow  
+Setting `lxc.pty.max` will cause LXC to mount the container's devpts with the requested limit
+on the number of useable ptys. For example, setting `lxc.pty.max = 10` will only allow
 the container to allocate `10` ptys. The default setting is `1024`.
 
 ### `bool lxc_config_item_is_supported(const char *key)` API extension
-This function let's users query the liblxc whether a specific configuration item is supported for this library.  
-This is particularly useful for embedded users that running versions of liblxc that come with significantly  
+This function let's users query the liblxc whether a specific configuration item is supported for this library.
+This is particularly useful for embedded users that running versions of liblxc that come with significantly
 less configuration options than the standard liblxc library or liblxc's that have backported new configuration items.
 
 ### New log API extension
@@ -514,21 +513,21 @@ less configuration options than the standard liblxc library or liblxc's that hav
 These types and functions let users initialize LXC logging. This is useful for users who use the liblxc API directly.
 
 ### Deprecation of `lxc-monitord`
-Starting with LXC 2.1 the `lxc-monitord` binary is marked as deprecated.  
-It is not required anymore to start daemonized containers. Instead, LXC 2.1 switches to an implementation using  
-an abstract unix domain socketpair. This has the advantage of spawning one less processes on container startup which is  
+Starting with LXC 2.1 the `lxc-monitord` binary is marked as deprecated.
+It is not required anymore to start daemonized containers. Instead, LXC 2.1 switches to an implementation using
+an abstract unix domain socketpair. This has the advantage of spawning one less processes on container startup which is
 important for highly threaded users such as `LXD`.
 
 Also, testing the new implementation on heavy workloads has shown this solution to be more robust and reliable in every way.
 
 ### `lxc-copy` create snapshots on `tmpfs`
-Place an ephemeral container started with -e flag on a tmpfs.  
-Restrictions are that you cannot request the data to be kept while placing the container on a tmpfs,  
-that either overlay or aufs backing storage must be used, and that the storage backend of the original  
+Place an ephemeral container started with -e flag on a tmpfs.
+Restrictions are that you cannot request the data to be kept while placing the container on a tmpfs,
+that either overlay or aufs backing storage must be used, and that the storage backend of the original
 container must be a directory.
 
-For ephemeral snapshots backed by overlay or aufs filesystems, a fresh tmpfs is mounted over the containers directory  
-if the user requests it. This should be the easiest options. Anything else would require us to change the current  
+For ephemeral snapshots backed by overlay or aufs filesystems, a fresh tmpfs is mounted over the containers directory
+if the user requests it. This should be the easiest options. Anything else would require us to change the current
 mount-layout of overlay and aufs snapshots. A standard overlay or aufs snapshot clone currently has the layout:
 
             /var/lib/lxc/CLONE_SNAPSHOT/delta0      <-- upperdir
@@ -540,26 +539,26 @@ mount-layout of overlay and aufs snapshots. A standard overlay or aufs snapshot 
 
             /var/lib/lxc/CLONE_PARENT/rootfs
 
-The fact that upperdir and workdir are not placed in a common subfolder under the container directory  
-has the consequence that we cannot simply mount a fresh tmpfs under upperdir and workdir  
+The fact that upperdir and workdir are not placed in a common subfolder under the container directory
+has the consequence that we cannot simply mount a fresh tmpfs under upperdir and workdir
 because overlay expects them to be on the same filesystem.
 
-Because we mount a fresh tmpfs over the directory of the container the updated /etc/hostname file created  
+Because we mount a fresh tmpfs over the directory of the container the updated /etc/hostname file created
 during the clone residing in the upperdir (currently named "delta0" by default) will be hidden.
 
-Hence, if the user requests that the old name is not to be kept for the clone, we recreate this file on the tmpfs.  
-This should be all that is required to restore the exact behaviour we would get with a normal clone.  
+Hence, if the user requests that the old name is not to be kept for the clone, we recreate this file on the tmpfs.
+This should be all that is required to restore the exact behaviour we would get with a normal clone.
 NOTE: If the container is rebooted all changes made to it are lost. This is not easy to prevent since each reboot remounts the rootfs again.
 
 ## Configuration changes
-A lot of configuration keys have been renamed to make the experience of configuring a container much more consistent.  
+A lot of configuration keys have been renamed to make the experience of configuring a container much more consistent.
 LXC 2.1 ensures that all keys that have subkeys are properly namespaces via the "." syntax.
 
 ### Network configuration
-The network configuration keys have all been given a new prefix. Some of them  have also been renamed.  
-From LXC 2.1. onwards network configuration keys using the "lxc.network" prefix are considered deprecated.  
-They are replaced by network configuration keys using the new "lxc.net" prefix.  
-Furthermore, defining network without indices is marked deprecated.  
+The network configuration keys have all been given a new prefix. Some of them  have also been renamed.
+From LXC 2.1. onwards network configuration keys using the "lxc.network" prefix are considered deprecated.
+They are replaced by network configuration keys using the new "lxc.net" prefix.
+Furthermore, defining network without indices is marked deprecated.
 Consider the following *legacy* network configuration:
 
     lxc.network.type = veth
@@ -584,7 +583,7 @@ Would define two distinct networks. Starting with LXC 2.1 this should be replace
     lxc.net.1.link = lxcbr0
     lxc.net.1.name = eno1
 
-Defining networks only in this manner has the advantage of being consistent and order independent.  
+Defining networks only in this manner has the advantage of being consistent and order independent.
 This means an equivalent configuration for the two networks would be:
 
     lxc.net.1.link = lxcbr0
@@ -598,7 +597,7 @@ This means an equivalent configuration for the two networks would be:
     lxc.net.1.name = eno1
 
 
-Note that when using multiple definitions of the same key with the same index only the last one  
+Note that when using multiple definitions of the same key with the same index only the last one
 will be considered by LXC. This is in line with prior LXC version. For example:
 
     lxc.net.2.link = lxcbr0
@@ -656,27 +655,27 @@ The following table lists the legacy configuration keys on the left side and the
     lxc.utsname                          | lxc.uts.name                  |
 
 ### `lxc-update-config` script
-LXC 2.1 comes with a new script `lxc-update-config` which can be used to upgrade existing legacy  
+LXC 2.1 comes with a new script `lxc-update-config` which can be used to upgrade existing legacy
 LXC configurations to valid LXC 2.1 configurations by simply passing
 
     lxc-update-config -c /path/to/config
 
-The script will create a backup of the legacy configuration file first.  
-The name of the backup config file will by `<original-config-file-name>.backup`.  
-The backup is made in case the upgrade does not yield a useable LXC 2.1 config file.  
+The script will create a backup of the legacy configuration file first.
+The name of the backup config file will by `<original-config-file-name>.backup`.
+The backup is made in case the upgrade does not yield a useable LXC 2.1 config file.
 After creating the backup the script will replace all legacy configuration keys with their new counterparts.
 
 ## Deprecation warnings
-LXC 2.1 intends to be fully backward compatible with respect to pre-2.1 configuration files.  
-This specifically means that the presence of any deprecated keys should not prevent the container from being useable.  
-However, LXC 2.1 will warn about the presence of any deprecated configuration keys.  
+LXC 2.1 intends to be fully backward compatible with respect to pre-2.1 configuration files.
+This specifically means that the presence of any deprecated keys should not prevent the container from being useable.
+However, LXC 2.1 will warn about the presence of any deprecated configuration keys.
 On container startup LXC 2.1 will warn *once* with the message:
 
     The configuration file contains legacy configuration keys.
     Please update your configuration file.
 
-All users are advised to use the aforementioned `lxc-update-config` script to update their configuration files.  
-If the container has logging enabled the log will contain warnings for each detected legacy configuration key.  
+All users are advised to use the aforementioned `lxc-update-config` script to update their configuration files.
+If the container has logging enabled the log will contain warnings for each detected legacy configuration key.
 This is mostly useful for users who prefer to update their configuration files manually.
 
 # Changelog
@@ -830,10 +829,10 @@ This is mostly useful for users who prefer to update their configuration files m
     * tools/lxc-ls: return all containers by default, new filter - list only defined containers.
 
 # Downloads
-The release tarballs may be found on our [download page](https://linuxcontainers.org/lxc/downloads/) and we expect most distributions  
+The release tarballs may be found on our [download page](https://linuxcontainers.org/lxc/downloads/) and we expect most distributions
 will very soon ship a packaged version of LXC 2.1.
 
-Should you be interested in individual changes or just looking at the detailed development history,  
+Should you be interested in individual changes or just looking at the detailed development history,
 our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-2.1).
 
 
@@ -843,9 +842,9 @@ This is the eighth bugfix release for LXC 2.0.
 Important:
 
  * Security fix for CVE-2017-5985
- * All templates have been updated to not set default passwords anymore,  
-   instead requiring lxc-attach be used to configure users.  
-   This may affect some automated environments that were relying on our  
+ * All templates have been updated to not set default passwords anymore,
+   instead requiring lxc-attach be used to configure users.
+   This may affect some automated environments that were relying on our
    default (very much insecure) users.
 
 Bugfixes:
@@ -950,10 +949,10 @@ Bugfixes:
  * start: add crucial details about lxc\_spawn()
 
 ### Downloads
-The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions  
+The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
 will very soon ship a packaged version of LXC 2.0.8.
 
-Should you be interested in individual changes or just looking at the detailed development history,  
+Should you be interested in individual changes or just looking at the detailed development history,
 our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-2.0).
 
 
@@ -1008,14 +1007,14 @@ Bugfixes:
  * lxccontainer: avoid NULL pointer dereference
 
 ### Downloads
-The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions  
+The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
 will very soon ship a packaged version of LXC 1.0.10.
 
-Please note that LXC upstream strongly recommends 1.0 users to upgrade to the 2.0 LTS release.  
-The 1.0 branch will keep being supported until June 2019, but at this point,  
+Please note that LXC upstream strongly recommends 1.0 users to upgrade to the 2.0 LTS release.
+The 1.0 branch will keep being supported until June 2019, but at this point,
 only critical bugfixes and security updates will be backported.
 
-Should you be interested in individual changes or just looking at the detailed development history,  
+Should you be interested in individual changes or just looking at the detailed development history,
 our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-1.0).
 
 
@@ -1082,10 +1081,10 @@ The main bugfixes in this release are:
  * utils: Add uid, gid, group convenience wrappers
 
 ### Downloads
-The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions  
+The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
 will very soon ship a packaged version of LXC 2.0.7.
 
-Should you be interested in individual changes or just looking at the detailed development history,  
+Should you be interested in individual changes or just looking at the detailed development history,
 our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-2.0).
 
 
@@ -1206,10 +1205,10 @@ Bugfixes:
  * attach: do not send procfd to attached process
 
 ### Downloads
-The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions  
+The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
 will very soon ship a packaged version of LXC 2.0.6.
 
-Should you be interested in individual changes or just looking at the detailed development history,  
+Should you be interested in individual changes or just looking at the detailed development history,
 our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-2.0).
 
 
@@ -1366,14 +1365,14 @@ Bugfixes:
  * attach: do not send procfd to attached process
 
 ### Downloads
-The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions  
+The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
 will very soon ship a packaged version of LXC 1.0.9.
 
-Please note that LXC upstream strongly recommends 1.0 users to upgrade to the 2.0 LTS release.  
-The 1.0 branch will keep being supported until June 2019, but at this point,  
+Please note that LXC upstream strongly recommends 1.0 users to upgrade to the 2.0 LTS release.
+The 1.0 branch will keep being supported until June 2019, but at this point,
 only critical bugfixes and security updates will be backported.
 
-Should you be interested in individual changes or just looking at the detailed development history,  
+Should you be interested in individual changes or just looking at the detailed development history,
 our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-1.0).
 
 
@@ -1447,16 +1446,16 @@ The main bugfixes in this release are:
  * tools: lxc-checkconfig conditionalize devpts check
 
 ### Downloads
-The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions  
+The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
 will very soon ship a packaged version of LXC 2.0.5.
 
-Should you be interested in individual changes or just looking at the detailed development history,  
+Should you be interested in individual changes or just looking at the detailed development history,
 our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-2.0).
 
 ## End of life announcement for LXC 1.1 <span class="text-muted">1st of September 2016</span>
 LXC 1.1 has now reached its end of life.
 
-This means that the stable-1.1 branch is now closed and we will not be  
+This means that the stable-1.1 branch is now closed and we will not be
 doing any more bugfix or security releases for this branch.
 
 Anyone still on LXC 1.1 should upgrade to 2.0 as soon as possible.
@@ -1510,17 +1509,17 @@ The main bugfixes in this release are:
  * tests: Add unit tests for lxc\_string\_replace()
 
 ### Downloads
-The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions  
+The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
 will very soon ship a packaged version of LXC 2.0.4.
 
-Should you be interested in individual changes or just looking at the detailed development history,  
+Should you be interested in individual changes or just looking at the detailed development history,
 our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-2.0).
 
 
 ## LXC 2.0.3 release announcement <span class="text-muted">28th of June 2016</span>
 This is the third bugfix release for LXC 2.0.
 
-LXC 2.0.3 was released just minutes after LXC 2.0.2 as we spotted an incorrect  
+LXC 2.0.3 was released just minutes after LXC 2.0.2 as we spotted an incorrect
 AppArmor profile included in the LXC 2.0.2 release tarball.
 
 The main bugfixes in this release are:
@@ -1528,17 +1527,17 @@ The main bugfixes in this release are:
  * apparmor: Refresh generated file
 
 ### Downloads
-The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions  
+The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
 will very soon ship a packaged version of LXC 2.0.3.
 
-Should you be interested in individual changes or just looking at the detailed development history,  
+Should you be interested in individual changes or just looking at the detailed development history,
 our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-2.0).
 
 
 ## LXC 2.0.2 release announcement <span class="text-muted">28th of June 2016</span>
 This is the second bugfix release for LXC 2.0.
 
-Please do not use LXC 2.0.2, instead use 2.0.3 which fixes  
+Please do not use LXC 2.0.2, instead use 2.0.3 which fixes
 an accidental regression in AppArmor coverage.
 
 The main bugfixes in this release are:
@@ -1561,10 +1560,10 @@ The main bugfixes in this release are:
  * upstart: Force lxc-instance to behave like a good Upstart client
 
 ### Downloads
-The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions  
+The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
 will very soon ship a packaged version of LXC 2.0.2.
 
-Should you be interested in individual changes or just looking at the detailed development history,  
+Should you be interested in individual changes or just looking at the detailed development history,
 our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-2.0).
 
 
@@ -1610,10 +1609,10 @@ The main bugfixes in this release are:
  * templates: tweak to network configuration of the Oracle template
 
 ### Downloads
-The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions  
+The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
 will very soon ship a packaged version of LXC 2.0.1.
 
-Should you be interested in individual changes or just looking at the detailed development history,  
+Should you be interested in individual changes or just looking at the detailed development history,
 our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-2.0).
 
 
@@ -1704,26 +1703,26 @@ This release was made possible by contributions (720 commits) from a total of 96
  * The new cgfsng cgroup backend is now the recommended backend
  * lxc.hook.post-stop failures are now fatal to container reboots
 
-Note that several commands have been significantly reworked in this release.  
-We don't consider our command line tools as stable ABI so you may need to test and adapt your scripts,  
+Note that several commands have been significantly reworked in this release.
+We don't consider our command line tools as stable ABI so you may need to test and adapt your scripts,
 or better, port them to use our stable C API or one of its bindings.
 
 ### Deprecation warnings
 
-The "lxc-clone" and "lxc-start-ephemeral" commands are now considered deprecated and to be replaced by the new lxc-copy.  
-Those commands can still be built by using the --enable-legacy flag, however note that they will print a warning when used  
+The "lxc-clone" and "lxc-start-ephemeral" commands are now considered deprecated and to be replaced by the new lxc-copy.
+Those commands can still be built by using the --enable-legacy flag, however note that they will print a warning when used
 and that they will be removed from upcoming LXC releases.
 
 ### Support
-This is the second LXC Long Term Support release which we will be supporting until the 1st of June 2021.  
-LXC 1.0, our previous Long Term Support release, is still supported until the 1st of June 2019.  
+This is the second LXC Long Term Support release which we will be supporting until the 1st of June 2021.
+LXC 1.0, our previous Long Term Support release, is still supported until the 1st of June 2019.
 And lastly, the previous stable release, LXC 1.1 will go end of life on the 1st of September 2016.
 
 ### Downloads
-The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions  
+The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
 will very soon ship a packaged version of LXC 2.0.0.
 
-Should you be interested in individual changes or just looking at the detailed development history,  
+Should you be interested in individual changes or just looking at the detailed development history,
 our master branch is on [Github](https://github.com/lxc/lxc/tree/master).
 
 
@@ -1927,10 +1926,10 @@ Commands:
 Those stable fixes were brought to you by 59 individual contributors.
 
 ### Downloads
-The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions  
+The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
 will very soon ship a packaged version of LXC 1.0.8.
 
-Should you be interested in individual changes or just looking at the detailed development history,  
+Should you be interested in individual changes or just looking at the detailed development history,
 our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-1.0).
 
 
@@ -1964,10 +1963,10 @@ Templates:
  * ubuntu-cloud: Always exit 1 on error
 
 ### Downloads
-The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions  
+The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
 will very soon ship a packaged version of LXC 1.1.5.
 
-Should you be interested in individual changes or just looking at the detailed development history,  
+Should you be interested in individual changes or just looking at the detailed development history,
 our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-1.1).
 
 
@@ -2044,10 +2043,10 @@ Templates:
 Those stable fixes were brought to you by 14 individual contributors.
 
 ### Downloads
-The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions  
+The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
 will very soon ship a packaged version of LXC 1.1.4.
 
-Should you be interested in individual changes or just looking at the detailed development history,  
+Should you be interested in individual changes or just looking at the detailed development history,
 our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-1.1).
 
 
@@ -2060,9 +2059,9 @@ Important:
 
  * Security fix for CVE-2015-1331
  * Security fix for CVE-2015-1334
- * Fix an ABI regression in LXC 1.1 compared to LXC 1.0.  
+ * Fix an ABI regression in LXC 1.1 compared to LXC 1.0.
    Fixing this unfortunately means that binaries built against LXC
-   1.1.0, 1.1.1 and 1.1.2 will need rebuilding against LXC 1.1.3.  
+   1.1.0, 1.1.1 and 1.1.2 will need rebuilding against LXC 1.1.3.
    This is however preferable to not having backward compatibility with
    binaries built for LXC 1.0 and its bugfix releases.
 
@@ -2121,10 +2120,10 @@ Templates:
 Those stable fixes were brought to you by 31 individual contributors.
 
 ### Downloads
-The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions  
+The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
 will very soon ship a packaged version of LXC 1.1.3.
 
-Should you be interested in individual changes or just looking at the detailed development history,  
+Should you be interested in individual changes or just looking at the detailed development history,
 our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-1.1).
 
 
@@ -2148,10 +2147,10 @@ This is the second bugfix release for LXC 1.1.
 Those stable fixes were brought to you by 9 individual contributors.
 
 ### Downloads
-The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions  
+The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
 will very soon ship a packaged version of LXC 1.1.2.
 
-Should you be interested in individual changes or just looking at the detailed development history,  
+Should you be interested in individual changes or just looking at the detailed development history,
 our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-1.1).
 
 
@@ -2177,37 +2176,37 @@ This is the first bugfix release for LXC 1.1.
 Those stable fixes were brought to you by 13 individual contributors.
 
 ### Downloads
-The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions  
+The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
 will very soon ship a packaged version of LXC 1.1.1.
 
-Should you be interested in individual changes or just looking at the detailed development history,  
+Should you be interested in individual changes or just looking at the detailed development history,
 our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-1.1).
 
 
 ## LXC 1.1.0 release announcement <span class="text-muted">30th of January 2015</span>
 The LXC team is pleased to announce the release of LXC 1.1.
 
-This release will be supported until January 2016 or 2 months after the next release of LXC,  
+This release will be supported until January 2016 or 2 months after the next release of LXC,
 whichever comes last.
 
-If you need a long-term supported version of LXC for use in production, we still strongly recommend  
+If you need a long-term supported version of LXC for use in production, we still strongly recommend
 you stick to LXC 1.0 which is supported with frequent stable releases until April 2019.
 
 
-While not strictly required, it is recommended that LXC 1.1 be used with cgmanager 0.35 (or higher)  
+While not strictly required, it is recommended that LXC 1.1 be used with cgmanager 0.35 (or higher)
 and lxcfs 0.5 (or higher).
 
 ### Highlights
-LXC 1.1 introduces checkpoint/restore support for containers through CRIU.  
-This allows to serialize the container running state to disk, for live migration or for later local restoration  
+LXC 1.1 introduces checkpoint/restore support for containers through CRIU.
+This allows to serialize the container running state to disk, for live migration or for later local restoration
 of the container.
 
-Support for running systemd as the init system inside the container was also greatly improved  
-and should now work by default both for privileged and unprivileged containers when combined  
+Support for running systemd as the init system inside the container was also greatly improved
+and should now work by default both for privileged and unprivileged containers when combined
 with lxcfs and a recent systemd.
 
-Init scripts have now all been updated to provide the same feature set, which means that a lxcbr0 bridge  
-with a DHCP and DNS server (dnsmasq) is now the default for anyone using LXC.  
+Init scripts have now all been updated to provide the same feature set, which means that a lxcbr0 bridge
+with a DHCP and DNS server (dnsmasq) is now the default for anyone using LXC.
 We currently provide init scripts for systemd, sysvinit and upstart.
 
 This release was made possible by contributions from 84 developers.
@@ -2258,10 +2257,10 @@ This release was made possible by contributions from 84 developers.
  * templates: All templates now use lxc.mount.auto = cgroup:mixed proc:mixed sys:mixed (safe default configuration)
 
 ### Downloads
-The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions  
+The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
 will very soon ship a packaged version of LXC 1.1.0, unless they decide to stick to the long term 1.0 release.
 
-Should you be interested in individual changes or just looking at the detailed development history,  
+Should you be interested in individual changes or just looking at the detailed development history,
 our master branch is on [Github](https://github.com/lxc/lxc/tree/master).
 
 
@@ -2356,18 +2355,18 @@ Documentation:
 Those stable fixes were brought to you by 27 individual contributors.
 
 ### Downloads
-The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions  
+The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
 will very soon ship a packaged version of LXC 1.0.7.
 
-Should you be interested in individual changes or just looking at the detailed development history,  
+Should you be interested in individual changes or just looking at the detailed development history,
 our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-1.0).
 
 
 ## LXC 1.0.6 release announcement <span class="text-muted">24th of September 2014</span>
 This is the sixth bugfix release for the LXC 1.0 series.
 
-To make supporting both LXC 1.0 and the future LXC 1.1 easier, this version introduces the -F argument to lxc-start.  
-This argument is a no-op as lxc-start is already running in the foreground by default, but as that behavior will change in LXC 1.1,  
+To make supporting both LXC 1.0 and the future LXC 1.1 easier, this version introduces the -F argument to lxc-start.
+This argument is a no-op as lxc-start is already running in the foreground by default, but as that behavior will change in LXC 1.1,
 introducing -F in 1.0 too allows for writing script which will work consistently on upgrades.
 
 ### Changes
@@ -2471,10 +2470,10 @@ Documentaiton:
 Those stable fixes were brought to you by 24 individual contributors.
 
 ### Downloads
-The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions  
+The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
 will very soon ship a packaged version of LXC 1.0.6.
 
-Should you be interested in individual changes or just looking at the detailed development history,  
+Should you be interested in individual changes or just looking at the detailed development history,
 our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-1.0).
 
 
@@ -2482,8 +2481,8 @@ our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-1.0).
 This is the fifth bugfix release for the LXC 1.0 series.
 
 ### seccomp profile
-Outside of the usual bugfixes, this release also introduces one important change.  
-For systems where LXC is built with seccomp support, containers will now have a seccomp profile enabled  
+Outside of the usual bugfixes, this release also introduces one important change.
+For systems where LXC is built with seccomp support, containers will now have a seccomp profile enabled
 which will prevent calls to the following syscalls:
 
  * kexec\_load
@@ -2494,13 +2493,13 @@ which will prevent calls to the following syscalls:
 
 This will amongst other things prevent exploits like the recently release "shocker" exploit.
 
-This profile will be applied to any new or existing container that uses the new-style LXC configurations  
-(using lxc.include of common configs), so currently the following distributions:  
+This profile will be applied to any new or existing container that uses the new-style LXC configurations
+(using lxc.include of common configs), so currently the following distributions:
 centos, debian, fedora, gentoo, oracle, plamo and ubuntu.
 
 You can turn this off by adding "lxc.seccomp =" in your container's configuration.
 
-If you want to manually turn this on for a container which doesn't use the common config mechanism,  
+If you want to manually turn this on for a container which doesn't use the common config mechanism,
 you can add something like "lxc.seccomp = /usr/share/lxc/config/common.seccomp" to the container configuration.
 
 ### Changes
@@ -2554,10 +2553,10 @@ Bindings:
 Those stable fixes were brought to you by 11 individual contributors.
 
 ### Downloads
-The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions  
+The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
 will very soon ship a packaged version of LXC 1.0.5.
 
-Should you be interested in individual changes or just looking at the detailed development history,  
+Should you be interested in individual changes or just looking at the detailed development history,
 our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-1.0).
 
 
@@ -2589,7 +2588,7 @@ Core:
  * core: Fix a null check after dereference (identified by coverity).
  * core: Export bdev\_specs so that API users can actually use the functions taking it as an argument.
  * core: Don't destroy the container until we've made sure the requested snapshot actually exists.
- * core: Retrieve the container personality over the command interface rather than through /proc.  
+ * core: Retrieve the container personality over the command interface rather than through /proc.
          This is required for unprivileged containers attach on the 3.15 kernel and higher as access to /proc/$$/personality is now restricted to root.
  * core: Fix invalid signal number comparison.
  * core: Don't let -lcgmanager end up in LIBS.
@@ -2621,13 +2620,13 @@ Commands:
  * lxc-autostart: Backport the autoboot/autostart change.
 
         This is required to resolve problems with autostart on
-        systemd systems at least.  
+        systemd systems at least.
 
         This change adds support for the NULL group in the -g
         option (identified as a comma without any group name).
         Add a new special "onboot" group and set the init
         scripts (sysvinit, systemd and upstart) to all start
-        both the NULL and onboot group.  
+        both the NULL and onboot group.
 
         This won't cause any visible change to existing users
         unless they were already using an "onboot" group that wasn't
@@ -2666,10 +2665,10 @@ Tests:
 Those stable fixes were brought to you by 14 individual contributors.
 
 ### Downloads
-The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions  
+The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
 will very soon ship a packaged version of LXC 1.0.4.
 
-Should you be interested in individual changes or just looking at the detailed development history,  
+Should you be interested in individual changes or just looking at the detailed development history,
 our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-1.0).
 
 
@@ -2683,16 +2682,16 @@ Core:
  * core: Always initialize netpipe in lxc\_spawn.
  * core: Move lxc-monitord.log to LOGPATH instead of LXCPATH.
  * core: Make monitord more resilient to unexpected termination.
- * core: Move lxc-init to /sbin/init.lxc instead of the architecture/distro specific multiarch path.  
+ * core: Move lxc-init to /sbin/init.lxc instead of the architecture/distro specific multiarch path.
          Use path lookup to find it in the container rather than using an hardcoded path.
  * core: Set macvlan default mode to private.
  * core: Check whether rootfs is shared before running the pre-mount hooks.
- * apparmor: Update the profiles for current upstream apparmor.  
-        This includes tweak to the pivot\_root targets and the addition of the ptrace and signal stanzas.  
-        Users of older apparmor versions may want to comment the dbus, ptrace and signal stanzas  
+ * apparmor: Update the profiles for current upstream apparmor.
+        This includes tweak to the pivot\_root targets and the addition of the ptrace and signal stanzas.
+        Users of older apparmor versions may want to comment the dbus, ptrace and signal stanzas
         if the parser fails to parse the profile.
- * apparmor: Use an intermediary profile which allows for easier generation of complex rules.  
-        This discovered a few problems with the existing profile which has now been fixed.  
+ * apparmor: Use an intermediary profile which allows for easier generation of complex rules.
+        This discovered a few problems with the existing profile which has now been fixed.
         Most of /proc/sys is now properly blocked with exceptions for kernel/shm/*, net/*, kernel/domainname and kernel/hostname.
  * apparmor: block cgroupfs by default in the with-nesting profile, users should now be using cgmanager which doesn't required this.
  * cgmanager: Fix a small cgm\_get bug when len == 0.
@@ -2719,10 +2718,10 @@ Tests:
  * tests: Always propagate http\_proxy and https\_proxy.
 
 ### Downloads
-The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions  
+The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
 will very soon ship a packaged version of LXC 1.0.3.
 
-Should you be interested in individual changes or just looking at the detailed development history,  
+Should you be interested in individual changes or just looking at the detailed development history,
 our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-1.0).
 
 
@@ -2780,10 +2779,10 @@ Templates:
  * opensuse template: Fix syntax error
 
 ### Downloads
-The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions  
+The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
 will very soon ship a packaged version of LXC 1.0.2.
 
-Should you be interested in individual changes or just looking at the detailed development history,  
+Should you be interested in individual changes or just looking at the detailed development history,
 our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-1.0).
 
 
@@ -2794,7 +2793,7 @@ This is the first bugfix release for the LXC 1.0 series.
 
 Core:
 
- * core: Detect the use of rshared / and properly work around it.  
+ * core: Detect the use of rshared / and properly work around it.
          This fixes LXC on systemd systems where the mount table would be duplicated in the container and lxc-attach wouldn't attach to the container's rootfs.
  * core: Don't crash on invalid lxc.id\_map
  * core: Fix attaching when extra cgroups were setup after the container started
@@ -2827,35 +2826,35 @@ Other:
  * upstart: Don't forward requests for LXC\_DOMAIN (dnsmasq)
 
 ### Downloads
-The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions  
+The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
 will very soon ship a packaged version of LXC 1.0.1.
 
-Should you be interested in individual changes or just looking at the detailed development history,  
+Should you be interested in individual changes or just looking at the detailed development history,
 our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-1.0).
 
 ## LXC 1.0.0 release announcement <span class="text-muted">20th of February 2014</span>
 ### Introduction
 It's with great pleasure that the LXC team is announcing the release of LXC 1.0!
 
-This release is a significant milestone for us as it marks the first release we consider to be production ready.  
-It features a wide variety of improvements to container security, a consistent set of tools,  
+This release is a significant milestone for us as it marks the first release we consider to be production ready.
+It features a wide variety of improvements to container security, a consistent set of tools,
 updated documentation and an API with multiple bindings.
 
-Over 60 people contributed their time to this release, making it the best LXC release yet!  
-The result of all that work can be seen used in areas as diverse as individual laptops,  
-cellphones and cloud instances. And we are confident that with LXC 1.0, we will see LXC's usage expand even more  
+Over 60 people contributed their time to this release, making it the best LXC release yet!
+The result of all that work can be seen used in areas as diverse as individual laptops,
+cellphones and cloud instances. And we are confident that with LXC 1.0, we will see LXC's usage expand even more
 and be used for a lot of new and exciting projects.
 
 ### Downloads
-The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions  
+The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
 will very soon ship a packaged version of LXC 1.0.
 
-Should you be interested in individual changes or just looking at the detailed development history,  
+Should you be interested in individual changes or just looking at the detailed development history,
 our main repository is on [Github](https://github.com/lxc/lxc).
 
 ### New features
-LXC 1.0 is the result of 10 months of development and over a thousand commits, including a major rework of the way LXC is structured.  
-It's therefore near impossible to come up with a comprehensive list of changes in this release,  
+LXC 1.0 is the result of 10 months of development and over a thousand commits, including a major rework of the way LXC is structured.
+It's therefore near impossible to come up with a comprehensive list of changes in this release,
 however here are some highlights:
 
  * Support for fully unprivileged containers
@@ -2880,20 +2879,20 @@ A series of blog posts introducing you to LXC and highlighting some of LXC 1.0's
 
 
 ### LXC 1.0 moving forward
-LXC 1.0 is the first production ready release of LXC and it comes with a commitment from upstream  
-to maintain it until at least Ubuntu 14.04 LTS reaches end of life in April 2019.  
+LXC 1.0 is the first production ready release of LXC and it comes with a commitment from upstream
+to maintain it until at least Ubuntu 14.04 LTS reaches end of life in April 2019.
 That's slightly over 5 years of support!
 
-We will be maintaining a separate stable branch and will cherry-pick and backport fixes as appropriate.  
-It's expected that we will have frequent bugfix releases of 1.0 so distributions can simply use those  
+We will be maintaining a separate stable branch and will cherry-pick and backport fixes as appropriate.
+It's expected that we will have frequent bugfix releases of 1.0 so distributions can simply use those
 and save themselves the trouble of having to manually follow our stable branch.
 
 ### Bug reports and contact information
-Bug reports should be filed on [Github](https://github.com/lxc/lxc/issues) or if you do not wish to create an account, by e-mail to the appropriate [mailing-list](https://lists.linuxcontainers.org).  
+Bug reports should be filed on [Github](https://github.com/lxc/lxc/issues) or if you do not wish to create an account, by e-mail to the appropriate [mailing-list](https://lists.linuxcontainers.org).
 The same goes for your patches. We tend to prefer patches sent to lxc-devel but we also accept pull request directly on Github.
 
-LXC 1.0 is also the first release after the change of project maintainers which occurred in September 2013.  
-We'd like to thank Daniel Lezcano for all the great work and efforts he's put in LXC over the years  
+LXC 1.0 is also the first release after the change of project maintainers which occurred in September 2013.
+We'd like to thank Daniel Lezcano for all the great work and efforts he's put in LXC over the years
 and wish him the best of luck in his new projects!
 
 The current projects maintainers are [Serge Hallyn](https://s3hh.wordpress.com), [Stéphane Graber](https://www.stgraber.org) and [Christian Brauner](https://cbrauner.wordpress.com/)
