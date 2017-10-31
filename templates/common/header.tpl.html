@@ -77,28 +77,30 @@
         </li>
         {% endif %}
     {% endfor %}
-            </ul>
+        </ul>
 {% endif %}
 
-{% if not languages %}
-            <ul class="u-align--right">
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ page_language[2] }} <span class="caret"></span></a>
-                    <ul class="dropdown-menu" role="menu">
-    {% for language in languages %}
-        {% if page_language[0] == language[0] %}
-                        <li class="active"><a href="#">{{ language[1] }}</a></li>
-        {% else %}
-            {% if language[0] %}
-                        <li><a href="/{{ language[0] }}{{ page_raw_path }}">{{ language[1] }}</a></li>
+{% if languages %}
+            <nav class="p-navigation__nav u-float-right">
+                <ul class="p-navigation__links">
+                    <li class="p-navigation__link">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ page_language[2] }} <span class="caret"></span></a>
+                        <ul class="hover-menu" role="menu">
+        {% for language in languages %}
+            {% if page_language[0] == language[0] %}
+                            <li class="is-active"><a href="#">{{ language[1] }}</a></li>
             {% else %}
-                        <li><a href="{{ page_raw_path }}">{{ language[1] }}</a></li>
+                {% if language[0] %}
+                            <li><a href="/{{ language[0] }}{{ page_raw_path }}">{{ language[1] }}</a></li>
+                {% else %}
+                            <li><a href="{{ page_raw_path }}">{{ language[1] }}</a></li>
+                {% endif %}
             {% endif %}
-        {% endif %}
-    {% endfor %}
-                    </ul>
-                </li>
-            </ul>
+        {% endfor %}
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
 {% endif %}
         </div>
     </div>

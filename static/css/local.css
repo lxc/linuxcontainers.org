@@ -499,6 +499,7 @@ html {
   margin: 0;
   padding: 0.5rem 0 1rem;
 }
+
 @media (min-width: 769px) {
   .p-navigation__link:hover .hover-menu {
     display: block;
@@ -545,6 +546,17 @@ html {
   }
   .hover-menu a {
     color: #111 !important;
+  }
+  .hover-menu .is-active a {
+    color: #e95420 !important;
+  }
+  .u-float-right .hover-menu {
+    right: 0;
+    left: auto;
+    text-align: right;
+  }
+  .p-navigation .p-navigation__nav.u-float-right ul li:hover ul::after {
+    background-position-x: 90%;
   }
 }
 @media (max-width: 767px) {
