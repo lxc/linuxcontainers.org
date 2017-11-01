@@ -1,4 +1,4 @@
-![Download icon](/static/img/containers.png)
+
 # News
 ## LXC 1.0.11 リリースのお知らせ <!-- LXC 1.0.11 release announcement --><span class="text-muted">19th of October 2017</span>
 This is the eleventh bugfix release for LXC 1.0.
@@ -163,14 +163,14 @@ our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-2.1).
 
 ## LXC 2.1 リリースのお知らせ <!-- LXC 2.1 release announcement --><span class="text-muted">2017 年 9 月 5 日<!-- 5th of September 2017 --></span>
 <!--
-The LXC team is proud to announce the release of LXC 2.1.  
+The LXC team is proud to announce the release of LXC 2.1.
 This release contains a lot of new features introduced since the release of LXC 2.0.
 -->
 LXC チームは LXC 2.1 のリリースをお知らせすることを誇りに思います。
 このリリースには LXC 2.0 以降に追加されたたくさんの機能が含まれています。
 
 <!--
-Note that this isn't a LTS release and we'll therefore only be supporting LXC 2.1 for a year.  
+Note that this isn't a LTS release and we'll therefore only be supporting LXC 2.1 for a year.
 Production environments that require longer term support should remain on LXC 2.0 which is supported until June 2021.
 -->
 このリリースは LTS リリースではないことに注意してください。LTS リリースではありませんので、LXC 2.1 のサポートは 1 年間のみです。長い期間のサポートが必要なプロダクション環境では 2021 年 6 月までサポートされる LXC 2.0 を使い続けてください。
@@ -178,9 +178,9 @@ Production environments that require longer term support should remain on LXC 2.
 ## 新機能 <!-- New features -->
 ### リソース制限のサポート<!-- Resource limit support -->
 <!--
-Similar to requesting specific cgroup limits users can specify any limits for any resource  
-the underlying kernel is aware of by prefixing the name of the limit with "lxc.prlimit."  
-in the container's configuration file. For example, to request a limit on the number of processes  
+Similar to requesting specific cgroup limits users can specify any limits for any resource
+the underlying kernel is aware of by prefixing the name of the limit with "lxc.prlimit."
+in the container's configuration file. For example, to request a limit on the number of processes
 and a specific nice value the configuration file for the container should contain the entries:
 -->
 cgroupを使った制限を指定するのと同じように、コンテナの設定ファイル内で、制限名に "lxc.prlimit." というプレフィックスをつけて、カーネルが対応しているすべてのリソースの制限を設定できます。例えば、プロセス数の制限を設定し、同時に nice 値を指定するには、コンテナの設定ファイルで次のように指定します:
@@ -200,29 +200,29 @@ It is now possible to define openvswitch networks as an unprivileged user:
     lxc.net.0.name = eth0
 
 <!--
-LXC 2.1. will take care to properly delete the host-side veth device from the  
+LXC 2.1. will take care to properly delete the host-side veth device from the
 openvswitch database on shutdown.
 -->
 LXC 2.1 は、シャットダウン時に openvswitch からホスト側の veth デバイスを適切に削除する処理を行います。
 
 ### 新たな設定項目 `lxc.cgroup.dir` <!-- New `lxc.cgroup.dir` key -->
 <!--
-The `lxc.cgroup.dir` key lets users specify the name of the parent cgroup under  
-which the container's cgroup will be created. Setting `lxc.cgroup.dir` will  
+The `lxc.cgroup.dir` key lets users specify the name of the parent cgroup under
+which the container's cgroup will be created. Setting `lxc.cgroup.dir` will
 override the system-wide setting for `lxc.cgroup.pattern`.
 -->
 `lxc.cgroup.dir` を設定することで、コンテナ用の cgroup を作成する親となる cgroup 名を指定できるようになりました。`lxc.cgroup.dir` はシステムワイドの設定である `lxc.cgroup.pattern` を上書きします。
 
 <!--
-For example, setting `lxc.cgroup.dir = mycontainers` for a container with `lxc.uts.name = c1`  
+For example, setting `lxc.cgroup.dir = mycontainers` for a container with `lxc.uts.name = c1`
 will cause LXC to create the cgroups `mycontainers/c1` for all controllers in the cgroup hierarchy.
 -->
 例えば、`lxc.uts.name = c1` と設定されたコンテナに `lxc.cgroup.dir = mycontainers` と設定すると、LXC は cgroup 階層内のすべてのコントローラで、`mycontainers/c1` という cgroup を作ります。
 
 ### hybrid cgroup レイアウトのサポート <!-- Support for hybrid cgroup layout -->
 <!--
-Since the advent of cgroup v2 some init systems have decided to allow for a hybrid mode in which  
-cgroup v1 per-controller hierarchies can be used simultaneously with an empty cgroup v2 hierarchy.  
+Since the advent of cgroup v2 some init systems have decided to allow for a hybrid mode in which
+cgroup v1 per-controller hierarchies can be used simultaneously with an empty cgroup v2 hierarchy.
 Systems that use this hybrid mode usually have a cgroup layout similar to this one:
 -->
 cgroup v2 が導入されてから、一部の init システムでは cgroup v1 のコントローラごとの階層と、空の cgroup v2 階層を同時に使える hybrid モードが使えるようになりました。hybrid モードを使うシステムは、通常は次と同じような cgroup レイアウトになります:
@@ -233,24 +233,24 @@ cgroup v2 が導入されてから、一部の init システムでは cgroup v1
       /sys/fs/cgroup/unified
 
 <!--
-Where the mountpoint `/sys/fs/cgroup/unified` usually indicates the presence of a cgroup v2 hierarchy.  
-This can be confirmed by testing whether `findmnt | grep cgroup2` returns a matching line.  
+Where the mountpoint `/sys/fs/cgroup/unified` usually indicates the presence of a cgroup v2 hierarchy.
+This can be confirmed by testing whether `findmnt | grep cgroup2` returns a matching line.
 LXC 2.1 supports this hybrid mode.
 -->
 マウントポイント `/sys/fs/cgroup/unified` は、通常は cgroup v2 階層の存在を示します。これは `findmnt | grep cgroup2` が一致する行を返すかどうかをテストすることで確認できます。LXC 2.1 はこの hybrid モードをサポートします。
 
 ### コンテナが割り当てることができる pty の数を制限する <!-- Limiting the number of ptys a container can allocate -->
 <!--
-Setting `lxc.pty.max` will cause LXC to mount the container's devpts with the requested limit  
-on the number of useable ptys. For example, setting `lxc.pty.max = 10` will only allow  
+Setting `lxc.pty.max` will cause LXC to mount the container's devpts with the requested limit
+on the number of useable ptys. For example, setting `lxc.pty.max = 10` will only allow
 the container to allocate `10` ptys. The default setting is `1024`.
 -->
 `lxc.pty.max` を設定すると、LXC は、使える pty の数に指定した制限を設定した上で、コンテナの devpts をマウントします。例えば、`lxc.pty.max = 10` と設定すると、コンテナは `10` 個の pty だけしか割り当てられません。デフォルト値は `1024` です。
 
 ### `bool lxc_config_item_is_supported(const char *key)` API 拡張 <!-- extension -->
 <!--
-This function let's users query the liblxc whether a specific configuration item is supported for this library.  
-This is particularly useful for embedded users that running versions of liblxc that come with significantly  
+This function let's users query the liblxc whether a specific configuration item is supported for this library.
+This is particularly useful for embedded users that running versions of liblxc that come with significantly
 less configuration options than the standard liblxc library or liblxc's that have backported new configuration items.
 -->
 この関数は、特定の設定項目がライブラリでサポートされているかどうかをユーザが問い合わせるための関数です。この関数は、標準的な liblxc ライブラリや、新しい設定項目がバックポートされた liblxc よりもはるかに少ない設定オプションを持つ liblxc のバージョンを実行する組み込みユーザに特に役に立つでしょう。
@@ -286,9 +286,9 @@ These types and functions let users initialize LXC logging. This is useful for u
 
 ### `lxc-monitord` が廃止予定に <!-- Deprecation of `lxc-monitord` -->
 <!--
-Starting with LXC 2.1 the `lxc-monitord` binary is marked as deprecated.  
-It is not required anymore to start daemonized containers. Instead, LXC 2.1 switches to an implementation using  
-an abstract unix domain socketpair. This has the advantage of spawning one less processes on container startup which is  
+Starting with LXC 2.1 the `lxc-monitord` binary is marked as deprecated.
+It is not required anymore to start daemonized containers. Instead, LXC 2.1 switches to an implementation using
+an abstract unix domain socketpair. This has the advantage of spawning one less processes on container startup which is
 important for highly threaded users such as `LXD`.
 -->
 LXC 2.1 から `lxc-monitord` バイナリは廃止予定になりました。デーモン化されたコンテナの起動には `lxc-monitord` はもう不要です。代わりに、LXC 2.1 では abstract unix ドメインソケットペアを使った実装に切り替えました。これは、`LXD` のような高度にスレッド化されたコンテナの起動において、起動するプロセスがひとつ少なくなるという利点があります。
@@ -300,17 +300,17 @@ Also, testing the new implementation on heavy workloads has shown this solution 
 
 ### `lxc-copy` は `tmpfs` 上にスナップショットを作ります <!-- `lxc-copy` create snapshots on `tmpfs` -->
 <!--
-Place an ephemeral container started with -e flag on a tmpfs.  
-Restrictions are that you cannot request the data to be kept while placing the container on a tmpfs,  
-that either overlay or aufs backing storage must be used, and that the storage backend of the original  
+Place an ephemeral container started with -e flag on a tmpfs.
+Restrictions are that you cannot request the data to be kept while placing the container on a tmpfs,
+that either overlay or aufs backing storage must be used, and that the storage backend of the original
 container must be a directory.
 -->
 `-e` オプションを付けて起動した一時的 (ephemeral) なコンテナは tmpfs 上に置かれます。
 tmpfs 上にコンテナを置きながらデータの保存は要求できません。そして、バッキングストアとして overlay か aufs を使わなければならず、オリジナルのコンテナは directory でなくてはいけません。
 
 <!--
-For ephemeral snapshots backed by overlay or aufs filesystems, a fresh tmpfs is mounted over the containers directory  
-if the user requests it. This should be the easiest options. Anything else would require us to change the current  
+For ephemeral snapshots backed by overlay or aufs filesystems, a fresh tmpfs is mounted over the containers directory
+if the user requests it. This should be the easiest options. Anything else would require us to change the current
 mount-layout of overlay and aufs snapshots. A standard overlay or aufs snapshot clone currently has the layout:
 -->
 overlay もしくは aufs ファイルシステムを使った一時的なスナップショットのために、ユーザの要求に応じて新しい tmpfs がコンテナディレクトリ上にマウントされます。これは最も簡単なオプションです。それ以外の場合は、現在の overlay と aufs スナップショットのマウントレイアウトを変更する必要があります。標準では overlay と aufs のスナップショットクローンのレイアウトは次のようになります:
@@ -325,21 +325,21 @@ overlay もしくは aufs ファイルシステムを使った一時的なスナ
             /var/lib/lxc/CLONE_PARENT/rootfs
 
 <!--
-The fact that upperdir and workdir are not placed in a common subfolder under the container directory  
-has the consequence that we cannot simply mount a fresh tmpfs under upperdir and workdir  
+The fact that upperdir and workdir are not placed in a common subfolder under the container directory
+has the consequence that we cannot simply mount a fresh tmpfs under upperdir and workdir
 because overlay expects them to be on the same filesystem.
 -->
 upperdir と workdir がコンテナディレクトリ以下の共通のサブディレクトリ内に置かれていないということは、新しい tmpfs を単純に upperdir と workdir の下にマウントできないということになります。なぜなら overlayfs はこのふたつが同じファイルシステム上にあることを期待しているからです。
 
 <!--
-Because we mount a fresh tmpfs over the directory of the container the updated /etc/hostname file created  
+Because we mount a fresh tmpfs over the directory of the container the updated /etc/hostname file created
 during the clone residing in the upperdir (currently named "delta0" by default) will be hidden.
 -->
 コンテナディレクトリ上に新しい tmpfs をマウントするので、upperdir (現在はデフォルトで "delta0" という名前) 内にクローン中に作成される、更新された `/etc/hostname` ファイルが隠されてしまいます。
 
 <!--
-Hence, if the user requests that the old name is not to be kept for the clone, we recreate this file on the tmpfs.  
-This should be all that is required to restore the exact behaviour we would get with a normal clone.  
+Hence, if the user requests that the old name is not to be kept for the clone, we recreate this file on the tmpfs.
+This should be all that is required to restore the exact behaviour we would get with a normal clone.
 NOTE: If the container is rebooted all changes made to it are lost. This is not easy to prevent since each reboot remounts the rootfs again.
 -->
 したがって、ユーザが古い名前をクローンで保存しないように要求した場合は、このファイルを tmpfs 上に再作成します。
@@ -348,7 +348,7 @@ NOTE: If the container is rebooted all changes made to it are lost. This is not 
 
 ## 設定項目名の変更 <!-- Configuration changes -->
 <!--
-A lot of configuration keys have been renamed to make the experience of configuring a container much more consistent.  
+A lot of configuration keys have been renamed to make the experience of configuring a container much more consistent.
 LXC 2.1 ensures that all keys that have subkeys are properly namespaces via the "." syntax.
 -->
 コンテナの設定がより一貫性を持って行えるように、多数の設定項目の名前が変わりました。
@@ -356,10 +356,10 @@ LXC 2.1 では、すべての設定項目が "." で分けられた適切なネ�
 
 ### ネットワーク設定 <!-- Network configuration -->
 <!--
-The network configuration keys have all been given a new prefix. Some of them  have also been renamed.  
-From LXC 2.1. onwards network configuration keys using the "lxc.network" prefix are considered deprecated.  
-They are replaced by network configuration keys using the new "lxc.net" prefix.  
-Furthermore, defining network without indices is marked deprecated.  
+The network configuration keys have all been given a new prefix. Some of them  have also been renamed.
+From LXC 2.1. onwards network configuration keys using the "lxc.network" prefix are considered deprecated.
+They are replaced by network configuration keys using the new "lxc.net" prefix.
+Furthermore, defining network without indices is marked deprecated.
 Consider the following *legacy* network configuration:
 -->
 ネットワークの設定で、新しいプレフィックスを導入しました。いくつかの項目はリネームされました。
@@ -393,7 +393,7 @@ Would define two distinct networks. Starting with LXC 2.1 this should be replace
     lxc.net.1.name = eno1
 
 <!--
-Defining networks only in this manner has the advantage of being consistent and order independent.  
+Defining networks only in this manner has the advantage of being consistent and order independent.
 This means an equivalent configuration for the two networks would be:
 -->
 この方法だけで定義を行うと、定義する順序には依存しない、一貫性のある定義になる利点があります。
@@ -410,7 +410,7 @@ This means an equivalent configuration for the two networks would be:
     lxc.net.1.name = eno1
 
 <!--
-Note that when using multiple definitions of the same key with the same index only the last one  
+Note that when using multiple definitions of the same key with the same index only the last one
 will be considered by LXC. This is in line with prior LXC version. For example:
 -->
 同じインデックスの同じ設定が複数ある場合は、LXC は最後の設定を採用することに注意が必要です。これはこれまでのバージョンの LXC と同じ動作です。例えば:
@@ -477,7 +477,7 @@ The following table lists the legacy configuration keys on the left side and the
 
 ### `lxc-update-config` スクリプト <!-- script -->
 <!--
-LXC 2.1 comes with a new script `lxc-update-config` which can be used to upgrade existing legacy  
+LXC 2.1 comes with a new script `lxc-update-config` which can be used to upgrade existing legacy
 LXC configurations to valid LXC 2.1 configurations by simply passing
 -->
 LXC 2.1 には新しく `lxc-update-config` スクリプトが付属します。これは、以前の設定項目名を LXC 2.1 で有効な設定にアップグレードするのに使えます。次のように実行します
@@ -485,9 +485,9 @@ LXC 2.1 には新しく `lxc-update-config` スクリプトが付属します。
     lxc-update-config -c /path/to/config
 
 <!--
-The script will create a backup of the legacy configuration file first.  
-The name of the backup config file will by `<original-config-file-name>.backup`.  
-The backup is made in case the upgrade does not yield a useable LXC 2.1 config file.  
+The script will create a backup of the legacy configuration file first.
+The name of the backup config file will by `<original-config-file-name>.backup`.
+The backup is made in case the upgrade does not yield a useable LXC 2.1 config file.
 After creating the backup the script will replace all legacy configuration keys with their new counterparts.
 -->
 このスクリプトは、最初に現在の設定ファイルのバックアップを取得します。
@@ -497,9 +497,9 @@ After creating the backup the script will replace all legacy configuration keys 
 
 ## 廃止予定の警告 <!-- Deprecation warnings -->
 <!--
-LXC 2.1 intends to be fully backward compatible with respect to pre-2.1 configuration files.  
-This specifically means that the presence of any deprecated keys should not prevent the container from being useable.  
-However, LXC 2.1 will warn about the presence of any deprecated configuration keys.  
+LXC 2.1 intends to be fully backward compatible with respect to pre-2.1 configuration files.
+This specifically means that the presence of any deprecated keys should not prevent the container from being useable.
+However, LXC 2.1 will warn about the presence of any deprecated configuration keys.
 On container startup LXC 2.1 will warn *once* with the message:
 -->
 LXC 2.1 は 2.1 より前の設定ファイルとの完全な下位互換性を持っています。
@@ -509,8 +509,8 @@ LXC 2.1 は 2.1 より前の設定ファイルとの完全な下位互換性を�
     Please update your configuration file.
 
 <!--
-All users are advised to use the aforementioned `lxc-update-config` script to update their configuration files.  
-If the container has logging enabled the log will contain warnings for each detected legacy configuration key.  
+All users are advised to use the aforementioned `lxc-update-config` script to update their configuration files.
+If the container has logging enabled the log will contain warnings for each detected legacy configuration key.
 This is mostly useful for users who prefer to update their configuration files manually.
 -->
 すべてのユーザは、前述の `lxc-update-config` スクリプトを使って、設定ファイルを更新することをおすすめします。
@@ -669,13 +669,13 @@ This is mostly useful for users who prefer to update their configuration files m
 
 # ダウンロード <!-- Downloads -->
 <!--
-The release tarballs may be found on our [download page](https://linuxcontainers.org/lxc/downloads/) and we expect most distributions  
+The release tarballs may be found on our [download page](https://linuxcontainers.org/lxc/downloads/) and we expect most distributions
 will very soon ship a packaged version of LXC 2.1.
 -->
 このリリースの tarball は [ダウンロードページ](https://linuxcontainers.org/lxc/downloads/) から取得できます。そして、各ディストリビューションがすぐに LXC 2.1 のパッケージをリリースするでしょう。
 
 <!--
-Should you be interested in individual changes or just looking at the detailed development history,  
+Should you be interested in individual changes or just looking at the detailed development history,
 our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-2.1).
 -->
 個々の変更点に興味がある場合、そして開発の履歴を見たい場合、stable ブランチが [Github](https://github.com/lxc/lxc/tree/stable-2.1) にあります。
@@ -691,9 +691,9 @@ This is the eighth bugfix release for LXC 2.0.
 
  * セキュリティホール <!-- Security fix for -->CVE-2017-5985 の修正
  * このバージョンで、すべてのテンプレートでデフォルトのパスワードは設定されなくなりました。代わりに、lxc-attach を使ってユーザの設定を行います。この変更により、(かなり安全性に問題のある) デフォルトユーザを使うように設定された、自動化された環境に影響があるでしょう。
-   <!-- All templates have been updated to not set default passwords anymore,  
-   instead requiring lxc-attach be used to configure users.  
-   This may affect some automated environments that were relying on our  
+   <!-- All templates have been updated to not set default passwords anymore,
+   instead requiring lxc-attach be used to configure users.
+   This may affect some automated environments that were relying on our
    default (very much insecure) users. -->
 
 バグ修正 <!-- Bugfixes -->:
@@ -799,13 +799,13 @@ This is the eighth bugfix release for LXC 2.0.
 
 ### ダウンロード <!-- Downloads -->
 <!--
-The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions  
+The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
 will very soon ship a packaged version of LXC 2.0.8.
 -->
 このリリースの tarball は [ダウンロードページ](/lxc/downloads/) から取得できます。そして、各ディストリビューションがすぐに LXC 2.0.8 のパッケージをリリースするでしょう。
 
 <!--
-Should you be interested in individual changes or just looking at the detailed development history,  
+Should you be interested in individual changes or just looking at the detailed development history,
 our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-2.0).
 -->
 個々の変更点に興味がある場合、そして開発の履歴を見たい場合、stable-2.0 ブランチが [Github](https://github.com/lxc/lxc/tree/stable-2.0) にあります。
@@ -866,21 +866,21 @@ This is the tenth bugfix release for LXC 1.0.
 
 ### ダウンロード <!-- Downloads -->
 <!--
-The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions  
+The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
 will very soon ship a packaged version of LXC 1.0.10.
 -->
 このリリースの tarball は [ダウンロードページ](/lxc/downloads/) から取得できます。そして、各ディストリビューションがすぐに LXC 1.0.10 のパッケージをリリースするでしょう。
 
 <!--
-Please note that LXC upstream strongly recommends 1.0 users to upgrade to the 2.0 LTS release.  
-The 1.0 branch will keep being supported until June 2019, but at this point,  
+Please note that LXC upstream strongly recommends 1.0 users to upgrade to the 2.0 LTS release.
+The 1.0 branch will keep being supported until June 2019, but at this point,
 only critical bugfixes and security updates will be backported.
 -->
 LXC 開発元として、1.0 ユーザには 2.0 LTS リリースへのアップグレードを強くおすすめします。
 1.0 ブランチは 2019 年 6 月までサポートが続きます。しかし現時点では、重大なバグフィックスとセキュリティホール対策のみがバックポートされます。
 
 <!--
-Should you be interested in individual changes or just looking at the detailed development history,  
+Should you be interested in individual changes or just looking at the detailed development history,
 our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-1.0).
 -->
 個々の変更点に興味がある場合、そして開発の履歴を見たい場合、stable-1.0 ブランチが [Github](https://github.com/lxc/lxc/tree/stable-1.0) にあります。
@@ -956,13 +956,13 @@ The main bugfixes in this release are:
 
 ### ダウンロード <!-- Downloads -->
 <!--
-The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions  
+The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
 will very soon ship a packaged version of LXC 2.0.7.
 -->
 このリリースの tarball は [ダウンロードページ](/lxc/downloads/) から取得できます。そして、各ディストリビューションがすぐに LXC 2.0.6 のパッケージをリリースするでしょう。
 
 <!--
-Should you be interested in individual changes or just looking at the detailed development history,  
+Should you be interested in individual changes or just looking at the detailed development history,
 our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-2.0).
 -->
 個々の変更点に興味がある場合、そして開発の履歴を見たい場合、stable-2.0 ブランチが [Github](https://github.com/lxc/lxc/tree/stable-2.0) にあります。
@@ -1089,13 +1089,13 @@ This is the sixth bugfix release for LXC 2.0.
 
 ### ダウンロード <!-- Downloads -->
 <!--
-The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions  
+The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
 will very soon ship a packaged version of LXC 2.0.6.
 -->
 このリリースの tarball は [ダウンロードページ](/lxc/downloads/) から取得できます。そして、各ディストリビューションがすぐに LXC 2.0.6 のパッケージをリリースするでしょう。
 
 <!--
-Should you be interested in individual changes or just looking at the detailed development history,  
+Should you be interested in individual changes or just looking at the detailed development history,
 our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-2.0).
 -->
 個々の変更点に興味がある場合、そして開発の履歴を見たい場合、stable-2.0 ブランチが [Github](https://github.com/lxc/lxc/tree/stable-2.0) にあります。
@@ -1256,21 +1256,21 @@ This is the ninth bugfix release for LXC 1.0.
 
 ### ダウンロード <!-- Downloads -->
 <!--
-The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions  
+The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
 will very soon ship a packaged version of LXC 1.0.9.
 -->
 このリリースの tarball は [ダウンロードページ](/lxc/downloads/) から取得できます。そして、各ディストリビューションがすぐに LXC 1.0.9 のパッケージをリリースするでしょう。
 
 <!--
-Please note that LXC upstream strongly recommends 1.0 users to upgrade to the 2.0 LTS release.  
-The 1.0 branch will keep being supported until June 2019, but at this point,  
+Please note that LXC upstream strongly recommends 1.0 users to upgrade to the 2.0 LTS release.
+The 1.0 branch will keep being supported until June 2019, but at this point,
 only critical bugfixes and security updates will be backported.
 -->
 1.0 ユーザに対して、LXC開発元は 2.0 LTS リリースへのアップグレードを強くおすすめします。
 1.0 ブランチは 2019 年 6 月までサポートが続きます。しかし現時点では、重大なバグフィックスとセキュリティホール対策のみがバックポートされます。
 
 <!--
-Should you be interested in individual changes or just looking at the detailed development history,  
+Should you be interested in individual changes or just looking at the detailed development history,
 our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-1.0).
 -->
 個々の変更点に興味がある場合、そして開発の履歴を見たい場合、stable-1.0 ブランチが [Github](https://github.com/lxc/lxc/tree/stable-1.0) にあります。
@@ -1352,13 +1352,13 @@ The main bugfixes in this release are:
 
 ### ダウンロード <!-- Downloads -->
 <!--
-The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions  
+The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
 will very soon ship a packaged version of LXC 2.0.5.
 -->
 このリリースの tarball は [ダウンロードページ](/lxc/downloads/) から取得できます。そして、各ディストリビューションがすぐに LXC 2.0.5 のパッケージをリリースするでしょう。
 
 <!--
-Should you be interested in individual changes or just looking at the detailed development history,  
+Should you be interested in individual changes or just looking at the detailed development history,
 our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-2.0).
 -->
 個々の変更点に興味がある場合、そして開発の履歴を見たい場合、stable ブランチが [Github](https://github.com/lxc/lxc/tree/stable-2.0) にあります。
@@ -1370,7 +1370,7 @@ LXC 1.1 has now reached its end of life.
 LXC 1.1 は EOL となりました。
 
 <!--
-This means that the stable-1.1 branch is now closed and we will not be  
+This means that the stable-1.1 branch is now closed and we will not be
 doing any more bugfix or security releases for this branch.
 -->
 stable-1.1 ブランチはクローズされ、今後このブランチに対するバグ修正やセキュリティ対策のリリースは行われません。
@@ -1438,13 +1438,13 @@ The main bugfixes in this release are:
 
 ### ダウンロード <!-- Downloads -->
 <!--
-The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions  
+The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
 will very soon ship a packaged version of LXC 2.0.4.
 -->
 このリリースの tarball は [ダウンロードページ](/lxc/downloads/) から取得できます。そして、各ディストリビューションがすぐに LXC 2.0.4 のパッケージをリリースするでしょう。
 
 <!--
-Should you be interested in individual changes or just looking at the detailed development history,  
+Should you be interested in individual changes or just looking at the detailed development history,
 our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-2.0).
 -->
 個々の変更点に興味がある場合、そして開発の履歴を見たい場合、stable ブランチが [Github](https://github.com/lxc/lxc/tree/stable-2.0) にあります。
@@ -1456,7 +1456,7 @@ This is the third bugfix release for LXC 2.0.
 このリリースは LXC 2.0 の 3 回目のバグフィックスリリースです。
 
 <!--
-LXC 2.0.3 was released just minutes after LXC 2.0.2 as we spotted an incorrect  
+LXC 2.0.3 was released just minutes after LXC 2.0.2 as we spotted an incorrect
 AppArmor profile included in the LXC 2.0.2 release tarball.
 -->
 LXC 2.0.3 は、LXC 2.0.2 に正しくない AppArmor プロファイルが含まれてしまったので、LXC 2.0.2 リリース直後にリリースしました。
@@ -1470,13 +1470,13 @@ The main bugfixes in this release are:
 
 ### ダウンロード <!-- Downloads -->
 <!--
-The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions  
+The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
 will very soon ship a packaged version of LXC 2.0.3.
 -->
 このリリースの tarball は [ダウンロードページ](/lxc/downloads/) から取得できます。そして、各ディストリビューションがすぐに LXC 2.0.3 のパッケージをリリースするでしょう。
 
 <!--
-Should you be interested in individual changes or just looking at the detailed development history,  
+Should you be interested in individual changes or just looking at the detailed development history,
 our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-2.0).
 -->
 個々の変更点に興味がある場合、そして開発の履歴を見たい場合、stable ブランチが [Github](https://github.com/lxc/lxc/tree/stable-2.0) にあります。
@@ -1489,7 +1489,7 @@ This is the second bugfix release for LXC 2.0.
 このリリースは LXC 2.0 の 2 回目のバグフィックスリリースです。
 
 <!--
-Please do not use LXC 2.0.2, instead use 2.0.3 which fixes  
+Please do not use LXC 2.0.2, instead use 2.0.3 which fixes
 an accidental regression in AppArmor coverage.
 -->
 LXC 2.0.2 は使用せず、代わりに 2.0.3 を使用してください。2.0.3 では AppArmor に関する不具合を修正しています。
@@ -1518,13 +1518,13 @@ The main bugfixes in this release are:
 
 ### ダウンロード <!-- Downloads -->
 <!--
-The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions  
+The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
 will very soon ship a packaged version of LXC 2.0.2.
 -->
 このリリースの tarball は [ダウンロードページ](/lxc/downloads/) から取得できます。そして、各ディストリビューションがすぐに LXC 2.0.2 のパッケージをリリースするでしょう。(訳注: 前述のように 2.0.2 の代わりに 2.0.3 を使用してください)
 
 <!--
-Should you be interested in individual changes or just looking at the detailed development history,  
+Should you be interested in individual changes or just looking at the detailed development history,
 our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-2.0).
 -->
 個々の変更点に興味がある場合、そして開発の履歴を見たい場合、stable ブランチが [Github](https://github.com/lxc/lxc/tree/stable-2.0) にあります。
@@ -1580,13 +1580,13 @@ The main bugfixes in this release are:
 
 ### ダウンロード <!-- Downloads -->
 <!--
-The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions  
+The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
 will very soon ship a packaged version of LXC 2.0.1.
 -->
 このリリースの tarball は [ダウンロードページ](/lxc/downloads/) から取得できます。そして、各ディストリビューションがすぐに LXC 2.0.1 のパッケージをリリースするでしょう。
 
 <!--
-Should you be interested in individual changes or just looking at the detailed development history,  
+Should you be interested in individual changes or just looking at the detailed development history,
 our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-2.0).
 -->
 個々の変更点に興味がある場合、そして開発の履歴を見たい場合、stable ブランチが [Github](https://github.com/lxc/lxc/tree/stable-2.0) にあります。
@@ -1685,8 +1685,8 @@ This release was made possible by contributions (720 commits) from a total of 96
  * lxc.hook.post-stop が失敗した場合は、コンテナがリブートが失敗するようになりました <!-- lxc.hook.post-stop failures are now fatal to container reboots -->
 
 <!--
-Note that several commands have been significantly reworked in this release.  
-We don't consider our command line tools as stable ABI so you may need to test and adapt your scripts,  
+Note that several commands have been significantly reworked in this release.
+We don't consider our command line tools as stable ABI so you may need to test and adapt your scripts,
 or better, port them to use our stable C API or one of its bindings.
 -->
 このリリースで、コマンドの中には大きく作り直されたものがあります。
@@ -1696,8 +1696,8 @@ or better, port them to use our stable C API or one of its bindings.
 ### 廃止予定の警告 <!-- Deprecation warnings -->
 
 <!--
-The "lxc-clone" and "lxc-start-ephemeral" commands are now considered deprecated and to be replaced by the new lxc-copy.  
-Those commands can still be built by using the \-\-enable-legacy flag, however note that they will print a warning when used  
+The "lxc-clone" and "lxc-start-ephemeral" commands are now considered deprecated and to be replaced by the new lxc-copy.
+Those commands can still be built by using the \-\-enable-legacy flag, however note that they will print a warning when used
 and that they will be removed from upcoming LXC releases.
 -->
 "lxc-clone" と "lxc-start-ephemeral" コマンドは、"lxc-copy" に置き換えられ、将来廃止の予定です。
@@ -1705,8 +1705,8 @@ and that they will be removed from upcoming LXC releases.
 
 ### サポート <!-- Support -->
 <!--
-This is the second LXC Long Term Support release which we will be supporting until the 1st of June 2021.  
-LXC 1.0, our previous Long Term Support release, is still supported until the 1st of June 2019.  
+This is the second LXC Long Term Support release which we will be supporting until the 1st of June 2021.
+LXC 1.0, our previous Long Term Support release, is still supported until the 1st of June 2019.
 And lastly, the previous stable release, LXC 1.1 will go end of life on the 1st of September 2016.
 -->
 これは 2 度目の LXC の長期サポートリリースであり、2021 年 6 月 1 日までサポートされます。
@@ -1715,13 +1715,13 @@ And lastly, the previous stable release, LXC 1.1 will go end of life on the 1st 
 
 ### ダウンロード <!-- Downloads -->
 <!--
-The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions  
+The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
 will very soon ship a packaged version of LXC 2.0.0.
 -->
 このリリースの tarball は [ダウンロードページ](/lxc/downloads/) から取得できます。そして、各ディストリビューションがすぐに LXC 2.0.0 のパッケージをリリースするでしょう。
 
 <!--
-Should you be interested in individual changes or just looking at the detailed development history,  
+Should you be interested in individual changes or just looking at the detailed development history,
 our master branch is on [Github](https://github.com/lxc/lxc/tree/master).
 -->
 個々の変更点に興味がある場合、そして開発の履歴を見たい場合、master ブランチが [Github](https://github.com/lxc/lxc/tree/master) にあります。
@@ -1933,13 +1933,13 @@ Those stable fixes were brought to you by 59 individual contributors.
 
 ### ダウンロード <!-- Downloads -->
 <!--
-The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions  
+The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
 will very soon ship a packaged version of LXC 1.0.8.
 -->
 このリリースの tarball は [ダウンロードページ](/lxc/downloads/) から取得できます。そして、各ディストリビューションがすぐに LXC 1.0.8 のパッケージをリリースするでしょう。
 
 <!--
-Should you be interested in individual changes or just looking at the detailed development history,  
+Should you be interested in individual changes or just looking at the detailed development history,
 our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-1.0).
 -->
 個々の変更点に興味がある場合、そして開発の履歴を見たい場合、stable ブランチは [Github](https://github.com/lxc/lxc/tree/stable-1.0) にあります。
@@ -1978,13 +1978,13 @@ Init スクリプト<!-- Init scripts -->:
 
 ### ダウンロード <!-- Downloads -->
 <!--
-The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions  
+The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
 will very soon ship a packaged version of LXC 1.1.5.
 -->
 このリリースの tarball は [ダウンロードページ](/lxc/downloads/) から取得できます。そして、各ディストリビューションがすぐに LXC 1.1.5 のパッケージをリリースするでしょう。
 
 <!--
-Should you be interested in individual changes or just looking at the detailed development history,  
+Should you be interested in individual changes or just looking at the detailed development history,
 our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-1.1).
 -->
 個々の変更点に興味がある場合、そして開発の履歴を見たい場合、stable ブランチ (stable-1.1) は [Github](https://github.com/lxc/lxc/tree/stable-1.1) にあります。
@@ -2070,13 +2070,13 @@ Those stable fixes were brought to you by 14 individual contributors.
 
 ### ダウンロード <!-- Downloads -->
 <!--
-The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions  
+The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
 will very soon ship a packaged version of LXC 1.1.4.
 -->
 このリリースの tarball は [ダウンロードページ](/lxc/downloads/) から取得できます。そして、各ディストリビューションがすぐに LXC 1.1.4 のパッケージをリリースするでしょう。
 
 <!--
-Should you be interested in individual changes or just looking at the detailed development history,  
+Should you be interested in individual changes or just looking at the detailed development history,
 our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-1.1).
 -->
 個々の変更点に興味がある場合、そして開発の履歴を見たい場合、stable ブランチ (stable-1.1) は [Github](https://github.com/lxc/lxc/tree/stable-1.1) にあります。
@@ -2094,11 +2094,11 @@ This is the third bugfix release for LXC 1.1.
 
  * セキュリティホール CVE-2015-1331 の修正 <!-- Security fix for CVE-2015-1331 -->
  * セキュリティホール CVE-2015-1334 の修正 <!-- Security fix for CVE-2015-1334 -->
- * LXC 1.1 で生じた LXC 1.0 との ABI の非互換性に関する修正を行いました <!-- Fix an ABI regression in LXC 1.1 compared to LXC 1.0. -->  
+ * LXC 1.1 で生じた LXC 1.0 との ABI の非互換性に関する修正を行いました <!-- Fix an ABI regression in LXC 1.1 compared to LXC 1.0. -->
    大変申し訳ないことですが、この修正は LXC 1.1.0、1.1.1、1.1.2 でビルドしたバイナリは LXC 1.1.3 で再度ビルドする必要があることを意味します。しかし、この修正は LXC 1.0 とそのバグフィックスリリースに対するバイナリとの後方互換性を損なうよりも望ましいことです。
    <!--
    Fixing this unfortunately means that binaries built against LXC
-   1.1.0, 1.1.1 and 1.1.2 will need rebuilding against LXC 1.1.3.  
+   1.1.0, 1.1.1 and 1.1.2 will need rebuilding against LXC 1.1.3.
    This is however preferable to not having backward compatibility with
    binaries built for LXC 1.0 and its bugfix releases.
    -->
@@ -2161,13 +2161,13 @@ Those stable fixes were brought to you by 31 individual contributors.
 
 ### ダウンロード<!-- Downloads -->
 <!--
-The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions  
+The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
 will very soon ship a packaged version of LXC 1.1.3.
 -->
 このリリースの tarball は [ダウンロードページ](/lxc/downloads/) から取得できます。そして、各ディストリビューションがすぐに LXC 1.1.3 のパッケージをリリースするでしょう。
 
 <!--
-Should you be interested in individual changes or just looking at the detailed development history,  
+Should you be interested in individual changes or just looking at the detailed development history,
 our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-1.1).
 -->
 個々の変更点に興味がある場合、そして開発の履歴を見たい場合、stable ブランチ (stable-1.1) は [Github](https://github.com/lxc/lxc/tree/stable-1.1) にあります。
@@ -2200,13 +2200,13 @@ Those stable fixes were brought to you by 9 individual contributors.
 
 ### ダウンロード <!-- Downloads -->
 <!--
-The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions  
+The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
 will very soon ship a packaged version of LXC 1.1.2.
 -->
 このリリースの tarball は [ダウンロードページ](/lxc/downloads/) から取得できます。そして、各ディストリビューションがすぐに LXC 1.1.2 のパッケージをリリースするでしょう。
 
 <!--
-Should you be interested in individual changes or just looking at the detailed development history,  
+Should you be interested in individual changes or just looking at the detailed development history,
 our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-1.1).
 -->
 個々の変更点に興味がある場合、そして開発の履歴を見たい場合、stable ブランチ (stable-1.1) は [Github](https://github.com/lxc/lxc/tree/stable-1.1) にあります。
@@ -2241,13 +2241,13 @@ Those stable fixes were brought to you by 13 individual contributors.
 
 ### ダウンロード <!-- Downloads -->
 <!--
-The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions  
+The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
 will very soon ship a packaged version of LXC 1.1.1.
 -->
 このリリースの tarball は [ダウンロードページ](/lxc/downloads/) から取得できます。そして、各ディストリビューションがすぐに LXC 1.1.1 のパッケージをリリースするでしょう。
 
 <!--
-Should you be interested in individual changes or just looking at the detailed development history,  
+Should you be interested in individual changes or just looking at the detailed development history,
 our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-1.1).
 -->
 個々の変更点に興味がある場合、そして開発の履歴を見たい場合、stable ブランチ (stable-1.1) は [Github](https://github.com/lxc/lxc/tree/stable-1.1) にあります。
@@ -2257,40 +2257,40 @@ our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-1.1).
 <!-- The LXC team is pleased to announce the release of LXC 1.1. -->
 LXC チームは LXC 1.1 のリリースを発表しました。
 
-<!-- This release will be supported until January 2016 or 2 months after the next release of LXC,  
+<!-- This release will be supported until January 2016 or 2 months after the next release of LXC,
 whichever comes last. -->
 このリリースは 2016 年 1 月か、その時点で LXC の次のリリース (1.2) がなされていない場合は、次のリリースの 2 ヶ月後までサポートされます。
 
 <!--
-If you need a long-term supported version of LXC for use in production, we still strongly recommend  
+If you need a long-term supported version of LXC for use in production, we still strongly recommend
 you stick to LXC 1.0 which is supported with frequent stable releases until April 2019.
 -->
 プロダクション環境での長期間のサポートが必要であれば、2019 年 4 月まで安定版リリースとしてサポートされる LXC 1.0 を使い続けることを強くおすすめします。
 
 <!--
-While not strictly required, it is recommended that LXC 1.1 be used with cgmanager 0.35 (or higher)  
+While not strictly required, it is recommended that LXC 1.1 be used with cgmanager 0.35 (or higher)
 and lxcfs 0.5 (or higher).
 -->
 一方でそこまでの厳密さが不要であれば、LXC 1.1 を cgmanager 0.35 以降、lxcfs 0.5 以降と一緒に使うこともおすすめです。
 
 ### 注目の新機能 <!-- Highlights -->
 <!--
-LXC 1.1 introduces checkpoint/restore support for containers through CRIU.  
-This allows to serialize the container running state to disk, for live migration or for later local restoration  
+LXC 1.1 introduces checkpoint/restore support for containers through CRIU.
+This allows to serialize the container running state to disk, for live migration or for later local restoration
 of the container.
 -->
 LXC 1.1 は CRIU を使ったコンテナのチェックポイント・リストアの機能を新たに導入しました。
 
 <!--
-Support for running systemd as the init system inside the container was also greatly improved  
-and should now work by default both for privileged and unprivileged containers when combined  
+Support for running systemd as the init system inside the container was also greatly improved
+and should now work by default both for privileged and unprivileged containers when combined
 with lxcfs and a recent systemd.
 -->
 コンテナ内の init として systemd の実行のサポートも大きな改良点です。lxcfs と最新の systemd の組み合わせで、特権、非特権の両方のコンテナが動作するでしょう。
 
 <!--
-Init scripts have now all been updated to provide the same feature set, which means that a lxcbr0 bridge  
-with a DHCP and DNS server (dnsmasq) is now the default for anyone using LXC.  
+Init scripts have now all been updated to provide the same feature set, which means that a lxcbr0 bridge
+with a DHCP and DNS server (dnsmasq) is now the default for anyone using LXC.
 We currently provide init scripts for systemd, sysvinit and upstart.
 -->
 init スクリプトが更新されました。これにより LXC を使ういかなるシステムでも、DHCP サーバと DNS サーバ機能を dnsmasq によって提供する lxcbr0 ブリッジがデフォルトとなり、同じように動くようになりました。現時点で systemd、sysvinit、upstart 向けの init スクリプトを提供しています。
@@ -2344,12 +2344,12 @@ init スクリプトが更新されました。これにより LXC を使うい�
  * templates: 全てのテンプレートで lxc.mount.auto = cgroup:mixed proc:mixed sys:mixed を使うようになりました (安全なデフォルト設定です) <!-- All templates now use lxc.mount.auto = cgroup:mixed proc:mixed sys:mixed (safe default configuration) -->
 
 ### ダウンロード<!-- Downloads -->
-<!-- The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions  
+<!-- The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
 will very soon ship a packaged version of LXC 1.1.0, unless they decide to stick to the long term 1.0 release. -->
 このリリースの tarball は [ダウンロードページ](/lxc/downloads/) から取得できます。そして、各ディストリビューションが長期サポートの 1.0 リリースの採用を続ける決定をしない場合は、すぐに LXC 1.1.0 のパッケージをリリースするでしょう。
 
 <!--
-Should you be interested in individual changes or just looking at the detailed development history,  
+Should you be interested in individual changes or just looking at the detailed development history,
 our master branch is on [Github](https://github.com/lxc/lxc/tree/master).
 -->
 個々の変更点に興味がある場合、そして開発の履歴を見たい場合、master ブランチは [Github](https://github.com/lxc/lxc/tree/master) にあります。
@@ -2453,13 +2453,13 @@ Those stable fixes were brought to you by 27 individual contributors.
 
 ### ダウンロード <!-- Downloads -->
 <!--
-The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions  
+The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
 will very soon ship a packaged version of LXC 1.0.7.
 -->
 このリリースの tarball は [ダウンロードページ](/lxc/downloads/) から取得できます。そして、各ディストリビューションがすぐに LXC 1.0.7 のパッケージをリリースするでしょう。
 
 <!--
-Should you be interested in individual changes or just looking at the detailed development history,  
+Should you be interested in individual changes or just looking at the detailed development history,
 our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-1.0).
 -->
 個々の変更点に興味がある場合、そして開発の履歴を見たい場合、stable ブランチは [Github](https://github.com/lxc/lxc/tree/stable-1.0) にあります。
@@ -2478,7 +2478,7 @@ our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-1.0).
 
 
 ### <!-- Changes -->変更点
-  
+
 * <!-- rootfs_is_blockdev: don't run if no rootfs is specified -->rootfs_is_blockdev: rootfs が指定されていないときには実行されないようにしました (訳注: rootfs が指定されていない場合はストレージバックエンドがブロックデバイスかどうかチェックを行う処理を実行しないようにしました)
 * <!-- confile: sanity-check netdev-&#62;type before setting
              netdev-&#62;priv elements -->confile: netdev-&gt;priv を設定する前に netdev-&gt;type のチェックを行うようにしました
@@ -2632,7 +2632,7 @@ our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-1.0).
 
 ### <!-- Changes -->変更点
 
-  
+
 * <!-- core: Fix unprivileged containers to work with recent
              kernels. -->core: 最近のカーネルで非特権コンテナが動作するように修正しました(訳注: 最近のカーネル = 3.15.1 or 3.14.8 以降)
 * <!-- core: Fix building with -Werror=maybe-uninitialized. -->core: -Werror=maybe-uninitialized を付けた時のビルドの問題を修正しました
@@ -2694,7 +2694,7 @@ our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-1.0).
 
 ### <!-- Changes -->変更点
 
-  
+
 * <!-- core: Don't call nih_dbus_setup for cgmanager as it's
              only relevant when using a nih main loop, which we're not. -->core: cgmanager に対して nih_dbus_setup を呼ばないようにしました。これはnihのメインループを使うときだけ使うのが適切なものでしたが、lxc では使っていないためです。
 * <!-- core: Fix uncheck realloc in lxc_info. (found by cppcheck) -->core: lxc_infoでreallocのチェックをしていなかったのを修正しました。(cppcheckで発見)
@@ -2725,7 +2725,7 @@ our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-1.0).
 * <!-- core: Use the same ifndef/define format for all headers. -->core: 全てのヘッダファイルでの ifndef/define のフォーマットを統一しました。
 * <!-- core: Fix bashism in lxc-devsetup. -->core: lxc-devsetup での bashism (bash特有の機能) を修正しました。
 * <!-- core: Fix a null check after dereference (identified by
-             coverity). -->ポインタの値を参照した後の null チェックの修正を行いました (coverity で検出) 
+             coverity). -->ポインタの値を参照した後の null チェックの修正を行いました (coverity で検出)
 * <!-- core: Export bdev_specs so that API users can actually use the
              functions taking it as an argument. -->core: bdev_specs 構造体を export しました。これにより API を使う場合に引数として関数で使うことができるようになりました。
 * <!-- core: Don't destroy the container until we've made sure
@@ -2817,7 +2817,7 @@ our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-1.0).
 
 ### <!-- Changes -->変更点
 
-  
+
 * <!-- core: Always initialize netpipe in lxc_spawn. -->core: lxc_spawn 中で常に netpipe を初期化するようにしました (訳注: 非特権コンテナのリブート時に存在しないパイプに対してメッセージを送ることのないように lxc_spawn 中でパイプを初期化するように修正されています)
 * <!-- core: Move lxc-monitord.log to LOGPATH instead of LXCPATH. -->core: lxc-monitord.log が LXCPATH でなく LOGPATH に出力されるようになりました
 * <!-- core: Make monitord more resilient to unexpected
@@ -2872,7 +2872,7 @@ our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-1.0).
 * <!-- tests: Bump timeouts to fix occasional failures on slow
              ARM builders. -->tests: 遅い ARM での失敗のケースの修正としてタイムアウト値を増やしました
 * <!-- tests: Always propagate http_proxy and https_proxy. -->tests: 常に http_proxy と https_proxy の値を使用するようにしました
-  
+
 
 
 ### <!-- Downloads -->ダウンロード
@@ -2897,7 +2897,7 @@ our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-1.0).
 
 ### <!-- Changes -->変更点
 
-  
+
 * <!-- core: Fix parsing lxc.netwotk.type = none -->core: lxc.network.type = none を指定した場合の不具合を修正しました
 * <!-- core: Fix race on shutdown causing SIGPIPE being sent to
              the caller -->core: シャットダウン時にコマンドの呼び出し元に SIGPIPE が送られないように修正しました
@@ -2935,7 +2935,7 @@ our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-1.0).
 * <!-- fedora template: Use a sane default for localtime -->fedora template: 適切なデフォルトの localtime を使うようにしました
 * <!-- fedora template: Fix building i686 containers on x86_64 -->fedora template: x86_64 環境上での i686 コンテナの作成時の不具合を修正しました
 * <!-- opensuse template: Fix syntax error -->opensuse template: 文法エラーを修正しました
-  
+
 
 
 ### <!-- Downloads -->ダウンロード
@@ -2959,7 +2959,7 @@ our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-1.0).
 
 ### <!-- Changes -->変更点
 
-  
+
 * <!-- core: Detect the use of rshared / and properly work
              around it. This fixes LXC on systemd systems where the mount
              table would be duplicated in the container and
@@ -3030,7 +3030,7 @@ our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-1.0).
       tests: lxc-test-concurrent 中に hang する可能性があったのを修正しました
 * <!-- upstart: Don't forward requests for LXC_DOMAIN (dnsmasq) -->
       upstart: LXC_DOMAIN で指定されたものに対するリクエストを転送しなくなりました (dnsmasq)
-  
+
 
 
 ### <!-- Downloads -->ダウンロード
