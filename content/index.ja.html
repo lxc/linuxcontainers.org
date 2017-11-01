@@ -1,150 +1,162 @@
-<h2>LinuxContainers.org <span class="text-muted">Infrastructure for container projects.</span></h2>
-<div class="large_content">
-    <p><img src="/static/img/containers.png"
-            alt="logo"/>
+<div class="p-strip">
+  <div class="row">
+    <div class="col-8 suffix-1">
+      <h1>Infrastructure for container projects.</h1>
+      <p>
       <!--
-       linuxcontainers.org is the umbrella project behind LXC,
-       LXD and LXCFS. -->
-       linuxcontainers.org は LXC、LXD、LXCFS を傘下に持つプロジェクトです。</p>
-    </p>
+        linuxcontainers.org is the umbrella project behind LXC,
+        LXD and LXCFS. -->
+        linuxcontainers.org は LXC、LXD、LXCFS を傘下に持つプロジェクトです
+      </p>
 
-    <p>
-      <!--
-       The goal is to offer a distro and vendor neutral environment
-       for the development of Linux container technologies.
-       -->
-      このプロジェクトの目的は、Linux のコンテナ技術を開発するための、ディストリビューションやベンダから中立の環境を提供することです。
-    </p>
+      <p>
+        <!--
+          The goal is to offer a distro and vendor neutral environment
+          for the development of Linux container technologies.
+        -->
+        このプロジェクトの目的は、Linux のコンテナ技術を開発するための、ディストリビューションやベンダから中立の環境を提供することです。
+      </p>
 
-    <p>
-      <!--
-      Our main focus is system containers. That is, containers which
-      offer an environment as close as possible as the one you'd get from a
-      VM but without the overhead that comes with running a separate
-      kernel and simulating all the hardware.
-      -->
-      私たちは主にシステムコンテナにフォーカスを当てています。つまり、VM の環境に可能な限り近い環境でありながら、VM のように環境ごとに別々のカーネルを実行したり、ハードウェアをシミュレートすることによるオーバーヘッドがない環境を提供するコンテナです。
-    </p>
+      <p>
+        <!--
+          Our main focus is system containers. That is, containers which
+          offer an environment as close as possible as the one you'd get from a
+          VM but without the overhead that comes with running a separate
+          kernel and simulating all the hardware.
+        -->
+        私たちは主にシステムコンテナにフォーカスを当てています。つまり、VM の環境に可能な限り近い環境でありながら、VM のように環境ごとに別々のカーネルを実行したり、ハードウェアをシミュレートすることによるオーバーヘッドがない環境を提供するコンテナです。
+      </p>
+    </div>
+    <div class="col-4">
+      <img src="/static/img/containers.png" alt="" />
+    </div>
+  </div>
 </div>
 
-<hr/>
-<h2>活動中のプロジェクト <!-- Active projects --></h2>
-<div class="row">
-    <div class="col-md-4">
-        <h3>LXC</h3>
-        <p>
-          <!--
-           LXC is the well known set of tools, templates,
-           library and language bindings. It's pretty low
-           level, very flexible and covers just about every
-           containment feature supported by the upstream
-           kernel.
-           -->
-          LXC はツール、テンプレート、ライブラリ、言語バインディングの良く知られたセットです。低レイヤで非常に柔軟性に富んでおり、Upstream のカーネルがサポートするほとんどのコンテナ関連機能をカバーします。
-        </p>
-        <p>
-          <!--
-           LXC is production ready with LXC 1.0 getting 5
-           years of security updates and bugfixes
-           (until April 2019).
-           -->
-          LXC は production ready であり、LXC 1.0 が 5 年間のセキュリティアップデートとバグ修正を提供します (2019 年 4 月まで)。
-        </p>
-        <p><a class="btn btn-primary" href="/ja/lxc/introduction/" role="button">詳しく見る &raquo;</a></p>
+<div class="p-strip--light">
+  <div class="row">
+    <div class="col-8">
+      <h2>活動中のプロジェクト <!-- Active projects --></h2>
+    </div>
+  </div>
+  <div class="row u-equal-height">
+    <div class="p-card col-4">
+      <h3>LXC</h3>
+      <p>
+        <!--
+          LXC is the well known set of tools, templates,
+          library and language bindings. It's pretty low
+          level, very flexible and covers just about every
+          containment feature supported by the upstream
+          kernel.
+        -->
+        LXC はツール、テンプレート、ライブラリ、言語バインディングの良く知られたセットです。低レイヤで非常に柔軟性に富んでおり、Upstream のカーネルがサポートするほとんどのコンテナ関連機能をカバーします。
+      </p>
+      <p>
+        <!--
+          LXC is production ready with LXC 1.0 getting 5
+          years of security updates and bugfixes
+          (until April 2019).
+        -->
+        LXC は production ready であり、LXC 1.0 が 5 年間のセキュリティアップデートとバグ修正を提供します (2019 年 4 月まで)。
+      </p>
+      <p><a class="p-button" href="/ja/lxc/introduction/" role="button">詳しく見る</a></p>
     </div>
 
-    <div class="col-md-4">
-        <h3>LXD</h3>
-        <p>
-          <!--
-           LXD is the new LXC experience. It offers a
-           completely fresh and intuitive user experience
-           with a single command line tool to manage your
-           containers. Containers can be managed over the
-           network in a transparent way through a REST API.
-           It also works with large scale deployments by
-           integrating with OpenStack.
-            -->
-          LXD は LXC の新しい体験です。コンテナを管理するための一つのコマンドラインツールで、完全に新鮮で直感的なユーザ体験を提供します。コンテナを REST API を通した透過的な方法でネットワーク経由で管理できます。LXD は OpenStack との統合により大規模のデプロイも扱います。
-        </p>
+    <div class="p-card col-4">
+      <h3>LXD</h3>
+      <p>
+        <!--
+          LXD is the new LXC experience. It offers a
+          completely fresh and intuitive user experience
+          with a single command line tool to manage your
+          containers. Containers can be managed over the
+          network in a transparent way through a REST API.
+          It also works with large scale deployments by
+          integrating with OpenStack.
+        -->
+        LXD は LXC の新しい体験です。コンテナを管理するための一つのコマンドラインツールで、完全に新鮮で直感的なユーザ体験を提供します。コンテナを REST API を通した透過的な方法でネットワーク経由で管理できます。LXD は OpenStack との統合により大規模のデプロイも扱います。
+      </p>
 
-        <p>
-            <a class="btn btn-primary" href="/lxd/try-it/" role="button">試してみる &raquo;</a>
-            <a class="btn btn-primary" href="/lxd/introduction/" role="button">詳しく見る &raquo;</a>
-        </p>
+      <p>
+        <a class="p-button--positive" href="/lxd/try-it/" role="button">試してみる</a>
+        <a class="p-button" href="/lxd/introduction/" role="button">詳しく見る</a>
+      </p>
     </div>
 
-    <div class="col-md-6">
-        <h3>LXCFS</h3>
-        <p>
-          <!--
+    <div class="p-card col-4">
+      <h3>LXCFS</h3>
+      <p>
+        <!--
           Userspace (FUSE) filesystem offering two main things:
-          -->
-          主に以下の2つを提供する FUSE を使ったユーザスペースのファイルシステムです:
-            <ul>
-                <li>
-                  <!--
-                  Overlay files for cpuinfo, meminfo, stat and uptime.
-                  -->
-                  cpuinfo, meminfo, stat, uptime のためのファイルを差し替えます
-                </li>
-                <li>
-                  <!--
-                  A cgroupfs compatible tree allowing unprivileged writes.
-                  -->
-                  一般ユーザ権限でも書き込める cgroupfs 互換のツリーを提供します
-                </li>
-            </ul>
-        </p>
+        -->
+        主に以下の2つを提供する FUSE を使ったユーザスペースのファイルシステムです:
+        <ul>
+          <li>
+            <!--
+              Overlay files for cpuinfo, meminfo, stat and uptime.
+            -->
+            cpuinfo, meminfo, stat, uptime のためのファイルを差し替えます
+          </li>
+          <li>
+            <!--
+              A cgroupfs compatible tree allowing unprivileged writes.
+            -->
+            一般ユーザ権限でも書き込める cgroupfs 互換のツリーを提供します
+          </li>
+        </ul>
+      </p>
 
-        <p>
-          <!--
-           It's designed to workaround the shortcomings of procfs, sysfs
-           and cgroupfs by exporting files which match what a system
-           container user would expect.
-          -->
-          このファイルシステムは、システムコンテナのユーザが期待する情報を書き出すことによって、procfs、sysfs、cgroupfs の欠点を回避するようにデザインされます。
-        </p>
+      <p>
+        <!--
+          It's designed to workaround the shortcomings of procfs, sysfs
+          and cgroupfs by exporting files which match what a system
+          container user would expect.
+        -->
+        このファイルシステムは、システムコンテナのユーザが期待する情報を書き出すことによって、procfs、sysfs、cgroupfs の欠点を回避するようにデザインされます。
+      </p>
 
-        <p><a class="btn btn-primary" href="/ja/lxcfs/introduction/" role="button">詳しく見る &raquo;</a></p>
+      <p><a class="p-button" href="/ja/lxcfs/introduction/" role="button">詳しく見る</a></p>
     </div>
+  </div>
 </div>
 
-<hr/>
-<h2>廃止予定のプロジェクト <!-- Deprecated projects --></h2>
-<div class="row">
-    <div class="col-md-6">
-        <h3>CGManager</h3>
-        <p>
-          <!--
-           CGManager is our cgroup manager daemon. It's
-           designed to allow nested unprivileged containers
-           to still be able to create and manage their
-           cgroups through a DBus API.
-           -->
-          CGManager は cgroup を管理するデーモンです。DBus API を通して、ネストした非特権コンテナであっても、コンテナを作成してそのコンテナの cgroup を管理できるように設計されています。
-        </p>
+<div class="p-strip">
+  <div class="row">
+    <div class="col-8">
+      <h2>廃止予定のプロジェクト <!-- Deprecated projects --></h2>
+      <h3>CGManager</h3>
+      <p>
+        <!--
+          CGManager is our cgroup manager daemon. It's
+          designed to allow nested unprivileged containers
+          to still be able to create and manage their
+          cgroups through a DBus API.
+        -->
+        CGManager は cgroup を管理するデーモンです。DBus API を通して、ネストした非特権コンテナであっても、コンテナを作成してそのコンテナの cgroup を管理できるように設計されています。
+      </p>
 
-        <p>
-          <!--
-           CGManager has been used by default with LXC in
-           Ubuntu since April 2014 and then by other
-           distributions as they start needing working
-           unprivileged containers.
-           -->
-          CGManager は 2014 年 4 月から Ubuntu の LXC がデフォルトで使用しています。非特権コンテナの動作が必要な他のディストリビューションでも使用されています。
-        </p>
+      <p>
+        <!--
+          CGManager has been used by default with LXC in
+          Ubuntu since April 2014 and then by other
+          distributions as they start needing working
+          unprivileged containers.
+        -->
+        CGManager は 2014 年 4 月から Ubuntu の LXC がデフォルトで使用しています。非特権コンテナの動作が必要な他のディストリビューションでも使用されています。
+      </p>
 
-        <p>
-          <!--
-           It has now been deprecated in favor of the CGroup namespace
-           in recent Linux kernels. On older kernels, LXCFS still offers
-           a cgroupfs emulation that can be used instead of cgmanager
-           and is more widely compatible with existing userspace.
-            -->
-          CGManager は最近のカーネルに cgroup namespace が実装されたため廃止予定です。古いカーネルに対しては LXCFS が cgroupfs のエミュレーション機能を提供します。LXCFS のほうが広い環境に対応できます。
-        </p>
+      <p>
+        <!--
+          It has now been deprecated in favor of the CGroup namespace
+          in recent Linux kernels. On older kernels, LXCFS still offers
+          a cgroupfs emulation that can be used instead of cgmanager
+          and is more widely compatible with existing userspace.
+        -->
+        CGManager は最近のカーネルに cgroup namespace が実装されたため廃止予定です。古いカーネルに対しては LXCFS が cgroupfs のエミュレーション機能を提供します。LXCFS のほうが広い環境に対応できます。
+      </p>
 
-        <p><a class="btn btn-primary" href="/ja/cgmanager/introduction/" role="button">詳しく見る &raquo;</a></p>
+      <p><a class="btn btn-primary" href="/ja/cgmanager/introduction/" role="button">詳しく見る</a></p>
     </div>
+  </div>
 </div>
