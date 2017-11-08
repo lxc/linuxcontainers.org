@@ -629,3 +629,10 @@ p:empty {
 .terminal {
   width: 100%;
 }
+
+/* Font wrapping on large screens */
+.col-12 p,
+.col-12 li,
+.col-12 pre {
+  max-width: 38em;
+}
