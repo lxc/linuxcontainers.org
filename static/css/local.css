@@ -631,8 +631,13 @@ p:empty {
 }
 
 /* Font wrapping on large screens */
-.col-12 p,
-.col-12 li,
-.col-12 pre {
+.u-wrap-content p,
+.u-wrap-content li,
+.u-wrap-content pre {
   max-width: 38em;
+}
+
+/* Align text in notifications */
+[class^="p-notification"] {
+  text-align: left;
 }

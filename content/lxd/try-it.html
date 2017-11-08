@@ -8,7 +8,7 @@
         <div class="col-12">
             <noscript>
                 <div class="p-notification--negative">
-                    <div class="p-notification__response">
+                    <div>
                         <span class="p-notification__status">JavaScript required</span>
 
                         <div class="p-notification__body">
@@ -24,7 +24,7 @@
             </noscript>
 
             <div class="p-notification--negative" id="tryit_status_panel" style="display:none">
-                <p class="p-notification__response">
+                <p>
                     <span class="p-notification__status">Server status</span>
                     <span class="p-notification__body" id="tryit_online_message" style="display:none">
                         You are connected over: <span id="tryit_protocol"></span> (<span id="tryit_address"></span>)<br/>
@@ -46,14 +46,14 @@
             </div>
 
             <div class="p-notification--information" id="tryit_terms_panel" style="display:none">
-                <p class="p-notification__response">
+                <p>
                     <span class="p-notification__status">Terms of service</span>
                     <div class="p-notification__body" id="tryit_terms"></div>
                 </p>
             </div>
 
             <div class="p-notification--caution" id="tryit_start_panel" style="display:none">
-                <p class="p-notification__response">
+                <p>
                     <span class="p-notification__status">Start</span>
                     <div class="p-notification__body">
                         <button class="p-button" id="tryit_accept" type="button">
@@ -72,7 +72,7 @@
             </div>
 
             <div class="p-notification--positive" id="tryit_info_panel" style="display:none">
-                <div class="p-notification__response">
+                <div>
                     <span class="p-notification__status">Container information</span>
                     <div class="p-notification__body">
                         <table class="table">
@@ -91,7 +91,7 @@
             </div>
 
             <div class="p-notification" id="tryit_console_panel" style="display:none">
-                <div class="p-notification__response">
+                <div>
                     <span class="p-notification__status">Terminal</span>
                     <div id="tryit_console" style="background-color:black;"></div>
 
@@ -102,7 +102,7 @@
             </div>
 
             <div class="p-notification--caution" id="tryit_examples_panel" style="display:none">
-                <div class="p-notification__response">
+                <div>
                     <span class="p-notification__status"><a href="#introduction">Step by step instructions</a></span>
 
                     <ul class="nav nav-tabs" style="display:none">
@@ -497,7 +497,7 @@
             </div>
 
             <div class="p-notification--information" id="tryit_feedback" style="display:none">
-                <div class="p-notification__response">
+                <div>
                     <span class="p-notification__status"><a data-toggle="collapse" class="text" href="#tryit_feedback_collapse">Feedback</a></span>
                     <div class="panel-body collapse in" id="tryit_feedback_collapse">
                         <form class="p-form" id="tryit_feedback_submit">
@@ -532,7 +532,7 @@
             </div>
 
             <div class="p-notification--negative" id="tryit_error_panel" style="display:none">
-                <div class="p-notification__response">
+                <div>
                     <span class="p-notification__status" id="tryit_error_panel_create" style="display:none">Unable to create a new container</span>
                     <span class="p-notification__status" id="tryit_error_panel_access" style="display:none">Unable to access the container</span>
 
