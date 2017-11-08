@@ -615,6 +615,11 @@ p:empty {
   margin-top: 0;
 }
 
+.tryit_run:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
 #tryit_console_measurement {
   color: white;
   display: block;
@@ -640,4 +645,14 @@ p:empty {
 /* Align text in notifications */
 [class^="p-notification"] {
   text-align: left;
+}
+
+/* Make the page width wider */
+.row {
+  max-width: 1170px;
+}
+
+/* Add spacing to pre tags */
+pre {
+  margin-top: .5rem;
 }
