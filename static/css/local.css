@@ -531,7 +531,8 @@ html {
     padding: 0.5rem 0 1rem;
     position: absolute;
     top: 58px;
-    width: 200px;
+    width: auto;
+    min-width: 200px;
     z-index: 1;
   }
   .hover-menu::before {
@@ -546,6 +547,7 @@ html {
   }
   .hover-menu a {
     color: #111 !important;
+    white-space: nowrap;
   }
   .hover-menu .is-active a {
     color: #e95420 !important;
