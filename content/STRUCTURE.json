@@ -134,6 +134,11 @@
      "generator": "markdown",
      "meta": {"input": "lxd/getting-started-openstack.md"}},
 
+    {"path": "/lxd/documentation",
+     "menu": ["LXD", "Documentation"],
+     "generator": "link",
+     "meta": {"url": "https://lxd.readthedocs.io/en/latest/"}},
+
     {"path": "/lxd/rest-api/",
      "title": "LXD - REST API",
      "menu": ["LXD", "REST API"],
