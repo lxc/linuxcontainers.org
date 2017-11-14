@@ -21,7 +21,7 @@ Bugfixes:
  * commands: Make state server interface flexible
  * commands: Move lxc\_make\_abstract\_socket\_name()
  * commands: Rename to lxc\_cmd\_add\_state\_client()
- * commonds: Fix typo
+ * commands: Fix typo
  * conf: Adapt to lxc-user-nic usage
  * conf: Add lxc\_get\_idmaps()
  * conf: Add userns\_exec\_full()
@@ -235,8 +235,8 @@ Bugfixes:
  * tests: Support systemd hybrid cgroups
  * tools: Add additional cgroup checks
  * tools: Print "-devel" when LXC\_DEVEL is true
- * tools: Use "which"
  * tools/lxc-attach: Allow for situations without /dev/tty
+ * tools/lxc-checkconfig: Use "which"
  * tools/lxc-checkconfig: Add CONFIG\_NETFILTER\_XT\_MATCH\_COMMENT
  * tools/lxc-checkconfig: Add probe status checking
  * tools/lxc-execute: Print error message when failed
