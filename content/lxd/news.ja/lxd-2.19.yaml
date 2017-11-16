@@ -2,7 +2,7 @@ title: LXD 2.19 リリースのお知らせ
 date: 2017/10/17 00:00
 origin: https://discuss.linuxcontainers.org/t/lxd-2-19-has-been-released/665
 content: |-
-  機能<!-- Features -->:
+  新機能<!-- Features -->:
 
    * LXD のドキュメントが https://lxd.readthedocs.io で読めるようになりました <!-- The LXD documentation is now available at https://lxd.readthedocs.io -->
    * 新しい "resources" API を追加しました。この API により CPU やメモリの情報や、ストレージプールのサイズを取得できます。
