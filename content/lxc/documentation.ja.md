@@ -6,18 +6,18 @@ For the command line tools, please refer to the [man pages.](/lxc/manpages/)
 
 # API
 <!--
-LXC ships with a stable C API and a bunch of bindings. That API is stable and properly versioned.  
-We may make additions to the liblxc1 API in LXC releases but will not remove or change existing symbols  
+LXC ships with a stable C API and a bunch of bindings. That API is stable and properly versioned.
+We may make additions to the liblxc1 API in LXC releases but will not remove or change existing symbols
 without calling it liblxc2.
 -->
 LXC は C の API といくつかの言語のバインディングと共にリリースされています。API は同じバージョンでは不変で適切にバージョン管理されています。
 LXC のリリースで liblxc1 には追加がなされることはあっても、API が削除されたり既存のシンボルが変更されることは liblxc2 になるまではありません。
 
 <!--
-The first LXC version to ship with the stable API was LXC 1.0.0.  
+The first LXC version to ship with the stable API was LXC 1.0.0.
 Only symbols listed in
 [lxccontainer.h](https://github.com/lxc/lxc/blob/master/src/lxc/lxccontainer.h)
-are part of the API, everything else is internal to LXC  
+are part of the API, everything else is internal to LXC
 and can change at any point.
 -->
 安定版 API としてリリースされた最初の LXC のバージョンは LXC 1.0.0 でした。
@@ -105,13 +105,13 @@ And now a simple example of how to use the API to create, start, stop and destro
 
 ## Python
 <!--
-The python bindings are typically very close to the C API except for the part where it exports  
+The python bindings are typically very close to the C API except for the part where it exports
 proper objects instead of structs.
 -->
 python バインディングは、構造体に代わりに適切なオブジェクトがエクスポートされる部分を除いては、一般的に C API に最も近いです。
 
 <!--
-The binding is made in two parts, the raw "\_lxc" C extension and the "lxc" python overlay  
+The binding is made in two parts, the raw "\_lxc" C extension and the "lxc" python overlay
 which provides the improve user experience.
 -->
 バインディングは 2 つの部分から作られています。生の (raw) "\_lxc" C 拡張と、ユーザの使い勝手を改良する "lxc" python オーバーレイです。
@@ -199,7 +199,7 @@ C の例と全く同じ例は以下のようになります:
         sys.exit(1)
 
 <!--
-A great feature of the python binding is the ability to run a function in the container's context  
+A great feature of the python binding is the ability to run a function in the container's context
 as can be seen in the example below of a script updating all of your containers:
 -->
 python バインディングの大きな特徴は、以下の全てのコンテナを更新するスクリプトの例でわかるように、コンテナのコンテキスト内で関数を実行できることです:

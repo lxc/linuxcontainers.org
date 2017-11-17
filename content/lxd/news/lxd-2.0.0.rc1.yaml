@@ -1,8 +1,8 @@
 title: LXD 2.0.0.rc1 release announcement
 date: 2016/03/02 00:00
 content: |-
-  This is the first release candidate for LXD 2.0. This means that we believe all features required  
-  for LXD 2.0 have now been merged and we only expect bugfixes and minor usability improvements  
+  This is the first release candidate for LXD 2.0. This means that we believe all features required
+  for LXD 2.0 have now been merged and we only expect bugfixes and minor usability improvements
   to land between now and final release.
 
   ### The main changes for this release are

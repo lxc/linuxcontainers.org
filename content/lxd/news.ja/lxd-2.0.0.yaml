@@ -8,7 +8,7 @@ content: |-
   LXD 2.0 を正式にリリースしました!
 
   <!--
-  LXD 2.0 is a Long Term Support release, similar to LXC 2.0 and LXCFS 2.0 and so comes  
+  LXD 2.0 is a Long Term Support release, similar to LXC 2.0 and LXCFS 2.0 and so comes
   with a 5 years support commitment from upstream, ending on 1st of June 2021.
   -->
   LXD 2.0 は LXC 2.0、LXCFS 2.0 と同様に、長期サポート対象のリリースです。開発元が 5 年間のサポート、つまり 2021 年の 6 月 1 日までのサポートを約束します。

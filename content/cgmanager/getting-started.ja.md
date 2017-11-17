@@ -31,8 +31,8 @@ If you are running another distribution, you can install it by hand using:
 
 # LXC コンテナ内部で CGManager を使う <!-- Using CGManager from inside a LXC container -->
 <!--
-To use cgmanager in containers, you need to tell lxc to bind mount the  
-cgmanager socket into the container by adding the following line into  
+To use cgmanager in containers, you need to tell lxc to bind mount the
+cgmanager socket into the container by adding the following line into
 the container configuration file (e.g. /var/lib/lxc/container/config).
 -->
 コンテナ内で cgmanager を使うには、cgmanager のソケットをコンテナ内にバインドマウントするように lxc を設定する必要があります。これを行うには (例えば /var/lib/lxc/container/config ファイル内で) 以下のように設定します。

@@ -10,13 +10,13 @@ content: |-
   ## CVE-2016-1581
 
   <!--
-  Robie Basak noticed that after setting up a loop based ZFS pool through "lxd init"  
+  Robie Basak noticed that after setting up a loop based ZFS pool through "lxd init"
   the resulting file (/var/lib/lxd/zfs.img) was world readable.
   -->
   "lxd init" を使って loop ベースの ZFS プールを設定すると、出来上がったファイル (/var/lib/lxd/zfs.img) が、全ユーザに読み取り権限のあるファイルとなってしまうことについて、Robie Basak から報告を受けました。
 
   <!--
-  This would allow any user on the system, and a potential attacker to copy and  
+  This would allow any user on the system, and a potential attacker to copy and
   then read the data of any LXD container, regardless of file permissions inside the container.
   -->
   これにより、コンテナ内のファイルのパーミッションに関わらず、システム上の全ユーザがすべての LXD コンテナのデータをコピーして読むことができます。そして、攻撃者が同じことを行う可能性があります。
@@ -27,14 +27,14 @@ content: |-
   LXD 2.0.2 は "lxd init" のロジックを修正し、常に zfs.img のモードが 0600 に設定されるようにしました。
 
   <!--
-  Additionally a one-time upgrade step will trigger on first run and reset any existing  
+  Additionally a one-time upgrade step will trigger on first run and reset any existing
   zfs.img mode to be 0600.
   -->
   加えて、アップグレード処理が LXD の最初の実行時に実行され、既存の zfs.img のモードを 0600 に設定します。
 
   <!--
-  If you manage an affected system and suspect an unauthorized user may have accessed  
-  the zfs.img file, you should consider replacing any secret that was stored in the  
+  If you manage an affected system and suspect an unauthorized user may have accessed
+  the zfs.img file, you should consider replacing any secret that was stored in the
   affected containers (private keys and similar credentials).
   -->
   もし、影響を受けるシステムを管理しており、許可されていないユーザが zfs.img ファイルにアクセスしたことが疑われる場合は、対象のコンテナ内に格納されている機密情報 (秘密鍵や同等のクレデンシャル) を置き換えることを検討すべきです。
@@ -42,32 +42,32 @@ content: |-
   ## CVE-2016-1582
 
   <!--
-  Robie Basak noticed that when switching an unprivileged container (default, security.privileged=false)  
-  into privileged mode (by setting security.privileged to true), the container rootfs is properly  
+  Robie Basak noticed that when switching an unprivileged container (default, security.privileged=false)
+  into privileged mode (by setting security.privileged to true), the container rootfs is properly
   remapped but the container directory itself (/var/lib/lxd/containers/XYZ) remains at 0755.
   -->
   非特権コンテナ (デフォルトのモードです。security.privileged=false) を特権モードのコンテナ (security.privileged=true に設定されます) に切り替える際、コンテナの rootfs は適切に (ユーザ、グループの) 再マッピングが行われますが、コンテナディレクトリ自身 (/var/lib/lxd/containers/XYZ) はモードが 0755 のままとなることについて、Robie Basak から報告を受けました。
 
   <!--
-  This is a problem because it allows an unprivileged user on the host to access any world readable path  
+  This is a problem because it allows an unprivileged user on the host to access any world readable path
   under /var/lib/lxd/containers/XYZ which may include setuid binaries.
   -->
   これにより、ホスト上の非特権ユーザすべてが /var/lib/lxd/containers/XYZ 以下の、setuid バイナリを含む全ユーザに読み取り権限のあるパスにアクセスできることになり、問題です。
 
   <!--
-  Such setuid binaries could then be used on the host to access otherwise unaccessible data  
+  Such setuid binaries could then be used on the host to access otherwise unaccessible data
   or to escalate one's privileges.
   -->
   このような setuid バイナリが、通常ではアクセスできないようなデータにアクセスしたり、自身の権限を昇格させたりする目的でホスト上で使われる可能性があります。
 
   <!--
-  LXD 2.0.2 fixes this behavior by making sure all privileged containers are always root-owned and have  
+  LXD 2.0.2 fixes this behavior by making sure all privileged containers are always root-owned and have
   their mode set to 0700 to prevent traversal by unprivileged users.
   -->
   LXD 2.0.2 は、すべての特権コンテナが常に確実に root 所有であるようにし、非特権ユーザによるトラバーサルを防ぐためにモードを 0700 に設定することで、このような動作を修正しました。
 
   <!--
-  Additionally a one-time upgrade step will trigger on first run and reset any existing privileged containers'  
+  Additionally a one-time upgrade step will trigger on first run and reset any existing privileged containers'
   ownership and mode to root:root 0700
   -->
   加えて、アップグレード処理が LXD の最初の実行時に実行され、既存の特権コンテナの所有権とモードを root:root 0700 に設定します。

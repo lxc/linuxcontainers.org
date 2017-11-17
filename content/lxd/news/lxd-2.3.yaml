@@ -3,13 +3,13 @@ date: 2016/09/27 00:00
 content: |-
   LXD 2.3 includes a few major features we've been working on for months.
 
-  The main one is a completely new set of API endpoints, configuration options and commands.  
-  This allows creating and configuring bridges through LXD, including IPv4  
-  and IPv6 connectivity, Ubuntu FAN support, cross-host tunnels with GRE  
+  The main one is a completely new set of API endpoints, configuration options and commands.
+  This allows creating and configuring bridges through LXD, including IPv4
+  and IPv6 connectivity, Ubuntu FAN support, cross-host tunnels with GRE
   or VXLAN, various DNS modes, DHCP configuration and MAC filtering.
 
-  The other feature we're very excited about is support for AppArmor  
-  namespaces and stacking. This will allow containers to load apparmor  
+  The other feature we're very excited about is support for AppArmor
+  namespaces and stacking. This will allow containers to load apparmor
   profiles and further confine their workloads.
 
   ### The changes in this release include

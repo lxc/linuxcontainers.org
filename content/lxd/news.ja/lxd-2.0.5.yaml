@@ -9,8 +9,8 @@ content: |-
   ### LXD 2.0.4 以降の変更は以下の通りです <!-- The changes since LXD 2.0.4 are -->
 
   <!--
-  Note that several migration fixes included in this release depend on a newer go-lxc.  
-  If building manually, you may need to update your copy of go-lxc.  
+  Note that several migration fixes included in this release depend on a newer go-lxc.
+  If building manually, you may need to update your copy of go-lxc.
   If building for a distribution, you may need to update your packaged version of go-lxc to a newer snapshot.
   -->
   このリリースに含まれるマイグレーションに関する修正のいくつかは、新しい go-lxc に依存していることに注意してください。

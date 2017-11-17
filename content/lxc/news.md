@@ -277,10 +277,10 @@ Bugfixes:
  * utils: Use access instead of stat
 
 ### Downloads
-The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions  
+The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
 will very soon ship a packaged version of LXC 2.0.9.
 
-Should you be interested in individual changes or just looking at the detailed development history,  
+Should you be interested in individual changes or just looking at the detailed development history,
 our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-2.0).
 
 
@@ -342,14 +342,14 @@ Bugfixes:
  * utils: Remove dead assignments in lxc\_popen()
 
 ### Downloads
-The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions  
+The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
 will very soon ship a packaged version of LXC 1.0.11.
 
-Please note that LXC upstream strongly recommends 1.0 users to upgrade to the 2.0 LTS release.  
-The 1.0 branch will keep being supported until June 2019, but at this point,  
+Please note that LXC upstream strongly recommends 1.0 users to upgrade to the 2.0 LTS release.
+The 1.0 branch will keep being supported until June 2019, but at this point,
 only critical bugfixes and security updates will be backported.
 
-Should you be interested in individual changes or just looking at the detailed development history,  
+Should you be interested in individual changes or just looking at the detailed development history,
 our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-1.0).
 
 
@@ -420,10 +420,10 @@ Bugfixes:
  * utils: Remove dead assignments in lxc\_popen()
 
 ### Downloads
-The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions  
+The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
 will very soon ship a packaged version of LXC 2.1.1.
 
-Should you be interested in individual changes or just looking at the detailed development history,  
+Should you be interested in individual changes or just looking at the detailed development history,
 our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-2.1).
 
 

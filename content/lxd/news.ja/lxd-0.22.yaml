@@ -27,7 +27,7 @@ content: |-
   ### アップグレードの注意 <!-- Upgrade notes -->
 
   <!--
-  This LXD version corrects a problem in the implementation of the images API,  
+  This LXD version corrects a problem in the implementation of the images API,
   as a result, some actions against older servers or using older clients may fail.
   -->
   この LXD のバージョンでは、イメージ API の実装の問題を修正しました。この結果、古いサーバに対する操作や古いクライアントを使った操作の中には失敗するものもあるかもしれません。

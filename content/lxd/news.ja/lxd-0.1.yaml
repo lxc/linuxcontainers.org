@@ -18,13 +18,13 @@ content: |-
    * LXD [REST API](/lxd/rest-api/) の試験的な使用<!-- Experiment with the LXD REST API -->
 
   <!--
-  Support for other container images, container migration, container configuration and profiles  
+  Support for other container images, container migration, container configuration and profiles
   and a stable REST API will be coming in the next few releases.
   -->
   他のコンテナイメージ、コンテナマイグレーション、コンテナの設定とプロファイル、Stable な REST API はこの後のリリースで提供予定です。
 
   <!--
-  This release is our first development snapshot and isn't intended for production use  
+  This release is our first development snapshot and isn't intended for production use
   and comes with no support statement from upstream. 
   (reported bugs and patches will be included in the next release)
   -->

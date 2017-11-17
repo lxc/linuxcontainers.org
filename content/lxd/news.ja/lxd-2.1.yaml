@@ -7,7 +7,7 @@ content: |-
   LXD 2.1 は、LXD 2.0 LTS リリース以降初めての、機能の変更と強化が図られたリリースです。
 
   <!--
-  Note that this release does not have LTS status and as such will not  
+  Note that this release does not have LTS status and as such will not
   benefit from multi-year support or bugfix releases.
   -->
   このリリースは LTS ではありませんので、複数年にわたるサポートやバグフィックスといった恩恵を受けないことに注意してください。

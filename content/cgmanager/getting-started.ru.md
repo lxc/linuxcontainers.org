@@ -20,8 +20,8 @@
     sudo /sbin/cgmanager --debug -m name=systemd
 
 # Использование CGManager изнутри контейнера LXC
-Для использования cgmanager в контейнере, вам нужно указать lxc смонтировать сокет  
-cgmanager в контейнер добавив следующую линию в  
+Для использования cgmanager в контейнере, вам нужно указать lxc смонтировать сокет
+cgmanager в контейнер добавив следующую линию в
 конфигурационный файл контейнера (т.е. /var/lib/lxc/container/config).
 
     lxc.mount.auto = cgroup

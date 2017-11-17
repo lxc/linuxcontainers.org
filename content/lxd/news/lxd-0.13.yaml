@@ -12,8 +12,8 @@ content: |-
    * Improve btrfs performance during container copy
    * A lot of other bugfixes, minor improvements and cleanups
 
-  This is the first release of LXD where the client may be built on operating systems other than Linux.  
-  At the moment, MacOS X has been confirmed to work and Windows is known not to work, other Unix may  
+  This is the first release of LXD where the client may be built on operating systems other than Linux.
+  At the moment, MacOS X has been confirmed to work and Windows is known not to work, other Unix may
   work too but haven't been tested.
 
   ### Downloads

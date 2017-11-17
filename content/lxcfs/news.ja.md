@@ -471,7 +471,7 @@ Critical bug/security fix update for LXCFS.
 このリリースは LXCFS の重大なバグとセキュリティホールの修正のためのアップデートです。
 
 <!--
-Prior versions of LXCFS would replace the host's /proc with the container's  
+Prior versions of LXCFS would replace the host's /proc with the container's
 when a read to /proc/uptime was done on a system with / mounted rshared (default on systemd).
 -->
 LXCFS のこれまでのバージョンは、/ が rshared でマウントされているシステム (systemd のデフォルトです) で /proc/uptime が読まれたとき、ホストの /proc をコンテナの /proc で置き換えていました。
@@ -506,7 +506,7 @@ Packager-friendly release of LXCFS 0.2.
 パッケージの作成がしやすいリリースの LXCFS 0.2 がリリースされました。
 
 <!--
-This release now installs /usr/share/lxcfs/lxc.mount.hook and /usr/share/lxc/common.conf.d/00-lxcfs.conf  
+This release now installs /usr/share/lxcfs/lxc.mount.hook and /usr/share/lxc/common.conf.d/00-lxcfs.conf
 which when combined with LXC 1.1 will automatically enable lxcfs for all containers.
 -->
 このリリースでは、LXC 1.1 で自動的に全てのコンテナに lxcfs が自動的に有効になる /usr/share/lxcfs/lxc.mount.hook と /usr/share/lxc/common.conf.d/00-lxcfs.conf をインストールするようになりました。
@@ -531,13 +531,13 @@ This is the initial LXCFS release.
 これは LXCFS の初めてのリリースです。
 
 <!--
-It offers a basic cgroupfs-like interface which writes through CGManager as well as  
+It offers a basic cgroupfs-like interface which writes through CGManager as well as
 cgroup-ified versions of the cpuinfo, meminfo, stat and uptime proc files.
 -->
 LXCFS は CGManager を通して書き込める cgroupfs 風のインターフェースと、cgroup を元にした cpuinfo、meminfo、stat、uptime といった proc ファイルを提供します。
 
 <!--
-Note that as the first release of LXCFS, things can still be very rough and we would advice  
+Note that as the first release of LXCFS, things can still be very rough and we would advice
 against using this in production.
 -->
 LXCFS の最初のリリースですので、まだ非常に未完成である可能性があり、まだ production 環境で使用しないでください。

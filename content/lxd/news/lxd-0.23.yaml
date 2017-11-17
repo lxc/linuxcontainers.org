@@ -24,9 +24,9 @@ content: |-
    * "lxc info --show-log" is now also suggested on "lxc launch" failures
 
   ### Upgrade notes
-  Users of the operations API may have to update their code to suit the new operation code.  
-  The new implementation is now specification-compliant, meaning that all operation queries  
-  always return a full operation object wrapped in an Async reply and with operation-specific  
+  Users of the operations API may have to update their code to suit the new operation code.
+  The new implementation is now specification-compliant, meaning that all operation queries
+  always return a full operation object wrapped in an Async reply and with operation-specific
   properties inside the metadata.
 
   The "lxc" client was updated to be backward compatible when possible.

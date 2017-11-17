@@ -15,7 +15,7 @@ content: |-
    * And the usual set of bugfixes.
 
 
-  NOTE: The key to set a server password is now, core.trust\_password.  
+  NOTE: The key to set a server password is now, core.trust\_password.
   On first startup of LXD 0.11, all the old supported names will be
   converted to the official one.
 

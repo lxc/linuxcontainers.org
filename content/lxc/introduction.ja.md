@@ -1,8 +1,8 @@
 # LXC について <!-- What's LXC? -->
 
 <!--
-LXC is a userspace interface for the Linux kernel containment features.  
-Through a powerful API and simple tools, it lets Linux users easily create  
+LXC is a userspace interface for the Linux kernel containment features.
+Through a powerful API and simple tools, it lets Linux users easily create
 and manage system or application containers.
 -->
 LXC は Linux カーネルが持つコンテナ機能のためのユーザスペースのインターフェースです。
@@ -23,8 +23,8 @@ Current LXC uses the following kernel features to contain processes:
  * CGroups (control groups)
 
 <!--
-LXC containers are often considered as something in the middle between a chroot and  
-a full fledged virtual machine. The goal of LXC is to create an environment as close as possible  
+LXC containers are often considered as something in the middle between a chroot and
+a full fledged virtual machine. The goal of LXC is to create an environment as close as possible
 to a standard Linux installation but without the need for a separate kernel.
 -->
 LXC はよく強力な chroot と本格的な仮想マシンの中間のようなものに見なされます。
@@ -50,8 +50,8 @@ LXC はいくつかのコンポーネントから構成されています。
 
 # ライセンス <!-- Licensing -->
 <!--
-LXC is free software, most of the code is released under the terms of the GNU LGPLv2.1+ license,  
-some Android compatibility bits are released under a standard 2-clause BSD license  
+LXC is free software, most of the code is released under the terms of the GNU LGPLv2.1+ license,
+some Android compatibility bits are released under a standard 2-clause BSD license
 and some binaries and templates are released under the GNU GPLv2 license.
 -->
 LXC はフリーソフトウェアで、コードのほとんどの部分が GNU LGPLv2.1+ の条項に基づいてリリースされています。
@@ -65,19 +65,19 @@ The default license for the project is the GNU LGPLv2.1+.
 # サポート <!-- Support -->
 
 <!--
-LXC's stable release support relies on the Linux distributions  
+LXC's stable release support relies on the Linux distributions
 and their own commitment to pushing stable fixes and security updates.
 -->
 LXC の stable リリースは各 Linux ディストリビューションの stable に対する修正とセキュリティアップデートのポリシーに依存します。
 
 <!--
-Based on the needs and available resources from the various distributions,  
+Based on the needs and available resources from the various distributions,
 specific versions of LXC can enjoy long term support with frequent bugfix updates.
 -->
 各種ディストリビューションでのニーズと利用可能なリソース次第で、そのディストリビューションで LXC の特定のバージョンが頻繁なバグフィックスの更新が行われる長期サポートで利用できる可能性があります。
 
 <!--
-Other releases will typically be maintained on a best effort basis which  
+Other releases will typically be maintained on a best effort basis which
 typically means until the next stable release is out.
 -->
 他のリリースは、一般的に次の stable リリースが出るまでを指すベストエフォートの原則で、一般的にはメンテナンスされるでしょう。
@@ -90,15 +90,15 @@ Ubuntu LTS リリースに含まれる LXC に対する商用サポートは [Ca
 ## 延長サポート <!-- Extended support -->
 
 <!--
-LXC 1.0 and LXC 2.0 are long term support releases.  
+LXC 1.0 and LXC 2.0 are long term support releases.
 LXC 1.0 will be supported until June 1st 2019 and LXC 2.0 until June 1st 2021.
 -->
 LXC 1.0 と 2.0 は長期サポート版のリリースです。
 LXC 1.0 は 2019 年 6 月 1 日までサポートされます。そして LXC 2.0 は 2021 年 6 月 1 日までサポートされます。
 
 <!--
-This is thanks to [Canonical Ltd](http://www.canonical.com) and Ubuntu who include  
-the long term support releases of LXC into their own LTS releases and work closely  
+This is thanks to [Canonical Ltd](http://www.canonical.com) and Ubuntu who include
+the long term support releases of LXC into their own LTS releases and work closely
 with LXC upstream to maintain our stable branches.
 -->
 これは、[Canonical Ltd](http://www.canonical.com) と Ubuntu が LTS (長期サポート版) に LXC の LTS を含めているためであり、stable ブランチをメンテナンスするために LXC の開発元と密接に連携しているためです。

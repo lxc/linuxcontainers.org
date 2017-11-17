@@ -21,12 +21,12 @@ content: |-
    * Various testsuite improvements
    * A lot more bugfixes and other small improvements
 
-  This release moves containers from /var/lib/lxd/lxc to /var/lib/lxd/containers  
+  This release moves containers from /var/lib/lxd/lxc to /var/lib/lxd/containers
   and snapshots from /var/lib/lxd/lxc/\<name\>/snapshots to /var/lib/lxd/snapshots/\<name\>.
-  To do so, LXD will stop all containers on the next startup, then start them again  
+  To do so, LXD will stop all containers on the next startup, then start them again
   after moving everything to the new location.
 
-  The --tcp daemon option has been replaced by the core.https\_address option allowing users  
+  The --tcp daemon option has been replaced by the core.https\_address option allowing users
   to change the address and port LXD binds to. Changes are now applied immediately.
 
   ### Downloads

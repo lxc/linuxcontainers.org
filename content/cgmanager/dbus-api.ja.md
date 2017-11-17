@@ -24,14 +24,14 @@ controller と PID を与えると、cgroup の絶対パスを返します。
 
 ### Create (string controller, string cgroup) -> int existed
 <!--
-Creates a new cgroup path in the provided controller, returns 1  
+Creates a new cgroup path in the provided controller, returns 1
 if the path already existed, 0 if it was created.
 -->
 指定した controller 内に新しい cgroup パスを作成します。既にパスが存在する場合は 1 を、作成が成功した場合は 0 を返します。
 
 ### Chown (string controller, string cgroup, int uid, int gid) -> None
 <!--
-Chown the provided controller/cgroup path to the provied uid and gid,  
+Chown the provided controller/cgroup path to the provied uid and gid,
 this will chown the directory as well as the cgroup.procs and tasks files.
 -->
 指定した uid と gid で、指定したパス controller/cgroup を chown します。ディレクトリ、cgroup.procs、tasks ファイルを chown します。
@@ -50,8 +50,8 @@ Moves the provided PID into the provided controller/cgroup.
 
 ### MovePidAbs (string controller, string cgroup, int pid) -> None
 <!--
-Similar to MovePid but takes an absolute cgroup path rather than one relative  
-to the caller (or proxy). This call is restricted to root as it lets you escape  
+Similar to MovePid but takes an absolute cgroup path rather than one relative
+to the caller (or proxy). This call is restricted to root as it lets you escape
 your current cgroup restrictions.
 -->
 MovePid と同様ですが、呼び出し元 (もしくはプロキシ) からの相対 cgroup パスでなく、絶対 cgroup パスを指定します。
@@ -59,7 +59,7 @@ MovePid と同様ですが、呼び出し元 (もしくはプロキシ) から�
 
 ### GetValue (string controller, string cgroup, string key) -> string value
 <!--
-Queries the value of the given key in the given controller/cgroup.  
+Queries the value of the given key in the given controller/cgroup.
 The value is always returned as a string.
 -->
 指定した controller/cgroup 内の指定した key の値を返します。常に文字列が返されます。
@@ -72,7 +72,7 @@ Sets the value of the given key to that provided.
 
 ### Remove (string controller, string cgroup, int recursive) -> int existed
 <!--
-Removes the provided cgroup, if recursive is set to 1, any sub-cgroup will also be removed.  
+Removes the provided cgroup, if recursive is set to 1, any sub-cgroup will also be removed.
 The return value indicates whether the cgroup existed.
 -->
 指定した cgroup を削除します。もし recursive が 1 の場合は指定した cgroup のサブ cgroup も削除されます。
@@ -98,7 +98,7 @@ Returns an array of string representing all the children (sub-cgroup) of the pro
 
 ### RemoveOnEmpty (string controller, string cgroup) -> None
 <!--
-Marks the cgroup as removable when empty.  
+Marks the cgroup as removable when empty.
 Once the last task exists the cgroup, cgmanager will automatically remove it.
 -->
 指定した cgroup が空の場合に消去可能なマークをつけます。cgroup の最後のタスクがなくなったとき、cgmanager は自動的にその cgroup を消去します。
@@ -110,7 +110,7 @@ Calls RemoveOnEmpty on the cgroups path and any sub-directory (recursively).
 指定した cgroup パスとサブディレクトリで (再帰的に) RemoveOnEmpty を呼び出します。
 
 <!--
-Tasks will not be killed but once they all exit either naturally or  
+Tasks will not be killed but once they all exit either naturally or
 because something killed them, the cgroup will disappear.
 -->
 タスクが kill されることはありませんが、タスクが自然に exit するか何かの理由で kill されたらすぐに cgroup は消えるでしょう。

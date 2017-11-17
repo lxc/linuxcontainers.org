@@ -3,7 +3,7 @@ date: 2016/08/16 00:00
 content: |-
   LXD 2.1 is the first feature release following LXD 2.0 LTS.
 
-  Note that this release does not have LTS status and as such will not  
+  Note that this release does not have LTS status and as such will not
   benefit from multi-year support or bugfix releases.
 
   For production environments, we recommend that you stick to the LXD 2.0 LTS release.

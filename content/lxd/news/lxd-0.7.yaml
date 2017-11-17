@@ -9,8 +9,8 @@ content: |-
    * Some documentation update
    * A few more minor fixes
 
-  Please note that it's still early in the LXD development and that current LXD isn't intended  
-  for production use and comes with no support statement from upstream.  
+  Please note that it's still early in the LXD development and that current LXD isn't intended
+  for production use and comes with no support statement from upstream.
   (reported bugs and patches will be included in the next release)
 
   ### Downloads

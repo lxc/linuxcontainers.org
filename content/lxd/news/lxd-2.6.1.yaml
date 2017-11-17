@@ -3,7 +3,7 @@ date: 2016/11/24 00:00
 content: |-
   This is an emergency bugfix release to fix a critical regression in LXD 2.6.
 
-  The regression was causing pre-existing unpriivleged containers to  
+  The regression was causing pre-existing unpriivleged containers to
   potentially start as privileged containers upon restart.
 
   ### The changes in this release include

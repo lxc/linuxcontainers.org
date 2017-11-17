@@ -25,7 +25,7 @@ content: |-
    * Fix a LXD hang on invalid LXC configuration key
 
   ### Upgrade notes
-  This LXD version corrects a problem in the implementation of the images API,  
+  This LXD version corrects a problem in the implementation of the images API,
   as a result, some actions against older servers or using older clients may fail.
 
   ### Try it for yourself

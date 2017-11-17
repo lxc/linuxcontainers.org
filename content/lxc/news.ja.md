@@ -282,13 +282,13 @@ This is the nineth bugfix release for LXC 2.0.
 
 ### ダウンロード <!-- Downloads -->
 <!--
-The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions  
+The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
 will very soon ship a packaged version of LXC 2.0.9.
 -->
 このリリースの tarball は [ダウンロードページ](/lxc/downloads/) から取得できます。そして、各ディストリビューションがすぐに LXC 2.0.9 のパッケージをリリースするでしょう。
 
 <!--
-Should you be interested in individual changes or just looking at the detailed development history,  
+Should you be interested in individual changes or just looking at the detailed development history,
 our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-2.0).
 -->
 個々の変更点に興味がある場合、そして開発の履歴を見たい場合、stable-2.0 ブランチが [Github](https://github.com/lxc/lxc/tree/stable-2.0) にあります。
@@ -356,21 +356,21 @@ This is the eleventh bugfix release for LXC 1.0.
 
 ### ダウンロード <!-- Downloads -->
 <!--
-The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions  
+The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
 will very soon ship a packaged version of LXC 1.0.11.
 -->
 このリリースの tarball は [ダウンロードページ](/lxc/downloads/) から取得できます。そして、各ディストリビューションがすぐに LXC 1.0.11 のパッケージをリリースするでしょう。
 
 <!--
-Please note that LXC upstream strongly recommends 1.0 users to upgrade to the 2.0 LTS release.  
-The 1.0 branch will keep being supported until June 2019, but at this point,  
+Please note that LXC upstream strongly recommends 1.0 users to upgrade to the 2.0 LTS release.
+The 1.0 branch will keep being supported until June 2019, but at this point,
 only critical bugfixes and security updates will be backported.
 -->
 LXC 開発元として、1.0 ユーザには 2.0 LTS リリースへのアップグレードを強くおすすめします。
 1.0 ブランチは 2019 年 6 月までサポートが続きます。しかし現時点では、重大なバグフィックスとセキュリティホール対策のみがバックポートされます。
 
 <!--
-Should you be interested in individual changes or just looking at the detailed development history,  
+Should you be interested in individual changes or just looking at the detailed development history,
 our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-1.0).
 -->
 個々の変更点に興味がある場合、そして開発の履歴を見たい場合、stable-1.0 ブランチが [Github](https://github.com/lxc/lxc/tree/stable-1.0) にあります。
@@ -447,13 +447,13 @@ This is the first bugfix release for LXC 2.1.
 
 ### ダウンロード <!-- Downloads -->
 <!--
-The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions  
+The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
 will very soon ship a packaged version of LXC 2.1.1.
 -->
 このリリースの tarball は [ダウンロードページ](/lxc/downloads/) から取得できます。そして、各ディストリビューションがすぐに LXC 2.1.1 のパッケージをリリースするでしょう。
 
 <!--
-Should you be interested in individual changes or just looking at the detailed development history,  
+Should you be interested in individual changes or just looking at the detailed development history,
 our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-2.1).
 -->
 個々の変更点に興味がある場合、そして開発の履歴を見たい場合、stable ブランチが [Github](https://github.com/lxc/lxc/tree/stable-2.1) にあります。

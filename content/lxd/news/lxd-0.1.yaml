@@ -11,10 +11,10 @@ content: |-
    * Management of multiple LXD hosts through the lxc command line tool
    * Experiment with the LXD [REST API](/lxd/rest-api/)
 
-  Support for other container images, container migration, container configuration and profiles  
+  Support for other container images, container migration, container configuration and profiles
   and a stable REST API will be coming in the next few releases.
 
-  This release is our first development snapshot and isn't intended for production use  
+  This release is our first development snapshot and isn't intended for production use
   and comes with no support statement from upstream. 
   (reported bugs and patches will be included in the next release)
 

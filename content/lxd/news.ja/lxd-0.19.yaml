@@ -26,7 +26,7 @@ content: |-
    * 多数のバグフィックスを行いました (リリース時点での既知のバグはなくなりました)<!-- A lot of bugfixes (no known bugs left at time of release) -->
 
   <!--
-  Note that due to an API implementation problem in past releases, older command line clients  
+  Note that due to an API implementation problem in past releases, older command line clients
   will fail to interact with LXD 0.19's image store. Such clients should be upgraded to 0.19.
   -->
   過去のリリースの API 実装の問題により、古いコマンドラインクライアントでは、LXD 0.19 のイメージストアの操作が失敗することに注意してください。このような場合は 0.19 へアップグレードする必要があります。

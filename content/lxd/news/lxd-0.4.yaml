@@ -10,13 +10,13 @@ content: |-
    * API fixes to more closely match the spec
    * A lot of bugfixes
 
-  Please note that it's still early in the LXD development and that current LXD isn't intended  
-  for production use and comes with no support statement from upstream.  
+  Please note that it's still early in the LXD development and that current LXD isn't intended
+  for production use and comes with no support statement from upstream.
   (reported bugs and patches will be included in the next release)
 
-  At this point, most core LXD features are present but many of the  
-  particular options aren't implemented yet (don't match our  
-  specifications), we expect to make great progress in supporting all of  
+  At this point, most core LXD features are present but many of the
+  particular options aren't implemented yet (don't match our
+  specifications), we expect to make great progress in supporting all of
   the expected options over the next couple of releases.
 
   ### Downloads

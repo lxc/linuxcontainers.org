@@ -7,17 +7,17 @@ content: |-
   LXD 2.3 には私たちがここ数ヶ月取り組んでいたいくつかの主要な機能が含まれています。
 
   <!--
-  The main one is a completely new set of API endpoints, configuration options and commands.  
-  This allows creating and configuring bridges through LXD, including IPv4  
-  and IPv6 connectivity, Ubuntu FAN support, cross-host tunnels with GRE  
+  The main one is a completely new set of API endpoints, configuration options and commands.
+  This allows creating and configuring bridges through LXD, including IPv4
+  and IPv6 connectivity, Ubuntu FAN support, cross-host tunnels with GRE
   or VXLAN, various DNS modes, DHCP configuration and MAC filtering.
   -->
   その主要なものとは、API エンドポイント、設定オプション、コマンドの完全な新しいセットです。
   これにより、IPv4 と IPv6 の接続性、Ubuntu FAN のサポート、GRE または VXLAN を使ったクロスホストのトンネル、様々な DNS モード、DHCP 設定、MAC フィルタリングを含む LXD 経由のブリッジの作成や設定ができるようになりました。
 
   <!--
-  The other feature we're very excited about is support for AppArmor  
-  namespaces and stacking. This will allow containers to load apparmor  
+  The other feature we're very excited about is support for AppArmor
+  namespaces and stacking. This will allow containers to load apparmor
   profiles and further confine their workloads.
   -->
   私たちがとてもわくわくしている他の機能は、AppArmor の名前空間とスタッキングのサポートです。

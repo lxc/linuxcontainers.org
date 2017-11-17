@@ -2,14 +2,14 @@
 For the command line tools, please refer to the [man pages.](/lxc/manpages/)
 
 # API
-LXC ships with a stable C API and a bunch of bindings. That API is stable and properly versioned.  
-We may make additions to the liblxc1 API in LXC releases but will not remove or change existing symbols  
+LXC ships with a stable C API and a bunch of bindings. That API is stable and properly versioned.
+We may make additions to the liblxc1 API in LXC releases but will not remove or change existing symbols
 without calling it liblxc2.
 
-The first LXC version to ship with the stable API was LXC 1.0.0.  
+The first LXC version to ship with the stable API was LXC 1.0.0.
 Only symbols listed in
 [lxccontainer.h](https://github.com/lxc/lxc/blob/master/src/lxc/lxccontainer.h)
-are part of the API, everything else is internal to LXC  
+are part of the API, everything else is internal to LXC
 and can change at any point.
 
 ## C
@@ -81,10 +81,10 @@ And now a simple example of how to use the API to create, start, stop and destro
     }
 
 ## Python
-The python bindings are typically very close to the C API except for the part where it exports  
+The python bindings are typically very close to the C API except for the part where it exports
 proper objects instead of structs.
 
-The binding is made in two parts, the raw "\_lxc" C extension and the "lxc" python overlay  
+The binding is made in two parts, the raw "\_lxc" C extension and the "lxc" python overlay
 which provides an improved user experience.
 
 Loading a container called "test" can be done with:
@@ -157,7 +157,7 @@ And now for the same end to end example as was done in C:
         print("Failed to destroy the container.", file=sys.stderr)
         sys.exit(1)
 
-A great feature of the python binding is the ability to run a function in the container's context  
+A great feature of the python binding is the ability to run a function in the container's context
 as can be seen in the example below of a script updating all of your containers:
 
     #!/usr/bin/python3

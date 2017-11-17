@@ -2,7 +2,7 @@ title: LXD 2.4.1 リリースのお知らせ
 date: 2016/10/05 00:00
 content: |-
   <!--
-  The primary goal for this release is to publish release tarballs that actually report LXD  
+  The primary goal for this release is to publish release tarballs that actually report LXD
   as "2.4.1" rather than "2.3" as the release ones mistakenly did.
   -->
   このリリースの主な目的は、リリースのミスによりバージョン表示が LXD "2.3" となっていたのを、実際に "2.4.1" と表示させるためのリリースを行うことです。

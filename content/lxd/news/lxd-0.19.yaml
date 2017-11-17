@@ -18,7 +18,7 @@ content: |-
    * Updated documentation and specifications
    * A lot of bugfixes (no known bugs left at time of release)
 
-  Note that due to an API implementation problem in past releases, older command line clients  
+  Note that due to an API implementation problem in past releases, older command line clients
   will fail to interact with LXD 0.19's image store. Such clients should be upgraded to 0.19.
 
   ### Downloads

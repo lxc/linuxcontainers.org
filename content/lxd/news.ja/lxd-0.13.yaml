@@ -17,8 +17,8 @@ content: |-
    * 他にも多数のバグ修正、細かな改良、クリーンアップを行っています <!-- A lot of other bugfixes, minor improvements and cleanups -->
 
   <!--
-  This is the first release of LXD where the client may be built on operating systems  
-  other than Linux. At the moment, MacOS X has been confirmed to work and Windows is known not to work,  
+  This is the first release of LXD where the client may be built on operating systems
+  other than Linux. At the moment, MacOS X has been confirmed to work and Windows is known not to work,
   other Unix may work too but haven't been tested.
   -->
   このリリースは Linux 以外のオペレーティングシステム上でクライアントがビルドできる LXD の最初のリリースです。今のところ、Mac OS X では動作確認がされています。Windows では動かないことが確認されています。他の Unix では動く可能性が高いですが、テストはされていません。

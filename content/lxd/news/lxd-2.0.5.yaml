@@ -4,8 +4,8 @@ content: |-
   This is the fifth bugfix release for LXD 2.0.
 
   ### The changes since LXD 2.0.4 are
-  Note that several migration fixes included in this release depend on a newer go-lxc.  
-  If building manually, you may need to update your copy of go-lxc.  
+  Note that several migration fixes included in this release depend on a newer go-lxc.
+  If building manually, you may need to update your copy of go-lxc.
   If building for a distribution, you may need to update your packaged version of go-lxc to a newer snapshot.
 
   Minor improvements:

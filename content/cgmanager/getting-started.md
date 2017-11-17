@@ -20,8 +20,8 @@ If you are running another distribution, you can install it by hand using:
     sudo /sbin/cgmanager --debug -m name=systemd
 
 # Using CGManager from inside a LXC container
-To use cgmanager in containers, you need to tell lxc to bind mount the  
-cgmanager socket into the container by adding the following line into  
+To use cgmanager in containers, you need to tell lxc to bind mount the
+cgmanager socket into the container by adding the following line into
 the container configuration file (e.g. /var/lib/lxc/container/config).
 
     lxc.mount.auto = cgroup

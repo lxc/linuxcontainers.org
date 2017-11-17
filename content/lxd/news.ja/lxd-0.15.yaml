@@ -25,15 +25,15 @@ content: |-
    * 多数のバグフィックスと小さな改良を行いました <!-- A lot more bugfixes and other small improvements -->
 
   <!--
-  This release moves containers from /var/lib/lxd/lxc to /var/lib/lxd/containers  
+  This release moves containers from /var/lib/lxd/lxc to /var/lib/lxd/containers
   and snapshots from /var/lib/lxd/lxc/\<name\>/snapshots to /var/lib/lxd/snapshots/\<name\>.
-  To do so, LXD will stop all containers on the next startup, then start them again  
+  To do so, LXD will stop all containers on the next startup, then start them again
   after moving everything to the new location.
   -->
   このリリースでコンテナが /var/lib/lxd/lxc から /var/lib/lxd/containers へ、スナップショットは /var/lib/lxd/lxc/\<name\>/snapshots から /var/lib/lxd/snapshots/\<name\> へ移動しました。このため、LXD は次回の起動時にすべてのコンテナを停止し、すべてのコンテナを新しい場所に移動させたあとにコンテナを起動します。
 
   <!--
-  The --tcp daemon option has been replaced by the core.https\_address option allowing users  
+  The --tcp daemon option has been replaced by the core.https\_address option allowing users
   to change the address and port LXD binds to. Changes are now applied immediately.
   -->
   --tcp デーモンオプションは、ユーザが LXD がバインドするアドレスとポートを変更するための  core.https\_address オプションに置き換えられました。この変更はすぐに適用されます。
