@@ -93,6 +93,18 @@
             <div class="p-notification--caution" id="tryit_examples_panel" style="display:none">
                 <div class="p-notification__response">
                     <span class="p-notification__status"><a href="#introduction">ステップバイステップでの入門</a></span> <!-- Step by step introduction -->
+
+                    <ul class="nav nav-tabs" style="display:none">
+                        <li class="active"><a href="#introduction" data-toggle="tab">Introduction</a></li>
+                        <li><a href="#first-container" data-toggle="tab">Your first container</a></li>
+                        <li><a href="#limiting-resources" data-toggle="tab">Limiting resources</a></li>
+                        <li><a href="#snapshots" data-toggle="tab">Snapshots</a></li>
+                        <li><a href="#creating-images" data-toggle="tab">Creating images</a></li>
+                        <li><a href="#container-files" data-toggle="tab">Accessing files from the container</a></li>
+                        <li><a href="#image-server" data-toggle="tab">Use a remote image server</a></li>
+                        <li><a href="#remote-lxd" data-toggle="tab">Interact with remote LXD servers</a></li>
+                        <li><a href="#conclusion" data-toggle="tab">Conclusion</a></li>
+                    </ul>
                     <div class="tab-content" id="introduction">
                         <h3>1. はじめに <!-- Introduction --></h3>
                         <p><!-- You are now root inside a LXD container with a
@@ -119,6 +131,17 @@
                         <br />
                         もしくは、このステップバイステップのチュートリアルを使って、LXDの主な機能を学んでも良いでしょう。
                         </p>
+
+                        <nav aria-label="...">
+                            <ul class="p-inline-list u-align--center">
+                                <li class="p-inline-list__item">
+                                    <a href="#" class="p-button is--disabled" aria-disabled="true">Previous</a>
+                                </li>
+                                <li class="p-inline-list__item">
+                                    <a href="#first-container" class="p-button js-tab-button">Next</a>
+                                </li>
+                            </ul>
+                        </nav>
                     </div>
 
                     <div class="tab-content" id="first-container">
@@ -160,6 +183,17 @@
                             <pre>lxc info first
  lxc config show first</pre>
                          </p>
+
+                        <nav aria-label="...">
+                            <ul class="p-inline-list u-align--center">
+                                <li class="p-inline-list__item">
+                                    <a href="#introduction" class="p-button js-tab-button">Previous</a>
+                                </li>
+                                <li class="p-inline-list__item">
+                                    <a href="#limiting-resources" class="p-button js-tab-button">Next</a>
+                                </li>
+                            </ul>
+                        </nav>
                     </div>
 
                     <div class="tab-content" id="limiting-resources">
@@ -181,6 +215,17 @@
                             そして、制限が適用されたことを確認するには以下のように実行します。
                             <pre>lxc exec first -- free -m</pre>
                          </p>
+
+                        <nav aria-label="...">
+                            <ul class="p-inline-list u-align--center">
+                                <li class="p-inline-list__item">
+                                    <a href="#first-container" class="p-button js-tab-button">Previous</a>
+                                </li>
+                                <li class="p-inline-list__item">
+                                    <a href="#snapshots" class="p-button js-tab-button">Next</a>
+                                </li>
+                            </ul>
+                        </nav>
                     </div>
 
                     <div class="tab-content" id="snapshots">
@@ -223,6 +268,17 @@
                         すべて普通の状態に戻っていることを確認してみましょう (実行後に exit してください)。
                         <pre>lxc exec first -- bash</pre>
                         </p>
+
+                        <nav aria-label="...">
+                            <ul class="p-inline-list u-align--center">
+                                <li class="p-inline-list__item">
+                                    <a href="#limiting-resources" class="p-button js-tab-button">Previous</a>
+                                </li>
+                                <li class="p-inline-list__item">
+                                    <a href="#creating-images" class="p-button js-tab-button">Next</a>
+                                </li>
+                            </ul>
+                        </nav>
                     </div>
 
                     <div class="tab-content" id="creating-images">
@@ -256,6 +312,17 @@ lxc delete first</pre>
                             最後に、作成したイメージから新しいコンテナを起動してみましょう。
                             <pre>lxc launch clean-ubuntu second</pre>
                         </p>
+
+                        <nav aria-label="...">
+                            <ul class="p-inline-list u-align--center">
+                                <li class="p-inline-list__item">
+                                    <a href="#snapshots" class="p-button js-tab-button">Previous</a>
+                                </li>
+                                <li class="p-inline-list__item">
+                                    <a href="#container-files" class="p-button js-tab-button">Next</a>
+                                </li>
+                            </ul>
+                        </nav>
                     </div>
 
                     <div class="tab-content" id="container-files">
@@ -286,6 +353,17 @@ lxc delete first</pre>
                             もうこのコンテナが不要であれば、以下のようにして削除しましょう。
                             <pre>lxc delete --force second</pre>
                         </p>
+
+                        <nav aria-label="...">
+                            <ul class="p-inline-list u-align--center">
+                                <li class="p-inline-list__item">
+                                    <a href="#creating-images" class="p-button js-tab-button">Previous</a>
+                                </li>
+                                <li class="p-inline-list__item">
+                                    <a href="#image-server" class="p-button js-tab-button">Next</a>
+                                </li>
+                            </ul>
+                        </nav>
                     </div>
 
                     <div class="tab-content" id="image-server">
@@ -332,6 +410,17 @@ lxc delete first</pre>
                             設定されたリモートホストの一覧は以下のように取得できます。
                             <pre>lxc remote list</pre>
                         </p>
+
+                        <nav aria-label="...">
+                            <ul class="p-inline-list u-align--center">
+                                <li class="p-inline-list__item">
+                                    <a href="#container-files" class="p-button js-tab-button">Previous</a>
+                                </li>
+                                <li class="p-inline-list__item">
+                                    <a href="#remote-lxd" class="p-button js-tab-button">Next</a>
+                                </li>
+                            </ul>
+                        </nav>
                     </div>
 
                     <div class="tab-content" id="remote-lxd">
@@ -403,6 +492,18 @@ lxc exec sixth -- bash</pre>
                             <pre>lxc delete -f sixth
 lxc delete -f tryit:fourth
 lxc image delete clean-ubuntu</pre>
+                        </p>
+
+                        <nav aria-label="...">
+                            <ul class="p-inline-list u-align--center">
+                                <li class="p-inline-list__item">
+                                    <a href="#remote-lxd" class="p-button js-tab-button">Previous</a>
+                                </li>
+                                <li class="p-inline-list__item">
+                                    <a href="#conclusion" class="p-button js-tab-button">Next</a>
+                                </li>
+                            </ul>
+                        </nav>
                     </div>
 
                     <div class="tab-content" id="conclusion">
@@ -419,6 +520,17 @@ lxc image delete clean-ubuntu</pre>
                             </p>
 
                         <p>楽しんでください!</p>
+
+                        <nav aria-label="...">
+                            <ul class="p-inline-list u-align--center">
+                                <li class="p-inline-list__item">
+                                    <a href="#image-server" class="p-button js-tab-button">Previous</a>
+                                </li>
+                                <li class="p-inline-list__item">
+                                    <a href="#conclusion" class="p-button is--disabled" aria-disabled="true">Next</a>
+                                </li>
+                            </ul>
+                        </nav>
                     </div>
                 </div>
             </div>
