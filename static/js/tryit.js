@@ -295,6 +295,9 @@ $(document).ready(function() {
 
             tryit_console = data.id;
             window.history.pushState("", "", "?id="+tryit_console);
+            window.setTimeout(function() {
+                window.location.hash = "introduction";
+            }, 200);
             setupConsole(tryit_console);
         });
     });
