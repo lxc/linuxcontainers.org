@@ -1,4 +1,4 @@
-![Logo](/static/img/containers.png)
+
 # Installation
 ## Choose your release
 LXD upstream maintains two release branches in parallel:
@@ -6,7 +6,7 @@ LXD upstream maintains two release branches in parallel:
  * LTS release (LXD 2.0.x)
  * Feature releases (LXD 2.x)
 
-LTS releases are recommended for production environments as they will benefit from regular bugfix  
+LTS releases are recommended for production environments as they will benefit from regular bugfix
 and security updates but will not see new features added or any kind of behavioral change.
 
 To get all the latest features and monthly updates to LXD, use the feature release branch instead.
@@ -80,13 +80,13 @@ This is all done with:
     sudo lxd init
 
 ## Access control
-Access control for LXD is based on group membership.  
+Access control for LXD is based on group membership.
 The root user as well as members of the "lxd" group can interact with the local daemon.
 
-If the "lxd" group is missing on your system, create it, then restart the LXD daemon.  
+If the "lxd" group is missing on your system, create it, then restart the LXD daemon.
 You can then add trusted users to it. Anyone added to this group will have full control over LXD.
 
-Because group membership is normally only applied at login, you may need to either re-open your user session  
+Because group membership is normally only applied at login, you may need to either re-open your user session
 or use the "newgrp lxd" command in the shell you're going to use to talk to LXD.
 
 # Creating and using your first container
@@ -98,7 +98,7 @@ That will create and start a new Ubuntu 16.04 container as can be confirmed with
 
     lxc list
 
-Your container here is called "first". You also could let LXD give it a random name by  
+Your container here is called "first". You also could let LXD give it a random name by
 just calling "lxc launch ubuntu:16.04" without a name.
 
 Now that your container is running, you can get a shell inside it with:
@@ -126,7 +126,7 @@ And to remove it entirely:
     lxc delete first
 
 # Container images
-LXD is image based. Containers must be created from an image and so the image store  
+LXD is image based. Containers must be created from an image and so the image store
 must get some images before you can do much with LXD.
 
 There are three ways to feed that image store:
@@ -185,7 +185,7 @@ Now to talk to that remote LXD, you can simply add it with:
 
 This will prompt you to confirm the remote server fingerprint and then ask you for the password.
 
-And after that, use all the same command as above but prefixing the container  
+And after that, use all the same command as above but prefixing the container
 and images name with the remote host like:
 
     lxc exec host-a:first -- apt-get update

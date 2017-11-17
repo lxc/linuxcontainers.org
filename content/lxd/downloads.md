@@ -1,7 +1,5 @@
-![Download icon](/static/img/download.png)
-
 # Distribution packages
-LXD is shipped by a number of Linux distributions.  
+LXD is shipped by a number of Linux distributions.
 Installation instructions can be found in our [getting started](/lxd/getting-started-cli/) guide.
 
 # Current development version

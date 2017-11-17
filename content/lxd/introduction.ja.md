@@ -1,41 +1,41 @@
-![Logo](/static/img/containers.png)
+
 
 # LXD とは? <!-- What's LXD? -->
 <!--
-LXD is a next generation system container manager.  
+LXD is a next generation system container manager.
 It offers a user experience similar to virtual machines but using Linux containers instead.
 -->
 LXD は次世代のシステムコンテナマネージャです。
 仮想マシンと同じようなユーザ体験を提供しますが、仮想マシンではなく Linux コンテナを使います。
 
 <!--
-It's image based with pre-made images available for a [wide number of Linux distributions](https://images.linuxcontainers.org)  
+It's image based with pre-made images available for a [wide number of Linux distributions](https://images.linuxcontainers.org)
 and is built around a very powerful, yet pretty simple, REST API.
 -->
 LXD は、[多数の Linux ディストリビューション](https://images.linuxcontainers.org)が利用できる、あらかじめビルドされたイメージをベースとしています。そして、とてもパワフルでありながら、とてもシンプルな REST API を中心に構成されています。
 
 <!--
-To get a better idea of what LXD is and what it does, you can [try it online](/lxd/try-it/)!  
+To get a better idea of what LXD is and what it does, you can [try it online](/lxd/try-it/)!
 Then if you want to run it locally, take a look at our [getting started guide](/lxd/getting-started-cli/).
 -->
 LXD がどのようなもので、何ができるのかをよく理解するために、[オンラインで使ってみる](/ja/lxd/try-it/)ことができます!
 さらに、LXD をローカルで実行したい場合は、[「はじめに」](/ja/lxd/getting-started-cli/) のページをご覧ください。
 
 <!--
-The LXD project was founded and is currently led by [Canonical Ltd](https://www.canonical.com)  
+The LXD project was founded and is currently led by [Canonical Ltd](https://www.canonical.com)
 with contributions from a range of other companies and individual contributors.
 -->
 LXD プロジェクトは [Canonical Ltd](http://www.canonical.com) によって設立され、現在は様々な企業や個人のコントリビュータの貢献のもとで [Canonical Ltd](http://www.canonical.com) が主導しています。
 
 # デザイン <!-- Design -->
 <!--
-The core of LXD is a privileged daemon which exposes a REST API over a local unix socket  
+The core of LXD is a privileged daemon which exposes a REST API over a local unix socket
 as well as over the network (if enabled).
 -->
 LXD のコアは、ローカルの UNIX ソケットとネットワーク経由 (有効になっている場合) で REST API を提供する特権デーモンです。
 
 <!--
-Clients, such as the command line tool provided with LXD itself then do everything through that REST API.  
+Clients, such as the command line tool provided with LXD itself then do everything through that REST API.
 It means that whether you're talking to your local host or a remote server, everything works the same way.
 -->
 LXD に付属するコマンドラインツールのようなクライアントは、この REST API を通してすべての操作を行います。
@@ -59,13 +59,13 @@ LXDの主要な特長には以下のようなものがあります:
 
 # OpenStack との統合 <!-- Integration with OpenStack -->
 <!--
-The "nova-lxd" project provides an OpenStack Nova plugin that seemlessly integrates  
+The "nova-lxd" project provides an OpenStack Nova plugin that seemlessly integrates
 system containers into a regular OpenStack deployment.
 -->
 "nova-lxd" プロジェクトが提供する OpenStack Nova プラグインは、システムコンテナを通常の OpenStack のデプロイメントにシームレスに統合します。
 
 <!--
-With this, users will either get a virtual machine or a container, simply depending on what image or  
+With this, users will either get a virtual machine or a container, simply depending on what image or
 instance type they select. It's completely transparent and works with the regular OpenStack APIs.
 -->
 これにより、ユーザは選択したイメージまたはインスタンスタイプに応じて、仮想マシンまたはコンテナが得られます。完全に透過的で、通常の OpenStack API で動作します。
@@ -77,7 +77,7 @@ LXD と OpenStack について更に知りたい場合は、[「はじめに - O
 
 # 可用性 <!-- Availability -->
 <!--
-LXD works on any recent Linux distribution. LXD upstream directly maintains the Ubuntu packages  
+LXD works on any recent Linux distribution. LXD upstream directly maintains the Ubuntu packages
 and also publishes a snap package which can be used with most of the popular Linux distributions.
 -->
 LXD は最近の Linux ディストリビューションで動作します。LXD 開発元は、直接 Ubuntu のパッケージのメンテナンスを行っています。そして、主要な Linux ディストリビューションのほとんどで使える snap パッケージのリリースも行っています。
@@ -89,15 +89,15 @@ More details can be found on our [getting started](/lxd/getting-started-cli/) pa
 
 # LXC との関係 <!-- Relationship with LXC -->
 <!--
-LXD isn't a rewrite of LXC, in fact it's building on top of LXC to provide a new,  
-better user experience. Under the hood, LXD uses LXC through liblxc and its Go binding  
+LXD isn't a rewrite of LXC, in fact it's building on top of LXC to provide a new,
+better user experience. Under the hood, LXD uses LXC through liblxc and its Go binding
 to create and manage the containers.
 -->
 LXD は LXC の書き直しではありません。実際 LXD は新しい、より良いユーザ体験を提供するために LXC 上で構築されています。
 LXD はコンテナを作成したり管理したりするために liblxc とその Go バインディングを通して LXC を利用しています。
 
 <!--
-It's basically an alternative to LXC's tools and distribution template system  
+It's basically an alternative to LXC's tools and distribution template system
 with the added features that come from being controllable over the network.
 -->
 LXD は基本的には LXC ツールとディストリビューションテンプレートの仕組みの代わりとなる新しいもので、ネットワーク経由でコントロールできる特長を追加したものです。
@@ -109,7 +109,7 @@ LXD is written in Go, it's free software and is developed under the Apache 2 lic
 LXD は Go で書かれています。フリーソフトウェアであり、Apache 2 ライセンスのもとで開発されています。
 
 <!--
-There are no CLA or similar legal agreements required to contribute to LXD,  
+There are no CLA or similar legal agreements required to contribute to LXD,
 however we do require commits be signed-off (following the DCO - Developer Certificate of Ownership).
 -->
 LXD に貢献するのに必要な CLA や同様の法的合意はありません。しかし、コミットを signed-off する必要があります (DCO - Developer Certificate of Ownership に従います)。
@@ -124,14 +124,14 @@ LXD には二種類のリリースがあります:
  * Feature (新機能) リリース <!-- Feature releases -->
 
 <!--
-The current LTS is LXD 2.0 which is supported until June 2021 and gets frequent bugfix and security updates  
+The current LTS is LXD 2.0 which is supported until June 2021 and gets frequent bugfix and security updates
 but does not receive any feature addition.
 -->
 現在の LTS は LXD 2.0 で、2021 年 6 月までサポートされます。LTS ではバグフィックスとセキュリティアップデートを受けられますが、機能の追加は行われません。
 
 <!--
-Feature releases are pushed out every month or so and contain new features as well as bugfixes.  
-The normal support length for those releases is of about a month, or until the next one comes out.  
+Feature releases are pushed out every month or so and contain new features as well as bugfixes.
+The normal support length for those releases is of about a month, or until the next one comes out.
 Some Linux distributions may offer longer support for particular feature releases that they decided to ship.
 -->
 Feature リリースは毎月リリースされ、バグフィックスと新機能が含まれています。通常のサポート期間は約一ヶ月か、次のリリースが行われるまでです。

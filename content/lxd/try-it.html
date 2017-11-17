@@ -3,538 +3,578 @@
 <script src="/static/js/term.js" type="text/javascript"></script>
 <script src="/static/js/bootstrap-rating.min.js" type="text/javascript"></script>
 <script src="/static/js/tryit.js" type="text/javascript"></script>
+<div class="p-strip--shallow">
+    <div class="row">
+        <div class="col-12">
+            <noscript>
+                <div class="p-notification--negative">
+                    <div>
+                        <span class="p-notification__status">JavaScript required</span>
 
-<noscript>
-    <div class="panel panel-danger">
-        <div class="panel-heading">JavaScript required</div>
+                        <div class="p-notification__body">
+                            <p>The LXD demo service client is entirely JavaScript based.</p>
+                            <p>It appears the your web browser doesn't support JavaScript or
+                            that you or an extension you installed is disabling
+                            JavaScript for this site.</p>
+                            <p>To use this service, you will need to enable JavaScript support
+                            and refresh the page.</p>
+                        </div>
+                    </div>
+                </div>
+            </noscript>
 
-        <div class="panel-body">
-            <p>The LXD demo service client is entirely JavaScript based.</p>
+            <div class="p-notification--negative" id="tryit_status_panel" style="display:none">
+                <p>
+                    <span class="p-notification__status">Server status</span>
+                    <span class="p-notification__body" id="tryit_online_message" style="display:none">
+                        You are connected over: <span id="tryit_protocol"></span> (<span id="tryit_address"></span>)<br/>
+                        The demo server is currently running <span id="tryit_count"></span> user sessions out of <span id="tryit_max"></span>
+                    </span>
 
-            <p>It appears the your web browser doesn't support JavaScript or
-               that you or an extension you installed is disabling
-               JavaScript for this site.</p>
+                    <span class="p-notification__body" id="tryit_maintenance_message" style="display:none">
+                        The demo service is currently down for maintenance and should be
+                        back online in a few minutes.
+                    </span>
 
-            <p>To use this service, you will need to enable JavaScript support
-               and refresh the page.</p>
-        </div>
-    </div>
-</noscript>
-
-<div class="panel panel-success" id="tryit_status_panel" style="display:none">
-    <div class="panel-heading">Server status</div>
-    <div class="panel-body" id="tryit_online_message" style="display:none">
-        You are connected over: <span id="tryit_protocol"></span> (<span id="tryit_address"></span>)<br/>
-        The demo server is currently running <span id="tryit_count"></span> user sessions out of <span id="tryit_max"></span>
-    </div>
-
-    <div class="panel-body" id="tryit_maintenance_message" style="display:none">
-        The demo service is currently down for maintenance and should be
-        back online in a few minutes.
-    </div>
-
-    <div class="panel-body" id="tryit_unreachable_message" style="display:none">
-        Your browser couldn't reach the demo server.<br />
-        This is either (most likely) because of a firewall or proxy
-        issue on your side or because of a network, power or other catastrophic
-        server side failure.
-    </div>
-</div>
-
-<div class="panel panel-primary" id="tryit_terms_panel" style="display:none">
-    <div class="panel-heading">Terms of service</div>
-    <div class="panel-body" id="tryit_terms"></div>
-</div>
-
-<div class="panel panel-warning" id="tryit_start_panel" style="display:none">
-    <div class="panel-heading">Start</div>
-    <div class="panel-body">
-        <button class="btn btn-default btn-lg" id="tryit_accept" type="button">
-            <span aria-hidden="true" class="glyphicon glyphicon-ok"></span>
-            I have read and accept the terms of service above
-        </button>
-
-        <div id="tryit_progress" style="display:none;width:100%;text-align:center;">
-            <p>
-                <big>Starting the container...</big>
-            </p>
-            <p>
-                <div class="large spinner"></div>
-            </p>
-        </div>
-    </div>
-</div>
-
-<div class="panel panel-success" id="tryit_info_panel" style="display:none">
-    <div class="panel-heading">Container information</div>
-    <table class="table" style="padding-left: 15px;">
-        <tr id="tryit_lxd_row">
-            <th>Remote LXD</th>
-            <td>lxc remote add tryit <span class="tryit_container_ip"></span> --password=<span class="tryit_container_password"></span></td>
-        </tr>
-
-        <tr id="tryit_clock">
-            <th>Remaining time</th>
-            <td><span class="minutes"></span> minutes, <span class="seconds"></span> seconds</td>
-        </tr>
-    </table>
-</div>
-
-<div class="panel panel-primary" id="tryit_console_panel" style="display:none">
-    <div class="panel-heading">Terminal</div>
-    <div id="tryit_console" style="background-color:black;"></div>
-
-    <button class="btn btn-default btn-lg" id="tryit_console_reconnect" type="button" style="display:none">
-        <span aria-hidden="true" class="glyphicon glyphicon-repeat"></span>
-        Reconnect
-    </button>
-</div>
-
-<div class="panel panel-warning" id="tryit_examples_panel" style="display:none">
-    <div class="panel-heading"><a data-toggle="collapse" class="text" href="#tryit_examples_collapse">Step by step instructions</a></div>
-    <div class="panel-body collapse in" id="tryit_examples_collapse">
-        <ul class="nav nav-tabs" style="display:none">
-            <li class="active"><a href="#introduction" data-toggle="tab">Introduction</a></li>
-            <li><a href="#first-container" data-toggle="tab">Your first container</a></li>
-            <li><a href="#limiting-resources" data-toggle="tab">Limiting resources</a></li>
-            <li><a href="#snapshots" data-toggle="tab">Snapshots</a></li>
-            <li><a href="#creating-images" data-toggle="tab">Creating images</a></li>
-            <li><a href="#container-files" data-toggle="tab">Accessing files from the container</a></li>
-            <li><a href="#image-server" data-toggle="tab">Use a remote image server</a></li>
-            <li><a href="#remote-lxd" data-toggle="tab">Interact with remote LXD servers</a></li>
-            <li><a href="#conclusion" data-toggle="tab">Conclusion</a></li>
-        </ul>
-
-        <div class="tab-content">
-            <div class="tab-pane fade in active" id="introduction">
-                <h3>Introduction</h3>
-                <p>You are now root inside a LXD container with a
-                   nested LXD installed inside it.
+                    <span class="p-notification__body" id="tryit_unreachable_message" style="display:none">
+                        Your browser couldn't reach the demo server.<br />
+                        This is either (most likely) because of a firewall or proxy
+                        issue on your side or because of a network, power or other catastrophic
+                        server side failure.
+                    </span>
                 </p>
-
-                <p>Initial startup can take a few seconds due to
-                   having to generate SSL keys on a rather busy system.
-                   <br />
-                   Further commands should then be near instantaneous.
-                </p>
-
-                <p>You're welcome to just poke around and
-                   discover LXD through its manpage and --help
-                   option.
-                   <br />
-                   Or you can follow this step by step tutorial
-                   instead which will get you through LXD's
-                   main features.
-                </p>
-
-                <nav aria-label="...">
-                    <ul class="pager">
-                        <li class="disabled"><a href="#" class="tabPrevious">Previous</a></li>
-                        <li class="active"><a href="#" class="tabNext">Next</a></li>
-                    </ul>
-                </nav>
             </div>
 
-            <div class="tab-pane fade in" id="first-container">
-                <h3>Your first container</h3>
-
-                <p>LXD is image based, however by default no
-                   images are loaded into the image store as can
-                   be seen with: <pre>lxc image list</pre>
+            <div class="p-notification--information" id="tryit_terms_panel" style="display:none">
+                <p>
+                    <span class="p-notification__status">Terms of service</span>
+                    <div class="p-notification__body" id="tryit_terms"></div>
                 </p>
-
-                <p>LXD knows about 3 default image servers:
-                   <ul>
-                     <li>ubuntu: (for Ubuntu stable images)</li>
-                     <li>ubuntu-daily: (for Ubuntu daily images)</li>
-                     <li>images: (for a bunch of other distributions)</li>
-                   </ul>
-                </p>
-
-                <p>The stable Ubuntu images can be listed with:
-                   <pre>lxc image list ubuntu: | less</pre>
-                </p>
-
-                <p>To launch a first container called "first"
-                   using the Ubuntu 16.04 image, use:
-                   <pre>lxc launch ubuntu:16.04 first</pre>
-                </p>
-
-                <p>Your new container will now be visible in:
-                   <pre>lxc list</pre>
-                </p>
-
-                <p>Running state details and configuration can
-                   be queried with:
-                   <pre>lxc info first
-lxc config show first</pre>
-                </p>
-
-                <nav aria-label="...">
-                    <ul class="pager">
-                        <li class="active"><a href="#" class="tabPrevious">Previous</a></li>
-                        <li class="active"><a href="#" class="tabNext">Next</a></li>
-                    </ul>
-                </nav>
             </div>
 
-            <div class="tab-pane fade in" id="limiting-resources">
-                <h3>Limiting resources</h3>
+            <div class="p-notification--caution" id="tryit_start_panel" style="display:none">
+                <p>
+                    <span class="p-notification__status">Start</span>
+                    <div class="p-notification__body">
+                        <button class="p-button" id="tryit_accept" type="button">
+                            <i aria-hidden="true" class="p-icon--success"></i>
+                            I have read and accept the terms of service above
+                        </button>
 
-                <p>By default your container comes with no
-                   resource limitation and inherits from its
-                   parent environment. You can confirm it with:
-                   <pre>free -m
-lxc exec first -- free -m</pre>
+                        <div id="tryit_progress" style="display:none;width:100%;text-align:center;">
+                            <p class="p-heading--four">Starting the container...</p>
+                            <p>
+                                <i class="p-icon--spinner u-animation--spin"></i>
+                            </p>
+                        </div>
+                    </div>
                 </p>
-
-                <p>To apply a memory limit to your container, do:
-                   <pre>lxc config set first limits.memory 128MB</pre>
-                </p>
-
-                <p>And confirm that it's been applied with:
-                   <pre>lxc exec first -- free -m</pre>
-                </p>
-
-                <nav aria-label="...">
-                    <ul class="pager">
-                        <li class="active"><a href="#" class="tabPrevious">Previous</a></li>
-                        <li class="active"><a href="#" class="tabNext">Next</a></li>
-                    </ul>
-                </nav>
             </div>
 
-            <div class="tab-pane fade in" id="snapshots">
-                <h3>Snapshots</h3>
+            <div class="p-notification--positive" id="tryit_info_panel" style="display:none">
+                <div>
+                    <span class="p-notification__status">Container information</span>
+                    <div class="p-notification__body">
+                        <table class="table">
+                            <tr id="tryit_lxd_row">
+                                <th>Remote LXD</th>
+                                <td>lxc remote add tryit <span class="tryit_container_ip"></span> --password=<span class="tryit_container_password"></span></td>
+                            </tr>
 
-                <p>LXD supports snapshoting and restoring
-                   container snapshots.
-                   <br />
-                   Before making a snapshot, lets do some
-                   changes to the container, for example, updating it:
-                   <pre>lxc exec first -- apt-get update
-lxc exec first -- apt-get dist-upgrade -y
-lxc exec first -- apt-get autoremove --purge -y</pre>
-                </p>
-
-                <p>Now that the container is all updated and
-                   cleaned, let's make a snapshot called "clean":
-                   <pre>lxc snapshot first clean</pre>
-                </p>
-
-                <p>Let's break our container:
-                   <pre>lxc exec first -- rm -Rf /etc /usr</pre>
-                </p>
-
-                <p>Confirm the breakage with (then exit):
-                   <pre>lxc exec first -- bash</pre>
-                </p>
-
-                <p>And restore everything to the snapshotted state:
-                   <pre>lxc restore first clean</pre>
-                </p>
-
-                <p>And confirm everything's back to normal (then exit):
-                   <pre>lxc exec first -- bash</pre>
-                </p>
-
-                <nav aria-label="...">
-                    <ul class="pager">
-                        <li class="active"><a href="#" class="tabPrevious">Previous</a></li>
-                        <li class="active"><a href="#" class="tabNext">Next</a></li>
-                    </ul>
-                </nav>
-            </div>
-
-            <div class="tab-pane fade in" id="creating-images">
-                <h3>Creating images</h3>
-
-                <p>As your probably noticed earlier, LXD is
-                   image based, that is, all containers must be
-                   created from either a copy of an existing
-                   container or from an image.</p>
-
-                <p>You can create new images from an existing
-                   container or a container snapshot.</p>
-
-                <p>To publish our "clean" snapshot from earlier
-                   as a new image with a user friendly alias of
-                   "clean-ubuntu", run:
-                   <pre>lxc publish first/clean --alias clean-ubuntu</pre>
-                </p>
-
-                <p>At which point we won't need our "first"
-                   container, so just delete it with:
-                   <pre>lxc stop first
-lxc delete first</pre>
-                </p>
-
-                <p>And lastly we can start a new container from
-                   our image with:
-                   <pre>lxc launch clean-ubuntu second</pre>
-                </p>
-
-                <nav aria-label="...">
-                    <ul class="pager">
-                        <li class="active"><a href="#" class="tabPrevious">Previous</a></li>
-                        <li class="active"><a href="#" class="tabNext">Next</a></li>
-                    </ul>
-                </nav>
-            </div>
-
-            <div class="tab-pane fade in" id="container-files">
-                <h3>Accessing files from the container</h3>
-
-                <p>To pull a file from the container you can use
-                   the "lxc file pull" command:
-                   <pre>lxc file pull second/etc/hosts .</pre>
-                </p>
-
-                <p>Let's add an entry to it:
-                   <pre>echo "1.2.3.4 my-example" &gt;&gt; hosts</pre>
-                </p>
-
-                <p>And push it back where it came from:
-                   <pre>lxc file push hosts second/etc/hosts</pre>
-                </p>
-
-                <p>You can also use this mechanism to access log files:
-                   <pre>lxc file pull second/var/log/syslog - | less</pre>
-                </p>
-
-                <p>We won't be needing that container anymore,
-                   so stop and delete it with:
-                   <pre>lxc delete --force second</pre>
-                </p>
-
-                <nav aria-label="...">
-                    <ul class="pager">
-                        <li class="active"><a href="#" class="tabPrevious">Previous</a></li>
-                        <li class="active"><a href="#" class="tabNext">Next</a></li>
-                    </ul>
-                </nav>
-            </div>
-
-            <div class="tab-pane fade in" id="image-server">
-                <h3>Use a remote image server</h3>
-
-                <p>The lxc client tool supports multiple
-                   "remotes", those remotes can be read-only
-                   image servers or other LXD hosts.</p>
-
-                <p>LXC upstream runs one such server at
-                   <a href="https://images.linuxcontainers.org">https://images.linuxcontainers.org</a>
-                   which serves a set of automatically generated
-                   images for various Linux distributions.
-                </p>
-
-                <p>It comes pre-added with default LXD but you
-                   can remove it or change it if you don't want it.
-                </p>
-
-                <p>You can list the available images with:
-                   <pre>lxc image list images: | less</pre>
-                </p>
-
-                <p>And spawn a new Centos 7 container with:
-                   <pre>lxc launch images:centos/7 third</pre>
-                </p>
-
-                <p>Confirm it's indeed Centos 7 with:
-                   <pre>lxc exec third -- cat /etc/redhat-release</pre>
-                </p>
-
-                <p>And delete it:
-                   <pre>lxc delete -f third</pre>
-                </p>
-
-                <p>The list of all configured remotes can be
-                   obtained with:
-                   <pre>lxc remote list</pre>
-                </p>
-
-                <nav aria-label="...">
-                    <ul class="pager">
-                        <li class="active"><a href="#" class="tabPrevious">Previous</a></li>
-                        <li class="active"><a href="#" class="tabNext">Next</a></li>
-                    </ul>
-                </nav>
-            </div>
-
-            <div class="tab-pane fade in" id="remote-lxd">
-                <h3>Interact with remote LXD servers</h3>
-
-                <p>For this step, you'll need a second demo
-                   session, so open a new one
-                   <a href="/lxd/try-it/" target="_blank">here</a></p>
-
-                <p>Copy/paste the "lxc remote add" command from
-                   the top of the page of that new session into
-                   the shell of your old session.
-                   <br />
-                   Then confirm the server fingerprint for the remote
-                   server.</p>
-
-                <p>Note that it may take a few seconds for the
-                   new LXD daemon to listen to the network, just
-                   retry the command until it answers.</p>
-
-                <p>At this point you can list the remote
-                   containers with: <pre>lxc list tryit:</pre></p>
-
-                <p>And its images with:
-                   <pre>lxc image list tryit:</pre>
-                </p>
-
-                <p>Now, let's start a new container on the remote
-                   LXD using the local image we created earlier.
-                   <pre>lxc launch clean-ubuntu tryit:fourth</pre>
-                </p>
-
-                <p>You now have a container called "fourth"
-                   running on the remote host "tryit". You can
-                   spawn a shell inside it with (then exit):
-                   <pre>lxc exec tryit:fourth bash</pre>
-                </p>
-
-                <p>Now let's copy that container into a new one
-                   called "fifth":
-                   <pre>lxc copy tryit:fourth tryit:fifth</pre>
-                </p>
-
-                <p>And just for fun, move it back to our local
-                   lxd while renaming it to "sixth":
-                   <pre>lxc move tryit:fifth sixth</pre>
-                </p>
-
-                <p>And confirm it's all still working (then exit):
-                   <pre>lxc start sixth
-lxc exec sixth -- bash</pre>
-                </p>
-
-                <p>Then clean everything up:
-                   <pre>lxc delete -f sixth
-lxc delete -f tryit:fourth
-lxc image delete clean-ubuntu</pre>
-                </p>
-
-                <nav aria-label="...">
-                    <ul class="pager">
-                        <li class="active"><a href="#" class="tabPrevious">Previous</a></li>
-                        <li class="active"><a href="#" class="tabNext">Next</a></li>
-                    </ul>
-                </nav>
-            </div>
-
-
-            <div class="tab-pane fade in" id="conclusion">
-                <h3>Conclusion</h3>
-
-                <p>We hope this gave you a good introduction to
-                   LXD, its capabilities and how easy it is to
-                   use.</p>
-
-                <p>You're welcome to use the demo service as
-                   long as you want to try LXD and play with the
-                   latest features.</p>
-
-                <p>Enjoy!</p>
-
-                <nav aria-label="...">
-                    <ul class="pager">
-                        <li class="active"><a href="#" class="tabPrevious">Previous</a></li>
-                        <li class="disabled"><a href="#" class="tabNext">Next</a></li>
-                    </ul>
-                </nav>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="panel panel-primary" id="tryit_feedback" style="display:none">
-    <div class="panel-heading"><a data-toggle="collapse" class="text" href="#tryit_feedback_collapse">Feedback</a></div>
-    <div class="panel-body collapse in" id="tryit_feedback_collapse">
-        <form id="tryit_feedback_submit">
-            <div class="form-group">
-                <label for="feedbackRating">Rate your experience</label>
-                <br />
-                <input type="hidden" class="rating rating-tooltip" id="feedbackRating" />
-            </div>
-
-            <div class="form-group">
-                <label for="feedbackEmail">Email address (optional)</label>
-                <input type="email" class="form-control" id="feedbackEmail" placeholder="foo@bar.com"/>
-                <small id="feedbackEmailHelp" class="form-text text-muted">Fill this to allow us to contact you about your feedback.</small>
-
-                <div class="form-check">
-                    <label class="form-check-label">
-                        <input type="checkbox" class="form-check-input" id="feedbackEmailUse"/>
-                            I'm interested in hearing more about LXD and related products from Canonical.
-                    </label>
+                            <tr id="tryit_clock">
+                                <th>Remaining time</th>
+                                <td><span class="minutes"></span> minutes, <span class="seconds"></span> seconds</td>
+                            </tr>
+                        </table>
+                    </div>
                 </div>
             </div>
 
-            <div class="form-group">
-                <label for="feedbackText">Feedback (optional)</label>
-                <textarea class="form-control" id="feedbackText" rows="5"></textarea>
+            <div class="p-notification" id="tryit_console_panel" style="display:none">
+                <div>
+                    <span class="p-notification__status">Terminal</span>
+                    <div id="tryit_console" style="background-color:black;"></div>
+
+                    <button class="p-button" id="tryit_console_reconnect" type="button" style="display:none">
+                        Reconnect
+                    </button>
+                </div>
             </div>
 
-            <button type="submit" class="btn btn-primary">Send feedback</button>
-        </form>
-    </div>
-</div>
+            <div class="p-notification--caution" id="tryit_examples_panel" style="display:none">
+                <div>
+                    <span class="p-notification__status"><a href="#introduction">Step by step instructions</a></span>
 
-<div class="panel panel-danger" id="tryit_error_panel" style="display:none">
-    <div class="panel-heading" id="tryit_error_panel_create" style="display:none">Unable to create a new container</div>
-    <div class="panel-heading" id="tryit_error_panel_access" style="display:none">Unable to access the container</div>
+                    <ul class="nav nav-tabs" style="display:none">
+                        <li class="active"><a href="#introduction" data-toggle="tab">Introduction</a></li>
+                        <li><a href="#first-container" data-toggle="tab">Your first container</a></li>
+                        <li><a href="#limiting-resources" data-toggle="tab">Limiting resources</a></li>
+                        <li><a href="#snapshots" data-toggle="tab">Snapshots</a></li>
+                        <li><a href="#creating-images" data-toggle="tab">Creating images</a></li>
+                        <li><a href="#container-files" data-toggle="tab">Accessing files from the container</a></li>
+                        <li><a href="#image-server" data-toggle="tab">Use a remote image server</a></li>
+                        <li><a href="#remote-lxd" data-toggle="tab">Interact with remote LXD servers</a></li>
+                        <li><a href="#conclusion" data-toggle="tab">Conclusion</a></li>
+                    </ul>
+                    <div class="tab-content" id="introduction">
+                        <h3>Introduction</h3>
+                        <p>You are now root inside a LXD container with a
+                        nested LXD installed inside it.
+                        </p>
 
-    <div class="panel-body" id="tryit_error_full" style="display:none">
-        The server is currently full, please try again in a few minutes.
+                        <p>Initial startup can take a few seconds due to
+                        having to generate SSL keys on a rather busy system.
+                        <br />
+                        Further commands should then be near instantaneous.
+                        </p>
 
-        <br /><br />
+                        <p>You're welcome to just poke around and
+                        discover LXD through its manpage and --help
+                        option.
+                        <br />
+                        Or you can follow this step by step tutorial
+                        instead which will get you through LXD's
+                        main features.
+                        </p>
 
-        <button class="btn btn-default btn-lg tryit_goback" type="button">
-            <span aria-hidden="true" class="glyphicon glyphicon-home"></span>
-            Start over
-        </button>
-    </div>
+                        <nav aria-label="...">
+                            <ul class="p-inline-list u-align--center">
+                                <li class="p-inline-list__item">
+                                    <a href="#" class="p-button is--disabled" aria-disabled="true">Previous</a>
+                                </li>
+                                <li class="p-inline-list__item">
+                                    <a href="#first-container" class="p-button js-tab-button">Next</a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
 
-    <div class="panel-body" id="tryit_error_quota" style="display:none">
-        You have reached the maximum number of concurrent sessions,
-        please wait for some to expire before starting more of them.
+                    <div class="tab-content" id="first-container">
+                        <h3>Your first container</h3>
 
-        <br /><br />
+                        <p>LXD is image based, however by default no
+                        images are loaded into the image store as can
+                        be seen with: <pre>lxc image list</pre>
+                        </p>
 
-        <button class="btn btn-default btn-lg tryit_goback" type="button">
-            <span aria-hidden="true" class="glyphicon glyphicon-home"></span>
-            Start over
-        </button>
-    </div>
+                        <p>LXD knows about 3 default image servers:
+                        <ul>
+                            <li>ubuntu: (for Ubuntu stable images)</li>
+                            <li>ubuntu-daily: (for Ubuntu daily images)</li>
+                            <li>images: (for a bunch of other distributions)</li>
+                        </ul>
+                        </p>
 
-    <div class="panel-body" id="tryit_error_banned" style="display:none">
-        You have been banned from this service due to a failure to
-        respect the terms of service.
-    </div>
+                        <p>The stable Ubuntu images can be listed with:
+                        <pre>lxc image list ubuntu: | less</pre>
+                        </p>
 
-    <div class="panel-body" id="tryit_error_unknown" style="display:none">
-        An unknown error occured. Please try again in a few minutes.
+                        <p>To launch a first container called "first"
+                        using the Ubuntu 16.04 image, use:
+                        <pre>lxc launch ubuntu:16.04 first</pre>
+                        </p>
 
-        <br /><br />
+                        <p>Your new container will now be visible in:
+                        <pre>lxc list</pre>
+                        </p>
 
-        <button class="btn btn-default btn-lg tryit_goback" type="button">
-            <span aria-hidden="true" class="glyphicon glyphicon-home"></span>
-            Start over
-        </button>
-    </div>
+                        <p>Running state details and configuration can
+                        be queried with:
+                        <pre>lxc info first
+lxc config show first</pre>
+                        </p>
 
-    <div class="panel-body" id="tryit_error_missing" style="display:none">
-        The container you're trying to connect to doesn't exist anymore.
+                        <nav aria-label="...">
+                            <ul class="p-inline-list u-align--center">
+                                <li class="p-inline-list__item">
+                                    <a href="#introduction" class="p-button js-tab-button">Previous</a>
+                                </li>
+                                <li class="p-inline-list__item">
+                                    <a href="#limiting-resources" class="p-button js-tab-button">Next</a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
 
-        <br /><br />
+                    <div class="tab-content" id="limiting-resources">
+                        <h3>Limiting resources</h3>
 
-        <button class="btn btn-default btn-lg tryit_goback" type="button">
-            <span aria-hidden="true" class="glyphicon glyphicon-home"></span>
-            Start over
-        </button>
+                        <p>By default your container comes with no
+                        resource limitation and inherits from its
+                        parent environment. You can confirm it with:
+                        <pre>free -m
+lxc exec first -- free -m</pre>
+                        </p>
+
+                        <p>To apply a memory limit to your container, do:
+                        <pre>lxc config set first limits.memory 128MB</pre>
+                        </p>
+
+                        <p>And confirm that it's been applied with:
+                        <pre>lxc exec first -- free -m</pre>
+                        </p>
+
+                        <nav aria-label="...">
+                            <ul class="p-inline-list u-align--center">
+                                <li class="p-inline-list__item">
+                                    <a href="#first-container" class="p-button js-tab-button">Previous</a>
+                                </li>
+                                <li class="p-inline-list__item">
+                                    <a href="#snapshots" class="p-button js-tab-button">Next</a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+
+                    <div class="tab-content" id="snapshots">
+                        <h3>Snapshots</h3>
+
+                        <p>LXD supports snapshoting and restoring
+                        container snapshots.
+                        <br />
+                        Before making a snapshot, lets do some
+                        changes to the container, for example, updating it:
+                        <pre>lxc exec first -- apt-get update
+lxc exec first -- apt-get dist-upgrade -y
+lxc exec first -- apt-get autoremove --purge -y</pre>
+                        </p>
+
+                        <p>Now that the container is all updated and
+                        cleaned, let's make a snapshot called "clean":
+                        <pre>lxc snapshot first clean</pre>
+                        </p>
+
+                        <p>Let's break our container:
+                        <pre>lxc exec first -- rm -Rf /etc /usr</pre>
+                        </p>
+
+                        <p>Confirm the breakage with (then exit):
+                        <pre>lxc exec first -- bash</pre>
+                        </p>
+
+                        <p>And restore everything to the snapshotted state:
+                        <pre>lxc restore first clean</pre>
+                        </p>
+
+                        <p>And confirm everything's back to normal (then exit):
+                        <pre>lxc exec first -- bash</pre>
+                        </p>
+
+                        <nav aria-label="...">
+                            <ul class="p-inline-list u-align--center">
+                                <li class="p-inline-list__item">
+                                    <a href="#limiting-resources" class="p-button js-tab-button">Previous</a>
+                                </li>
+                                <li class="p-inline-list__item">
+                                    <a href="#creating-images" class="p-button js-tab-button">Next</a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+
+                    <div class="tab-content" id="creating-images">
+                        <h3>Creating images</h3>
+
+                        <p>As your probably noticed earlier, LXD is
+                        image based, that is, all containers must be
+                        created from either a copy of an existing
+                        container or from an image.</p>
+
+                        <p>You can create new images from an existing
+                        container or a container snapshot.</p>
+
+                        <p>To publish our "clean" snapshot from earlier
+                        as a new image with a user friendly alias of
+                        "clean-ubuntu", run:
+                        <pre>lxc publish first/clean --alias clean-ubuntu</pre>
+                        </p>
+
+                        <p>At which point we won't need our "first"
+                        container, so just delete it with:
+                        <pre>lxc stop first
+lxc delete first</pre>
+                        </p>
+
+                        <p>And lastly we can start a new container from
+                        our image with:
+                        <pre>lxc launch clean-ubuntu second</pre>
+                        </p>
+
+                        <nav aria-label="...">
+                            <ul class="p-inline-list u-align--center">
+                                <li class="p-inline-list__item">
+                                    <a href="#snapshots" class="p-button js-tab-button">Previous</a>
+                                </li>
+                                <li class="p-inline-list__item">
+                                    <a href="#container-files" class="p-button js-tab-button">Next</a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+
+                    <div class="tab-content" id="container-files">
+                        <h3>Accessing files from the container</h3>
+
+                        <p>To pull a file from the container you can use
+                        the "lxc file pull" command:
+                        <pre>lxc file pull second/etc/hosts .</pre>
+                        </p>
+
+                        <p>Let's add an entry to it:
+                        <pre>echo "1.2.3.4 my-example" &gt;&gt; hosts</pre>
+                        </p>
+
+                        <p>And push it back where it came from:
+                        <pre>lxc file push hosts second/etc/hosts</pre>
+                        </p>
+
+                        <p>You can also use this mechanism to access log files:
+                        <pre>lxc file pull second/var/log/syslog - | less</pre>
+                        </p>
+
+                        <p>We won't be needing that container anymore,
+                        so stop and delete it with:
+                        <pre>lxc delete --force second</pre>
+                        </p>
+
+                        <nav aria-label="...">
+                            <ul class="p-inline-list u-align--center">
+                                <li class="p-inline-list__item">
+                                    <a href="#creating-images" class="p-button js-tab-button">Previous</a>
+                                </li>
+                                <li class="p-inline-list__item">
+                                    <a href="#image-server" class="p-button js-tab-button">Next</a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+
+                    <div class="tab-content" id="image-server">
+                        <h3>Use a remote image server</h3>
+
+                        <p>The lxc client tool supports multiple
+                        "remotes", those remotes can be read-only
+                        image servers or other LXD hosts.</p>
+
+                        <p>LXC upstream runs one such server at
+                        <a href="https://images.linuxcontainers.org">https://images.linuxcontainers.org</a>
+                        which serves a set of automatically generated
+                        images for various Linux distributions.
+                        </p>
+
+                        <p>It comes pre-added with default LXD but you
+                        can remove it or change it if you don't want it.
+                        </p>
+
+                        <p>You can list the available images with:
+                        <pre>lxc image list images: | less</pre>
+                        </p>
+
+                        <p>And spawn a new Centos 7 container with:
+                        <pre>lxc launch images:centos/7 third</pre>
+                        </p>
+
+                        <p>Confirm it's indeed Centos 7 with:
+                        <pre>lxc exec third -- cat /etc/redhat-release</pre>
+                        </p>
+
+                        <p>And delete it:
+                        <pre>lxc delete -f third</pre>
+                        </p>
+
+                        <p>The list of all configured remotes can be
+                        obtained with:
+                        <pre>lxc remote list</pre>
+                        </p>
+
+                        <nav aria-label="...">
+                            <ul class="p-inline-list u-align--center">
+                                <li class="p-inline-list__item">
+                                    <a href="#container-files" class="p-button js-tab-button">Previous</a>
+                                </li>
+                                <li class="p-inline-list__item">
+                                    <a href="#remote-lxd" class="p-button js-tab-button">Next</a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+
+                    <div class="tab-content" id="remote-lxd">
+                        <h3>Interact with remote LXD servers</h3>
+
+                        <p>For this step, you'll need a second demo
+                        session, so open a new one
+                        <a href="/lxd/try-it/" target="_blank">here</a></p>
+
+                        <p>Copy/paste the "lxc remote add" command from
+                        the top of the page of that new session into
+                        the shell of your old session.
+                        <br />
+                        Then confirm the server fingerprint for the remote
+                        server.</p>
+
+                        <p>Note that it may take a few seconds for the
+                        new LXD daemon to listen to the network, just
+                        retry the command until it answers.</p>
+
+                        <p>At this point you can list the remote
+                        containers with: <pre>lxc list tryit:</pre></p>
+
+                        <p>And its images with:
+                        <pre>lxc image list tryit:</pre>
+                        </p>
+
+                        <p>Now, let's start a new container on the remote
+                        LXD using the local image we created earlier.
+                        <pre>lxc launch clean-ubuntu tryit:fourth</pre>
+                        </p>
+
+                        <p>You now have a container called "fourth"
+                        running on the remote host "tryit". You can
+                        spawn a shell inside it with (then exit):
+                        <pre>lxc exec tryit:fourth bash</pre>
+                        </p>
+
+                        <p>Now let's copy that container into a new one
+                        called "fifth":
+                        <pre>lxc copy tryit:fourth tryit:fifth</pre>
+                        </p>
+
+                        <p>And just for fun, move it back to our local
+                        lxd while renaming it to "sixth":
+                        <pre>lxc move tryit:fifth sixth</pre>
+                        </p>
+
+                        <p>And confirm it's all still working (then exit):
+                        <pre>lxc start sixth
+lxc exec sixth -- bash</pre>
+                        </p>
+
+                        <p>Then clean everything up:
+                        <pre>lxc delete -f sixth
+lxc delete -f tryit:fourth
+lxc image delete clean-ubuntu</pre>
+                        </p>
+
+                        <nav aria-label="...">
+                            <ul class="p-inline-list u-align--center">
+                                <li class="p-inline-list__item">
+                                    <a href="#remote-lxd" class="p-button js-tab-button">Previous</a>
+                                </li>
+                                <li class="p-inline-list__item">
+                                    <a href="#conclusion" class="p-button js-tab-button">Next</a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+
+
+                    <div class="tab-content" id="conclusion">
+                        <h3>Conclusion</h3>
+
+                        <p>We hope this gave you a good introduction to
+                        LXD, its capabilities and how easy it is to
+                        use.</p>
+
+                        <p>You're welcome to use the demo service as
+                        long as you want to try LXD and play with the
+                        latest features.</p>
+
+                        <p>Enjoy!</p>
+
+                        <nav aria-label="...">
+                            <ul class="p-inline-list u-align--center">
+                                <li class="p-inline-list__item">
+                                    <a href="#image-server" class="p-button js-tab-button">Previous</a>
+                                </li>
+                                <li class="p-inline-list__item">
+                                    <a href="#conclusion" class="p-button is--disabled" aria-disabled="true">Next</a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-notification--information" id="tryit_feedback" style="display:none">
+                <div>
+                    <span class="p-notification__status"><a data-toggle="collapse" class="text" href="#tryit_feedback_collapse">Feedback</a></span>
+                    <div class="panel-body collapse in" id="tryit_feedback_collapse">
+                        <form class="p-form" id="tryit_feedback_submit">
+                            <div class="p-form__group">
+                                <label for="feedbackRating">Rate your experience</label>
+                                <br />
+                                <input type="hidden" class="rating rating-tooltip" id="feedbackRating" />
+                            </div>
+
+                            <div class="p-form__group">
+                                <label for="feedbackEmail">Email address (optional)</label>
+                                <input type="email" class="form-control" id="feedbackEmail" placeholder="foo@bar.com"/>
+                                <small id="feedbackEmailHelp" class="form-text text-muted">Fill this to allow us to contact you about your feedback.</small>
+
+                                <div class="form-check">
+                                    <label class="form-check-label">
+                                        <input type="checkbox" class="form-check-input" id="feedbackEmailUse"/>
+                                            I'm interested in hearing more about LXD and related products from Canonical.
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="p-form__group">
+                                <label for="feedbackText">Feedback (optional)</label>
+                                <textarea class="form-control" id="feedbackText" rows="5"></textarea>
+                            </div>
+
+                            <button type="submit" class="p-button--positive">Send feedback</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-notification--negative" id="tryit_error_panel" style="display:none">
+                <div>
+                    <span class="p-notification__status" id="tryit_error_panel_create" style="display:none">Unable to create a new container</span>
+                    <span class="p-notification__status" id="tryit_error_panel_access" style="display:none">Unable to access the container</span>
+
+                    <div class="panel-body" id="tryit_error_full" style="display:none">
+                        <p>The server is currently full, please try again in a few minutes.</p>
+
+                        <p><button class="p-button tryit_goback" type="button">
+                            Start over
+                        </button></p>
+                    </div>
+
+                    <div class="panel-body" id="tryit_error_quota" style="display:none">
+                        <p>You have reached the maximum number of concurrent sessions,
+                        please wait for some to expire before starting more of them.</p>
+
+                        <p><button class="p-button tryit_goback" type="button">
+                            Start over
+                        </button></p>
+                    </div>
+
+                    <div class="panel-body" id="tryit_error_banned" style="display:none">
+                        <p>You have been banned from this service due to a failure to
+                        respect the terms of service.</p>
+                    </div>
+
+                    <div class="panel-body" id="tryit_error_unknown" style="display:none">
+                        <p>An unknown error occured. Please try again in a few minutes.</p>
+
+                        <p><button class="p-button tryit_goback" type="button">
+                            Start over
+                        </button></p>
+                    </div>
+
+                    <div class="panel-body" id="tryit_error_missing" style="display:none">
+                        <p>The container you're trying to connect to doesn't exist anymore.</p>
+
+                        <p><button class="p-button tryit_goback" type="button">
+                            Start over
+                        </button></p>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>

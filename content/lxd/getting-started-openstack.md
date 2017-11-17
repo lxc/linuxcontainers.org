@@ -1,4 +1,4 @@
-![Logo](/static/img/containers.png)
+
 
 # Installing and configuring Nova LXD
 
@@ -18,7 +18,7 @@ containers:
     sudo usermod -G lxd -a nova
     sudo service nova-compute restart
 
-In order to support migration of containers between Compute hosts, LXD must be configured to listen for network  
+In order to support migration of containers between Compute hosts, LXD must be configured to listen for network
 connections and a trust password must be set:
 
     sudo lxc config set core.https_address [::]
@@ -30,10 +30,10 @@ Each Nova LXD instance within your deployment must then be configured with remot
 
 ## Automated deployment using Juju
 
-Deploying OpenStack is a complex process, for which a number of deployment tools exist; Juju provides a nice way  
+Deploying OpenStack is a complex process, for which a number of deployment tools exist; Juju provides a nice way
 to deploy OpenStack on Ubuntu, and a specific [bundle of charms](https://jujucharms.com/u/openstack-charmers-next/openstack-lxd) can be used to deploy OpenStack cloud using LXD.
 
-The bundle automatically configures storage for containers root filesystems using LVM and sets up appropriate network configuration,  
+The bundle automatically configures storage for containers root filesystems using LVM and sets up appropriate network configuration,
 trust passwords and remotes to support migration of containers between LXD hypervisors.
 
 ## LXD images for OpenStack
@@ -50,5 +50,5 @@ LXD containers are managed in the same manner as KVM containers - either via Hor
 
     nova boot --image=trusty --flavor=m1.tiny my-first-openstack-lxd-container
 
-You may need to associate a floating ip address and configure appropriate security rules, depending on the network and  
+You may need to associate a floating ip address and configure appropriate security rules, depending on the network and
 security configuration of the OpenStack cloud you are using.

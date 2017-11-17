@@ -1,81 +1,94 @@
-<h2>LinuxContainers.org <span class="text-muted">Infrastructure pour projets de conteneurs.</span></h2>
-<div class="large_content">
-    <p><img src="/static/img/containers.png"
-            alt="logo"/>
-       linuxcontainers.org est le projet parent de LXC, LXD, LXCFS et
-       CGManager.</p>
+<div class="p-strip">
+  <div class="row">
+    <div class="col-8 suffix-1">
+      <h1>Infrastructure pour projets de conteneurs.</h1>
+      <p>linuxcontainers.org est le projet parent de LXC, LXD, LXCFS et
+        CGManager.</p>
 
-    <p>L'objectif est d'offrir un environnement neutre, non influencé par des
-       distributions ou fournisseurs, permettant le développement des technologies 
-       liées aux conteneurs Linux.</p>
+      <p>L'objectif est d'offrir un environnement neutre, non influencé par des
+        distributions ou fournisseurs, permettant le développement des technologies
+        liées aux conteneurs Linux.</p>
 
-    <p>Ce projet se concentre sur les conteneurs systèmes. Ceux-ci  
-       offrent un environnement aussi proche que possible de celui
-       d'une machine virtuelle, mais sans le surcoût associé à l'utilisation 
-       d'un noyau séparé ou à la simulation de matériel.</p>
+      <p>Ce projet se concentre sur les conteneurs systèmes. Ceux-ci
+        offrent un environnement aussi proche que possible de celui
+        d'une machine virtuelle, mais sans le surcoût associé à l'utilisation
+        d'un noyau séparé ou à la simulation de matériel.</p>
 
-    <p>Tout ceci est possible grâce aux fonctionalités de sécurité du
-       noyau telles que les "namespaces", le contrôle d'accès obligatoire (MAC)
-       et les groupes de contrôle (CGroups).</p>
+      <p>Tout ceci est possible grâce aux fonctionalités de sécurité du
+        noyau telles que les "namespaces", le contrôle d'accès obligatoire (MAC)
+        et les groupes de contrôle (CGroups).</p>
+    </div>
+    <div class="col-4">
+      <img src="/static/img/containers.png" alt="" />
+    </div>
+  </div>
 </div>
 
-<hr/>
-<h2>Projets. <span class="text-muted">Les choses intéressantes.</span></h2>
-<div class="row">
-    <div class="col-md-4">
-        <h3>LXC</h3>
-        <p>LXC est l'ensemble bien connu d'outils, modèles, bibliothèque et
-           connecteurs pour différents langages. LXC est bas niveau,
-           très flexible et couvre à peu près toutes les technologies de
-           confinement supportées par le noyau.
-        <p>LXC est prêt pour la production. La version 1.0 est supportée
-           pour 5 ans (jusqu'en avril 2019) avec des mises à jour de sécurité et
-           correctifs .</p>
-        <p><a class="btn btn-primary" href="/fr/lxc/introduction/" role="button">Plus d'information &raquo;</a></p>
+<div class="p-strip--light">
+  <div class="row">
+    <div class="col-8">
+      <h2>Projets. Les choses intéressantes.</h2>
+    </div>
+  </div>
+  <div class="row u-equal-height">
+    <div class="p-card col-4">
+      <h3>LXC</h3>
+      <p>LXC est l'ensemble bien connu d'outils, modèles, bibliothèque et
+        connecteurs pour différents langages. LXC est bas niveau,
+        très flexible et couvre à peu près toutes les technologies de
+        confinement supportées par le noyau.
+      <p>LXC est prêt pour la production. La version 1.0 est supportée
+        pour 5 ans (jusqu'en avril 2019) avec des mises à jour de sécurité et
+        correctifs .</p>
+      <p><a class="p-button" href="/fr/lxc/introduction/" role="button">Plus d'information</a></p>
     </div>
 
-    <div class="col-md-4">
-        <h3>LXD</h3>
-        <p>LXD est la nouvelle expérience LXC avec une seule commande
-           intuitive pour contrôler tous vos conteneurs. Les conteneurs
-           sont gérés par le réseau de façon complètement transparente
-           grâce à une interface REST. Il marche aussi à grande échelle,
-           s'intégrant avec OpenStack.</p>
+    <div class="p-card col-4">
+      <h3>LXD</h3>
+      <p>LXD est la nouvelle expérience LXC avec une seule commande
+        intuitive pour contrôler tous vos conteneurs. Les conteneurs
+        sont gérés par le réseau de façon complètement transparente
+        grâce à une interface REST. Il marche aussi à grande échelle,
+        s'intégrant avec OpenStack.</p>
 
-        <p>LXD a été annoncé en début Novembre 2014 et est en
-           développement actif.</p>
+      <p>LXD a été annoncé en début Novembre 2014 et est en
+        développement actif.</p>
 
-        <p><a class="btn btn-primary" href="/fr/lxd/introduction/" role="button">Plus d'information &raquo;</a></p>
+      <p><a class="p-button" href="/fr/lxd/introduction/" role="button">Plus d'information</a></p>
     </div>
 
-    <div class="col-md-4">
-        <h3>CGManager</h3>
-        <p>CGManager est notre gestionnaire de cgroup. Son but est de
-           permettre aux conteneurs imbriqués de créer et gérer leurs
-           cgroups à travers une interface D-Bus.</p>
+    <div class="p-card col-4">
+      <h3>CGManager</h3>
+      <p>CGManager est notre gestionnaire de cgroup. Son but est de
+        permettre aux conteneurs imbriqués de créer et gérer leurs
+        cgroups à travers une interface D-Bus.</p>
 
-        <p>CGManager a fait ses débuts en avril 2014 où il a été intégré
-           avec LXC par Ubuntu. Depuis, il a rejoint d'autres
-           distributions leur permettant ainsi d'offrir des conteneurs
-           non-privilégiés fonctionnels.</p>
+      <p>CGManager a fait ses débuts en avril 2014 où il a été intégré
+        avec LXC par Ubuntu. Depuis, il a rejoint d'autres
+        distributions leur permettant ainsi d'offrir des conteneurs
+        non-privilégiés fonctionnels.</p>
 
-        <p><a class="btn btn-primary" href="/fr/cgmanager/introduction/" role="button">Plus d'information &raquo;</a></p>
+      <p><a class="p-button" href="/fr/cgmanager/introduction/" role="button">Plus d'information</a></p>
     </div>
-
-    <div class="col-md-6">
-        <h3>LXCFS</h3>
-        <p>Système de fichier (FUSE) offrant deux fonctionnalités principales:
-            <ul>
-                <li>Remplacement pour cpuinfo, meminfo, stat et uptime.</li>
-                <li>Une vue compatible avec cgroupfs permettant les écritures non-privilégiées.</li>
-            </ul>
-        </p>
-
-        <p>Son but est de contourner les limites des systèmes de
-           fichiers procfs, sysfs et cgroupfs par la mise à disposition
-           de fichiers correspondant à ce que l'utilisateur s'attend à
-           voir dans un conteneur complet (système).</p>
-
-        <p><a class="btn btn-primary" href="/fr/lxcfs/introduction/" role="button">Plus d'information &raquo;</a></p>
-    </div>
+  </div>
 </div>
+
+<div class="p-strip">
+  <div class="row">
+    <div class="col-8">
+      <h3>LXCFS</h3>
+      <p>Système de fichier (FUSE) offrant deux fonctionnalités principales:
+        <ul>
+          <li>Remplacement pour cpuinfo, meminfo, stat et uptime.</li>
+          <li>Une vue compatible avec cgroupfs permettant les écritures non-privilégiées.</li>
+        </ul>
+      </p>
+
+      <p>Son but est de contourner les limites des systèmes de
+        fichiers procfs, sysfs et cgroupfs par la mise à disposition
+        de fichiers correspondant à ce que l'utilisateur s'attend à
+        voir dans un conteneur complet (système).</p>
+
+      <p><a class="p-button" href="/fr/lxcfs/introduction/" role="button">Plus d'information </a></p>
+    </div>
+  </div>

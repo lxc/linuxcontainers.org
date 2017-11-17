@@ -1,5 +1,8 @@
 {% extends "common/base.tpl.html" %}
 {% block content %}
+<div class="row">
+    <div class="p-strip">
+        <div class="col-12 u-wrap-content">
     {{ content }}
 
 {% if downloads %}
@@ -19,4 +22,7 @@
     {% endfor %}
     </table>
 {% endif %}
+        </div>
+    </div>
+</div>
 {% endblock %}
