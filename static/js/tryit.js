@@ -109,7 +109,7 @@ $(document).ready(function() {
             hSubs   = element.offsetHeight - element.clientHeight,
             h       = element.clientHeight - hSubs,
 
-            x       = cell.clientWidth / 21,
+            x       = cell.clientWidth / 22,
             y       = cell.clientHeight,
 
             cols    = Math.max(Math.floor(w / x), 10),

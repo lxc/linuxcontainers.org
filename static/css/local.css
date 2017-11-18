@@ -615,9 +615,10 @@ p:empty {
   margin-top: 0;
 }
 
-.tryit_run:hover {
-  text-decoration: underline;
-  cursor: pointer;
+#tryit_console {
+  margin-bottom: -10px;
+  margin-left: -10px;
+  margin-right: -10px;
 }
 
 #tryit_console_measurement {
@@ -629,6 +630,11 @@ p:empty {
   border-width: 5px 5px 5px 5px;
   position: absolute;
   top: -1000px;
+}
+
+.tryit_run:hover {
+  text-decoration: underline;
+  cursor: pointer;
 }
 
 .terminal {
