@@ -1,0 +1,134 @@
+title: LXD 2.20 リリースのお知らせ
+date: 2017/11/15 00:00
+origin: https://discuss.linuxcontainers.org/t/lxd-2-20-has-been-released/798
+content: |-
+  新機能 <!-- Features -->:
+
+   * `lxc console` サブコマンドと console API が追加されました。これにより、コンテナのブートコンソールにアタッチできたり、ブートログを取得したりできます <!-- New `lxc console` subcommand and console API to attach to the container's boot console or retrieve the boot log -->
+   * `lxc operation` コマンドが追加されました。バックグラウンド操作のリスト表示やキャンセルができます <!-- New `lxc operation` subcommand to list and cancel background operations. -->
+   * SR-IOV ネットワークデバイス (nictype=sriov) が追加されました。新しい Virtual Function のダイナミックな追加を含みます <!-- Added support for SR-IOV network devices (nictype=sriov) including dynamic allocation of new virtual functions -->
+   * Macaroons 経由の外部認証への委譲をサポートしました (go-bakery v2 プロトコルを使います)<!-- Support for delegated external authentication through macarroons (using the go-bakery v2 protocol) -->
+
+  バグ修正<!-- Bugfixes -->:
+
+   * client: GetOperationUUIDs と GetOperations を追加しました <!-- Add GetOperationUUIDs and GetOperations -->
+   * client: interface のすべての返り値に変数名を付けました <!-- Name all the return values in interfaces -->
+   * doc: Markdown のエスケープを修正しました <!-- Fix markdown escaping -->
+   * doc: コンテナの設定キーでソートしました <!-- Sort container config keys -->
+   * doc: ネットワークの設定キーでソートしました <!-- Sort network config keys -->
+   * doc: server.md を設定キーでソートしました <!-- Sort server.md config keys -->
+   * doc: ストレージの設定キーでソートしました <!-- Sort storage config keys -->
+   * extra: bash completion 新しい設定項目を追加しました <!-- Update bash completion for all the new keys -->
+   * global: チェックされていなかった多数の変数にチェックを追加しました <!-- Fix a number of unchecked variables -->
+   * global: いくつか typo を修正しました <!-- Fix some typos -->
+   * global: <!-- Revert --> "Temporary workaround for log15 API breakage" で行った変更を元にもどしました
+   * global: ビルトインの log15 にスイッチしました <!-- Switch to the built-in log15 -->
+   * lxc/file: ダウンロードとアップロードのログを記録するようにしました <!-- Log downloads/uploads -->(Issue #4018)
+   * lxc/network: エラーメッセージを修正しました <!-- Fix error message -->
+   * lxd-benchmark: デフォルトの設定を取得するのに NewConfig を使うようにしました <!-- use NewConfig to get a default configuration -->
+   * lxd/containers: 実行時にバージョンを検出するようになりました <!-- Detect version at runtime -->(Issue #3934)
+   * lxd/containers: lxc.conf や lxc.log を削除できなくなりました <!-- Don't allow removing lxc.conf or lxc.log -->
+   * lxd/containers: container.StateObject() を container.DaemonObject() にリネームしました <!-- Rename container.StateObject() to container.DaemonObject() -->
+   * lxd/daemon: HTTP エンドポイントを管理するために endpoints.Endpoints クラスを追加しました <!-- Add a endpoints.Endpoints class for managing HTTP endpoints -->
+   * lxd/daemon: CPU のプロファイリングと goroutines の一覧出力を debug サブパッケージに追加しました <!-- Add cpu profiling and goroutines printing to the debug sub-package -->
+   * lxd/daemon: lxdTestSuite のセットアップと終了時のエラーメッセージを追加しました <!-- Add error messages to lxdTestSuite setup and teardown -->
+   * lxd/daemon: 初期の Go レベルのデーモンのインテグレーションテストを追加しました <!-- Add initial Go-level daemon integration-like test -->
+   * lxd/daemon: 構造化された設定の Map を実装するための lxd/config サブパッケージを追加しました。 <!-- Add lxd/config sub-package implementing structured config maps -->
+   * lxd/daemon: 定期的に実行する関数のための lxd/task サブパッケージを追加しました <!-- Add lxd/task sub-package for running functions periodically -->
+   * Lxd/daemon: メモリのプロファイリングをサポートする debug サブパッケージを追加しました <!-- Add new debug sub-package with support for memory profiling -->
+   * lxd/daemon: ノードレベルの設定を変更するためのハイレベルの API である node.Config を追加しました <!-- Add node.Config high-level API for modifying node-level config -->
+   * lxd/daemon: 隔離を改良するために、テストごとに状態をクリーンアップするようにしました <!-- Cleanup test state at every test, to improve isolation. -->
+   * lxd/daemon: task.Task を使った Daemon.Ready() 内で起動されるすべての goroutines をコントロールするようにしました <!-- Control all goroutines spawned in Daemon.Ready() using task.Task -->
+   * lxd/daemon: テストで Daemon.Ready() をスキップしなくなりました。これは無条件に実行できます <!-- Don't skip Daemon.Ready() in tests, it can be run unconditionally -->
+   * lxd/daemon: sys.OS 内でグローバルのパス変数を使わなくなりました <!-- Don't use global path variables in sys.OS -->
+   * lxd/daemon: Daemon.Init() 内のロギングのセットアップを削除しました <!-- Drop logging setup in Daemon.Init() -->
+   * lxd/daemon: "setup mode" のサポートを削除しました <!-- Drop support for "setup mode" -->
+   * lxd/daemon: 利便性のためにあった containerLXC.OS() を削除しました (訳注: この関数が返していた値の式を直接コード中に記載してもそんなにコードは変わらないため) <!-- Drop the containerLXC.OS() convenience -->
+   * lxd/daemon: MockMode での不要なチェックを削除しました <!-- Drop unnecessary checks on MockMode -->
+   * lxd/daemon: REST と /dev/lxd http サーバの初期化部分を別ファイルに抜き出しました <!-- Extract initialization of the REST and /dev/lxd http Server -->
+   * lxd/daemon: デーモンのシャットダウンの際に graceful にタスクのキャンセルを行うようにしました <!-- Gracefully cancel tasks on daemon shutdown -->
+   * lxd/daemon: 不正な設定キーのエラーを改良しました <!-- Improve error on invalid config key -->(Issue #3925)
+   * lxd/daemon: ディレクトリの初期化を sys.OS に移動しました <!-- Move directory initialization to sys.OS. -->
+   * lxd/daemon: グローバル変数 execPath を sys.OS.ExecPath に移動しました <!-- Move execPath global variable to sys.OS.ExecPath -->
+   * lxd/daemon: グローバル変数 aaAdminMove を sys.OS に移動しました <!-- aaAdminMove global aaAdmin global variable to sys.OS -->
+   * lxd/daemon: グローバル変数 aaAvailable を sys.OS に移動しました <!-- Move global aaAvailable global variable to sys.OS -->
+   * lxd/daemon: グローバル変数 aaConfined を sys.OS に移動しました <!-- Move global aaConfined global variable to sys.OS -->
+   * lxd/daemon: グローバル変数 aaStacking を sys.OS に移動しました <!-- Move global aaStacking global variable to sys.OS -->
+   * lxd/daemon: グローバル変数 cgBlkioController を sys.OS に移動しました <!-- Move global cgBlkioController global variable to sys.OS -->
+   * lxd/daemon: グローバル変数 cgCpuController を sys.OS に移動しました <!-- Move global cgCpuController global variable to sys.OS -->
+   * lxd/daemon: グローバル変数 runningInUserns を sys.OS に移動しました <!-- Move global runningInUserns global variable to sys.OS -->
+   * lxd/daemon: オプショナルなデーモンの設定を DaemonConfig に移動しました <!--  Move optional Daemon config values to DaemonConfig -->
+   * lxd/daemon: 残りのグローバル変数 cgXXX を sys.OS に移動しました <!-- Move remaining global cgXXX global variables to sys.OS -->
+   * lxd/daemon: util.AppArmorCanStack を lxd/sys 内の private な appArmorCanStack に移動しました <!-- Move util.AppArmorCanStack to a private appArmorCanStack in lxd/sys -->
+   * lxd/daemon: ストリームラインのデーモンで初期化とシャットダウンを行うようにしました <!-- Streamline Daemon init and shutdownn -->
+   * lxd/daemon: ログの expire 処理を行う goroutine のライフサイクルをトラッキングするようにしました <!-- Track the lifecycle of the goroutine performing log expiration -->
+   * lxd/daemon: イメージを切り詰めるためのスケジュール関数の調整を行いました <!-- Tweak schedule function for pruning images -->
+   * lxd/daemon: 環境変数の代わりにインスタンスレベルのキャッシュディレクトリ変数を使うようにしました <!-- Use instance-level cache dir variable instead of the environment one -->
+   * lxd/daemon: 環境変数の代わりにインスタンスレベルのログディレクトリ変数を使うようにしました <!-- Use instance-level log dir variable instead of the environment one -->
+   * lxd/daemon: 環境変数の代わりにインスタンスレベルのディレクトリ変数を使うようにしました <!-- Use instance-level var dir variable instead of the environment one -->
+   * lxd/daemon: デバッグ用ユーティリティを main_daemon.go に直接記載するようにしました <!-- Wire debug utilities into main_daemon.go -->
+   * lxd/daemon: endpoints.Endpoints を Daemon 内に記載するようにしました <!-- Wire endpoints.Endpoints into Daemon -->
+   * lxd/db: 低レベルのトランザクションを抽象化するために db.NodeTx 構造体を追加しました <!-- Add a db.NodeTx structure to abstract away low-level transactions -->
+   * lxd/db: DB のスキーマが新たに作成されたときに実行するための SQL ステートメントを設定するために Schema.Fresh() を追加しました <!-- Add a Schema.Fresh() method to set a "bootstrap" SQL statement -->
+   * lxd/db: ノードローカルな設定値を取得したり変更したりするための db API を追加しました <!-- Add db APIs for fetching and changing node-local config values -->
+   * lxd/db: データベース関連のユニットテスト用のヘルパー db.NewTestNode を追加しました <!-- Add db.NewTestNode helper for database-related unit tests -->
+   * lxd/db: 設定テーブルを変更するための低レベルのクエリヘルパを追加しました <!-- Add low-level query helpers for changing config tables -->
+   * lxd/db: query.Count ユーティリティ (訳注: SELECT count(*) を実行する) を追加しました <!-- Add query.Count utility -->
+   * lxd/db: 個々の更新をテストするための Schema.ExerciseUpdate() を追加しました <!-- Add Schema.ExerciseUpdate() for testing a individual update -->
+   * lxd/db: schema.Ensure を graceful に中止する機能を追加しました <!-- Add support for gracefully aborting schema.Ensure -->
+   * lxd/db: スキーマを作成するロジックを完全に schema.Schema に移動しました <!-- Complete moving schema creation logic to schema.Schema -->
+   * lxd/db: いくつかの sql.DB.Begin の呼び出しを db.DB.Begin に変更しました <!-- Convert a few call sites of sql.DB.Begin to db.DB.Begin -->
+   * lxd/db: 低レベルの db.Begin 関数の残りの呼び出しを変更しました <!-- Convert remaining call sites of the low-level db.Begin function -->
+   * lxd/db: Daemon.nodeDB へのすべての参照を削除しました <!-- Drop all references to Daemon.nodeDB -->
+   * lxd/db: lxd/db/schema/query.go の 誤った tx.Exec 引数を修正しました <!-- Fix spurious tx.Exec argument in lxd/db/schema/query.go -->
+   * lxd/db: certificate DB API を db.Node ファサードに移動しました <!-- Move certificate db APIs to the db.Node facade -->
+   * lxd/db: container DB API を db.Node ファサードに移動しました <!-- Move container db APIs to the db.Node facade -->
+   * lxd/db: devices DB API を db.Node ファサードに移動しました <!-- Move devices db APIs to the db.Node facade -->
+   * lxd/db: image DB API を db.Node ファサードに移動しました <!-- Move image db APIs to the db.Node facade -->
+   * lxd/db: network DB API を db.Node ファサードに移動しました <!-- Move network db APIs to the db.Node facade -->
+   * lxd/db: ノードレベルのスキーマの更新を自身のサブパッケージである db/local/ に移動しました <!-- Move node-level schema updates to their own db/local/ sub-package. -->
+   * lxd/db: patch DB API を db.Node ファサードに移動しました <!-- Move patches db APIs to the db.Node facade -->
+   * lxd/db: profile DB API を db.Node ファサードに移動しました <!-- Move profile db APIs to the db.Node facade -->
+   * lxd/db: storage DB API を db.Node ファサードに移動しました <!-- Move storage db APIs to the db.Node facade -->
+   * lxd/db: 低レベルの db.Exec() 関数を lxd/db/ の外で直接使うのを止めました <!-- Remove direct use of the low-level db.Exec() func outside of lxd/db/ -->
+   * lxd/db: Daemon.db を Daemon.nodeDB にリネームしました <!-- Rename Daemon.db to Daemon.nodeDB -->
+   * lxd/db: db.Exec を db.exec にリネームし、エクスポートしなくしました <!-- Rename db.Exec to db.exec, making it unexported -->
+   * lxd/db: db.QueryScan を db.queryScan にリネームし、エクスポートしなくしました <!-- Rename db.QueryScan to db.queryScan, making it unexported -->
+   * lxd/db: ホワイトボックステストなので db_test.go を db_internal_test.go にリネームしました。 <!-- Rename db_test.go to db_internal_test.go, since it's white box -->
+   * lxd/db: State.DB を State.NodeDB にリネームしました <!-- Rename State.DB to State.NodeDB -->
+   * lxd/db: Schema.Ensure() で初期のスキーマバージョンを返すようにしました <!-- Return the initial schema version in Schema.Ensure() -->
+   * lxd/import: 削除時に正しい VG 名を使うようにしました <!-- Use the right VG name on delete -->
+   * lxd/main: --print-goroutines-every の出力を修正しました <!-- Fix output of \-\-print-goroutines-every -->
+   * lxd/networks: トンネルを利用するときの 1400 の MTU チェックを削除しました <!-- Don't require a 1400 MTU with tunnels -->(Issue #3999)
+   * lxd/seccomp: security.syscalls.blacklist のハンドリングを修正しました <!-- Fix security.syscalls.blacklist handling -->
+   * lxd/storage: storageShared.OS() の使用を削除しました <!-- Drop the storageShared.OS() convenience -->
+   * lxd/storage: btrfs に対する thinpool で新しい UUID を生成するようにしました <!-- Generate new UUID on thinpools for btrfs -->
+   * lxd/storage/zfs: zpool が存在しないときでもインポートするようにしました <!--  Try to import missing zpools --> (Issue #3976)
+   * lxd/storage/zfs: 新しい ZFS リリース向けの更新を行いました <!-- Update for newer ZFS releases -->(Issue #3986)
+   * shared: 規約に沿って名付けられた証明書を返す shared.KeyPairAndCA 関数を追加しました <!-- Add a shared.KeyPairAndCA function to get coventionally named certs -->
+   * shared: snap で stdin/stdout 同士のファイル転送の問題を修正しました <!-- Fix file transfers to/from stdin/stdout in snap -->
+   * shared: 最新の gofmt に対応しました <!-- Make current gofmt happy -->
+   * shared/api: AuthMethods に API 拡張ラベルを追加しました <!-- Add API extension label to AuthMethods -->
+   * shared/log15: ベンダの log15 を shared/log15 にコピーしました <!-- Vendor a copy of log15 in shared/log15 -->
+   * shared/logger: グローバルのロガーをテスト用ロガーにリダイレクトするヘルパを追加しました <!-- Add helper to redirect the global logger to the testing logger -->
+   * shared/logging: freebsd を log_posix.go のビルドタグに追加しました <!-- Add freebsd build conditional to log_posix.go -->
+   * shared/version: api10Get から APIExtensions を抽出しました <!-- Extract the APIExtensions list from api10Get -->
+   * shared/version: shared/version のバージョンの宣言をいくつかのファイルに分割しました <!-- Split version declarations in shared/version into several files -->
+   * tests: ユニークな btrfs の UUID の生成テストを追加しました <!-- Add test for unique btrfs UUID generation -->
+   * tests: 使われていない変数のテストを追加しました <!-- Add test for unused variables -->
+   * tests: typo のチェックを追加しました <!-- Check for typos -->
+   * tests: インポートのチェックに godeps を使わないようにしました <!-- Don't use godeps for import check -->
+   * tests: liblxc < 2.1 の場合は prlimits のテストをスキップするようにしました <!-- Skip prlimits on liblxc < 2.1 -->
+   * tests: 新たな依存関係を追加しました <!-- Update for new dependencies -->
+
+  ### 試用環境 <!-- Try it for yourself -->
+  <!--
+  This new LXD release is already available for you to try on our [demo service](/lxd/try-it/).
+  -->
+  この新しい LXD のリリースが、すでに私たちの [デモサービス](/ja/lxd/try-it/) で利用できます。
+
+  ### ダウンロード <!-- Downloads -->
+  <!--
+  The release tarballs can be found on our [download page](/lxd/downloads/).
+  -->
+  このリリースの tarball は [ダウンロードページ](/lxd/downloads/) から取得できます。
