@@ -1,0 +1,322 @@
+title: LXD 2.0.11 リリースのお知らせ
+date: 2017/10/19 00:00
+content: |-
+  <!--
+  This is the eleventh bugfix release for LXD 2.0.
+  -->
+  これは LXD 2.0 の 11 回目のバグフィックスリリースです。
+
+  ### LXD 2.0.10 以降の変更は以下の通りです <!-- The changes since LXD 2.0.10 are -->
+
+  細かな改良点 <!-- Minor improvements--> :
+
+   * LXD 2.0.11 は snap で利用できるようになり、"2.0" トラックからインストールできます <!-- LXD 2.0.11 is now snap aware and can be installed from the "2.0" track. -->
+   * ドキュメントが ReadTheDocs で読めるようになりました <!-- The documentation is now available on ReadTheDocs--> : https://lxd.readthedocs.io/en/stable-2.0/
+   * イメージのダウンロードを中断できるようになりました <!-- It's now possible to interrupt image downloads. -->
+   * 新たな security.idmap.base.config キーを追加しました (コンテナのベースの uid/gid を上書きします) <!-- Added a new security.idmap.base config key (overrides the base uid/gid of the container). -->
+   * イメージの差分ダウンロードのサポートを追加しました <!-- Added support for delta image downloads. -->
+   * リソース制限のプロキシとしてインスタンスタイプを実装しました (訳注: リソース制限を簡単に設定できるようにインスタンスタイプを実装)<!-- Implemented instance types as a proxy for resource limits. -->
+   * user-agent 文字列が OS とカーネルの情報を含むように拡張されました <!-- The user-agent string was expanded to include OS and kernel information. -->
+   * クライアントライブラリと関連するコードが master と同期されました <!-- The client library and related code is now kept in sync with master. -->
+   * コマンドラインクライアントが新たなクライアントライブラリに移植されました <!-- The command line client has been ported to the new client library. -->
+
+
+  Bugfixes:
+
+   * client: RemoteOperation に CancelTarget を追加しました <!-- Add CancelTarget to RemoteOperation -->
+   * client: CreateContainerFromImage 関数を追加しました <!-- Add CreateContainerFromImage function -->
+   * client: insecureSkipVerify フラグを ConnnectionArgs 構造体に追加しました <!-- Added insecureSkipVerify flag the ConnectionArgs struct -->
+   * client: I/O の間操作をブロックする追加の実行オプションを追加しました <!-- Add extra exec option to block on I/O -->
+   * client: GetServerResources() を追加しました <!-- Add GetServerResources() -->
+   * client: GetStoragePoolResources() を追加しました <!-- Add GetStoragePoolResources() -->
+   * client: 後方互換性のために image_create_aliases を追加しました <!-- Add image_create_aliases backward compat -->
+   * client: RenameStoragePoolVolume() を追加しました <!-- Add RenameStoragePoolVolume() -->
+   * client: LXD からのイメージダウンロードのキャンセルができるようになりました <!-- Allow canceling image download from LXDs -->
+   * client: ベースとなる http クライアントを指定できるようになりました <!-- Allow specifying base http client -->
+   * client: イメージをダウンロードする関数内でのコードの重複をなくしました <!-- Cleanup code duplication in image download code -->
+   * client: エラーハンドリングの共通化を行いました <!-- Commonize error handling -->
+   * client: 停止しているコンテナのライブマイグレーションを行おうとしないようにしました <!-- Don't live migrate stopped containers -->
+   * client: 新しいクライアントから experimental のタグを削除しました <!-- Drop experimental tag from new client -->
+   * client: イメージサーバがネットワーク経由待ち受けてない場合、コピーが失敗するようにしました <!-- Fail if source isn't listening on network -->
+   * client: オペレーションハンドラ内のクラッシュを修正しました <!-- Fix crash in operation handler -->
+   * client: cookiejar がない場合にクラッシュする問題を修正しました <!-- Fix crash when missing cookiejar -->
+   * client: public な LXD のリモートホストを扱う際の問題を修正しました <!-- Fix handling of public LXD remote -->
+   * client: イメージコピーの問題を修正しました <!-- Fix image copy -->
+   * client: non-interactive モードの実行時にハングする問題を修正しました <!-- Fix non-interactive exec hangs -->
+   * client: イベントハンドラのセットアップで競合が起きる可能性があった問題を修正しました <!-- Fix potential race in event handler setup -->
+   * client: 操作処理中の競合を修正しました <!-- Fix race condition in operation handling -->
+   * client: コンテナとスナップショットのコピーを実装しました <!-- Implement container and snapshot copy -->
+   * client: コンテナコピーの push モードと relay モードを実装しました <!-- Implement push and relay container copy -->
+   * client: リモート操作を実装しました <!-- Implement remote operations -->
+   * client: イメージコピーの際のエラーを改良しました <!-- Improve error on image copy -->
+   * client: マイグレーションをリレーするコードを改良しました <!-- Improve migration relay code -->
+   * client: プロトコルを追跡するようにしました <!-- Keep track of protocol -->
+   * client: 使用中の HTTP クライアントを取得できるようになりました <!-- Make it possible to retrieve HTTP client -->
+   * client: Authentication Interactor を設定できるようにしました <!-- Make the authentication Interactor configurable -->
+   * client: CopyImage をターゲットサーバへ移動しました (訳注: 処理の重複を防ぎ整合性を取れるように関数が属する構造体を変更した)<!-- Move CopyImage to the target server -->
+   * client: 値がある場合だけファイルに関するヘッダを設定するようにしました <!-- Only set file headers if value is provided -->
+   * client: リモートの切断を正しく扱うようにしました <!-- PProperly handle remote disconnections -->
+   * client: リクエストに関するログを Debug レベルにしました <!-- Reduce request logging to Debug -->
+   * client: ConnectPublicLXD のロジックを簡素化しました <!-- Simplify ConnectPublicLXD logic -->
+   * client: Macaroons ベースの認証をサポートしました <!-- Support for macaroons-based authentication -->
+   * client: master ブランチと同期しました <!-- Sync with master branch -->
+   * client: CopyImage では RemoteOperation を使うようにしました <!-- Use RemoteOperation for CopyImage -->
+   * config: CookieJar のサポートを追加しました <!-- Add support for CookieJar -->
+   * config: スナップショット名中に ":" が含まれる場合の処理を改良しました <!-- Try to be clever about ":" in snapshots -->
+   * doc: blkio コントローラの制限について注意書きを追加しました <!-- Add a note about blkio limits -->
+   * doc: macvlan とブリッジに関するセクションを追加しました <!-- Add section on macvlan vs bridge -->
+   * doc: SUPPORT.md を追加しました <!-- Add SUPPORT.md -->
+   * doc: インスタンスタイプについて記載しました <!-- Document instance types -->
+   * doc: squashfs イメージも使えることを追加しました <!-- Document that squashfs images can also be used -->
+   * doc: exec セッション中の control API を文書に追加しました <!-- Document the exec control API -->
+   * doc: セキュリティに関連する文書を作り直し詳細にしました <!-- Extend/rework security-related documentation. -->
+   * doc: Issue 用テンプレートの lxd.log の場所を修正しました <!-- Fix lxd.log location in issue template -->
+   * doc: 空白、カンマ、クオート、括弧を修正しました <!-- Fix spaces, commas, quotes, brackets where needed -->
+   * doc: コンテナ内の環境についての文書を追加しました <!-- Initial documentation of container env -->
+   * doc: Issue 用のテンプレートを更新しました <!-- Refresh the issue template -->
+   * doc: README の説明を見直しました <!-- Seriously rework the content of the README -->
+   * doc: コンテナの設定キーでソートしました <!-- Sort container config keys -->
+   * doc: server.md を設定キーでソートしました <!-- Sort server.md config keys -->
+   * doc: containers.md を更新しました <!-- Update containers.md -->
+   * extra/lxc-to-lxd: 不適切なテストを修正しました <!-- Fix bad test -->
+   * extra/lxc-to-lxd: デフォルトで drop されるケーパビリティを無視しました <!-- Ignore capabilities dropped by default -->
+   * extra/lxc-to-lxd: sysfs/proc のマウントを無視しました <!-- Ignore sysfs/proc mounts -->
+   * extra/lxc-to-lxd: lxc.seccomp を適切に扱うようにしました <!-- Properly handle lxc.seccomp -->
+   * i18n: クライアントのメッセージの日本語翻訳を更新しました <!-- Update Japanese translation (for stable-2.0) -->
+   * lxc: 操作をキャンセルするための機能を追加しました <!-- Add plumbing for operation cancelation -->
+   * lxc: クロスプラットフォームで HOME を扱えるようにしました <!-- Cross-platform HOME handling -->
+   * lxc: 実際に動作するサンプルを示すように help を修正しました <!-- Fix help to provide sample that actually works -->
+   * lxc: プロパティを追加したとき、インポートがクラッシュする不具合を修正しました <!-- Fix import crash when adding properties -->
+   * lxc: 進捗レポートの競合を修正しました <!-- Fix race in progress reporter -->
+   * lxc: コピー時にエイリアスのソースを適切に記録するようにしました <!-- Properly record alias source on copy -->
+   * lxc: リモートのプロトコル変換を再導入しました <!-- Re-introduce remote protocol migration -->
+   * lxc: 設定されている場合は HOME を使うようにしました <!-- Respect HOME if set -->
+   * lxc/config: 一度に複数のデバイスを削除できるようにしました <!-- Removal of multiple devices at once -->
+   * lxc/copy: 進捗をレポートするようにしました <!-- Report progress data -->
+   * lxc/delete: --force の使い方を修正しました <!-- Fix lxc delete \-\-force description -->
+   * lxc/exec: Windows でのシグナルハンドラを修正しました <!-- Fix signal handler for Windows -->
+   * lxc/exec: Windows へのポーティングを修正しました <!-- Fix Windows port -->
+   * lxc/file: 名前にスペースが含まれたファイルの push/pull の問題を修正しました <!-- Fix file push/pull with names containing spaces. -->
+   * lxc/file: Windows のファイルシステムからファイルのパーミッションを読み取るようにしました <!-- Read file perms from Windows FS -->
+   * lxc/file: push/pull で shared.HostPath を使うようにしました <!-- Use shared.HostPath for push/pull -->
+   * lxc/image: エクスポートした際のファイル名では、常に長いフィンガープリントを使うようにしました <!-- Always use long fingerprint in exported filenames -->
+   * lxc/image: "cached" フラグを表示するようにしました <!-- Expose the "cached" flag -->
+   * lxc/image: simplestreams リモートでのエイリアスの問題を修正しました <!-- Fix aliases with simplestreams remotes -->
+   * lxc/image: "ixc image copy" が取得元を記録していない問題を修正しました <!-- Fix "lxc image copy" not recording the source -->
+   * lxc/image: export した際のファイル名に関するリグレッションを修正しました <!-- Fix regression in exported filename -->
+   * lxc/image: フィルタのハンドリングを改良しました <!-- Improve filter handling -->
+   * lxc/image: "lxc image copy" を再度速くしました <!-- Make "lxc image copy" fast again -->
+   * lxc/image: イメージにエイリアスが設定されている場合、エイリアスを更新するようにしました <!-- Update image aliases when they already exist -->
+   * lxc/image: import/export で shared.HostPath を使うようにしました <!-- Use shared.HostPath for import/export -->
+   * lxc/init: ランダムな名前をつけたコンテナの起動に失敗する問題を修正しました <!-- Fix failure to launch containers with random names -->
+   * lxc/list: --columns と --fast を同時に指定した場合にエラーになっていた問題を修正しました <!-- Error if \-\-columns and \-\-fast are used together -->
+   * lxc/move: 強制的に削除するようにしました <!-- Use force on delete -->
+   * lxc/publish: フィンガープリントの表示の問題を修正しました <!-- Fix fingerprint printing -->
+   * lxc/remote: public なリモートサーバでは証明書が不要になりました <!-- Don't require a cert for public remotes -->
+   * lxc/utils: 進捗表示での競合の可能性をなくしました <!-- Avoid potential progress race condition -->
+   * lxc/utils: エラー表示でフォーマット指定を行う処理が抜けていた問題を修正しました <!-- Println doesn't do format strings -->
+   * lxd-benchmark: CreateContainers 関数を追加しました <!-- Add CreateContainers function -->
+   * lxd-benchmark: csv によるレポート出力を追加しました <!-- Add csv reporting -->
+   * lxd-benchmark: freezeContainer 関数を追加しました <!-- Add freezeContainer function -->
+   * lxd-benchmark: processBatch 関数を追加しました。この関数は SpawnContainers と DeleteContainers で使われます <!-- Add processBatch function, use it in SpawnContainers and DeleteContainers -->
+   * lxd-benchmark: "launch" と同等の命令として廃止予定の "spawn" を追加しました <!-- Add "spawn" as equivalent but deprecated to "launch" -->
+   * lxd-benchmark: start と stop コマンドを追加しました <!-- Add start and stop commands -->
+   * lxd-benchmark: StartContainers 関数を追加しました <!-- Add StartContainers function -->
+   * lxd-benchmark: StopContainers 関数を追加しました <!-- Add StopContainers function -->
+   * lxd-benchmark: `spawn` コマンドの名前を `launch` に変更しました <!-- Change name of `spawn` command to `launch` -->
+   * lxd-benchmark: deleteContainer と copyImage を独立した関数にしました <!-- Extract deleteContainer and copyImage functions -->
+   * lxd-benchmark: ensureImage を独立した関数にしました <!-- Extract ensureImage function -->
+   * lxd-benchmark: getBatchSize を独立した関数にしました <!-- Extract getBatchSize function -->
+   * lxd-benchmark: GetContainers を独立した関数にしました <!-- Extract GetContainers function -->
+   * lxd-benchmark: ロジックを独立したパッケージにしました <!-- Extract logic to separate package -->
+   * lxd-benchmark: PrintServerInfo を独立した関数にしました <!-- Extract PrintServerInfo function -->
+   * lxd-benchmark: printTestConfig を独立した関数にしました <!-- Extract printTestConfig function -->
+   * lxd-benchmark: ローカルのエイリアスを与えられた場合の ensureImage の問題を修正しました <!-- Fix ensureImage when a local alias is passed -->
+   * lxd-benchmark: ローカルイメージの扱いの問題を修正しました <!-- Fix local image handling -->
+   * lxd-benchmark: 操作時間を返すようにしました <!-- Return operations duration -->
+   * lxd-benchmark: プライベートな関数を別のファイルにわけました <!-- Split private functions to separate files -->
+   * lxd-benchmark: デフォルトの設定値を取得する際に NewConfig を使うようにしました <!--Use NewConfig to get a default configuration -->
+   * lxd: 初期の lxd/sys サブパッケージと OperationSystem 構造体を追加しました <!-- Add initial lxd/sys sub-package and OperatingSystem structure -->
+   * lxd: Typo を修正しました (now -> Know) <!-- Fix typo now -> know -->
+   * lxd: .dir-locals.el を flycheck でいい感じで動くようにしました <!-- Make .dir-locals.el play nice with flycheck -->
+   * lxd: InternalError が使われているところの何箇所かを SmartError に置き換えました <!-- Replace some uses of InternalError with SmartError -->
+   * lxd: 可能な場合は Daemon の代わりに sql.DB、sys.OS を使うようにしました <!-- Use sql.DB or sys.OS instead of Daemon where possible -->
+   * lxd/apparmor: apparmor の使われない deny を削除しました <!-- Drop useless apparmor denies -->
+   * lxd/apparmor: 新しい stacking 文法をサポートしました <!-- Support new stacking syntax -->
+   * lxd/containers: LXD snap にディスクデバイスを与えられるようになりました <!-- Allow passing disk devices with the LXD snap -->
+   * lxd/containers: メモリ使用量の表示の際のエラー処理を改良しました <!-- Better handle errors in memory reporting -->
+   * lxd/containers: コンテナのマウントポイントもチェックするようになりました <!-- Check for container mountpoint too -->
+   * lxd/containers: ディスクデバイスの存在をチェックするようになりました <!-- Check whether disk device exists -->
+   * lxd/containers: update 時に一時的なキーをクリアするようにしました <!-- Cleanup volatile keys on update -->
+   * lxd/containers: exec 中の poll で POLLNVAL を検出するようにしました <!-- Detect POLLNVAL when poll()ing during exec -->
+   * lxd/containers: ディレクトリマウント(訳注: bind マウント) の読み込み専用モードの際の問題を修正しました <!-- Fix readonly mode for directory mount -->
+   * lxd/containers: "dev" という名前のネットワークインターフェース名でも動くようにしました <!-- Make "dev" work as a network interface name -->
+   * lxd/containers: ストレージの作成に失敗した場合には DB から削除するようにしました <!-- Remove from db on storage failure -->
+   * lxd/containers: コンテナの削除が失敗した場合の根本的なエラーを表示するようにしました <!-- Show underlying error when container delete fails -->
+   * lxd/containers: LXC 2.1 の設定キーのサポートを追加しました <!-- Update to support LXC 2.1 configuration keys -->
+   * lxd/containers: lxc.network.N (訳注: LXC 2.1 形式のネットワーク設定) を使うようにしました <!-- Use lxc.network.N. -->
+   * lxd/daemon: prune 中 (訳注: 期限切れのキャッシュの削除中) はイメージを更新しないようにしました <!-- Don't update images while pruning -->
+   * lxd/daemon: d.os.Init の実行をすべてのパスが作られた後に行われるようにしました <!-- d.os.Init must be run after all paths are created -->
+   * lxd/daemon: Daemon.ExpireLogs を独立した関数にしました <!-- Extract Daemon.ExpireLogs into a standalone function -->
+   * lxd/daemon: Daemon.GetListeners を独立した関数にしました <!-- Extract Daemon.GetListeners into a standalone function -->
+   * lxd/daemon: Daemon.httpClient を独立した関数にしました <!-- Extract Daemon.httpClient into a standalone HTTPClient function -->
+   * lxd/daemon: Daemon.ListenAddresses を独立した関数にしました <!-- Extract Daemon.ListenAddresses into a standalone function -->
+   * lxd/daemon: Daemon.PasswordCheck を独立した関数にしました <!-- Extract Daemon.PasswordCheck into a standalone function -->
+   * lxd/daemon: Daemon.SetupStorageDriver を独立した関数にしました <!-- Extract Daemon.SetupStorageDriver into a standalone function -->
+   * lxd/daemon: 高レベルエンティティ API 中の Daemon を State に置き換える作業が完了しました <!-- Finish replacing Daemon with State also in higher-level entity APIs -->
+   * lxd/daemon: config のトリガーの扱いを修正しました <!-- Fix handling of config triggers -->
+   * lxd/daemon: 不正な設定キーのエラーを改良しました <!-- Improve error on invalid config key -->
+   * lxd/daemon: 存在しない設定項目に対する警告をログに出力するようになり、クラッシュしなくなりました <!-- Log a warning for unknown config keys and don't crash -->
+   * lxd/daemon: Daemon.BackingFs を OS 構造体に移動させました <!-- Move Daemon.BackingFs to the OS struct -->
+   * lxd/daemon: Daemon.IdmapSet を OS.IdmapSet に移動させました <!-- Move Daemon.IdmapSet to OS.IdmapSet -->
+   * lxd/daemon: Daemon.isRecursionRequest を lxd/util サブパッケージに移動させました <!-- Move Daemon.isRecursionRequest to the lxd/util sub-package -->
+   * lxd/daemon: Daemon.lxcpath を OS.LxcPath に移動させました <!-- Move Daemon.lxcpath to OS.LxcPath -->
+   * lxd/daemon: Daemon.MockMode を OS.MockMode に移動させました <!-- Move Daemon.MockMode to OS.MockMode -->
+   * lxd/daemon: Deamon.CheckTrustState と Deamon.isTrustedClient を lxd/util に移動させました <!-- Move Deamon.CheckTrustState and Deamon.isTrustedClient to lxd/util -->
+   * lxd/daemon: filesystemDetect 関数を lxd/util サブパッケージに移動させました <!-- Move filesystemDetect function into lxd/util subpackage. -->
+   * lxd/daemon: lxd/util.go を自身 lxd/util のサブパッケージに移動しました <!-- Move lxd/util.go into its own lxd/util/ sub-package -->
+   * lxd/daemon: すべてのモデルエンティティの Daemon を State に置き換えました <!-- Replace Daemon with State in all model entities -->
+   * lxd/daemon: 設定が変わったときはイメージの自動更新ループをリセットするようにしました <!-- Reset the images auto-update loop when configuration changes -->
+   * lxd/daemon: タイマーの処理を簡素化しました <!-- Simplify time channels -->
+   * lxd/daemon: select を使用し、goroutine を節約するようにしました <!-- Use select and save goroutines -->
+   * lxd/db: 共通のクエリヘルパとして db/query サブパッケージを追加しました <!-- Add db/query sub-package with common query helpers -->
+   * lxd/db: データベースのスキーマを管理するための db/schema サブパッケージを追加しました <!-- Add db/schema sub-package for managing database schemas -->
+   * lxd/db: query.Transaction を追加しました <!-- Add query.Transaction -->
+   * lxd/db: 一連のスキーマ更新を平坦化する Schema.Dump() メソッドを追加しました <!-- Add Schema.Dump() method for flattening a series of schema updates -->
+   * lxd/db: Map からスキーマを作るのが便利ないように schema.NewFromMap を追加しました <!-- Add schema.NewFromMap convenience to create a schema from a map. -->
+   * lxd/db: データベース更新から自動的にデータベーススキーマを生成するようになりました <!-- Automatically generate database schema from database updates -->
+   * lxd/db: db へのパッチで不要である特別なモックモードを実行しないようにしました <!-- Don't special-case mock mode unnecessarily in db patches -->
+   * lxd/db: Daemon に対する依存を削除しました <!-- Drop dependencies on Daemon -->
+   * lxd/db: スキーマバージョン 30 と 31 間の更新の不適切な DB スキーマを修正しました <!-- Fix bad DB schema update between schema 30 and 31 -->
+   * lxd/db: 中間のバージョンを挿入しないデータベースの更新ロジックを修正しました <!-- Fix database upgrade logic not inserting interim versions -->
+   * lxd/db: db*.go ファイルを自身の db/ サブパッケージへ移動させました <!-- Move db*.go files into their own db/ sub-package -->
+   * lxd/db: デーモンレベルのロジックから DB レベルの更新ロジックを分離しました <!-- Separate db-level update logic from daemon-level one -->
+   * lxd/db: 新しいスキーマコードを db.go で使うようにしました <!-- Wire new schema code into db.go -->
+   * lxd/devices: CPU スケジューラの isolcpu をサポートしました <!-- Add support for isolcpu in CPU scheduler -->
+   * lxd/devices: デフォルトではすべての CPU を隔離しないようにしました <!-- Don't mark all cpus isolated by default -->
+   * lxd/devices: デバイス ID のメジャーとマイナー番号の扱いを修正しました <!-- Fix handling of major and minor numbers in device IDs -->
+   * lxd/devices: デバイスのソート順を修正しました <!-- Fix sorting order of devices -->
+   * lxd/devices: 空の isolcpus を扱えるようにしました <!-- Handle empty isolcpus set -->
+   * lxd/devices: マイナーデバイス番号の 32bit すべてを取得するようにしました <!-- Take all 32 bits of minor device number -->
+   * lxd/events: イベントハンドラ中の競合を修正しました <!-- Fix race condition in event handlers -->
+   * lxd/images: 実際に消去するイメージのリストを取得するようにしました <!-- Actually get the list of images to remove -->
+   * lxd/images: 常にフィンガープリントを展開するようになりました <!-- Always expand fingerprint -->
+   * lxd/images: リフレッシュ時に古い "cached" という値も渡すようにしました <!-- Carry old "cached" value on refresh -->
+   * lxd/images: イメージが見つからない場合にエラー表示を行うようにしました <!-- Clear error for image not found -->
+   * lxd/images: エラーの場合はリターン値の構造体にアクセスしないようにしました <!-- Don't access the returned struct in case of error -->
+   * lxd/images: フィンガープリントが与えられた場合のイメージのリフレッシュの問題を修正しました <!-- Fix image refresh when fingerprint is passed -->
+   * lxd/images: 圧縮コマンドに与える引数の順序を修正しました <!-- Fix ordering of compressor arguments -->
+   * lxd/images: 複数回アンロックの可能性があったのを修正しました <!-- Fix potential double unlock -->
+   * lxd/images: 部分的なフィンガープリントを使ったプライベートイメージのコピーの問題を修正しました <!-- Fix private image copy with partial fp -->
+   * lxd/images: イメージの自動更新ロジックにあったリグレッションを修正しました <!-- Fix regression in image auto-update logic -->
+   * lxd/images: アクセスプロトコルが "direct" の場合はイメージ情報を初期化するようにしました <!-- Initialize image info in direct download case -->
+   * lxd/images: イメージの有効期限を適切に取得するようにしました <!-- Properly extract the image expiry -->
+   * lxd/images: キャッシュの期限切れを無効にする設定通りに動作するようにしました <!-- Respect disabled cache expiry -->
+   * lxd/images: RFC3399 形式で UploadedAt を保存するようにしました <!-- Store UploadedAt as RFC3399 -->
+   * lxd/init: コマンドラインのフラグをパースする cmd.Parser ヘルパを追加しました <!-- Add a cmd.Parser helper for parsing command line flags -->
+   * lxd/init: インタラクティブ・自動の初期化ロジックとあらかじめ準備した設定を与える初期化ロジックを統合しました <!-- Consolidate interactive/auto init logic with the preseed one -->
+   * lxd/init: 初期化の際の質問を行うコードを独立したメソッドに分離しました <!-- Extract code asking init questions to individual methods -->
+   * lxd/init: 初期化の際のデータを構造体に設定するロジックを独立したメソッドに分離しました <!-- Extract logic to fill init data to standalone methods -->
+   * lxd/init: --auto 引数のバリデーションを別のメソッドに分離しました <!-- Extract validation of --auto args into a separate method -->
+   * lxd/init: cmdInit をユニットテスト可能なようにログを生成するようにしました <!-- Make the log cmdInit unit-testable -->
+   * lxd/init: 状態を帰るインライン関数を独立したメソッドに移動させました <!-- Move state-changing inline functions to own methods -->
+   * lxd/init: cmd.Parser を main.go に追加しました <!-- Plug cmd.Parser into main.go -->
+   * lxd/init: 適切にデフォルトのポートを設定するようにしました <!-- Properly set default port -->
+   * lxd/main: ログのパスが設定されていないときのエラーメッセージを修正しました <!-- Fix error message when log path is missing -->
+   * lxd/migration: ライブマイグレーションでの不適切な URL の問題を修正しました <!-- Fix live migration (bad URL in dumpsuccess) -->
+   * lxd/networks: ipt_checksum は不要になりました <!-- Don't require ipt_checksum -->
+   * lxd/patches: UploadAt を RFC3399 形式に変換するようにしました <!-- Convert UploadedAt to RFC3399 -->
+   * lxd/rsync: rsync の際、sparse ファイルを扱えるようになりました <!-- Handle sparse files when rsyncing -->
+   * lxd/shutdown: 指定された場合だけタイムアウトを待つようにしました <!-- Only timeout if told to -->
+   * lxd/storage/btrfs: btrfs のバグを回避するようにしました <!-- Workaround btrfs bug -->
+   * lxd/storage/dir: sync がエラーになった際に unfreeze するようにしました <!-- Unfreeze on rsync error -->
+   * lxd/storage/rsync: sync 中の存在しないファイルの警告を無視するようになりました <!-- Ignore vanished file warnings -->
+   * Makefile: static-analysis ターゲットを修正しました <!-- Fix static-analysis target -->
+   * Makefile: po の前に pot を更新するようにしました <!-- Update pot before po -->
+   * network: 無条件に制限を更新しないようにしました <!-- Do not update limits unconditionally -->
+   * shared: ホストのパスを変換するラッパーを追加しました <!-- Add wrapper to translate host paths -->
+   * shared: log モジュールの使用をやめました <!-- Cleanup use of log -->
+   * shared: snap のパスの不適切なチェックを修正しました <!-- Fix bad check for snap paths -->
+   * shared: GroupId 関数で buf が大きくなっていく問題を修正しました <!-- Fix growing of buf in GroupId -->
+   * shared: golint の警告が出る部分を修正しました <!-- Fix new golint warning -->
+   * shared: GetRemoteCertificate を lxc/remote から (sharedに) 移動しました <!-- Move GetRemoteCertificate from lxc/remote -->
+   * shared: idmap と acl 関数は別パッケージに分離しました <!-- Move idmap/acl functions to a separate package -->
+   * shared: 当面 testhelpers を shared/osarch に移動します <!-- Move testhelpers into shared/osarch for now -->
+   * shared: RunCommand のカスタムエラータイプを使うようにしました <!-- Use custom error type for RunCommand -->
+   * shared: subtest の互換性を提供するパッケージを shared/subtest 与えるようにしました <!-- Vendor the subtest compatibility schim in shared/subtest -->
+   * shared: Websocket プロキシ はすべてをプロキシするようにしました <!-- Websocket proxy should proxy everything -->
+   * shared/api: コンテナの metadata.yaml とテンプレートファイルを編集する API を追加しました <!-- Add API for editing containers metadata.yaml and template files -->
+   * shared/api: コンテナのテンプレートを操作する API を追加しました <!-- Add container template files operations. -->
+   * shared/api: サーバのレスポンスに関する API 構造体を追加しました <!-- Add server resource api structs -->
+   * shared/api: ストレージプールリソースを Resource API 構造体に追加しました <!-- Add storage pool resource api structs -->
+   * shared/api: StorageVolumePost を追加しました <!-- Add StorageVolumePost -->
+   * shared/api: Macaroons ベースの認証の指示子のサポートを追加しました <!-- Add support for macaroons-based authentication indicator -->
+   * shared/api: API 拡張は構造体の一番最後に移動しました <!-- Extensions go at the bottom -->
+   * shared/api: 完全な push マイグレーションを実装しました <!-- Implement complete push migration -->
+   * shared/api: Migration: ステートフル/ステートレスなスナップショットのマイグレーションを追加しました <!-- state{ful,less} snapshot migration -->
+   * shared/api: ストレージ関連のファイルをプールとボリュームに分けました <!-- Split storage in separate files for pools and volumes -->
+   * shared/api: master ブランチと Sync しました <!-- Sync with master branch -->
+   * shared/canceler: 並行ダウンロードをキャンセルできるようにしました <!-- Support canceling with parallel downloads -->
+   * shared/canceler: 返り値の順序を修正しました (訳注: 関数の返り値を受け取る際、間違った変数で受け取っていた)<!-- Fix return value ordering -->
+   * shared/canceler: Request のキャンセルチャンネルを使うようにしました <!-- Use request Cancel channel -->
+   * shared/cmd: cmd パッケージ内では testify に依存しなくなりました <!-- Don't depend on testify in the cmd package -->
+   * shared/cmd: master と一致するように更新しました <!-- Update to match master -->
+   * shared/idmap: ホストのidとサブidが交差するのは許可されなくなりました <!-- Disallow hostids intersecting subids -->
+   * shared/idmap: 多数の問題を修正しました <!-- Fix numerous issues -->
+   * shared/idmap: テストを修正しました <!-- Fix tests -->
+   * shared/idmap: CL に関するエラー出力をより冗長にしました <!-- Make ACL failures more verbose -->
+   * shared/logger: log15 API が壊れているのに対する一時的な回避策を取りました <!-- Temporary workaround for log15 API breakage -->
+   * shared/network: TLS Cipher をさらにいくつか追加しました <!-- Add some more TLS ciphers -->
+   * shared/network: TLS の扱いを master に Sync しました <!-- Sync TLS handling with master -->
+   * shared/osarch: /etc/os-release をパースする関数を追加しました <!-- Add function for parsing /etc/os-release -->
+   * shared/osarch: アーキテクチャのエイリアスを追加しました <!-- Add missing architecture aliases -->
+   * shared/osarch: いくつかのアーキテクチャにおける uname の扱いを修正しました <!-- Fix uname handling on some architectures -->
+   * shared/util: テンポラリファイルを作るヘルパーを追加しました <!-- Add helper to create tempfiles -->
+   * shared/util: uname を取得するヘルパーを独立させました <!-- Extract helper to get uname -->
+   * shared/util: ysconf() が -1 を返した時、サイズを推測するようにしました <!-- Guess size when sysconf() returns -1
+   * shared/util: マウントポイントのチェックが出来る関数を実装しました <!-- Implement mountpoint checking -->
+   * shared/util: さらに snap を扱うロジックを追加しました <!-- More snap handling logic -->
+   * shared/util: xattr の ACL をコンテナ内の uid/gid にシフトさせるようにしました <!-- Shift xattr ACLs uid/gid -->
+   * shared/util: ParseLXDFileHeaders を master に sync しました <!-- Sync ParseLXDFileHeaders with master -->
+   * shared/version: プラットフォーム特有のバージョンを取得するヘルパを追加しました <!-- Add helper to get platform-specific versions -->
+   * shared/version: ビルド ID でなく、カーネルバージョンのみ含まれるようにしました <!-- Only include kernel version, not build id -->
+   * tests: 読み込み専用のディスクのテストを追加しました <!-- Add a test for read-only disks -->
+   * tests: 依存パッケージのチェックに新たなパッケージを追加しました <!-- Add new dependencies -->
+   * tests: パフォーマンスのりグレッションテストを追加しました <!-- Add performance regression tests -->
+   * tests: ストレージのヘルパを追加しました <!-- Add storage helpers -->
+   * tests: perf.sh に LXD_TMPFS のサポートを追加しました <!-- Add support for LXD_TMPFS to perf.sh -->
+   * tests: subuid 中に hostid を含めないためのテストを追加しました <!-- Add test for disallowing hostid in subuid -->
+   * tests: perf.sh でバッチの開始時刻も計測するようにしました <!-- Also measure batch startup time in perf.sh -->
+   * tests: イメージの自動アップデートの制限を 20min に増やしました <!-- bump image auto update limit to 20min -->
+   * tests: lxdSuiteTest が終了するごとにモックデーモンでデータベースの状態をクリアするようにしました <!-- Clear database state in the mock daemon after each lxdSuiteTest -->
+   * tests: パブリックなリモートに対する finger を実行しないようにしました <!-- Don't attempt to finger public remotes -->
+   * tests: 実行中の lvm/ceph コンテナはコピーしないようにしました <!-- Don't copy running lvm/ceph containers -->
+   * tests: raw.lxc のテストの問題を修正しました <!-- Fix bad raw.lxc test -->
+   * tests: 依存チェックを修正しました <!-- Fix dependency check -->
+   * tests: image_auto_update を修正しました <!-- Fix image_auto_update test -->
+   * tests: イメージの Expire テストを修正しました <!-- Fix image expiry test -->
+   * tests: シェルのリターン値のマスキングを修正しました <!-- Fix shell return value masking -->
+   * tests: ストレージバックエンドのヘルパを include する関数を追加しました <!-- Function to include storage backends helpers -->
+   * tests: イメージの自動更新に LVM を含めるようにしました <!-- include lvm in image auto update -->
+   * tests: apparmor の存在チェックを行うようにしました <!-- More apparmor presence checking -->
+   * tests: クリーンアップの関数をリファクタリングしました <!-- Refactor cleanup functions -->
+   * tests: トリガー用の基本チャンネルハンドラのセットアップを行うようにしました <!-- Setup basic channel handler for triggers -->
+   * tests: カーネルがサポートしていない場合は apparmor のテストをスキップするようにしました <!-- Skip apparmor tests when no kernel support -->
+   * tests: スクリプトを lxc と lxd それぞれに関連したヘルパ関数に分離しました <!-- Split out lxc and lxd related helper functions -->
+   * tests: ネットワーク関連のヘルパ関数を分離しました <!-- Split out network-related helper functions -->
+   * tests: ストレージ関連のヘルパ関数を分離しました <!-- Split out storage-related helper functions -->
+   * tests: テストのセットアップ関連のヘルパ関数を分離しました <!-- Split out test setup related helper functions -->
+   * tests: testify で一部のテストを独立して実行できるようにしました <!-- Support running individual testify test suites -->
+   * tests: 新しいストレージヘルパにスイッチしました <!-- Switch to new storage helpers -->
+   * tests: perf.sh 内の "lxd-benchmark spawn" 呼び出しを "lxd-benchmark launch" に更新しました <!-- Update perf.sh to "lxd-benchmark launch" -->
+   * tests: stop を実行する場合は常に "--force" を使うようにしました <!-- use "\-\-force" everywhere on stop -->
+   * tests: スピードアップのため、テストの場合はインメモリデータベースを使うようにしました <!-- Use in-memory db for tests (makes them faster) -->
+   * tests: パフォーマンステストには testimage を使うようにしました <!-- Use testimage for perf testing -->
+   * tests: 正しく busybox がインストールされているかを確認するようにしました <!-- Validate that the right busybox is present -->
+   * tests: イメージの更新は 2 分まで待つようにしました <!-- Wait up to 2 minutes for image updates -->
+
+  ### ダウンロード <!-- Downloads -->
+  <!--
+  The release tarballs can be found on our [download page](/lxd/downloads/).
+  -->
+  このリリースの tarball は [ダウンロードページ](/lxd/downloads/) から取得できます。
