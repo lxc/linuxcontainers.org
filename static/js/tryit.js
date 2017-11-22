@@ -321,6 +321,10 @@ $(document).ready(function() {
         }
     });
 
+    $('.js-collapsable').click(function(){
+        $(this).toggleClass('is-hidden');
+    });
+
     $('#tryit_feedback_submit').submit(function(event) {
         event.preventDefault();
 

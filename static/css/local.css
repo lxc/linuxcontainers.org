@@ -695,3 +695,24 @@ pre {
   cursor: pointer;
   margin-top: 1rem;
 }
+
+.js-collapsable {
+  cursor: pointer;
+  background-image: url('/static/img/chevron_up.svg');
+  background-repeat: no-repeat;
+  background-position: right center;
+  padding-right: 22px;
+  background-size: 14px;
+}
+
+.js-collapsable.is-hidden {
+  background-image: url('/static/img/chevron_down.svg');
+}
+
+.js-collapsable.is-hidden ~ .tab-content {
+  display: none;
+}
+
+#tryit_feedback .js-collapsable.is-hidden ~ .panel-body {
+  display: none;
+}
