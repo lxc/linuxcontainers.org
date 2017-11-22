@@ -662,3 +662,36 @@ p:empty {
 pre {
   margin-top: .5rem;
 }
+
+
+.glyphicon {
+  position: relative;
+  top: 1px;
+  display: inline-block;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  width: 24px;
+  height: 24px;
+}
+
+.rating-symbol-background {
+  background-image: url('/static/img/unstarred_24.svg');
+  background-repeat: no-repeat;
+}
+
+.rating-symbol-foreground {
+  background-image: url('/static/img/starred_24.svg');
+  background-repeat: no-repeat;
+  position: relative;
+  top: 1px;
+  margin-top: 0;
+}
+
+#tryit_feedback_submit > .p-form__group span + span {
+  display: none;
+}
+
+.rating-symbol {
+  cursor: pointer;
+  margin-top: 1rem;
+}
