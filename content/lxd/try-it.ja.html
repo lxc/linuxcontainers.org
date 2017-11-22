@@ -6,7 +6,7 @@
     <div class="row">
         <div class="col-12">
             <div class="p-notification--negative" id="tryit_status_panel" style="display:none">
-                <p class="p-notification__response">
+                <p>
                     <span class="p-notification__status">>サーバの状態 <!-- Server status --></span>
                     <span class="p-notification__body" id="tryit_online_message" style="display:none">
                         接続元 <!-- You are connected over: --><span id="tryit_protocol"></span> (<span id="tryit_address"></span>)<br/>
@@ -35,14 +35,14 @@
             </div>
 
             <div class="p-notification--information" id="tryit_terms_panel" style="display:none">
-                <p class="p-notification__response">
+                <p>
                     <span class="p-notification__status">サービス利用規約 <!-- Terms of service --></span>
                     <div class="p-notification__body" id="tryit_terms"></div>
                 </p>
             </div>
 
             <div class="p-notification--caution" id="tryit_start_panel" style="display:none">
-                <p class="p-notification__response">
+                <p>
                     <span class="p-notification__status">試用開始 <!-- Start --></span>
                     <div class="p-notification__body">
                         <button class="p-button" id="tryit_accept" type="button">
@@ -61,7 +61,7 @@
             </div>
 
             <div class="p-notification--positive" id="tryit_info_panel" style="display:none">
-                <div class="p-notification__response">
+                <div>
                     <span class="p-notification__status">コンテナの情報 <!-- Container information --></span>
                     <div class="p-notification__body">
                         <table class="table">
@@ -80,7 +80,7 @@
             </div>
 
             <div class="p-notification" id="tryit_console_panel" style="display:none">
-                <div class="p-notification__response">
+                <div>
                     <span class="p-notification__status">コンソール <!-- Console --></span>
                     <div id="tryit_console" style="background-color:black;"></div>
 
@@ -91,8 +91,8 @@
             </div>
 
             <div class="p-notification--caution" id="tryit_examples_panel" style="display:none">
-                <div class="p-notification__response">
-                    <span class="p-notification__status"><a href="#introduction">ステップバイステップでの入門</a></span> <!-- Step by step introduction -->
+                <div>
+                    <span class="p-notification__status js-collapsable">ステップバイステップでの入門</span> <!-- Step by step introduction -->
 
                     <ul class="nav nav-tabs" style="display:none">
                         <li class="active"><a href="#introduction" data-toggle="tab">Introduction</a></li>
@@ -536,7 +536,7 @@ lxc image delete clean-ubuntu</pre>
             </div>
 
             <div class="p-notification--negative" id="tryit_error_panel" style="display:none">
-                <div class="p-notification__response">
+                <div>
                     <span class="p-notification__status" id="tryit_error_panel_create" style="display:none">新しいコンテナを作成できません <!-- Unable to create a new container --></span>
                     <span class="p-notification__status" id="tryit_error_panel_access" style="display:none">コンテナにアクセスできません <!-- Unable to access the container --></span>
 
