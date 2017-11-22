@@ -1,7 +1,8 @@
 # linuxcontainers.org
 
 This branch contains the content and site generator of the
-linuxcontainers.org website.
+https://linuxcontainers.org website. Backend code for [Try it](https://linuxcontainers.org/lxd/try-it/)
+part is located at https://github.com/lxc/lxd-demo-server
 
 ## Dependencies
 
