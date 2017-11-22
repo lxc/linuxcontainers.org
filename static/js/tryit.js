@@ -316,15 +316,9 @@ $(document).ready(function() {
     });
 
     $('.tabNext').click(function(){
-        $('.nav-tabs > .active').next('li').find('a').trigger('click');
-
-        if (feedback == false && $('.nav-tabs > .active').find('a').attr('href') == "#conclusion") {
+        if (feedback == false && $(this).attr('href') == "#conclusion") {
             $('#tryit_feedback').css("display", "inherit");
         }
-    });
-
-    $('.tabPrevious').click(function(){
-        $('.nav-tabs > .active').prev('li').find('a').trigger('click');
     });
 
     $('#tryit_feedback_submit').submit(function(event) {
