@@ -34,7 +34,7 @@ Some of the biggest features of LXD are:
  * Storage management (support for multiple storage backends, storage pools and storage volumes)
 
 # Integration with OpenStack
-The "nova-lxd" project provides an OpenStack Nova plugin that seemlessly integrates
+The "nova-lxd" project provides an OpenStack Nova plugin that seamlessly integrates
 system containers into a regular OpenStack deployment.
 
 With this, users will either get a virtual machine or a container, simply depending on what image or
