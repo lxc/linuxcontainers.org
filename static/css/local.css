@@ -716,3 +716,24 @@ pre {
 #tryit_feedback .js-collapsable.is-hidden ~ .panel-body {
   display: none;
 }
+
+/* 
+XXX Ant: 04.12.17 This can be removed when this is fixed
+https://github.com/vanilla-framework/vanilla-framework/issues/1478
+*/
+.u-align--center h1,
+.u-align--center h2,
+.u-align--center h3,
+.u-align--center h4,
+.u-align--center h5,
+.u-align--center h6,
+.u-align--center p,
+h1.u-align--center,
+h2.u-align--center,
+h3.u-align--center,
+h4.u-align--center,
+h5.u-align--center,
+h6.u-align--center,
+p.u-align--center {
+  max-width: none;
+}
