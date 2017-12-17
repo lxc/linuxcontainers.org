@@ -37,7 +37,7 @@ content: |-
    * client: エラーハンドリングの共通化を行いました <!-- Commonize error handling -->
    * client: 停止しているコンテナのライブマイグレーションを行おうとしないようにしました <!-- Don't live migrate stopped containers -->
    * client: 新しいクライアントから experimental のタグを削除しました <!-- Drop experimental tag from new client -->
-   * client: イメージサーバがネットワーク経由待ち受けてない場合、コピーが失敗するようにしました <!-- Fail if source isn't listening on network -->
+   * client: イメージサーバがネットワーク経由で待ち受けてない場合、コピーが失敗するようにしました <!-- Fail if source isn't listening on network -->
    * client: オペレーションハンドラ内のクラッシュを修正しました <!-- Fix crash in operation handler -->
    * client: cookiejar がない場合にクラッシュする問題を修正しました <!-- Fix crash when missing cookiejar -->
    * client: public な LXD のリモートホストを扱う際の問題を修正しました <!-- Fix handling of public LXD remote -->
@@ -183,7 +183,7 @@ content: |-
    * lxd/db: データベースのスキーマを管理するための db/schema サブパッケージを追加しました <!-- Add db/schema sub-package for managing database schemas -->
    * lxd/db: query.Transaction を追加しました <!-- Add query.Transaction -->
    * lxd/db: 一連のスキーマ更新を平坦化する Schema.Dump() メソッドを追加しました <!-- Add Schema.Dump() method for flattening a series of schema updates -->
-   * lxd/db: Map からスキーマを作るのが便利ないように schema.NewFromMap を追加しました <!-- Add schema.NewFromMap convenience to create a schema from a map. -->
+   * lxd/db: Map からスキーマを作るのが便利なように schema.NewFromMap を追加しました <!-- Add schema.NewFromMap convenience to create a schema from a map. -->
    * lxd/db: データベース更新から自動的にデータベーススキーマを生成するようになりました <!-- Automatically generate database schema from database updates -->
    * lxd/db: db へのパッチで不要である特別なモックモードを実行しないようにしました <!-- Don't special-case mock mode unnecessarily in db patches -->
    * lxd/db: Daemon に対する依存を削除しました <!-- Drop dependencies on Daemon -->
