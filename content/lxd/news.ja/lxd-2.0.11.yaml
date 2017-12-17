@@ -212,20 +212,20 @@ content: |-
    * lxd/images: アクセスプロトコルが "direct" の場合はイメージ情報を初期化するようにしました <!-- Initialize image info in direct download case -->
    * lxd/images: イメージの有効期限を適切に取得するようにしました <!-- Properly extract the image expiry -->
    * lxd/images: キャッシュの期限切れを無効にする設定通りに動作するようにしました <!-- Respect disabled cache expiry -->
-   * lxd/images: RFC3399 形式で UploadedAt を保存するようにしました <!-- Store UploadedAt as RFC3399 -->
+   * lxd/images: RFC3339 形式で UploadedAt を保存するようにしました <!-- Store UploadedAt as RFC3339 -->
    * lxd/init: コマンドラインのフラグをパースする cmd.Parser ヘルパを追加しました <!-- Add a cmd.Parser helper for parsing command line flags -->
    * lxd/init: インタラクティブ・自動の初期化ロジックとあらかじめ準備した設定を与える初期化ロジックを統合しました <!-- Consolidate interactive/auto init logic with the preseed one -->
    * lxd/init: 初期化の際の質問を行うコードを独立したメソッドに分離しました <!-- Extract code asking init questions to individual methods -->
    * lxd/init: 初期化の際のデータを構造体に設定するロジックを独立したメソッドに分離しました <!-- Extract logic to fill init data to standalone methods -->
    * lxd/init: --auto 引数のバリデーションを別のメソッドに分離しました <!-- Extract validation of --auto args into a separate method -->
    * lxd/init: cmdInit をユニットテスト可能なようにログを生成するようにしました <!-- Make the log cmdInit unit-testable -->
-   * lxd/init: 状態を帰るインライン関数を独立したメソッドに移動させました <!-- Move state-changing inline functions to own methods -->
+   * lxd/init: 状態を変えるインライン関数を独立したメソッドに移動させました <!-- Move state-changing inline functions to own methods -->
    * lxd/init: cmd.Parser を main.go に追加しました <!-- Plug cmd.Parser into main.go -->
    * lxd/init: 適切にデフォルトのポートを設定するようにしました <!-- Properly set default port -->
    * lxd/main: ログのパスが設定されていないときのエラーメッセージを修正しました <!-- Fix error message when log path is missing -->
    * lxd/migration: ライブマイグレーションでの不適切な URL の問題を修正しました <!-- Fix live migration (bad URL in dumpsuccess) -->
    * lxd/networks: ipt_checksum は不要になりました <!-- Don't require ipt_checksum -->
-   * lxd/patches: UploadAt を RFC3399 形式に変換するようにしました <!-- Convert UploadedAt to RFC3399 -->
+   * lxd/patches: UploadAt を RFC3339 形式に変換するようにしました <!-- Convert UploadedAt to RFC3339 -->
    * lxd/rsync: rsync の際、sparse ファイルを扱えるようになりました <!-- Handle sparse files when rsyncing -->
    * lxd/shutdown: 指定された場合だけタイムアウトを待つようにしました <!-- Only timeout if told to -->
    * lxd/storage/btrfs: btrfs のバグを回避するようにしました <!-- Workaround btrfs bug -->
