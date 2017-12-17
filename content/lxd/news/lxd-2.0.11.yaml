@@ -209,7 +209,7 @@ content: |-
    * lxd/images: Initialize image info in direct download case
    * lxd/images: Properly extract the image expiry
    * lxd/images: Respect disabled cache expiry
-   * lxd/images: Store UploadedAt as RFC3399
+   * lxd/images: Store UploadedAt as RFC3339
    * lxd/init: Add a cmd.Parser helper for parsing command line flags
    * lxd/init: Consolidate interactive/auto init logic with the preseed one
    * lxd/init: Extract code asking init questions to individual methods
@@ -222,7 +222,7 @@ content: |-
    * lxd/main: Fix error message when log path is missing
    * lxd/migration: Fix live migration (bad URL in dumpsuccess)
    * lxd/networks: Don't require ipt_checksum
-   * lxd/patches: Convert UploadedAt to RFC3399
+   * lxd/patches: Convert UploadedAt to RFC3339
    * lxd/rsync: Handle sparse files when rsyncing
    * lxd/shutdown: Only timeout if told to
    * lxd/storage/btrfs: Workaround btrfs bug
@@ -271,7 +271,6 @@ content: |-
    * shared/util: Add helper to create tempfiles
    * shared/util: Extract helper to get uname
    * shared/util: Guess size when sysconf() returns -1
-   * shared/util: Guess size when sysconf() returns -1
    * shared/util: Implement mountpoint checking
    * shared/util: More snap handling logic
    * shared/util: Shift xattr ACLs uid/gid
@@ -287,7 +286,6 @@ content: |-
    * tests: Also measure batch startup time in perf.sh
    * tests: bump image auto update limit to 20min
    * tests: Clear database state in the mock daemon after each lxdSuiteTest
-   * tests: Don't attempt to finger public remotes
    * tests: Don't attempt to finger public remotes
    * tests: Don't copy running lvm/ceph containers
    * tests: Fix bad raw.lxc test
