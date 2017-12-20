@@ -51,19 +51,24 @@
           <a class="p-button" href="/lxd/introduction/" role="button">Saber mais</a>
         </p>
       </div>
+LXCFS
 
+Arquivos de sobreposição para cpuinfo, meminfo, stat e uptime.
+Uma árvore compatível com cgroupfs que permite gravações não privilegiadas.
+
+Ele é projetado para solucionar as falhas de procfs, sysfs e cgroupfs exportando arquivos que combinam o que o usuário do recipiente do sistema esperaria.
       <div class="p-card col-4">
         <h3>LXCFS</h3>
-        <p>Userspace (FUSE) filesystem offering two main things:
+        <p>Userspace (FUSE) filesystem oferece duas coisas principais:
           <ul>
-            <li>Overlay files for cpuinfo, meminfo, stat and uptime.</li>
-            <li>A cgroupfs compatible tree allowing unprivileged writes.</li>
+            <li>Arquivos de sobreposição para cpuinfo, meminfo, stat e uptime.</li>
+            <li>Uma árvore compatível com cgroupfs que permite gravaçõs não privilegiadas.</li>
           </ul>
         </p>
 
-        <p>It's designed to workaround the shortcomings of procfs, sysfs
-          and cgroupfs by exporting files which match what a system
-          container user would expect.</p>
+        <p>Ele é projetado para solucionar as falhas de procfs, sysfs
+          e cgroupfs exportando arquivos que combinam o que o usuário
+          do sistema de contêiner esperaria.</p>
 
         <p><a class="p-button" href="/lxcfs/introduction/" role="button">Saber mais</a></p>
       </div>
