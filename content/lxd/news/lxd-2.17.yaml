@@ -2,6 +2,7 @@ title: LXD 2.17 release announcement
 date: 2017/08/22 00:00
 origin: https://discuss.linuxcontainers.org/t/lxd-2-17-has-been-released/444
 content: |-
+  ### The changes in this release include
   Features:
 
    * Add support for specifying the ceph user (using the "ceph.user.name" property)

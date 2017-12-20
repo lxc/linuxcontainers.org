@@ -2,6 +2,7 @@ title: LXD 2.19 release announcement
 date: 2017/10/17 00:00
 origin: https://discuss.linuxcontainers.org/t/lxd-2-19-has-been-released/665
 content: |-
+  ### The changes in this release include
   Features:
 
    * The LXD documentation is now available at https://lxd.readthedocs.io

@@ -2,6 +2,7 @@ title: LXD 2.15 release announcement
 date: 2017/06/27 00:00
 origin: https://discuss.linuxcontainers.org/t/lxd-2-15-has-been-released/239
 content: |-
+  ### The changes in this release include
   New features:
 
    * "lxc image list" now support column customization.

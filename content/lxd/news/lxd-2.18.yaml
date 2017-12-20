@@ -2,6 +2,7 @@ title: LXD 2.18 release announcement
 date: 2017/09/19 00:00
 origin: https://discuss.linuxcontainers.org/t/lxd-2-18-has-been-released/547
 content: |-
+  ### The changes in this release include
   Features:
 
    * The btrfs filesystem can now be used on LVM and Ceph storage pools

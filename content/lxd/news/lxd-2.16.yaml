@@ -2,6 +2,7 @@ title: LXD 2.16 release announcement
 date: 2017/07/25 00:00
 origin: https://discuss.linuxcontainers.org/t/lxd-2-16-has-been-released/335
 content: |-
+  ### The changes in this release include
   New features:
 
    * Ceph RBD can now be used as a LXD storage backend (including "lxd init" support).
