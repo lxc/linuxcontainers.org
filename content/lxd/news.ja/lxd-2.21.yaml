@@ -35,7 +35,7 @@ content: |-
    * doc: スケーラビリティの問題をカバーするように LVM のドキュメントを更新しました <!-- Update LVM documentation to cover scalability issues -->
    * extra: profile の自動補完をいくつか修正しました <!-- Fix some profile autocompletions -->
    * i18n: weblate から翻訳を更新しました <!-- Update translations from weblate -->
-   * lxc: 最初に実行する際、ディレクトリでなく設定ファイルで検出するようにしました <!-- Detect first-run based on conf file not dir -->(Issue #4112)
+   * lxc: 初回の実行を設定ファイルのディレクトリではなく設定ファイルで検出するようにしました <!-- Detect first-run based on conf file not dir -->(Issue #4112)
    * lxc/exec: シェルに関係する動きをカバーするようヘルプを更新しました <!-- Update help to cover shell behavior -->
    * lxc/shell: `su -l` を使うように変更しました <!-- Switch to using `su \-l` -->(Issue #4036)
    * lxd-benchmark: デフォルトのコンテナ数を 100 から 1 に変更しました <!-- Change the default count of containers from 100 to 1 -->
