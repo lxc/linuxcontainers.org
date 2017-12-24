@@ -1,0 +1,90 @@
+title: LXD 2.21 リリースのお知らせ
+date: 2017/12/20 00:00
+origin: https://discuss.linuxcontainers.org/t/lxd-2-21-has-been-released/953
+content: |-
+  ### このリリースに含まれる変更点 <!-- The changes in this release include -->
+  新機能 <!-- Features -->:
+
+   * `lxc start/stop/restart/pause` コマンドに新たに `--all` フラグが追加されました <!-- The `lxc start/stop/restart/pause` commands now accept a new `\-\-all` flag. -->
+   * 新たに `infiniband` デバイスタイプを追加しました。これは SR-IOV カードと同様に Infiniband デバイスの物理的なパススルーをサポートします <!-- Introduced a new `infiniband` device type which supports physical
+     passthrough of Infiniband devices as well as SR-IOV allocated cards. -->
+   * 新たな設定項目 `security.devlxd` を追加しました。コンテナ内の /dev/lxd の存在をコントロールします <!-- Added a new `security.devlxd` configuration key to control the
+     presence of /dev/lxd inside the container. -->
+   * コンテナのライブマイグレーションでインクリメンタルなメモリコピーのサポートを追加しました。
+     この機能は新たな設定項目 `migration.incremental.memory` でコントロールします。
+     <!-- Added support for incremental memory copy with container live-migration.
+     This is controlled by a set of new `migration.incremental.memory`
+     configuration keys. -->
+   * 新たに追加した設定項目 `boot.stop.priority` を使って、LXD が停止する際のコンテナのシャットダウン順序をコントロールできます。
+     <!-- A new `boot.stop.priority` configuration key can be used to control
+     container shutdown order when LXD is brought down. -->
+   * MAAS を使ってネットワークを管理する LXD ユーザは、MAAS 内のすべてのコンテナを記録し、MAAS が管理するサブネット内で静的に割り当てを設定して、LXD から直接 MAAS を動かせるようになりました。
+     この機能は、デーモンで `maas.api.url`、 `maas.api.key` と、 ネットワークインターフェースで `maas.subnet.ipv4`、`maas.subnet.ipv6` を使ってコントロールします
+     <!-- LXD users that use MAAS to manage their networks can now have LXD
+     directly drive MAAS, recording all containers in MAAS and setting up
+     static allocations in MAAS managed subnets.
+     This is controlled with the `maas.api.url` and `maas.api.key`
+     daemon keys as well as the `maas.subnet.ipv4` and `maas.subnet.ipv6`
+     network interface configuration keys. -->
+
+  バグ修正 <!-- Bugfixes -->:
+
+   * client: すべてのユーザの入力を URL エスケープするようになりました <!-- URL escape all user input -->(Issue #4077)
+   * doc: 既存の LVM thinpool からストレージプールを作成する例を追加しました <!-- Add example to create an storage pool from existing LVM thinpool. -->
+   * doc: prlimits の markdown エスケープを修正しました <!-- Fix markdown escaping for prlimits -->
+   * doc: スケーラビリティの問題をカバーするように LVM のドキュメントを更新しました <!-- Update LVM documentation to cover scalability issues -->
+   * extra: profile の自動補完をいくつか修正しました <!-- Fix some profile autocompletions -->
+   * i18n: weblate から翻訳を更新しました <!-- Update translations from weblate -->
+   * lxc: 初回の実行を設定ファイルのディレクトリではなく設定ファイルで検出するようにしました <!-- Detect first-run based on conf file not dir -->(Issue #4112)
+   * lxc/exec: シェルに関係する動きをカバーするようヘルプを更新しました <!-- Update help to cover shell behavior -->
+   * lxc/shell: `su -l` を使うように変更しました <!-- Switch to using `su \-l` -->(Issue #4036)
+   * lxd-benchmark: デフォルトのコンテナ数を 100 から 1 に変更しました <!-- Change the default count of containers from 100 to 1 -->
+   * lxd/certificates: 欠けていた name の値を追加しました <!-- Add missing name value -->(Issue #4080)
+   * lxd/console: 新しい liblxc の変更にあわせて変更しました <!-- Adapt to new liblxc changes -->
+   * lxd/containers: 実際にエラーが返るようにしました <!-- Actually return an error -->
+   * lxd/containers: 新たなディスクデバイスの作成フォーマットを追加しました <!-- Add new disk-{char,block} path format -->
+   * lxd/containers: 新たな UNIX {char,block} デバイスの作成フォーマットを追加しました <!-- Add new unix-{char,block} path format -->
+   * lxd/containers: fstab 形式でパスのエスケープを行うようにしました (訳注: 空白を含むパスをエスケープする際に fstab のように '\040' を使うようにした) <!-- Escape paths fstab style -->(Issue #4064)
+   * lxd/containers: insertNetworkDevice() を修正しました (訳注: SR-IOV用のヘルパ関数を追加したのに伴う修正) <!-- Fix insertNetworkDevice() -->
+   * lxd/containers: シャットダウン時の競合状態を修正しました <!-- Fix race condition in shutdown -->(Issue #4102)
+   * lxd/containers: prlimit のエラー時の typo を修正しました <!-- Fix typo in prlimit error -->
+   * lxd/containers: 自動起動のエラーをログに記録するようにしました <!-- Log auto-start errors -->(Issue #4054)
+   * lxd/containers: 必要なときだけ設定の初期化を行うようにしました <!-- Only init the config if needed -->
+   * lxd/containers: 存在しない Nvidia GPU デバイスをスキップするようにしました <!-- Skip non-existing Nvidia GPU devices -->(Issue #4044)
+   * lxd/containers: tarball 内のソケットをスキップするようにしました <!-- Skip sockets in tarballs -->
+   * lxd/daemon: https のアドレスが設定されていない場合の問題を修正しました <!-- Fix unsetting https address -->
+   * lxd/daemon: ストレージの情報を適切にキャッシュするようにしました <!-- Properly cache the storage information -->(Issue #4025)
+   * lxd/dameon: execPath を上書きするための LXD_EXEC_PATH を追加しました <!-- Add LXD_EXEC_PATH to override execPath -->
+   * lxd/devlxd: イベントの準備でクリーンアップするようにしました <!-- Cleanup in preparation for events -->
+   * lxd/devlxd: 内部の構造体を適切にロックするようにしました <!-- Properly lock the internal struct -->
+   * lxd/migration: CRIU の機能をチェックするためのハンドラを追加しました <!-- Add handler for CRIU feature checking -->
+   * lxd/migration: CRIU がサポートしている場合は、事前コピーのマイグレーションをデフォルトにしました <!-- Default to pre-copy migration if CRIU supports it -->
+   * lxd/migration: ダンプ前のチェックを専用の関数に移動しました <!-- Move pre-dump check to its own function -->
+   * lxd/migration: 不要な TODO コメントを削除しました <!-- Remove obsolete TODO comment -->
+   * lxd/networks: インターフェース名に使える文字セットを拡張しました <!-- Extend allowed character set for interfaces -->(Issue #4042)
+   * lxd/patches: デバイスディレクトリがないコンテナをスキップするようにしました <!-- Skip containers that don't have a devices dir -->
+   * lxd/patches: 新しいデバイス名スキームへの更新を行いました <!-- Update to new device name scheme -->
+   * lxd/storage: dir と btrfs の場合は HostPath を使うようにしました  (訳注: snap の場合で既存のファイルシステムを bind マウントする場合のため) <!-- Use HostPath for dir/btrfs -->
+   * lxd/storage/zfs: zfs get コマンドの引数の順序を修正しました <!-- Fix argument order of zfs get commands -->
+   * lxd/storage/zfs: ストレージプールのインポートの問題を修正しました <!-- Fix storage pool import -->(Issue #4056)
+   * lxd/storage/zfs: 確実に devices, setuid, exec ができるようにしました <!-- Make sure to allow devices, setuid and exec -->(Issue #4084)
+   * Makefile: sqlite3.h の検出方法を改良しました <!-- Better detect sqlite3.h -->(Issue #4078)
+   * shared/idmap: ハードリンクの扱いを修正しました <!-- Fix handling of hardlinks -->
+   * shared/util: EscapePathFstab() 関数を追加しました <!-- Add EscapePathFstab() -->(Issue #4064)
+   * shared/utils: シンボリックリンクを扱うようにしました <!-- Deal with symlinks -->(Issue #4097)
+   * tests: コンソール API の動きの変化に合わせて変更しました <!-- Adapt to changes in console API behavior -->
+   * tests: ttyS0/ttyS1 がない場合を扱えるようにしました (s390xの場合) <!-- Deal with missing ttyS0/ttyS1 (on s390x) -->
+   * tests: liblxc のバージョンが古い場合はコンソールのテストをスキップするようにしました <!-- Skip console tests on lower liblxc versions -->
+   * travis: Go 1.9 だけで実行するようにしました <!-- Limit to just Go 1.9 -->
+
+  ### 試用環境 <!-- Try it for yourself -->
+  <!--
+  This new LXD release is already available for you to try on our [demo service](/lxd/try-it/).
+  -->
+  この新しい LXD のリリースが、すでに私たちの [デモサービス](/ja/lxd/try-it/) で利用できます。
+
+  ### ダウンロード <!-- Downloads -->
+  <!--
+  The release tarballs can be found on our [download page](/lxd/downloads/).
+  -->
+  このリリースの tarball は [ダウンロードページ](/lxd/downloads/) から取得できます。
