@@ -380,7 +380,7 @@ def gen_page(entry, override, prefix, **variables):
             if "origin" in article:
                 title = "<a href=\"%s\">%s</a>" % (article["origin"], title)
 
-            content += "\n\n\n## %s <span class=\"text-muted\">%s</span>\n" % \
+            content += "\n\n\n## %s \n<span class=\"text-muted\">%s</span>\n" % \
                 (title, date.strftime("%%-d%s of %%B %%Y" % suffix))
 
             content += article["content"]
