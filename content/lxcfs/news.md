@@ -1,5 +1,6 @@
 # News
-## LXCFS 2.0.8 release announcement <span class="text-muted">19th of October 2017</span>
+## LXCFS 2.0.8 release announcement
+<span class="text-muted">19th of October 2017</span>
 
 This is the eigth bugfix release for LXCFS 2.0.
 
@@ -18,7 +19,8 @@ This includes the following bugfixes:
  * tests: Fix invalid comparison
  * uptime: Fix a problem with subsequent reads
 
-## LXCFS 2.0.7 release announcement <span class="text-muted">11th of May 2017</span>
+## LXCFS 2.0.7 release announcement
+<span class="text-muted">11th of May 2017</span>
 
 This is the seventh bugfix release for LXCFS 2.0.
 
@@ -39,7 +41,8 @@ This includes the following bugfixes:
  * bindings: implement guest nice
  * bindings: increase reserved buffer size a little
 
-## LXCFS 2.0.6 release announcement <span class="text-muted">23rd of January 2017</span>
+## LXCFS 2.0.6 release announcement
+<span class="text-muted">23rd of January 2017</span>
 
 This is the sixth bugfix release for LXCFS 2.0.
 
@@ -49,7 +52,8 @@ This includes the following bugfixes:
  * tests: Fix run on ppc64el
  * Fix wrong scanning of memory.stat
 
-## LXCFS 2.0.5 release announcement <span class="text-muted">23rd of November 2016</span>
+## LXCFS 2.0.5 release announcement
+<span class="text-muted">23rd of November 2016</span>
 
 This is the fifth bugfix release for LXCFS 2.0.
 
@@ -66,7 +70,8 @@ This includes the following bugfixes:
  * pam\_cgfs: improve logging
  * cgroups: handle non-existent isolcpus file
 
-## LXCFS 2.0.4 release announcement <span class="text-muted">5th of October 2016</span>
+## LXCFS 2.0.4 release announcement
+<span class="text-muted">5th of October 2016</span>
 
 This is the fourth bugfix release for LXCFS 2.0.
 
@@ -103,7 +108,8 @@ This includes the following bugfixes:
  * bindings: fix type weirdness with statfs f\_type
  * bindings: make pivot\_enter() contain all its code
 
-## LXCFS 2.0.3 release announcement <span class="text-muted">15th of August 2016</span>
+## LXCFS 2.0.3 release announcement
+<span class="text-muted">15th of August 2016</span>
 
 This is the third bugfix release for LXCFS 2.0.
 
@@ -113,7 +119,8 @@ This includes the following bugfixes:
  * Setup and use a minimal chroot and mount namespace for cgroup mounts
  * Code cleanup and minor refactoring
 
-## LXCFS 2.0.2 release announcement <span class="text-muted">28th of June 2016</span>
+## LXCFS 2.0.2 release announcement
+<span class="text-muted">28th of June 2016</span>
 
 This is the second bugfix release for LXCFS 2.0.
 
@@ -122,7 +129,8 @@ This includes the following bugfixes:
  * Don't build pam/ when --with-pamdir=none
  * libpam\_cgfs: Don't create new path if we are under /user.slice/user-$uid.slice
 
-## LXCFS 2.0.1 release announcement <span class="text-muted">16th of May 2016</span>
+## LXCFS 2.0.1 release announcement
+<span class="text-muted">16th of May 2016</span>
 
 This is the first bugfix release for LXCFS 2.0.
 
@@ -135,65 +143,77 @@ This includes the following bugfixes:
  * Better error handling in a number of path processing functions.
  * Better error handling in swap calculation.
 
-## LXCFS 2.0.0 release announcement <span class="text-muted">31st of March 2016</span>
+## LXCFS 2.0.0 release announcement
+<span class="text-muted">31st of March 2016</span>
 
  * We are happy to release version 2.0.0 of lxcfs.
 
-## LXCFS 2.0.0.rc9 release announcement <span class="text-muted">29st of March 2016</span>
+## LXCFS 2.0.0.rc9 release announcement
+<span class="text-muted">29st of March 2016</span>
 
  * This is the ninth release candidate for 2.0.0
  * This guards against potential double-releasing of fuse file info.
 
-## LXCFS 2.0.0.rc8 release announcement <span class="text-muted">21st of March 2016</span>
+## LXCFS 2.0.0.rc8 release announcement
+<span class="text-muted">21st of March 2016</span>
 
  * This is the eight release candidate for 2.0.0
  * This implements access(2) which is required by the lxcfs cgfsng driver.
 
-## LXCFS 2.0.0.rc7 release announcement <span class="text-muted">21st of March 2016</span>
+## LXCFS 2.0.0.rc7 release announcement
+<span class="text-muted">21st of March 2016</span>
 
  * This is the seventh release candidate for 2.0.0
  * This includes some important fixes to the upstart jobs and mount hooks
  * Makes the reload handler async-safe, and a few more posix compliancy fixes.
 
-## LXCFS 2.0.0.rc6 release announcement <span class="text-muted">17th of March 2016</span>
+## LXCFS 2.0.0.rc6 release announcement
+<span class="text-muted">17th of March 2016</span>
 
  * This is the sixth release candidate for 2.0.0
  * Adds support for the systemd cgroup naming scheme used in 14.04.
 
-## LXCFS 2.0.0.rc5 release announcement <span class="text-muted">14th of March 2016</span>
+## LXCFS 2.0.0.rc5 release announcement
+<span class="text-muted">14th of March 2016</span>
 
  * This is the fifth release candidate for 2.0.0
  * Fixes libpam-cgfs mis-chowning systemd cgroups when running (for instance) 'sudo'.
 
-## LXCFS 2.0.0.rc4 release announcement <span class="text-muted">11th of March 2016</span>
+## LXCFS 2.0.0.rc4 release announcement
+<span class="text-muted">11th of March 2016</span>
 
  * This is the fourth release candidate for 2.0.0
  * Fix from stgraber to the mount hook and upstart job.
 
-## LXCFS 2.0.0.rc3 release announcement <span class="text-muted">7th of March 2016</span>
+## LXCFS 2.0.0.rc3 release announcement
+<span class="text-muted">7th of March 2016</span>
 
  * This is the third release candidate for 2.0.0
  * Fixes in this release:
      * Not mounting lxcfs procfiles when /sys/fs/cgroup is not mounted in container.
      * Occasional corrupted output in free -m.
 
-## LXCFS 2.0.0.rc2 release announcement <span class="text-muted">24th of February 2016</span>
+## LXCFS 2.0.0.rc2 release announcement
+<span class="text-muted">24th of February 2016</span>
 
  * This is the second release candidate for 2.0.0
  * This adds the previously missing config/ directory to the release tarball.
 
-## LXCFS 2.0.0.rc1 release announcement <span class="text-muted">24th of February 2016</span>
+## LXCFS 2.0.0.rc1 release announcement
+<span class="text-muted">24th of February 2016</span>
 
  * This is the first release candidate for 2.0.0
  * This adds sysvinit, upstart and systemd jobs.
 
-## LXCFS 2.0.0.beta2 release announcement <span class="text-muted">19th of February 2016</span>
+## LXCFS 2.0.0.beta2 release announcement
+<span class="text-muted">19th of February 2016</span>
 
  * Fix a bug causing PAM module to hang if there are unmounted controllers
  * Avoid a rare but not impossible bug due to a faulty glibc assert when
    forking a pid after setns.
 
-## LXCFS 2.0.0.beta1 release announcement <span class="text-muted">9th of February 2016</span>
+## LXCFS 2.0.0.beta1 release announcement
+<span class="text-muted">9th of February 2016</span>
 
  * Add support for /proc/swaps
  * Create or chown systemd cgroups if asked
@@ -202,7 +222,8 @@ This includes the following bugfixes:
 ### Downloads
 The release tarballs can be found on our [download page](/lxcfs/downloads).
 
-## LXCFS 0.18 release announcement <span class="text-muted">4th of February 2016</span>
+## LXCFS 0.18 release announcement
+<span class="text-muted">4th of February 2016</span>
 
  * Support restarting lxcfs in most cases, by moving most functionality
    into a library which is reloaded on SIGUSR1
@@ -210,7 +231,8 @@ The release tarballs can be found on our [download page](/lxcfs/downloads).
 ### Downloads
 The release tarballs can be found on our [download page](/lxcfs/downloads).
 
-## LXCFS 0.17 release announcement <span class="text-muted">26th of January 2016</span>
+## LXCFS 0.17 release announcement
+<span class="text-muted">26th of January 2016</span>
 
  * Add a PAM module
  * Allow users to see all cgroup directories under their init's.
@@ -221,7 +243,8 @@ The release tarballs can be found on our [download page](/lxcfs/downloads).
 ### Downloads
 The release tarballs can be found on our [download page](/lxcfs/downloads).
 
-## LXCFS 0.16 release announcement <span class="text-muted">8th of January 2016</span>
+## LXCFS 0.16 release announcement
+<span class="text-muted">8th of January 2016</span>
 Bugfix release.
 
  * This provides a fix for the memory allocation bugs in the last two releases.
@@ -229,7 +252,8 @@ Bugfix release.
 ### Downloads
 The release tarballs can be found on our [download page](/lxcfs/downloads).
 
-## LXCFS 0.15 release announcement <span class="text-muted">7th of January 2016</span>
+## LXCFS 0.15 release announcement
+<span class="text-muted">7th of January 2016</span>
 Bugfix release.
 
  * Fixing a critical memory allocation bug which makes 0.14 unusable.
@@ -237,7 +261,8 @@ Bugfix release.
 ### Downloads
 The release tarballs can be found on our [download page](/lxcfs/downloads).
 
-## LXCFS 0.14 release announcement <span class="text-muted">7th of January 2016</span>
+## LXCFS 0.14 release announcement
+<span class="text-muted">7th of January 2016</span>
 
  * Listen to hint from lxc regarding cgroup namespaces.
  * Several important bugfixes in code introduced during the switch from libnih.
@@ -248,7 +273,8 @@ The release tarballs can be found on our [download page](/lxcfs/downloads).
 ### Downloads
 The release tarballs can be found on our [download page](/lxcfs/downloads).
 
-## LXCFS 0.13 release announcement <span class="text-muted">25th of November 2015</span>
+## LXCFS 0.13 release announcement
+<span class="text-muted">25th of November 2015</span>
 Bugfix release.
 
  * This fixes several bugs which prevented newer systemd-based containers from
@@ -257,7 +283,8 @@ Bugfix release.
 ### Downloads
 The release tarballs can be found on our [download page](/lxcfs/downloads/).
 
-## LXCFS 0.12 release announcement <span class="text-muted">17th of November 2015</span>
+## LXCFS 0.12 release announcement
+<span class="text-muted">17th of November 2015</span>
 Critical bug/security fix update for LXCFS.
 
  * This fixes two critical CVEs.
@@ -271,7 +298,8 @@ Critical bug/security fix update for LXCFS.
 ### Downloads
 The release tarballs can be found on our [download page](/lxcfs/downloads/).
 
-## LXCFS 0.11 release announcement <span class="text-muted">26th of October 2015</span>
+## LXCFS 0.11 release announcement
+<span class="text-muted">26th of October 2015</span>
 
  * Switch from libnih and dbus to glib and GDbus.  Since these are
    thread-safe, enable threading by default.
@@ -280,7 +308,8 @@ The release tarballs can be found on our [download page](/lxcfs/downloads/).
 ### Downloads
 The release tarballs can be found on our [download page](/lxcfs/downloads/).
 
-## LXCFS 0.10 release announcement <span class="text-muted">3rd of September 2015</span>
+## LXCFS 0.10 release announcement
+<span class="text-muted">3rd of September 2015</span>
 Bugfix release.
 
  * Detect libnih threading support and use when available.
@@ -292,7 +321,8 @@ Bugfix release.
 ### Downloads
 The release tarballs can be found on our [download page](/lxcfs/downloads/).
 
-## LXCFS 0.9 release announcement <span class="text-muted">3rd of June 2015</span>
+## LXCFS 0.9 release announcement
+<span class="text-muted">3rd of June 2015</span>
 Bugfix release.
 
  * Fixes from Michael McCracken to fix lxcfs crashes
@@ -300,7 +330,8 @@ Bugfix release.
 ### Downloads
 The release tarballs can be found on our [download page](/lxcfs/downloads/).
 
-## LXCFS 0.8 release announcement <span class="text-muted">7th of May 2015</span>
+## LXCFS 0.8 release announcement
+<span class="text-muted">7th of May 2015</span>
 
  * Use direct io
  * Cache file and dir open work and re-use at read/write
@@ -312,7 +343,8 @@ The release tarballs can be found on our [download page](/lxcfs/downloads/).
 ### Downloads
 The release tarballs can be found on our [download page](/lxcfs/downloads/).
 
-## LXCFS 0.7 release announcement <span class="text-muted">3rd of April 2015</span>
+## LXCFS 0.7 release announcement
+<span class="text-muted">3rd of April 2015</span>
 Bugfix release.
 
  * Support for /proc/diskstats.
@@ -322,7 +354,8 @@ Bugfix release.
 The release tarballs can be found on our [download page](/lxcfs/downloads/).
 
 
-## LXCFS 0.6 release announcement <span class="text-muted">16th of February 2015</span>
+## LXCFS 0.6 release announcement
+<span class="text-muted">16th of February 2015</span>
 Bugfix release.
 
  * Fixes some memory and fd leaks.
@@ -332,7 +365,8 @@ Bugfix release.
 The release tarballs can be found on our [download page](/lxcfs/downloads/).
 
 
-## LXCFS 0.5 release announcement <span class="text-muted">28th of January 2015</span>
+## LXCFS 0.5 release announcement
+<span class="text-muted">28th of January 2015</span>
 Bugfix release.
 
 This tweaks configure.ac to detect cgmanager version and tweak the LXC hook.
@@ -341,7 +375,8 @@ This tweaks configure.ac to detect cgmanager version and tweak the LXC hook.
 The release tarballs can be found on our [download page](/lxcfs/downloads/).
 
 
-## LXCFS 0.4 release announcement <span class="text-muted">23rd of January 2015</span>
+## LXCFS 0.4 release announcement
+<span class="text-muted">23rd of January 2015</span>
 Critical bug/security fix update for LXCFS.
 
 Prior versions of LXCFS would replace the host's /proc with the container's
@@ -353,14 +388,16 @@ This release includes ONLY this bugfix and should be immediately deployed by any
 The release tarballs can be found on our [download page](/lxcfs/downloads/).
 
 
-## LXCFS 0.3 release announcement <span class="text-muted">21st of January 2015</span>
+## LXCFS 0.3 release announcement
+<span class="text-muted">21st of January 2015</span>
 This release is identical to 0.2 except for a fixed installation path of the LXC configuration file.
 
 ### Downloads
 The release tarballs can be found on our [download page](/lxcfs/downloads/).
 
 
-## LXCFS 0.2 release announcement <span class="text-muted">20th of January 2015</span>
+## LXCFS 0.2 release announcement
+<span class="text-muted">20th of January 2015</span>
 Packager-friendly release of LXCFS 0.2.
 
 This release now installs /usr/share/lxcfs/lxc.mount.hook and /usr/share/lxc/common.conf.d/00-lxcfs.conf
@@ -372,7 +409,8 @@ Additionally this release also includes some fixes to the testsuite.
 The release tarballs can be found on our [download page](/lxcfs/downloads/).
 
 
-## LXCFS 0.1 release announcement <span class="text-muted">9th of January 2015</span>
+## LXCFS 0.1 release announcement
+<span class="text-muted">9th of January 2015</span>
 This is the initial LXCFS release.
 
 It offers a basic cgroupfs-like interface which writes through CGManager as well as

@@ -1,5 +1,6 @@
 # News
-## LXC 2.0.9 release announcement <span class="text-muted">19th of October 2017</span>
+## LXC 2.0.9 release announcement
+<span class="text-muted">19th of October 2017</span>
 This is the nineth bugfix release for LXC 2.0.
 
 Bugfixes:
@@ -284,7 +285,8 @@ Should you be interested in individual changes or just looking at the detailed d
 our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-2.0).
 
 
-## LXC 1.0.11 release announcement <span class="text-muted">19th of October 2017</span>
+## LXC 1.0.11 release announcement
+<span class="text-muted">19th of October 2017</span>
 This is the eleventh bugfix release for LXC 1.0.
 
 Bugfixes:
@@ -353,7 +355,8 @@ Should you be interested in individual changes or just looking at the detailed d
 our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-1.0).
 
 
-## LXC 2.1.1 release announcement <span class="text-muted">19th of October 2017</span>
+## LXC 2.1.1 release announcement
+<span class="text-muted">19th of October 2017</span>
 This is the first bugfix release for LXC 2.1.
 
 Bugfixes:
@@ -427,7 +430,8 @@ Should you be interested in individual changes or just looking at the detailed d
 our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-2.1).
 
 
-## LXC 2.1 release announcement <span class="text-muted">5th of September 2017</span>
+## LXC 2.1 release announcement
+<span class="text-muted">5th of September 2017</span>
 The LXC team is proud to announce the release of LXC 2.1.
 This release contains a lot of new features introduced since the release of LXC 2.0.
 
@@ -836,7 +840,8 @@ Should you be interested in individual changes or just looking at the detailed d
 our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-2.1).
 
 
-## LXC 2.0.8 release announcement <span class="text-muted">11th of May 2017</span>
+## LXC 2.0.8 release announcement
+<span class="text-muted">11th of May 2017</span>
 This is the eighth bugfix release for LXC 2.0.
 
 Important:
@@ -956,7 +961,8 @@ Should you be interested in individual changes or just looking at the detailed d
 our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-2.0).
 
 
-## LXC 1.0.10 release announcement <span class="text-muted">11th of May 2017</span>
+## LXC 1.0.10 release announcement
+<span class="text-muted">11th of May 2017</span>
 This is the tenth bugfix release for LXC 1.0.
 
 Important:
@@ -1018,7 +1024,8 @@ Should you be interested in individual changes or just looking at the detailed d
 our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-1.0).
 
 
-## LXC 2.0.7 release announcement <span class="text-muted">23rd of January 2017</span>
+## LXC 2.0.7 release announcement
+<span class="text-muted">23rd of January 2017</span>
 This is the seventh bugfix release for LXC 2.0.
 
 The main bugfixes in this release are:
@@ -1088,7 +1095,8 @@ Should you be interested in individual changes or just looking at the detailed d
 our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-2.0).
 
 
-## LXC 2.0.6 release announcement <span class="text-muted">23rd of November 2016</span>
+## LXC 2.0.6 release announcement
+<span class="text-muted">23rd of November 2016</span>
 This is the sixth bugfix release for LXC 2.0.
 
 Important:
@@ -1212,7 +1220,8 @@ Should you be interested in individual changes or just looking at the detailed d
 our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-2.0).
 
 
-## LXC 1.0.9 release announcement <span class="text-muted">23rd of November 2016</span>
+## LXC 1.0.9 release announcement
+<span class="text-muted">23rd of November 2016</span>
 This is the ninth bugfix release for LXC 1.0.
 
 Important:
@@ -1376,7 +1385,8 @@ Should you be interested in individual changes or just looking at the detailed d
 our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-1.0).
 
 
-## LXC 2.0.5 release announcement <span class="text-muted">5th of October 2016</span>
+## LXC 2.0.5 release announcement
+<span class="text-muted">5th of October 2016</span>
 This is the fifth bugfix release for LXC 2.0.
 
 The main bugfixes in this release are:
@@ -1452,7 +1462,8 @@ will very soon ship a packaged version of LXC 2.0.5.
 Should you be interested in individual changes or just looking at the detailed development history,
 our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-2.0).
 
-## End of life announcement for LXC 1.1 <span class="text-muted">1st of September 2016</span>
+## End of life announcement for LXC 1.1
+<span class="text-muted">1st of September 2016</span>
 LXC 1.1 has now reached its end of life.
 
 This means that the stable-1.1 branch is now closed and we will not be
@@ -1465,7 +1476,8 @@ As a reminder, we currently support the following releaes:
  * LXC 1.0.x until June 1st 2019
  * LXC 2.0.x until June 1st 2021
 
-## LXC 2.0.4 release announcement <span class="text-muted">15th of August 2016</span>
+## LXC 2.0.4 release announcement
+<span class="text-muted">15th of August 2016</span>
 This is the fourth bugfix release for LXC 2.0.
 
 The main bugfixes in this release are:
@@ -1516,7 +1528,8 @@ Should you be interested in individual changes or just looking at the detailed d
 our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-2.0).
 
 
-## LXC 2.0.3 release announcement <span class="text-muted">28th of June 2016</span>
+## LXC 2.0.3 release announcement
+<span class="text-muted">28th of June 2016</span>
 This is the third bugfix release for LXC 2.0.
 
 LXC 2.0.3 was released just minutes after LXC 2.0.2 as we spotted an incorrect
@@ -1534,7 +1547,8 @@ Should you be interested in individual changes or just looking at the detailed d
 our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-2.0).
 
 
-## LXC 2.0.2 release announcement <span class="text-muted">28th of June 2016</span>
+## LXC 2.0.2 release announcement
+<span class="text-muted">28th of June 2016</span>
 This is the second bugfix release for LXC 2.0.
 
 Please do not use LXC 2.0.2, instead use 2.0.3 which fixes
@@ -1567,7 +1581,8 @@ Should you be interested in individual changes or just looking at the detailed d
 our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-2.0).
 
 
-## LXC 2.0.1 release announcement <span class="text-muted">16th of May 2016</span>
+## LXC 2.0.1 release announcement
+<span class="text-muted">16th of May 2016</span>
 This is the first bugfix release for LXC 2.0.
 
 The main bugfixes in this release are:
@@ -1616,7 +1631,8 @@ Should you be interested in individual changes or just looking at the detailed d
 our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-2.0).
 
 
-## LXC 2.0.0 release announcement <span class="text-muted">6th of April 2016</span>
+## LXC 2.0.0 release announcement
+<span class="text-muted">6th of April 2016</span>
 The LXC team is very pleased to announce the release of LXC 2.0!
 
 ### Highlights
@@ -1726,7 +1742,8 @@ Should you be interested in individual changes or just looking at the detailed d
 our master branch is on [Github](https://github.com/lxc/lxc/tree/master).
 
 
-## LXC 1.0.8 release announcement <span class="text-muted">9th of November 2015</span>
+## LXC 1.0.8 release announcement
+<span class="text-muted">9th of November 2015</span>
 This is the eight bugfix release for LXC 1.0.
 
 Important:
@@ -1933,7 +1950,8 @@ Should you be interested in individual changes or just looking at the detailed d
 our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-1.0).
 
 
-## LXC 1.1.5 release announcement <span class="text-muted">9th of November 2015</span>
+## LXC 1.1.5 release announcement
+<span class="text-muted">9th of November 2015</span>
 This is the fifth bugfix release for LXC 1.1.
 
 Core:
@@ -1970,7 +1988,8 @@ Should you be interested in individual changes or just looking at the detailed d
 our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-1.1).
 
 
-## LXC 1.1.4 release announcement <span class="text-muted">6th of October 2015</span>
+## LXC 1.1.4 release announcement
+<span class="text-muted">6th of October 2015</span>
 This is the fourth bugfix release for LXC 1.1.
 
 Important:
@@ -2050,7 +2069,8 @@ Should you be interested in individual changes or just looking at the detailed d
 our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-1.1).
 
 
-## LXC 1.1.3 release announcement <span class="text-muted">14th of August 2015</span>
+## LXC 1.1.3 release announcement
+<span class="text-muted">14th of August 2015</span>
 This is the third bugfix release for LXC 1.1.
 
 ### Changes
@@ -2127,7 +2147,8 @@ Should you be interested in individual changes or just looking at the detailed d
 our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-1.1).
 
 
-## LXC 1.1.2 release announcement <span class="text-muted">10th of April 2015</span>
+## LXC 1.1.2 release announcement
+<span class="text-muted">10th of April 2015</span>
 This is the second bugfix release for LXC 1.1.
 
 ### Changes
@@ -2154,7 +2175,8 @@ Should you be interested in individual changes or just looking at the detailed d
 our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-1.1).
 
 
-## LXC 1.1.1 release announcement <span class="text-muted">16th of March 2015</span>
+## LXC 1.1.1 release announcement
+<span class="text-muted">16th of March 2015</span>
 This is the first bugfix release for LXC 1.1.
 
 ### Changes
@@ -2183,7 +2205,8 @@ Should you be interested in individual changes or just looking at the detailed d
 our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-1.1).
 
 
-## LXC 1.1.0 release announcement <span class="text-muted">30th of January 2015</span>
+## LXC 1.1.0 release announcement
+<span class="text-muted">30th of January 2015</span>
 The LXC team is pleased to announce the release of LXC 1.1.
 
 This release will be supported until January 2016 or 2 months after the next release of LXC,
@@ -2264,7 +2287,8 @@ Should you be interested in individual changes or just looking at the detailed d
 our master branch is on [Github](https://github.com/lxc/lxc/tree/master).
 
 
-## LXC 1.0.7 release announcement <span class="text-muted">5th of December 2014</span>
+## LXC 1.0.7 release announcement
+<span class="text-muted">5th of December 2014</span>
 This is the seventh bugfix release for the LXC 1.0 series.
 
 ### Changes
@@ -2362,7 +2386,8 @@ Should you be interested in individual changes or just looking at the detailed d
 our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-1.0).
 
 
-## LXC 1.0.6 release announcement <span class="text-muted">24th of September 2014</span>
+## LXC 1.0.6 release announcement
+<span class="text-muted">24th of September 2014</span>
 This is the sixth bugfix release for the LXC 1.0 series.
 
 To make supporting both LXC 1.0 and the future LXC 1.1 easier, this version introduces the -F argument to lxc-start.
@@ -2477,7 +2502,8 @@ Should you be interested in individual changes or just looking at the detailed d
 our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-1.0).
 
 
-## LXC 1.0.5 release announcement <span class="text-muted">14th of July 2014</span>
+## LXC 1.0.5 release announcement
+<span class="text-muted">14th of July 2014</span>
 This is the fifth bugfix release for the LXC 1.0 series.
 
 ### seccomp profile
@@ -2560,7 +2586,8 @@ Should you be interested in individual changes or just looking at the detailed d
 our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-1.0).
 
 
-## LXC 1.0.4 release announcement <span class="text-muted">13th of June 2014</span>
+## LXC 1.0.4 release announcement
+<span class="text-muted">13th of June 2014</span>
 This is the fourth bugfix release for the LXC 1.0 series.
 
 ### Changes
@@ -2672,7 +2699,8 @@ Should you be interested in individual changes or just looking at the detailed d
 our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-1.0).
 
 
-## LXC 1.0.3 release announcement <span class="text-muted">8th of April 2014</span>
+## LXC 1.0.3 release announcement
+<span class="text-muted">8th of April 2014</span>
 This is the third bugfix release for the LXC 1.0 series.
 
 ### Changes
@@ -2726,7 +2754,8 @@ our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-1.0).
 
 
 
-## LXC 1.0.2 release announcement <span class="text-muted">27th of March 2014</span>
+## LXC 1.0.2 release announcement
+<span class="text-muted">27th of March 2014</span>
 This is the second bugfix release for the LXC 1.0 series.
 
 ### Changes
@@ -2786,7 +2815,8 @@ Should you be interested in individual changes or just looking at the detailed d
 our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-1.0).
 
 
-## LXC 1.0.1 release announcement <span class="text-muted">6th of March 2014</span>
+## LXC 1.0.1 release announcement
+<span class="text-muted">6th of March 2014</span>
 This is the first bugfix release for the LXC 1.0 series.
 
 ### Changes
@@ -2832,7 +2862,8 @@ will very soon ship a packaged version of LXC 1.0.1.
 Should you be interested in individual changes or just looking at the detailed development history,
 our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-1.0).
 
-## LXC 1.0.0 release announcement <span class="text-muted">20th of February 2014</span>
+## LXC 1.0.0 release announcement
+<span class="text-muted">20th of February 2014</span>
 ### Introduction
 It's with great pleasure that the LXC team is announcing the release of LXC 1.0!
 
