@@ -41,7 +41,7 @@ LXCFS 3.0.0 will be supported until June 2023 and our current LTS
 release, LXCFS 2.0 will now switch to a slower maintenance pace, only
 getting critical bugfixes and security updates.
 -->
-LXCFS 3.0.0 は 2023 年 6 月までサポートされ、最新の LTS リリースとなります。LXCFS 2.0 は少し遅いペースでのメンテナンスとなり、致命的なバグ修正とセキュリティ修正のみなされます。
+LXCFS 3.0.0 は 2023 年 6 月までサポートされ、最新の LTS リリースとなります。LXCFS 2.0 はより遅いペースでのメンテナンスとなり、致命的なバグ修正とセキュリティ修正のみなされます。
 
 <!--
 We strongly recommend all LXCFS users to plan an upgrade to the 3.0 branch.
