@@ -1,4 +1,40 @@
 # News
+## [LXCFS 3.0.0 release announcement](https://discuss.linuxcontainers.org/t/lxcfs-3-0-0-has-been-released/1440)
+### Introduction
+The LXCFS team is pleased to announce the release of LXCFS 3.0.0!
+
+This is the result of two years of work since the LXCFS 2.0.0 release
+This is the second LTS release for the LXCFS project and will be supported until June 2023.
+
+### Major changes
+The most significant change to LXCFS 3.0.0 is the removal of the PAM
+module `libpam-cgfs` which has now been moved to the LXC codebase
+instead.
+
+This was motivated by the fact that all LXC users, whether they use
+LXCFS or not can benefit from that PAM module and that much more code
+can be shared with LXC than it could with LXCFS.
+
+All other changes included in LXCFS 3.0.0 are considered to be bugfixes
+and have or will be backported to the LXCFS 2.0 branch, making this a
+very lightweight update.
+
+### Support and upgrade
+LXCFS 3.0.0 will be supported until June 2023 and our current LTS
+release, LXCFS 2.0 will now switch to a slower maintenance pace, only
+getting critical bugfixes and security updates.
+
+We strongly recommend all LXCFS users to plan an upgrade to the 3.0 branch.
+Due to the transition of libpam-cgfs to LXC, this should be done at the
+same time as the upgrade to LXC 3.0 to avoid regressions.
+
+### Downloads
+ - Main release tarball: [lxcfs-3.0.0.tar.gz](https://linuxcontainers.org/downloads/lxcfs/lxcfs-3.0.0.tar.gz)
+ - GPG signature: [lxcfs-3.0.0.tar.gz.asc](https://linuxcontainers.org/downloads/lxcfs/lxcfs-3.0.0.tar.gz.asc)
+
+### Contributors
+The LXCFS 3.0.0 release was brought to you by a total of 16 contributors.
+
 ## LXCFS 2.0.8 release announcement
 <span class="text-muted">19th of October 2017</span>
 
