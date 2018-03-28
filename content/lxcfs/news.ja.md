@@ -1,5 +1,65 @@
-![Download icon](/static/img/containers.png)
 # News
+## [LXCFS 3.0.0 リリースのお知らせ](https://discuss.linuxcontainers.org/t/lxcfs-3-0-0-has-been-released/1440)
+### はじめに <!-- Introduction -->
+<!--
+The LXCFS team is pleased to announce the release of LXCFS 3.0.0!
+-->
+LXCFS チームは LXCFS 3.0.0 のリリースをお知らせできることをうれしく思います！
+
+<!--
+This is the result of two years of work since the LXCFS 2.0.0 release
+This is the second LTS release for the LXCFS project and will be supported until June 2023.
+-->
+このリリースは、LXCFS 2.0.0 のリリース以来 2 年に渡る作業の結果で、
+LXCFS プロジェクトの 2 つ目の LTS リリースとなります。そして 2023 年 6 月までサポートされます。
+
+### 主な変更点 <!-- Major changes -->
+<!--
+The most significant change to LXCFS 3.0.0 is the removal of the PAM
+module `libpam-cgfs` which has now been moved to the LXC codebase
+instead.
+-->
+LXCFS 3.0.0 でのもっとも重要な変更点は、PAM モジュールである `libpam-cgfs` が削除されたことです。このモジュールは、LXCFS から LXC に移動しました。
+
+<!--
+This was motivated by the fact that all LXC users, whether they use
+LXCFS or not can benefit from that PAM module and that much more code
+can be shared with LXC than it could with LXCFS.
+-->
+これにより、LXCFS の使用の有無に関わらず、すべての LXC ユーザが PAM モジュールを使えるようになります。また、LXCFS 以上に LXC とコードが共有できます。このような理由から LXC へと移されました。
+
+<!--
+All other changes included in LXCFS 3.0.0 are considered to be bugfixes
+and have or will be backported to the LXCFS 2.0 branch, making this a
+very lightweight update.
+-->
+LXCFS 3.0.0 に含まれるその他のすべての変更はバグフィックスであり、これらの変更は LXCFS 2.0 ブランチにすでにバックポートされているか、今後バックポートされる予定です。つまり非常に軽いアップデートです。
+
+### サポートとアップグレード <!-- Support and upgrade -->
+<!--
+LXCFS 3.0.0 will be supported until June 2023 and our current LTS
+release, LXCFS 2.0 will now switch to a slower maintenance pace, only
+getting critical bugfixes and security updates.
+-->
+LXCFS 3.0.0 は 2023 年 6 月までサポートされ、最新の LTS リリースとなります。LXCFS 2.0 はより遅いペースでのメンテナンスとなり、致命的なバグ修正とセキュリティ修正のみなされます。
+
+<!--
+We strongly recommend all LXCFS users to plan an upgrade to the 3.0 branch.
+Due to the transition of libpam-cgfs to LXC, this should be done at the
+same time as the upgrade to LXC 3.0 to avoid regressions.
+-->
+LXCFS チームは、すべての LXCFS ユーザに対して、3.0 ブランチへのアップグレードの計画を立てることを強くおすすめします。libpam-cgfs が LXC へ移動しますので、LXC 3.0 へのアップグレードと同時に LXCFS 3.0 へのアップグレードを行うと、libpam-cgfs の機能を引き続き使えるでしょう。
+
+### ダウンロード <!-- Downloads -->
+ - リリース tarball: [lxcfs-3.0.0.tar.gz](https://linuxcontainers.org/downloads/lxcfs/lxcfs-3.0.0.tar.gz)
+ - GPG シグネチャ: [lxcfs-3.0.0.tar.gz.asc](https://linuxcontainers.org/downloads/lxcfs/lxcfs-3.0.0.tar.gz.asc)
+
+### コントリビューター <!-- Contributors -->
+<!--
+The LXCFS 3.0.0 release was brought to you by a total of 16 contributors.
+-->
+LXCFS 3.0.0 は、全部で 16 名の貢献によりリリースされました。
+
 ## LXCFS 2.0.8 のリリースのお知らせ <!-- LXCFS 2.0.8 release announcement --><span class="text-muted">2017 年 10 月 19 日<!-- 19th of October 2017 --></span>
 
 <!--
