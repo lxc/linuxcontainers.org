@@ -644,7 +644,6 @@ p:empty {
 /* Font wrapping on large screens */
 .u-wrap-content p,
 .u-wrap-content li,
-.u-wrap-content pre {
   max-width: 38em;
 }
 
