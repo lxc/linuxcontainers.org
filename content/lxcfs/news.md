@@ -1,5 +1,7 @@
 # News
 ## [LXCFS 3.0.0 release announcement](https://discuss.linuxcontainers.org/t/lxcfs-3-0-0-has-been-released/1440)
+<span class="text-muted">26th of March 2018</span>
+
 ### Introduction
 The LXCFS team is pleased to announce the release of LXCFS 3.0.0!
 
