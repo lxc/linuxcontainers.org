@@ -258,7 +258,7 @@ A new API extension
 
     int console_log(struct lxc_container *c, struct lxc_console_log *log);
 
-has been added that supports interacting with the newly added in-memory ringbuffer of the container. The following struct containers available arguments and return values:
+has been added that supports interacting with the newly added in-memory ringbuffer of the container. The following struct contains available arguments and return values:
 
     struct lxc_console_log {
         /* Clear the console log. */
@@ -283,7 +283,7 @@ has been added that supports interacting with the newly added in-memory ringbuff
     };
 
 ##### `reboot2()`
-This adds `reboot2()` as a new API extension. This function properly wait until a reboot succeeded. It takes a timeout argument. When set to `> 0` `reboot2()` will block until the timeout is reached, if timeout is set to zero `reboot2()` will not block, if set to `-1` `reboot2()` will block indefinitly.
+This adds `reboot2()` as a new API extension. This function properly wait until a reboot succeeded. It takes a timeout argument. When set to `> 0` `reboot2()` will block until the timeout is reached, if timeout is set to zero `reboot2()` will not block, if set to `-1` `reboot2()` will block indefinitely.
 
 ##### `MIGRATE_FEATURE_CHECK` for `CRIU` ``migrate()` API call
 For migration optimization features like pre-copy or post-copy migration the support cannot be determined by simply looking at the `CRIU` version.  Features like that depend on the architecture/kernel/criu combination and `CRIU` offers a feature checking interface to query if it is supported.
