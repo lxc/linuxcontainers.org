@@ -174,8 +174,10 @@ where the arguments of the tuple `[index,value,valueTwo,op]` have the following 
 
       <!-- as defined by `libseccomp >= v2.3.2`.
       For convenience liblxc also understands the standard operator notation indicated in brackets after the libseccomp constants above as an equivalent notation.
-      Note that it is legal to specify multiple entries for the same syscall. -->
+      Note that it is legal to specify multiple entries for the same syscall. 
+      -->
       便宜上 liblxc は、上記の libseccomp 定数の後にかっこで示された標準の演算子表記も、同等の表記法として理解します。
+      同じシステムコールに対して複数のエントリを指定することは正しいことに注意してください。
 
 <!--
 An example for an extended seccomp version 2 profile is:
@@ -205,7 +207,7 @@ This enables daemonized application containers with our minimal init running as 
 <!--
 The `lxc-*` tools now only entirely rely on the public LXC API.
 -->
-`lxc-*` ツールは、完全に公開された LXC API にのみ、依存するようになりました。
+`lxc-*` ツールは、もっぱら公開された LXC API にのみ、依存するようになりました。
 
 #### `hidepid={1,2}` プロパティを使ってマウントされた `/proc` の扱い <!-- Handle `/proc` being mounted with the `hidepid={1,2}` property -->
 <!--
@@ -371,7 +373,7 @@ PID 名前空間を共有すると、ほとんどの init で動作しない可�
 <!--
 Note  that  if the container requests a new user namespace and the container wants to inherit the network namespace it needs to inherit the user namespace as well.
 -->
-コンテナが新しいユーザ名前空間をリクエストし、そのコンテナがネットワーク名前空間は継承したい場合は、ユーザ名前空間は継承する必要があることに注意してください。
+コンテナが新しいユーザ名前空間をリクエストし、そのコンテナがネットワーク名前空間は継承したい場合は、ユーザ名前空間も同様に継承する必要があることに注意してください。
 
 #### `lxc.namespace.share.[namespace identifier]`
 <!--
@@ -382,12 +384,12 @@ Specify a namespace to inherit from another container or process.  The `[namespa
 <!--
 To  inherit  the  namespace  from  another  process  set  the  `lxc.namespace.share.[namespace identifier]`  to  the PID of the process, e.g. `lxc.namespace.share.net = 42`.
 -->
-他のプロセスから名前空間を継承するに PID に設定します。例えば `lxc.namespace.share.net=42` のようになります。
+他のプロセスから名前空間を継承するには、`lxc.namespace.share.[namespace identifier]` の値をプロセスの PID に設定します。例えば `lxc.namespace.share.net=42` のようになります。
 
 <!--
 To inherit the namespace from another container set the `lxc.namespace.share.[namespace identifier]` to  the  name  of  the  container,  e.g. `lxc.namespace.share.pid = c3`.
 -->
-他のコンテナから名前空間を継承するにに設定します。例えば `lxc.namespace.share.pid=c3` のようになります。
+他のコンテナから名前空間を継承するには、`lxc.namespace.share.[namespace identifier]` の値をコンテナ名に設定します。例えば `lxc.namespace.share.pid=c3` のようになります。
 
 <!--
 To  inherit the namespace from another container located in a different path than the standard LXC path set the `lxc.namespace.share.[namespace identifier]` to the full path to the container, e.g.  `lxc.namespace.share.user = /opt/c3`.
