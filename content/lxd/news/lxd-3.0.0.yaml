@@ -62,7 +62,7 @@ content: |-
       Storage volume copied successfully!
 
       stgraber@castiana:~$ lxc storage volume move ssd/example default/example
-      Storage volume copied successfully!
+      Storage volume moved successfully!
 
   #### Remote transfer of custom storage volumes
   A new storage migration API was introduced allowing for the exact same operations as shown above to work between LXD servers as well, using the same syntax as would be used for container migration.
