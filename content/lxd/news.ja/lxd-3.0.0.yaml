@@ -48,7 +48,7 @@ content: |-
   <!--
   The main contributor for this feature, Free Ekanayaka also gave a longer presentation on LXD clustering at FOSDEM 2018 which you can check out here:
   -->
-  この機能のメインコントリビューターである Free Ekanayaka も FOSDEM 2018 で LXD クラスタの長いプレゼンを行いました。こちらでチェックできます:
+  この機能のメインコントリビューターである Free Ekanayaka も FOSDEM 2018 で LXD クラスタの長いプレゼンテーションを行いました。こちらでチェックできます:
   <iframe width="560" height="315" src="https://www.youtube.com/embed/DVqMeo3lvv0?rel=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
 
   <!--
@@ -87,7 +87,7 @@ content: |-
   <!--
   A newly introduced `nvidia.runtime` container configuration key, combined with a copy of the `nvidia-container-cli` tool and liblxc 3.0 now makes it possible to automatically detect all the right bits on the host system and pass them into the container at boot time.
   -->
-  新たに導入された設定である nvidia.runtime と、nvidia-container-cli ツールと liblxc 3.0 を組み合わせると、ホスト上で正しい情報を自動で検出し、コンテナの起動時に必要な情報を与えるようになりました。（訳注: よくわからないけど、nvidia.runtime の設定とデバイスの設定を行えば、色々情報はホスト上で lxc が集めて、cli ツールもコンテナ上で使えるようにしてコンテナを起動する、という感じか? 下の asciinema を参照）
+  新たに導入された設定である nvidia.runtime と、nvidia-container-cli ツールと liblxc 3.0 を組み合わせると、ホスト上で正しい情報を自動で検出し、コンテナの起動時に必要な情報を与えるようになりました。（訳注: よくわからないけど、nvidia.runtime の設定とデバイスの設定を行えば、色々情報はホスト上で lxc が集めて、cli ツールやライブラリもコンテナ上で使えるようにしてコンテナを起動する、という感じか? 下の asciinema を参照）
 
   <!--
   This lets you save a lot of space and greatly simplifies maintenance.
@@ -118,7 +118,7 @@ content: |-
   <!--
   It's now possible to copy and move custom storage volumes between storage pools.
   -->
-  ストレージプール間で、カスタムのストレージボリュームをコピーや移動できるようになりました。
+  ストレージプール間で、カスタムのストレージボリュームをコピーや移動ができるようになりました。
 
       stgraber@castiana:~$ lxc storage volume copy ssd/example default/example
       Storage volume copied successfully!
