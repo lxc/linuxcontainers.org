@@ -1,0 +1,409 @@
+title: LXD 3.0.0 リリースのお知らせ
+date: 2018/04/02 00:00
+origin: https://discuss.linuxcontainers.org/t/lxd-3-0-0-has-been-released/1491
+content: |-
+  ### はじめに <!-- Introduction -->
+  <!--
+  The LXD team is pleased to announce the release of LXD 3.0.0!
+  This is the second LTS release for the LXD project and will be supported until June 2023.
+  -->
+  LXD チームは LXD 3.0.0 のリリースをお知らせできることをうれしく思います！
+  このリリースは LXD プロジェクトの2つめの LTS リリースです。そして 2023 年の 6 月までサポートされます。
+
+  ### 新機能（2.21 以降） <!-- New features (since 2.21) -->
+  <!--
+  LXD 3.0 is going to be our main LTS release for the next two years, receiving frequent bugfix updates backported from the current feature release.
+  -->
+  LXD 3.0 は次の 2 年間のメインの LTS リリースとなります。最新の機能のリリースから短い間隔でバックポートされたバグフィックスの更新がなされます。
+
+  <!--
+  We spent over 3 months since the LXD 2.21 release to land all the features we wanted to see in LXD 3.0 and clean up a lot of existing code to make it maintainable for the duration of the LTS, below are the main highlights.
+  -->
+  LXD 2.21 のリリース以来 3 ヶ月以上をかけて、LXD 3.0 で実装したかった機能をすべてリリースしました。そして既存コードを多数整理して、LTS の間メインテナンスしやすくなるようにしました。以下がメインのハイライトです。
+
+  #### クラスタリング <!-- Clustering -->
+  <!--
+  The biggest new feature for LXD 3.0 is the introduction of clustering support.
+  This allows for identically configured LXD servers to be joined together as part of a cluster, appearing to the outside world as one big LXD server.
+  -->
+  LXD 3.0 でのもっとも大きな新機能がクラスタリングサポートの導入です。
+  同じような設定を持つ LXD サーバをクラスタの一部として連携させることができます。そして大きなひとつの LXD サーバとして外部に見せられます。
+
+  <!--
+  The LXD database is replicated using [dqlite](https://www.youtube.com/watch?v=DVqMeo3lvv0) (a combination of sqlite3 and raft), making it so that 3 of the cluster members have a copy of the entire database at any given time.
+  -->
+  LXD データベースは [dqlite](https://www.youtube.com/watch?v=DVqMeo3lvv0) （sqlite3 と raft の組み合わせ）を使ってレプリケートされます。クラスタメンバーの 3 つが任意の時点でデータベース全体のコピーを持つようにします。
+
+  <!--
+  No special system configuration or services are required to setup LXD clustering, all you need is a few available machines or VMs with similar network and storage properties, then `lxd init` will walk you through the process of creating the cluster and then joining some servers into it.
+  -->
+  LXD クラスタリングをセットアップするための特別なシステム設定やサービスは必要ありません。必要なのは同様のネットワークとストレージプロパティを持つ、いくつかのマシンか VM が利用できることだけです。lxd init コマンドを使って、クラスタの作成やサーバをクラスタに追加する操作を、順に質問に答えることで行えます。
+
+  <!--
+  Here's a short recording of setting up a LXD cluster on 3 nodes using MAAS to allocate machines and networks:
+  -->
+  マシンとネットワークを割り当てるために、MAAS を使って 3 ノードの LXD クラスタを設定する録画をお見せしましょう:
+  <iframe width="560" height="315" src="https://www.youtube.com/embed/RnBu7t2wD4U?rel=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
+  <!--
+  The main contributor for this feature, Free Ekanayaka also gave a longer presentation on LXD clustering at FOSDEM 2018 which you can check out here:
+  -->
+  この機能のメインコントリビューターである Free Ekanayaka も FOSDEM 2018 で LXD クラスタの長いプレゼンを行いました。こちらでチェックできます:
+  <iframe width="560" height="315" src="https://www.youtube.com/embed/DVqMeo3lvv0?rel=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
+  <!--
+  You can also check the documentation here: [https://lxd.readthedocs.io/en/stable-3.0/clustering/](https://lxd.readthedocs.io/en/stable-3.0/clustering/)
+  -->
+  ドキュメントもこちらでチェックできます: [https://lxd.readthedocs.io/en/stable-3.0/clustering/](https://lxd.readthedocs.io/en/stable-3.0/clustering/)
+
+  #### lxd-p2c を使った物理からコンテナへのマイグレーション <!-- Physical to container migration with `lxd-p2c` -->
+  <!--
+  A new tool called `lxd-p2c` makes it possible to import a system's filesystem into a LXD container using the LXD API.
+  -->
+  lxc-p2c という名前の新しいツールが、システムのファイルシステムを LXD コンテナに LXD API を使ってインポートできます。
+
+  <!--
+  After building a copy of the tool, the resulting binary can be transferred to any system that you want to turn into a container. Point it to a remote LXD server and the entire system's filesystem will be transferred over the LXD migration API and a new container be created.
+  -->
+  ツールでのコピーが終わると、出来上がったバイナリーは、コンテナを作成したい任意のシステムに転送できます。リモートの LXD サーバを指定すると、システムのファイルシステムすべてが LXD のマイグレーション API を使って転送され、新しいコンテナが作成されます。
+
+  <!--
+  The main contributor for this feature, Stéphane Graber, also gave a presentation about it at FOSDEM 2018, the video is available here:
+  -->
+  この機能のメインのコントリビューターである Stéphane Graber が FOSDEM 2018 でこの機能についてのプレゼンテーションを行いました。ビデオがご覧いただけます:
+  <iframe width="560" height="315" src="https://www.youtube.com/embed/JKztAWZOj9g?rel=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
+  #### NVIDIA の動的なパススルーのサポート <!-- Support for NVIDIA runtime passthrough -->
+  <!--
+  A common issue for those using NVIDIA GPUs inside containers is the requirement to keep the userspace libraries in sync with the kernel driver.
+  -->
+  NVIDIA GPUをコンテナ内で使う人たちの共通の問題は、ユーザスペースのライブラリをカーネルドライバと同期させておくことが必要なことです。
+
+  <!--
+  This is made particularly difficult if the container's owner isn't also the host's owner as the two are then likely to become out of sync at any time and without warning.
+  -->
+  これは、コンテナの所有者がホストの所有者と異なる場合、警告なしに同期しなくなる可能性があり、特に難しくなります。
+
+  <!--
+  A newly introduced `nvidia.runtime` container configuration key, combined with a copy of the `nvidia-container-cli` tool and liblxc 3.0 now makes it possible to automatically detect all the right bits on the host system and pass them into the container at boot time.
+  -->
+  新たに導入された設定である nvidia.runtime と、nvidia-container-cli ツールと liblxc 3.0 を組み合わせると、ホスト上で正しい情報を自動で検出し、コンテナの起動時に必要な情報を与えるようになりました。（訳注: よくわからないけど、nvidia.runtime の設定とデバイスの設定を行えば、色々情報はホスト上で lxc が集めて、cli ツールもコンテナ上で使えるようにしてコンテナを起動する、という感じか? 下の asciinema を参照）
+
+  <!--
+  This lets you save a lot of space and greatly simplifies maintenance.
+  -->
+  これにより大量のスペースを節約でき、メンテナンスが大幅に簡素化されます。
+
+  <a href="https://asciinema.org/a/174076" target="_blank"><img src="https://asciinema.org/a/174076.png" /></a>
+
+  #### Unix キャラクタデバイス、Unix ブロックデバイスのホットプラグのサポート <!-- Hotplug support for `unix-char` and `unix-block` devices -->
+  <!--
+  A new `required` property has been added to all unix type devices. When set to false, LXD will wait until the requested path is available on the host before automatically passing it into the container.
+  -->
+  unix タイプのデバイスに新しい必須プロパティを追加しました。false に設定すると、LXD は要求されたパスがホスト上で利用できるようになってから、自動的にコンテナに追加します。
+
+  <!--
+  This allows for something like this:
+  -->
+  これで次のようなことができるようになります:
+
+      lxc config device add c1 ttyUSB0 unix-char path=/dev/ttyUSB0 required=false
+
+  <!--
+  The `c1` container will now get access to that USB serial device as soon as it's plugged into the system and it will automatically be removed from the container when unplugged.
+  -->
+  c1 コンテナは、USB シリアルデバイスがシステムにプラグインされるとすぐにアクセスし、システムから抜かれると自動的に削除されます。
+
+  #### ストレージボリュームのローカルコピー/移動<!-- Local copy/move of storage volumes -->
+  <!--
+  It's now possible to copy and move custom storage volumes between storage pools.
+  -->
+  ストレージプール間で、カスタムのストレージボリュームをコピーや移動できるようになりました。
+
+      stgraber@castiana:~$ lxc storage volume copy ssd/example default/example
+      Storage volume copied successfully!
+
+      stgraber@castiana:~$ lxc storage volume move ssd/example default/example
+      Storage volume moved successfully!
+
+  #### カスタムストレージボリュームのリモート転送 <!-- Remote transfer of custom storage volumes -->
+  <!--
+  A new storage migration API was introduced allowing for the exact same operations as shown above to work between LXD servers as well, using the same syntax as would be used for container migration.
+  -->
+  新しいストレージマイグレーション API が導入されました。コンテナのマイグレーションで使うのと同じ構文を使って、LXD サーバ間で同様に操作できます。
+
+  #### ネットワーク接続を転送する新しい `proxy` デバイスタイプ <!-- `proxy` device type to forward network connections -->
+  <!--
+  The new `proxy` device type allows for forwarding TCP connections between host and containers.
+  -->
+  ホストとコンテナ間の TCP 接続を転送できるデバイスタイプである proxy デバイスタイプが新たに追加されました。
+
+  <!--
+  For example, to forward any connection to port 80 on the host to container c1 on it's localhost IP on port 80:
+  -->
+  例えば、ホスト上の port 80 への任意の接続をコンテナ c1 の localhost の IP アドレスの 80 番に転送するには:
+
+      lxc config device add c1 http proxy listen=tcp:0.0.0.0:80 connect=tcp:127.0.0.1:80 
+
+  #### /dev/lxd を経由したイベント通知 <!-- Events through /dev/lxd -->
+  <!--
+  The REST API endpoint exposed inside the container can now be used to receive events whenever a configuration key or device is added, removed or modified.
+  -->
+  コンテナ内に対して提供されている REST API 使い、設定やデバイスが追加、削除、変更された場合のイベントを受け取ることができるようになりました。
+
+      root@c1:~# curl -i -N -H "Connection: Upgrade" -H "Upgrade: websocket" --header "Sec-WebSocket-Version: 13" --header "Sec-WebSocket-Key: SGVsbG8sIHdvcmxkIQ==" --unix-socket /dev/lxd/sock lxd/1.0/events
+      HTTP/1.1 101 Switching Protocols
+      Upgrade: websocket
+      Connection: Upgrade
+      Sec-WebSocket-Accept: qGEgH3En71di5rrssAZTmtRTyFk=
+
+      {"metadata":{"key":"user.foo","old_value":"","value":"bar"},"timestamp":"2018-04-02T23:58:54.433992023-04:00","type":"config"}
+      {"metadata":{"action":"added","config":{"path":"/home","source":"/home","type":"disk"},"name":"home"},"timestamp":"2018-04-02T23:59:25.65007597-04:00","type":"device"}
+
+  #### コマンドラインパーサーの変更 <!-- Switched command line parser -->
+  <!--
+  Our previous command line parser, gnuflag, didn't match our command line structure particularly well, causing confusing help and error messages. We have now transitioned to using the [cobra](https://github.com/spf13/cobra) command line parser, joining a number of other major Go projects.
+  -->
+  以前使っていたコマンドラインパーサの gnuflag は、LXD のコマンドライン構造とあまりマッチしておらず、ヘルプやエラーメッセージがわかりづらくなっていました。そこで、多数の主要な Go プロジェクトに使われている、[cobra](https://github.com/spf13/cobra) コマンドラインパーサに移行しました。
+
+  #### `lxc list` のプロセス数表示 <!-- Process count column in `lxc list` -->
+  <!--
+  An optional "processes" column was added to `lxc list` showing the number of processes running inside the container.
+  -->
+  lxc list で表示を指定できるカラムに "processes" が追加されました。コンテナの内部で動作しているプロセスの数を表示します。
+
+      stgraber@castiana:~$ lxc list -c nsN c1
+      +------+---------+-----------+
+      | NAME |  STATE  | PROCESSES |
+      +------+---------+-----------+
+      | c1   | RUNNING | 33        |
+      +------+---------+-----------+
+
+  #### `lxc storage info` サブコマンド <!-- `lxc storage info` sub-command -->
+  <!--
+  A new `info` subcommand was added as a way to get easy human readable information about a storage pool:
+  -->
+  ストレージプールの情報をわかりやすく取得できる info サブコマンドが新たに追加されました:
+
+      stgraber@castiana:~$ lxc storage info ssd
+      info:
+        description: ""
+        driver: dir
+        name: ssd
+        space used: 9.29GB
+        total space: 173.12GB
+      used by: {}
+
+  #### 代替 IPv4 ゲートウェイ向けのオプション <!-- Option for alternate IPv4 gateway -->
+  <!--
+  A new `ipv4.dhcp.gateway` option is now available for LXD managed bridges. This lets you set a gateway other than LXD itself and can be useful when mixing LXD bridges with physical networks.
+  -->
+  LXD が管理するブリッジ用に新たに `ipv4.dhcp.gateway` オプションが利用できます。LXD 自身が作るゲートウェイ以外を設定することができ、LXD のブリッジと物理ネットワークを混在させる場合に便利です。
+
+  #### ファイル転送時のシンボリックリンクサポート <!-- Support for symlinks in file transfer -->
+  <!--
+  When doing recursive file transfers including some symlinks, those will be properly created as symlinks on the target, rather than the content of the file they point to be pushed or pulled.
+  -->
+  シンボリックリンクを含む再帰的なファイル転送を行う場合、リンク先のファイルの内容ではなく、転送先でもただしくシンボリックリンクとして作られるようになりました。
+
+  #### `lxc monitor` コマンドでのログエントリの Pretty レンダリング <!-- Pretty rendering of log entries in `lxc monitor` -->
+  <!--
+  The LXD log messages have always been available over the event interface, accessible through the `lxc monitor` tool. However those raw events were sometimes pretty hard to read.
+  -->
+  LXD のログは、lxc monitor ツールを使って、イベントインターフェース経由で利用できました。しかし、そのままでは非常に読みにくいことがありました。
+
+  <!--
+  The command line client now knows how to filter and re-format those log events to look exactly as if you were looking at the server's log output.
+  -->
+  コマンドラインクライアントでは、このようなログイベントをフィルタし、再フォーマットして、サーバのログ出力を見ているように見れるようになりました。
+
+      stgraber@castiana:~$ lxc monitor --pretty --loglevel=info --type=logging
+      INFO[04-02|22:57:39] Stopping container                       action=stop created="2018-02-27 18:02:02 -0500 EST" ephemeral=false name=snapcraft stateful=false used="2018-03-29 15:33:05 -0400 EDT"
+      INFO[04-02|22:57:40] Stopped container                        action=stop created="2018-02-27 18:02:02 -0500 EST" ephemeral=false name=snapcraft stateful=false used="2018-03-29 15:33:05 -0400 EDT"
+      INFO[04-02|22:57:40] Starting container                       action=start created="2018-02-27 18:02:02 -0500 EST" ephemeral=false name=snapcraft stateful=false used="2018-03-29 15:33:05 -0400 EDT"
+      INFO[04-02|22:57:41] Started container                        action=start created="2018-02-27 18:02:02 -0500 EST" ephemeral=false name=snapcraft stateful=false used="2018-03-29 15:33:05 -0400 EDT"
+
+  #### `lxc network list-leases` サブコマンド <!-- `lxc network list-leases` sub-command -->
+  <!--
+  DHCP leases on LXD managed bridges can now be queried directly through the API and the command line tool.
+  -->
+  LXD が管理するブリッジの DHCP リース情報が API 経由とコマンドライン経由で直接取得できるようになりました。
+
+      stgraber@castiana:~$ lxc network list-leases lxdbr0
+      +-----------+-------------------+---------------+---------+
+      | HOSTNAME  |    MAC ADDRESS    |  IP ADDRESS   |  TYPE   |
+      +-----------+-------------------+---------------+---------+
+      | bar       | 00:16:3e:e0:36:3a | 10.166.11.185 | DYNAMIC |
+      +-----------+-------------------+---------------+---------+
+      | snapcraft | 00:16:3e:be:f1:87 | 10.166.11.120 | DYNAMIC |
+      +-----------+-------------------+---------------+---------+
+
+  #### `lxc alias` コマンド <!-- `lxc alias` command -->
+  <!--
+  It's now possible to list, create and delete command line aliases directly from the command line tool, rather than having to manually edit the configuration file.
+  -->
+  コマンドエイリアスを管理するのに、設定ファイルを直接編集するのではなく、コマンドラインツールを使って直接コマンドエイリアスを一覧表示、作成、削除できるようになりました。
+
+      stgraber@castiana:~$ lxc alias list
+      +--------+-------------------------------------------+
+      | ALIAS  |                  TARGET                   |
+      +--------+-------------------------------------------+
+      | delete | delete -f                                 |
+      +--------+-------------------------------------------+
+      | ls     | list -c ns46S                             |
+      +--------+-------------------------------------------+
+      | ubuntu | exec @ARGS@ -- sudo --login --user ubuntu |
+      +--------+-------------------------------------------+
+
+  #### `lxc config device override` サブコマンド <!--  `lxc config device override` sub-command -->
+  <!--
+  To override a particular option of a device that's inherited from a profile, such as the default network interface, you need to create a device that's local to the container and uses the same name as the one from the profile. This device will then take priority over the one coming from the profile and let you set any configuration you want.
+  -->
+  デフォルトのネットワークインターフェースのような、プロファイルから継承したデバイスの特定のオプションを上書きするには、コンテナにローカルなデバイスを作成し、プロファイルと同じ名前を使う必要があります。このデバイスはプロファイルのデバイスよりも優先されますので、必要な任意の設定を行うことができます。
+
+  <!--
+  To simplify this process, this can all be done now by using `lxc config device override`, passing it the container, device and configuration keys that should be changed.
+  -->
+  この操作を簡単にするために、変更が必要なコンテナ、デバイス、設定キーを指定して、`lxc config device override` を使うことができます。
+
+      stgraber@castiana:~$ lxc launch ubuntu:16.04 c1
+      Creating c1
+      Starting c1
+      stgraber@castiana:~$ lxc config device override c1 eth0 ipv4.address=10.166.11.42
+      Device eth0 overridden for c1
+      stgraber@castiana:~$ lxc restart c1
+      stgraber@castiana:~$ lxc list c1
+      +------+---------+---------------------+----------------------------------------------+------------+-----------+
+      | NAME |  STATE  |        IPV4         |                     IPV6                     |    TYPE    | SNAPSHOTS |
+      +------+---------+---------------------+----------------------------------------------+------------+-----------+
+      | c1   | RUNNING | 10.166.11.42 (eth0) | 2001:470:b368:4242:216:3eff:fed1:aff3 (eth0) | PERSISTENT | 0         |
+      +------+---------+---------------------+----------------------------------------------+------------+-----------+
+
+  #### オペレーションへの説明（description）の追加 <!-- Operations now have a description -->
+  <!--
+  A new `description` field is now present in the API for all background operations and is exposed in the command line tool.
+  -->
+  すべてのバックグラウンド操作用に、新たに API に説明（description）フィールドが追加されました。コマンドラインツールからも表示できます。
+
+      stgraber@castiana:~$ lxc operation list
+      +--------------------------------------+-----------+---------------------+---------+------------+----------------------+
+      |                  ID                  |   TYPE    |     DESCRIPTION     | STATUS  | CANCELABLE |       CREATED        |
+      +--------------------------------------+-----------+---------------------+---------+------------+----------------------+
+      | 343b1700-c0bd-44fa-8b1f-e6a8fdb91b42 | WEBSOCKET | Migrating container | RUNNING | NO         | 2018/04/03 02:51 UTC |
+      +--------------------------------------+-----------+---------------------+---------+------------+----------------------+
+      | 65494c6e-7643-4ed5-8abf-497e57cfdd5c | WEBSOCKET | Executing command   | RUNNING | NO         | 2018/04/03 02:51 UTC |
+      +--------------------------------------+-----------+---------------------+---------+------------+----------------------+
+
+  #### `lifecycle` タイプのイベント <!-- `lifecycle` type events -->
+  <!--
+  A new event class called `lifecycle` has been introduced, to provide much easier tracking of what LXD is doing from scripts or other API clients, without having to interpret LXD's log messages.
+  -->
+  新しいイベントクラスとして "lifecycle" と呼ばれるクラスが導入されました。これにより、スクリプトや他の API を使ったクライアントから、LXD が何をしているのかトラッキングしやすくなりました。LXD のログメッセージを読み取る必要はありません。
+
+      stgraber@castiana:~$ lxc monitor --type=lifecycle
+      metadata:
+        action: container-updated
+        source: /1.0/containers/bar
+      timestamp: "2018-04-02T22:53:06.742745596-04:00"
+      type: lifecycle
+
+
+      metadata:
+        action: container-started
+        source: /1.0/containers/bar
+      timestamp: "2018-04-02T22:53:07.234066242-04:00"
+      type: lifecycle
+
+
+      metadata:
+        action: container-shutdown
+        source: /1.0/containers/bar
+      timestamp: "2018-04-02T22:53:19.885795751-04:00"
+      type: lifecycle
+
+
+      metadata:
+        action: container-deleted
+        source: /1.0/containers/bar
+      timestamp: "2018-04-02T22:53:23.813480386-04:00"
+      type: lifecycle
+
+  ### システム要件 <!-- Requirements -->
+  <!--
+  LXD 3.0 now requires Go 1.9 or higher. While it may be possible to build it with an older version at this point, there is no guarantee that we won't start making use of newer Go functions in later bugfix releases.
+  -->
+  LXD 3.0 の動作には Go 1.9 以上が必要です。現時点では、これより古いバージョンでもビルドできるかもしれませんが、今後のバグフィックスリリースでは、より新しい Go の関数を使わないという保証はありません。
+
+  ### サポートとアップグレード <!-- Support and upgrade -->
+  <!--
+  LXD 3.0.0 will be supported until June 2023 and our current LTS release, LXD 2.0 will now switch to a slower maintenance pace, only getting critical bugfixes and security updates.
+  -->
+  LXD 3.0.0 は 2023 年 6 月までサポートされ、最新の LTS リリースとなります。LXD 2.0 はより遅いペースでのメンテナンスとなり、致命的なバグ修正とセキュリティ修正のみなされます。
+
+  <!--
+  Users of the LXD feature branch (currently at 2.21) should update to 3.0 to keep being supported and get all the bugfixes and new features that LXD 3.0 provides.
+  -->
+  LXD のフィーチャーブランチ (現在 2.21) のユーザは、サポートを継続して受け、すべてのバグ修正と LXD 3.0 が提供する新しい機能を使うには、3.0 へのアップデートが必要です。
+
+  <!--
+  Users of the LXD LTS branch (2.0.11) can choose to stay on LXD 2.0 and keep getting critical security fixes or upgrade to LXD 3.0. Those using LXD LTS in critical production environments will likely want to start upgrading a few test systems to LXD 3.0 to check for any potential issue and then upgrade the rest of their machines after LXD 3.0.1 is released.
+  -->
+  LXD の LTS ブランチ (現在 2.0.11) のユーザは、LXD 2.0 を使い続け、重要なセキュリティ修正を入手するか、LXD 3.0 へアップグレードするかを選択できます。重要なプロダクション環境で LXD LTS を使っているユーザは、いくつかのテストシステムで LXD 3.0 へのアップグレードを開始し、潜在的な問題をチェックし、LXD 3.0.1 がリリースされた後で残りのマシンをアップグレードしても良いでしょう。
+
+  ### 開発元からの snap パッケージの利用が可能に <!-- Availability as a snap package from upstream -->
+  <!--
+  The recommended way to install and keep LXD up to date is by using the upstream provided snap package. This ensures that all systems are running the exact same copy of LXD and simplifies the bug reporting and debugging process.
+  -->
+  LXD をインストールし、最新の状態に保つおすすめの方法は、開発元が提供する snap パッケージを使うことです。すべてのシステムが確実に LXD の同じコピーが実行されますし、バグレポートとデバッグのプロセスが簡単になります。
+
+  <!--
+  For the LXD snap, 3 tracks are provided:
+  -->
+  LXD の snap として、3 つのトラックが提供されます:
+
+   - latest（最新の LXD フィーチャーリリース、現時点では 3.0） <!-- (latest LXD feature release, currently 3.0) -->
+   - 2.0 （前の LTS リリース） <!-- (previous LTS release) -->
+   - 3.0 （現在の LTS リリース） <!-- (current LTS release) -->
+
+  <!--
+  For each of those tracks, 3 channels are maintained:
+  -->
+  それぞれのトラックで、3 つのチャンネルがメンテナンスされます:
+
+   - edge（開発元のリポジトリから取得したコードから自動的にビルドされテストされていない） <!-- (automatic, untested builds from the upstream repository) -->
+   - candidate （将来の stable ビルド、バージョンアップ前の約 48 時間のテスト用） <!-- (the future stable build, available for testing about 48h prior to promotion) -->
+   - stable（現時点の stable なサポート対象のビルド） <!-- (the current stable, supported build) -->
+
+  <!--
+  Users who wish to install LXD 3.0 and then get upgraded to 3.1 in a month or so, should use:
+  -->
+  LXD 3.0 をインストールし、1 ヶ月程度で 3.1 にアップグレードするには、次のように実行します:
+
+      snap install lxd
+
+  <!--
+  Users who wish to install LXD 3.0 and then only get bugfixes and security updates, should use:
+  -->
+  LXD 3.0 をインストールし、その後はバグフィックスとセキュリティフィックスのみ取得するには、つぎのように実行します:
+
+      snap install lxd --channel=3.0
+
+  <!--
+  If running staging systems, you may want to run those on the candidate channels, using `--channel=candidate` and `--channel=3.0/candidate` respectively.
+  -->
+  ステージングのシステムを実行する場合、`--channel=candidate` と `--channel=3.0/candidate` を使うことで、candidate チャンネルの LXD をそれぞれ実行できます。
+
+  <!--
+  Switching between tracks and channels is possible by using `snap refresh` but note that LXD doesn't support downgrading and will fail to start if you attempt it.
+  -->
+  トラックやチャンネルは snap refresh コマンドを使って変更できます。しかし LXD はダウングレードはサポートしませんので、実行しても起動しないでしょう。
+
+  ### ダウンロード <!-- Downloads -->
+   - リリース tarball <!-- Main release tarball -->: [lxd-3.0.0.tar.gz](https://linuxcontainers.org/downloads/lxd/lxd-3.0.0.tar.gz)
+   - GPGシグネチャ <!-- GPG signature -->: [lxd-3.0.0.tar.gz.asc](https://linuxcontainers.org/downloads/lxd/lxd-3.0.0.tar.gz.asc)
+
+  ### コントリビューター <!-- Contributors -->
+  <!--
+  The LXD 3.0.0 release was brought to you by a total of 18 contributors.
+  -->
+  LXD 3.0.0 は、全部で 18 名の貢献によりリリースされました。
