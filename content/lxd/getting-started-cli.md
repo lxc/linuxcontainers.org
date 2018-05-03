@@ -3,8 +3,8 @@
 ## Choose your release
 LXD upstream maintains two release branches in parallel:
 
- * LTS release (LXD 2.0.x)
- * Feature releases (LXD 2.x)
+ * LTS release (LXD 3.0.x or LXD 2.0.x)
+ * Feature releases (LXD 3.x)
 
 LTS releases are recommended for production environments as they will benefit from regular bugfix
 and security updates but will not see new features added or any kind of behavioral change.
