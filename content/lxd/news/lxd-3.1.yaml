@@ -18,6 +18,7 @@ content: |-
 
   ### The changes in this release include
   Features:
+
    - Introduced a new backup API and ability to export/import containers using it.
      In the CLI those are new `lxc export` and `lxc import` commands.
    - Made it possible to override the LXD socket path with `LXD_SOCKET`
@@ -28,6 +29,7 @@ content: |-
    - Extended `lxd init --auto` to also auto-configure an initial network
 
   Bugfixes:
+
    - client: Expose http URL in ConnectionInfo
    - client: Improve remote operation errors
    - doc: Document how to dump the content or schema of databases
