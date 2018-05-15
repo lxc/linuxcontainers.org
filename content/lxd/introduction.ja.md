@@ -124,10 +124,10 @@ LXD には二種類のリリースがあります:
  * Feature (新機能) リリース <!-- Feature releases -->
 
 <!--
-The current LTS is LXD 2.0 which is supported until June 2021 and gets frequent bugfix and security updates
+The current LTS is LXD 3.0 which is supported until June 2023 and gets frequent bugfix and security updates
 but does not receive any feature addition.
 -->
-現在の LTS は LXD 2.0 で、2021 年 6 月までサポートされます。LTS ではバグフィックスとセキュリティアップデートを受けられますが、機能の追加は行われません。
+現在の LTS は LXD 3.0 で、2023 年 6 月までサポートされます。LTS ではバグフィックスとセキュリティアップデートを受けられますが、機能の追加は行われません。
 
 <!--
 Feature releases are pushed out every month or so and contain new features as well as bugfixes.
