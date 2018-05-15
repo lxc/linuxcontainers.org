@@ -1,7 +1,7 @@
 
 # Installation
 ## Choose your release
-LXD upstream maintains two release branches in parallel:
+LXD upstream maintains three release branches in parallel:
 
  * LTS release (LXD 3.0.x or LXD 2.0.x)
  * Feature releases (LXD 3.x)

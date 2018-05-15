@@ -2,12 +2,12 @@
 # インストール<!-- Installation -->
 ## リリースを選択する <!-- Choose your release -->
 <!--
-LXD upstream maintains two release branches in parallel:
+LXD upstream maintains three release branches in parallel:
 -->
-LXD では 2 つのリリースブランチが並行してメンテナンスされています:
+LXD では 3 つのリリースブランチが並行してメンテナンスされています:
 
- * LTS リリース <!-- LTS release -->(LXD 2.0.x)
- * フィーチャーリリース <!-- Feature releases -->(LXD 2.x)
+ * LTS リリース <!-- LTS release -->(LXD 3.0.x or LXD 2.0.x)
+ * フィーチャーリリース <!-- Feature releases -->(LXD 3.x)
 
 <!--
 LTS releases are recommended for production environments as they will benefit from regular bugfix
