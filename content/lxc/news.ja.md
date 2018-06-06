@@ -1,4 +1,209 @@
 # News
+## [LXC 3.0.1 リリースのお知らせ](https://discuss.linuxcontainers.org/t/lxc-3-0-1-has-been-released/1949)
+<span class="text-muted">5th of June 2018</span>
+### はじめに
+<!--
+The LXC team is pleased to announce the release of LXC 3.0.1!
+-->
+LXC チームは LXC 3.0.1 のリリースをおしらせできることをうれしく思います！
+
+<!--
+As a stable bugfix release, no major changes have been done, instead focusing on bugfixes and minor usability improvements.
+-->
+Stable に対するバグフィックスのためのリリースですので、大きな変更はありません。バグフィックスと細かな使い勝手の改良にフォーカスしています。
+
+#### ハイライト <!-- Highlights -->
+
+ * liblxc の様々な部分でスレッドセーフとなるように改良されました <!-- Improvement in thread safety of various part of liblxc -->
+ * Coverity によって見つかった問題を多数修正しました <!-- Lots of bugfixes for issues identified by Coverity -->
+ * seccomp の扱いに関していくつか改良が行われました。特に personality に関係する部分です <!-- Several improvements to Seccomp handling, especially related to personalities -->
+ * GCC 8 をサポートしました <!-- Support for GCC 8 -->
+
+#### バグフィックス <!-- Bugfixes -->(LXC)
+
+ * tools: 初期化されていない変数を修正しました <!-- fix unitialized variable -->
+ * storage: lvm fs の uuid 生成の問題を修正しました<!-- fix lvm fs uuid generation -->
+ * lxc-oci: Cmd と Entrypoint のパースの問題を修正しました <!-- fix Cmd/Entrypoint parsing -->
+ * lxc-oci: umoci コマンドの出力を減らしました <!-- make umoci less verbose -->
+ * lxclock: スレッドセーフな `*_OFD_*` ロックを使うようにしました <!-- use thread-safe *_OFD_* fcntl() locks -->
+ * locktests: テストスイートを修正しました <!-- fix test suite -->
+ * conf: umount がホストに伝播しないようにしました <!-- ensure umounts don't propagate to host -->
+ * doc: 日本語の lxc.container.conf(5) の翻訳を改良しました <!-- Tweak Japanese translation in lxc.container.conf(5) -->
+ * lxc.init 内のシグナルの送出の問題を修正しました <!-- fix signal sending in lxc.init -->
+ * rootfs pinning: NFS 上でピンファイルを隠しファイルにし、このファイルを削除しません <!-- On NFS, make file hidden but don't delete it -->
+ * conf: テンポラリファイル作成の問題を修正しました <!-- fix temporary file creation -->
+ * ringbuf: テンポラリファイル作成の問題を修正しました <!-- fix temporary file creation -->
+ * static な libcap と shared な gnutls な場合のコンパイルの問題を修正しました <!-- Fix compilation with static libcap and shared gnutls -->
+ * attach: 常に補助 (supplementary) グループを落とすようにしました <!-- always drop supplementary groups -->
+ * lxc init: デッドコードを削除しました <!-- remove dead code -->
+ * storage/rsync: エラー時にメモリを free するようにしました <!-- free memory on error -->
+ * tools/utils: エラー時にメモリを free するようにしました <!-- free memory on error -->
+ * lxc init: コーディングスタイルの変更を行いました <!-- coding style -->
+ * utils: 古い glibc で `__NR_setns` がない場合は定義するようにしました <!-- define \_\_NR\_setns if missing on old glibcs -->
+ * attach: 常に補助 (supplementary) グループを落とそうとするようにしました <!-- try to always drop supplementary groups -->
+ * conf: エラー時には gid=5 オプションなしで devpts のマウントを試行するようにしました <!-- ret-try devpts mount without gid=5 on error -->
+ * execute: root をマッピングしていないアプリケーションコンテナの問題を修正しました <!-- fix app containers without root mapping -->
+ * conf: `run_script_argv()` 中のネットワークタイプのチェックの問題を修正しました <!-- fix net type checks in run\_script\_argv() -->
+ * seccomp: アーキテクチャの反転を扱えるようにしました (訳注: カーネルとユーザスペースとコンテナの間での様々な32bit,64bitの組み合わせを扱えるようにした)
+ * seccomp: すべてのエラーを扱うようにしました <!-- handle all errors -->
+ * seccomp: 互換アーキテクチャの処理をクリーンアップしました <!-- cleanup compat architecture handling -->
+ * seccomp: ロギングを改良しました <!-- improve logging -->
+ * tools: `lxc-execute` の `-d/–daemonize` オプションの記載を man page に追加しました <!-- document -d/--daemonize for lxc-execute -->
+ * seccomp: 機能と関係のない変更を行いました（訳注: 変数のリネーム） <!-- non-functional changes -->
+ * seccomp: アーキテクチャの反転を扱えるようにしましたII <!-- handle arch inversion II -->
+ * lxc-oci: ダウンロードディレクトリを `mkdir` するようにしました <!-- mkdir the download directory -->
+ * do\_lxcapi\_create: `umask` をセットするようにしました <!-- set umask -->
+ * lxc/tools/lxc\_monitor: `<stddef.h>` の include が欠けていたので追加しました <!-- include missing <stddef.h> -->
+ * pam-cgfs: cgroup 階層を作る場合はシステムの umask を無視するようにしました <!-- ignore the system umask when creating the cgroup hierarchy -->
+ * チェックポイント時の CRIU に action script を指定するようにしました <!-- Also pass action scripts to CRIU on checkpointing -->
+ * `cgfsng_attach` 内のメモリリークを修正しました <!-- Fix the memory leak in cgfsng\_attach -->
+ * `list_active_containers` 中のメモリリークを修正しました <!-- Fix memory leak in list\_active\_containers -->
+ * `HAVE_SETNS` が設定されてない場合の `tool_utils.c` のビルドを修正しました <!-- Fix tool\_utils.c build when HAVE\_SETNS is unset -->
+ * coverity: #1435210
+ * coverity: #1435208
+ * coverity: #1435207
+ * coverity: #1435206
+ * coverity: #1435205
+ * coverity: #1435203
+ * coverity: #1435200
+ * coverity: #1435198
+ * coverity: #1426734
+ * lxccontainer: 機能と関係のない変更を行いました <!-- non-functional changes -->
+ * lxccontainer: スレッドセーフな `*_OFD_*` ロックを使うようにしました <!-- use thread-safe *_OFD_* locks -->
+ * lxccontainer: 機能と関係のない変更を行いました <!- non-functional changes -->
+ * lxccontainer: do\_lxcapi\_is\_running()
+ * lxccontainer: do\_lxcapi\_freeze()
+ * lxccontainer: do\_lxcapi\_unfreeze()
+ * lxccontainer: 機能と関係のない変更を行いました <!- non-functional changes -->
+ * lxccontainer: スレッドセーフな open() + write() を使うようにしました <!-- use thread-safe open() + write() -->
+ * lxccontainer: 機能と関係のない変更を行いました <!- non-functional changes -->
+ * lxccontainer: 機能と関係のない変更を行いました <!- non-functional changes -->
+ * lxccontainer: 機能と関係のない変更を行いました <!- non-functional changes -->
+ * coverity: #1435263
+ * execute ログファイルのロジックを修正しました <!-- fix logic for execute log file -->
+ * utils: `LXC_PROC_PID_FD_LEN` を追加しました <!-- add LXC\_PROC\_PID\_FD\_LEN -->
+ * execute: 静的なバッファを使うようにしました <!-- use static buffer -->
+ * execute: 継承した fd を再チェックしないようにしました <!-- do not check inherited fds again -->
+ * TRACE/ERROR ログをいくつか追加しました <!-- add some TRACE/ERROR reporting -->
+ * execute: -o によるパスの指定の引数の数を正しくカウントするようにしました <!-- account for -o path option count -->
+ * execute: 存在する init が見つかった時に `init_path` を設定するようにしました <!-- set init\_path when existing init is found -->
+ * genl: 使わないソースファイルを削除しました <!-- remove -->
+ * coverity: #1248104
+ * coverity: #1248105 
+ * coverity: #1425744
+ * utils: 終端の `\0` バイトをきちんと扱うようにしました <!-- account for terminating \0 byte -->
+ * confile: gcc-8 向けに調整を行いました <!-- confile: satisfy gcc-8 -->
+ * network: gcc-8 向けに調整を行いました <!-- silence gcc-8 -->
+ * network: 制限を IFNAMSIZ に合わせるようにしました <!-- adhere to IFNAMSIZ limit -->
+ * 設定値で指定するサイズの単位は大文字小文字を区別しなくなりました <!-- support case ignored suffix for sizes -->
+ * utils: parse\_byte\_size\_string() のコーディングスタイルを修正しました <!-- fix parse\_byte\_size\_string() coding style -->
+ * strlcpy: `strlcpy()` を実装しました <!-- add strlcpy() implementation -->
+ * tree-wide: s/strncpy()/strlcpy()/g
+ * CODING\_STYLE: add section about using strlcpy()
+ * tools: s/strncpy()/strlcpy()/g
+ * Revert "tools: s/strncpy()/strlcpy()/g"
+ * tools: s/strncpy()/memcpy()/
+ * doc: 日本語の lxc-execute(1) に "-d/--daemon" オプションの説明を追加しました <!-- Add "-d/\-\-daemon" option to Japanese lxc-execute(1) -->
+ * doc: 日本語の lxc.container.conf(5) の単位の書き方の説明を修正しました <!-- Fix size unit style in Japanese lxc.container.conf(5) -->
+ * coverity: #1435604
+ * coverity: #1435603
+ * coverity: #1435602
+ * coverity: #1425844
+ * config: user namespace 内で `/sys` の読み書きができるようになりました <!-- allow read-write /sys in user namespace -->
+ * coverity: #1425836
+ * coverity: #1248106
+ * capabilities: ambient ケーパビリティを適用するようになりました <!-- raise ambient capabilities -->
+ * coverity: #1425802
+ * cgroups: cgroup の扱いをリファクタリングしました <!-- refactor cgroup handling -->
+ * cgroups: freezer\_state() を削除しました <!-- remove freezer\_state() -->
+ * seccomp: #ifdef SCMP\_ARCH\_AARCH64
+ * conf: write\_id\_mapping() を簡素化しました <!-- simplify write\_id\_mapping() -->
+ * log: スレッドごとのコンテナ名プレフィックスを使えるようにしました <!-- enable per-thread container name prefix -->
+ * lxc-init: キャッチできないシグナルはスキップするようにしました <!-- skip signals that can't be caught -->
+ * execute: サポートされている場合は `execveat()` を使うようになりました <!-- use execveat() syscall if supported -->
+ * tools: リクエストがあったときにのみログファイルを作るようにしました <!-- only create log file when requested -->
+ * seccomp: sscanf 用の配列の割り当て時の off-by-one エラーを修正しました <!-- fix off-by-one error in array allocation for sscanf -->
+ * seccomp: 混乱させるコメント行を削除しました <!-- remove confusing comment line -->
+ * seccomp: 不要な memset を削除しました <!-- remove unnecessary memset -->
+ * seccomp: システムコール引数のフィルタをパースする際の型の不一致を修正しました <!-- fix type mismatch when parsing syscall arguments filters -->
+ * lxcseccomp: ヘッダをクリーンアップしました <!-- cleanup header -->
+ * seccomp: parse\_config\_v1()
+ * utils: add remove\_trailing\_newlines()
+ * seccomp: get\_v2\_default\_action()
+ * seccomp: get\_action\_name()
+ * seccomp: get\_v2\_action()
+ * seccomp: fix get\_seccomp\_arg\_value()
+ * seccomp: parse\_v2\_rules()
+ * seccomp: `#ifdef` 行を移動しました <!-- move #ifdefines -->
+ * seccomp: get\_hostarch()
+ * seccomp: scmp\_filter\_ctx get\_new\_ctx()
+ * seccomp: do\_resolve\_add\_rule()
+ * seccomp: parse\_config\_v2()
+ * seccomp: parse\_config()
+ * seccomp: lxc\_read\_seccomp\_config()
+ * tree-wide: s/sigprocmask/pthread\_sigmask()/g
+ * utils: task\_blocking\_signal() を修正しました <!-- fix task\_blocking\_signal() -->
+ * lxccontainer: シグナルを送る時の fd のリークを修正しました <!-- fix fd leaks when sending signals -->
+ * confile: アーキテクチャを順に並べました <!-- order architectures -->
+ * start: `setns()` の失敗をログするようにしました <!-- log setns() failure -->
+ * seccomp: リークを修正しました <!-- leak fixup -->
+ * seccomp: (別の修正で削除された) アクションの定義をパースする際のエラーチェックを再度追加しました <!-- re-add action parse error handling -->
+ * seccomp: parse\_config の行の扱いをリファクタリングしました <!-- refactor line handling of parse\_config -->
+ * seccomp: 認められていないアクションの指定をエラーにするようにしました <!-- error on unrecognized actions -->
+ * seccomp: lxc\_read\_seccomp\_config()
+ * seccomp: parse\_v2\_rules()
+ * seccomp: do\_resolve\_add\_rule() をより厳格にしました <!-- make do\_resolve\_add\_rule() more strict -->
+ * tools: グローバル設定オプションの `lxc-create` 内での扱いを修正しました <!-- fix lxc-create with global config value -->
+ * tools: グローバル設定オプションの `lxc-create` 内での扱いを修正しました II<!-- fix lxc-create with global config value II -->
+ * coverity: #1435806
+ * coverity: #1435805
+ * coverity: #1435803
+ * coverity: #1435747
+ * conf: 機能と関係のない変更を行いました <!-- non-functional changes -->
+ * conf: make is\_execute a boolean
+ * conf: 機能と関係のない変更を行いました <!-- non-functional changes -->
+ * conf: close\_all\_fds 変数を boolean にしました <!-- make close\_all\_fds a boolean -->
+ * conf: 構造体の mount 関係のメンバの配置を変えました <!-- reshuffle mount members -->
+ * conf: tty の扱いを簡素化しました <!-- simplify tty handling -->
+ * conf: pts -> pty\_max
+ * conf: 機能と関係のない変更を行いました <!-- non-functional changes -->
+ * utils: task\_blocking\_signal() を修正しました <!-- fix task\_blocking\_signal() -->
+ * network: ソケットハンドルのリークを修正しました <!-- fix socket handle leak -->
+ * start: ns\_clone\_flags を `-1` で初期化しないようにしました <!-- do not init ns\_clone\_flags to -1 -->
+ * conf: lxc\_delete\_tty() がクラッシュしないようにしました <!-- ensure lxc\_delete\_tty() does not crash -->
+ * start: リブートのマクロを追加しました <!-- add reboot macros -->
+ * conf: root の idmap 構造体を const にしました <!-- make root idmap structs const -->
+ * conf: tmp\_umount\_proc 変数を bool にしました <!-- make tmp\_umount\_proc bool -->
+ * conf: 機能と関係のない変更を行いました <!-- non-functional changes -->
+ * conf: va\_end を呼ぶようにしました <!-- va\_end was not called. -->
+ * confile: `strprint()` を改良しました <!-- improve strprint() -->
+ * ハンドラの返り値の定義を変更しました <!-- change defines for return value of handlers -->
+ * start: waitpid() のブロッキングの問題を修正しました <!-- fix waitpid() blocking issue -->
+ * start: 未知の info.si\_code をログするようにしました <!-- log unknown info.si\_code -->
+ * tree-wide: いくつかのファイルのモードを修正しました <!-- fix mode of some files -->
+ * confile\_utils: strprint() を追加しました <!-- apply strprint() -->
+ * templates: 実際に DOWNLOAD\_TEMP ディレクトリを作るようにしました <!-- actually create DOWNLOAD\_TEMP directory -->
+ * templates: download テンプレートを修正しました <!-- fix download template -->
+ * `lxc-update-config` を修正しました <!-- Patch lxc-update-config -->
+
+#### バグ修正 <!-- Bugfixes -->(LXC templates)
+
+ * sshd: lxc.autodev を使うようにしました <!-- Use lxc.autodev -->
+ * sshd: init スクリプトにコンテナ名を渡すようにしました <!-- Pass the container name to the init script -->
+
+### サポートとアップグレード <!-- Support and upgrade -->
+<!--
+LXC 3.0.1 is supported until June 2023 and is our current LTS release, users are encouraged to update to the latest bugfix releases as they're made available.
+-->
+LXC 3.0.1 は 2023 年 6 月までサポートされる最新の LTS リリースです。
+利用可能になった最新のバグ修正リリースに更新することをお勧めします。
+
+### ダウンロード <!-- Downloads -->
+
+ - LXC リリース tarball <!-- Main release tarball -->: [lxc-3.0.1.tar.gz](https://linuxcontainers.org/downloads/lxc/lxc-3.0.1.tar.gz) (GPG: [lxc-3.0.1.tar.gz.asc](https://linuxcontainers.org/downloads/lxc/lxc-3.0.1.tar.gz.asc))
+ - LXC テンプレート tarball <!-- LXC templates tarball -->: [lxc-templates-3.0.1.tar.gz](https://linuxcontainers.org/downloads/lxc/lxc-templates-3.0.1.tar.gz) (GPG: [lxc-templates-3.0.1.tar.gz.asc](https://linuxcontainers.org/downloads/lxc/lxc-templates-3.0.1.tar.gz.asc))
+ - LXC python3 バインディング tarball <!-- LXC python3 bindings tarball -->: [python3-lxc-3.0.1.tar.gz](https://linuxcontainers.org/downloads/lxc/python3-lxc-3.0.1.tar.gz) (GPG: [python3-lxc-3.0.1.tar.gz.asc](https://linuxcontainers.org/downloads/lxc/python3-lxc-3.0.1.tar.gz.asc))
+
 ## [LXC 3.0.0 リリースのお知らせ](https://discuss.linuxcontainers.org/t/lxc-3-0-0-has-been-released/1449)
 <span class="text-muted">2018 年 3 月 27 日</span>
 
@@ -530,7 +735,7 @@ Allocation of a new terminal has been moved into the API itself. Callers can  no
 LXC 3.0.0 will be supported until June 2023 and our current LTS release.
 LXC 2.0 will now join LXC 1.0 in only getting critical bugfixes and security updates.
 -->
-LXC 3.0.0 は 2023 年 6 月までサポートされ、最新の LTS リリースとなります。
+LXC 3.0.0 は 2023 年 6 月までサポートされる最新の LTS リリースです。
 LXC 1.0 に加えて LXC 2.0 は、致命的なバグ修正とセキュリティ修正のみなされます。
 
 <!--

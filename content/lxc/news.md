@@ -19,7 +19,7 @@ As a stable bugfix release, no major changes have been done, instead focusing on
  * storage: fix lvm fs uuid generation
  * lxc-oci: fix Cmd/Entrypoint parsing
  * lxc-oci: make umoci less verbose
- * lxclock: use thread-safe *_OFD_* fcntl() locks
+ * lxclock: use thread-safe `*_OFD_*` fcntl() locks
  * locktests: fix test suite
  * conf: ensure umounts don't propagate to host
  * doc: Tweak Japanese translation in lxc.container.conf(5)
@@ -63,7 +63,7 @@ As a stable bugfix release, no major changes have been done, instead focusing on
  * coverity: #1435198
  * coverity: #1426734
  * lxccontainer: non-functional changes
- * lxccontainer: use thread-safe *_OFD_* locks
+ * lxccontainer: use thread-safe `*_OFD_*` locks
  * lxccontainer: non-functional changes
  * lxccontainer: do\_lxcapi\_is\_running()
  * lxccontainer: do\_lxcapi\_freeze()
