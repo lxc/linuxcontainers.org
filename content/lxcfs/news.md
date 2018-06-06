@@ -1,4 +1,23 @@
 # News
+## [LXCFS 3.0.1 release announcement](https://discuss.linuxcontainers.org/t/lxcfs-3-0-1-has-been-released/1946)
+<span class="text-muted">5th of June 2018</span>
+### Introduction
+The LXCFS team is pleased to announce the release of LXCFS 3.0.1!
+
+As a stable bugfix release, no major changes have been done, instead focusing on bugfixes and minor usability improvements.
+
+#### Minor improvements
+
+ * Add support for the `nonempty` FUSE mount option
+
+### Support and upgrade
+LXCFS 3.0.1 is supported until June 2023 and is our current LTS release, users are encouraged to update to the latest bugfix releases as they're made available.
+
+### Downloads
+
+ - Main release tarball: [lxcfs-3.0.1.tar.gz](https://linuxcontainers.org/downloads/lxcfs/lxcfs-3.0.1.tar.gz)
+ - GPG signature: [lxcfs-3.0.1.tar.gz.asc](https://linuxcontainers.org/downloads/lxcfs/lxcfs-3.0.1.tar.gz.asc)
+
 ## [LXCFS 3.0.0 release announcement](https://discuss.linuxcontainers.org/t/lxcfs-3-0-0-has-been-released/1440)
 <span class="text-muted">26th of March 2018</span>
 
@@ -31,6 +50,7 @@ Due to the transition of libpam-cgfs to LXC, this should be done at the
 same time as the upgrade to LXC 3.0 to avoid regressions.
 
 ### Downloads
+
  - Main release tarball: [lxcfs-3.0.0.tar.gz](https://linuxcontainers.org/downloads/lxcfs/lxcfs-3.0.0.tar.gz)
  - GPG signature: [lxcfs-3.0.0.tar.gz.asc](https://linuxcontainers.org/downloads/lxcfs/lxcfs-3.0.0.tar.gz.asc)
 
