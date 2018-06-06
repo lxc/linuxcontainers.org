@@ -70,15 +70,15 @@ Stable に対するバグフィックスのためのリリースですので、�
  * coverity: #1426734
  * lxccontainer: 機能と関係のない変更を行いました <!-- non-functional changes -->
  * lxccontainer: スレッドセーフな `*_OFD_*` ロックを使うようにしました <!-- use thread-safe *_OFD_* locks -->
- * lxccontainer: 機能と関係のない変更を行いました <!- non-functional changes -->
+ * lxccontainer: 機能と関係のない変更を行いました <!-- non-functional changes -->
  * lxccontainer: do\_lxcapi\_is\_running()
  * lxccontainer: do\_lxcapi\_freeze()
  * lxccontainer: do\_lxcapi\_unfreeze()
- * lxccontainer: 機能と関係のない変更を行いました <!- non-functional changes -->
+ * lxccontainer: 機能と関係のない変更を行いました <!-- non-functional changes -->
  * lxccontainer: スレッドセーフな open() + write() を使うようにしました <!-- use thread-safe open() + write() -->
- * lxccontainer: 機能と関係のない変更を行いました <!- non-functional changes -->
- * lxccontainer: 機能と関係のない変更を行いました <!- non-functional changes -->
- * lxccontainer: 機能と関係のない変更を行いました <!- non-functional changes -->
+ * lxccontainer: 機能と関係のない変更を行いました <!-- non-functional changes -->
+ * lxccontainer: 機能と関係のない変更を行いました <!-- non-functional changes -->
+ * lxccontainer: 機能と関係のない変更を行いました <!-- non-functional changes -->
  * coverity: #1435263
  * execute ログファイルのロジックを修正しました <!-- fix logic for execute log file -->
  * utils: `LXC_PROC_PID_FD_LEN` を追加しました <!-- add LXC\_PROC\_PID\_FD\_LEN -->
@@ -99,7 +99,7 @@ Stable に対するバグフィックスのためのリリースですので、�
  * utils: parse\_byte\_size\_string() のコーディングスタイルを修正しました <!-- fix parse\_byte\_size\_string() coding style -->
  * strlcpy: `strlcpy()` を実装しました <!-- add strlcpy() implementation -->
  * tree-wide: s/strncpy()/strlcpy()/g
- * CODING\_STYLE: add section about using strlcpy()
+ * CODING\_STYLE: `strlcpy()` についてのセクションを追加しました <!-- add section about using strlcpy() -->
  * tools: s/strncpy()/strlcpy()/g
  * Revert "tools: s/strncpy()/strlcpy()/g"
  * tools: s/strncpy()/memcpy()/
@@ -160,7 +160,7 @@ Stable に対するバグフィックスのためのリリースですので、�
  * coverity: #1435803
  * coverity: #1435747
  * conf: 機能と関係のない変更を行いました <!-- non-functional changes -->
- * conf: make is\_execute a boolean
+ * conf: is\_execute を boolean にしました <!-- make is\_execute a boolean -->
  * conf: 機能と関係のない変更を行いました <!-- non-functional changes -->
  * conf: close\_all\_fds 変数を boolean にしました <!-- make close\_all\_fds a boolean -->
  * conf: 構造体の mount 関係のメンバの配置を変えました <!-- reshuffle mount members -->
