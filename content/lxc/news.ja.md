@@ -50,7 +50,6 @@ Stable に対するバグフィックスのためのリリースですので、�
  * seccomp: ロギングを改良しました <!-- improve logging -->
  * tools: `lxc-execute` の `-d/–daemonize` オプションの記載を man page に追加しました <!-- document -d/--daemonize for lxc-execute -->
  * seccomp: 機能と関係のない変更を行いました（訳注: 変数のリネーム） <!-- non-functional changes -->
- * seccomp: アーキテクチャの反転を扱えるようにしましたII <!-- handle arch inversion II -->
  * lxc-oci: ダウンロードディレクトリを `mkdir` するようにしました <!-- mkdir the download directory -->
  * do\_lxcapi\_create: `umask` をセットするようにしました <!-- set umask -->
  * lxc/tools/lxc\_monitor: `<stddef.h>` の include が欠けていたので追加しました <!-- include missing <stddef.h> -->
@@ -70,15 +69,10 @@ Stable に対するバグフィックスのためのリリースですので、�
  * coverity: #1426734
  * lxccontainer: 機能と関係のない変更を行いました <!-- non-functional changes -->
  * lxccontainer: スレッドセーフな `*_OFD_*` ロックを使うようにしました <!-- use thread-safe *_OFD_* locks -->
- * lxccontainer: 機能と関係のない変更を行いました <!-- non-functional changes -->
  * lxccontainer: do\_lxcapi\_is\_running()
  * lxccontainer: do\_lxcapi\_freeze()
  * lxccontainer: do\_lxcapi\_unfreeze()
- * lxccontainer: 機能と関係のない変更を行いました <!-- non-functional changes -->
  * lxccontainer: スレッドセーフな open() + write() を使うようにしました <!-- use thread-safe open() + write() -->
- * lxccontainer: 機能と関係のない変更を行いました <!-- non-functional changes -->
- * lxccontainer: 機能と関係のない変更を行いました <!-- non-functional changes -->
- * lxccontainer: 機能と関係のない変更を行いました <!-- non-functional changes -->
  * coverity: #1435263
  * execute ログファイルのロジックを修正しました <!-- fix logic for execute log file -->
  * utils: `LXC_PROC_PID_FD_LEN` を追加しました <!-- add LXC\_PROC\_PID\_FD\_LEN -->
@@ -154,19 +148,16 @@ Stable に対するバグフィックスのためのリリースですので、�
  * seccomp: parse\_v2\_rules()
  * seccomp: do\_resolve\_add\_rule() をより厳格にしました <!-- make do\_resolve\_add\_rule() more strict -->
  * tools: グローバル設定オプションの `lxc-create` 内での扱いを修正しました <!-- fix lxc-create with global config value -->
- * tools: グローバル設定オプションの `lxc-create` 内での扱いを修正しました II<!-- fix lxc-create with global config value II -->
  * coverity: #1435806
  * coverity: #1435805
  * coverity: #1435803
  * coverity: #1435747
  * conf: 機能と関係のない変更を行いました <!-- non-functional changes -->
  * conf: is\_execute を boolean にしました <!-- make is\_execute a boolean -->
- * conf: 機能と関係のない変更を行いました <!-- non-functional changes -->
  * conf: close\_all\_fds 変数を boolean にしました <!-- make close\_all\_fds a boolean -->
  * conf: 構造体の mount 関係のメンバの配置を変えました <!-- reshuffle mount members -->
  * conf: tty の扱いを簡素化しました <!-- simplify tty handling -->
  * conf: pts -> pty\_max
- * conf: 機能と関係のない変更を行いました <!-- non-functional changes -->
  * utils: task\_blocking\_signal() を修正しました <!-- fix task\_blocking\_signal() -->
  * network: ソケットハンドルのリークを修正しました <!-- fix socket handle leak -->
  * start: ns\_clone\_flags を `-1` で初期化しないようにしました <!-- do not init ns\_clone\_flags to -1 -->
@@ -174,7 +165,6 @@ Stable に対するバグフィックスのためのリリースですので、�
  * start: リブートのマクロを追加しました <!-- add reboot macros -->
  * conf: root の idmap 構造体を const にしました <!-- make root idmap structs const -->
  * conf: tmp\_umount\_proc 変数を bool にしました <!-- make tmp\_umount\_proc bool -->
- * conf: 機能と関係のない変更を行いました <!-- non-functional changes -->
  * conf: va\_end を呼ぶようにしました <!-- va\_end was not called. -->
  * confile: `strprint()` を改良しました <!-- improve strprint() -->
  * ハンドラの返り値の定義を変更しました <!-- change defines for return value of handlers -->
