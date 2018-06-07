@@ -19,7 +19,7 @@ As a stable bugfix release, no major changes have been done, instead focusing on
  * storage: fix lvm fs uuid generation
  * lxc-oci: fix Cmd/Entrypoint parsing
  * lxc-oci: make umoci less verbose
- * lxclock: use thread-safe *_OFD_* fcntl() locks
+ * lxclock: use thread-safe `*_OFD_*` fcntl() locks
  * locktests: fix test suite
  * conf: ensure umounts don't propagate to host
  * doc: Tweak Japanese translation in lxc.container.conf(5)
@@ -44,7 +44,6 @@ As a stable bugfix release, no major changes have been done, instead focusing on
  * seccomp: improve logging
  * tools: document -d/--daemonize for lxc-execute
  * seccomp: non-functional changes
- * seccomp: handle arch inversion II
  * lxc-oci: mkdir the download directory
  * do\_lxcapi\_create: set umask
  * lxc/tools/lxc\_monitor: include missing <stddef.h>
@@ -63,16 +62,11 @@ As a stable bugfix release, no major changes have been done, instead focusing on
  * coverity: #1435198
  * coverity: #1426734
  * lxccontainer: non-functional changes
- * lxccontainer: use thread-safe *_OFD_* locks
- * lxccontainer: non-functional changes
+ * lxccontainer: use thread-safe `*_OFD_*` locks
  * lxccontainer: do\_lxcapi\_is\_running()
  * lxccontainer: do\_lxcapi\_freeze()
  * lxccontainer: do\_lxcapi\_unfreeze()
- * lxccontainer: non-functional changes
  * lxccontainer: use thread-safe open() + write()
- * lxccontainer: non-functional changes
- * lxccontainer: non-functional changes
- * lxccontainer: non-functional changes
  * coverity: #1435263
  * fix logic for execute log file
  * utils: add LXC\_PROC\_PID\_FD\_LEN
@@ -148,19 +142,16 @@ As a stable bugfix release, no major changes have been done, instead focusing on
  * seccomp: parse\_v2\_rules()
  * seccomp: make do\_resolve\_add\_rule() more strict
  * tools: fix lxc-create with global config value
- * tools: fix lxc-create with global config value II
  * coverity: #1435806
  * coverity: #1435805
  * coverity: #1435803
  * coverity: #1435747
  * conf: non-functional changes
  * conf: make is\_execute a boolean
- * conf: non-functional changes
  * conf: make close\_all\_fds a boolean
  * conf: reshuffle mount members
  * conf: simplify tty handling
  * conf: pts -> pty\_max
- * conf: non-functional changes
  * utils: fix task\_blocking\_signal()
  * network: fix socket handle leak
  * start: do not init ns\_clone\_flags to -1
@@ -168,7 +159,6 @@ As a stable bugfix release, no major changes have been done, instead focusing on
  * start: add reboot macros
  * conf: make root idmap structs const
  * conf: make tmp\_umount\_proc bool
- * conf: non-functional changes
  * conf: va\_end was not called.
  * confile: improve strprint()
  * change defines for return value of handlers
