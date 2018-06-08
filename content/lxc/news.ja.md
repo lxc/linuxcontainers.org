@@ -1,6 +1,6 @@
 # News
 ## [LXC 3.0.1 リリースのお知らせ](https://discuss.linuxcontainers.org/t/lxc-3-0-1-has-been-released/1949)
-<span class="text-muted">5th of June 2018</span>
+<span class="text-muted">2018 年 6 月 5 日</span>
 ### はじめに
 <!--
 The LXC team is pleased to announce the release of LXC 3.0.1!
