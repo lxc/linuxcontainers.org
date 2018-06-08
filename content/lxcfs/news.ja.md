@@ -1,4 +1,32 @@
 # News
+## [LXCFS 3.0.1 リリースのお知らせ](https://discuss.linuxcontainers.org/t/lxcfs-3-0-1-has-been-released/1946)
+<span class="text-muted">2018 年 6 月 5 日</span>
+### はじめに <!-- Introduction -->
+<!--
+The LXCFS team is pleased to announce the release of LXCFS 3.0.1!
+-->
+LXCFS チームは LXCFS 3.0.1 のリリースをお知らせできることをうれしく思います!
+
+<!--
+As a stable bugfix release, no major changes have been done, instead focusing on bugfixes and minor usability improvements.
+-->
+Stable に対するバグフィックスのためのリリースですので、大きな変更はありません。バグフィックスと細かな使い勝手の改良にフォーカスしています。
+
+#### 変更点 <!-- Minor improvements -->
+
+ * FUSE マウントオプションとして `noempty` が使えるようになりました <!-- Add support for the `nonempty` FUSE mount option -->
+
+### サポートとアップグレード <!-- Support and upgrade -->
+<!--
+LXCFS 3.0.1 is supported until June 2023 and is our current LTS release, users are encouraged to update to the latest bugfix releases as they're made available.
+-->
+LXCFS 3.0.1 は 2023 年 6 月までサポートされる最新の LTS リリースです。利用可能になった最新のバグ修正リリースに更新することをお勧めします。
+
+### ダウンロード <!-- Downloads -->
+
+ - リリース tarball<!-- Main release tarball -->: [lxcfs-3.0.1.tar.gz](https://linuxcontainers.org/downloads/lxcfs/lxcfs-3.0.1.tar.gz)
+ - GPG シグネチャ <!-- GPG signature -->: [lxcfs-3.0.1.tar.gz.asc](https://linuxcontainers.org/downloads/lxcfs/lxcfs-3.0.1.tar.gz.asc)
+
 ## [LXCFS 3.0.0 リリースのお知らせ](https://discuss.linuxcontainers.org/t/lxcfs-3-0-0-has-been-released/1440)
 <span class="text-muted">2018 年 3 月 26 日</span>
 
