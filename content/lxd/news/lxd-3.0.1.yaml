@@ -22,12 +22,10 @@ content: |-
    * lxd/migration: Pre-validate profiles
    * client: Improve remote operation errors
    * Fix some typos and wording.
-   * Wording fix.
    * lxc/image: Fix crash due to bad arg parsing
    * lxd: add missing limits.h include
    * lxd/init: Fix --auto with network config
    * lxc: Consistent naming of clustering terms
-   * i18n: Update translation templates
    * lxc/file: Fix pushing files to remote
    * lxd/init: Don't setup a remote storage pool by default
    * Fix lxd init failing to join a cluster in interactive mode with an existing zfs dataset
@@ -35,14 +33,12 @@ content: |-
    * lxc/help: Make help respect --all too
    * Fix typo in help of "lxc network"
    * Properly filter node-level storage configs by pool ID
-   * i18n: Update translation templates
    * lxd/init: Consistency
    * Make new gofmt happy
    * lxc/file: Allow using -r to follow symlinks
    * Replace juju/idmclient with CanonicalLtd/candidclient
    * lxc/config: Fix adding trust cert on snap
    * lxc/alias: Fix example in help message
-   * i18n: Update translation templates
    * client: Introduce LXD_SOCKET
    * Makefile: Add a manifest
    * containers: fix snapshot deletion
@@ -53,13 +49,9 @@ content: |-
    * devices: fail if Nvidia device minor is missing
    * Add db.ContainersNodeList
    * storage: createContainerMountpoint() fix perms
-   * ceph: s/0755/0711/g
-   * lvm: s/0755/0711/g
-   * storage utils: s/0755/0711/g
-   * zfs: s/0755/0711/g
+   * ceph, lvm, storage utils, zfs, btrfs: fix permissions
    * patches: add "storage_api_path_permissions"
    * sys/fs: s/MkdirAll/Mkdir/g
-   * btrfs: fix permissions
    * Pass a logger to raft-http
    * Add new cluster.Promote function to turn a non-database node into a database one
    * Add new cluster.Rebalance function to check if we need to add database nodes
@@ -113,7 +105,6 @@ content: |-
    * Make Unavailable accept an error parameter
    * Add a new Schema.File() method to load extra queries from a file
    * Add support for patch.local.sql and patch.global.sql
-   * Add integration tests
    * Add shared.DirCopy to recursively copy a directory.
    * Update database.md
    * Backup global database if non-clustered
@@ -148,9 +139,7 @@ content: |-
    * ceph: ensure fs consistency when snapshotting
    * ceph: ensure fs consistency when restoring
    * ceph: add doContainerCreate()
-   * ceph: add doContainerMount()
-   * lvm: add doContainerMount()
-   * zfs: add doContainerMount()
+   * ceph, lvm, zfs: add doContainerMount()
    * zfs: add do*() helpers
    * lvm: use internal pool name
    * lxd-p2c: Handle target URL smarter
