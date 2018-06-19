@@ -71,8 +71,8 @@ lxc-attach 사용을 위한 추가 사양 :
  *  ~/.config/lxc 디렉토리가 없다면 생성해 줍니다.
  * /etc/lxc/default.conf를 ~/.config/lxc/default.conf로 복사합니다.
  * 복사한 파일에 아래 두 줄을 추가합니다.:
-    * lxc.id\_map = u 0 100000 65536
-    * lxc.id\_map = g 0 100000 65536
+    * lxc.idmap = u 0 100000 65536
+    * lxc.idmap = g 0 100000 65536
 
 위 값들은 /etc/subuid and /etc/subgid에 있는 것과 동일하여야 합니다. 현재 우분투에서 첫번째 사용자인 경우라면 위와 같은 값을 가지고 있을 것입니다.
 
