@@ -87,8 +87,8 @@ With that done, the last step is to create an LXC configuration file.
  * Create the ~/.config/lxc directory if it doesn't exist.
  * Copy /etc/lxc/default.conf to ~/.config/lxc/default.conf
  * Append the following two lines to it:
-    * lxc.id\_map = u 0 100000 65536
-    * lxc.id\_map = g 0 100000 65536
+    * lxc.idmap = u 0 100000 65536
+    * lxc.idmap = g 0 100000 65536
 
 Those values should match those found in /etc/subuid and /etc/subgid, the values above are those expected
 for the first user on a standard Ubuntu system.

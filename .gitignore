@@ -3,3 +3,4 @@ output/*
 manpages/*
 content/lxc/apidoc/*
 .vscode
+.idea
