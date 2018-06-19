@@ -175,14 +175,14 @@ With that done, the last step is to create an LXC configuration file.
  * Create the ~/.config/lxc directory if it doesn't exist.
  * Copy /etc/lxc/default.conf to ~/.config/lxc/default.conf
  * Append the following two lines to it:
-    * lxc.id\_map = u 0 100000 65536
-    * lxc.id\_map = g 0 100000 65536
+    * lxc.idmap = u 0 100000 65536
+    * lxc.idmap = g 0 100000 65536
  -->
  * ~/.config/lxc ディレクトリがない場合は作成します。
  * /etc/lxc/default.conf を ~/.config/lxc/default.conf にコピーします。
  * 以下の 2 行をコピーしたファイルに追加します。
-    * lxc.id\_map = u 0 100000 65536
-    * lxc.id\_map = g 0 100000 65536
+    * lxc.idmap = u 0 100000 65536
+    * lxc.idmap = g 0 100000 65536
 
 <!--
 Those values should match those found in /etc/subuid and /etc/subgid, the values above are those expected
