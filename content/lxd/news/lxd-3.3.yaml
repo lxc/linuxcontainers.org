@@ -1,0 +1,214 @@
+title: LXD 3.3 release announcement
+date: 2018/07/27 00:00
+origin: https://discuss.linuxcontainers.org/t/lxd-3-3-has-been-released/2327
+content: |-
+  ### Introduction
+  The LXD team is very excited to announce the release of LXD 3.3!
+
+  This is a rather feature packed release, containing significant improvements to the `proxy` device, a complete rewrite of `lxc-to-lxd`, container deletion protection, improved debugging/profiling abilities, some improvements to network management and a number of new CLI options.
+
+  As well as the usual set of bugfixes.
+
+  ### New features
+  #### Rewrote and improved `lxc-to-lxd`
+  Our LXC to LXD migration tool has been rewritten in Go to match the rest of our codebase.
+  It now uses the LXD migration API to transfer the containers (similar to `lxd-p2c`) and has support for both LXC 2.x and 3.x.
+
+  #### Network state API
+  A new API at `/1.0/networks/<NAME>/state` was added to return information about an existing network interface, example output is:
+
+      {
+          "addresses": [
+              {
+                  "address": "10.166.11.1",
+                  "family": "inet",
+                  "netmask": "24",
+                  "scope": "global"
+              },
+              {
+                  "address": "2001:470:b368:4242::1",
+                  "family": "inet6",
+                  "netmask": "64",
+                  "scope": "global"
+              },
+              {
+                  "address": "fe80::4865:17ff:fed5:e347",
+                  "family": "inet6",
+                  "netmask": "64",
+                  "scope": "link"
+              }
+          ],
+          "counters": {
+              "bytes_received": 45866443,
+              "bytes_sent": 3087152218,
+              "packets_received": 600757,
+              "packets_sent": 772253
+          },
+          "hwaddr": "fe:65:0e:c3:df:3d",
+          "mtu": 1500,
+          "state": "up",
+          "type": "broadcast"
+      }
+
+  A new sub-command was added to the command line client to query this:
+
+      stgraber@castiana:~$ lxc network info lxdbr0
+      Name: lxdbr0
+      MAC address: fe:65:0e:c3:df:3d
+      MTU: 1500
+      State: up
+      
+      Ips:
+        inet	10.166.11.1
+        inet6	2001:470:b368:4242::1
+        inet6	fe80::4865:17ff:fed5:e347
+      
+      Network usage:
+        Bytes received: 45.87MB
+        Bytes sent: 3.09GB
+        Packets received: 600756
+        Packets sent: 772248
+
+  #### Deletion protection for containers
+  A new `security.protection.delete` configuration key can now be set to `true` on containers that you want to protect from accidental deletion.
+
+  It can be used like this:
+
+      stgraber@castiana:~$ lxc config set c1 security.protection.delete true
+      stgraber@castiana:~$ lxc delete c1
+      Error: Container is protected
+      stgraber@castiana:~$ lxc config unset c1 security.protection.delete
+      stgraber@castiana:~$ lxc delete c1
+
+  #### New configuration options for the `proxy` device type
+  The `proxy` device got some significant improvements in this release.
+
+  It's now possible to control ownership and permissions on listening unix sockets with the following new properties:
+
+   - uid
+   - gid
+   - mode
+
+  As well as control privilege dropping of the proxy process itself with:
+
+   - security.uid
+   - security.gid
+
+  The proxy can also now set a Haproxy compatible PROXY header (V1) for TCP connections by setting the `proxy_protocol` key to `true`.
+
+  And lastly, it's possible to skip the proxy process entirely in some cases and use NAT instead by setting the `nat` property to `true`. Note that for it to work, the connection must be either UDP or TCP on both ends and a static IP address must be set for the container through the `ipv4.address` or `ipv6.address` properties on its `nic` device.
+
+  #### Downloading images through the host
+  LXD 3.2 introduced a new devlxd API that allowed downloading of public or cached images from the LXD daemon from within the container so long as `security.devlxd` was enabled (default) and `security.devlxd.images` was set to `true`.
+
+  LXD 3.3 now itself supports using that new API and will attempt to fetch image artifacts from the host before hitting the network. This can result in significant bandwidth savings for users of nested LXD.
+
+  #### Built-in debugging and profiling server
+  LXD now has a built-in [pprof](https://golang.org/pkg/runtime/pprof/) server which can be enabled by setting the `core.debug_address` property using the same syntax as `core.https_address`.
+
+  You can then access `http://<address>/debug/pprof` to get some basic information out of the LXD daemon. The same URL can be used with the `pprof` tool to extract much more detailed information.
+
+  #### `--format` option to `lxc network list`
+  This new option matches that on a number of other sub-commands and let you choose between `table`, `csv`, `json` and `yaml` output.
+
+  #### Overriding device configuration during copy and move
+  It is now possible to override specific device configuration keys during remote copy or move operations by passing `-d <device>,<key>=<value>` to `lxc copy` or `lxc move`.
+
+  #### `--dump` option to `lxd init`
+  LXD supports configuration pre-seeding through `lxd init --preseed`, up until now, the only way to get a preseed was at the end of an interactive `lxd init` run or by manually writing one.
+
+  The new `lxd init --dump` will now generate a preseed file based on the running LXD configuration. This can make configuring a new, near-identical LXD server much easier.
+
+  #### `bridge.hwaddr` property for LXD networks
+  Setting the new `bridge.hwaddr` property on a network will let you control the MAC address of the LXD bridge. This can be useful for systems that are monitored/graphed and where the ever changing MAC address was causing some issues.
+
+  #### `ipv4.nat.order` and `ipv6.nat.order` properties for LXD networks
+  Those two new options control the order in which the NAT rules are added to the firewall.
+  They default to `before`, meaning that the generated rules will apply before any pre-existing user rules. Setting to `after` instead may be useful when manually added firewall rules should be run prior to LXD's own rules.
+
+  ### Bugs fixed
+
+   - client: Export OperationWait
+   - client: Split LXD download code into own function
+   - doc: Document hostname requirements
+   - doc: Fix links in api-extension
+   - doc: Fix missing escaping in api-extensions
+   - doc: Fix "neighbour: ndisc_cache: neighbor table overflow"
+   - doc: Fix storage volume examples
+   - doc: Note that default profile cannot be deleted/renamed
+   - i18n: Update translations from weblate
+   - i18n: Update translation templates
+   - lxc: Be clever about when to show "lxd init"
+   - lxc: Switch to Ubuntu 18.04 as initial container
+   - lxc/cluster: Remove bad alias
+   - lxc/profile: Fix "get" command
+   - lxd: Fix StoragePoolVolumesGetNames
+   - lxd: Make iptables logic usable for containers
+   - lxd: Move command structs around
+   - lxd: Prevent renaming/deletion of the default profile
+   - lxd: Properly set containerArgs in all cases
+   - lxd/apparmor: Allow ro bind-mounts and remounts
+   - lxd/apparmor: Fix typo in nesting profile
+   - lxd/certificates: Log password failures
+   - lxd/cluster: Fix attaching CEPH custom volumes
+   - lxd/cluster: Only restart local containers
+   - lxd/cluster: Reduce the frequency of raft snapshots
+   - lxd/containers: adapt allowedUnprivilegedOnlyMap()
+   - lxd/containers: Allow identity mappings for unprivileged containers
+   - lxd/containers: Don't fail while parsing NVIDIA GPU list
+   - lxd/containers: Fix Nvidia minor index parsing
+   - lxd/containers: Fix removing NVIDIA containers
+   - lxd/containers: Handle cards among Nvidia devices
+   - lxd/containers: Special case passing all GPUs
+   - lxd/containers: use lxcSetConfigItem() for lxc.log.file
+   - lxd/containers: Validate proxy config early
+   - lxd/db: Don't hang after bad request
+   - lxd/db: Fix handling of NetworkConfigClear
+   - lxd/init: Allow selecting custom Fan underlay
+   - lxd/init: Fix typo in Fan question
+   - lxd/migration: Fix cross version migrations
+   - lxd/networks: Calculate Fan MTU based on parent
+   - lxd/networks: Fix PATCH operations
+   - lxd/networks: Fix port number for DHCPv6
+   - lxd/networks: Fix revert on update failure
+   - lxd/networks: Improve dnsmasq leases cleanup
+   - lxd/networks: Improve error on missing openvswitch
+   - lxd/networks: Skip DHCP mangle if firewall off
+   - lxd/networks: Support stateful DHCPv6 with prefixes longer than /64
+   - lxd/operations: Forward to right cluster node
+   - lxd/patches: Force a one-time config re-gen
+   - lxd/patches: Make config re-gen fault tollerant
+   - lxd/patches: Make lvm.thinpool_name and lvm.vg_name node-specific
+   - lxd/proxy: Convert mode from string to octal
+   - lxd/proxy: Handle full socket buffer
+   - lxd/storage: Allow deleting storage pools that only contain image volumes
+   - lxd/storage/btrfs: Fix recursive snapshots
+   - lxd/storage/ceph: Don't keep snapshots mounted
+   - lxd/storage/ceph: Mount the fs after growing the block
+   - lxd/storage: Drop late size check
+   - lxd/storage: Fix double quoting
+   - lxd/storage: Fix PATCH on storage pools
+   - lxd/storage: Fix volume creation API
+   - lxd/storage: Keep images when deleting pool
+   - lxd/storage/lvm: Fix umount logic during btrfs copy
+   - lxd/storage/lvm: Round size to closest 512 bytes
+   - lxd/storage: Remove image on pool deletion
+   - lxd/storage/zfs: Support querying version through modinfo
+   - shared: Dereference directory symlinks
+   - shared: Do not print writer struct on network error
+   - shared: Move parseNumberFromFile to shared
+   - shared/idmap: support skipping directories
+   - shared/util: Fix unit parsing (metric vs iec)
+   - tests: Add alternative TCP port finder
+   - tests: Add test for network put/patch
+   - tests: Fix race in network test
+   - tests: Fix static analysis
+   - tests: Perform a lazy umount in case of errors
+   - tests: Switch to MiB for btrfs resize
+   - tests: Test default profile renaming/deletion
+
+  ### Try it for yourself
+  This new LXD release is already available for you to try on our [demo service](https://linuxcontainers.org/lxd/try-it/).
+
+  ### Downloads
+  The release tarballs can be found on our [download page](https://linuxcontainers.org/lxd/downloads/).
