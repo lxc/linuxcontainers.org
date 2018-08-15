@@ -1,0 +1,251 @@
+title: LXD 3.4 リリースのお知らせ
+date: 2018/08/14 00:00
+origin: https://discuss.linuxcontainers.org/t/lxd-3-4-has-been-released/2445
+content: |-
+  ### はじめに <!-- Introduction -->
+  <!--
+  The LXD team is very excited to announce the release of LXD 3.4!
+  -->
+  LXD チームは LXD 3.4 のリリースを発表することにとてもワクワクしています!
+
+  <!--
+  The main highlight for this release is the major performance improvement that made it in.
+  We upgraded to a newer version of our database backend, introduced new internal APIs for batch queries, made it possible to query all container states in one API call and fixed a number of bottlenecks that were quite negatively affecting cluster performance.
+  -->
+  このリリースの主なハイライトは、パフォーマンスの大幅な向上です。
+  データベースバックエンドを新しいバージョンにアップグレードし、バッチクエリ用の新しい内部 API を導入し、1 回の API コールで全コンテナの状態が問い合わせできるようになり、クラスタパフォーマンスにかなりの悪影響を及ぼした多数のボトルネックを修正しました。
+
+  <!--
+  Initial tests show that a cluster running several thousand containers will now usually return basic container status (`lxc list --fast`) in just a couple of seconds with most other operations also significantly faster than in the past. Things aren't quite as fast as we'd like them to be yet, especially when querying the full container state of hundreds/thousands of containers (`lxc list`) but we're working on a few options to improve that too.
+  -->
+  最初のテストで、数千のコンテナが稼働しているクラスタで、コンテナの基本的な状態を通常は数秒で返すようになりました（`lxc list --fast`）。その他の操作も以前に比べて大幅に高速化しています。特に数百〜数千のコンテナのすべての状態を問い合わせるような場合などは、まだ完全に想定の速度には到達していません（`lxc list`）。しかし、それを改善するためのオプションもいくつかあります。
+
+  <!--
+  As for new features, we added progress reporting to a few missing commands in our command line client, added support for aliasing to external commands and added support for cross-host DNS when using a Fan bridge on a LXD cluster.
+  -->
+  新機能は、いくつかのコマンドラインクライアントに欠けていた進捗表示を追加し、外部コマンドにエイリアスを設定する機能を追加しました。そして、クラスタ上の Fan ブリッジを使っている場合のホストをまたいで DNS が使えるようになりました。
+
+  Enjoy!
+
+  ### 重要なお知らせ <!-- Important notes -->
+  #### コンテナのスナップショットとバックアップのネーミングの修正 <!-- Fixed container snapshot and backup naming -->
+  <!--
+  In the past, the `name` property of all snapshots and backups included the container name followed by a slash and then by the snapshot or backup name.
+  -->
+  従来は、すべてのスナップショットとバックアップの `name` プロパティは、コンテナ名に続いてスラッシュが続き、その後にスナップショットもしくはバックアップ名が続いていました。
+
+  <!--
+  This was redundant given that you could only get this information by querying a particular container.
+  -->
+  これは、特定のコンテナを検索することでしかこの情報を得ることができなかったため、冗長でした。
+
+  <!--
+  The API now only returns the snapshot or backup name but LXD still understands the old syntax to allow for migrations and restoring of existing backups.
+  -->
+  API はスナップショットもしくはバックアップ名のみ返すようになりました。しかし LXD は、既存のバックアップのマイグレーションやリストアもできるように、依然として古い形式も認識します。
+
+  #### 新しい dqlite の実装に切り替わりました <!-- Switched to a newer implementation of dqlite -->
+  <!--
+  `dqlite`, the distributed sqlite3 implementation that we started using for LXD in LXD 3.0 has been significantly reworked to remove a number of performance bottlenecks.
+  -->
+  LXD 3.0 で使い始めた分散 sqlite3 実装である `dqlite` を、多数のパフォーマンス上のボトルネックを解消するために、大幅に修正しました。
+
+  <!--
+  Most of the database logic is now done inside a C library ([`libdqlite`](https://github.com/CanonicalLtd/dqlite)) with a matching Go package ([`go-dqlite`](https://github.com/CanonicalLtd/go-dqlite)) providing the SQL interface for LXD.
+  -->
+  ほとんどのデータベースロジックを、C ライブラリ（[`libdqlite`](https://github.com/CanonicalLtd/dqlite)）と、LXD 用の SQL インターフェースを提供する Go パッケージ（[`go-dqlite`](https://github.com/CanonicalLtd/go-dqlite)）内で実行するようになりました。
+
+  <!--
+  The on-disk format remains unchanged, so there's no risky upgrade step for this but packagers need to be aware of the new library and package it with LXD.
+  -->
+  ディスク上のフォーマットに変更はありませんので、この変更に対するアップグレード処理に危険はありません。しかし、パッケージを作成する場合には、新しいライブラリを忘れずに、LXD と一緒にパッケージングする必要があります。
+
+  #### `lxc remote set-default` は `lxc remote switch` に変更されました <!-- Renamed `lxc remote set-default` to `lxc remote switch` -->
+  <!--
+  We renamed `lxc remote set-default` to the much friendlier and shorter `lxc remote switch`, this is in preparation for work on LXD projects which will have a similar `switch` subcommand.
+  -->
+  `lxc remote set-default` をより親しみやすく、短い `lxc remote switch` に変更しました。この変更は、LXD プロジェクトで今後予定されている、同様の `switch` サブコマンドの追加に対する準備としてなされました。
+
+  <!--
+  `lxc remote set-default` remains valid as an alias of `lxc remote switch`.
+  -->
+  `lxc remote set-default` は `lxc remote switch` のエイリアスとして、今後も有効なままです。
+
+  #### `macaroon` 認証オプションを `candid` に変更しました <!-- Renamed the `macaroon` authentication options to `candid` -->
+  <!--
+  Now that a standard implementation of macaroon based authentication is publicly available in the [Candid project](https://github.com/CanonicalLtd/candid) we have updated LXD to support it and renamed our configuration options to match.
+  -->
+  [Candid project](https://github.com/CanonicalLtd/candid) で、macaroon ベースの認証の標準的な実装が公開されたので、これをサポートするように LXD を更新しました。そして設定オプションをこれに合うように変更しました。
+
+  <!--
+  This primarily affects the old `core.macaroon.endpoint` which has now been renamed to `candid.api.url`. Upgrading to LXD 3.4 will automatically convert one into the other.
+  -->
+  これは主に、現在は `candid.api.url` に変更された、以前の `core.macaroon.endpoint` に影響します。LXD 3.4 にアップグレードすると、自動的にこの名前を変換します。
+
+
+  ### 新機能 <!-- New features -->
+  #### クラスタ向けの Fan を使った DNS 名前解決 <!-- Fan-aware DNS resolving for clusters -->
+  <!--
+  One problem several users ran into when running a LXD cluster using the Ubuntu Fan as an overlay network was that even though all traffic was properly routed between the various nodes, attempting to resolve the name of a container would only work if it happened to be running on the same cluster node.
+  -->
+  オーバーレイ・ネットワークとして、Ubuntu の Fan を使っている LXD クラスターを実行しているユーザの問題のひとつに、様々なノード間ですべてのオラフィックが適切にルーティングされていても、同じクラスタノード上で実行中の場合のみ、コンテナの名前解決が働くというものがありました。
+
+  <!--
+  LXD 3.4 changes that by now attempting to resolve DNS queries for the network's defined domain (`lxd` by default) against all of the nodes until one returns a value, making it feel like it's all handled by a single unified DNS server.
+  -->
+  LXD 3.4 では、すべてのノードに対してネットワークの定義されたドメイン（デフォルトで `lxd`）に対する DNS クエリの解決にひとつの値を返すので、単一の統合 DNS サーバにが処理しているように感じます。
+
+  #### コンテナの状態向けのより速い API <!-- Faster API for container status -->
+  <!--
+  A new `/1.0/containers?recursion=2` API has been added which allows for retrieving all containers, their configuration, their state, their snapshot list and their backup list in a single call.
+  -->
+  新しい `/1.0/containers?recursion=2` API が追加されました。これにより、すべてのコンテナの設定、状態、スナップショットやバックアップのリストを単一の呼び出しで取得できます。
+
+  <!--
+  This effectively lets you move from making 1 main API call followed by 3 additional calls per container to just doing a single call.
+  -->
+  これにより、コンテナごとに行っていた、ひとつのメインの API 呼び出しと、それに続く 3 つの追加呼び出しを、効率的にひとつの呼び出しで行えるようになりました。
+  
+  #### `lxc file` と `lxc import` の進捗表示 <!-- Progress information in `lxc file` and `lxc import` -->
+  <!--
+  Transferring files or uploading a backup to LXD will now get you progress information.
+  When available, you'll get the percentage transferred and current speed, when the size is unknown, you'll still get how much was transferred and the transfer speed.
+  -->
+  ファイルの転送や LXD へのバックアップのアップロードで、進捗表示が表示されるようになりました。
+  表示できる場合は、転送された割合、現在のスピードが表示されます。サイズがわからない場合は、転送量と転送スピードを表示します。
+
+  #### 外部コマンドに対するエイリアス <!-- Aliases to external commands -->
+  <!--
+  It's now possible to setup aliases in the command line client which point to external commands. All you have to do is have the alias begin with the absolute path to the command to execute.
+  -->
+  コマンドラインクライアントに対して、外部コマンドを指すエイリアスが設定できるようになりました。
+  実行したいコマンドの絶対パスでエイリアスの指定を行うだけで済みます。
+
+      lxc alias add my-script "/usr/local/bin/myscript @ARGS@ --extra-args"
+
+
+  #### ファイルケーパビリティのサポート <!-- File capabilities support -->
+  <!--
+  All calls to `tar` and `rsync` now pass the required options to save and restore extended attributes, including file capabilities.
+  -->
+  `tar` や `rsync` を呼び出す場合はすべて、ファイルのケーパビリティを含む拡張属性を保存、復元するのに必要なオプションを与えるようになりました。
+
+  <!--
+  On top of that, we've implemented logic in our `idmap` package to shift and unshift files that include file capabilities, using the recently introduced unprivileged file capabilities.
+  -->
+  さらに、最近導入された非特権のファイルケーパビリティを使用して、ファイルのケーパビリティを含むファイルの ID のシフトやシフト解除（unshift）するためのロジックを `idmap` パッケージに実装しました。
+
+  <!--
+  On suitable kernels (upstream 4.14+) this will now allow LXD images to include file capabilities for utilities such as `ping` or `mtr` and have users of privileged or unprivileged containers alike be able to set and use those capabilities.
+  -->
+  適切なカーネル（upstream の 4.14 以上）では、LXD イメージは `ping` や `mtr` のようなユーティリティに対してファイルケーパビリティを含めることができ、特権コンテナのユーザでも非特権コンテナのユーザでも同じように、これらのケーパビリティを設定して使うことができます。
+
+  ### Bugs fixed
+
+   - client: Centrally handle targeting
+   - client: Fix CopyContainerSnapshot API
+   - doc: Fix API output for snapshots
+   - doc: Fix typo in storage documentation
+   - doc: Update README to cover `make deps` and new requirements
+   - doc: Update requirements
+   - global: Support xattrs in rsync calls
+   - global: Support xattrs in tar calls
+   - global: Unify error messages
+   - i18n: Update translations from weblate
+   - i18n: Update translation templates
+   - lxc: Allow aliases to external commands
+   - lxc: Make answer to remote add translatable
+   - lxc/container: CEPH also needs offline quotas
+   - lxc/copy: Update to fixed CopyContainerSnapshot
+   - lxc/file: Show progress
+   - lxc/image: Fix URL-based imports
+   - lxc/import: Show progress
+   - lxc/list: Port to ContainerFull
+   - lxc/list: Support for recursion=2
+   - lxc/remote: Fix crash on bad remote name
+   - lxc/remote: Rename set-default to switch
+   - lxc/storage: Fix bad argument parsing
+   - lxc/utils: Handle empty progress
+   - lxc-to-lxd: Fix lxc.rootfs parsing
+   - lxc-to-lxd: Fix rootfs tests
+   - lxd: Add dns forwarder
+   - lxd: Don't include container name in backups/snapshots
+   - lxd: Fix --syslog flag
+   - lxd: Port over to new containerLoadAll function
+   - lxd: Port over to new containerLoadNodeAll function
+   - lxd/backups: No need for interfaces
+   - lxd/cluster: Allow for MemberConfig to be empty in new join API
+   - lxd/cluster: Fix typo in errors
+   - lxd/cluster: Fix unit test regression
+   - lxd/cluster: Only query the containers we need
+   - lxd/cluster: Properly skip pending networks/pools
+   - lxd/cluster/gateway: Log proxy errors
+   - lxd/cluster/gateway: Tweak errors
+   - lxd/containers: Add helpers for retrieving containers
+   - lxd/containers: Don't flush leases for snapshots
+   - lxd/containers: Fetch containers info in parallel
+   - lxd/containers: Implement support for recursion=2
+   - lxd/containers: Improve shutdown logic for cluster nodes
+   - lxd/containers: Only get the profiles once
+   - lxd/containers: Speed up recursive list
+   - lxd/containers: Use internal struct values
+   - lxd/db: Adapt main package to new cluster sub-package API
+   - lxd/db: Add ContainerArgsList and ContainerArgsNodeList
+   - lxd/db: Add support for "lxd sql global .sync"
+   - lxd/db: Capitalize error messages
+   - lxd/db: Drop go-1.6 backward compatibility
+   - lxd/db: Drop raft snapshot workaround
+   - lxd/db: Fix lints
+   - lxd/db: Fix snapshot filtering
+   - lxd/db: Fix some missing error checks
+   - lxd/db: Limit open connections to local db after initialization
+   - lxd/db: Redirect dqlite logging to lxd logging
+   - lxd/db: Re-enable empty table checks
+   - lxd/db: Replace grpc-sql with dqlite custom protocol
+   - lxd/db: Use mattn's sqlite3 bindings instead of our fork
+   - lxd/db: Wire dqlite server
+   - lxd/forkproxy: use correct types for {g,u}ids
+   - lxd/images: Cleanup any leftovers on startup
+   - lxd/images: Send a notification to other nodes when an image is removed
+   - lxd/import: Fix support for snapshots without container name
+   - lxd/init: Make use of the new cluster join API
+   - lxd/networks: Add support for FAN clustered DNS
+   - lxd/networks: Don't try listing containers for lo
+   - lxd/networks: Drop unused db property
+   - lxd/networks: Fix packet stats logic for containers
+   - lxd/networks: Ignore veth devices
+   - lxd/networks/state: Skip non-existing interfaces
+   - lxd/patches: Fix "no transaction is active" error during database updates
+   - lxd/state: Add endpoints to state struct
+   - lxd/storage: Cache storage version
+   - lxd/storage: Don't log every storage init
+   - lxd/storage/ceph: Fix default container quotas
+   - lxd/storage/zfs: Optimize getting disk usage
+   - Makefile: Add deps target
+   - Makefile: Drop gccgo
+   - Makefile: Drop outdated comment
+   - Makefile: Fix tags handling
+   - Makefile: Fix typo in .PHONY
+   - Makefile: Include dqlite in dist tarball
+   - Makefile: Rename protobuf to update-protobuf
+   - Makefile: Require libsqlite3
+   - Makefile: Respect CGO_CFLAGS
+   - Makefile: Set PKG_CONFIG_PATH
+   - Makefile: Tweak sqlite build flags
+   - Makefile: Use shallow clone for dist
+   - Makefile: Use shallow clone for deps
+   - shared/api: Define ContainerFull
+   - shared/idmap: C coding style fixups
+   - shared/idmap: Convert uid from big to little endian
+   - shared/idmap: Fix xattr.h import
+   - shared/idmap: Shift fscaps
+   - shared/idmap: s/set_caps/set_vfs_ns_caps/g
+   - tests: Add test for cluster shutdown logic
+   - tests: Fix lxc-to-lxd unit tests
+   - tests: Fix new storage get/set test
+
+  ### Try it for yourself
+  This new LXD release is already available for you to try on our [demo service](https://linuxcontainers.org/lxd/try-it/).
+
+  ### Downloads
+  The release tarballs can be found on our [download page](https://linuxcontainers.org/lxd/downloads/).
