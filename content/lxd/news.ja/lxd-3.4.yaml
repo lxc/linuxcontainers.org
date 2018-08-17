@@ -88,7 +88,7 @@ content: |-
   <!--
   One problem several users ran into when running a LXD cluster using the Ubuntu Fan as an overlay network was that even though all traffic was properly routed between the various nodes, attempting to resolve the name of a container would only work if it happened to be running on the same cluster node.
   -->
-  オーバーレイ・ネットワークとして、Ubuntu の Fan を使っている LXD クラスターを実行しているユーザの問題のひとつに、様々なノード間ですべてのオラフィックが適切にルーティングされていても、同じクラスタノード上で実行中の場合のみ、コンテナの名前解決が働くというものがありました。
+  オーバーレイ・ネットワークとして、Ubuntu の Fan を使っている LXD クラスターを実行しているユーザの問題のひとつに、様々なノード間ですべてのトラフィックが適切にルーティングされていても、同じクラスタノード上で実行中の場合のみ、コンテナの名前解決が働くというものがありました。
 
   <!--
   LXD 3.4 changes that by now attempting to resolve DNS queries for the network's defined domain (`lxd` by default) against all of the nodes until one returns a value, making it feel like it's all handled by a single unified DNS server.
