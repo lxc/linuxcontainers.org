@@ -112,14 +112,14 @@ content: |-
   When available, you'll get the percentage transferred and current speed, when the size is unknown, you'll still get how much was transferred and the transfer speed.
   -->
   ファイルの転送や LXD へのバックアップのアップロードで、進捗表示が表示されるようになりました。
-  表示できる場合は、転送された割合、現在のスピードが表示されます。サイズがわからない場合は、転送量と転送スピードを表示します。
+  サイズがわかる場合は、転送された割合と現在のスピードが表示されます。サイズがわからない場合は、転送された量と転送スピードを表示します。
 
   #### 外部コマンドに対するエイリアス <!-- Aliases to external commands -->
   <!--
   It's now possible to setup aliases in the command line client which point to external commands. All you have to do is have the alias begin with the absolute path to the command to execute.
   -->
   コマンドラインクライアントに対して、外部コマンドを指すエイリアスが設定できるようになりました。
-  実行したいコマンドの絶対パスでエイリアスの指定を行うだけで済みます。
+  エイリアスの定義を、実行したいコマンドの絶対パスから開始するだけで済みます。
 
       lxc alias add my-script "/usr/local/bin/myscript @ARGS@ --extra-args"
 
