@@ -140,112 +140,118 @@ content: |-
   -->
   適切なカーネル（upstream の 4.14 以上）では、LXD イメージは `ping` や `mtr` のようなユーティリティに対してファイルケーパビリティを含めることができ、特権コンテナのユーザでも非特権コンテナのユーザでも同じように、これらのケーパビリティを設定して使うことができます。
 
-  ### Bugs fixed
+  ### バグ修正 <!-- Bugs fixed -->
 
-   - client: Centrally handle targeting
-   - client: Fix CopyContainerSnapshot API
-   - doc: Fix API output for snapshots
-   - doc: Fix typo in storage documentation
-   - doc: Update README to cover `make deps` and new requirements
-   - doc: Update requirements
-   - global: Support xattrs in rsync calls
-   - global: Support xattrs in tar calls
-   - global: Unify error messages
-   - i18n: Update translations from weblate
-   - i18n: Update translation templates
-   - lxc: Allow aliases to external commands
-   - lxc: Make answer to remote add translatable
-   - lxc/container: CEPH also needs offline quotas
-   - lxc/copy: Update to fixed CopyContainerSnapshot
-   - lxc/file: Show progress
-   - lxc/image: Fix URL-based imports
-   - lxc/import: Show progress
-   - lxc/list: Port to ContainerFull
-   - lxc/list: Support for recursion=2
-   - lxc/remote: Fix crash on bad remote name
-   - lxc/remote: Rename set-default to switch
-   - lxc/storage: Fix bad argument parsing
-   - lxc/utils: Handle empty progress
-   - lxc-to-lxd: Fix lxc.rootfs parsing
-   - lxc-to-lxd: Fix rootfs tests
-   - lxd: Add dns forwarder
-   - lxd: Don't include container name in backups/snapshots
-   - lxd: Fix --syslog flag
-   - lxd: Port over to new containerLoadAll function
-   - lxd: Port over to new containerLoadNodeAll function
-   - lxd/backups: No need for interfaces
-   - lxd/cluster: Allow for MemberConfig to be empty in new join API
-   - lxd/cluster: Fix typo in errors
-   - lxd/cluster: Fix unit test regression
-   - lxd/cluster: Only query the containers we need
-   - lxd/cluster: Properly skip pending networks/pools
-   - lxd/cluster/gateway: Log proxy errors
-   - lxd/cluster/gateway: Tweak errors
-   - lxd/containers: Add helpers for retrieving containers
-   - lxd/containers: Don't flush leases for snapshots
-   - lxd/containers: Fetch containers info in parallel
-   - lxd/containers: Implement support for recursion=2
-   - lxd/containers: Improve shutdown logic for cluster nodes
-   - lxd/containers: Only get the profiles once
-   - lxd/containers: Speed up recursive list
-   - lxd/containers: Use internal struct values
-   - lxd/db: Adapt main package to new cluster sub-package API
-   - lxd/db: Add ContainerArgsList and ContainerArgsNodeList
-   - lxd/db: Add support for "lxd sql global .sync"
-   - lxd/db: Capitalize error messages
-   - lxd/db: Drop go-1.6 backward compatibility
-   - lxd/db: Drop raft snapshot workaround
-   - lxd/db: Fix lints
-   - lxd/db: Fix snapshot filtering
-   - lxd/db: Fix some missing error checks
-   - lxd/db: Limit open connections to local db after initialization
-   - lxd/db: Redirect dqlite logging to lxd logging
-   - lxd/db: Re-enable empty table checks
-   - lxd/db: Replace grpc-sql with dqlite custom protocol
-   - lxd/db: Use mattn's sqlite3 bindings instead of our fork
-   - lxd/db: Wire dqlite server
-   - lxd/forkproxy: use correct types for {g,u}ids
-   - lxd/images: Cleanup any leftovers on startup
-   - lxd/images: Send a notification to other nodes when an image is removed
-   - lxd/import: Fix support for snapshots without container name
-   - lxd/init: Make use of the new cluster join API
-   - lxd/networks: Add support for FAN clustered DNS
-   - lxd/networks: Don't try listing containers for lo
-   - lxd/networks: Drop unused db property
-   - lxd/networks: Fix packet stats logic for containers
-   - lxd/networks: Ignore veth devices
-   - lxd/networks/state: Skip non-existing interfaces
-   - lxd/patches: Fix "no transaction is active" error during database updates
-   - lxd/state: Add endpoints to state struct
-   - lxd/storage: Cache storage version
-   - lxd/storage: Don't log every storage init
-   - lxd/storage/ceph: Fix default container quotas
-   - lxd/storage/zfs: Optimize getting disk usage
-   - Makefile: Add deps target
-   - Makefile: Drop gccgo
-   - Makefile: Drop outdated comment
-   - Makefile: Fix tags handling
-   - Makefile: Fix typo in .PHONY
-   - Makefile: Include dqlite in dist tarball
-   - Makefile: Rename protobuf to update-protobuf
-   - Makefile: Require libsqlite3
-   - Makefile: Respect CGO_CFLAGS
-   - Makefile: Set PKG_CONFIG_PATH
-   - Makefile: Tweak sqlite build flags
-   - Makefile: Use shallow clone for dist
-   - Makefile: Use shallow clone for deps
-   - shared/api: Define ContainerFull
-   - shared/idmap: C coding style fixups
-   - shared/idmap: Convert uid from big to little endian
-   - shared/idmap: Fix xattr.h import
-   - shared/idmap: Shift fscaps
+   - client: クラスタのターゲット取得処理を1ヶ所で扱うようにしました <!-- Centrally handle targeting -->
+   - client: CopyContainerSnapshot API を修正しました <!-- Fix CopyContainerSnapshot API -->
+   - doc: スナップショットの API 出力を修正しました <!-- Fix API output for snapshots -->
+   - doc: ストレージのドキュメント内の typo を修正しました <!-- Fix typo in storage documentation -->
+   - doc: README に `make deps` について記載し、動作環境の情報を更新しました <!-- Update README to cover `make deps` and new requirements -->
+   <!-- - doc: Update requirements -->
+   - global: rsync 呼び出しで xattrs をサポートしました <!-- Support xattrs in rsync calls -->
+   - global: tar 呼び出しで xattrs をサポートしました <!-- Support xattrs in tar calls -->
+   - global: エラーメッセージを統一しました <!-- Unify error messages -->
+   - i18n: weblate から翻訳を更新しました <!-- Update translations from weblate -->
+   - i18n: 翻訳テンプレートを更新しました <!-- Update translation templates -->
+   - lxc: 外部コマンドに対してエイリアスを設定できるようになりました <!-- Allow aliases to external commands -->
+   - lxc: `remote add` の際の回答を翻訳可能にしました <!-- Make answer to remote add translatable -->
+   - lxc/container: Ceph の場合でもオフラインクォータを設定するようにしました <!-- CEPH also needs offline quotas -->
+   - lxc/copy: 修正した CopyContainerSnapshot に更新しました <!-- Update to fixed CopyContainerSnapshot -->
+   - lxc/file: 進捗表示を行うようになりました <!-- Show progress -->
+   - lxc/image: URL ベースのインポートの問題を修正しました <!-- Fix URL-based imports -->
+   - lxc/import: 進捗表示を行うようになりました <!-- Show progress -->
+   - lxc/list: ContainerFull を使うようにしました <!-- Port to ContainerFull -->
+   - lxc/list: recursion=2 のサポートを追加しました <!-- Support for recursion=2 -->
+   - lxc/remote: 不適切なリモート名を指定した場合のクラッシュを修正しました <!-- Fix crash on bad remote name -->
+   - lxc/remote: `set-default` を `switch` にリネームしました <!-- Rename set-default to switch -->
+   - lxc/storage: 不適切な引数のパースを修正しました <!-- Fix bad argument parsing -->
+   - lxc/utils: 進捗表示するものがない場合の扱いを追加しました <!-- Handle empty progress -->
+   - lxc-to-lxd: `lxc.rootfs` のパースの問題を修正しました <!-- Fix lxc.rootfs parsing -->
+   - lxc-to-lxd: rootfs のテストを修正しました <!-- Fix rootfs tests -->
+   - lxd: dns フォワーダーを追加しました <!-- Add dns forwarder -->
+   - lxd: バックアップ・スナップショットにコンテナ名を含めないようにしました <!-- Don't include container name in backups/snapshots -->
+   - lxd: `--syslog` オプションの問題を修正しました <!-- Fix \-\-syslog flag -->
+   - lxd: 新しい containerLoadAll 関数を使うようにしました <!-- Port over to new containerLoadAll function -->
+   - lxd: 新しい containerLoadNodeAll 関数を使うようにしました <!-- Port over to new containerLoadNodeAll function -->
+   - lxd/backups: インターフェースである必要がない部分を修正しました <!-- No need for interfaces -->
+   - lxd/cluster: 新しい join API で空の MemberConfig も許可されるようにしました <!-- Allow for MemberConfig to be empty in new join API -->
+   - lxd/cluster: エラーメッセージの typo を修正しました <!-- Fix typo in errors -->
+   - lxd/cluster: ユニットテストのリグレッションを修正しました <!-- Fix unit test regression -->
+   - lxd/cluster: 必要なときのみコンテナの問い合わせを行うようにしました <!-- Only query the containers we need -->
+   - lxd/cluster: ペンディング状態のネットワーク/プールを適切にスキップするようにしました <!-- Properly skip pending networks/pools -->
+   - lxd/cluster/gateway: プロキシのエラーをログ出力するようにしました <!-- Log proxy errors -->
+   - lxd/cluster/gateway: エラーメッセージを少し変更しました <!-- Tweak errors -->
+   - lxd/containers: コンテナを取得するヘルパを追加しました <!-- Add helpers for retrieving containers -->
+   - lxd/containers: スナップショットのリースをフラッシュしないようにしました <!-- Don't flush leases for snapshots -->
+   - lxd/containers: 並列でコンテナを取得するようにしました <!-- Fetch containers info in parallel -->
+   - lxd/containers: recursion=2 のサポートを実装しました <!-- Implement support for recursion=2 -->
+   - lxd/containers: クラスタノードのシャットダウンロジックを改良しました <!-- Improve shutdown logic for cluster nodes -->
+   - lxd/containers: プロファイルを一度だけ取得するようにしました <!-- Only get the profiles once -->
+   - lxd/containers: リカーシブなリスト取得をスピードアップしました <!-- Speed up recursive list -->
+   - lxd/containers: 内部的な構造体の値を使うようにしました <!-- Use internal struct values -->
+   - lxd/db: メインパッケージを新しいクラスタサブパッケージ API に合わせました <!-- Adapt main package to new cluster sub-package API -->
+   - lxd/db: ContainerArgsList 関数と ContainerArgsNodeList 関数を追加しました <!-- Add ContainerArgsList and ContainerArgsNodeList -->
+   - lxd/db: `lxd sql global .sync` コマンドを追加しました <!-- Add support for "lxd sql global .sync" -->
+   - lxd/db: エラーメッセージを大文字で始めるようにしました <!-- Capitalize error messages -->
+   - lxd/db: go-1.6 に対する後方互換性用のコードを削除しました <!-- Drop go-1.6 backward compatibility -->
+   - lxd/db: raft のスナップショットのための回避コードを削除しました <!-- Drop raft snapshot workaround -->
+   - lxd/db: lint のエラーを修正しました <!-- Fix lints -->
+   - lxd/db: スナップショットのフィルタリングの問題を修正しました <!-- Fix snapshot filtering -->
+   - lxd/db: 欠けていたエラーチェックをいくつか修正しました <!-- Fix some missing error checks -->
+   - lxd/db: ローカル DB を初期化した後のオープンしているコネクション数を制限しました <!-- Limit open connections to local db after initialization -->
+   - lxd/db: dqlite のロギングを lxd のロギングにリダイレクトするようにしました <!-- Redirect dqlite logging to lxd logging -->
+   - lxd/db: 空のテーブルチェックを復活させました <!-- Re-enable empty table checks -->
+   - lxd/db: grpc-sql を dqlite のカスタムプロトコルに置き換えました <!-- Replace grpc-sql with dqlite custom protocol -->
+   - lxd/db: 自身（カノニカル）の fork の代わりに mattn の sqlite3 バインディングを使うようにしました <!-- Use mattn's sqlite3 bindings instead of our fork -->
+   - lxd/db: dqlite サーバを使うようにしました <!-- Wire dqlite server -->
+   - lxd/forkproxy: {g,u}id に正しい型を使うようにしました <!-- use correct types for {g,u}ids -->
+   - lxd/images: スタートアップ時に残ったイメージをクリーンアップするようにしました <!-- Cleanup any leftovers on startup -->
+   - lxd/images: イメージを削除した際に他のノードに通知を送るようにしました <!-- Send a notification to other nodes when an image is removed -->
+   - lxd/import: コンテナ名なしのスナップショットサポートの問題を修正しました <!-- Fix support for snapshots without container name -->
+   - lxd/init: 新しいクラスタに参加する API を使うようにしました <!-- Make use of the new cluster join API -->
+   - lxd/networks: FAN のクラスター化された DNS が使えるようになりました <!-- Add support for FAN clustered DNS -->
+   - lxd/networks: lo に対してコンテナをリストしないようにしました <!-- Don't try listing containers for lo -->
+   - lxd/networks: 使われていない DB プロパティを削除しました <!-- Drop unused db property -->
+   - lxd/networks: コンテナのパケット統計の問題を修正しました <!-- Fix packet stats logic for containers -->
+   - lxd/networks: veth デバイスを無視するようにしました <!-- Ignore veth devices -->
+   - lxd/networks/state: 存在しないインターフェースをスキップするようにしました <!-- Skip non-existing interfaces -->
+   - lxd/patches: データベース更新中の「アクティブなトランザクションはありません」というエラーを修正しました <!-- Fix "no transaction is active" error during database updates -->
+   - lxd/state: state 構造体に endpoints を追加しました <!-- Add endpoints to state struct -->
+   - lxd/storage: ストレージのバージョンをキャッシュするようにしました <!-- Cache storage version -->
+   - lxd/storage: ストレージの初期化ごとにログを記録しないようにしました <!-- Don't log every storage init -->
+   - lxd/storage/ceph: デフォルトのコンテナクォータを修正しました <!-- Fix default container quotas -->
+   - lxd/storage/zfs: ディスク使用量の取得を最適化しました <!-- Optimize getting disk usage -->
+   - Makefile: deps ターゲットを追加しました <!-- Add deps target -->
+   - Makefile: gccgo のサポートを削除しました <!-- Drop gccgo -->
+   - Makefile: 古くなったコメントを削除しました <!-- Drop outdated comment -->
+   - Makefile: タグの扱いを修正しました <!-- Fix tags handling -->
+   - Makefile: .PHONY の typo を修正しました <!-- Fix typo in .PHONY -->
+   - Makefile: dist tarball に dqlite を含めました <!-- Include dqlite in dist tarball -->
+   - Makefile: protobuf を update-protobuf にリネームしました <!-- Rename protobuf to update-protobuf -->
+   - Makefile: libsqlite3 に依存するようになりました <!-- Require libsqlite3 -->
+   - Makefile: CGO_CFLAGS を参照するようになりました <!-- Respect CGO_CFLAGS -->
+   - Makefile: PKG_CONFIG_PATH を設定するようにしました <!-- Set PKG_CONFIG_PATH -->
+   - Makefile: sqlite のビルドフラグを調整しました <!-- Tweak sqlite build flags -->
+   - Makefile: dist の clone で最新版のみ取得するようにしました <!-- Use shallow clone for dist -->
+   - Makefile: deps の clone で最新版のみ取得するようにしました <!-- Use shallow clone for deps -->
+   - shared/api: ContainerFull を定義しました <!-- Define ContainerFull -->
+   - shared/idmap: C コーディングスタイルを修正しました <!-- C coding style fixups -->
+   - shared/idmap: uid をビッグからリトルエンディアンに変換するようにしました <!-- Convert uid from big to little endian -->
+   - shared/idmap: xattr.h のインポートを修正しました <!-- Fix xattr.h import -->
+   - shared/idmap: fscaps をシフトするようにしました <!-- Shift fscaps -->
    - shared/idmap: s/set_caps/set_vfs_ns_caps/g
-   - tests: Add test for cluster shutdown logic
-   - tests: Fix lxc-to-lxd unit tests
-   - tests: Fix new storage get/set test
+   - tests: クラスターのシャットダウンロジックのテストを追加しました <!-- Add test for cluster shutdown logic -->
+   - tests: lxc-to-lxd のユニットテストを修正しました <!-- Fix lxc-to-lxd unit tests -->
+   - tests: 新しいストレージの get/set テストを修正しました <!-- Fix new storage get/set test -->
 
-  ### Try it for yourself
+  ### 試用環境 <!-- Try it for yourself -->
+  <!--
   This new LXD release is already available for you to try on our [demo service](https://linuxcontainers.org/lxd/try-it/).
+  -->
+  この新しい LXD リリースは私たちの [デモサービス](https://linuxcontainers.org/ja/lxd/try-it/) で利用できます。
 
-  ### Downloads
+  ### ダウンロード <!-- Downloads -->
+  <!--
   The release tarballs can be found on our [download page](https://linuxcontainers.org/lxd/downloads/).
+  -->
+  このリリースの tarball は [ダウンロードページ](/lxd/downloads/) から取得できます。
