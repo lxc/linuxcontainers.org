@@ -1,0 +1,97 @@
+title: LXD 3.5 release announcement
+date: 2018/09/11 00:00
+origin: https://discuss.linuxcontainers.org/t/lxd-3-5-has-been-released/2656
+content: |-
+  ### Introduction
+  The LXD team is very excited to announce the release of LXD 3.5!
+
+  You'll no doubt notice the smaller than usual feature changes.
+  That's explained by the beginning of `conference season` as well as some of our ongoing work being so large that it won't fit in a single release cycle and so will land in the LXD 3.6 or 3.7 timeframe.
+
+  This release still contains a number of welcome improvements, especially for those cluster and enterprise users as well as a good number of bugfixes and performance improvements.
+
+  ### New features
+  #### Additional configuration options for external Candid authentication
+  Candid external authentication was extended to support multiple domains as well as providing with configurable expiry for the authentication tokens (defaulting to 1h).
+
+  This allows administrators in large organizations to choose what Candid domains will be allowed on a particular LXD server and configure exactly how long a user will be trusted before having to renew their authentication token with Candid.
+
+  The relevant configuration keys are:
+   - candid.domains (comma separate listed of domains, default to allow all)
+   - candid.expiry (token expiry in seconds, default to 3600)
+
+  #### `--quiet` option in the command line client
+  Users of the `lxc` command from scripts will be happy to hear that we've finally introduced a `--quiet` option which will silence all progress information and limit output to error messages.
+
+  #### Configurable compression for backups
+  We reworked the way backups are stored and handled quite a bit in this LXD release.
+  Most of this won't be visible in day to day operations, other than making retrieving backups significantly faster and using much less memory.
+
+  One thing that is visible however is a new configuration option to control what compression to apply to backups.
+
+  The new configuration key is:
+   - backups.compression_algorithm (default to "gzip")
+
+  #### Hook to handle cluster-wide release updates
+  A common issue with LXD clusters is the requirement that all nodes run the same LXD version and have a matching set of API extensions and DB schema.
+
+  When any node goes ahead of the rest, all database operations are held back until the remainder of the nodes are upgraded.
+
+  As we're talking about a number of separate machines, coordinating that upgrade may be a bit tricky and in the case of the LXD snap, could take up to 24h without user intervention.
+
+  To improve this, we introduced a new `LXD_CLUSTER_UPDATE` environment variable which packagers can set, pointing it to a script which will update the local LXD daemon through the relevant package manager. When LXD detects that another node is now ahead of itself, it will call this script which will then update the local LXD and have it match.
+
+  ### Bugs fixed
+
+   - client: Avoid err == nil pattern
+   - doc: Add example of exec with record-output
+   - doc: Add note about ignoring mount options
+   - doc: Fix and improve the description
+   - global: Advertise rsync features
+   - i18n: Update translations from weblate
+   - i18n: Update translation templates
+   - lxc: Only target if --target is passed
+   - lxc/export: Don't crash on failure to delete backup
+   - lxd: Don't mask database errors
+   - lxd/api: Sort list of endpoints
+   - lxd/backups: Rework to behave as intended
+   - lxd/cluster: Consider pending containers when placing a new container
+   - lxd/cluster: Make database queries timeout after 10s
+   - lxd/containers: Also use apply_quota for CEPH
+   - lxd/containers: Avoid root device name conflict
+   - lxd/containers: Don't return nil on Storage calls
+   - lxd/containers: Fix bad function name
+   - lxd/containers: Simplify and fix pool update logic
+   - lxd/db: Add a few missing rows.Close() calls
+   - lxd/db: Add NodeIsOutdated() db API to check is a node is outdated
+   - lxd/db: Add type column to operations table
+   - lxd/db: Fix internal DB test
+   - lxd/db: Use NoSuchObject consistently
+   - lxd/devices: Iterate /sys/class/drm for GPUs
+   - lxd/forkdns: Properly rewrite answer
+   - lxd/images: Add missing cleanup code
+   - lxd/import: Add root disk if needed
+   - lxd/import: Don't delete container on import failure
+   - lxd/operations: Fill the type column when creating a new operation
+   - lxd/operations: Return true if operation is done before timeout
+   - lxd/patches: Profiles are in the cluster db
+   - lxd/profiles: Don't list snapshots in UsedBy
+   - lxd/proxy: Fix unix socket paths in snap
+   - lxd/proxy: Only log errors
+   - lxd/storage/btrfs: Fix clearing quotas
+   - lxd/storage/ceph: Only freeze container if running
+   - Makefile: Honor the CC environment variable when invoking go install
+   - scripts: Update auto-complete
+   - shared/api: Don't re-define fields
+   - shared/idmap: Test for fscaps support
+   - shared: Return decompressor in DetectCompression
+   - tests: Always pass --force to stop
+   - tests: Avoid err == nil pattern
+   - tests: Fix mode of proxy.sh
+   - tests: Fix pki with newer easyrsa
+
+  ### Try it for yourself
+  This new LXD release is already available for you to try on our [demo service](https://linuxcontainers.org/lxd/try-it/).
+
+  ### Downloads
+  The release tarballs can be found on our [download page](https://linuxcontainers.org/lxd/downloads/).
