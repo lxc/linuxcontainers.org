@@ -41,13 +41,13 @@ content: |-
   関連する設定は次の設定です:
 
   - candid.domains (カンマ区切りのドメインリスト、デフォルトはすべて許可します<!-- comma separate listed of domains, default to allow all -->)
-  - candid.expiry (トークンが有効な期間。デフォルトは 3600 <!-- token expiry in seconds, default to 3600 -->)
+  - candid.expiry (トークンが有効な期間（秒）。デフォルトは 3600 <!-- token expiry in seconds, default to 3600 -->)
 
   #### コマンドラインクライアントの `--quiet` オプション <!-- `\-\-quiet` option in the command line client -->
   <!--
   Users of the `lxc` command from scripts will be happy to hear that we've finally introduced a `--quiet` option which will silence all progress information and limit output to error messages.
   -->
-  ついに、すべての進捗情報やエラーメッセージの出力を抑制する `--quiet` オプションが導入されました。
+  ついに、すべての進捗情報を抑制し、エラーメッセージのみ出力する `--quiet` オプションが導入されました。
   スクリプトから `lxc` コマンドを使うユーザが歓迎する機能でしょう。
 
   #### バックアップの圧縮が設定可能に <!-- Configurable compression for backups -->
