@@ -127,7 +127,7 @@ content: |-
    - lxd/import: インポートが失敗した時にコンテナを削除しないようにしました <!-- Don't delete container on import failure -->
    - lxd/operations: 新しい操作を追加するときに type カラムを埋めるようにしました <!-- Fill the type column when creating a new operation -->
    - lxd/operations: タイムアウト前に操作が完了した場合は true を返すようにしました <!-- Return true if operation is done before timeout -->
-   - lxd/patches: プロファイルはクラスター DB の方見るようにしました <!-- Profiles are in the cluster db -->
+   - lxd/patches: プロファイルはクラスター DB の方を見るようにしました <!-- Profiles are in the cluster db -->
    - lxd/profiles: UsedBy 内にはスナップショットをリストしないようにしました <!-- Don't list snapshots in UsedBy -->
    - lxd/proxy: スナップでの unix ソケットのパスを修正しました <!-- Fix unix socket paths in snap -->
    - lxd/proxy: エラーのみログするようにしました <!-- Only log errors -->
