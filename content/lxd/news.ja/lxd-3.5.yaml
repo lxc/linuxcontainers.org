@@ -94,57 +94,63 @@ content: |-
   これは関係するパッケージマネージャーを使って、ローカルの LXD デーモンを更新するためのスクリプトを指します。
   LXD が別のノードが自分より新しいバージョンになっていることを検出すると、このスクリプトを呼び出し、ローカルの LXD を更新して他のノードと一致させます。
 
-  ### Bugs fixed
+  ### バグ修正 <!-- Bugs fixed -->
 
-   - client: Avoid err == nil pattern
-   - doc: Add example of exec with record-output
-   - doc: Add note about ignoring mount options
-   - doc: Fix and improve the description
-   - global: Advertise rsync features
-   - i18n: Update translations from weblate
-   - i18n: Update translation templates
-   - lxc: Only target if --target is passed
-   - lxc/export: Don't crash on failure to delete backup
-   - lxd: Don't mask database errors
-   - lxd/api: Sort list of endpoints
-   - lxd/backups: Rework to behave as intended
-   - lxd/cluster: Consider pending containers when placing a new container
-   - lxd/cluster: Make database queries timeout after 10s
-   - lxd/containers: Also use apply_quota for CEPH
-   - lxd/containers: Avoid root device name conflict
-   - lxd/containers: Don't return nil on Storage calls
-   - lxd/containers: Fix bad function name
-   - lxd/containers: Simplify and fix pool update logic
-   - lxd/db: Add a few missing rows.Close() calls
-   - lxd/db: Add NodeIsOutdated() db API to check is a node is outdated
-   - lxd/db: Add type column to operations table
-   - lxd/db: Fix internal DB test
-   - lxd/db: Use NoSuchObject consistently
-   - lxd/devices: Iterate /sys/class/drm for GPUs
-   - lxd/forkdns: Properly rewrite answer
-   - lxd/images: Add missing cleanup code
-   - lxd/import: Add root disk if needed
-   - lxd/import: Don't delete container on import failure
-   - lxd/operations: Fill the type column when creating a new operation
-   - lxd/operations: Return true if operation is done before timeout
-   - lxd/patches: Profiles are in the cluster db
-   - lxd/profiles: Don't list snapshots in UsedBy
-   - lxd/proxy: Fix unix socket paths in snap
-   - lxd/proxy: Only log errors
-   - lxd/storage/btrfs: Fix clearing quotas
-   - lxd/storage/ceph: Only freeze container if running
-   - Makefile: Honor the CC environment variable when invoking go install
-   - scripts: Update auto-complete
-   - shared/api: Don't re-define fields
-   - shared/idmap: Test for fscaps support
-   - shared: Return decompressor in DetectCompression
-   - tests: Always pass --force to stop
-   - tests: Avoid err == nil pattern
-   - tests: Fix mode of proxy.sh
-   - tests: Fix pki with newer easyrsa
+   - client: err == nil のパターンを避けました（訳注: 条件文の判断順を変えた） <!-- Avoid err == nil pattern -->
+   - doc: record-output が true の場合の exec の例を追加しました <!-- Add example of exec with record-output -->
+   - doc: マウントオプションを無視する事に関する注意書きを追加しました <!-- Add note about ignoring mount options -->
+   - doc: 説明の修正と改良を行いました（訳注: ネットワークの制限の表の説明欄のパラメータ名が間違っていたのを修正） <!-- Fix and improve the description -->
+   - global: rsync の機能を知らせるようになりました <!-- Advertise rsync features -->
+   - i18n: Weblate からの翻訳の更新を行いました <!-- Update translations from weblate -->
+   - i18n: 翻訳テンプレートを更新しました <!-- Update translation templates -->
+   - lxc: `--target` が与えられた時だけ target を使うようになりました <!-- Only target if \-\-target is passed -->
+   - lxc/export: バックアップの削除に失敗したときにクラッシュしなくなりました <!-- Don't crash on failure to delete backup -->
+   - lxd: データベースのエラーを出力するようにしました <!-- Don't mask database errors -->
+   - lxd/api: エンドポイントのリストをソートするようにしました <!-- Sort list of endpoints -->
+   - lxd/backups: 意図した通りに動作するように書き直しました（訳注: tarball生成タイミングの変更、重複コードの削除、既存のバックアップを変換するコードの追加） <!-- Rework to behave as intended -->
+   - lxd/cluster: 新しいコンテナを配置する際にペンディング状態のコンテナを考慮するようにしました <!-- Consider pending containers when placing a new container -->
+   - lxd/cluster: データベースクエリーのタイムアウトを 10 秒後にしました <!-- Make database queries timeout after 10s -->
+   - lxd/containers: Ceph でも `apply_quota` を使うようにしました <!-- Also use apply_quota for CEPH -->
+   - lxd/containers: ルートデバイス名の衝突を回避するようにしました <!-- Avoid root device name conflict -->
+   - lxd/containers: `Storage` 関数の呼び出しで nil が返らないようにしました <!-- Don't return nil on Storage calls -->
+   - lxd/containers: 不適切な関数名を修正しました <!-- Fix bad function name -->
+   - lxd/containers: プールを更新するロジックを修正し、簡素化しました <!-- Simplify and fix pool update logic -->
+   - lxd/db: 何箇所か足りなかった `rows.Close()` の呼び出しを追加しました <!-- Add a few missing rows.Close() calls -->
+   - lxd/db: ノードの API バージョンが古いかどうかをチェックするデータベース API である `NodeIsOutdated()` を追加しました <!-- Add NodeIsOutdated() db API to check is a node is outdated -->
+   - lxd/db: `operations` テーブルに `type` カラムを追加しました <!-- Add type column to operations table -->
+   - lxd/db: DB の内部テストを修正しました <!-- Fix internal DB test -->
+   - lxd/db: 一貫して `NoSuchObject` を使うようにしました <!-- Use NoSuchObject consistently -->
+   - lxd/devices: GPU のために `/sys/class/drm` をイテレートするようにしました <!-- Iterate /sys/class/drm for GPUs -->
+   - lxd/forkdns: 適切に応答を書き換えるようにしました <!-- Properly rewrite answer -->
+   - lxd/images: 足りなかったクリーンアップのコードを追加しました <!-- Add missing cleanup code -->
+   - lxd/import: 必要であれば root ディスクを追加するようにしました <!-- Add root disk if needed -->
+   - lxd/import: インポートが失敗した時にコンテナを削除しないようにしました <!-- Don't delete container on import failure -->
+   - lxd/operations: 新しい操作を追加するときに type カラムを埋めるようにしました <!-- Fill the type column when creating a new operation -->
+   - lxd/operations: タイムアウト前に操作が完了した場合は true を返すようにしました <!-- Return true if operation is done before timeout -->
+   - lxd/patches: プロファイルはクラスター DB の方を見るようにしました <!-- Profiles are in the cluster db -->
+   - lxd/profiles: UsedBy 内にはスナップショットをリストしないようにしました <!-- Don't list snapshots in UsedBy -->
+   - lxd/proxy: スナップでの unix ソケットのパスを修正しました <!-- Fix unix socket paths in snap -->
+   - lxd/proxy: エラーのみログするようにしました <!-- Only log errors -->
+   - lxd/storage/btrfs: クォータをクリアする際の処理を修正しました <!-- Fix clearing quotas -->
+   - lxd/storage/ceph: コンテナが実行中の時のみフリーズするようにしました <!-- Only freeze container if running -->
+   - Makefile: `go install` の際に `CC` 環境変数を使用するようにしました <!-- Honor the CC environment variable when invoking go install -->
+   - scripts: オートコンプリートを更新しました <!-- Update auto-complete -->
+   - shared/api: フィールドを複数回定義しないようにしました <!-- Don't re-define fields -->
+   - shared/idmap: fscap サポートのテストを追加しました <!-- Test for fscaps support -->
+   - shared: DetectCompression が展開コマンドを返すようになりました <!-- Return decompressor in DetectCompression -->
+   - tests: stop の際は常に `--force` を与えるようにしました <!-- Always pass \-\-force to stop -->
+   - tests: `err == nil` パターンを避けるようにしました <!-- Avoid err == nil pattern -->
+   - tests: `proxy.sh` のモードを修正しました <!-- Fix mode of proxy.sh -->
+   - tests: 新しい easyrsa を使う場合の pki テストを修正しました <!-- Fix pki with newer easyrsa -->
 
-  ### Try it for yourself
+  ### 試用環境 <!-- Try it for yourself -->
+  <!--
   This new LXD release is already available for you to try on our [demo service](https://linuxcontainers.org/lxd/try-it/).
+  -->
+  この新しい LXD リリースは私たちの [デモサービス](https://linuxcontainers.org/ja/lxd/try-it/) で利用できます。
 
-  ### Downloads
+  ### ダウンロード <!-- Downloads -->
+  <!--
   The release tarballs can be found on our [download page](https://linuxcontainers.org/lxd/downloads/).
+  -->
+  このリリースの tarball は [ダウンロードページ](/lxd/downloads/) から取得できます。
