@@ -107,6 +107,11 @@
      "generator": "markdown",
      "meta": {"input": "lxd/getting-started-openstack.ja.md"}},
 
+     {"path": "/lxd/documentation",
+     "menu": ["LXD", "ドキュメント"],
+     "generator": "link",
+     "meta": {"url": "https://lxd-ja.readthedocs.io/ja/latest/"}},
+
     {"path": "/lxd/rest-api/",
      "title": "LXD - REST API",
      "menu": ["LXD", "REST API"],
