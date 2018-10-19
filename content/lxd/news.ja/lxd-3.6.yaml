@@ -141,7 +141,7 @@ content: |-
   <!--
   More details about those can be found here
   -->
-  詳しい情報は [ドキュメント](https://github.com/NVIDIA/nvidia-container-runtime#environment-variables-oci-spec) をご覧ください。
+  詳しい情報は [nvidia-container-runtime のドキュメント](https://github.com/NVIDIA/nvidia-container-runtime#environment-variables-oci-spec) をご覧ください。
 
   ### lxc list と lxc image list の新しいカラム <!-- New columns in lxc list and lxc image list -->
 
