@@ -1,0 +1,241 @@
+title: LXD 3.6 release announcement
+date: 2018/10/11 00:00
+origin: https://discuss.linuxcontainers.org/t/lxd-3-6-has-been-released/2923
+content: |-
+  ### Introduction
+  The LXD team is very excited to announce the release of LXD 3.6!
+
+  This is a rather feature packed release with a variety of new configuration options as well as big features like LXD projects and ability to snapshot/restore custom storage volumes.
+
+  ### New features
+  #### Introducing LXD projects
+  LXD projects let you effectively split your LXD server.
+  Each project has its own list of containers and can also have its own profiles and images.
+
+  You can define as many projects as you want and easily switch between them with `lxc project switch`.
+
+  Newly created projects have all `features` enabled, meaning that at this point, they will be able to hold:
+
+   - containers
+   - images
+   - profiles
+
+  When some of those features are disabled, they simply inherit from the `default` project.
+
+  For example, let's create a new project which only holds containers and then start a container inside it:
+
+      stgraber@castiana:~$ lxc list
+      +-------------+---------+----------------------+----------------------------------------------+------------+-----------+
+      |    NAME     |  STATE  |         IPV4         |                     IPV6                     |    TYPE    | SNAPSHOTS |
+      +-------------+---------+----------------------+----------------------------------------------+------------+-----------+
+      | centos3     | STOPPED |                      |                                              | PERSISTENT |           |
+      +-------------+---------+----------------------+----------------------------------------------+------------+-----------+
+      | centos4     | STOPPED |                      |                                              | PERSISTENT |           |
+      +-------------+---------+----------------------+----------------------------------------------+------------+-----------+
+      | snapcraft   | RUNNING | 10.166.11.213 (eth0) | 2001:470:b368:4242:216:3eff:fe77:c7f8 (eth0) | PERSISTENT | 1         |
+      +-------------+---------+----------------------+----------------------------------------------+------------+-----------+
+      | tutorials   | RUNNING | 172.17.0.1 (docker0) | 2001:470:b368:4242:216:3eff:fea7:1816 (eth0) | PERSISTENT |           |
+      +-------------+---------+----------------------+----------------------------------------------+------------+-----------+
+      
+      stgraber@castiana:~$ lxc project list
+      +-------------------+--------+----------+---------+
+      |       NAME        | IMAGES | PROFILES | USED BY |
+      +-------------------+--------+----------+---------+
+      | default (current) | YES    | YES      | 19      |
+      +-------------------+--------+----------+---------+
+      
+      stgraber@castiana:~$ lxc project create demo -c features.images=false -c features.profiles=false
+      Project demo created
+      stgraber@castiana:~$ lxc project switch demo
+      
+      stgraber@castiana:~$ lxc list
+      +------+-------+------+------+------+-----------+
+      | NAME | STATE | IPV4 | IPV6 | TYPE | SNAPSHOTS |
+      +------+-------+------+------+------+-----------+
+      
+      stgraber@castiana:~$ lxc launch ubuntu:18.04 c1
+      Creating c1
+      Starting c1
+      
+      stgraber@castiana:~$ lxc list
+      +------+---------+----------------------+----------------------------------------------+------------+-----------+
+      | NAME |  STATE  |         IPV4         |                     IPV6                     |    TYPE    | SNAPSHOTS |
+      +------+---------+----------------------+----------------------------------------------+------------+-----------+
+      | c1   | RUNNING | 10.166.11.147 (eth0) | 2001:470:b368:4242:216:3eff:fef6:58a8 (eth0) | PERSISTENT |           |
+      +------+---------+----------------------+----------------------------------------------+------------+-----------+
+
+  #### Custom storage volume snapshots
+  It is now possible to create and manage snapshots on your custom storage volumes.
+
+
+      stgraber@castiana:~$ lxc storage volume create default data
+      Storage volume data created
+      stgraber@castiana:~$ lxc storage volume snapshot default data my-snapshot
+      stgraber@castiana:~$ lxc storage volume list default
+      +----------------------+------------------------------------------------------------------+-------------+---------+
+      |         TYPE         |                               NAME                               | DESCRIPTION | USED BY |
+      +----------------------+------------------------------------------------------------------+-------------+---------+
+      | container            | centos3                                                          |             | 1       |
+      +----------------------+------------------------------------------------------------------+-------------+---------+
+      | container            | centos4                                                          |             | 1       |
+      +----------------------+------------------------------------------------------------------+-------------+---------+
+      | container            | snapcraft                                                        |             | 1       |
+      +----------------------+------------------------------------------------------------------+-------------+---------+
+      | container            | tutorials                                                        |             | 1       |
+      +----------------------+------------------------------------------------------------------+-------------+---------+
+      | container (snapshot) | snapcraft/snap0                                                  |             | 1       |
+      +----------------------+------------------------------------------------------------------+-------------+---------+
+      | custom               | data                                                             |             | 0       |
+      +----------------------+------------------------------------------------------------------+-------------+---------+
+      | custom (snapshot)    | data/my-snapshot                                                 |             | 0       |
+      +----------------------+------------------------------------------------------------------+-------------+---------+
+      | image                | 0381c3c01c04b937579e0f055f5378a548eefcc18dd928249d4752ac47a6aa08 |             | 1       |
+      +----------------------+------------------------------------------------------------------+-------------+---------+
+      stgraber@castiana:~$ lxc storage volume restore default data my-snapshot
+      stgraber@castiana:~$
+
+  New volumes may also be created by copying a snapshot.
+
+  #### New NVIDIA configuration options
+  This introduces a few extra config keys when using nvidia.runtime and the libnvidia-container library. Those keys translate pretty much directly to the matching nvidia-container environment variables:
+
+   - nvidia.driver.capabilities = NVIDIA_DRIVER_CAPABILITIES
+   - nvidia.require.cuda = NVIDIA_REQUIRE_CUDA
+   - nvidia.require.driver = NVIDIA_REQUIRE_DRIVER
+
+  More details about those can be [found here](https://github.com/NVIDIA/nvidia-container-runtime#environment-variables-oci-spec)
+
+  #### New columns in `lxc list` and `lxc image list`
+  New columns have been added to `lxc list` to show the image that was used to create the container. The `f` column shows the short hash, the `F` column shows the full hash.
+
+      stgraber@castiana:~$ lxc list -c nfF
+      +-------------+--------------+------------------------------------------------------------------+
+      |    NAME     |  BASE IMAGE  |                            BASE IMAGE                            |
+      +-------------+--------------+------------------------------------------------------------------+
+      | centos3     | 3265a2551f2a | 3265a2551f2a8b3a08896f0a5b487bc4fa1d2a71fee3220b2077b8a4850d8f7a |
+      +-------------+--------------+------------------------------------------------------------------+
+      | centos4     | d22c637f6420 | d22c637f6420570b0b6d5a4ad687672a59d6f13acd19ad07901a47469ea78137 |
+      +-------------+--------------+------------------------------------------------------------------+
+      | snapcraft   | 3e50ba589426 | 3e50ba589426c21f26370e2f949f30210f2d0419fbb9d4d4a0f860a035373353 |
+      +-------------+--------------+------------------------------------------------------------------+
+      | tutorials   | d72ae2e5073f | d72ae2e5073f20450c5260e6f227484c23452a46c6bb553ffe6be55e48602bb4 |
+      +-------------+--------------+------------------------------------------------------------------+
+
+  And similarly, a `F` column was added to `lxc image list`.
+
+      stgraber@castiana:~$ lxc image list -c fFd
+      +--------------+------------------------------------------------------------------+---------------------------------------------+
+      | FINGERPRINT  |                           FINGERPRINT                            |                 DESCRIPTION                 |
+      +--------------+------------------------------------------------------------------+---------------------------------------------+
+      | 5ceb96c7eb29 | 5ceb96c7eb29ed3bf971cca95e4f9c7c95b7fcb1528e2733fca143e3908a384d | ubuntu 18.10 amd64 (daily) (20181010)       |
+      +--------------+------------------------------------------------------------------+---------------------------------------------+
+      | c966933fdfd3 | c966933fdfd390d301fed3447528e2f910bf72c0615b2caaf3235a791fed3541 | ubuntu 16.04 LTS amd64 (release) (20181004) |
+      +--------------+------------------------------------------------------------------+---------------------------------------------+
+      | d72ae2e5073f | d72ae2e5073f20450c5260e6f227484c23452a46c6bb553ffe6be55e48602bb4 | ubuntu 18.04 LTS amd64 (release) (20181003) |
+      +--------------+------------------------------------------------------------------+---------------------------------------------+
+      | ef20901f9494 | ef20901f94946ebe05e05c63f54fda8e366ca47677b55e9c021527065c11459c | ubuntu 16.04 LTS i386 (release) (20181004)  |
+      +--------------+------------------------------------------------------------------+---------------------------------------------+
+
+
+  #### Basic support for CGroupV2-only systems
+  On systems that only have CGroupV2 enabled, LXD will now start properly and most container operations will work as expected.
+
+  Note that resource limits on CGroupV2 only systems will not be applied at this time.
+  Getting to feature parity with CGroupV1 will need quite a lot more work.
+
+  #### New `security.unmapped` storage volume property
+  A new `security.unmapped` property has been added to the storage volumes.
+  This effectively allows you to attach a custom volume to a first container, letting LXD remap it for you, then set that property and attach it to as many other containers as you want even if they have mismatching uid/gid maps.
+
+  Without this property set, LXD refuses to attach the volume because of uid/gid mismatch, with it set, it makes it the user's problem to either use pretty wide open file permissions to allow access or setup some POSIX ACLs for the various containers.
+
+  #### Support for PEM encrypted client key
+  For added security, LXD now supports PEM encrypted keys, this means that you can now manually encrypt your `~/.config/lxc/client.crt` using openssl and LXD will then prompt you for the password as needed.
+
+      stgraber@castiana:~$ lxc project list s-vorash:
+      Password for client.crt: 
+      +-------------------+--------+----------+---------+
+      |       NAME        | IMAGES | PROFILES | USED BY |
+      +-------------------+--------+----------+---------+
+      | default (current) | YES    | YES      | 28      |
+      +-------------------+--------+----------+---------+
+
+  #### Uevent injection for USB devices
+  On very recent kernels, containers that have USB devices setup in LXD will now get add/remove and bind/unbind uevents forwarded to them, allowing for the use of udev rules and other software that listen for uevents.
+
+  Here is an example of a phone getting plugged in:
+
+      stgraber@castiana:~$ lxc exec tutorials udevadm monitor
+      monitor will print the received events for:
+      UDEV - the event which udev sends out after rule processing
+      KERNEL - the kernel uevent
+      
+      KERNEL[894420.794945] add      /devices/pci0000:00/0000:00:1d.0/0000:06:00.0/0000:07:02.0/0000:3c:00.0/usb3/3-1/3-1.1/3-1.1.4/3-1.1.4.1 (usb)
+      UDEV  [894420.796425] add      /devices/pci0000:00/0000:00:1d.0/0000:06:00.0/0000:07:02.0/0000:3c:00.0/usb3/3-1/3-1.1/3-1.1.4/3-1.1.4.1 (usb)
+      KERNEL[894420.809028] bind     /devices/pci0000:00/0000:00:1d.0/0000:06:00.0/0000:07:02.0/0000:3c:00.0/usb3/3-1/3-1.1/3-1.1.4/3-1.1.4.1 (usb)
+      UDEV  [894420.810630] bind     /devices/pci0000:00/0000:00:1d.0/0000:06:00.0/0000:07:02.0/0000:3c:00.0/usb3/3-1/3-1.1/3-1.1.4/3-1.1.4.1 (usb)
+
+  #### Optimized retrieval of network information
+  Support for a set of upcoming netlink APIs has been added to LXD.
+  With those, it is now possible to retrieve all container network information without requiring the use of subprocesses and without having to switch between namespaces.
+
+  On systems with a kernel supporting those new APIs, we can observe up to 40% performance improvement in `lxc list`.
+
+  ### Bugs fixed
+
+   - client: Fix client when using HTTPs candid server
+   - client: Fix Potential Event Race
+   - doc: Add configuration for readthedocs
+   - doc: Added optional ?target=<member> to /containers POST documentation
+   - doc: Document LVM support for storage quotas
+   - doc: Fix storage API endpoints
+   - doc: Rework backup documentation
+   - global: Pass -std=gnu11 -Wvla
+   - i18n: Update translations from weblate
+   - lxc/config: More TLS optimizations
+   - lxc/config: Only setup needed connection args
+   - lxc/import: Fix error handling
+   - lxc/progress: Add terminal detection
+   - lxc/progress: Don't print empty lines
+   - lxc/storage: Identify snapshots when listed
+   - lxd: Fix handling of CGroup-V2 systems
+   - lxd: Lookup for the "target" API parameter only in the URL query string
+   - lxd/candid: Cleanup code a bit
+   - lxd/candid: Improve domain validation and pubkey
+   - lxd/containers: Fix bad nvidia information parsing
+   - lxd/containers: Fix cleanup on create failure
+   - lxd/containers: Fix root disk limits on container startup
+   - lxd/containers: Force bring up of SRIOV parent
+   - lxd/containers: Improve error reporting when creating a container
+   - lxd/containers: Improve some error messages around container creation
+   - lxd/containers: Rework exec FD handling
+   - lxd/containers: Use the ID field from db.Container directly
+   - lxd/db: Add cluster statements registry
+   - lxd/db: Add query.SelectURIs convenience for getting API resource URIs
+   - lxd/db: Change query.SelectObjects signature to support a prepared statement
+   - lxd/db: More efficient profile delete API handler
+   - lxd/db: Switch over to code generation
+   - lxd/db: Use ClusterTx.ProfileDelete instead of Cluster.ProfileDelete
+   - lxd/db: Use ClusterTx.ProfileRename instead of Cluster.ProfileUpdate
+   - lxd/db: Use tx.ProfileCreate() instead of db.ProfileCreate()
+   - lxd/devices: Fix bad disk limits
+   - lxd/images: Fix parsing of public property
+   - lxd/nvidia: Default to compute,utility
+   - lxd-p2c: Fix static build
+   - lxd/storage/btrfs: Don't fail deleting pools on misisng disk
+   - lxd/storage/ceph: Don't un-necessarily mount snapshots
+   - lxd/storage: Change ContainerStorageReady() to take a container struct
+   - lxd/storage: Change ContainerUmount to accept a container struct
+   - lxd/storage: Fix some storage URLs in API
+   - lxd/storage/lvm: Don't un-necessarily start/stop storage
+   - lxd/storage/lvm: Improve error messages around LVM volume creation
+   - Makefile: Set LDFLAGS for dqlite
+   - shared/network: Don't crash on VPN devices
+   - shared/version: Support detecting ChromeOS versions
+   - storage: Fix error strings
+
+  ### Try it for yourself
+  This new LXD release is already available for you to try on our [demo service](https://linuxcontainers.org/lxd/try-it/).
+
+  ### Downloads
+  The release tarballs can be found on our [download page](https://linuxcontainers.org/lxd/downloads/).
