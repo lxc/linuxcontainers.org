@@ -11,7 +11,7 @@ Extra dependencies for lxc-attach:
 
 Extra dependencies for unprivileged containers:
 
- * cgmanager or another CGroup manager configuring your system for unprivileged CGroups operation
+ * libpam-cgfs, cgmanager or another CGroup manager configuring your system for unprivileged CGroups operation
  * A recent version of shadow including newuidmap and newgidmap
  * Linux kernel >= 3.12
 
