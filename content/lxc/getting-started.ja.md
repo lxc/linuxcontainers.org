@@ -258,10 +258,10 @@ you'll need to follow only a subset of the steps above.
 
 <!--
 Specifically, you need to manually allocate a uid and gid range to root in /etc/subuid and /etc/subgid.
-And then set that range in /etc/lxc/default.conf using lxc.id\_map entries similar to those above.
+And then set that range in /etc/lxc/default.conf using lxc.idmap entries similar to those above.
 -->
 具体的に言うと、root に対して割り当てる uid と gid の範囲を /etc/subuid と /etc/subgid に割り当てる必要があります。
-そして、その範囲を先と同様に /etc/lxc/default.conf に lxc.id\_map を使って設定します。
+そして、その範囲を先と同様に /etc/lxc/default.conf に lxc.idmap を使って設定します。
 
 <!--
 And that's it. Root doesn't need network devices quota and uses the

@@ -133,7 +133,7 @@ To run a system-wide unprivileged container (that is, an unprivileged container 
 you'll need to follow only a subset of the steps above.
 
 Specifically, you need to manually allocate a uid and gid range to root in /etc/subuid and /etc/subgid.
-And then set that range in /etc/lxc/default.conf using lxc.id\_map entries similar to those above.
+And then set that range in /etc/lxc/default.conf using lxc.idmap entries similar to those above.
 
 And that's it. Root doesn't need network devices quota and uses the
 global configuration file so the other steps don't apply.
