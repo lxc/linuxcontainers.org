@@ -11,7 +11,7 @@ lxc-attach 사용을 위한 추가 사양 :
 
 비특권 컨테이너 사용을 위한 추가 사양 :
 
- * cgmanager 또는 비특권 컨트롤 그룹 작업이 가능한 다른 컨트롤 그룹 관리자
+ * libpam-cgfs, cgmanager 또는 비특권 컨트롤 그룹 작업이 가능한 다른 컨트롤 그룹 관리자
  * newuidmap와 newgidmap가 최신버전의 shadow
  * 리눅스 커널 >= 3.12
 

@@ -28,11 +28,11 @@ Extra dependencies for unprivileged containers:
 非特権のコンテナが動作するのに必要な環境:
 
 <!--
- * cgmanager or another CGroup manager configuring your system for unprivileged CGroups operation
+ * libpam-cgfs, cgmanager or another CGroup manager configuring your system for unprivileged CGroups operation
  * A recent version of shadow including newuidmap and newgidmap
  * Linux kernel >= 3.12
  -->
- * cgmanager もしくは非特権の cgroup の操作が可能な他の cgroup マネージャ
+ * libpam-cgfs, cgmanager もしくは非特権の cgroup の操作が可能な他の cgroup マネージャ
  * newuidmap、newgidmap を含む最新バージョンの shadow
  * Linux カーネル 3.12 以上
 
