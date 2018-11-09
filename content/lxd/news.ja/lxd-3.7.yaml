@@ -21,7 +21,7 @@ content: |-
   <!--
   On top of the project fixes, we've also done a number of improvements to our database, logging and fixed quite a few other bugs.
   -->
-  プロジェクト機能の修正に加えて、データベース、ロギングの改良を行い、他にいくつかのバグ修正を行いました。
+  プロジェクト機能の修正に加えて、データベース、ロギングの改良を行い、他に多数のバグ修正を行いました。
 
   ### 新機能 <!-- New features -->
   #### コンテナのリフレッシュ <!-- Container refresh -->
