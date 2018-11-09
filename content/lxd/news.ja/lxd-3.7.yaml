@@ -1,0 +1,225 @@
+title: LXD 3.7 リリースのお知らせ
+date: 2018/11/09 00:00
+origin: https://discuss.linuxcontainers.org/t/lxd-3-7-has-been-released/3206
+content: |-
+  ### はじめに <!-- Introduction -->
+  <!--
+  The LXD team is very excited to announce the release of LXD 3.7!
+  -->
+  LXD チームは LXD 3.7 のリリースを発表することにとてもワクワクしています!
+
+  <!--
+  We started off this release cycle by fixing a number of issues and edge cases surrounding our recently introduced projects feature as more and more of our users started making use of it.
+  -->
+  このリリースサイクルは、新たに導入した、使用するユーザーが増えてきたプロジェクト機能周辺の問題やエッジケースを修正して開始しました。
+
+  <!--
+  But that's not to say that we've spent the entire past month fixing bugs and LXD 3.7 also debuts support for container refreshes, got a few tweaks to our TLS setup, improved exec operations and an extra VXLAN configuration key.
+  -->
+  しかし、ここ 1 ヶ月まるまるをバグ修正に費やしたわけではなく、LXD 3.7 ではコンテナのリフレッシュ、TLS セットアップの調整をいくつか、exec 操作の改良、VXLAN 設定項目の追加を行いました。
+
+  <!--
+  On top of the project fixes, we've also done a number of improvements to our database, logging and fixed quite a few other bugs.
+  -->
+  プロジェクト機能の修正に加えて、データベース、ロギングの改良を行い、他にいくつかのバグ修正を行いました。
+
+  ### 新機能 <!-- New features -->
+  #### コンテナのリフレッシュ <!-- Container refresh -->
+  <!--
+  It is now possible to tell LXD to refresh a container based on another container, either locally or remotely. On the command line, this is controlled by a new `--refresh` argument to `lxc copy`.
+  -->
+  ローカルもしくはリモートの他のコンテナに基づいて、コンテナをリフレッシュするように LXD に指示できるようになりました。この機能は、新たに追加された `--refresh` オプションを `lxc copy` に指定して制御します。
+
+  <!--
+  This can be used to setup a backup LXD server that will then get regular updates from production servers, keeping the containers and their snapshots in sync until such time as they need to be restore or just started from the backup server.
+  -->
+  この機能で、本番サーバから定期的に更新を行い、リストアが必要になったときのために、コンテナやスナップショットを同期し続けたり、バックアップサーバからコンテナを起動したりするような、バックアップ LXD サーバを設定するのに使えます。
+
+  <!--
+  The initial copy uses our usual migration code, subsequent refreshes will then compare the list of snapshots, delete any snapshot which was removed from the source or which appears to have been changed and then sync the missing snapshots and container state using rsync.
+  -->
+  最初のコピーには通常のマイグレーションコードを使用し、その後の同期ではスナップショットの比較を行い、コピー元から削除されたスナップショットや、同期時点から変更されたスナップショットを削除し、それから足りないスナップショットやコンテナを rsync を使って同期します。
+
+  #### デフォルトの鍵タイプを EC384 に変更 <!-- Switch default key type to EC384 -->
+  <!--
+  LXD has always used RSA4096 has the algorithm and key strength of choice for its private keys. This has unfortunately cause a number of issues on some CPU architectures where RSA can get very very slow.
+  -->
+  LXD は秘密鍵のアルゴリズムと鍵強度に RSA4096 を選択してきています。これにより、不幸なことに RSA の計算が非常に遅くなることがある CPU アーキテクチャでいくつか問題を引き起こしています。
+
+  <!--
+  The switch to using an elliptic-curve key by default fixes that issue by considerably reducing the generation time without compromising on private key security.
+  -->
+  デフォルトで楕円曲線暗号のキーを使うことに変更することで、秘密鍵のセキュリティを犠牲にせずに、生成時間を大幅に短縮し、この問題を修正します。
+
+  <!--
+  Note that this is only used for newly generated keys, existing users will keep using their RSA private keys. It's also worth noting that LXD will happily let you generate your own private key and certificate and just put them into place on the filesystem for it to use.
+  -->
+  これは新たに鍵を生成する際のみの話であり、既存のユーザは RSA 秘密鍵を使い続けます。LXD が自身の秘密鍵と証明書を生成し、それを使用するためにファイルシステム上に置くだけで楽に使えることは注目に値するでしょう。
+
+  #### 暗号を選択するための環境変数の追加 <!-- New environment variable to control cipher selection -->
+  <!--
+  While all our own image servers and internal communications support modern ciphers, it's been brought to our attention that some corporate environments will intercept TLS traffic through their proxy and using a company CA, terminate the TLS connection on the proxy to inspect the traffic.
+  -->
+  LXD のイメージサーバと内部通信ではすべて最新の暗号が使えますが、プロキシと企業 CA を使って TLS 通信を傍受し、プロキシ上で TLS 接続を終端させてトラフィックを検査するような企業環境が存在するという報告がありました。
+
+  <!--
+  This would work fine so long as the company CA is trusted on the system and LXD is configured to use the company proxy. Unfortunately, it appears that many such proxies also do not support the modern ciphers that LXD requires, effectively causing all outgoing TLS connections to fail.
+  -->
+  企業 CA がシステムで信頼され、LXD が企業のプロキシを使用するように設定されている限り、このような環境でもうまく動作します。しかし、このようなプロキシの多くは LXD が必要とする最新の暗号が使えず、外向きの TLS 接続が失敗するようです。
+
+  <!--
+  For those environments, we have now added a new `LXD_INSECURE_TLS` environment variable which is respected by both `lxd` and `lxc` and that will instruct LXD to relax the ciphers requirements, using the default TLS settings from Go rather than using our restricted set of trusted ciphers.
+  -->
+  このような環境用に、新たに `LXD_INSECURE_TLS` 環境変数を追加しました。`lxd` も `lxc` もこれを参照し、暗号に対する要求を緩めるように LXD に指示します。これにより LXD が信頼する暗号の限られた組ではなく、Go のデフォルトの TLS 設定を使うようになります。
+
+  #### `exec` へのメタデータの追加 <!-- Added metadata to `exec` operations -->
+  <!--
+  Ever wondered what that `exec` session is about in `lxc operation list`?
+  -->
+  これまで `lxc operation list` で表示される `exec` セッションは何だろう? と思ったことがありますか?
+
+  <!--
+  Well, now LXD lets you find that out by looking at some extra metadata that's recorded as part of the `exec` operation.
+  -->
+  今後は LXD が `exec` 操作の一部として記録されているメタデータをいくつか見ることで、あなたがそれを見れるようにしました。
+
+      stgraber@castiana:~$ lxc exec xenial -- sleep 30 &
+      [1] 25911
+      
+      stgraber@castiana:~$ lxc operation list
+      +--------------------------------------+-----------+-------------------+---------+------------+----------------------+
+      |                  ID                  |   TYPE    |    DESCRIPTION    | STATUS  | CANCELABLE |       CREATED        |
+      +--------------------------------------+-----------+-------------------+---------+------------+----------------------+
+      | 274ab284-ed07-4834-b3f5-6ec1d7cf3b74 | WEBSOCKET | Executing command | RUNNING | NO         | 2018/11/09 04:20 UTC |
+      +--------------------------------------+-----------+-------------------+---------+------------+----------------------+
+      
+      stgraber@castiana:~$ lxc operation show 274ab284-ed07-4834-b3f5-6ec1d7cf3b74
+      id: 274ab284-ed07-4834-b3f5-6ec1d7cf3b74
+      class: websocket
+      description: Executing command
+      created_at: 2018-11-08T23:20:30.323852365-05:00
+      updated_at: 2018-11-08T23:20:30.323852365-05:00
+      status: Running
+      status_code: 103
+      resources:
+        containers:
+        - /1.0/containers/xenial
+      metadata:
+        command:
+        - bash
+        environment:
+          HOME: /root
+          LANG: C.UTF-8
+          PATH: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
+          TERM: xterm
+          USER: root
+        fds:
+          "0": d79593f74c3e566987a3bdb109d2f4102aea5915ad344f64ea665082c1a3177e
+          control: 0ed5ba645a9f6f0b2956282bba274ce015407a6309e1a9ec1a897fab0483d6fe
+        interactive: true
+      may_cancel: false
+      err: ""
+
+  <!--
+  This records the command that was executed, its environment and whether it was run interactively or not.
+  -->
+  これは、実行されたコマンド、その環境変数、それが対話的に実行されたかどうかを記録します。
+
+  #### VXLAN TTL 設定キーの追加 <!-- New VXLAN TTL configuration key -->
+  <!--
+  A new `tunnel.NAME.ttl` key has been added to LXD managed bridges.
+  This lets you configure the TTL to use for multicast VXLAN tunnels (default is 1).
+  -->
+  LXD が管理するブリッジに、設定 `tunnel.NAME.ttl` を追加しました。
+  これで、マルチキャスト VXLAN トンネルの TTL を設定できるようになりました（デフォルトは 1）。
+
+  ### Bugs fixed
+
+   - backup: Allow backups to not expire
+   - client: Always use the "do()" wrapper
+   - client: Fix cancelation of image download
+   - client: Fix error handling in operations
+   - client: Fix URLs with missing project/target
+   - doc: Add the appropriate titles to some documents
+   - doc: Bump to 1.10 or higher everywhere
+   - doc: Update build instruction
+   - doc: Update cloud-init network documentation
+   - i18n: Update translations from weblate
+   - i18n: Update translation templates
+   - lxc: Switch all progress op handling to cancelable
+   - lxc/copy: --container-only is meaningless for snapshots
+   - lxd: Register background tasks as operations
+   - lxd: Remove expired container backups
+   - lxd: Rework task handling
+   - lxd/backups: Set default expiry for backups
+   - lxd/checkfeature: Check for vfs3 fscaps support
+   - lxd/checkfeature: Don't log error on missing feature
+   - lxd/containers: Add ContainerListExpanded to load containers and expand their configs/devices
+   - lxd/containers: Associate a container with the profile from its own project
+   - lxd/containers: Consider the container's project when loading profiles
+   - lxd/containers: Detect root disk pool changes
+   - lxd/containers: Expand container devices and configs from the associated project
+   - lxd/containers: Fix bad check for recursive mounts
+   - lxd/containers: Fix cluster shutdown
+   - lxd/containers: Fix lxc exec when using a container inside a project
+   - lxd/containers: Fix missing project in args
+   - lxd/containers: Improve error messages
+   - lxd/containers: Make containers on other nodes visible also in the non-default project
+   - lxd/containers: Prefix the container name with the project name when invoking forkconsole
+   - lxd/containers: Prevent duplicate profiles
+   - lxd/containers: Use liblxc mount injection api
+   - lxd/daemon: Clarify early loggging
+   - lxd/daemon: Don't expire lxd.log by accident
+   - lxd/daemon: Don't mention MAAS unless configured
+   - lxd/daemon: Improve logging of inherited fds
+   - lxd/daemon: Improve logging of kernel features
+   - lxd/db: Add logic to the db package to expand devices
+   - lxd/db: Add logic to the db package to load and expand profiles
+   - lxd/db: Detect and shrink large boltdb files
+   - lxd/db: Fix bad limits.cpu in test
+   - lxd/db: Fix listing container backups
+   - lxd/db: Increase database timeout when creating indexes in db update 12
+   - lxd/db: Increase go-dqlite client timeout when not-clustered
+   - lxd/db: Make the db mapper code generator handle compound natural keys
+   - lxd/db: Sanitize references to containers table
+   - lxd/db: Send raft/dqlite logging to debug
+   - lxd/db: Speed up execution of update from v11 of the db
+   - lxd/db: Wire expand config logic fromt the db package
+   - lxd/db: Wire expand devices logic fromt the db package
+   - lxd/events: Prevent event listeners from lying around even after Disconnect()
+   - lxd/images: Auto-update images also in projects other than the default one
+   - lxd/images: Avoid downloading an image twice if it's already in another project
+   - lxd/images: Link an image to a project when downloading it to init a container
+   - lxd/images: Support creating project-bound container using an image on another node
+   - lxd/main_forkmount: Use pkg-config
+   - lxd/main_forknet: Simplify getifaddrs
+   - lxd/migration: Use current idmap instead of next
+   - lxd/networks: Include containers from all projects in the UsedBy field of a network
+   - lxd/patches: Add missing transition for symlinks
+   - lxd/profiles: Fix project-aware URIs in the UsedBy field of api.Profile
+   - lxd/projects: Fix clustered exec/console
+   - lxd/projects: Fix profile updates
+   - lxd/projects: Propagate events about all projects to all cluster nodes
+   - lxd/projects: Re-create the project default profile when turning on the project profiles feature
+   - lxd/storage: Add StorageVolumeIsAvailable to check if a Ceph volume can be attached
+   - lxd/storage: Destroy the correct ZFS volume when deleting a container in a project
+   - lxd/storage: Fix importing preseed dump
+   - lxd/storage: Improve loop device errors
+   - lxd/storage: Make custom volumes visible from non-default projects
+   - lxd/storage: Retry loop device allocation on EBUSY
+   - lxd/storage: Wire StorageVolumeIsAvailable to containerValidDevices
+   - rsync: Tweak transfer options (introduce delete & compress)
+   - scripts: Add 'project' to bash completion
+   - shared: Add limits.cpu validator
+   - shared/idmap: Use global variable for vfs3 fcaps support
+   - shared/logging: Improve logfile output
+   - shared/network: Allow TLS1.3
+   - tests: Add integration test for CEPH cross-node volumes
+   - tests: Small unrelated cleanup in projects integration test
+   - travis: Bump Go versions and use '.x' to always get latest patch versions
+
+  ### Try it for yourself
+  This new LXD release is already available for you to try on our [demo service](https://linuxcontainers.org/lxd/try-it/).
+
+  ### Downloads
+  The release tarballs can be found on our [download page](https://linuxcontainers.org/lxd/downloads/).
