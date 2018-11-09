@@ -54,7 +54,7 @@ content: |-
   <!--
   Note that this is only used for newly generated keys, existing users will keep using their RSA private keys. It's also worth noting that LXD will happily let you generate your own private key and certificate and just put them into place on the filesystem for it to use.
   -->
-  これは新たに鍵を生成する際のみの話であり、既存のユーザは RSA 秘密鍵を使い続けます。LXD が自身の秘密鍵と証明書を生成し、それを使用するためにファイルシステム上に置くだけで楽に使えることは注目に値するでしょう。
+  これは新たに鍵を生成する際のみの話であり、既存のユーザは RSA 秘密鍵を使い続けます。自身で秘密鍵と証明書を生成し、それを使用するためにファイルシステム上に置くだけで楽に使えることは注目に値するでしょう。
 
   #### 暗号を選択するための環境変数の追加 <!-- New environment variable to control cipher selection -->
   <!--
