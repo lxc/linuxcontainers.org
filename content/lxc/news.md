@@ -1,4 +1,410 @@
 # News
+## [LXC 3.0.3 release announcement](https://discuss.linuxcontainers.org/t/lxc-3-0-3-has-been-released/3358)
+<span class="text-muted">22nd of November 2018</span>
+### Introduction
+The LXC team is pleased to announce the release of LXC 3.0.3!
+
+As a stable bugfix release, no major changes have been done, instead focusing on bugfixes and minor usability improvements.
+
+#### Highlights
+
+ - Improved our default build flags to make use of compiler hardening
+ - Added support for netlink strict property checking on newer kernels
+ - Added support for new netlink interface/address netns API
+ - Added handling of the kernel keyring on startup
+
+#### Bugfixes (LXC)
+
+ - CONTRIBUTING: Update reference to kernel coding style
+ - CONTRIBUTING: Link to latest online kernel docs
+ - CONTRIBUTING: Direct readers to CODING\_STYLE.md
+ - CODING\_STYLE: Mention kernel style in introduction
+ - CONTRIBUTING: Add 'be' to fix grammar
+ - CODING\_STLYE: Simplify explanation for use of 'extern'
+ - CODING\_STLYE: Remove sections implied by 'kernel style'
+ - CODING\_STYLE: Fix non-uniform heading level
+ - CODING\_STYLE: Update section header format
+ - cmd: Use parenthesis around complex macro
+ - cmd: Use 'void' instead of empty parameter list
+ - cmd: Do not use braces for single statement block
+ - cmd: Fix whitespace issues
+ - cmd: Use 'const' for static string constant.
+ - cmd: Remove unnecessary whitespace in string
+ - cmd: Put trailing \*/ on a separate line
+ - cmd: Remove typo'd semicolon
+ - cmd: Do not use comparison to NULL
+ - lxc\_init: s/SYSDEBUG()/SYSERROR()/g in remove\_self
+ - tools: lxc-attach: add default log priority & cleanups
+ - tools: lxc-cgroup: add default log priority & cleanups
+ - tools: lxc-checkpoint: add default log priority & cleanups
+ - tools: lxc-console: add default log priority & cleanups
+ - tools: lxc-create: add default log priority & cleanups
+ - tools: lxc-destroy: add default log priority & cleanups
+ - tools: lxc-device: add default log priority & cleanups
+ - tools: lxc-execute: add default log priority & cleanups
+ - tools: lxc-start: add default log priority & cleanups
+ - tools: lxc-stop: add default log priority & cleanups
+ - tools: lxc-freeze: add default log priority & cleanups
+ - tools: lxc-unfreeze: add default log priority & cleanups
+ - storage\_utils: move duplicated function from tools
+ - tools: fix lxc-execute command parsing
+ - lseek - integer overflow
+ - cmd: lxc-user-nic: change log macro & cleanups
+ - cmd: lxc-usernsexec reorder includes
+ - cmd: move declarations to macro.h
+ - cmd: use utils.{c,h} helpers in lxc-usernsexec
+ - cmd: simplify lxc-usernsexec
+ - cmd: use safe number parsers in lxc-usernsexec
+ - macro: add missing headers
+ - macro: add macvlan properties
+ - tools: Indicate container startup failure
+ - storage: exit() => _exit(). when exec is failed, child process needs to use _exit()
+ - tools: lxc-wait: add default log priority & cleanups
+ - conf: fix path/lxcpath mixups in tty setup
+ - cmd: use goto for cleanup in lxc-usernsexec
+ - cmd: Do not reassign variable before it is used
+ - cmd: Reduce scope of 'count' variable
+ - cmd: Fix format issues found by clang-format
+ - list: fix indent
+ - utils: split into {file,string}\_utils.{c,h}
+ - pam\_cgfs: build from the same sources as liblxc
+ - conf: fix devpts mounting when fully unprivileged
+ - macro: s/rexit()/\_exit()/g
+ - attach: move struct declaration to top
+ - macro: move macros from attach.c
+ - Makefile: don't allow undefined symbols
+ - autotools: check if compiler is new enough
+ - log: handle strerror\_r() versions
+ - autotools: add --{disable,enable}-thread-safety
+ - log: fail build on ENFORCE\_THREAD\_SAFETY error
+ - {file,string}\_utils: remove NO\_LOG
+ - initutils: remove useless comment
+ - string\_utils: remove unnecessary include
+ - string\_utils: remove unused headers
+ - string\_utils: add remove\_trailing\_slashes()
+ - Makefile: remove last pam\_cgfs special-casing
+ - conf: add missing headers
+ - Fix typo
+ - ifaddrs: add safe implementation of getifaddrs()
+ - Makefile: conditionalize ifaddrs.h inclusion
+ - execute: skip lxc-init logging when unprivileged
+ - execute: pass /proc/self/fd/<nr>
+ - tests: cleanup get\_item.c
+ - build: fix musl
+ - configure: reorder header checks
+ - compiler: add compiler.h header
+ - commands: return -1 on lxc\_cmd\_get\_init\_pid() err
+ - tests: add basic.c
+ - tests: cleanup Makefile
+ - commands: ensure -1 is sent on EPIPE for init pid
+ - macro: add LXC\_AUDS\_ADDR\_LEN
+ - macro: move LXC\_CMD\_DATA\_MAX from commands.h
+ - macro: add PTR\_TO\_INT() and INT\_TO\_PTR()
+ - macro: add INTTYPE\_TO\_STRLEN()
+ - caps: s/LXC\_NUMSTRLEN64/INTTYPE\_TO\_STRLEN()/
+ - cgfsng: s/LXC\_NUMSTRLEN64/INTTYPE\_TO\_STRLEN()/
+ - confile: s/LXC\_NUMSTRLEN64/INTTYPE\_TO\_STRLEN()/
+ - log: s/LXC\_NUMSTRLEN64/INTTYPE\_TO\_STRLEN()/
+ - lsm: s/LXC\_NUMSTRLEN64/INTTYPE\_TO\_STRLEN()/
+ - macro: s/LXC\_NUMSTRLEN64/INTTYPE\_TO\_STRLEN()/
+ - lxccontainer: s/LXC\_NUMSTRLEN64/INTTYPE\_TO\_STRLEN()/
+ - monitor: s/LXC\_NUMSTRLEN64/INTTYPE\_TO\_STRLEN()/
+ - network: s/LXC\_NUMSTRLEN64/INTTYPE\_TO\_STRLEN()/
+ - string\_utils: s/LXC\_NUMSTRLEN64/INTTYPE\_TO\_STRLEN()/
+ - utils: s/LXC\_NUMSTRLEN64/INTTYPE\_TO\_STRLEN()/
+ - tools: s/LXC\_NUMSTRLEN64/INTTYPE\_TO\_STRLEN()/
+ - conf: s/LXC\_NUMSTRLEN64/INTTYPE\_TO\_STRLEN()/
+ - tests: s/LXC\_NUMSTRLEN64/INTTYPE\_TO\_STRLEN()/
+ - macro: final INTTYPE\_TO\_STRLEN() related cleanups
+ - macro: coding style fixes
+ - Makefile: correctly add ifaddrs to noinst\_HEADERS
+ - start: remove duplicate macros
+ - caps: move macros to macro header
+ - string\_utils: use UINT64\_MAX macro
+ - tree-wide: use sizeof on static arrays
+ - Revert "tree-wide: use sizeof on static arrays"
+ - commands: pass around intmax\_t
+ - commands: assign before converting to pointer
+ - macro: calculate buffer lengths correctly
+ - Revert "Revert "tree-wide: use sizeof on static arrays""
+ - macro: move MS\_\* macros
+ - caps: fix illegal access to array bound
+ - utils: defensive programming
+ - nl: remove duplicated define
+ - syntax error: mismatch brace
+ - commands: better error message
+ - file\_utils: add lxc\_recv\_nointr()
+ - commands: switch to setting errno and returning -1
+ - log: do not clobber errno
+ - log: save errno on strerror\_r()
+ - tree-wide: s/recv()/lxc\_recv\_nointr()/g
+ - file\_utils: add lxc\_send\_nointr()
+ - tree-wide: s/send()/lxc\_send\_nointr()/g
+ - nl: save errno on lxc\_netns\_set\_nsid()
+ - log: log\_append\_logfile() add new error path
+ - lxccontainer: fix dereferenced pointer
+ - lxc: fix build with --disable-werror
+ - utils: improve get\_ns\_uid() and add get\_ns\_gid()
+ - utils: improve lxc\_switch\_uid\_gid()
+ - log: support dlog
+ - attach: handle id switching smarter
+ - start: avoid unnecessary syscalls
+ - utils: make lxc\_setgroups() return bool
+ - utils: make lxc\_switch\_uid\_gid() return bool
+ - lxccontainer: use correct pid\_t type
+ - conf: remove extra MS\_BIND with sysfs:mixed
+ - network: use correct type in lxc\_netns\_set\_nsid()
+ - network: add lxc\_netns\_get\_nsid()
+ - remove unused variables
+ - file\_utils: remove unused function
+ - network: minor tweaks
+ - add compile flags for dlog
+ - log: add common functions
+ - log: add additional info of dlog
+ - attach: don't shutdown ipc socket in child
+ - security: fix too wide or inconsistent non-owner permissions
+ - attach: report standard shell exit codes
+ - af\_unix: add function to remove duplicated codes for set sockaddr
+ - lxccontainer: remove locks from set\_cgroup\_item()
+ - lxccontainer: remove locks from get\_cgroup\_item()
+ - apparmor: account for specified rootfs path (closes #2617)
+ - conf: realpath() uses null as second parameter to prevent buffer overflow
+ - start: s/backgrounded/daemonize/g
+ - cgfsng: mark ops with \_\_cgfsng\_ops\_\_ attribute
+ - autotools: add -Wimplicit-fallthrough
+ - cgroup: rename container specific cgroup functions
+ - cgroups: s/fullcgpath/container\_full\_path/g
+ - cgroups: add missing string.h include
+ - cgroups: s/base\_cgroup/container\_base\_path/g
+ - autotools: fix wrong AX\_CHECK\_COMPILE\_FLAG test
+ - compiler: s/\_\_fallthrough\_\_/\_\_fallthrough/g
+ - compiler: s/\_\_noreturn\_\_/\_\_noreturn/g
+ - cgfsng: s/\_\_cgfsng\_ops\_\_/\_\_cgfsng\_ops/g
+ - macro: add STRLITERALLEN() and STRARRAYLEN()
+ - tree-wide: replace sizeof() with SIZEOF2STRLEN()
+ - compiler: \_\_attribute\_\_((noreturn)) on bionic
+ - autotools: support -Wcast-align
+ - autotools: support -Wstrict-prototypes
+ - network: add netns\_getifaddrs() implementation
+ - tree\_wide: switch to netns\_getifaddrs()
+ - netns\_ifaddrs: mark casts as safe
+ - autotools: fix lxc\_user\_nic build
+ - stop: Only freeze if freezer is available
+ - doc: tweak documentation a little
+ - cgfsng: set errno to ENOENT on get\_hierarchy()
+ - cgfsng: s/cgfsng\_destroy/cgfsng\_payload\_destroy/g
+ - cgfsng: s/25/INTTYPE\_TO\_STRLEN(pid\_t)/g
+ - compiler: fix \_\_noreturn on bionic
+ - compiler: add \_\_hot attribute
+ - netns\_ifaddrs: fix missing include
+ - autools: prevent dlog build on stable branch
+ - tree-wide: fix includes to fix bionic builds
+ - template: oci template supports for char user info
+ - btrfs: fix btrfs containers
+ - oci-template: Add logic for no /etc/passwd, group
+ - configure: fix -Wimplicit-fallthrough check
+ - utils: add lxc\_setup\_keyring()
+ - autotools: support -z relro and -z now
+ - netns\_ifaddrs: handle IFLA\_STATS{64} correctly
+ - syscall\_wrappers: add pivot\_root()
+ - raw\_syscalls: add lxc\_raw\_execveat()
+ - raw\_syscalls: add lxc\_raw\_clone{_cb}()
+ - raw_syscalls: add lxc\_raw\_getpid()
+ - autotools: fix lxc init build
+ - autotools: fix lxc-monitord build
+ - autotools: fix lxc-user-nic build
+ - autotools: fix lxc-usernsexec build
+ - tests: add missing build dependencies
+ - netns\_ifaddrs: only use struct rtnl\_link\_stats64
+ - cgroups: remove unnecessary line
+ - netns\_iaddrs: remove unused functions
+ - parse: prefault config file with MAP\_POPULATE
+ - cgfsng: avoid tiny race window
+ - utils: fix lxc\_set\_death\_signal()
+ - cgfsng: handle v1 cpuset hierarchy first
+ - syscall\_wrappers: move memfd\_create()
+ - syscall\_wrappers: move setns()
+ - syscall\_wrappers: move sethostname()
+ - syscall\_wrappers: move unshare()
+ - syscall\_wrappers: move signalfd()
+ - raw\_syscalls: move lxc\_raw\_gettid()
+ - tools: lxc-start: remove unused argument
+ - tools: lxc-unshare: remove unnecessary initialization
+ - parse: remove access() check
+ - parse: report errors when failing config parsing
+ - macro: add PATH\_MAX
+ - cmd: s/MAXPATHLEN/PATH\_MAX/g
+ - conf: s/MAXPATHLEN/PATH\_MAX/g
+ - confile: s/MAXPATHLEN/PATH\_MAX/g
+ - log: s/MAXPATHLEN/PATH\_MAX/g
+ - lxccontainer: s/MAXPATHLEN/PATH\_MAX/g
+ - macro: s/MAXPATHLEN/PATH\_MAX/g
+ - network: s/MAXPATHLEN/PATH\_MAX/g
+ - pam: s/MAXPATHLEN/PATH\_MAX/g
+ - start: s/MAXPATHLEN/PATH\_MAX/g
+ - terminal: s/MAXPATHLEN/PATH\_MAX/g
+ - utils: s/MAXPATHLEN/PATH\_MAX/g
+ - storage: s/MAXPATHLEN/PATH\_MAX/g
+ - tools: s/MAXPATHLEN/PATH\_MAX/g
+ - attach: reset signal mask
+ - start: change log level
+ - file\_utils: fix too wide or inconsistent non-owner permissions
+ - attach: fix missing pthread.h include
+ - macro: add NETLINK\_DUMP\_STRICT\_CHK
+ - macro: add SOL\_NETLINK
+ - netns\_ifaddrs: check for NETLINK\_DUMP\_STRICT\_CHK
+ - parse: do not mask failed parse
+ - test: test invalid config keys
+ - confile: remove unused variable
+ - parse: fix uninitialized pointer access
+ - fix rpm packaging error for static library
+ - fix post section script error for rpm install
+ - conf: log prlimit setup
+ - conf: verify\_start\_hooks() after lxc.mount.entry
+ - checkpoint: fix running do\_dump()
+ - monitor: log cleanups
+ - monitor: checking name too long to make monitor sock name
+ - commands\_utils: improve code redundancy to make abstract unix socket name
+ - monitor: fix coding standard
+ - autools: use -fno-strict-aliasing
+ - checkconfig: Handle missing kernel version
+ - lxc-init: log to /dev/console
+ - autotools: fix --disable-commands builds
+ - string\_utils: fix global buffer overflow issue
+ - include: simplify strlcpy()
+ - raw\_syscalls: ensure function always returns value
+ - confile: fix append\_unexp\_config\_line()
+ - parse: protect against config updates during parse
+ - parse: fix uninitialized value
+ - tree-wide: coding style fixes
+ - start: simplify
+ - autotools: compiler based hardening
+ - coverity: update .travis.yml
+ - coverity: update .travis.yml
+ - coverity: update .travis.yml
+ - coverity: update .travis.yml
+ - coverity: update .travis.yml
+ - confile: do not overwrite global variable
+ - commands: simplify
+ - cgfsng: move increment out of branch
+ - monitord: do not hide global variable
+ - tools/lxc\_copy: do not hide global variable
+ - tools/lxc\_top: do not hide global variable
+ - tools/lxc\_info: do not hide global variable
+ - state: remove tautological check
+ - conf: remove tautological check
+ - conf: use O\_CLOEXEC in lxc\_pivot\_root()
+ - conf: remove tautological check
+ - lxccontainer: remove check from goto target
+ - start: prevent values smaller 0
+ - tools/lxc\_stop: use correct check
+ - cmd/lxc\_init: do not hide global variable
+ - coverity: #1440391
+ - coverity: #1440389
+ - coverity: #1426130
+ - storage\_utils: add error handling
+ - storage\_utils: cleanups
+ - storage\_utils: use \_exit() instead of exit() in child process
+ - parse: cleanups
+ - dlog: inherit dlog fds
+ - spelling: allocate
+ - spelling: ambiguous
+ - spelling: answer
+ - spelling: architecture
+ - spelling: array
+ - spelling: asynchronous
+ - spelling: backingstorage
+ - spelling: capabilities
+ - spelling: character
+ - spelling: checkpoint
+ - spelling: comma
+ - spelling: command
+ - spelling: committer
+ - spelling: configuration
+ - spelling: constant
+ - spelling: container
+ - spelling: control
+ - spelling: convenience
+ - spelling: could
+ - spelling: describing
+ - spelling: device
+ - spelling: exiting
+ - spelling: explicitly
+ - spelling: feature
+ - spelling: github
+ - spelling: hierarchy
+ - spelling: hoops
+ - spelling: ifindices
+ - spelling: implementations
+ - spelling: inherited
+ - spelling: initialize
+ - spelling: javascript
+ - spelling: keepdata
+ - spelling: libraries
+ - spelling: loglevel
+ - spelling: namespace
+ - spelling: otherwise
+ - spelling: output
+ - spelling: overlayfs
+ - spelling: overridden
+ - spelling: override
+ - spelling: passphrase
+ - spelling: perhaps
+ - spelling: pertains
+ - spelling: portion
+ - spelling: potentially
+ - spelling: returns
+ - spelling: root
+ - spelling: securityfs
+ - spelling: snapshotting
+ - spelling: specified
+ - spelling: specify
+ - spelling: subtracting
+ - spelling: successfully
+ - spelling: syscall
+ - spelling: timeout
+ - spelling: unsigned
+ - spelling: userns
+ - spelling: without
+ - lxcmntent: coding rules
+ - string\_utils: coding rules
+ - log: fix too wide or inconsistent non-owner permissions
+ - coverity: move to separate branch
+ - include: correctly include macro.h
+ - Fix spacing error in namespace.c
+ - caps: replace read with lxc\_read\_nointr
+ - log: replace write with lxc\_write\_nointr
+ - dlog: move match\_dlog\_fds()
+ - conf: s/ty/tty/g
+ - pam\_cgfs: remove redundancy file utils
+ - cgfs: remove redundancy utils
+ - pam\_cgfs: remove dependency from cap & log
+ - utils: fix coding styles
+ - utils: add errno logs for exception case
+ - Adds -qq flags to lvcreate commands to avoid answer 'no' to ant questions the LVM subsystem asks to avoid hanging lxc-create command
+ - utils: make keyring allocation failure non-fatal
+ - autotools: fix lxc-{create,copy} build
+ - cgfsng: remove freezer requirement
+ - start: don't call cgroup\_exit() twice
+
+#### Bugfixes (LXC templates)
+
+ - alpine: Make dropping setpcap optional
+ - plamo: Update the default version to 7.x
+ - sabayon: Don't fail on existing directories
+
+#### Bugfixes (python3 binding)
+
+ - No changes in this release, version bump only
+
+### Support and upgrade
+LXC 3.0.3 is supported until June 2023 and is our current LTS release, users are encouraged to update to the latest bugfix releases as they're made available.
+
+### Downloads
+ - Main release tarball: [lxc-3.0.3.tar.gz](https://linuxcontainers.org/downloads/lxc/lxc-3.0.3.tar.gz) (GPG: [lxc-3.0.3.tar.gz.asc](https://linuxcontainers.org/downloads/lxc/lxc-3.0.3.tar.gz.asc))
+ - LXC templates tarball: [lxc-templates-3.0.3.tar.gz](https://linuxcontainers.org/downloads/lxc/lxc-templates-3.0.3.tar.gz) (GPG: [lxc-templates-3.0.3.tar.gz.asc](https://linuxcontainers.org/downloads/lxc/lxc-templates-3.0.3.tar.gz.asc))
+ - LXC python3 bindings tarball: [python3-lxc-3.0.3.tar.gz](https://linuxcontainers.org/downloads/lxc/python3-lxc-3.0.3.tar.gz) (GPG: [python3-lxc-3.0.3.tar.gz.asc](https://linuxcontainers.org/downloads/lxc/python3-lxc-3.0.3.tar.gz.asc))
+
 ## [LXC 3.0.2 release announcement](https://discuss.linuxcontainers.org/t/lxc-3-0-2-has-been-released/2504)
 <span class="text-muted">21st of August 2018</span>
 ### Introduction
