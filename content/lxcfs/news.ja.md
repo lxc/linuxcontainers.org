@@ -1,4 +1,55 @@
 # News
+## [LXCFS 3.0.3 release announcement](https://discuss.linuxcontainers.org/t/lxcfs-3-0-3-has-been-released/3355)
+<span class="text-muted">22nd of November 2018</span>
+### Introduction
+The LXCFS team is pleased to announce the release of LXCFS 3.0.3!
+
+As a stable bugfix release, no major changes have been done, instead focusing on bugfixes and minor usability improvements.
+
+#### Bugfixes improvements
+
+ - bindings: prevent double free
+ - tests: include missing sys/sysmacros.h header
+
+### Support and upgrade
+LXCFS 3.0.3 is supported until June 2023 and is our current LTS release, users are encouraged to update to the latest bugfix releases as they're made available.
+
+### Downloads
+ - Main release tarball: [lxcfs-3.0.3.tar.gz](https://linuxcontainers.org/downloads/lxcfs/lxcfs-3.0.3.tar.gz)
+ - GPG signature: [lxcfs-3.0.3.tar.gz.asc](https://linuxcontainers.org/downloads/lxcfs/lxcfs-3.0.3.tar.gz.asc)
+
+## [LXCFS 3.0.2 リリースのお知らせ](https://discuss.linuxcontainers.org/t/lxcfs-3-0-2-has-been-released/2503)
+<span class="text-muted">2018 年 8 月 21 日</span>
+### はじめに <!-- Introduction -->
+<!--
+The LXCFS team is pleased to announce the release of LXCFS 3.0.2!
+-->
+LXCFS チームは LXCFS 3.0.2 のリリースをお知らせできることをうれしく思います!
+
+<!--
+As a stable bugfix release, no major changes have been done, instead focusing on bugfixes and minor usability improvements.
+-->
+Stable に対するバグフィックスのリリースですので、大きな変更はありません。バグフィックスと細かな使い勝手の改良にフォーカスしています。
+
+#### バグ修正と改良点 <!-- Bugfixes improvements -->
+
+ - travis: coverity に対応しました <!-- add coverity support -->
+ - travis: <!-- fix --> `.travis.yml` を修正しました
+ - meminfo: `memory.stat` から cgroup のパラメーター shmem を読むようにしました <!-- read shmem from cgroup parameter memory.stat -->
+ - meminfo: ShmemHugePages と ShmemPmdMapped を 0 に設定するようにしました <!-- set ShmemHugePages and ShmemPmdMapped to zero -->
+ - bindings: `write_string()` のロギングを改良しました <!-- better logging for write\_string() -->
+
+
+### サポートとアップグレード <!-- Support and upgrade -->
+<!--
+LXCFS 3.0.2 is supported until June 2023 and is our current LTS release, users are encouraged to update to the latest bugfix releases as they're made available.
+-->
+LXCFS 3.0.2 は 2023 年 6 月までサポートされる最新の LTS リリースです。利用可能になった最新のバグ修正リリースに更新することをお勧めします。
+
+### ダウンロード <!-- Downloads -->
+ - リリース tarball <!-- Main release tarball -->: [lxcfs-3.0.2.tar.gz](https://linuxcontainers.org/downloads/lxcfs/lxcfs-3.0.2.tar.gz)
+ - GPG シグネチャ <!-- GPG signature -->: [lxcfs-3.0.2.tar.gz.asc](https://linuxcontainers.org/downloads/lxcfs/lxcfs-3.0.2.tar.gz.asc)
+
 ## [LXCFS 3.0.1 リリースのお知らせ](https://discuss.linuxcontainers.org/t/lxcfs-3-0-1-has-been-released/1946)
 <span class="text-muted">2018 年 6 月 5 日</span>
 ### はじめに <!-- Introduction -->
