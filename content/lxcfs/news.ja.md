@@ -1,22 +1,31 @@
 # News
-## [LXCFS 3.0.3 release announcement](https://discuss.linuxcontainers.org/t/lxcfs-3-0-3-has-been-released/3355)
+## [LXCFS 3.0.3 リリースのお知らせ](https://discuss.linuxcontainers.org/t/lxcfs-3-0-3-has-been-released/3355)
 <span class="text-muted">22nd of November 2018</span>
-### Introduction
+### はじめに <!-- Introduction -->
+<!--
 The LXCFS team is pleased to announce the release of LXCFS 3.0.3!
+-->
+LXCFS チームは LXCFS 3.0.3 のリリースをお知らせできることをうれしく思います!
 
+<!--
 As a stable bugfix release, no major changes have been done, instead focusing on bugfixes and minor usability improvements.
+-->
+Stable に対するバグフィックスのリリースですので、大きな変更はありません。バグフィックスと細かな使い勝手の改良にフォーカスしています。
 
-#### Bugfixes improvements
+#### バグ修正と改良点 <!-- Bugfixes improvements -->
 
- - bindings: prevent double free
- - tests: include missing sys/sysmacros.h header
+ - bindings: 二重解放（double free）しないようにしました <!-- prevent double free -->
+ - tests: `sys/sysmacros.h` ヘッダの include が欠けていたのを修正しました <!-- include missing sys/sysmacros.h header -->
 
-### Support and upgrade
+### サポートとアップグレード <!-- Support and upgrade -->
+<!--
 LXCFS 3.0.3 is supported until June 2023 and is our current LTS release, users are encouraged to update to the latest bugfix releases as they're made available.
+-->
+LXCFS 3.0.3 は 2023 年 6 月までサポートされる最新の LTS リリースです。利用可能になった最新のバグ修正リリースに更新することをお勧めします。
 
-### Downloads
- - Main release tarball: [lxcfs-3.0.3.tar.gz](https://linuxcontainers.org/downloads/lxcfs/lxcfs-3.0.3.tar.gz)
- - GPG signature: [lxcfs-3.0.3.tar.gz.asc](https://linuxcontainers.org/downloads/lxcfs/lxcfs-3.0.3.tar.gz.asc)
+### ダウンロード <!-- Downloads -->
+ - リリース tarball <!-- Main release tarball -->: [lxcfs-3.0.3.tar.gz](https://linuxcontainers.org/downloads/lxcfs/lxcfs-3.0.3.tar.gz)
+ - GPG シグネチャ <!-- GPG signature -->: [lxcfs-3.0.3.tar.gz.asc](https://linuxcontainers.org/downloads/lxcfs/lxcfs-3.0.3.tar.gz.asc)
 
 ## [LXCFS 3.0.2 リリースのお知らせ](https://discuss.linuxcontainers.org/t/lxcfs-3-0-2-has-been-released/2503)
 <span class="text-muted">2018 年 8 月 21 日</span>
