@@ -1,4 +1,121 @@
 # News
+## [LXC 3.0.2 リリースのお知らせ](https://discuss.linuxcontainers.org/t/lxc-3-0-2-has-been-released/2504)
+<span class="text-muted">2018 年 8 月 21 日</span>
+### はじめに <!-- Introduction -->
+<!--
+The LXC team is pleased to announce the release of LXC 3.0.2!
+-->
+LXC チームは LXC 3.0.2 のリリースをおしらせできることをうれしく思います！
+
+<!--
+As a stable bugfix release, no major changes have been done, instead focusing on bugfixes and minor usability improvements.
+-->
+Stable に対するバグフィックスのためのリリースですので、大きな変更はありません。バグフィックスと細かな使い勝手の改良にフォーカスしています。
+
+#### ハイライト <!-- Highlights -->
+
+ - ユーザ名前空間内ではデバイスを作成できるがオープンできないという Linux `4.18` での変更に合わせました <!-- Adapt to changes in Linux `4.18` which allows to create but not to open devices nodes in user namespaces -->
+ - コンテナの起動時にネットワーク名前空間の ID を割り当てるようにしました <!-- Allocate network namespace id on container startup -->
+ - static な `liblxc` をビルドするようにしました <!-- Build a static `liblxc` -->
+   これは、Netlink 経由でネットワークインターフェースとそのアドレスを効率的に取得するのに役立ちます <!-- This is helpful to efficiently retrieve network interfaces and their addresses via Netlink. -->
+ - コードベース全体でスレッドセーフが強化されました <!-- Hardened thread-safety across the whole codebase -->
+ - 文字列をよりセキュアに扱うために、`strncpy()` と `strncat()` のすべてのインスタンスに、効率的な `strlcpy()` と `strlcat()` の実装を追加しました <!-- Added efficient `strlcpy()` and `strlcat()` implementations to all instances of `strncpy()` and `strncat()` to make string handling more secure -->
+ - `lxc-*` ツール群（例: `lxc-attach` や `lxc-start`）が `liblxc` 共有ライブラリとシンボルを共有するようになりました <!-- The `lxc-*` tools (e.g. `lxc-attach`, `lxc-start`)  share symbols with the `liblxc` shared library -->
+   これによりコードベースのサイズが大幅に減りました <!-- This significantly reduced the size of the codebase. -->
+ - コード全体でコーディングスタイルの修正を行いました <!-- Tree-wide coding style fixes -->
+
+##### CVE-2018-6556
+
+<!--
+This release fixes [CVE-2018-6556](http://seclists.org/oss-sec/2018/q3/81) via commit [CVE 2018-6556: verify netns fd in lxc-user-nic](https://github.com/lxc/lxc/commit/c1cf54ebf251fdbad1e971679614e81649f1c032): `lxc-user-nic` when asked to delete a network interface will unconditionally open a user provided path. 
+-->
+このリリースでは、コミット [CVE 2018-6556: verify netns fd in lxc-user-nic](https://github.com/lxc/lxc/commit/c1cf54ebf251fdbad1e971679614e81649f1c032) によって [CVE-2018-6556](http://seclists.org/oss-sec/2018/q3/81) が修正されました。この問題は、`lxc-user-nic` がネットワークインターフェースを削除する際に、無条件でユーザから与えられたパスを開いてしまう問題です。
+
+<!--
+This code path may be used by an unprivileged user to check for the existence of a path which they wouldn't otherwise be able to reach. It may also be used to trigger side effects by causing a (read-only) open of special kernel files (`ptmx`, `proc`, `sys`).
+-->
+このコードパスは、非特権ユーザーが到達できないパスの存在をチェックするのに使われる可能性があります。また、読み込み専用の特別なカーネルファイル（`ptmx`、`proc`、`sys`）をオープンすることによる副作用を引き起こす可能性があります。
+
+<!--
+Affected releases are LXC: 2.0 versions above and including 2.0.9; 3.0 versions above and including 3.0.0, prior to 3.0.2.
+-->
+影響を受ける LXC のリリースは、2.0.9 を含む 2.0 以上のバージョン、3.0.2 より前の、3.0.0 を含む 3.0 以上のバージョンです。
+
+#### バグ修正 <!-- Bugfixes -->(LXC)
+
+ - Coverity が見つけた一連のバグを修正しました <!-- fixed a range of bugs found by Coverity -->
+ - lxc-usernsexec: クリーンアップとバグフィックスを行いました <!-- cleanup and bugfixes -->
+ - log: CMD\_SYSINFO() を追加しました <!-- add  CMD\_SYSINFO() -->
+ - log: CMD\_SYSERROR() を追加しました <!-- add  CMD\_SYSERROR() -->
+ - state: s/sleep()/nanosleep()/
+ - lxclock: ファイルロックの改良を行いました <!-- improve file locking -->
+ - lxccontainer: ファイルロックの改良を行いました <!-- improve file locking -->
+ - lxccontainer: F\_OFD\_GETLK のチェックを修正しました <!-- fix F\_OFD\_GETLK checks -->
+ - netlink: \_\_netlink\_{send,recv,transaction} を追加しました <!-- add \_\_netlink\_{send,recv,transaction} -->
+ - netns: ネットワーク名前空間の ID を割り当てるようにしました <!-- allocate network namespace id -->
+ - MAINTAINERS: Wolfgang Bumiller 氏を追加しました <!-- add Wolfgang Bumiller -->
+ - CVE 2018-6556: `lxc-user-nic` で netns の fd をチェックするようにしました <!-- verify netns fd in lxc-user-nic -->
+ - pam\_cgfs: クリーンアップを行いました <!-- cleanups -->
+ - log: デフォルトのログプライオリティを追加しました <!-- add default log priority -->
+ - tree-wide: `unsigned long` を `prctl()` に与えるようにしました <!-- pass unsigned long to prctl() -->
+ - macro: 新しいマクロヘッダーを追加しました <!-- add new macro header -->
+ - conf: `EINVAL` の際は "max" なしで devpts をマウントするようにしました <!-- mount devpts without "max" on EINVAL -->
+ - tree-wide: `read()` と `write()` で `EINTR` を扱うようにしました <!-- handle EINTR in read() and write() -->
+ - tree-wide: `pipe()` を `pipe2()` に置き換えました <!-- replace pipe() with pipe2() -->
+ - confile: マウントオプションをフラグとデータに分離しました <!-- split mount options into flags and data -->
+ - conf: rootfs のセットアップを改良しました <!-- improve rootfs setup -->
+ - autotools: `-Wvla -std=gnu11` をデフォルトにしました <!-- default to -Wvla -std=gnu11 -->
+ - tree-wide: VLA を削除しました <!-- remove VLAs -->
+ - tree-wide: `strtok_r()` を `lxc_iterate_parts()` に置き換えました <!-- replace strtok\_r() with lxc\_iterate\_parts() -->
+ - utils: `lxc_iterate_parts()` を追加しました <!-- add lxc\_iterate\_parts() -->
+ - apparmor: `start-container` で `lxc-**` を許可しました <!-- allow start-container to change to lxc-\*\* -->
+ - apparmor: 最新のプロファイルに更新しました <!-- update current profiles -->
+ - apparmor: `/usr/lib*` のパスで `mount` と `pivot_root` を許可しました <!-- Allow /usr/lib\* paths for mount and pivot\_root -->
+ - conf: ユーザ名前空間内では atime をロックするようにしました <!-- the atime flags are locked in userns -->
+ - conf: 部分的に functional device ノードを扱うようにしました <!-- handle partially functional device nodes -->
+ - conf: `/dev` ディレクトリを作成するようにしました <!-- create /dev directory -->
+ - autotools: liblxc の共有ライブラリとスタティックライブラリの両方をビルドするようにしました <!-- build both a shared and static liblxc -->
+ - namespace: 名前空間を標準の識別子に変換する API を追加しました <!-- add api to convert namespaces to standard identifiers -->
+ - tree-wide: `MSG_NOSIGNAL` を設定するようにしました <!-- set MSG\_NOSIGNAL -->
+ - tree-wide: ダミーファイルを作成する際には `mknod()` を使うようにしました <!-- use mknod() to create dummy files -->
+ - cgfsng: `lxc.cgroup.use` を参照するようにしました <!-- respect lxc.cgroup.use -->
+ - cgroups: `is_crucial_cgroup_subsystem()` を削除しました <!-- remove is\_crucial\_cgroup\_subsystem() -->
+ - tree-wide: 不要なログプレフィックスを削除しました <!-- remove unneeded log prefixes -->
+ - tests: 全テストをクリーンアップしました <!-- cleanup all tests -->
+ - terminal: pty ファイルディスクリプタに `FD_CLOEXEC` を設定するようにしました <!-- set FD\_CLOEXEC on pty file descriptors -->
+ - conf: `lxc_setup_dev_console()` を簡素化しました <!-- simplify lxc\_setup\_dev\_console() -->
+ - tools: ツール類を手直ししました <!-- rework tools -->
+ - autodev: Linux 4.18 での変更に合わせました <!-- adapt to changes in Linux 4.18 -->
+ - log: strerror を使った `DEBUG, INFO, TRACE, NOTICE` マクロを `SYS*` マクロに変更しました <!-- change DEBUG, INFO, TRACE, NOTICE macro using strerror to SYS\* macro -->
+ - log: `lxc_log_strerror_r` マクロを追加しました <!-- add lxc\_log\_strerror\_r macro -->
+ - network: 非特権 LXC が `lxc.net.[i].script.up` を実行するようになりました <!-- unpriv lxc will run lxc.net.[i].script.up now -->
+ - conf: 必要なときだけ `newuidmap` と `newgidmap` を使うようになりました <!-- only use newuidmap and newgidmap when necessary -->
+ - autotools: クロスコンパイル時に TLS をサポートするようになりました <!-- support tls in cross-compile -->
+
+#### バグ修正 <!-- Bugfixes -->(LXC templates)
+
+ - fedora: Fedora 28 をサポートを追加しました <!-- support Fedora 28 -->
+ - templates: opensuse: openSUSE Leap 15 のサポートを追加しました <!-- Add support for openSUSE Leap 15 -->
+ - templates: opensuse: EOL となったディストリビューションのサポートを削除しました <!-- Drop support for EOL distributions -->
+ - templates: lxc-opensuse.in: キャッシュが完全に存在していることを保証するようにしました <!-- Ensure cache is fully populated -->
+ - templates: lxc-opensuse.in: openSUSE Leap 15 のキャッシュ URL を修正しました <!-- Fix openSUSE Leap 15 cache url -->
+
+#### バグ修正 (python3 バインディング)<!-- Bugfixes (python3 binding) -->
+
+ - README.md 内の Typo を修正しました <!-- Fix typo in README.md -->
+
+### サポートとアップグレード <!-- Support and upgrade -->
+<!--
+LXC 3.0.2 is supported until June 2023 and is our current LTS release, users are encouraged to update to the latest bugfix releases as they're made available.
+-->
+LXC 3.0.2 は 2023 年 6 月までサポートされる最新の LTS リリースです。
+利用可能になった最新のバグ修正リリースに更新することをお勧めします。
+
+### ダウンロード <!-- Downloads -->
+ - LXC リリース tarball <!-- Main release tarball -->: [lxc-3.0.2.tar.gz](https://linuxcontainers.org/downloads/lxc/lxc-3.0.2.tar.gz) (GPG: [lxc-3.0.2.tar.gz.asc](https://linuxcontainers.org/downloads/lxc/lxc-3.0.2.tar.gz.asc))
+ - LXC テンプレート tarball <!-- LXC templates tarball -->: [lxc-templates-3.0.2.tar.gz](https://linuxcontainers.org/downloads/lxc/lxc-templates-3.0.2.tar.gz) (GPG: [lxc-templates-3.0.2.tar.gz.asc](https://linuxcontainers.org/downloads/lxc/lxc-templates-3.0.2.tar.gz.asc))
+ - LXC python3 バインディング tarball <!-- LXC python3 bindings tarball -->: [python3-lxc-3.0.2.tar.gz](https://linuxcontainers.org/downloads/lxc/python3-lxc-3.0.2.tar.gz) (GPG: [python3-lxc-3.0.2.tar.gz.asc](https://linuxcontainers.org/downloads/lxc/python3-lxc-3.0.2.tar.gz.asc))
+
 ## [LXC 3.0.1 リリースのお知らせ](https://discuss.linuxcontainers.org/t/lxc-3-0-1-has-been-released/1949)
 <span class="text-muted">2018 年 6 月 5 日</span>
 ### はじめに
