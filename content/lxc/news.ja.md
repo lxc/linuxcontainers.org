@@ -21,7 +21,7 @@ Stable に対するバグフィックスのためのリリースですので、�
  - コードベース全体でスレッドセーフが強化されました <!-- Hardened thread-safety across the whole codebase -->
  - 文字列をよりセキュアに扱うために、`strncpy()` と `strncat()` のすべてのインスタンスに、効率的な `strlcpy()` と `strlcat()` の実装を追加しました <!-- Added efficient `strlcpy()` and `strlcat()` implementations to all instances of `strncpy()` and `strncat()` to make string handling more secure -->
  - `lxc-*` ツール群（例: `lxc-attach` や `lxc-start`）が `liblxc` 共有ライブラリとシンボルを共有するようになりました <!-- The `lxc-*` tools (e.g. `lxc-attach`, `lxc-start`)  share symbols with the `liblxc` shared library -->
-   これはコードベースのサイズを減らすのに重要です <!-- This significantly reduced the size of the codebase. -->
+   これはコードベースのサイズが大幅に減りました <!-- This significantly reduced the size of the codebase. -->
  - コード全体でコーディングスタイルの修正を行いました <!-- Tree-wide coding style fixes -->
 
 ##### CVE-2018-6556
@@ -34,7 +34,7 @@ This release fixes [CVE-2018-6556](http://seclists.org/oss-sec/2018/q3/81) via c
 <!--
 This code path may be used by an unprivileged user to check for the existence of a path which they wouldn't otherwise be able to reach. It may also be used to trigger side effects by causing a (read-only) open of special kernel files (`ptmx`, `proc`, `sys`).
 -->
-このコードパスは、非特権ユーザーが到達できないパスの存在をチェックするのに使えます。また、読み込み専用の特別なカーネルファイル（`ptmx`、`proc`、`sys`）のオープンすることによる副次的な作用を引き起こすのにも使えます。
+このコードパスは、非特権ユーザーが到達できないパスの存在をチェックするのに使われる可能性があります。また、読み込み専用の特別なカーネルファイル（`ptmx`、`proc`、`sys`）をオープンすることによる副作用を引き起こす可能性があります。
 
 <!--
 Affected releases are LXC: 2.0 versions above and including 2.0.9; 3.0 versions above and including 3.0.0, prior to 3.0.2.
