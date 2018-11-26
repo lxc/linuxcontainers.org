@@ -21,7 +21,7 @@ Stable に対するバグフィックスのためのリリースですので、�
  - コードベース全体でスレッドセーフが強化されました <!-- Hardened thread-safety across the whole codebase -->
  - 文字列をよりセキュアに扱うために、`strncpy()` と `strncat()` のすべてのインスタンスに、効率的な `strlcpy()` と `strlcat()` の実装を追加しました <!-- Added efficient `strlcpy()` and `strlcat()` implementations to all instances of `strncpy()` and `strncat()` to make string handling more secure -->
  - `lxc-*` ツール群（例: `lxc-attach` や `lxc-start`）が `liblxc` 共有ライブラリとシンボルを共有するようになりました <!-- The `lxc-*` tools (e.g. `lxc-attach`, `lxc-start`)  share symbols with the `liblxc` shared library -->
-   これはコードベースのサイズが大幅に減りました <!-- This significantly reduced the size of the codebase. -->
+   これによりコードベースのサイズが大幅に減りました <!-- This significantly reduced the size of the codebase. -->
  - コード全体でコーディングスタイルの修正を行いました <!-- Tree-wide coding style fixes -->
 
 ##### CVE-2018-6556
