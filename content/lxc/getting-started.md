@@ -11,7 +11,7 @@ Extra dependencies for lxc-attach:
 
 Extra dependencies for unprivileged containers:
 
- * libpam-cgfs, cgmanager or another CGroup manager configuring your system for unprivileged CGroups operation
+ * A CGroup manager configuring your system for unprivileged CGroups operation (eg. libpam-cgfs or cgmanager)
  * A recent version of shadow including newuidmap and newgidmap
  * Linux kernel >= 3.12
 
@@ -95,7 +95,7 @@ for the first user on a standard Ubuntu system.
 
 Just before you create your first container, you probably should logout and login again,
 or even reboot your machine to make sure that your user is placed in the right cgroups.
-(This is only required if cgmanager wasn't installed on your machine prior to you installing LXC.)
+(This is only required if the CGroup manager wasn't installed on your machine prior to you installing LXC.)
 
 
 And now, create your first container with:
