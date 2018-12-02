@@ -149,7 +149,9 @@ def md2html(content):
     hilite_config = [('linenums', None),
                      ('guess_lang', False),
                      ('noclasses', False)]
-    codehilite = markdown.extensions.codehilite.makeExtension(**dict(hilite_config))
+    codehilite = markdown.extensions.codehilite.makeExtension(
+        **dict(hilite_config)
+    )
 
     # Using toc extension to generate HTML anchors for paragraphs
     anchors = markdown.extensions.toc.TocExtension(
