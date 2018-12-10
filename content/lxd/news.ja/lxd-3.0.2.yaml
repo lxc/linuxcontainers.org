@@ -1,0 +1,309 @@
+title: LXD 3.0.2 リリースのお知らせ
+date: 2018/08/21 00:00
+origin: https://discuss.linuxcontainers.org/t/lxd-3-0-2-has-been-released/2505
+content: |-
+  ### はじめに <!-- Introduction -->
+  <!--
+  The LXD team is pleased to announce the release of LXD 3.0.2!
+  -->
+  LXD チームは LXD 3.0.2 のリリースをお知らせできることをうれしく思います！
+
+  <!--
+  As a stable bugfix release, no major changes have been done, instead focusing on bugfixes and minor usability improvements.
+  -->
+  Stable に対するバグフィックスのためのリリースですので、大きな変更はありません。バグフィックスと細かな使い勝手の改良にフォーカスしています。
+
+  ### ハイライト <!-- Highlights -->
+  #### コンテナのスナップショットとバックアップのネーミングの修正 <!-- Fixed container snapshot and backup naming -->
+  <!--
+  In the past, the `name` property of all snapshots and backups included the container name followed by a slash and then by the snapshot or backup name.
+  -->
+  従来は、すべてのスナップショットとバックアップの `name` プロパティは、コンテナ名に続いてスラッシュが続き、その後にスナップショットもしくはバックアップ名が続いていました。
+
+  <!--
+  This was redundant given that you could only get this information by querying a particular container.
+  -->
+  これは、特定のコンテナを検索することでしかこの情報を得ることができなかったため、冗長でした。
+
+  <!--
+  The API now only returns the snapshot or backup name but LXD still understands the old syntax to allow for migrations and restoring of existing backups.
+  -->
+  API はスナップショットもしくはバックアップ名のみ返すようになりました。しかし LXD は、既存のバックアップのマイグレーションやリストアもできるように、依然として古い形式も認識します。
+
+  #### 新しい dqlite の実装に切り替わりました <!-- Switched to a newer implementation of dqlite -->
+  <!--
+  `dqlite`, the distributed sqlite3 implementation that we started using for LXD in LXD 3.0 has been significantly reworked to remove a number of performance bottlenecks.
+  -->
+  LXD 3.0 で使い始めた分散 sqlite3 実装である `dqlite` を、多数のパフォーマンス上のボトルネックを解消するために、大幅に修正しました。
+
+  <!--
+  Most of the database logic is now done inside a C library ([`libdqlite`](https://github.com/CanonicalLtd/dqlite)) with a matching Go package ([`go-dqlite`](https://github.com/CanonicalLtd/go-dqlite)) providing the SQL interface for LXD.
+  -->
+  ほとんどのデータベースロジックを、C ライブラリ（[`libdqlite`](https://github.com/CanonicalLtd/dqlite)）と、LXD 用の SQL インターフェースを提供する Go パッケージ（[`go-dqlite`](https://github.com/CanonicalLtd/go-dqlite)）内で実行するようになりました。
+
+  <!--
+  The on-disk format remains unchanged, so there's no risky upgrade step for this but packagers need to be aware of the new library and package it with LXD.
+  -->
+  ディスク上のフォーマットに変更はありませんので、この変更に対するアップグレード処理に危険はありません。しかし、パッケージを作成する場合には、新しいライブラリを忘れずに、LXD と一緒にパッケージングする必要があります。
+
+  #### ファイルケーパビリティのサポート <!-- File capabilities support -->
+  <!--
+  All calls to `tar` and `rsync` now pass the required options to save and restore extended attributes, including file capabilities.
+  -->
+  `tar` や `rsync` を呼び出す場合はすべて、ファイルのケーパビリティを含む拡張属性を保存、復元するのに必要なオプションを与えるようになりました。
+
+  <!--
+  On top of that, we've implemented logic in our `idmap` package to shift and unshift files that include file capabilities, using the recently introduced unprivileged file capabilities.
+  -->
+  さらに、最近導入された非特権のファイルケーパビリティを使用して、ファイルのケーパビリティを含むファイルの ID のシフトやシフト解除（unshift）するためのロジックを `idmap` パッケージに実装しました。
+
+  <!--
+  On suitable kernels (upstream 4.14+) this will now allow LXD images to include file capabilities for utilities such as `ping` or `mtr` and have users of privileged or unprivileged containers alike be able to set and use those capabilities.
+  -->
+  適切なカーネル（upstream の 4.14 以上）では、LXD イメージは `ping` や `mtr` のようなユーティリティに対してファイルケーパビリティを含めることができ、特権コンテナのユーザでも非特権コンテナのユーザでも同じように、これらのケーパビリティを設定して使うことができます。
+
+  #### `lxc file` と `lxc import` の進捗表示 <!-- Progress information in `lxc file` and `lxc import` -->
+  <!--
+  Transferring files or uploading a backup to LXD will now get you progress information.
+  When available, you'll get the percentage transferred and current speed, when the size is unknown, you'll still get how much was transferred and the transfer speed.
+  -->
+  ファイルの転送や LXD へのバックアップのアップロードで、進捗表示が表示されるようになりました。
+  サイズがわかる場合は、転送された割合と現在のスピードが表示されます。サイズがわからない場合は、転送された量と転送スピードを表示します。
+
+  ### Bugfixes
+
+   - container: containerCreateAsCopy() update pool
+   - forkmount: ignore ENOENT and EINVAL on umount2()
+   - nsexec: simplify attach_userns()
+   - Fall back to alternate way of detecting minor version of Nvidia driver if needed
+   - lxd/maas: Make error more readable
+   - lxd-p2c: Send rsync output to stderr
+   - lxd/migration: Don't pass -vP to a hidden rsync
+   - lxc: Properly handle --target in copy and move
+   - memory: fix format string
+   - lxc/move: Support config and profile overrides
+   - i18n: Update translation templates
+   - exec: fix format string
+   - images: fix format string
+   - migrate: remove debug residuals
+   - lvm: fix format string
+   - db: fix format string
+   - nsexec: prevent fd leak
+   - Fix the storage_pool_id filter from the WHERE clause of StoragePoolsConfig
+   - Fix lints
+   - Extract cmdInit.ApplyConfig into a separete initApplyConfig function
+   - Split initApplyConfig into initDataNodeApply and initDataClusterApply
+   - Fix broken alternate TLS server cert in integration tests
+   - lxd/containers: Don't update MAAS for snapshots
+   - lxd/maas: Allow starting with MAAS offline
+   - Enable tcp KeepAlive
+   - lxd/cluster: Improve error on bad target
+   - reader: Handle EINTR
+   - allow uidmaps to be parsed from alternate roots
+   - lxd/storage/zfs: Improve defaults
+   - test: Fix static analysis
+   - Allow identity mappings for unprivileged containers
+   - container: adapt allowedUnprivilegedOnlyMap()
+   - shared: Dereference directory symlinks
+   - lxd,shared: Move parseNumberFromFile to shared
+   - lxc/network: Add --format option to list
+   - lxd/db: Don't hang after bad request
+   - lxd/apparmor: Allow ro bind-mounts and remounts
+   - idmap: support skipping directories
+   - lxd: Properly set containerArgs in all cases
+   - lxd/storage: Fix PATCH on storage pools
+   - container: use lxcSetConfigItem() for lxc.log.file
+   - lxc/cluster: Remove bad alias
+   - lxd/storage: Fix volume creation API
+   - tests: Add alternative TCP port finder
+   - doc: Document hostname requirements
+   - networks: Support stateful DHCPv6 with prefixes longer than /64
+   - lxd/networks: Skip DHCP mangle if firewall off
+   - network: do not print writer struct on error
+   - lxd/patches: Force a one-time config re-gen
+   - storage pools: move structs
+   - storage volumes: move structs
+   - images: move structs
+   - client: Export OperationWait
+   - lxd/cluster: Only restart local containers
+   - images: consistenly name command structs
+   - cluster: move structs
+   - api 1.0: move struct
+   - api internal: move structs
+   - certificates: move structs
+   - events: move structs
+   - operations: move structs
+   - profiles: move structs
+   - resources: move structs
+   - container logs: move structs
+   - container post: move structs
+   - lxd/storage/btrfs: Fix recursive snapshots
+   - lxd/cluster: Fix attaching CEPH custom volumes
+   - lxd/storage: Fix double quoting
+   - Reduce the frequency of raft snapshots
+   - lxd/storage/ceph: Don't keep snapshots mounted
+   - util linux: add abstract unix socket helpers
+   - proxy: Rework to match master
+   - lxd: Cleanup logging
+   - lxd: Improve error messages
+   - proxy: Properly handle relay errors
+   - lxd/certificates: Log password failures
+   - proxy: handle full socket buffer
+   - gpu: special case passing all GPUs
+   - gpu: don't fail during parse
+   - gpu: handle cards among Nvidia devices
+   - gpu: fix Nvidia minor index parsing
+   - lxd/containers: Fix removing NVIDIA containers
+   - doc: Add links to REST API
+   - doc: Fix storage volume examples
+   - lxd/operations: Forward to right cluster node
+   - lxc/{copy,move}: Allow overriding device config
+   - i18n: Update translations
+   - tests: Perform a lazy umount in case of errors
+   - lxd/networks: Improve dnsmasq leases cleanup
+   - migration: fix cross version migrations
+   - doc: Note that default profile cannot be deleted/renamed
+   - lxc/profile: Fix "get" command
+   - lxd: Prevent renaming/deletion of the default profile
+   - test: Test default profile renaming/deletion
+   - Fix "neighbour: ndisc_cache: neighbor table overflow"
+   - lxd: Fix StoragePoolVolumesGetNames
+   - lxd/apparmor: Fix typo in nesting profile
+   - lxd/patches: Make config re-gen fault tollerant
+   - fix links in api-extension
+   - lxd/db: Fix handling of NetworkConfigClear
+   - lxd/networks: Fix PATCH operations
+   - lxd/networks: Improve error on missing openvswitch
+   - tests: Add test for network put/patch
+   - lxd/networks: Fix revert on update failure
+   - Allow deleting storage pools that only contain image volumes
+   - lxd/storage: Remove image on pool deletion
+   - lxd/storage: Keep images when deleting pool
+   - lxd/init: Allow selecting custom Fan underlay
+   - lxd/init: Fix typo in Fan question
+   - lxd/networks: Calculate Fan MTU based on parent
+   - shared/util: Fix unit parsing (metric vs iec)
+   - lxd/storage/lvm: Round size to closest 512 bytes
+   - lxd/storage: Drop late size check
+   - lxd/storage/lvm: Fix umount logic during btrfs copy
+   - lxd/storage/ceph: Mount the fs after growing the block
+   - tests: Switch to MiB for btrfs resize
+   - tests: Fix race in network test
+   - lxc: Switch to Ubuntu 18.04 as initial container
+   - lxc: Be clever about when showing "lxd init"
+   - client: Split LXD download code into own function
+   - client: Attempt to fetch through devlxd
+   - Make lvm.thinpool_name and lvm.vg_name node-specific
+   - This should have been a patch, for easier backporting
+   - i18n: Update translation templates
+   - zfs: Support querying version through modinfo
+   - lxd/networks: Fix port number for DHCPv6
+   - Don't include container name in backups/snapshots
+   - client: Fix CopyContainerSnapshot API
+   - lxc/copy: Update to fixed CopyContainerSnapshot
+   - lxd/import: Fix support for snapshots without container name
+   - doc: Fix API output for snapshots
+   - lxc: Make answer to remote add translatable
+   - doc: Fix typo
+   - lxc/storage: Fix bad argument parsing
+   - tests: Fix new storage get/set test
+   - *: Unify error messages
+   - i18n: Update translation templates
+   - Use mattn's sqlite3 bindings in the lxd/db sub package
+   - Drop go-1.6 code
+   - Replace grpc-sql with dqlite custom protocol
+   - Wire dqlite server
+   - Adapt main package to new cluster sub-package API
+   - Drop raft snapshot workaround
+   - Fetch containers info in parallel
+   - Fix some missing error checks
+   - Add support for "lxd sql global .sync", to sync the cluster db to disk
+   - Capitalize error messages
+   - Enforce the limit of open connections to local db after initialization is over
+   - Re-enable empty table checks
+   - Fix lints
+   - lxd/cluster/gateway: Tweak errors
+   - lxd/cluster/gateway: Log proxy errors
+   - lxd: Improve shutdown logic for cluster nodes
+   - Redirect dqlite logging to lxd logging
+   - Fix unit test regression
+   - Makefile: Respect CGO_CFLAGS
+   - Makefile: Fix typo in .PHONY
+   - Makefile: Rename protobuf to update-protobuf
+   - Makefile: Drop gccgo
+   - Makefile: Drop outdated comment
+   - Makefile: Fix tags handling
+   - Makefile: Require libsqlite3
+   - Makefile: Include dqlite in dist tarball
+   - Makefile: Add deps target
+   - lxd: Fix --syslog flag
+   - lxd/containers: Don't flush leases for snapshots
+   - shared/idmap: Shift fscaps
+   - lxd/cluster: Fix typo in errors
+   - tar: Support xattrs
+   - rsync: Support xattrs
+   - test: Add test for cluster shutdown logic
+   - tar: Use --xattrs-include=\* during extract
+   - idmap: C coding style fixups
+   - idmap: s/set_caps/set_vfs_ns_caps/g
+   - idmap: convert uid from big to little endian
+   - client: Centrally handle targeting
+   - shared/idmap: Fix xattr.h import
+   - lxc/utils: Handle empty progress
+   - lxc/file: Show progress
+   - lxd/containers: Use internal struct values
+   - networks: Ignore veth devices
+   - networks: Don't try listing containers for lo
+   - lxd/cluster: Only query the containers we need
+   - Add ContainerArgsList and ContainerArgsNodeList
+   - lxd/db: Fix snapshot filtering
+   - lxd/containers: Add helpers for retrieving containers
+   - lxd: Port over to new containerLoadNodeAll function
+   - lxd: Port over to new containerLoadAll function
+   - lxd: Only get the profiles once
+   - lxd/containers: Speed up recursive list
+   - shared/api: Define ContainerFull
+   - lxd/storage: Don't log every storage init
+   - lxc/list: Port to ContainerFull
+   - lxd/storage: Cache storage version
+   - Fix "no transaction is active" error during database updates
+   - lxc/remote: Fix crash on bad remote name
+   - lxd/storage/zfs: Optimize getting disk usage
+   - lxd/networks: Drop unused db property
+   - lxd: Add endpoints to state struct
+   - lxc/container: CEPH also needs offline quotas
+   - lxd/storage/ceph: Fix default container quotas
+   - Makefile: Set PKG_CONFIG_PATH
+   - i18n: Update translation templates
+   - client: Implement support for recursion=2
+   - doc: Update requirements
+   - lxd/images: Cleanup any leftovers on startup
+   - Send a notification to other nodes when an image is removed
+   - Silence shellcheck
+   - doc: Update README a bit
+   - doc: Add some more packages to README
+   - doc: Add tcl to README
+   - Makefile: Tweak sqlite build flags
+   - doc: Pass LD_LIBRARY_PATH through sudo
+   - Support moving a container within a cluster, keeping the same name
+   - lxc/image: Fix URL-based imports
+   - Update rest-api.md
+   - shallow clone for deps
+   - Shallow clone for dist
+   - *: Rename macaroon(s) -> candid
+   - lxd/patches: Add patch for macaroon/candid config
+   - auth: Support URL based auth
+   - Update i18n
+   - doc: Add example of exec with record-output
+   - lxd/devices: Iterate /sys/class/drm for GPUs
+   - lxd/api: Sort list of endpoints
+
+  ### サポートとアップグレード <!-- Support and upgrade -->
+  <!--
+  LXD 3.0.2 is supported until June 2023 and is our current LTS release, users are encouraged to update to the latest bugfix releases as they're made available.
+  -->
+  LXD 3.0.2 は 2023 年 6 月までサポートされる最新の LTS リリースです。利用可能になった最新のバグ修正リリースに更新することをお勧めします。
+
+  ### ダウンロード <!-- Downloads -->
+   - LXD リリース tarball <!-- Main release tarball -->: [lxd-3.0.2.tar.gz](https://linuxcontainers.org/downloads/lxd/lxd-3.0.2.tar.gz)
+   - GPG シグネチャ <!-- GPG signature -->: [lxd-3.0.2.tar.gz.asc](https://linuxcontainers.org/downloads/lxd/lxd-3.0.2.tar.gz.asc)
