@@ -1,0 +1,351 @@
+title: LXD 3.0.3 リリースのお知らせ <!-- LXD 3.0.3 release announcement -->
+date: 2018/11/22 00:00
+origin: https://discuss.linuxcontainers.org/t/lxd-3-0-3-has-been-released/3359
+content: |-
+  ### はじめに <!-- Introduction -->
+  <!--
+  The LXD team is pleased to announce the release of LXD 3.0.3!
+  -->
+  LXD チームは LXD 3.0.3 のリリースをお知らせできることをうれしく思います！
+
+  <!--
+  As a stable bugfix release, no major changes have been done, instead focusing on bugfixes and minor usability improvements.
+  -->
+  Stable に対するバグフィックスのためのリリースですので、大きな変更はありません。バグフィックスと細かな使い勝手の改良にフォーカスしています。
+
+  ### ハイライト <!-- Highlights -->
+  #### snap 環境でのクラスターの更新 <!-- Cluster refreshes for snap environments -->
+  <!--
+  A common issue with LXD clusters is the requirement that all nodes run the same LXD version and have a matching set of API extensions and DB schema.
+  -->
+  LXD クラスターでよく目にする問題は、すべてのノードで同じバージョンの LXD を実行し、同じ API エクステンションを持ち、同じ DB スキーマを持っている必要があるという要件があることです。
+
+  <!--
+  When any node goes ahead of the rest, all database operations are held back until the remainder of the nodes are upgraded.
+  -->
+  あるノードが他よりも新しいバージョンになってしまうと、すべてのデータベースオペレーションは、残りのノードがアップグレードするまで処理が止まります。
+
+  <!--
+  As we're talking about a number of separate machines, coordinating that upgrade may be a bit tricky and in the case of the LXD snap, could take up to 24h without user intervention.
+  -->
+  多数の別々のマシンの話なので、アップグレードの調整は少しむずかしい問題です。
+  LXD snap の場合は、ユーザが処理しなければ最大で 24 時間かかることがあります。
+
+  <!--
+  To improve this, we introduced a new `LXD_CLUSTER_UPDATE` environment variable which packagers can set, pointing it to a script which will update the local LXD daemon through the relevant package manager. When LXD detects that another node is now ahead of itself, it will call this script which will then update the local LXD and have it match.
+  -->
+  これを改良するために、管理者が設定できる `LXD_CLUSTER_UPDATE` 環境変数を新たに導入しました。
+  これは関係するパッケージマネージャーを使って、ローカルの LXD デーモンを更新するためのスクリプトを指します。
+  LXD が別のノードが自分より新しいバージョンになっていることを検出すると、このスクリプトを呼び出し、ローカルの LXD を更新して他のノードと一致させます。
+
+  #### rsync オプションのネゴシエーション <!-- Rsync option negotiation -->
+  <!--
+  This release includes support for the rsync option negotiation which got rolled out in LXD 3.5, 3.6 and 3.7. This should result in smoother migrations between varying LXD releases.
+  -->
+  このリリースでは、LXD 3.5、3.6、3.7 で導入した rsync オプションのネゴシエーション機能を含みます。この機能は、様々な LXD リリース間の速やかなマイグレーションに対応できるはずです。
+
+  #### Candid サポートの改良 <!-- Improved Candid support -->
+  <!--
+  Candid external authentication was extended to support multiple domains as well as providing with configurable expiry for the authentication tokens (defaulting to 1h).
+  -->
+  Candid を使った外部認証が拡張されました。複数のドメインが使えるようなりました。
+  そして、認証トークンの期限（expiry）が設定できるようになりました（デフォルトは 1 時間）。
+
+  <!--
+  This allows administrators in large organizations to choose what Candid domains will be allowed on a particular LXD server and configure exactly how long a user will be trusted before having to renew their authentication token with Candid.
+  -->
+  大きな組織の管理者は、特定の LXD サーバーでどの Candid ドメインを使うのかを選べるようになりました。
+  また、ユーザーの Candid 認証トークンを信頼し、更新するまで期間を正確に設定できるようになりました。
+
+  <!--
+  The relevant configuration keys are:
+  -->
+  関連する設定は次の設定です:
+
+   - candid.domains (カンマ区切りのドメインリスト、デフォルトはすべて許可します<!-- comma separate listed of domains, default to allow all -->)
+    - candid.expiry (トークンが有効な期間（秒）。デフォルトは 3600 <!-- token expiry in seconds, default to 3600 -->)
+
+  #### PEM エンコードされたクライアント鍵のサポート <!-- Added support for PEM encrypted keys -->
+  <!--
+  For added security, LXD now supports PEM encrypted keys, this means that you can now manually encrypt your `~/.config/lxc/client.crt` using openssl and LXD will then prompt you for the password as needed.
+  -->
+  セキュリティを強化するため、LXD で PEM 形式の鍵を使えるようになりました。これにより、openssl を使ってマニュアルで自身の `~/.config/lxc/client.crt` を作成でき、LXD は必要に応じてパスワードプロンプトを表示します。
+
+      stgraber@castiana:~$ lxc project list s-vorash:
+      Password for client.crt: 
+      +-------------------+--------+----------+---------+
+      |       NAME        | IMAGES | PROFILES | USED BY |
+      +-------------------+--------+----------+---------+
+      | default (current) | YES    | YES      | 28      |
+      +-------------------+--------+----------+---------+
+
+  #### 環境変数 `LXD_INSECURE_TLS` の追加 <!-- Added support for LXD_INSECURE_TLS -->
+  <!--
+  While all our own image servers and internal communications support modern ciphers, it's been brought to our attention that some corporate environments will intercept TLS traffic through their proxy and using a company CA, terminate the TLS connection on the proxy to inspect the traffic.
+  -->
+  LXD のイメージサーバと内部通信ではすべて最新の暗号が使えますが、プロキシと企業 CA を使って TLS 通信を傍受し、プロキシ上で TLS 接続を終端させてトラフィックを検査するような企業環境が存在するという報告がありました。
+
+  <!--
+  This would work fine so long as the company CA is trusted on the system and LXD is configured to use the company proxy. Unfortunately, it appears that many such proxies also do not support the modern ciphers that LXD requires, effectively causing all outgoing TLS connections to fail.
+  -->
+  企業 CA がシステムで信頼され、LXD が企業のプロキシを使用するように設定されている限り、このような環境でもうまく動作します。しかし、このようなプロキシの多くは LXD が必要とする最新の暗号が使えず、外向きの TLS 接続が失敗するようです。
+
+  <!--
+  For those environments, we have now added a new `LXD_INSECURE_TLS` environment variable which is respected by both `lxd` and `lxc` and that will instruct LXD to relax the ciphers requirements, using the default TLS settings from Go rather than using our restricted set of trusted ciphers.
+  -->
+  このような環境用に、新たに `LXD_INSECURE_TLS` 環境変数を追加しました。`lxd` も `lxc` もこれを参照し、暗号に対する要求を緩めるように LXD に指示します。これにより LXD が信頼する暗号の限られた組ではなく、Go のデフォルトの TLS 設定を使うようになります。
+
+  #### exec 操作へのメタデータの追加 <!-- Expanded exec operation metadata -->
+  <!--
+  Ever wondered what that `exec` session is about in `lxc operation list`?
+  -->
+  これまで `lxc operation list` で表示される `exec` セッションは何だろう? と思ったことがありますか?
+
+  <!--
+  Well, now LXD lets you find that out by looking at some extra metadata that's recorded as part of the `exec` operation.
+  -->
+  今後は LXD が `exec` 操作の一部として記録されているメタデータをいくつか見ることで、あなたがそれを見れるようにしました。
+
+      stgraber@castiana:~$ lxc exec xenial -- sleep 30 &
+      [1] 25911
+      
+      stgraber@castiana:~$ lxc operation list
+      +--------------------------------------+-----------+-------------------+---------+------------+----------------------+
+      |                  ID                  |   TYPE    |    DESCRIPTION    | STATUS  | CANCELABLE |       CREATED        |
+      +--------------------------------------+-----------+-------------------+---------+------------+----------------------+
+      | 274ab284-ed07-4834-b3f5-6ec1d7cf3b74 | WEBSOCKET | Executing command | RUNNING | NO         | 2018/11/09 04:20 UTC |
+      +--------------------------------------+-----------+-------------------+---------+------------+----------------------+
+      
+      stgraber@castiana:~$ lxc operation show 274ab284-ed07-4834-b3f5-6ec1d7cf3b74
+      id: 274ab284-ed07-4834-b3f5-6ec1d7cf3b74
+      class: websocket
+      description: Executing command
+      created_at: 2018-11-08T23:20:30.323852365-05:00
+      updated_at: 2018-11-08T23:20:30.323852365-05:00
+      status: Running
+      status_code: 103
+      resources:
+        containers:
+        - /1.0/containers/xenial
+      metadata:
+        command:
+        - bash
+        environment:
+          HOME: /root
+          LANG: C.UTF-8
+          PATH: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
+          TERM: xterm
+          USER: root
+        fds:
+          "0": d79593f74c3e566987a3bdb109d2f4102aea5915ad344f64ea665082c1a3177e
+          control: 0ed5ba645a9f6f0b2956282bba274ce015407a6309e1a9ec1a897fab0483d6fe
+        interactive: true
+      may_cancel: false
+      err: ""
+
+  <!--
+  This records the command that was executed, its environment and whether it was run interactively or not.
+  -->
+  これは、実行されたコマンド、その環境変数、それが対話的に実行されたかどうかを記録します。
+
+  ### Bugfixes
+
+   - doc: add note about ignoring mount options
+   - shared/idmap: test fcaps support
+   - Add a few missing rows.Close() calls
+   - lxd/patches: Profiles are in the cluster db
+   - lxd/storage/ceph: Only freeze container if running
+   - lxc: Only target if --target is passed
+   - shared: Return decompressor in DetectCompression
+   - lxd/containers: Don't return nil on Storage calls
+   - tests: Fix mode of proxy.sh
+   - shared/api: Don't re-define fields
+   - lxd/storage/btrfs: Fix clearing quotas
+   - lxd/containers: Also use apply_quota for CEPH
+   - lxd/containers: Simplify and fix pool update logic
+   - Add NodeIsOutdated() db API to check is a node is outdated
+   - Trigger whatever is in the LXD_CLUSTER_UPDATE var is node is outdated
+   - lxd/images: Add missing cleanup code
+   - lxd/containers: Fix bad function name
+   - tests: Avoid err == nil pattern
+   - lxd: Don't mask database errors
+   - Honor the CC environment variable when invoking go install
+   - client: Avoid err == nil pattern
+   - lxd/profiles: Don't list snapshots in UsedBy
+   - Make database queries timeout after 10s if cluster db is unavail
+   - tests: Fix pki with newer easyrsa
+   - lxd/db: Fix internal DB test
+   - doc: Fix and improve the description
+   - operations: return true if operation is done before timeout
+   - lxd/containers: Avoid root device name conflict
+   - lxd/import: Add root disk if needed
+   - global: Advertise rsync features
+   - lxd/db: Use NoSuchObject consistently
+   - proxy: Only log errors
+   - lxd/import: Don't delete container on import failure
+   - i18n: Update translation templates
+   - Support --domain flag for lxc remote
+   - Add configurable macaroon expiry
+   - Support Candid domain validation
+   - Update Candid docs
+   - Update i18n
+   - lxd: Rename API endpoints
+   - network_linux: add netns_getifaddrs()
+   - main_checkfeature: check kernel for netnsid support
+   - network: add NetworkGetCounters()
+   - container_lxc: switch to NetnsGetifaddrs()
+   - shared: Add network state API
+   - api: Add extended cluster join API
+   - lxd/init: Fix struct conflict
+   - lxc: Identify snapshots when listed
+   - shared/version: Support detecting ChromeOS versions
+   - lxd/containers: Force bring up of SRIOV parent
+   - netns_getifaddrs: fix argument passing
+   - netnsid_getifaddrs: fix check for netnsid support
+   - doc: Fix storage API endpoints
+   - container_lxc: handle network retrieval smarter
+   - shared: Add storage volume snapshot support
+   - client: Add storage volume snapshot support
+   - netns_getifaddrs: don't print useless info
+   - shared/api: Fix StorageVolumeSource struct
+   - Makefile: Set LDFLAGS for dqlite
+   - lxd: Fix handling of CGroup-V2 systems
+   - tree-wide: pass -std=gnu11 -Wvla
+   - lxd/containers: Rework exec FD handling
+   - Added optional ?target=<member> to /containers POST documentation
+   - lxd/storage/lvm: Don't un-necessarily start/stop storage
+   - lxd/storage/ceph: Don't un-necessarily mount snapshots
+   - lxd/containers: Fix cleanup on create failure
+   - shared/network: Don't crash on VPN devices
+   - lxd/containers: Fix bad nvidia information parsing
+   - netns_getifaddrs: fix network stats retrieval
+   - network: Fix counters on non-ethernet interfaces
+   - doc: Add configuration for readthedocs
+   - storage: Fix error strings
+   - lxd/storage/btrfs: Don't fail deleting pools on misisng disk
+   - Split code in 2 seperate files
+   - network: provide #ifdefs for RTM_* requests
+   - Document LVM support for storage quotas
+   - candid: Cleanup code a bit
+   - network: fix netns_get_nsid() signature
+   - apparmor: Allow cgroupv2 in cgns
+   - candid: Fix client when using https candid server
+   - lxd-p2c: Fix static build
+   - config: Add support for PEM encrypted keys
+   - lxc: Setup password helper
+   - lxc/config: Only setup needed connection args
+   - lxc/config: More TLS optimizations
+   - i18n: Update translation templates
+   - macro: add SOL_NETLINK
+   - macro: add NETLINK_DUMP_STRICT_CHK
+   - netns_ifaddrs: check for NETLINK_DUMP_STRICT_CHK
+   - Fix Potential Event Race
+   - devices: Fix bad disk limits
+   - Fix root disk limits on container startup
+   - checkfeature: Rework structure
+   - checkfeature: simplify is_netnsid_aware() check
+   - checkfeature: Avoid double line break
+   - checkfeature: dial logging down from to debug
+   - lxc/progress: Add terminal detection
+   - doc: Rework backup documentation
+   - client: Add GetNetworkState
+   - client: Add extended cluster join API
+   - client: Add UseProject
+   - shared/api: Add projects
+   - client: Add support for projects
+   - lxc/config: Add support for projects
+   - Change query.SelectObjects signature to support a prepared statement
+   - Add query.SelectURIs convenience for getting API resource URIs
+   - Add cluster statements registry
+   - api: Add Project.Config reference
+   - Improve some error messages around container creation
+   - Lookup for the "target" API parameter only in the URL query string
+   - Automatically add ?project=x query param to image server
+   - Improve error reporting when creating a container
+   - Change ContainerStorageRead() to take a container object instead of its name
+   - Improve error messages around LVM volume creation
+   - Change Storage.ContainerUmount to accept a container vs a container name
+   - lxd/init: Update for current client package
+   - lxc/progress: Don't print empty lines
+   - candid: Improve domain validation and pubkey
+   - lxd/images: Fix parsing of public property
+   - client: Always use the "do()" wrapper
+   - client: Fix URLs with missing project/target
+   - Improve error messages
+   - lxd/containers: Fix cluster shutdown
+   - i18n: Update Japanese translation
+   - idmap: use global variable for vfs3 fcaps support
+   - checkfeature: check for vfs3 fscaps support
+   - lxd/db: Fix bad limits.cpu
+   - shared: Add limits.cpu validator
+   - doc: add the appropriate titles to some documents
+   - shared/network: Allow TLS1.3
+   - global: Implement LXD_INSECURE_TLS env variable
+   - netns_getifaddrs: simplify
+   - Fix bad check for recursive mounts
+   - Prevent event listeners from lying around even after Disconnect()
+   - client: Support creating project-bound container using an image on another node
+   - client: Filter lifecycle and operations events by project
+   - client: Make container backups code honor projects
+   - client: Make GET /profiles return only profiles for the project
+   - Bump Go versions and use '.x' to always get latest patch versions
+   - Update build instruction
+   - doc: Bump to 1.10 or higher everywhere
+   - Don't expire lxd.log by accident
+   - lxd/storage: Fix importing preseed dump
+   - lxd/migration: Use current idmap instead of next
+   - lxd/db: Send raft/dqlite logging to debug
+   - lxd/daemon: Clarify early loggging
+   - checkfeature: Don't log error on missing feature
+   - lxd/daemon: Improve logging of inherited fds
+   - shared/logging: Improve logfile output
+   - lxd/daemon: Don't mention MAAS unless configured
+   - exec: Expose command, env and mode in metadata
+   - client: Fix cancelation of image download
+   - Detect and shrink large boltdb files
+   - lxd/daemon: Fix build
+   - loop: retry on EBUSY
+   - lxd/storage: Improve loop device errors
+   - lxd/containers: Detect root disk pool changes
+   - doc: Update cloud-init network documentation
+   - client: Fix error handling in operations
+   - lxd/containers: Prevent duplicate profiles
+   - lxc/copy: --container-only is meaningless for snapshots
+   - shared/api: Add support for incremental container copy
+   - client: Add support for incremental container copy
+   - doc: Add kernel.keys.maxkeys to production-setup
+   - lxd/storage/dir: Don't fail when quota are set
+   - lxd: Handle AppArmor policy cache directory
+   - test: Support AppArmor policy cache directory
+   - lxd/containers: Respect optional=true for disks
+   - use empty usb vendorid to pass through all usb devices
+   - doc: Add usb_optional_vendorid API extension
+   - lxc/image: Fix rootfs file handling on snap
+   - lxd/containers: Properly clear static leases
+   - shared/api: Support copy between projects
+   - client: Support copy between projects
+   - lxc/config: Allow overriding the current project
+   - rsync: Tweak transfer options (delete & compress)
+   - lxd/daemon: Improve logging of kernel features
+   - lxd: Register background tasks as operations
+   - lxc: Switch all progress op handling to cancelable
+   - Increase go-dqlite client timeout when not-clustered
+   - lxd: Rework task handling
+   - lxd/migration: Fix CRIU rsync option negotiation
+   - lxd/storage/btrfs: Tweak errors
+   - lxd/init: Better handle disk sizes
+   - lxd/db: Avoid un-needed query on container move
+   - i18n: Update translation templates
+   - Add StorageVolumeIsAvailable to check if a Ceph volume can be attached
+   - Wire StorageVolumeIsAvailable to containerValidDevices
+   - Add integration test
+
+  ### サポートとアップグレード <!-- Support and upgrade -->
+  <!--
+  LXD 3.0.3 is supported until June 2023 and is our current LTS release, users are encouraged to update to the latest bugfix releases as they're made available.
+  -->
+  LXD 3.0.3 は 2023 年 6 月までサポートされる最新の LTS リリースです。利用可能になった最新のバグ修正リリースに更新することをお勧めします。
+
+  ### ダウンロード <!-- Downloads -->
+   - LXD リリース <!-- Main release tarball -->: [lxd-3.0.3.tar.gz](https://linuxcontainers.org/downloads/lxd/lxd-3.0.3.tar.gz)
+   - GPG シグネチャ <!-- GPG signature -->: [lxd-3.0.3.tar.gz.asc](https://linuxcontainers.org/downloads/lxd/lxd-3.0.3.tar.gz.asc)
