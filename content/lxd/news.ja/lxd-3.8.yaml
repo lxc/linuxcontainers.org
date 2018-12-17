@@ -1,0 +1,263 @@
+title: LXD 3.8 リリースのお知らせ
+date: 2018/12/12 00:00
+origin: https://discuss.linuxcontainers.org/t/lxd-3-8-has-been-released/3450
+content: |-
+  ### はじめに <!-- Introduction -->
+  <!--
+  The LXD team is very excited to announce the release of LXD 3.8!
+  -->
+  LXD チームは LXD 3.8 のリリースをお知らせすることにとてもワクワクしています!
+
+  <!--
+  This is the last release for 2018 and is a pretty feature packed one, improving on a lot of previously introduced features.
+  -->
+  このリリースは 2018 年の最後のリリースで、かなりの新機能を導入し、以前に導入した多数の機能を改良しています。
+
+  Enjoy!
+
+  ### 新機能 <!-- New features -->
+  #### コンテナの自動スナップショット <!-- Automated container snapshots -->
+  <!--
+  Three configuration keys were introduced to control automated snapshots and configure how they will be named.
+  -->
+  自動スナップショットや、スナップショットの名前をどのように決めるかを設定する設定キーを新たに 3 つ追加しました。
+
+   - `snapshots.schedule` はスナップショット取得をいつ実行するかを指定する CRON パターン文字列です <!-- `snapshots.schedule` takes a CRON pattern to determine when to perform the snapshot -->
+   - `snapshots.schedule.stopped` は、停止中のコンテナのスナップショットも取得するかどうかを決める真偽値です <!-- `snapshots.schedule.stopped` is a boolean used to control whether to snapshot stopped containers too -->
+   - `snapshots.pattern` は、スナップショット名を指定していないときにスナップショット名を設定するために使う pongo2 テンプレートをサポートするフォーマット文字列です。これは自動スナップショットと名前を指定していない手動スナップショットの両方に適用されます <!-- `snapshots.pattern` is a format string with pongo2 templating support used to set what the name of the snapshots should be when none is specified. This applies both to automated snapshots and to manually created snapshots where no name is provided. -->
+
+  #### プロジェクト間の copy/move のサポート <!-- Support for copy/move between projects -->
+  <!--
+  A new `\-\-target-project` option has been added to both `lxc copy` and `lxc move`, making it possible to copy or move containers between projects.
+  -->
+  `lxc copy` と `lxc move` に `--target-project` オプションを追加しました。これにより、プロジェクト間でコンテナをコピーしたり移動したりできるようになります。
+
+      stgraber@castiana:~$ lxc move test1 test1 --target-project blah
+      stgraber@castiana:~$ lxc list --project blah
+      +-------+---------+------+------+------------+-----------+
+      | NAME  |  STATE  | IPV4 | IPV6 |    TYPE    | SNAPSHOTS |
+      +-------+---------+------+------+------------+-----------+
+      | test1 | STOPPED |      |      | PERSISTENT |           |
+      +-------+---------+------+------+------------+-----------+
+
+  #### `cluster.https_address` サーバーオプション <!-- `cluster.https_address` server option -->
+  <!--
+  Up till now, clustered LXD servers had to be configured to listen on a single IPv4 or IPv6 address with both internal cluster traffic and regular client traffic all using that same address.
+  -->
+  これまでクラスタ環境の LXD サーバーは、クラスターの内部通信と通常のクライアントからの通信のすべてに同じアドレスを使うよう、単一の IPv4 もしくは IPv6 アドレスで待ち受けるように設定する必要がありました。
+
+  <!--
+  LXD 3.8 changes that by introducing a new `cluster.https_address` option.
+  This write-once key holds the address used for cluster communication and cannot currently be changed without having to remove the node from the cluster.
+  -->
+  LXD 3.8 では、新たに `cluster.https_address` オプションを追加しました。
+  この設定キーは一度のみ設定でき、クラスター通信に使うアドレスを保持します。この値は現在、クラスターからノードを削除しないで変更することはできません。
+
+  <!--
+  With this separate key in place, it's now possible to change the regular `core.https_address` on clustered nodes to any address you want, including to wildcard patterns like `:8443`.
+  -->
+  この設定キーを使うことで、クラスターノードの通常の `core.https_address` を、`:8443` のようなワイルドカードパターンを含む任意のアドレスに変更できます。
+
+  <!--
+  This makes it possible to use a completely different network for internal cluster communication, making it easy to prioritize and filter cluster traffic.
+  -->
+  この設定キーにより、クラスター内部通信が完全に別のネットワークを使えるようになり、クラスタートラフィックの優先度設定とフィルタリングが容易になります。
+
+  #### クラスター環境でのイメージの複製 <!-- Cluster image replication -->
+  <!--
+  Another improvement for our cluster users is the introduction of automatic image replication.
+  Prior to LXD 3.8, images would only get copied to other cluster members as containers on those systems request them.
+  -->
+  クラスターユーザー向けのもうひとつの改良は、自動でイメージを複製する機能の追加です。
+  LXD 3.8 より前のバージョンでは、システム上のコンテナがイメージを要求したときに、イメージを他のクラスターメンバーにコピーするだけでした。
+
+  <!--
+  While good for performance, bandwidth and disk usage, this had the obvious downside that if the image is only present on a single system and that system goes offline, then there is no way for that image to be used until the system recovers.
+  -->
+  この動きは、パフォーマンス、帯域、ディスク使用量の点では良かったのですが、イメージが単一のシステムにのみ存在し、そのシステムがオフラインになると、システムが復帰するまでそのイメージを使う方法がないという明らかな問題がありました。
+
+  <!--
+  LXD 3.8 changes this by having all manually created or imported images be replicated on at least 3 systems. Images that are stored in the image store only as a cache entry do not get replicated.
+  -->
+  LXD 3.8 は、手動で作成したりインポートしたイメージすべてを、少なくとも 3 システムで複製するように変更しました。キャッシュエントリーとしてのみイメージストアに格納されたイメージは複製されません。
+
+  <!--
+  The behavior can be configured through `cluster.images_minimal_replica` with `3` being the new default behavior, `1` being the previous behavior and `-1` used to replicate on all cluster members.
+  -->
+  この動作は `cluster.images_minimal_replica` で設定できます。`3 に設定するとデフォルトの動作となり、`1` は以前の動きに、`-1` はすべてのクラスターメンバーに複製するのに使えます。
+
+  #### `security.protection.shift` コンテナオプション <!-- `security.protection.shift` container option -->
+  <!--
+  Until such time as we get `shiftfs` into Linux distributions and land support for it in LXD, LXD has to rely on slow rewriting of all uid/gid on the filesystem whenever the container's idmap changes.
+  -->
+  `shiftfs` が Linux ディストリビューションでサポートされ、LXD でもそのような機能がサポートされるまでは、LXD はコンテナの idmap が変更された場合は、ファイルシステム上のすべての uid/gid を書き換える遅い方法に頼る必要があります。
+
+  <!--
+  This can be a dangerous operation when run on systems that are prone to sudden power less or shutdown as this operation cannot be safely resumed if interrupted partway.
+  -->
+  このような操作を、突然電源が喪失したりシャットダウンすることがあるようなシステム上で実行するのは危険な操作となる可能性があります。これは、操作が途中で中断した場合に、その操作を安全に復旧させられないためです。
+
+  <!--
+  When set, the new `security,protection.shift` configuration option will prevent any such remapping, instead making any action that would result in one fail until the key is unset.
+  -->
+  新しい `security,protection.shift` 設定オプションを設定すると、このような再マッピングを防げます。キーが設定されなくなるまでこのような動作は失敗します。
+
+  #### すべての USB デバイスを渡す機能 <!-- Support for passing all USB devices -->
+  <!--
+  Similar to how you can pass all GPUs to a container by not specifying any filter, it is now possible to do the same with USB devices by not specifying any vendorid or productid filter.
+  -->
+  フィルタを設定せずに、すべての GPU をコンテナに割り当てる方法と同様に、一切 vendorid や productid フィルターを設定せずに USB デバイスに対して同様のことができるようになりました。
+
+  <!--
+  In such cases, every USB device will be made visible to the container, including any device hotplugged after the fact.
+  -->
+  このような場合には、事後にホットプラグされたデバイスを含めて、すべてのデバイスがコンテナに表示されます。
+
+  #### CLI でのデフォルトプロジェクトのオーバーライド <!-- CLI override of default project -->
+  <!--
+  Many users reported that interacting with multiple projects can be tedious due to having to constantly use `lxc project switch` to switch the client between projects. This is especially true when all you want to do in a particular project is a simple action like starting a container.
+  -->
+  複数のプロジェクトを操作するような場合に、プロジェクト間でクライアントを切り替えるために、何度も `lxc project switch` を使う必要があり面倒であると、多数のユーザが報告しました。これは、特定のプロジェクトで行いたいことが、コンテナの起動などの単純な操作である場合に、特に当てはまります。
+
+  <!--
+  LXD 3.8 now has a `--project` option available throughout the command line client, which lets you override the project for a particular operation.
+  -->
+  LXD 3.8 では、コマンドラインクライアント全体で使える、`--project` オプションが追加されました。これにより、特定の操作でプロジェクトをオーバーライドできます。
+
+      stgraber@castiana:~$ lxc project list
+      +-------------------+--------+----------+---------+
+      |       NAME        | IMAGES | PROFILES | USED BY |
+      +-------------------+--------+----------+---------+
+      | blah              | NO     | NO       | 2       |
+      +-------------------+--------+----------+---------+
+      | default (current) | YES    | YES      | 14      |
+      +-------------------+--------+----------+---------+
+      
+      stgraber@castiana:~$ lxc list test
+      +-------+---------+------+------+------------+-----------+
+      | NAME  |  STATE  | IPV4 | IPV6 |    TYPE    | SNAPSHOTS |
+      +-------+---------+------+------+------------+-----------+
+      | test1 | STOPPED |      |      | PERSISTENT | 0         |
+      +-------+---------+------+------+------------+-----------+
+      
+      stgraber@castiana:~$ lxc list test --project blah
+      +-------+---------+------+------+------------+-----------+
+      | NAME  |  STATE  | IPV4 | IPV6 |    TYPE    | SNAPSHOTS |
+      +-------+---------+------+------+------------+-----------+
+      | test2 | STOPPED |      |      | PERSISTENT | 0         |
+      +-------+---------+------+------+------------+-----------+
+
+  #### 双方向 rsync ネゴシエーション <!-- Bi-directional rsync negotiation -->
+  <!--
+  Recent LXD releases have introduced rsync feature negotiation where the source could tell the server what rsync features it's using so that the server can match them on the receiving end.
+  -->
+  最近の LXD では、rsync のネゴシエーションが導入されました。コピー元はサーバーにどの rsync の機能を使っているかを伝え、サーバーが受信側でそれを照合できます。
+
+  <!--
+  LXD 3.8 introduces the reverse of that by having the LXD server indicate what it supports as part of the migration protocol, allowing for the source to restrict the features it uses.
+  -->
+  LXD 3.8 ではその逆の機能が追加されました。LXD サーバーがマイグレーションプロトコルの一部としてサポートしている機能を示し、コピー元がそれを使って機能を制限できます。
+
+  <!--
+  This should provide very robust migration in the future where a newer LXD will be able to migrate containers out to an older LXD without running into rsync feature mismatches.
+  -->
+  rsync 機能のミスマッチを起こすことなく、新しい LXD がコンテナを古い LXD にマイグレーションでき、将来的にも堅牢なマイグレーションが提供できます。
+
+  #### ZFS 圧縮サポート <!-- ZFS compression support -->
+  <!--
+  Another improvement to our migration protocol is the detection and use of ZFS compression support when available.
+  -->
+  マイグレーションプロトコルのもうひとつの改良点は、ZFS 圧縮が使える場合に検出と使用をすることです。
+
+  <!--
+  When combined with zpool compression, this can very significantly reduce the size of the migration stream.
+  -->
+  zpool 圧縮と組み合わせると、マイグレーションストリームのサイズを大幅に削減できます。
+
+  ### Bugs fixed
+
+   - client: convert EventListener to use api.Event
+   - client: Fix crash on missing ProgressTracker
+   - doc: Add kernel.keys.maxkeys to production-setup
+   - doc: Add project documentation
+   - doc: Updated documentation of /cluster/members/<name> to have correct keys
+   - i18n: Update translations from weblate
+   - i18n: Update translation templates
+   - lxc/image: Fix rootfs file handling on snap
+   - lxc/import: gzip is the default
+   - lxc/project: Check existence on switch
+   - lxd: Finish converting events to api.Event
+   - lxd: Fix AppArmor cache policy version check
+   - lxd: Handle AppArmor policy cache directory
+   - lxd/cluster: Tweak error messages
+   - lxd/containers: Drop needless function
+   - lxd/containers: Fix snapshot URLs in projects
+   - lxd/containers: Hide duplicate log entries
+   - lxd/containers: Improve hwaddr retry logic
+   - lxd/containers: Properly clear static leases
+   - lxd/containers: Respect optional=true for disks
+   - lxd/db: Avoid un-needed query on container move
+   - lxd/db: Fix typo in existing docstring
+   - lxd/db: Fix unit test not actually checking error
+   - lxd/db: Make ContainerSetState use single query
+   - lxd/images: Fix bad project handling
+   - lxd/init: Better handle disk sizes
+   - lxd/init: Checks if a zfs storage pool or dataset exists
+   - lxd/init: Fix typo
+   - lxd/migration: Cleanup feature negotiation
+   - lxd/migration: Fix CRIU rsync option negotiation
+   - lxd/migration: Fix rsync project prefix
+   - lxd/migration: Fix shutdown race
+   - lxd/migration: Remove leftover debugging
+   - lxd/migration: Re-spawn proxy devices
+   - lxd/migration: Simplify MigrationSink
+   - lxd/migration: Simplify MigrationSource
+   - lxd/migration: Simplify StorageMigrationSink
+   - lxd/networks: Fix projects in dnsmasq.hosts
+   - lxd/projects: Add config validation
+   - lxd/projects: Fix copy of snapshots
+   - lxd/proxy: Improve shutdown code
+   - lxd/storage: Fix broken error handling
+   - lxd/storage: Fix check for custom volume restore
+   - lxd/storage: Fix custom volume copies
+   - lxd/storage: Fix more project copy issues
+   - lxd/storage: Fix snapshot migration with projects
+   - lxd/storage: Freeze containers during rsync
+   - lxd/storage: user_subvol_rm_allowed for btrfs
+   - lxd/storage/btrfs: Fix project migrations
+   - lxd/storage/btrfs: Tweak errors
+   - lxd/storage/ceph: Fix copies within project
+   - lxd/storage/ceph: Fix project migration
+   - lxd/storage/dir: Don't fail when quota are set
+   - lxd/storage/dir: Fix project snapshot symlink
+   - lxd/storage/lvm: Fix project handling
+   - lxd/storage/lvm: Run pvremove on VG deletion
+   - lxd/storage/zfs: Add zfsPoolVolumeExists
+   - lxd/storage/zfs: Detect tool version on Ubuntu
+   - lxd/storage/zfs: Fix missing dir on copy
+   - lxd/storage/zfs: Fix project copies
+   - lxd/storage/zfs: Fix project migrations
+   - lxd/storage/zfs: Fix setting quotas on project
+   - shared: Fix import order
+   - shared: Fix windows cert handling
+   - shared/idmap: Workaround Go tip change
+   - shared/termios: Add shim for non-cgo builds
+   - storage/zfs: Fix arguments in function call
+   - tests: Always pass -w to iptables
+   - tests: Bump size to 120MB for btrfs
+   - tests: Fix leftover file
+   - tests: Improve live-migration tests
+   - tests: Test migration in projects
+   - test: Support AppArmor policy cache directory
+
+  ### 試用環境 <!-- Try it for yourself -->
+  <!--
+  This new LXD release is already available for you to try on our [demo service](https://linuxcontainers.org/lxd/try-it/).
+  -->
+  この新しい LXD リリースは私たちの [デモサービス](https://linuxcontainers.org/ja/lxd/try-it/) で利用できます。
+
+  ### ダウンロード <!-- Downloads -->
+  <!--
+  The release tarballs can be found on our [download page](https://linuxcontainers.org/lxd/downloads/).
+  -->
+  このリリースの tarball は [ダウンロードページ](/lxd/downloads/) から取得できます。
