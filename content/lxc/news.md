@@ -208,15 +208,6 @@ As a stable bugfix release, no major changes have been done, instead focusing on
  - CODING\_STLYE: Remove sections implied by 'kernel style'
  - CODING\_STYLE: Fix non-uniform heading level
  - CODING\_STYLE: Update section header format
- - cmd: Use parenthesis around complex macro
- - cmd: Use 'void' instead of empty parameter list
- - cmd: Do not use braces for single statement block
- - cmd: Fix whitespace issues
- - cmd: Use 'const' for static string constant.
- - cmd: Remove unnecessary whitespace in string
- - cmd: Put trailing \*/ on a separate line
- - cmd: Remove typo'd semicolon
- - cmd: Do not use comparison to NULL
  - lxc\_init: s/SYSDEBUG()/SYSERROR()/g in remove\_self
  - tools: add default log priority & cleanups
  - storage\_utils: move duplicated function from tools
@@ -228,8 +219,7 @@ As a stable bugfix release, no major changes have been done, instead focusing on
  - cmd: use safe number parsers in lxc-usernsexec
  - macro: add, move, and remove some macros, and change macros to use
  - tools: Indicate container startup failure
- - storage: exit() => _exit(). when exec is failed, child process needs to use _exit()
- - tools: lxc-wait: add default log priority & cleanups
+ - storage, storage_utils: use _exit() instead of exit() in child process
  - conf: fix path/lxcpath mixups in tty setup
  - cmd: Do not reassign variable before it is used
  - cmd: Reduce scope of 'count' variable
@@ -245,7 +235,7 @@ As a stable bugfix release, no major changes have been done, instead focusing on
  - log: fail build on ENFORCE\_THREAD\_SAFETY error
  - {file,string}\_utils: remove NO\_LOG
  - initutils: remove useless comment
- - string\_utils: remove unnecessary include and headers
+ - string\_utils: remove unnecessary includes
  - string\_utils: add remove\_trailing\_slashes()
  - Makefile: remove last pam\_cgfs special-casing
  - conf: add missing headers
@@ -264,11 +254,9 @@ As a stable bugfix release, no major changes have been done, instead focusing on
  - commands: ensure -1 is sent on EPIPE for init pid
  - Makefile: correctly add ifaddrs to noinst\_HEADERS
  - tree-wide: use sizeof on static arrays
- - Revert "tree-wide: use sizeof on static arrays"
  - commands: pass around intmax\_t
  - commands: assign before converting to pointer
  - macro: calculate buffer lengths correctly
- - Revert "Revert "tree-wide: use sizeof on static arrays""
  - caps: fix illegal access to array bound
  - utils: defensive programming
  - nl: remove duplicated define
@@ -277,16 +265,14 @@ As a stable bugfix release, no major changes have been done, instead focusing on
  - file\_utils: add lxc\_recv\_nointr()
  - commands: switch to setting errno and returning -1
  - log: do not clobber errno
- - log: save errno on strerror\_r()
+ - log,nl: save errno
  - tree-wide: s/recv()/lxc\_recv\_nointr()/g
  - file\_utils: add lxc\_send\_nointr()
  - tree-wide: s/send()/lxc\_send\_nointr()/g
- - nl: save errno on lxc\_netns\_set\_nsid()
  - log: log\_append\_logfile() add new error path
  - lxccontainer: fix dereferenced pointer
  - lxc: fix build with --disable-werror
  - utils: improve get\_ns\_uid(), add get\_ns\_gid(), and lxc\_switch\_uid\_gid()
- - log: support dlog
  - attach: handle id switching smarter
  - start: avoid unnecessary syscalls
  - utils: make lxc\_setgroups() and lxc\_switch\_uid\_gid() return bool
@@ -297,18 +283,16 @@ As a stable bugfix release, no major changes have been done, instead focusing on
  - remove unused variables
  - file\_utils: remove unused function
  - network: minor tweaks
- - add compile flags for dlog
  - log: add common functions
- - log: add additional info of dlog
  - attach: don't shutdown ipc socket in child
- - security: fix too wide or inconsistent non-owner permissions
+ - security, file\_utils: fix too wide or inconsistent non-owner permissions
  - attach: report standard shell exit codes
  - af\_unix: add function to remove duplicated codes for set sockaddr
  - lxccontainer: remove locks from set\_cgroup\_item()
  - apparmor: account for specified rootfs path (closes #2617)
  - conf: realpath() uses null as second parameter to prevent buffer overflow
  - start: s/backgrounded/daemonize/g
- - cgfsng: mark ops with \_\_cgfsng\_ops\_\_ attribute
+ - cgfsng: mark ops with \_\_cgfsng\_ops attribute
  - autotools: add -Wimplicit-fallthrough
  - cgroup: rename container specific cgroup functions
  - cgroups: s/fullcgpath/container\_full\_path/g
@@ -317,7 +301,6 @@ As a stable bugfix release, no major changes have been done, instead focusing on
  - autotools: fix wrong AX\_CHECK\_COMPILE\_FLAG test
  - compiler: s/\_\_fallthrough\_\_/\_\_fallthrough/g
  - compiler: s/\_\_noreturn\_\_/\_\_noreturn/g
- - cgfsng: s/\_\_cgfsng\_ops\_\_/\_\_cgfsng\_ops/g
  - tree-wide: replace sizeof() with SIZEOF2STRLEN()
  - compiler: \_\_attribute\_\_((noreturn)) on bionic
  - autotools: support -Wcast-align, -Wstrict-prototypes
@@ -333,7 +316,6 @@ As a stable bugfix release, no major changes have been done, instead focusing on
  - compiler: fix \_\_noreturn on bionic
  - compiler: add \_\_hot attribute
  - netns\_ifaddrs: fix missing include
- - autools: prevent dlog build on stable branch
  - tree-wide: fix includes to fix bionic builds
  - template: oci template supports for char user info
  - btrfs: fix btrfs containers
@@ -362,7 +344,6 @@ As a stable bugfix release, no major changes have been done, instead focusing on
  - parse: report errors when failing config parsing
  - attach: reset signal mask
  - start: change log level
- - file\_utils: fix too wide or inconsistent non-owner permissions
  - attach: fix missing pthread.h include
  - netns\_ifaddrs: check for NETLINK\_DUMP\_STRICT\_CHK
  - parse: do not mask failed parse
@@ -388,36 +369,28 @@ As a stable bugfix release, no major changes have been done, instead focusing on
  - parse: protect against config updates during parse
  - parse: fix uninitialized value
  - tree-wide: coding style fixes
- - start: simplify
+ - start, commands: simplify
  - autotools: compiler based hardening
  - confile: do not overwrite global variable
- - commands: simplify
  - cgfsng: move increment out of branch
  - monitord, tools: do not hide global variable
  - state,conf: remove tautological check
  - conf: use O\_CLOEXEC in lxc\_pivot\_root()
- - conf: remove tautological check
  - lxccontainer: remove check from goto target
  - start: prevent values smaller 0
  - tools/lxc\_stop: use correct check
  - cmd/lxc\_init: do not hide global variable
  - fix coverity-found problems
  - storage\_utils: add error handling
- - storage\_utils: cleanups
- - storage\_utils: use \_exit() instead of exit() in child process
- - parse: cleanups
- - dlog: inherit dlog fds
+ - parse, storage\_utils: cleanups
  - fix spellings
- - log: fix too wide or inconsistent non-owner permissions
  - include: correctly include macro.h
  - Fix spacing error in namespace.c
  - caps: replace read with lxc\_read\_nointr
  - log: replace write with lxc\_write\_nointr
- - dlog: move match\_dlog\_fds()
  - pam\_cgfs: remove redundancy file utils
  - cgfs: remove redundancy utils
  - pam\_cgfs: remove dependency from cap & log
- - utils: fix coding styles
  - utils: add errno logs for exception case
  - Adds -qq flags to lvcreate commands to avoid answer 'no' to ant questions the LVM subsystem asks to avoid hanging lxc-create command
  - utils: make keyring allocation failure non-fatal
