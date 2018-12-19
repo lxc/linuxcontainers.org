@@ -109,7 +109,7 @@ Stable に対するバグフィックスのためのリリースですので、�
  - attach: 子プロセスで ipc ソケットを shutdown しないようにしました <!-- don't shutdown ipc socket in child -->
  - log, security, file\_utils: 広すぎる、一貫性のない全ユーザー向けのパーミッションを修正しました <!-- fix too wide or inconsistent non-owner permissions -->
  - attach: 標準的なシェルの終了コードを返すようになりました <!-- report standard shell exit codes -->
- - af\_unix: 重複するコードを削除するために、set sockaddr 用にadd function to remove duplicated codes for set sockaddr
+ - af\_unix: set sockaddr で重複するコードを削除するために関数を追加しました <!-- add function to remove duplicated codes for set sockaddr -->
  - lxccontainer: `set_cgroup_item()` からロックを削除しました <!-- remove locks from set\_cgroup\_item() -->
  - apparmor: configure で指定した rootfs のパスを見るようにしました（訳注: apparmorで指定しているrootfsのパスが決め打ちだった） <!-- account for specified rootfs path -->(closes #2617)
  - conf: `realpath()` でバッファオーバーフローを防ぐために2つ目のパラメータとして null を使うようにしました <!-- realpath() uses null as second parameter to prevent buffer overflow -->
