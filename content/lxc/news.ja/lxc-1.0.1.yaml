@@ -1,0 +1,96 @@
+title: LXC 1.0.1 リリースのお知らせ
+date: 2014/03/06 00:00
+content: |-
+  
+  <!-- This is the first bugfix release for the LXC 1.0 series. -->このリリースは LXC 1.0 シリーズの最初のバグフィックスとなるリリースです。
+  
+  ### <!-- Changes -->変更点
+  
+  
+  * <!-- core: Detect the use of rshared / and properly work
+               around it. This fixes LXC on systemd systems where the mount
+               table would be duplicated in the container and
+               lxc-attach wouldn't attach to the container's rootfs. -->
+        core: / が rshared でマークされているのを検出し、正しく動作するようになりました。
+        これは systemd が使われているシステム上で LXC を使う場合、マウントテーブルがコンテナ内で重複してしまう問題と、lxc-attach がコンテナの rootfs にアタッチできない問題を修正します。
+  * <!-- core: Don't crash on invalid lxc.id_map -->
+        core: 正しくない形式の lxc.id_map でクラッシュする問題を修正しました
+  * <!-- core: Fix attaching when extra cgroups were setup
+               after the container started -->
+        core: コンテナが開始した後に更に cgroup を作成する時の問題を修正しました
+  * <!-- core: Fix crash when rebooting container with phys
+               interfaces -->
+        core: phys インターフェースを持つコンテナがリブート時にクラッシュする問題を修正しました
+  * <!-- core: Better detect and report permission problems -->
+        core: パーミッションの問題の検出とレポートを改良しました
+  * <!-- core: Use common code for any unprivileged action, using
+               newuidmap/newgidmap if available and only falling back
+               to straight writes to uid_map/gid_map if they're not and
+               the user is root -->
+        core: 特権のない場合の操作を共通のコードを使うように変更しました。
+        これは newuidmap/newgidmap コマンドが使用可能な場合はそれを使用し、もし使用出来ない場合は root の時のみ uid_map/gid_map へ直接書き込みを行うようになっています。
+  * <!-- core: Fix btrfs snapshot restore -->
+        core: btrfs スナップショットのリストアの問題を修正しました
+  * <!-- core: Fix race in the cloning code potentially leading
+               to data loss -->
+        core: クローンの際にデータロスにつながる可能性があったのを修正しました
+  * <!-- core: Don't double-map the root uid/gid -->
+        core: コンテナの root ユーザをユーザのホスト上の uid/gid にマッピングしている場合に、2 度同じマッピングを行おうとする問題を修正しました
+  * <!-- core: Fix snapshot restore for overlayfs -->
+        core: overlayfs 上に存在するコンテナのスナップショットのリストア時の問題を修正しました
+  * <!-- core: Put logging variables in TLS -->
+        core: ログに使用する変数を TLS (訳注: スレッド局所記憶) 中に置くようにしました
+  * <!-- apparmor: Stop using on-exec for profile changes as it's
+               been proven unreliable on overlayfs at least -->
+        apparmor: プロファイルの変更に onexec を使用するのをやめました。
+        これは少なくとも overlayfs 上では信頼できないことが証明されています
+  * <!-- bash completion: Remove wrong shebang -->
+        bash completion: 間違った shebang を削除しました
+  * <!-- cgmanager: Don't keep an active connection after
+               container start -->
+        cgmanager: コンテナの開始後、アクティブな接続を維持しないようにしました
+  * <!-- cgmanager: Fix to work with threads -->
+        cgmanager: スレッドでも動作するように修正しました
+  * <!-- doc: Update README -->
+        README の更新
+  * <!-- lua: Respect --prefix -->
+        lua: --prefix で指定したディレクトリ以下に lua のファイルをインストールするようにしました
+  * <!-- lxc-create: Fix the dir backend to actually respect &#045;&#045;dir -->
+        lxc-create: dir バックエンド使用時に --dir オプションが有効になるように修正しました
+  * <!-- lxc-device: Properly support wlan devices -->
+        lxc-device: wlan デバイスを正しく扱うようになりました
+  * <!-- lxc-ls: Fix --nesting function to work with unprivileged
+               containers -->
+        lxc-ls: --nesting オプションが非特権コンテナでも動作するように修正しました
+  * <!-- lxc-start-ephemeral: Set the tmpfs as 0755 instead of 0777 -->
+        lxc-start-ephemeral: tmpfs のパーミッションを 0777 の代わりに 0755 に設定するようにしました
+  * <!-- python3: Export missing get_global_config_item function -->
+        python3: get_global_config_item 関数が export されるように修正しました
+  * <!-- seccomp: Catch violations by init -->
+        seccomp: init がキャッチした seccomp ポリシーの侵害をキャッチできるようになりました
+  * <!-- systemd: Fix unit file location -->
+        systemd: 正しい場所に unit ファイルが置かれるように修正しました
+  * <!-- templates: Detect system containers inside
+               unprivileged containers (lxc-download)-->
+        templates: 非特権コンテナ内のシステムコンテナを検出するようになりました (lxc-download)
+  * <!-- tests: Fix potential hang in lxc-test-concurent -->
+        tests: lxc-test-concurrent 中に hang する可能性があったのを修正しました
+  * <!-- upstart: Don't forward requests for LXC_DOMAIN (dnsmasq) -->
+        upstart: LXC_DOMAIN で指定されたものに対するリクエストを転送しなくなりました (dnsmasq)
+  
+  
+  
+  ### <!-- Downloads -->ダウンロード
+  <!-- The release tarballs may be found on our
+          [download page</a> and we expect most
+          distributions will very soon ship a packaged version of LXC 1.0.1. -->
+    このリリースの tarball は [ダウンロードページ](/lxc/downloads/) から取得できます。
+    そして、各ディストリビューションがすぐに LXC 1.0.1 のパッケージをリリースするでしょう。
+  
+  
+  <!-- Should you be interested in individual changes or just
+          looking at the detailed development history, our stable branch is
+          on <a href="https://github.com/lxc/lxc/tree/stable-1.0">Github</a>. -->
+    個々の変更点に興味がある場合、そして開発の履歴を見たい場合、stable ブランチは <a href="https://github.com/lxc/lxc/tree/stable-1.0">Github</a> にあります。
+  
+  

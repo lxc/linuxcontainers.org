@@ -1,0 +1,105 @@
+title: LXC 1.1.0 リリースのお知らせ
+date: 2015/01/30 00:00
+origin:  <!-- LXC 1.1.0 release announcement -->
+content: |-
+  <!-- The LXC team is pleased to announce the release of LXC 1.1. -->
+  LXC チームは LXC 1.1 のリリースを発表しました。
+  
+  <!-- This release will be supported until January 2016 or 2 months after the next release of LXC,
+  whichever comes last. -->
+  このリリースは 2016 年 1 月か、その時点で LXC の次のリリース (1.2) がなされていない場合は、次のリリースの 2 ヶ月後までサポートされます。
+  
+  <!--
+  If you need a long-term supported version of LXC for use in production, we still strongly recommend
+  you stick to LXC 1.0 which is supported with frequent stable releases until April 2019.
+  -->
+  プロダクション環境での長期間のサポートが必要であれば、2019 年 4 月まで安定版リリースとしてサポートされる LXC 1.0 を使い続けることを強くおすすめします。
+  
+  <!--
+  While not strictly required, it is recommended that LXC 1.1 be used with cgmanager 0.35 (or higher)
+  and lxcfs 0.5 (or higher).
+  -->
+  一方でそこまでの厳密さが不要であれば、LXC 1.1 を cgmanager 0.35 以降、lxcfs 0.5 以降と一緒に使うこともおすすめです。
+  
+  ### 注目の新機能 <!-- Highlights -->
+  <!--
+  LXC 1.1 introduces checkpoint/restore support for containers through CRIU.
+  This allows to serialize the container running state to disk, for live migration or for later local restoration
+  of the container.
+  -->
+  LXC 1.1 は CRIU を使ったコンテナのチェックポイント・リストアの機能を新たに導入しました。
+  
+  <!--
+  Support for running systemd as the init system inside the container was also greatly improved
+  and should now work by default both for privileged and unprivileged containers when combined
+  with lxcfs and a recent systemd.
+  -->
+  コンテナ内の init として systemd の実行のサポートも大きな改良点です。lxcfs と最新の systemd の組み合わせで、特権、非特権の両方のコンテナが動作するでしょう。
+  
+  <!--
+  Init scripts have now all been updated to provide the same feature set, which means that a lxcbr0 bridge
+  with a DHCP and DNS server (dnsmasq) is now the default for anyone using LXC.
+  We currently provide init scripts for systemd, sysvinit and upstart.
+  -->
+  init スクリプトが更新されました。これにより LXC を使ういかなるシステムでも、DHCP サーバと DNS サーバ機能を dnsmasq によって提供する lxcbr0 ブリッジがデフォルトとなり、同じように動くようになりました。現時点で systemd、sysvinit、upstart 向けの init スクリプトを提供しています。
+  
+  <!-- This release was made possible by contributions from 84 developers. -->
+  このリリースは 84 名の開発者からのコントリビュートによりリリースできました。
+  
+  ### 新機能<!-- New features -->
+   * lxc-autostart: 新たに -A/--ignore-auto オプションを追加しました (すべてのコンテナを起動できます) <!-- New -A/--ignore-auto flag (starts all containers) -->
+   * lxc-ls: 新たな出力項目 "interface" を追加しました <!-- New "interface" field -->
+   * centos/fedora: root\_password\_expired 環境変数を追加しました (デフォルト yes) <!-- Added a root\_password\_expired environment variable (defaults to yes) -->
+   * oracle: (メディアからを含めて) 任意の yum リポジトリからインストールできるようになりました <!-- Allow installing from arbitrary yum repositories (including medias) -->
+   * oracle: Oracle Linux 7 のサポートを追加しました <!-- Add Oracle Linux 7 support -->
+   * lxc-ls: --fancy オプションなしで group によるコンテナのフィルタリングができるようになりました <!-- Allow filtering containers by group even without \-\-fancy -->
+   * core: qemu-img 経由での qcow2 のサポートを追加しました <!-- Add support for qcow2 images (through qemu-img) -->
+   * lxc-autostart: NULL グループのサポートを追加しました (lxc.start.auto は 1 に設定されているがグループには属していないコンテナ) <!-- Add support for the NULL group (any container with lxc.start.auto set to 1 but without a group) -->
+   * core: コメントと同様に展開されないバージョンの設定のトラッキング <!-- Track an unexpanded version of the configuration as well as comments (improves formatting of the save configuration) -->
+   * opensuse: 共通設定を使うようになりました <!-- Switch to using common configurations -->
+   * core: lxc.cap.keep に none を設定できるようになりました <!-- Allow lxc.cap.keep be set to none -->
+   * archlinux: 共通設定を使うようになりました <!-- Switch to using common configurations -->
+   * ubuntu: 利用可能な場合、btrfs の subvolume とスナップショットを使うようになりました <!-- use btrfs subvolumes and snapshots when available -->
+   * seccomp: 全てのディストリビューションでデフォルトの seccomp プロファイルを設定するようになりました (危険なシステムコールをブロックします) <!-- Set a default seccomp profile for all distros (blocks dangerous syscalls) -->
+   * core: Openvswitch のブリッジのサポート <!-- Add support for Openvswitch bridges -->
+   * core: lxc.environment のサポートの追加 (特別な環境変数の追加) <!-- Add support for lxc.environment (sets extra environment variables) -->
+   * init: systemd, upstart, sysvinit スクリプトで同一のサポートの追加 <!-- Add identical Support of systemd, upstart and sysvinit scripts -->
+   * core: CRIU を使ったコンテナのチェックポイントとリストアのサポート <!-- Add support for checkpoint and restore of containers using CRIU -->
+   * core: 新しい aa\_allow\_incomplete フラグの追加。部分的な AppArmor のサポートでコンテナの起動が可能になりました <!-- Add a new aa\_allow\_incomplete flag to allow container startup with partial apparmor support -->
+   * lxc-top: デフォルトでCバイナリ版がインストールされるようになりました (以前は lua スクリプトでした) <!-- Now a C binary installed by default (was a lua script) -->
+   * API: attach\_interface と detach\_interface が追加されました <!-- Addition of attach\_interface and detach\_interface -->
+   * lxc-device: デフォルトで C バイナリ版がインストールされるようになりました <!-- Now a C binary installed by default (was a python3 script) -->
+   * lxc-config: lxc.cgroup.(use|pattern) が表示できるようになりました <!-- Now supports querying lxc.cgroup.(use|pattern) -->
+   * core: 新たに lxc.init\_cmd オプションを追加しました。デフォルトの init コマンドである /sbin/init を上書きします <!-- Add new lxc.init\_cmd config option to override the default init command (/sbin/init/) -->
+   * lxc-start-ephemeral: 新たに --cdir オプションを追加しました (copy-on-write マウント)。<!-- Add new --cdir option (copy-on-write mounts) -->
+   * opensuse: 複数のリリースのサポート <!-- Support multiple releases -->
+   * core: lxc.include でディレクトリの include が可能になりました (全ての .conf 拡張子を持つファイルを include します)<!-- lxc.include now allows including directories (includes all the files with a .conf suffix) -->
+   * core: 新たに common.conf.d ディレクトリが利用可能になりました。ユーザ、パッケージが全てのコンテナに反映させたい設定を追加できるようになりました<!-- A new common.conf.d configuration directory is available for users and packages to drop configuration snippets to be applied to all containers -->
+   * core: LXC が container_ttys 環境変数を設定するようになりました <!-- The container\_ttys environment variable is now set by LXC -->
+  
+  ### 動作の変更点<!-- Change in behavior -->
+   * lxc-create で -t オプションが必須になりました。以前のようにテンプレートなしの場合は "none" を使用します <!-- lxc-create now requires be passed (-t), use "none" for the old behavior. -->
+   * スナップショットがコンテナのディレクトリ内に保存されるようになりました <!-- snapshots are now stored in the container's directory -->
+   * PER\_LINUX32 に対する lxc.arch は i686 を出力するようになりました <!-- lxc.arch for PER\_LINUX32 is now output as i686 -->
+   * lxc-execute: コンテナ内に lxc-init が見つからない場合はコンテナ内にバインドマウントされるようになりました <!-- lxc-init is now bind-mounted in the container if it can't be found -->
+   * lxc-start: デーモン起動がデフォルトになりました <!-- containers now start daemonized by default -->
+   * core: pivot_\root は lxc.pivotdir を使わずに行われるようになりました。この結果、このオプションは非推奨となり、将来は削除される予定です <!-- pivot\_root is now done without the use of lxc.pivotdir, as a result this option is now considered deprecated and will be removed in upcoming releases. -->
+   * Core: デフォルトでデーモンモードで起動するようになったので、close-all-fds もデフォルトになりました <!-- with the switch to daemonized containers by default, close-all-fds is also now the default. -->
+   * core: lxc.autodev は作りかえられました。/dev/lxc は使いません。代わりにコンテナの /dev 上で直接 tmpfs をマウントします。非特権コンテナ上でも動くようになりました <!-- lxc.autodev was reworked, it no longer uses /dev/lxc, instead mounting a tmpfs directly on the container's /dev, it also now works with unprivileged containers -->
+   * core: lxc.autodev がデフォルトで有効になりました (lxc.autodev=1)<!-- lxc.autodev is now on by default (can be overriden with lxc.autodev=0) -->
+   * core: lxc.kmsg はデフォルトで無効になりました (lxc.kmsg=0) <!-- lxc.kmsg is now disabled by default (can be overriden with lxc.kmsg=1) -->
+   * core: clear\_config\_item はリスト (lxc\_list) のみに影響するようになりました。他では set\_config\_item を使用してください <!-- clear\_config\_item now exclusively Affects lists (lxc\_list) entries. set\_config\_item should be used for anything else. -->
+   * templates: 全てのテンプレートで lxc.mount.auto = cgroup:mixed proc:mixed sys:mixed を使うようになりました (安全なデフォルト設定です) <!-- All templates now use lxc.mount.auto = cgroup:mixed proc:mixed sys:mixed (safe default configuration) -->
+  
+  ### ダウンロード<!-- Downloads -->
+  <!-- The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
+  will very soon ship a packaged version of LXC 1.1.0, unless they decide to stick to the long term 1.0 release. -->
+  このリリースの tarball は [ダウンロードページ](/lxc/downloads/) から取得できます。そして、各ディストリビューションが長期サポートの 1.0 リリースの採用を続ける決定をしない場合は、すぐに LXC 1.1.0 のパッケージをリリースするでしょう。
+  
+  <!--
+  Should you be interested in individual changes or just looking at the detailed development history,
+  our master branch is on [Github](https://github.com/lxc/lxc/tree/master).
+  -->
+  個々の変更点に興味がある場合、そして開発の履歴を見たい場合、master ブランチは [Github](https://github.com/lxc/lxc/tree/master) にあります。
+  
+  

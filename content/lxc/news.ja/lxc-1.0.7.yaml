@@ -1,0 +1,112 @@
+title: LXC 1.0.7 リリースのお知らせ
+date: 2014/12/05 00:00
+origin:  <!-- LXC 1.0.7 release announcement -->
+content: |-
+  
+  <!-- This is the seventh bugfix release for the LXC 1.0 series. -->
+  このリリースは LXC 1.0 シリーズの 7 回目のバグフィックスとなるリリースです。
+  
+  ### 変更点 <!-- Changes -->
+  
+  コア <!-- Core -->:
+  
+   * IPv4/IPv6 アドレスをキーに問い合わせたとき、ネットワークプレフィックスも含めるようにしました <!-- Include network prefix when ipv4/ipv6 keys are queried -->
+   * apparmor: 'silent' マウントを黙って拒否するようにしました<!-- silence 'silent' mount denials -->
+   * デバッグ出力にファイル、関数、行数の情報を含めるようにしました<!-- add file/func/line to debug info -->
+   * apparmor: プロセスに対する signal と ptrace を制限するようにしました <!-- restrict signal and ptrace for processes -->
+   * cgmanager: いくつか修正を行いました (訳注: 非特権コンテナで全てのコントローラを同じパスにマウントしていない時の操作が失敗することがある不具合を修正しました)<!-- several fixes -->
+   * lxc: / が ramfs のときに pivot\_root を呼ばないようにしました <!-- don't call pivot\_root if / is on a ramfs -->
+   * lxc.mount.auto の後片付けを修正しました <!-- fix lxc.mount.auto clearing -->
+   * conf.c: Android に対する MS\_PRIVATE を定義しました <!-- Define MS\_PRIVATE for Android -->
+   * network: ifname パラメータを const に変更しました (訳注: ネットワークインターフェース関連の関数の引数を char* から const char* に変更しています)<!-- convert param ifname to const. -->
+   * network: if\_nametoindex() の返り値のチェックを行うようにしました (訳注: 内部的に使用している関数の返り値が
+   NULL でないかどうかのチェックを追加しました)<!-- check result of if\_nametoindex(). -->
+   * network: 名前空間を移動するときに allow lxc\_network\_move\_by\_index() でネットワークインターフェースの名前を変更できるようにしました <!-- allow lxc\_network\_move\_by\_index() rename netdev in moving. -->
+   * network: lxc\_netdev\_isup() という名前の関数の導入 (訳注: ネットワークインターフェースの状態が up か down かを取得する関数を追加しました)<!-- introduce a interface named lxc\_netdev\_isup(). -->
+   * lxccontainer.c: enter\_to\_ns 関数を enter\_net\_ns という名前に変更しました<!-- rename enter\_to\_ns to enter\_net\_ns -->
+   * root の場合でも非 root の場合でも lxc\_global\_config\_value 関数がデフォルトの lxc.cgroup.pattern を返すようにしました <!-- lxc\_global\_config\_value can return the default lxc.cgroup.pattern whether root or non-root -->
+   * do\_rootfs\_setup: 返り値のバグを修正しました <!-- fix return bugs -->
+   * lxc-start: rootfs がマウントされているときに rootfs のマウントをリトライしないようにしました <!-- don't re-try to mount rootfs if we already did so -->
+   * attach: confstr(\_CS\_PATH) を使わないようにしました <!-- don't use confstr(\_CS\_PATH) -->
+   * lxc\_global\_config\_value: テーマを簡素化しました (訳注: グローバルの設定値用の内部変数の解放を簡素化して安全に解放するようにしました)<!-- simplify the theme -->
+   * ipvX gatewayの値のミスマッチの修正をしました (設定値 ipvX.gateway 関係の内部処理で "ipvX_gateway" という文字列で比較していたので期待通りの処理が行われていない部分があったのを修正しました)<!-- Fixed mismatch on ipvX gateway -->
+   * attach: stdin がリダイレクトされているときに sigint/sigkill を無視しないようにしました <!-- don't ignore sigint/sigkill if stdin is redirected -->
+   * cgmanager: "all" コントローラをサポートした 'attach' の修正を行いました <!-- fix 'attach' with "all" controller support -->
+   * lxc/utils: 解放されたポインタの返り値に関する修正を行いました <!-- bugfix freed pointer return value -->
+   * conf.c: 関数名などで使っている 'instanciate' の綴りを 'instantiate' に変更しました <!-- change 'instanciate' to 'instantiate' -->
+   * 間違った nlmsg_\len の長さを修正しました <!-- fix wrong nlmsg\_len -->
+   * read-only フラグが与えられているときは bind mount を再マウントするようにしました <!-- Remounts bind mounts if read-only flag is provided -->
+   * lxc\_clear\_config\_item 関数が idmaps をクリアできるようにしました <!-- Allow lxc\_clear\_config\_item to clear idmaps. -->
+   * overlayfs と aufs のクローンを行うときの処理 (clone\_path) をより確実に行えるようにしました <!-- overlay and aufs clone\_paths: be more robust -->
+   * overlayfs: overlayfs ver.22 以上の場合にはマウントに workdir オプションを付けるようにしました <!-- overlayfs.v22 or higher needs workdir option -->
+   * クローン時の問題を修正しました (訳注: aufs と overlayfs のクローンを行うときに問題が起こる場合があるのを修正しました) <!-- Fix clone issues -->
+   * veth のエラーの場合のロギングの改良を行いました <!-- Improve veth error cases logging -->
+   * コメントの typo の修正を行いました <!-- fixed typo in comment -->
+   * audit: capacity と reserve() を netlink メッセージに追加しました (訳注: netlink メッセージがオーバーフローしないようにしました)<!-- added capacity and reserve() to nlmsg -->
+   * rmdir と lxc\_unpriv がマイナスの値を返さないようにしました <!-- rmdir and lxc\_unpriv returns non-negative error codes -->
+   * typo の修正をしました - https://github.com/vlajos/misspell\_fixer を使って <!-- typofixes - https://github.com/vlajos/misspell\_fixer -->
+  
+  バインディング <!-- Bindings -->:
+  
+   * src/python-lxc/setup.py を .gitignore に追加しました <!-- add src/python-lxc/setup.py into .gitignore -->
+  
+  Tests:
+  
+   * tests: 非特権のテストを修正しました <!-- Fix unpriv test -->
+   * lxc-test-unpriv: /etc/lxc/lxc-usernet をクリアしないようにしました <!-- don't clear out /etc/lxc/lxc-usernet -->
+   * lxc-test-unpriv: サブシステムごとに異なる cgroup である場合のテストを追加しました <!-- test for different cgroups per subsystem -->
+   * tests: waitpid() が errno として EINTR を返したときにリトライするようにしました <!-- try again when waitpid() sets errno as EINTR -->
+  
+  コマンド <!-- Commands -->:
+  
+   * lxc\_start: コンテナが実行中のときは ERROR を返すようにしました (訳注: ↓で更に修正されて0を返すようになってます)<!-- ERROR if container is already running. -->
+   * lxc-start: コンテナが実行中のときはエラーでなく 0 を返すようにしました <!-- return 0 rather than error if container is already running -->
+   * 古い lxc-ls コマンドをより適切に処理がなされるようにしました (訳注: python3 がインストールされていない場合にインストールされる古いシェル版の lxc-ls です)<!-- Make legacy lxc-ls more robust -->
+   * lxc\_info: fork する処理を呼ぶ前に stdout をフラッシュするようにしました <!-- flush stdout before calling routines which may fork -->
+  
+  テンプレート <!-- Templates -->:
+  
+   * lxc-gentoo テンプレートの typo を修正しました <!-- Fix typo in lxc-gentoo template -->
+   * busybox template: 非特権コンテナをサポートしました <!-- support for unprivileged containers -->
+   * busybox template: fstab が利用できる場合はマウントするようにしました <!-- mount fstab when available -->
+   * gentoo テンプレートで更に他の typo を修正しました <!-- Fix another gentoo template typo -->
+   * コンテナの代わりにキャッシュに apt proxy を作成するようにしました (訳注: Ubuntu テンプレート) <!-- Create the apt proxy in the cache instead of the 1st container -->
+   * lxc-plamo: /dev/shm を tmpfs でマウントするようにしました <!-- mount tmpfs on /dev/shm -->
+   * lxc-cirros: 非特権コンテナの作成と実行をサポートしました <!-- support creating+running unprivileged -->
+   * lxc-openmandriva の typo を修正しました <!-- Fix lxc-openmandriva.in typo. -->
+   * lxc-centos の typo を修正しました <!-- Fix lxc-centos.in typo. -->
+   * lxc-opensuse: openSUSE 13.2 環境上でのコンテナの作成を無効にしました <!-- Disable on 13.2 -->
+   * lxc-alpine: /dev/shm が確実に誰でも書き込み可能になるようにしました <!-- make sure /dev/shm is world writeable -->
+   * lxc-alpine: コンソール用のデフォルトの tty を作成するようにしました <!-- create a default tty for console -->
+   * lxc-debian: パッケージインストール用のサポートを追加しました <!-- added support for package installation -->
+   * lxc-debian: デフォルトミラーの修正を行いました <!-- Fix default mirrors -->
+   * lxc-debian: PID 1 として systemd をサポートしました <!-- support systemd as PID 1 -->
+   * lxc-debian: init のシステム設定の調整を行いました <!-- adjust init system configurations -->
+   * lxc-debian: Wheezy と Jessie で udev サービスのマスクをおこないました　<!-- mask both Wheezy and Jessie udev services -->
+   * lxc-opensuse: openSUSE Tumbleweed 上でのコンテナ作成を無効化し、検出を改良しました。<!-- Disabling builds on openSUSE Tumbleweed, detection improved. -->
+  
+  ドキュメント <!-- Documentation -->:
+  
+   * lxc(7) のカーネルと cgroup の情報を最新情報に修正 <!-- Fix the lxc manpage a bit -->
+   * lxc-create の -t オプションを必須に変更 <!-- lxc-create -t option is not optional -->
+   * 日本語の lxc(7) のカーネルと cgroup の情報を最新情報に修正 <!-- doc: Update kernel and cgroup info in Japanese lxc(7) -->
+   * タブ/スペースの一貫性 <!-- tabs/spaces consistency -->
+  
+  <!--
+  Those stable fixes were brought to you by 27 individual contributors.
+  -->
+  これらの stable の修正は 27 名のコントリビュータによってなされました。
+  
+  ### ダウンロード <!-- Downloads -->
+  <!--
+  The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
+  will very soon ship a packaged version of LXC 1.0.7.
+  -->
+  このリリースの tarball は [ダウンロードページ](/lxc/downloads/) から取得できます。そして、各ディストリビューションがすぐに LXC 1.0.7 のパッケージをリリースするでしょう。
+  
+  <!--
+  Should you be interested in individual changes or just looking at the detailed development history,
+  our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-1.0).
+  -->
+  個々の変更点に興味がある場合、そして開発の履歴を見たい場合、stable ブランチは [Github](https://github.com/lxc/lxc/tree/stable-1.0) にあります。
+  

@@ -1,0 +1,138 @@
+title: LXC 2.0.0 リリースのお知らせ
+date: 2016/04/06 00:00
+origin:  <!-- LXC 2.0.0 release announcement -->
+content: |-
+  <!--
+  The LXC team is very pleased to announce the release of LXC 2.0!
+  -->
+  LXC チームは LXC 2.0 のリリースをお知らせできることをうれしく思います！
+  
+  ### ハイライト <!-- Highlights -->
+  
+   * 主要な LXC コマンドはすべて C 言語で書きなおされました <!-- All main LXC commands have now been rewritten in C -->
+      * lxc-ls
+      * lxc-device
+      * lxc-copy
+   * 新たに lxc-copy コマンドが lxc-clone と lxc-start-ephemeral の役割を引き継ぎました <!-- New lxc-copy command taking over the role of lxc-clone and lxc-start-ephemeral -->
+   * コンテナのチェックポイント／リストアのサポートを多数改良しました <!-- Much improved support for checkpoint/restore of containers -->
+   * cgroup namespace のサポートを含む cgroup の扱いを完全に作り替えました <!-- Completely reworked cgroup handling including support for the cgroup namespace -->
+   * 色々なコマンドラインツールをより一貫性のあるものにしました <!-- The various command line tools are now much more consistent -->
+   * ストレージバックエンドの実装を再編成しました。Ceph RBD バックエンドの追加も含みます <!-- Re-organized storage backend implementation, including addition of a Ceph RBD backend -->
+   * 多数のバグフィックスを行いました。このバグフィックスのほとんどは 1.0 と 1.1 の次のリリースにバックポートする予定です <!-- An enormous amount of bugfixes, most of which will be backported to 1.0 and 1.1 over the next few bugfix releases -->
+   * C API は 1.2 としてリリースしました。この C API は、前のバージョンとの後方互換性を維持します。 <!--The C API remains backward compatible with previous versions and is released as 1.2 -->
+  
+  <!--
+  This release was made possible by contributions (720 commits) from a total of 96 contributors.
+  -->
+  このリリースは合計 96 名のコントリビュータからの 720 コミットからなる貢献によってリリースできました。
+  
+  ### 新しい設定オプション <!-- New configuration options -->
+  
+   * lxc.ephemeral: コンテナが一時的 (ephemeral) かどうかをコントロールします。一時的な場合はシャットダウン後に削除されます <!-- Controls whether the container is ephemeral and so will be destroyed on shutdown -->
+   * lxc.rebootsignal: コンテナをリブートするために送出するシグナルを指定できます <!-- Allows to override the signal sent for container reboot -->
+   * lxc.hook.destroy: コンテナの削除時に呼ばれる新しいフックです <!-- New hook being called on container destruction -->
+   * lxc.hook.stop: コンテナの名前空間 (Namespace) が解体される前に、コンテナ (の名前空間) への参照とともに、ホストの名前空間で実行されます <!-- Run in the host context with references to the containers just before namespace teardown -->
+   * lxc.init\_uid: lxc-execute が使うユーザを指定します <!-- Used by lxc-execute to set an alternative user -->
+   * lxc.init\_gid: lxc-execute が使うグループを指定します <!-- Used by lxc-execute to set an alternative group -->
+   * lxc.monitor.unshare: 他のフックを実行する前にマウント名前空間を unshare できます <!-- Allows unsharing the mount namespace prior to running any hook -->
+  
+  ### 新機能 <!-- New features -->
+  
+   * API:
+      * API バージョンは 1.2 です。1.0、1.1 に対する完全な後方互換性を保っています <!-- API version is 1.2, fully backward compatible with 1.1 and 1.0 -->
+      * 新しいシンボル <!-- new symbols -->:
+           * migrate_opts 構造体を使った checkpoint() の代替の追加を簡素化するために、新たに migrate() シンボルを追加しました <!-- New migrate() symbol as an alternative to checkpoint() using a migrate_opts struct to simplify additions -->
+      * python3
+           * create() にストレージバックエンドが与えられるようになりました <!-- Support for passing the storage backend to create() -->
+      * lua
+           * get_ips() のサポートを追加しました <!-- Add support for get_ips() -->
+           * get_interfaces() のサポートを追加しました <!-- Add support for get_interfaces() -->
+           * rename() のサポートを追加しました <!-- Add support for rename() -->
+   * コア <!-- Core -->:
+      * cgfsng: 新しい Linux カーネルに対応する新しい cgroup バックエンドドライバを追加しました <!-- New cgroup backend driver for recent Linux kernel -->
+      * cgroup: 新しい cgroup 階層構造の部分的なサポートを追加しました <!-- Partial support for the new cgroup hierarchy -->
+      * cgroup: cgroup namespace のサポートを追加しました <!-- Support for the cgroup namespace -->
+      * checkpoint: デフォルトの LXC コンテナのチェックポイント／リストアのサポートを追加しました <!-- Support checkpoint/restore of default LXC containers -->
+      * checkpoint: 非特権コンテナのチェックポイント／リストアのサポートを追加しました <!-- Support checkpoint/restore of unprivileged containers -->
+      * checkpoint: page server のサポートを追加しました (訳注: ディスクレスでマイグレーションを行う CRIU の機能です)<!-- Support for the page server -->
+      * config: lxc.aa\_profile: "unchanged" が指定できるようになりました <!-- Now supports an "unchanged" value -->
+      * config: lxc.init\_cmd: 引数を指定できるようになりました <!-- Now supports arguments -->
+      * config: lxc.network.macvlan.mode: "passthru" モードのサポートを追加しました <!-- Added support for the "passthru" mode -->
+      * config: lxc.rootfs.backend: ストレージバックエンドを明示的に指定できるようになりました (自動検出をバイパスします) <!-- Allows to override the storage backend (bypasses auto-detection) -->
+      * config: コンテナをネストするための設定ファイルとして新たに nesting.conf を追加しました <!-- New nesting.conf configuration file to setup container nesting -->
+      * hooks: 新たに環境変数 LXC\_CGNS\_AWARE を追加しました。LXC が cgroup namespace をサポートする場合に 1 が設定されます (カーネルが cgroup namespace をサポートするかどうかは関知しません)。 <!-- New LXC\_CGNS\_AWARE environment variable, set to 1 if LXC supports the cgroup namespace (the kernel however may not) -->
+      * hooks: 新たに環境変数 LXC\_SRC\_NAME を追加しました。クローンフックにおいて、コピー元のコンテナの名前が設定されます <!-- New LXC\_SRC\_NAME environment variable is set in clone hook with the original container name -->
+      * hooks: 新たに環境変数 LXC\_TARGET を追加しました。stop フックでコンテナがシャットダウンするのか (stop が設定される) 、リブートするのか (reboot が設定される) が設定されます<!-- New LXC\_TARGET environment variable is set with the container goal (stop or reboot) -->
+      * logging: ログのタイムスタンプが少し読みやすくなりました <!-- Updated logging timestamps to be a bit more readable -->
+      * lxc-usernet: ブリッジなしの veth インターフェースを使ったコンテナのサポートが追加されました <!-- Support for containers usning a veth interface without bridging -->
+      * lxc-usernet: グループで制限をかけることができるようになりました (@ をプレフィックスに使います) <!-- Support for group-based quotas (use the @ prefix) -->
+      * network: ブリッジの MTU をコンテナのデフォルトの MTU として使用するようになりました <!-- The bridge interface MTU is now used as the default container interface MTU -->
+      * start: プロセスのタイトルを読みやすくリネームしました <!-- The process title is now renamed to be easier to read -->
+      * storage: 新たに Ceph RBD ストレージバックエンドを追加しました <!-- New Ceph RBD storage backend -->
+   * 文書 <!-- Documentation -->:
+      * すべての man pages に対する韓国語翻訳を追加しました <!-- Korean translation of all the man pages -->
+   * コマンド <!-- Commands -->:
+      * lxc-attach: 親のシェルに対する攻撃を防ぐために中間の pts デバイスを使うようになりました <!-- Use an intermediate pts device to prevent attacks against the parent shell -->
+      * lxc-clone: コンテナのリネームができるようになりました <!-- Support for renaming containers -->
+      * lxc-start-ephemeral: バインドマウント先が変更できるようになりました <!-- Support for changing bind-mount targets -->
+   * Init systems:
+      * systemd: instanced service unit を追加しました (訳注: テンプレートファイルからユニットを実行するためのテンプレートファイルの追加)<!-- Support for instanced service units -->
+   * テンプレート <!--Templates -->:
+      * ALTLinux テンプレートを追加しました <!-- New ALTLinux template -->
+      * Slackware テンプレートを追加しました <!-- New Slackware template -->
+      * SPARCLinux テンプレートを追加しました <!-- New SPARCLinux template -->
+      * alpine: 追加パッケージのインストールができるようになりました <!-- Support installing extra packages -->
+      * debian: デフォルトでは "main" だけ有効化し、引数で他のリポジトリを有効化できるようにしました <!-- Default to just "main" enabled, allow enabling other repositories through argument -->
+      * oracle: コンテナのタイムゾーンを設定しました <!-- Set the timezone in the container -->
+      * openssh: OpenSSH サポートを追加しました <!-- Add OpenSSH support -->
+      * ubuntu: ユーザが debootstrap の variant を指定できるように -v オプションを追加しました <!-- New -v option allowing the user to set the debootstrap variant -->
+      * ubuntu-cloud: vendor-data を指定できるようになりました <!-- Support for vendor-data passthrough -->
+  
+  ### 挙動の変更 <!-- Change in behavior -->
+  
+   * lxc-autostart の起動順が逆になりました (正しい動きになりました) (訳注: lxc.start.order に指定した値の降順で起動していたのが昇順になった)<!-- The lxc-autostart container startup order is now reversed (to be correct) -->
+   * cgfsng cgroup バックエンドが推奨のバックエンドになりました <!-- The new cgfsng cgroup backend is now the recommended backend -->
+   * lxc.hook.post-stop が失敗した場合は、コンテナがリブートが失敗するようになりました <!-- lxc.hook.post-stop failures are now fatal to container reboots -->
+  
+  <!--
+  Note that several commands have been significantly reworked in this release.
+  We don't consider our command line tools as stable ABI so you may need to test and adapt your scripts,
+  or better, port them to use our stable C API or one of its bindings.
+  -->
+  このリリースで、コマンドの中には大きく作り直されたものがあります。
+  我々は、コマンドラインツールは stable な ABI とはみなしていませんので、ご自身のスクリプトをテストして変更する必要があるかもしれません。
+  そのスクリプトを、LXC の stable な C API か、言語バインディングのどれかを使って書きなおすのがよりベターでしょう。
+  
+  ### 廃止予定の警告 <!-- Deprecation warnings -->
+  
+  <!--
+  The "lxc-clone" and "lxc-start-ephemeral" commands are now considered deprecated and to be replaced by the new lxc-copy.
+  Those commands can still be built by using the \-\-enable-legacy flag, however note that they will print a warning when used
+  and that they will be removed from upcoming LXC releases.
+  -->
+  "lxc-clone" と "lxc-start-ephemeral" コマンドは、"lxc-copy" に置き換えられ、将来廃止の予定です。
+  これらのコマンドは --enable-legacy フラグを使ってビルドできますが、使用の際に警告が表示されます。そして、LXC の将来のリリースで削除される予定です。
+  
+  ### サポート <!-- Support -->
+  <!--
+  This is the second LXC Long Term Support release which we will be supporting until the 1st of June 2021.
+  LXC 1.0, our previous Long Term Support release, is still supported until the 1st of June 2019.
+  And lastly, the previous stable release, LXC 1.1 will go end of life on the 1st of September 2016.
+  -->
+  これは 2 度目の LXC の長期サポートリリースであり、2021 年 6 月 1 日までサポートされます。
+  前の長期サポートリリース版である LXC 1.0 も、2019 年 6 月 1 日までサポートされます。
+  そして、先の stable リリースである LXC 1.1 は 2016 年 9 月 1 日に EOL となります。
+  
+  ### ダウンロード <!-- Downloads -->
+  <!--
+  The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
+  will very soon ship a packaged version of LXC 2.0.0.
+  -->
+  このリリースの tarball は [ダウンロードページ](/lxc/downloads/) から取得できます。そして、各ディストリビューションがすぐに LXC 2.0.0 のパッケージをリリースするでしょう。
+  
+  <!--
+  Should you be interested in individual changes or just looking at the detailed development history,
+  our master branch is on [Github](https://github.com/lxc/lxc/tree/master).
+  -->
+  個々の変更点に興味がある場合、そして開発の履歴を見たい場合、master ブランチが [Github](https://github.com/lxc/lxc/tree/master) にあります。
+  

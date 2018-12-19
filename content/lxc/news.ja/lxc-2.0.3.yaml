@@ -1,0 +1,36 @@
+title: LXC 2.0.3 リリースのお知らせ
+date: 2016/06/28 00:00
+origin:  <!-- LXC 2.0.3 release announcement -->
+content: |-
+  <!--
+  This is the third bugfix release for LXC 2.0.
+  -->
+  このリリースは LXC 2.0 の 3 回目のバグフィックスリリースです。
+  
+  <!--
+  LXC 2.0.3 was released just minutes after LXC 2.0.2 as we spotted an incorrect
+  AppArmor profile included in the LXC 2.0.2 release tarball.
+  -->
+  LXC 2.0.3 は、LXC 2.0.2 に正しくない AppArmor プロファイルが含まれてしまったので、LXC 2.0.2 リリース直後にリリースしました。
+  
+  <!--
+  The main bugfixes in this release are:
+  -->
+  このリリースのバグフィックスは以下です:
+  
+   * apparmor: 生成されたファイルの更新 <!-- Refresh generated file -->
+  
+  ### ダウンロード <!-- Downloads -->
+  <!--
+  The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
+  will very soon ship a packaged version of LXC 2.0.3.
+  -->
+  このリリースの tarball は [ダウンロードページ](/lxc/downloads/) から取得できます。そして、各ディストリビューションがすぐに LXC 2.0.3 のパッケージをリリースするでしょう。
+  
+  <!--
+  Should you be interested in individual changes or just looking at the detailed development history,
+  our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-2.0).
+  -->
+  個々の変更点に興味がある場合、そして開発の履歴を見たい場合、stable ブランチが [Github](https://github.com/lxc/lxc/tree/stable-2.0) にあります。
+  
+  
