@@ -1,0 +1,112 @@
+title: LXC 2.0.0 release announcement
+date: 2016/04/06 00:00
+content: |-
+  The LXC team is very pleased to announce the release of LXC 2.0!
+  
+  ### Highlights
+  
+   * All main LXC commands have now been rewritten in C
+      * lxc-ls
+      * lxc-device
+      * lxc-copy
+   * New lxc-copy command taking over the role of lxc-clone and lxc-start-ephemeral
+   * Much improved support for checkpoint/restore of containers
+   * Completely reworked cgroup handling including support for the cgroup namespace
+   * The various command line tools are now much more consistent
+   * Re-organized storage backend implementation, including addition of a Ceph RBD backend
+   * An enormous amount of bugfixes, most of which will be backported to 1.0 and 1.1 over the next few bugfix releases
+   * The C API remains backward compatible with previous versions and is released as 1.2
+  
+  This release was made possible by contributions (720 commits) from a total of 96 contributors.
+  
+  ### New configuration options
+  
+   * lxc.ephemeral: Controls whether the container is ephemeral and so will be destroyed on shutdown
+   * lxc.rebootsignal: Allows to override the signal sent for container reboot
+   * lxc.hook.destroy: New hook being called on container destruction
+   * lxc.hook.stop: Run in the host context with references to the containers just before namespace teardown
+   * lxc.init\_uid: Used by lxc-execute to set an alternative user
+   * lxc.init\_gid: Used by lxc-execute to set an alternative group
+   * lxc.monitor.unshare: Allows unsharing the mount namespace prior to running any hook
+  
+  ### New features
+  
+   * API:
+      * API version is 1.2, fully backward compatible with 1.1 and 1.0
+      * new symbols:
+           * New migrate() symbol as an alternative to checkpoint() using a migrate_opts struct to simplify additions
+      * python3
+           * Support for passing the storage backend to create()
+      * lua
+           * Add support for get_ips()
+           * Add support for get_interfaces()
+           * Add support for rename()
+   * Core:
+      * cgfsng: New cgroup backend driver for recent Linux kernel
+      * cgroup: Partial support for the new cgroup hierarchy
+      * cgroup: Support for the cgroup namespace
+      * checkpoint: Support checkpoint/restore of default LXC containers
+      * checkpoint: Support checkpoint/restore of unprivileged containers
+      * checkpoint: Support for the page server
+      * config: lxc.aa\_profile: Now supports an "unchanged" value
+      * config: lxc.init\_cmd: Now supports arguments
+      * config: lxc.network.macvlan.mode: Added support for the "passthru" mode
+      * config: lxc.rootfs.backend: Allows to override the storage backend (bypasses auto-detection)
+      * config: New nesting.conf configuration file to setup container nesting
+      * hooks: New LXC\_CGNS\_AWARE environment variable, set to 1 if LXC supports the cgroup namespace (the kernel however may not)
+      * hooks: New LXC\_SRC\_NAME environment variable is set in clone hook with the original container name
+      * hooks: New LXC\_TARGET environment variable is set with the container goal (stop or reboot)
+      * logging: Updated logging timestamps to be a bit more readable
+      * lxc-usernet: Support for containers usning a veth interface without bridging
+      * lxc-usernet: Support for group-based quotas (use the @ prefix)
+      * network: The bridge interface MTU is now used as the default container interface MTU
+      * start: The process title is now renamed to be easier to read
+      * storage: New Ceph RBD storage backend
+   * Documentation:
+      * Korean translation of all the man pages
+   * Commands:
+      * lxc-attach: Use an intermediate pts device to prevent attacks against the parent shell
+      * lxc-clone: Support for renaming containers
+      * lxc-start-ephemeral: Support for changing bind-mount targets
+   * Init systems:
+      * systemd: Support for instanced service units
+   * Templates
+      * New ALTLinux template
+      * New Slackware template
+      * New SPARCLinux template
+      * alpine: Support installing extra packages
+      * debian: Default to just "main" enabled, allow enabling other repositories through argument
+      * oracle: Set the timezone in the container
+      * openssh: Add OpenSSH support
+      * ubuntu: New -v option allowing the user to set the debootstrap variant
+      * ubuntu-cloud: Support for vendor-data passthrough
+  
+  ### Change in behavior
+  
+   * The lxc-autostart container startup order is now reversed (to be correct)
+   * The new cgfsng cgroup backend is now the recommended backend
+   * lxc.hook.post-stop failures are now fatal to container reboots
+  
+  Note that several commands have been significantly reworked in this release.
+  We don't consider our command line tools as stable ABI so you may need to test and adapt your scripts,
+  or better, port them to use our stable C API or one of its bindings.
+  
+  ### Deprecation warnings
+  
+  The "lxc-clone" and "lxc-start-ephemeral" commands are now considered deprecated and to be replaced by the new lxc-copy.
+  Those commands can still be built by using the --enable-legacy flag, however note that they will print a warning when used
+  and that they will be removed from upcoming LXC releases.
+  
+  ### Support
+  This is the second LXC Long Term Support release which we will be supporting until the 1st of June 2021.
+  LXC 1.0, our previous Long Term Support release, is still supported until the 1st of June 2019.
+  And lastly, the previous stable release, LXC 1.1 will go end of life on the 1st of September 2016.
+  
+  ### Downloads
+  The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
+  will very soon ship a packaged version of LXC 2.0.0.
+  
+  Should you be interested in individual changes or just looking at the detailed development history,
+  our master branch is on [Github](https://github.com/lxc/lxc/tree/master).
+  
+  

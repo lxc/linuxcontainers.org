@@ -1,0 +1,186 @@
+title: LXC 3.1 release announcement
+date: 2018/12/13 00:00
+origin: https://discuss.linuxcontainers.org/t/lxc-3-1-has-been-released/3527
+content: |-
+  ### Introduction
+  The LXC team is pleased to announce the release of LXC 3.1.0!
+  
+  This is an intermediary feature release and not one of our major LTS releases or LTS bugfix releases. We plan on doing more of those in the future, but note that support on those releases will be limited as we mostly focus on LTS for production environments.
+  
+  ### New features
+  #### enable various remount options with AppArmor
+  Read-write bind mounts need to be restricted for some paths in order to avoid MAC restriction bypasses, but read-only bind mounts shouldn't have that problem. Additionally, combinations of `nosuid`, `nodev` and `noexec` flags shouldn't be a problem either and are required with newer systemd versions, so let's allow those as long as they're combined with `ro,remount,bind`.
+  
+  #### support `NETLINK_DUMP_STRICT_CHK`
+  Make use of the new socket option, `NETLINK_DUMP_STRICT_CHK`, that userspace can use via `setsockopt()` to request strict checking of headers and attributes on dump requests.
+  
+  To get dump features such as kernel side filtering based on data in the header or attributes appended to the dump request, userspace must call `setsockopt()` for `NETLINK_DUMP_STRICT_CHK` and a non-zero value. This is necessary to make use of the `IFA_TARGET_NETNSID` property used to efficiently retrieve information from network namespaces by LXC.
+  
+  #### allocate new keyring on startup
+  To isolate and protect the hosts keyring each LXC container will try to allocate a new keyring for itself on startup.
+  
+  #### full `cgroup2` support
+  LXC has supported `cgroup2` for a while now without adhering to its strict delegation model. Now, LXC is ready to fully support it.
+  
+  #### implement efficient way to retrieve network devices and addresses from containers
+  Based on kernel work done by the LXD team it is now possible to query a network namespace without having to perform costly `fork()` and `setns()` syscalls. Instead, the network namespace is identified by a network namespace identifier. As such a new network namespace aware version and very improved and safe version of `getifaddrs()` named `netns_getifaddrs()` is introduced that LXC uses. It is a strict superset of `getifaddrs()`.
+  
+  #### introduce `lxc_has_api_extension()` into the API
+  Going forward each new API addition will be given a unique name that can be passed to `lxc_has_api_extension()`. This is modeled after LXD's API extension checks. This allows API users to query the given LXC instance whether a given API extension is supported.
+  
+  #### add `lxc.cgroup.relative` configuration key
+  This adds the new `lxc.cgroup.keep` config key. The key can be used to instruct LXC to never escape to the root cgroup. This makes it easy for users to adhere to restrictions enforced by `cgroup2` and `systemd`. Specifically, this makes it possible to run LXC containers as systemd services.
+  
+  #### allocate new network namespace identifier on startup
+  Each container will now have a unique network namespace identifier assigned on startup. This can be used by LXC to siginficantly speed up operations performed on network namespaces (e.g. network device configuration and retrieval).
+  
+  #### add `lxc.rootfs.managed` configuration key
+  This introduces a new config key which can be used to indicate whether this LXC instance is managing the container storage. If LXC is not managing the storage then LXC will not modify the container storage. For example, an API call to `c->destroy(c)` will then run any destroy hooks but will not destroy the actual rootfs (Unless, of course, the hook does so behind LXC's back.).
+  
+  #### removal of all `VLA`s
+  LXC is now compiled with `-Wvla` by default.
+  
+  #### AppArmor profile generation
+  This copies lxd's AppArmor profile generation. This tries to detect features such as cgroup namespaces, AppArmor namespaces and stacking support, and has profile parts conditionally for unprivileged containers.
+  
+  This introduces the following changes to the configuration:
+  
+   - `lxc.apparmor.profile = generated`
+      The fixed value 'generated' will cause this functionality to be used, otherwise there should be no functional changes happening unless specifically requested with the next key.
+   - `lxc.apparmor.allow_nesting`
+      This is a boolean which, if enabled, causes the following changes: When generated AppArmor profiles are used, they will contain the necessary changes to allow creating a nested container. In addition to the usual mount points, `/dev/.lxc/proc` and `/dev/.lxc/sys` will contain `procfs` and `sysfs` mount points without the `lxcfs` overlays, which, if generated AppArmor profiles are being used, will not be read/writable directly.
+   - `lxc.apparmor.raw`
+     A list of raw AppArmor profile lines to append to the profile. Only valid when using generated profiles.
+  
+  In order for `apparmor_parser`'s cache to be of use, this adds a
+  `--with-apparmor-cache-dir` `./configure` option.
+  
+  
+  #### add mount injection api
+  This work has been done as part of the bachelor thesis of [LizaTretyakova](https://github.com/LizaTretyakova). The team is very happy and thankful for this outstanding work!
+  
+  Being able to dynamically interact with mounts while a container is running has been a long-standing request from users and something we have supported in LXD for a long time now. This feature enables the following main use-cases:
+  
+   - Injecting a mount into a running container
+     This lets users dynamically add mounts to a container. An example would be adding a new dedicated storage device to the container before it runs out of disk space.
+   - Enabling device hotplug
+     Interacting with mounts at container runtime is also necessary in order to add new devices to containers. Specifically, any privileged container that has dropped capabilities that would allow it to create device nodes (e.g. `CAP_MKNOD)` or any unprivileged container will not be able to create devices. This requires that such devices are created by a sufficiently privileged process on the host inside the host's namespaces and then injected as mounts into the container.
+  
+  To this end two new API calls have been added:
+  
+      int (*mount)(struct lxc_container *c, const char *source, const char *target,
+                          const char *filesystemtype, unsigned long mountflags, const void *data,
+                          struct lxc_mount *mnt);
+      
+      int (*umount)(struct lxc_container *c, const char *target, unsigned long mountflags,
+                            struct lxc_mount *mnt);
+  
+  #### add `lxc.monitor.signal.pdeath` configuration key
+  Set the signal to be sent to the container's init when the lxc monitor exits. By default it is set to `SIGKILL` which will cause all container processes to be killed when the lxc monitor process dies. To ensure that containers stay alive even if lxc monitor dies set this to `0`.
+  
+  #### build a shared and static `liblxc` library
+  LXC will now by default build both a shared and a static library.
+  
+  #### adapt to `mknod()` changes in Linux Kernel 4.18
+  Starting with commit
+  
+      55956b59df33 ("vfs: Allow userns root to call mknod on owned filesystems.")
+  
+  Linux will allow `mknod()` in user namespaces for userns root if `CAP_MKNOD` is available.
+      However, these device nodes are useless since
+  
+      static struct super_block *alloc_super(struct file_system_type *type, int flags,
+                                             struct user_namespace *user_ns)
+      {
+              /* <snip> */
+  
+              if (s->s_user_ns != &init_user_ns)
+                      s->s_iflags |= SB_I_NODEV;
+  
+              /* <snip> */
+      }
+  
+  will set the `SB_I_NODEV` flag on the filesystem. When a device node created in non-init userns is `open()`ed the call chain will hit:
+  
+      bool may_open_dev(const struct path *path)
+      {
+              return !(path->mnt->mnt_flags & MNT_NODEV) &&
+                      !(path->mnt->mnt_sb->s_iflags & SB_I_NODEV);
+      }
+  
+  which will cause an `EPERM` because the device node is located on an fs owned by non-init-userns and thus doesn't grant access to device nodes due to `SB_I_NODEV`. LXC has learned to correctly handle this case.
+  
+  #### use `execveat()` to execute application containers
+  Application containers rely on a minimal init system to run their workloads. Instead of executing it by opening a file that is bind-mounted into the container simply pass a file descriptor to `execveat()`. This makes application container startup safer and simpler.
+  
+  #### enable per-thread container name prefix when logging
+  Now each thread that runs a different container but shares a single log file can be identified by printing the name of the container into the log.
+  
+  #### refactor cgroup handling
+  This replaces the constructor implementation of cgroup handling with a simpler, thread-safe on-demand model of cgroup driver initialization.
+  Making the cgroup initialization code run in a constructor means that each time the shared library gets mapped the cgroup parsing code gets run. That was unnecessary overhead. The cleaner implementation is to allocate a cgroup driver on demand whenever it is needed.
+  
+  #### raise ambient capabilities when running hooks
+  In very restricted containers (e.g. unprivileged containers that only run with a single mapping for a non-root user) it was not possible to perform operations that require privilege during startup.
+  By raising ambient capabilities when a hook is run it is possible to preserve priviliges accross `exec`.
+  
+  #### allow to mount `/sys` `rw` in unprivileged containers
+  With new kernel work done by the LXD team it is now possible to send uevents inside user namespaces. This means it is time to let `udev` run inside containers. A pre-condition for this is that `/sys` is mounted `rw`. If it is not `udev` will refuse to start.
+  
+  #### add `strlcpy()` and `strlcat()` and deprecate `strncpy()` and `strncat()`
+  This makes string handling safer as `strlcat()` and `strlcpy()` always return a valid string and allow to properly check for truncation.
+  
+  #### compiler based hardening
+  By default `LXC` will turn on  variety of compiler hardening options  such as:
+  
+      -Wimplicit-fallthrough
+      -Wcast-align
+      -Wstrict-prototypes
+      -fstack-clash-protection
+      -fstack-protector-strong
+      --mcet -fcf-protection
+      -Werror=implicit-function-declaration
+  
+  #### thread-safety improvements
+  The codebase has been further hardended to be useable in multi-threaded environments
+  
+  #### seccomp: support architecture stacking
+  This allows to support e.g. the following use-case and more:
+  
+   - 64bit kernel and 64bit userspace running 32bit containers
+   - 64bit kernel and 32bit userspace running 64bit containers
+   - 64bit kernel and 64bit userspace running 32bit containers running 64bit containers
+   - ...
+  
+  #### support application containers without `uid 0` in the container
+  This allows to start containers that do not have a mapping for `uid 0` inside of the container. 
+  Here's an example config:
+  
+      lxc.include = /usr/share/lxc/config/common.conf
+      lxc.include = /usr/share/lxc/config/userns.conf
+      lxc.arch = linux64
+      lxc.rootfs.path = dir:/home/brauner/.local/share/lxc/c1/rootfs
+      lxc.uts.name = c1
+      lxc.net.0.type = empty
+      lxc.hook.mount =
+      
+      # Only map uid and gid 1000 on the host to uid and gid 1001 inside the container.
+      lxc.idmap = u 1001 1000 1
+      lxc.idmap = g 1001 1000 1
+      
+      # Switch to uid and gid 1001 in the container.
+      lxc.init.uid = 1001
+      lxc.init.gid = 1001
+  
+  #### support `devpts` mounts on kernels without `gid` mount option
+  Older kernels do not support the `gid` mount option to grant access to a specific group. LXC will now handle this case automatically and only add `gid = 5` if the `gid` mount option is supported by the kernel.
+  
+  ### Bugfixes
+  LXC 3.1.0 includes all the same bugfixes as LXC 3.0.1, 3.0.2 and 3.0.3.
+  
+  ### Support and upgrade
+  LXC 3.1 isn't a LTS release and so will only be supported until such time as LXC 3.2 is released. We recommend users that need a stronger support commitment to stay on one of our LTS releases.
+  
+  ### Downloads
+   - LXC release tarball: [lxc-3.1.0.tar.gz](https://linuxcontainers.org/downloads/lxc/lxc-3.1.0.tar.gz) (GPG: [lxc-3.1.0.tar.gz.asc](https://linuxcontainers.org/downloads/lxc/lxc-3.1.0.tar.gz.asc))
+  

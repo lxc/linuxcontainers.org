@@ -1,0 +1,48 @@
+title: LXC 1.0.1 release announcement
+date: 2014/03/06 00:00
+content: |-
+  This is the first bugfix release for the LXC 1.0 series.
+  
+  ### Changes
+  
+  Core:
+  
+   * core: Detect the use of rshared / and properly work around it.
+           This fixes LXC on systemd systems where the mount table would be duplicated in the container and lxc-attach wouldn't attach to the container's rootfs.
+   * core: Don't crash on invalid lxc.id\_map
+   * core: Fix attaching when extra cgroups were setup after the container started
+   * core: Fix crash when rebooting container with phys interfaces
+   * core: Better detect and report permission problems
+   * core: Use common code for any unprivileged action, using newuidmap/newgidmap if available and only falling back to straight writes to uid\_map/gid\_map if they're not and the user is root.
+   * core: Fix btrfs snapshot restore
+   * core: Fix race in the cloning code potentially leading to data loss
+   * core: Don't double-map the root uid/gid
+   * core: Fix snapshot restore for overlayfs
+   * core: Put logging variables in TLS
+  
+  Other:
+  
+   * apparmor: Stop using on-exec for profile changes as it's been proven unreliable on overlayfs at least
+   * bash completion: Remove wrong shebang
+   * cgmanager: Don't keep an active connection after container start
+   * cgmanager: Fix to work with threads
+   * doc: Update README
+   * lua: Respect --prefix
+   * lxc-create: Fix the dir backend to actually respect --dir
+   * lxc-device: Properly support wlan devices
+   * lxc-ls: Fix --nesting function to work with unprivileged containers
+   * lxc-start-ephemeral: Set the tmpfs as 0755 instead of 0777
+   * python3: Export missing get\_global\_config\_item function
+   * seccomp: Catch violations by init
+   * systemd: Fix unit file location
+   * templates: Detect system containers inside unprivileged containers (lxc-download)
+   * tests: Fix potential hang in lxc-test-concurent
+   * upstart: Don't forward requests for LXC\_DOMAIN (dnsmasq)
+  
+  ### Downloads
+  The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
+  will very soon ship a packaged version of LXC 1.0.1.
+  
+  Should you be interested in individual changes or just looking at the detailed development history,
+  our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-1.0).
+  

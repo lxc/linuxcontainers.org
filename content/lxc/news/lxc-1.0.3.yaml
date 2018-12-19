@@ -1,0 +1,56 @@
+title: LXC 1.0.3 release announcement
+date: 2014/04/08 00:00
+content: |-
+  This is the third bugfix release for the LXC 1.0 series.
+  
+  ### Changes
+  
+  Core:
+  
+   * core: Always initialize netpipe in lxc\_spawn.
+   * core: Move lxc-monitord.log to LOGPATH instead of LXCPATH.
+   * core: Make monitord more resilient to unexpected termination.
+   * core: Move lxc-init to /sbin/init.lxc instead of the architecture/distro specific multiarch path.
+           Use path lookup to find it in the container rather than using an hardcoded path.
+   * core: Set macvlan default mode to private.
+   * core: Check whether rootfs is shared before running the pre-mount hooks.
+   * apparmor: Update the profiles for current upstream apparmor.
+          This includes tweak to the pivot\_root targets and the addition of the ptrace and signal stanzas.
+          Users of older apparmor versions may want to comment the dbus, ptrace and signal stanzas
+          if the parser fails to parse the profile.
+   * apparmor: Use an intermediary profile which allows for easier generation of complex rules.
+          This discovered a few problems with the existing profile which has now been fixed.
+          Most of /proc/sys is now properly blocked with exceptions for kernel/shm/*, net/*, kernel/domainname and kernel/hostname.
+   * apparmor: block cgroupfs by default in the with-nesting profile, users should now be using cgmanager which doesn't required this.
+   * cgmanager: Fix a small cgm\_get bug when len == 0.
+   * lxc-info: Don't print duplicate lines.
+   * sysvinit script: Fix wait\_for\_bridge to better parse default.conf
+   * tools: Don't exit -1, instead use more conventional and consistent exit codes 0 on success, 1 on failure with some (now documented) exceptions for lxc-start.
+  
+  Templates:
+  
+   * archlinux template: Add debugging info for missing network link.
+   * archlinux template: Various fixes and cleanups.
+   * centos template: Properly set lxc.arch.
+   * download template: Make it a bit more resilient to download failures.
+   * fedora template: Properly set lxc.arch.
+   * gentoo template: Make sure sshd is started.
+   * gentoo template: Fix lack of generated locales.
+   * gentoo template: Fix lxc-console by setting up a tty.
+   * oracle template: Fix upgrade problems by introducing a patch script that's run on upgrade.
+  
+  Tests:
+  
+   * tests: Add a test for the apparmor profiles.
+   * tests: Bump timeouts to fix occasional failures on slow ARM builders.
+   * tests: Always propagate http\_proxy and https\_proxy.
+  
+  ### Downloads
+  The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
+  will very soon ship a packaged version of LXC 1.0.3.
+  
+  Should you be interested in individual changes or just looking at the detailed development history,
+  our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-1.0).
+  
+  
+  

@@ -1,0 +1,114 @@
+title: LXC 1.0.4 release announcement
+date: 2014/06/13 00:00
+content: |-
+  This is the fourth bugfix release for the LXC 1.0 series.
+  
+  ### Changes
+  
+  Core:
+  
+   * core: Don't call nih\_dbus\_setup for cgmanager as it's only relevant when using a nih main loop, which we're not.
+   * core: Fix uncheck realloc in lxc\_info. (found by cppcheck)
+   * core: At startup, manually mark every shared mount entry as slave.
+   * core: Check for pre-existing /dev symlinks before attempting to create them.
+   * core: Fix fd leak. (found by coverity).
+   * core: Allow all iX86 strings for lxc.arch.
+   * core: Fix building using clang 3.4.
+   * core: Fix minor typo in .gitignore.
+   * core: Add missing MAX\_STACK\_DEPTH define on MUTEX\_DEBUGGING builds.
+   * core: Don't mount /sys/fs/cgroup readonly as this breaks at least mountall.
+   * core: Factor out capability parsing logic.
+   * core: Tweak the default values of lxc.mount.auto for the cgroup and cgroup-full keys to adapt themselves depending on whether CAP\_SYS\_ADMIN has been dropped or not.
+   * core: Support unprivileged create, clone and destroy with btrfs.
+   * core: Support named subsystems with cgmanager.
+   * core: Use absolute cgroup paths to switch cgroups at attach with cgmanager. This allows for unprivileged lxc-attach across user sessions of the same user.
+   * core: Detect whether cgmanager supports name= subsystems.
+   * core: Use the same ifndef/define format for all headers.
+   * core: Fix bashism in lxc-devsetup.
+   * core: Fix a null check after dereference (identified by coverity).
+   * core: Export bdev\_specs so that API users can actually use the functions taking it as an argument.
+   * core: Don't destroy the container until we've made sure the requested snapshot actually exists.
+   * core: Retrieve the container personality over the command interface rather than through /proc.
+           This is required for unprivileged containers attach on the 3.15 kernel and higher as access to /proc/$$/personality is now restricted to root.
+   * core: Fix invalid signal number comparison.
+   * core: Don't let -lcgmanager end up in LIBS.
+   * core: Correct invalid log message when keeping capabilities.
+   * core: Fix a crash when attempting to snapshot an invalid container.
+   * core: Make it possible for unprivileged containers started by root to mount block devices.
+   * core: Improve startup failure mode to hide irrelevant error messages and suggest how to debug the failure.
+   * core: Validate start hooks path before startup.
+   * core: Log the whole cgroup path on failure.
+   * apparmor: Allow writes to sem\* and msg\*. sysctls
+  
+  Documentation:
+  
+   * doc: Fix typo in lxc-clone man page.
+   * doc: Fix puncation marks in Japanese man pages.
+   * doc: Fix typo in lxc-ls manpage.
+   * doc: Correct license on some files and fix FSF address.
+   * doc: Document lxc.mount.entry relative target.
+   * doc: Remove TODO file with old items.
+   * doc: Fix reference to renamed manpage.
+   * doc: Update japanese documentation to be in sync with the english one.
+  
+  Commands:
+  
+   * lxc-create: Make "none" bdev type work as documented.
+   * lxc-execute: Fix a memory leak on the exit path.
+   * lxc-ls: Fix running against nested containers without python support.
+   * lxc-user-nic: Don't crash on missing bridge.
+   * lxc-autostart: Backport the autoboot/autostart change.
+  
+          This is required to resolve problems with autostart on
+          systemd systems at least.
+  
+          This change adds support for the NULL group in the -g
+          option (identified as a comma without any group name).
+          Add a new special "onboot" group and set the init
+          scripts (sysvinit, systemd and upstart) to all start
+          both the NULL and onboot group.
+  
+          This won't cause any visible change to existing users
+          unless they were already using an "onboot" group that wasn't
+          auto-started at boot time.
+  
+  
+  Templates:
+  
+   * alpine template: Set correct lxc\_arch for x86.
+   * archlinux template: Add sigpwr handler.
+   * archlinux template: Fix lxc.root for btrfs backend.
+   * download template: Retry the GPG setup step 3 times.
+   * fedora template: Correct some systemd target setups.
+   * oracle template: Use db\_load from inside the container.
+   * oracle template: Fix warnings/errors from some rpm scriptlets.
+   * oracle template: Fix lxc-patch.py to be 644 (fixes rpmlint warning).
+   * oracle template: Add pts/[1-4] to securetty for libvirt-lxc.
+   * oracle template: Set the hostname on systemd systems.
+   * oracle template: Fix ssh login under libvirt-lxc.
+   * plamo template: Don't attempt to configure wireless interfaces.
+   * sshd template: Use correct lxc-init path.
+  
+  Bindings:
+  
+   * python3: Slight tweaks to the .py files to work with the unofficial python2.7 binding.
+   * python3: Don't fail network test if hwaddr isn't set by the template.
+   * python3: Don't require a template name be passed to create().
+   * python3: Don't crash on invalid global config keys.
+   * python3: Fix crash in snapshot().
+  
+  Tests:
+  
+   * tests: Make sure we join all the right cgroups.
+   * tests: Workaround race condition in lxc-test-autostart.
+  
+  Those stable fixes were brought to you by 14 individual contributors.
+  
+  ### Downloads
+  The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
+  will very soon ship a packaged version of LXC 1.0.4.
+  
+  Should you be interested in individual changes or just looking at the detailed development history,
+  our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-1.0).
+  
+  
