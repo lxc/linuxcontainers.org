@@ -79,11 +79,11 @@ content: |-
   -->
   LXC はデフォルトで `-Wvla` を付けてコンパイルされるようになりました。
   
-  #### 生成済みの AppArmor プロファイルの利用 <!-- AppArmor profile generation -->
+  #### AppArmor プロファイルの生成 <!-- AppArmor profile generation -->
   <!--
   This copies lxd's AppArmor profile generation. This tries to detect features such as cgroup namespaces, AppArmor namespaces and stacking support, and has profile parts conditionally for unprivileged containers.
   -->
-  lxd で生成した AppArmor プロファイルをコピーします。この機能は、cgroup 名前空間、AppArmor 名前空間とスタッキングのサポートのような機能を検出しようとします。そして条件付きで、プロファイルの非特権コンテナ向けのパーツを持ちます。
+  この機能は lxd の AppArmor プロファイル生成機能のコピーです。この機能は、cgroup 名前空間、AppArmor 名前空間とスタッキングのサポートのような機能を検出しようとします。そして条件付きで、プロファイルの非特権コンテナ向けのパーツを持ちます。
 
   <!--
   This introduces the following changes to the configuration:
@@ -136,7 +136,7 @@ content: |-
   <!--
   Set the signal to be sent to the container's init when the lxc monitor exits. By default it is set to `SIGKILL` which will cause all container processes to be killed when the lxc monitor process dies. To ensure that containers stay alive even if lxc monitor dies set this to `0`.
   -->
-  lxc モニタープロセスが exit した際に、コンテナの init に送るシグナルを設定します。デフォルトでは `SIGKILL` が設定されています。つまり、lxc モニタープロセスが死んだ場合は、コンテナのプロセスすべてが kill されることになります。
+  lxc モニタープロセスが exit した際に、コンテナの init に送るシグナルを設定します。デフォルトでは `SIGKILL` が設定されています。つまり、lxc モニタープロセスが死んだ場合は、コンテナのプロセスすべてが kill されることになります。lxc モニタープロセスが死んでもコンテナを起動したままにしておきたい場合はこれを `0` にセットします。
   
   #### `liblxc` の共有と静的ライブラリのビルド <!-- build a shared and static `liblxc` library -->
   <!--
@@ -172,7 +172,7 @@ content: |-
   <!--
   will set the `SB_I_NODEV` flag on the filesystem. When a device node created in non-init userns is `open()`ed the call chain will hit:
   -->
-  が、ファイルシステムに `SB_I_NODEVE` を設定するからです。init の名前空間以外で作られたデバイスノードが `open()` されるとき、次の呼び出しにヒットします:
+  が、ファイルシステムに `SB_I_NODEVE` を設定するからです。init のユーザー名前空間以外で作られたデバイスノードが `open()` されるとき、次の呼び出しにヒットします:
   
       bool may_open_dev(const struct path *path)
       {
@@ -183,13 +183,13 @@ content: |-
   <!--
   which will cause an `EPERM` because the device node is located on an fs owned by non-init-userns and thus doesn't grant access to device nodes due to `SB_I_NODEV`. LXC has learned to correctly handle this case.
   -->
-  これにより `EPERM` が発生します。なぜなら、デバイスノードは init のユーザー名前空間が所有するファイルシステム上に存在し、`SB_I_NODEVE` により、デバイスノードへのアクセスが許可されないからです。LXC は、このケースを正しく扱うようになりました。
+  これにより `EPERM` が発生します。なぜなら、デバイスノードは非 init のユーザー名前空間が所有するファイルシステム上に存在し、`SB_I_NODEV` により、デバイスノードへのアクセスが許可されないからです。LXC は、このケースを正しく扱うようになりました。
   
-  #### use `execveat()` to execute application containers
+  #### アプリケーションコンテナの実行に `execveat()` を使用 <!-- use `execveat()` to execute application containers -->
   <!--
   Application containers rely on a minimal init system to run their workloads. Instead of executing it by opening a file that is bind-mounted into the container simply pass a file descriptor to `execveat()`. This makes application container startup safer and simpler.
   -->
-  アプリケーションコンテナは、そのワークロードを実行するために、最小限の機能を持つ init システムに依存します。コンテナ内にバインドマウントしたファイルを開くことでアプリケーションを実行する代わりに、シンプルに `execveat()` にファイルディスクリプタを渡します。これにより、アプリケーションコンテナがより安全にシンプルに起動します。
+  アプリケーションコンテナは、そのワークロードを実行するために、最小限の機能を持つ init システムに依存します。コンテナ内にバインドマウントしたファイルを開くことでアプリケーションコンテナを実行する代わりに、シンプルに `execveat()` にファイルディスクリプタを渡します。これにより、アプリケーションコンテナがより安全にシンプルに起動します。
   
   #### ロギング時のスレッドごとのコンテナ名出力が可能に <!-- enable per-thread container name prefix when logging -->
   <!--
@@ -217,7 +217,7 @@ content: |-
   <!--
   With new kernel work done by the LXD team it is now possible to send uevents inside user namespaces. This means it is time to let `udev` run inside containers. A pre-condition for this is that `/sys` is mounted `rw`. If it is not `udev` will refuse to start.
   -->
-  LXD チームによる新しいカーネルへの取り組みにより、ユーザー名前空間内へ uevent を送ることができるようになりました。これは、コンテナ内で `udev` が実行できるようになったことを意味します。この前提条件は、`/sys` が `rw` でマウントされていることです。これが `udev` でなければ、起動を拒否します。
+  LXD チームによる新しいカーネルへの取り組みにより、ユーザー名前空間内へ uevent を送ることができるようになりました。これは、コンテナ内で `udev` が実行できるようになったことを意味します。この前提条件は、`/sys` が `rw` でマウントされていることです。そうでなければ、`udev` は起動を拒否します。
   
   #### `strlcpy()` と `strlcat()` を追加、`strncpy()` と `strncat()` を廃止 <!-- add `strlcpy()` and `strlcat()` and deprecate `strncpy()` and `strncat()` -->
   <!--
