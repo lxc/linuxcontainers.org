@@ -29,7 +29,7 @@ content: |-
   Going forward each new API addition will be given a unique name that can be passed to `lxc_has_api_extension()`. This is modeled after LXD's API extension checks. This allows API users to query the given LXC instance whether a given API extension is supported.
   
   #### add `lxc.cgroup.relative` configuration key
-  This adds the new `lxc.cgroup.keep` config key. The key can be used to instruct LXC to never escape to the root cgroup. This makes it easy for users to adhere to restrictions enforced by `cgroup2` and `systemd`. Specifically, this makes it possible to run LXC containers as systemd services.
+  This adds the new `lxc.cgroup.relative` config key. The key can be used to instruct LXC to never escape to the root cgroup. This makes it easy for users to adhere to restrictions enforced by `cgroup2` and `systemd`. Specifically, this makes it possible to run LXC containers as systemd services.
   
   #### allocate new network namespace identifier on startup
   Each container will now have a unique network namespace identifier assigned on startup. This can be used by LXC to siginficantly speed up operations performed on network namespaces (e.g. network device configuration and retrieval).
