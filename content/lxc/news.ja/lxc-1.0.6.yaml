@@ -1,0 +1,127 @@
+title: LXC 1.0.6 リリースのお知らせ
+date: 2014/09/24 00:00
+content: |-
+  
+  <!-- This is the sixth bugfix release for the LXC 1.0 series. -->このリリースは LXC 1.0 シリーズの 6 回目のバグフィックスとなるリリースです。
+  
+  <!-- To make supporting both LXC 1.0 and the future LXC 1.1
+          easier, this version introduces the -F argument to lxc-start. This
+          argument is a no-op as lxc-start is already running in the
+          foreground by default, but as that behavior will change in
+          LXC 1.1, introducing -F in 1.0 too allows for writing script
+          which will work consistently on upgrades. -->
+    LXC 1.0 と将来リリースする LXC 1.1 の両方を簡単にサポートするために、このバージョンでは lxc-start に -F オプションを追加しました。(現在の 1.0 で) デフォルトでフォアグラウンドで起動している lxc-start ではこのオプションは不要ですが、この動きは LXC 1.1 で変わる予定です (訳注: バックグラウンドがデフォルトに変わる予定です)。1.0 で -F を導入したのは、アップグレード後も作成したスクリプトが変わらずに動くようにするためです。
+  
+  
+  ### <!-- Changes -->変更点
+  
+  * <!-- rootfs_is_blockdev: don't run if no rootfs is specified -->rootfs_is_blockdev: rootfs が指定されていないときには実行されないようにしました (訳注: rootfs が指定されていない場合はストレージバックエンドがブロックデバイスかどうかチェックを行う処理を実行しないようにしました)
+  * <!-- confile: sanity-check netdev-&#62;type before setting
+               netdev-&#62;priv elements -->confile: netdev-&gt;priv を設定する前に netdev-&gt;type のチェックを行うようにしました
+  * <!-- Remove mention of mountcgroups in ubuntu.common config -->ubuntu.common 設定ファイル中の mountcgroups フックのコメント内での例示を削除しました (訳注: 例示は "lxc.mount.auto = cgroup:mixed" に置き換わっています)
+  * <!-- remove mountcgroup hook entirely -->mountcgroup フックファイルを削除しました
+  * <!-- Add SIGPWR support to lxc_init -->lxc_init が SIGPWR を扱えるようになりました
+  * <!-- Sysvinit script fixes -->Sysvinit スクリプトを修正しました
+  * <!-- unprivileged containers: use next available nic name if
+               unspecified -->非特権コンテナ: 指定がない場合は次に利用可能な NIC 名を使用するようにしました
+  * <!-- fix typo in btrfs error msg -->btrfs のエラーメッセージの typo を修正しました
+  * <!-- apparmor: Allow slave bind mounts -->apparmor: スレーブバインドマウントが可能になりました
+  * <!-- provide an example SELinux policy for older releases -->古いリリースに対する SELinux ポリシーの例を追加しました
+  * <!-- print a helpful message if creating unpriv container
+               with no idmap -->idmap (idのマッピング) なしで非特権コンテナを作成しようとした場合に参考になるエラーメッセージを出力するようにしました
+  * <!-- use non-thread-safe getpwuid and getpwgid for android -->Android ではスレッドセーフでない getpwuid と getpwgid を使うようにしました
+  * <!-- btrfs: support recursive subvolume deletion (v2) -->btrfs: 再帰的な subvolume の削除をサポートしました (v2)
+  * <!-- fix '--log-priority' --&#62; '--logpriority' in main -->'--log-priority' を '--logpriority' に修正しました (訳注: エラーメッセージ中の typo の修正)
+  * <!-- Fix a file descriptor leak in the daemonization -->デーモン化の際ファイルディスクリプタのリークを修正しました
+  * <!-- Fix a file descriptor leak in the monitord spawn -->monitord が起動する際のファイルディスクリプタのリークを修正しました
+  * <!-- Ensure /dev/pts directory exists on pts setup -->pts セットアップ時に確実に /dev/pts ディレクトリが存在するようにしました
+  * <!-- Do not allow snapshots of LVM backed containers -->LVM バックエンドのコンテナのスナップショットを禁止しました (訳注: LVM でスナップショットが正常に動作しないための一時的な処置です)
+  * <!-- add lxc.console.logpath -->設定項目として lxc.console.logpath を追加しました
+  * <!-- coverity: don't use newname after null check -->coverity: null チェックの後に newname を使わないようにしました (訳注: クローン時のクローン先のコンテナが存在しないかどうかのチェックの際にテンポラリ変数を使わないように処理を変更した)
+  * <!-- coverity: malloc the right size for btrs_node tree -->coverity: btrfs_node tree の malloc を正しいサイズで行うようにしました
+  * <!-- introduce --with-distro=raspbian -->--with-distro=raspbian が使用可能になりました (訳注: configure 時のオプション指定です)
+  * <!-- cgmanager get/set: clean up child (v2) -->cgmanager get/set: cgmanager で確実に子グループを刈り取るようにしました
+  * <!-- Add extra debugging -->デバッグ出力の追加
+  * <!-- do_mount_entry: add nexec, nosuid, nodev, rdonly flags
+               if needed at remount -->do_mount_entry: remount 時に必要であれば nexec, nosuid, nodev, rdonly フラグを追加するようにしました (訳注: 関連 <a href="https://lkml.org/lkml/2014/8/13/746">https://lkml.org/lkml/2014/8/13/746</a>)
+  * <!-- command socket: use hash if needed -->command socket: 必要な場合にハッシュを使うようにしました (訳注: コンテナのコマンドソケット名が長すぎる場合にはハッシュを使うようにしました)
+  * <!-- monitor: fix sockname calculation for long lxcpaths -->monitor: 長い lxcpath の場合のソケット名の計算を修正しました
+  * <!-- show additional info if btrfs subvolume deletion fails
+               (issue #315) -->btrfs の subvolume の削除が失敗した場合の出力の変更 (issue #315)
+  * <!-- ignore SIGKILL (CTRL-C) and SIGQUIT (CTRL-\) - issue #313 -->SIGKILL (CTRL-C) と SIGQUIT (CTRL-\) を無視するようにしました (issue #313) (訳注: lxc-attach コマンドの処理です)
+  * <!-- chmod container dir to 0770 (v2) -->コンテナディレクトリを 0770 に chmod するようにしました
+  * <!-- build: Fix support for split build and source dirs -->build: 分離したビルドとソースディレクトリのサポートの修正
+  * <!-- mount_entry: use statvfs -->mount_entry: statvfs を使うように変更しました (訳注: /proc/self/mountinfo をパースしていたのを変更しました)
+  * <!-- lxc_mount_auto_mounts: honor existing nodev etc at
+               remounts -->lxc_mount_auto_mounts: 再マウント時に存在する nodev などのオプションをきちんと評価できるようにしました
+  * <!-- statvfs: do nothing if statvfs does not exist
+               (android/bionic) -->statvfs: statvfs が存在しない場合に何もしないようにしました (android/bionic)
+  * <!-- Prevent compiler warning by initializing ifindex -->ifindex の初期化時のコンパイラの警告がでないようにしました (訳注: 内部で使っている変数初期化の際の警告の抑止です)
+  * <!-- build: don't remove configuration template on clean -->build: clean の際に設定テンプレートを削除しないようにしました (訳注: make clean 時です)
+  * <!-- build: Make setup.py run from srcdir to avoid distutils
+               errors -->build: distutils のエラーを防ぐために srcdir から setup.py を実行するようにしました
+  * <!-- handle hashed command socket names (v2) -->コマンドソケット名の扱いの処理の変更をしました (v2)
+  * <!-- lxc-cgm: fix issue with nested chowning -->lxc-cgm: ネストした chown の際の問題を修正しました
+  * <!-- Report container exit status to monitord -->monitord (コンテナをモニタリングするデーモン) にコンテナの終了ステータスを報告するようになりました
+  * <!-- support use of 'all' containers when cgmanager supports it -->cgmanager が 'all' サブシステムをサポートしている時は 'all' を使うようにしました (訳注: 原文は「'all' containers」となっていて、該当のコミットログもそうなっていますが、修正内容を見る限りは cgroup の複数のサブシステムを扱う話に見えますのでそのように訳しています→<a href="https://github.com/lxc/lxc/commit/69a8b71ba5b8900d5b8a1784061c72f995acacb6">コミット</a>)
+  * <!-- log: fix quiet mode -->log: quiet モードのバグを修正しました
+  * <!-- Fix build error(ISO C90 specs violation) in lxc.c -->lxc.c ビルド内のビルド時のエラー(ISO C90仕様違反)を修正しました
+  * <!-- lxc_map_ids: don't do bogus chekc for newgidmap -->lxc_map_ids: 不要な newgidmap コマンドのチェックを行わないようにしました。コード中にその部分のコメントを追加しました。
+  * <!-- clean autodev dir on container exit -->コンテナ終了時に autodev 処理に使ったディレクトリを掃除するようにしました
+  * <!-- As discussed on ML, do not clean autodev dir on reboot -->MLでの議論で、リブート時は autodev 処理に使ったディレクトリを掃除しないようにしました
+  * <!-- Fix build failure due to slightly different rmdir -->少し異なったrmdir処理の呼び出しに起因するビルドの失敗を修正しました
+  * <!-- Fix presentation of IPv6 addresses and gateway -->IPv6アドレスとゲートウェイの表現の修正
+  * <!-- lxc-start: Add -F (foreground) option -->lxc-start: -F (フォアグラウンド) オプションの追加
+  * <!-- all: Discontinue the use of in-line comments (stable) -->all: インラインコメントの使用をやめました (訳注: 付属の標準設定ファイルの話です)
+  * <!-- all: Include hostname in DHCP requests -->centos: DHCPリクエストにホスト名を含めるようにしました
+  * <!-- all: Switch from arch command to uname -m -->centos, fedora, gentoo: arch コマンドを uname -m に変更しました
+  * <!-- altlinux: bugfixes -->altlinux: バグ修正をしました
+  * <!-- archlinux: Properly set default locale in /etc/locale.conf -->archlinux: /etc/locale.conf にデフォルトのロケールを適切に設定するようにしました
+  * <!-- centos template: prevent mingetty from calling vhangup(2) -->centos template: mingetty 実行時に vhangup(2) が呼ばれないようにしました
+  * <!-- download: Have wget retry 3 times -->download: wget が 3 度リトライをするようにしました
+  * <!-- download: Make --keyserver actually work -->download: --keyserver オプションが実際に動作するようにしました
+  * <!-- gentoo: keep original uid/gid of files/dirs when
+               installing -->gentoo: インストール時のファイルとディレクトリがオリジナルのuid/gidを保持するようにしました
+  * <!-- gentoo: Use portageq to determine portage distdir -->gentoo: portage distdir の決定に portageq を使用するようにしました
+  * <!-- plamo: keep original uid/gid of files/dirs when installing -->plamo: インストール時のファイルとディレクトリがオリジナルのuid/gidを保持するようにしました
+  * <!-- plamo: bugfix template -->plamo: バグを修正しました
+  * <!-- ssh: send hostname to dhcp server -->ssh: DHCP サーバにホスト名を送るようにしました
+  * <!-- ubuntu: don't check for $rootfs/run/shm -->ubuntu: $rootfs/run/shm の存在チェックを行わないようにしました
+  * <!-- ubuntu: add help string -->ubuntu: ヘルプを追加しました
+  * <!-- lxc-test-{unpriv,usernic.in}: make sure to chgrp as well -->lxc-test-{unpriv,usernic.in}: 確実に chgrp されるようにしました
+  * <!-- lxc-test-unpriv: test lxc-clone -s -->lxc-test-unpriv: lxc-clone -s のテストを行うようにしました
+  * <!-- tests: Call sync before testing a shutdown -->tests: shutdown をテストする前に sync を呼ぶようにしました
+  * <!-- tests: Copy the download cache when available [v2] -->tests: 使用可能であればダウンロードキャッシュをコピーするようにしました [v2]
+  * <!-- Fix the unprivileged tests cgroup management -->非特権の cgroup 管理のテストを修正しました
+  * <!-- doc: Mention that veth.pair is ignored for unpriv -->doc: 非特権の場合に veth.pair が無視されることを追記しました (日本語manでも追記しました)
+  * <!-- doc: Add -F option to Japanese lxc-start(1) -->doc: lxc-start(1) に -F オプションの説明を追加しました
+  * <!-- doc: Update the description of SELinux in Japanese
+               lxc.container.conf(5) -->doc: 日本語の lxc.container.conf(5) の SELinux の説明を更新しました
+  * <!-- doc: Add 'zfs' to the parameter of -B option in
+               lxc-create(1) -->lxc-create(1) の -B オプションのパラメータに 'zfs' を追加しました
+  * <!-- doc: add lxc.console.logpath to Japanese
+               lxc.container.conf(5) -->doc: 日本語の lxc.container.conf(5) に lxc.console.logpath の説明を追加しました
+  * <!-- doc: language correction -->doc: 言語の修正
+  * <!-- doc: Fix Japanese translation of lxc.container.conf(5) -->doc: 日本語の lxc.container.conf(5) の誤記を修正しました
+  * <!-- doc: Add destroy option to lxc-snapshot(1) -->lxc-snapshot(1) に destroy オプションの説明を追加しました
+  * <!-- doc: Add description about ignoring lxc.cgroup.use when
+               using cgmanager -->lxc.system.conf(5) に lxc.cgroup.use が cgmanager を使っているときは無視されることを追記しました
+  
+  <!-- Those stable fixes were brought to you by 24 individual
+          contributors. -->これらの stable の修正は 24 名のコントリビュータによってなされました。
+  
+  ### <!-- Downloads -->
+  <!-- The release tarballs may be found on our
+          <a href="/downloads/">download page</a> and we expect most
+          distributions will very soon ship a packaged version of LXC 1.0.6. -->
+    このリリースの tarball は [ダウンロードページ](/lxc/downloads/) から取得できます。
+    そして、各ディストリビューションがすぐに LXC 1.0.6 のパッケージをリリースするでしょう。
+  
+  
+  <!-- Should you be interested in individual changes or just
+          looking at the detailed development history, our stable branch is
+          on <a href="https://github.com/lxc/lxc/tree/stable-1.0">Github</a>. -->
+    個々の変更点に興味がある場合、そして開発の履歴を見たい場合、stable ブランチは <a href="https://github.com/lxc/lxc/tree/stable-1.0">Github</a> にあります。
+  
+  
+  

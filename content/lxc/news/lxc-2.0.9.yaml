@@ -1,0 +1,287 @@
+title: LXC 2.0.9 release announcement
+date: 2017/10/19 00:00
+content: |-
+  This is the nineth bugfix release for LXC 2.0.
+  
+  Bugfixes:
+  
+   * apparmor: Allow containers to start in AppArmor namespaces
+   * apparmor: Drop useless apparmor denies
+   * caps: Move ifndef/define to the top
+   * cgfsng: Fail when limits fail to apply
+   * cgfsng: Log when we defer to cgfsng
+   * cgfsng: Only output debug info when we set cgroup data
+   * cgroups: Handle hybrid cgroup layouts
+   * cgroups: Use tight scoping
+   * cgroups: Workaround gcc-7 bug
+   * commands: Abstract cmd socket handling + logging
+   * commands: Add missing translation
+   * commands: Delete meaningless comments
+   * commands: Handle EINTR
+   * commands: Make state server interface flexible
+   * commands: Move lxc\_make\_abstract\_socket\_name()
+   * commands: Rename to lxc\_cmd\_add\_state\_client()
+   * commands: Fix typo
+   * conf: Adapt to lxc-user-nic usage
+   * conf: Add lxc\_get\_idmaps()
+   * conf: Add userns\_exec\_full()
+   * conf: Allow to clear all config items
+   * conf: Allow to get lxc.autodev
+   * conf: Allow to get lxc.haltsignal
+   * conf: Allow to get lxc.kmsg
+   * conf: Allow to get lxc.rebootsignal
+   * conf: Allow to get lxc.stopsignal
+   * conf: Allow writing uid mappings with euid != 0
+   * conf: Avoid double-frees in userns\_exec\_1()
+   * conf: Clear lxc.include
+   * conf: Do not check for empty value twice
+   * conf: Do not check union on wrong net type
+   * conf: Do not deref null pointer
+   * conf: Do not free static memory
+   * conf: Do not log uninitialized memory
+   * conf: Do not write out trailing spaces
+   * conf: Don't send ttys when none are configured
+   * conf: Dump lxc\_get\_config\_item()
+   * conf: Error out on too many mappings
+   * conf: Fix bionic builds
+   * conf: Fix build without libcap
+   * conf: Fix tty creation
+   * conf: Fix userns\_exec\_1()
+   * conf: Free netdev-\>downscript
+   * conf: Implement config item clear callback
+   * conf: Improve lxc\_map\_ids()
+   * conf: Improve tty shifting function
+   * conf: Improve write\_id\_mapping()
+   * conf: Increase lxc-user-nic buffer
+   * conf: Log lxc-user-nic output
+   * conf: lxc\_listconfigs -> lxc\_list\_config\_items
+   * conf: Move clearing config items into one place
+   * conf: Non-functional changes
+   * conf: NOTICE() on mounts on container's /dev
+   * conf: Performance tweaks
+   * conf: Preserve newlines
+   * conf: Properly parse lxc.idmap entries
+   * conf: Record idmap that gets written
+   * conf: Refactoring of most config parsing code
+   * conf: Refactor network deletion
+   * conf: Remove dead assignments in parse\_idmaps()
+   * conf: Remove dead mount code
+   * conf: Rework lxc\_map\_ids()
+   * conf: Rework userns\_exec\_1()
+   * conf: Send ttys in batches of 2
+   * conf: Switch API to new callback system
+   * conf: Use a minimal {g,u}id map
+   * conf: Use correct check on char array
+   * conf: Use run\_command for lxc-usernsexec
+   * console: Clean tty state + return 0 on peer exit
+   * console: DO NOT add the handles of adjust winsize when the 'stdin' is not a tty
+   * console: Fix memory leak of 'lxc\_tty\_state'
+   * console: Remove dead assignments
+   * core: Do remount with the MS\_REMOUNT flag when mounts with MS\_RDONLY
+   * core: Fix a format string build failure on x32
+   * core: Fix includes for Android
+   * core: Fix memory and resource leak
+   * core: Fix some cppcheck warnings
+   * core: Fix the bug of 'ts-\>stdoutfd' did not fill with parameters 'stdoutfd'
+   * core: Include custom mntent for Android
+   * core: Log function called in userns\_exec\_1()
+   * core: Remove the `__func__` macro
+   * core: Remove the unused macro
+   * core: Replace "priority" with "level"
+   * core: Revert "Add a prefix to the lxc.pc"
+   * core: root -> am\_root
+   * core: struct bdev -> struct lxc\_storage
+   * core: Update .gitignore
+   * core: Use strerror(errno) instead of %m
+   * criu: Add cmp\_version()
+   * criu: Use correct check initialization check
+   * doc: Add CII Best Practices badge to README
+   * doc: Add console behavior to Japanese lxc.container.conf(5)
+   * doc: Document missing env variables
+   * doc: Fix regex-typo in Japanese and Korean lxc-monitor(1)
+   * doc: Fix regex-typo in lxc-monitor.sgml.in
+   * doc: Reword id mapping restrictions when unpriv
+   * doc: Rework README
+   * doc: Tweak Japanese lxc.container.conf(5)
+   * doc: Tweak lxc.container.conf a little
+   * doc: Untabify Japanese lxc.container.conf(5)
+   * doc: Update API documentation for get\_config\_item
+   * execute: Enable console & standard /dev symlinks
+   * init: Add comment for exclude 32 and 33 signals
+   * init: Adjust include statements
+   * init: Become session leader
+   * init: Move initialization of act to outside of the loop
+   * init: Report exec\*() failure
+   * init: Use lxc-stop to stop systemd service
+   * liblxc: Make sure memory is free()ed
+   * liblxc: Only spawn monitord on demand
+   * liblxc: Remove 5s timeout on error
+   * liblxc: Use snprintf()
+   * liblxc: Use userns\_exec\_full()
+   * lock: Non-functional changes
+   * lock: Return the right error when open lock file failed
+   * log: Prevent stack smashing
+   * log: Switch to a new lxc\_log\_init function
+   * monitor: Abstract lxc\_abstract\_unix\_{send,recv}\_fd for af\_unix
+   * monitor: Add lxc\_cmd\_state\_server()
+   * monitor: Add TRACE()ers
+   * monitor: Delete unneccessory include file
+   * monitor: Remove dead assignments
+   * monitor: Remove the workaround-code for lxc\_abstract\_unix\_connect
+   * monitor: Remove unlink operation for af\_unix
+   * network: Add arg to config clear method
+   * network: Add data arg to set callback
+   * network: Add ifindex field for host veth device
+   * network: Add lxc\_log\_configured\_netdevs()
+   * network: Add missing checks for empty links
+   * network: Add network counter
+   * network: Add warning when ignoring MTU
+   * network: Clear ifindeces
+   * network: Delete ovs for unprivileged networks
+   * network: Document all fields in struct lxc\_netdev
+   * network: Don't delete net devs we didn't create
+   * network: Fix grammar
+   * network: Implement lxc\_get\_netdev\_by\_idx()
+   * network: Log cleanup thread pid for openswitch
+   * network: Log ifindex
+   * network: Log ifindex for host side veth device
+   * network: Log veth\_attr.pair and veth\_attr.veth1
+   * network: Move config\_value\_empty() to confile\_utils
+   * network: Perform network validation at creation time
+   * network: Remove allocation from lxc\_mkifname()
+   * network: Remove dead assignments
+   * network: Remove netpipe
+   * network: Retrieve correct names and ifindices
+   * network: Retrieve the host's veth device ifindex
+   * network: Rework network creation
+   * network: Send ifindex for unpriv networks
+   * network: Stop recording saved physical net devices
+   * network: Use correct network device name
+   * network: Use send()/recv()
+   * network: Use single helper to delete networks
+   * network: Use static memory for net device names
+   * openvswitch: Delete ports intelligently
+   * seccomp: Export the seccomp filter after load it into kernel successful
+   * seccomp: Print action name in log
+   * seccomp: s/n-new-privs/no-new-privs/g
+   * seccomp: Update comment for function `parse_config`
+   * start: Add lxc\_free\_handler()
+   * start: Add lxc\_init\_handler()
+   * start: Document all handler fields
+   * start: Don't call lxc\_map\_ids() without id map
+   * start: Don't close inherited namespace fds
+   * start: Don't let data\_sock users close the fd
+   * start: Dup std{in,out,err} to pty slave
+   * start: Ensure cgroups are cleaned up
+   * start: Generalize lxc\_check\_inherited()
+   * start: Log sending and receiving of tty fds
+   * start: lxc\_setup() after unshare(CLONE\_NEWCGROUP)
+   * start: Move env setup before container setup
+   * start: Pass LXC\_LOG\_LEVEL to hooks
+   * start: Pin rootfs when privileged
+   * start: Remove dead variable
+   * start: Send state to legacy lxc-monitord state server even if no state clients registered
+   * start: Set environment variables correctly
+   * start: Switch from SOCK\_DGRAM to SOCK\_STREAM
+   * start: Switch ids at last possible instance
+   * start: Use separate socket on daemonized start
+   * start: Use userns\_exec\_full()
+   * state: Remove lxc\_rmstate declaration
+   * storage: Add storage\_utils.{c.h}
+   * storage: Avoid segfault
+   * storage: Default to orig type on identical paths
+   * storage: Record output from mkfs.\*
+   * storage: Rename files "bdev" -> "storage"
+   * storage: Use userns\_exec\_full()
+   * storage/dir: Using 'add-required\_remount\_flags' function to add required flags
+   * storage/loop: Detect loop file
+   * storage/overlayfs: Fix wrong path
+   * storage/overlay: Handle overlay for stable 2.0
+   * template: Remove obsolete bind-mounts from userns.conf
+   * template: Use "rsync -SHaAX" to copy the cached rootfs into place
+   * template/alpine: Add support for ppc64le
+   * template/alpine: Change file check to also check file size (`-f` => `-s`)
+   * template/archlinux: Change locale "en-US.UTF-8" to "en\_US.UTF-8"
+   * template/centos: Add cronie to the pkg list
+   * template/centos: Use altarch mirror for CentOS on arches other than i386 and x86\_64
+   * template/debian: Add aarch64 -> arm64 mapping
+   * template/debian: Add buster as a valid release
+   * template/debian: Don't force getty@ configuration
+   * template/debian: Use deb.debian.org as the default Debian mirror
+   * template/download: Fix syntax error
+   * template/download: Sanitize script with shellcheck
+   * template/opensuse: Add Tumbleweed as supported release
+   * template/opensuse: Fix tumbleweed software selection
+   * template/opensuse: getty.target.wants does not always exists
+   * template/opensuse: Support leap 42.3
+   * template/opensuse: Tumbleweed has no update repo
+   * template/plamo: Delete unnecessary process during container shutdown
+   * template/ubuntu: Check that there is netplan binary, rather than just just a config directory
+   * template/ubuntu: Conditionally move upstart ssh job, as it is now optional
+   * template/ubuntu: Support netplan in newer releases by default
+   * tests: Adapt lxc-user-nic tests to new syntax
+   * tests: Add corner-case tests for lxc\_safe\_{u}int()
+   * tests: Add item clear and config file tests
+   * tests: Add test script to test the ro option of lxc.rootfs.options
+   * tests: Add unit tests for idmap parser
+   * tests: Avoid NULL pointer dereference
+   * tests: Compare return value to expected value whenever we can
+   * tests: Define a network before checks
+   * tests: Don't fail when no processes for the user exist
+   * tests: Enforce all methods for config items
+   * tests: Remove dead assignments
+   * tests: Remove the temp container directory
+   * tests: Shortlived daemonized containers
+   * tests: Support systemd hybrid cgroups
+   * tools: Add additional cgroup checks
+   * tools: Print "-devel" when LXC\_DEVEL is true
+   * tools/lxc-attach: Allow for situations without /dev/tty
+   * tools/lxc-checkconfig: Use "which"
+   * tools/lxc-checkconfig: Add CONFIG\_NETFILTER\_XT\_MATCH\_COMMENT
+   * tools/lxc-checkconfig: Add probe status checking
+   * tools/lxc-execute: Print error message when failed
+   * tools/lxc-ls: Return all containers by default
+   * tools/lxc-monitord: Exit when receiving a quit command
+   * tools/lxc-unshare: Do not pass NULL pointer
+   * tools/lxc-user-nic: Add new {create,delete} subcommands
+   * tools/lxc-user-nic: Check db before trying to delete
+   * tools/lxc-user-nic: Fix adding database entries
+   * tools/lxc-user-nic: Fix memleak
+   * tools/lxc-user-nic: Free memory and check for error
+   * tools/lxc-user-nic: Initialize vars to silence gcc-7
+   * tools/lxc-user-nic: Keep lines from other {users,links}
+   * tools/lxc-user-nic: Remove delta between master + stable
+   * tools/lxc-user-nic: Remove double initialization
+   * tools/lxc-user-nic: Rework renaming net devices
+   * tools/lxc-user-nic: Simplify logic
+   * tools/lxc-user-nic: Test privilege over netns on delete
+   * tools/lxc-usernsexec: Remove dead assignments
+   * travis: Fix builds
+   * utils: Add has\_fs\_type() + is\_fs\_type()
+   * utils: Add lxc\_nic\_exists()
+   * utils: Add lxc\_safe\_ulong()
+   * utils: Add run\_command
+   * utils: Close parent end in child process after fork
+   * utils: Do not write to 0 sized buffer
+   * utils: Duplicate stderr as well in lxc\_popen()
+   * utils: Fix lxc\_mount\_proc\_if\_needed()
+   * utils: Fix lxc\_popen()/lxc\_pclose()
+   * utils: Fix mem leak with realpath
+   * utils: Fix num parsing functions
+   * utils: Fix ppc64le builds
+   * utils: Fix the way to detect blocking signal
+   * utils: lxc\_popen() remove dead assignments
+   * utils: Move helpers from cgfsng.c to utils.{c,h}
+   * utils: Rework lxc\_deslashify()
+   * utils: Switch to has\_fs\_type()
+   * utils: Use 1LU otherwise we overflow
+   * utils: Use access instead of stat
+  
+  ### Downloads
+  The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
+  will very soon ship a packaged version of LXC 2.0.9.
+  
+  Should you be interested in individual changes or just looking at the detailed development history,
+  our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-2.0).
+  
+  

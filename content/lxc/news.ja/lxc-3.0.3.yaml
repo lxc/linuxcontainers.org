@@ -1,0 +1,244 @@
+title: LXC 3.0.3 リリースのお知らせ
+date: 2018/11/22 00:00
+origin: https://discuss.linuxcontainers.org/t/lxc-3-0-3-has-been-released/3358
+content: |-
+  ### はじめに <!-- Introduction -->
+  <!--
+  The LXC team is pleased to announce the release of LXC 3.0.3!
+  -->
+  LXC チームは LXC 3.0.3 のリリースをおしらせできることをうれしく思います！
+  
+  <!--
+  As a stable bugfix release, no major changes have been done, instead focusing on bugfixes and minor usability improvements.
+  -->
+  Stable に対するバグフィックスのためのリリースですので、大きな変更はありません。バグフィックスと細かな使い勝手の改良にフォーカスしています。
+  
+  #### ハイライト <!-- Highlights -->
+  
+   - コンパイラが持つよりセキュアなバイナリを生成するための機能を使うためにビルドフラグを見直しました <!-- Improved our default build flags to make use of compiler hardening -->
+   - 新しいカーネルで使える netlink の厳格なプロパティチェックのサポートを追加しました <!-- Added support for netlink strict property checking on newer kernels -->
+   - netlink の新しいインターフェース・アドレスの netns API のサポートを追加しました <!-- Added support for new netlink interface/address netns API -->
+   - 起動時のカーネルキーリングの処理を追加しました <!-- Added handling of the kernel keyring on startup -->
+  
+  #### バグ修正 <!-- Bugfixes -->(LXC)
+  
+   - CONTRIBUTING: カーネルのコーディングスタイルへのリファレンスを更新しました <!-- Update reference to kernel coding style -->
+   - CONTRIBUTING: カーネルの最新のオンラインドキュメントへリンクするようにしました <!-- Link to latest online kernel docs -->
+   - CONTRIBUTING: CODING\_STYLE.md を参照するように記載しました <!-- Direct readers to CODING\_STYLE.md -->
+   - CODING\_STYLE: 最初にカーネルのコーディングスタイルについて記載しました <!-- Mention kernel style in introduction -->
+   - CONTRIBUTING: 文法間違いを修正しました <!-- Add 'be' to fix grammar -->
+   - CODING\_STLYE: `extern` の使い方の説明を簡単にしました <!-- Simplify explanation for use of 'extern' -->
+   - CODING\_STLYE: カーネルのコーディングスタイルに含まれるセクションを削除しました <!-- Remove sections implied by 'kernel style' -->
+   - CODING\_STYLE: Markdown のセクションヘッダを調整しました <!-- Fix non-uniform heading level -->
+  <!-- - CODING\_STYLE: Update section header format -->
+   - lxc\_init: remove\_self 関数内で s/SYSDEBUG()/SYSERROR()/g <!-- in remove\_self -->
+   - tools: デフォルトのログプライオリティを追加し、コードのクリーンアップをしました <!-- add default log priority & cleanups -->
+   - storage\_utils: 重複している関数を移動させました <!-- move duplicated function from tools -->
+   - tools: `lxc-exec` のコマンドラインのパースの問題を修正しました <!-- fix lxc-execute command parsing -->
+   - lseek - integer overflow を修正しました
+   - cmd: `lxc-usernsexec` の include を並べ直しました <!-- lxc-usernsexec reorder includes -->
+   - cmd: `lxc-usernsexec` で utils.{c,h} のヘルパーを使うようにしました <!-- use utils.{c,h} helpers in lxc-usernsexec -->
+   - cmd: `lxc-usernsexec` を簡素化してクリーンアップしました <!-- simplify and cleanup lxc-usernsexec -->
+   - cmd: `lxc-usernsexec` で安全な数字のパーサーを使うようにしました <!-- use safe number parsers in lxc-usernsexec -->
+   - macro: 新たにマクロを追加したり、移動したり、削除したりしました。それらのマクロを使っていた部分を更新しました <!-- add, move, and remove some macros, and change macros to use -->
+   - tools: （訳注: `lxc-autostart` で）コンテナの起動が完全に失敗したのか、一部のコンテナのみ失敗したのかを示すようにしました <!-- Indicate container startup failure -->
+   - storage, storage_utils: 子プロセスでは `exit()` の代わりに `_exit()` を使うようにしました <!-- use _exit() instead of exit() in child process -->
+   - conf: tty セットアップ時の path と lxcpath の混同を修正しました <!-- fix path/lxcpath mixups in tty setup -->
+   - cmd: 使用前に変数を再割当てしないようにしました <!-- Do not reassign variable before it is used -->
+   - cmd: `count` 変数のスコープ範囲を減らしました <!-- Reduce scope of 'count' variable -->
+   - cmd: clang-format が見つけたフォーマットの問題を修正しました <!-- Fix format issues found by clang-format -->
+   - utils: `{file,string}\_utils.{c,h}` に分離しました <!-- split into {file,string}\_utils.{c,h} -->
+   - pam\_cgfs: liblxc と同じソースからビルドするようにしました <!-- build from the same sources as liblxc -->
+   - conf: 完全に非特権な場合の devpts マウントの問題を修正しました <!-- fix devpts mounting when fully unprivileged -->
+   - attach: 構造体の宣言を先頭に移動させました <!-- move struct declaration to top -->
+   - Makefile: 未定義シンボルを許さないようにしました <!-- don't allow undefined symbols -->
+   - autotools: コンパイラが十分に新しいかどうかチェックするようにしました <!-- check if compiler is new enough -->
+   - log: `strerror_r()` の複数バージョンを扱えるようにしました <!-- handle strerror\_r() versions -->
+   - autotools: `--{disable,enable}-thread-safety` を追加しました <!-- add \-\-{disable,enable}-thread-safety -->
+   - log: `ENFORCE_THREAD_SAFETY` エラー時にビルドを失敗させるようにしました <!-- fail build on ENFORCE\_THREAD\_SAFETY error -->
+   - {file,string}\_utils: `NO_LOG` を削除しました <!-- remove NO\_LOG -->
+   - initutils: 不要なコメントを削除しました <!-- remove useless comment -->
+   - string\_utils: 不要なヘッダの include を削除しました <!-- include remove unnecessary includes -->
+   - string\_utils: `remove_trailing_slashes()` を追加しました <!-- add remove\_trailing\_slashes() -->
+   - Makefile: 最後の `pam_cgfs` の特別なケースを削除しました <!-- remove last pam\_cgfs special-casing -->
+   - conf: 足りないヘッダを追加しました <!-- add missing headers -->
+   - typo を修正しました <!-- Fix typo -->
+   - ifaddrs: `getifaddrs()` の安全な実装を追加しました <!-- add safe implementation of getifaddrs() -->
+   - Makefile: 条件によって `ifaddrs.h` を include するようにしました <!-- conditionalize ifaddrs.h inclusion -->
+   - execute: 非特権の場合は `lxc-init` のロギングをスキップするようにしました <!-- skip lxc-init logging when unprivileged -->
+   - execute: `/proc/1/fd/<nr>` の代わりに `/proc/self/fd/<nr>` を与えるようにしました <!--  pass /proc/self/fd/<nr> -->
+   - tests: `get_item.c` をクリーンアップしました <!-- cleanup get\_item.c -->
+   - build: musl に対する修正を行いました <!-- fix musl -->
+   - configure: ヘッダのチェック順序を変更しました <!-- reorder header checks -->
+   - compiler: `compiler.h` を追加しました <!-- add compiler.h header -->
+   - commands: `lxc_cmd_get_init_pid()` のエラー時は -1 を返すようにしました <!-- return -1 on lxc\_cmd\_get\_init\_pid() err -->
+   - tests: basic.c を追加しました <!-- add basic.c -->
+   - tests: Makefile のクリーンアップを行いました <!-- cleanup Makefile -->
+   - commands: init pid に対する `EPIPE` 時は必ず -1 が送られるようにしました <!-- ensure -1 is sent on EPIPE for init pid -->
+   - Makefile: 正しく `noinst_HEADERS` に `ifaddrs.h` を追加されるようにしました <!--  correctly add ifaddrs to noinst\_HEADERS -->
+   - tree-wide: 静的な配列には sizeof を使うようにしました <!-- use sizeof on static arrays -->
+   - commands: `intmax_t` を与えるようにしました <!-- pass around intmax\_t -->
+   - commands: ポインタに変換する前に割り当てるようにしました <!-- assign before converting to pointer -->
+   - macro: 正しくバッファの長さを計算するようにしました <!-- calculate buffer lengths correctly -->
+   - caps: 配列境界への不正なアクセスを修正しました <!-- fix illegal access to array bound -->
+   - utils: 安全なプログラムにしました <!-- defensive programming -->
+   - nl: 重複する define を削除しました <!-- remove duplicated define -->
+   - 文法エラーを修正しました <!-- syntax error: mismatch brace -->
+   - commands: エラーメッセージを改良しました <!-- better error message -->
+   - file\_utils: add `lxc_recv_nointr()` を追加しました <!-- add lxc\_recv\_nointr() -->
+   - commands: errno を設定し、-1 を返すようにしました <!-- switch to setting errno and returning -1 -->
+   - log: errno を上書きしないようにしました <!-- do not clobber errno -->
+   - log,nl: errno を保存するようにしました <!-- save errno -->
+   - tree-wide: s/recv()/lxc\_recv\_nointr()/g
+   - file\_utils: `lxc_send_nointr()` を追加しました <!-- add lxc\_send\_nointr() -->
+   - tree-wide: s/send()/lxc\_send\_nointr()/g
+   - log: `log_append_logfile()` で新たにエラーパスを追加しました <!-- log\_append\_logfile() add new error path -->
+   - lxccontainer: ポインターの逆参照の問題を修正しました <!-- fix dereferenced pointer -->
+   - lxc: `--disable-werror` を付けた場合のビルドの問題を修正しました <!-- fix build with \-\-disable-werror -->
+   - utils: `get_ns_uid()` を改良し、`get_ns_gid()`、`lxc_switch_uid_gid()` を追加しました <!-- improve get\_ns\_uid(), add get\_ns\_gid(), and lxc\_switch\_uid\_gid() -->
+   - attach: id の切り替えをよりスマートに扱うようになりました <!-- handle id switching smarter -->
+   - start: 不要なシステムコール呼び出しを防ぐようにしました <!-- avoid unnecessary syscalls -->
+   - utils: `lxc_setgroups()` と `lxc_switch_uid_gid()` は bool を返すようにしました <!-- make lxc\_setgroups() and lxc\_switch\_uid\_gid() return bool -->
+   - lxccontainer: （訳注: int を使っていたのを）正しく `pid_t` を使うようにしました <!-- use correct pid\_t type -->
+   - conf: `sysfs:mixed` のときの余計な `MS_BIND` を削除しました <!-- remove extra MS\_BIND with sysfs:mixed -->
+   - network: `lxc_netns_set_nsid()` 内で正しい型を使うようにしました <!-- use correct type in lxc\_netns\_set\_nsid() -->
+   - network: `lxc_netns_get_nsid()` を追加しました <!-- add lxc\_netns\_get\_nsid() -->
+   - remove unused variables
+   - file\_utils: 使っていない関数を削除しました <!-- remove unused function -->
+   - network: 細かい調整を行いました <!-- minor tweaks -->
+   - log: 共通関数を追加しました <!-- add common functions -->
+   - attach: 子プロセスで ipc ソケットを shutdown しないようにしました <!-- don't shutdown ipc socket in child -->
+   - log, security, file\_utils: 広すぎる、一貫性のない全ユーザー向けのパーミッションを修正しました <!-- fix too wide or inconsistent non-owner permissions -->
+   - attach: 標準的なシェルの終了コードを返すようになりました <!-- report standard shell exit codes -->
+   - af\_unix: set sockaddr で重複するコードを削除するために関数を追加しました <!-- add function to remove duplicated codes for set sockaddr -->
+   - lxccontainer: `set_cgroup_item()` からロックを削除しました <!-- remove locks from set\_cgroup\_item() -->
+   - apparmor: configure で指定した rootfs のパスを見るようにしました（訳注: apparmorで指定しているrootfsのパスが決め打ちだった） <!-- account for specified rootfs path -->(closes #2617)
+   - conf: `realpath()` でバッファオーバーフローを防ぐために2つ目のパラメータとして null を使うようにしました <!-- realpath() uses null as second parameter to prevent buffer overflow -->
+   - start: s/backgrounded/daemonize/g
+   - cgfsng: `__cgfsng_ops` attribute でマークしました <!-- mark ops with \_\_cgfsng\_ops attribute -->
+   - autotools: `-Wimplicit-fallthrough` を追加しました <!-- add -Wimplicit-fallthrough -->
+   - cgroup: コンテナ特有の cgroup 関数をリネームしました <!-- rename container specific cgroup functions -->
+   - cgroups: s/fullcgpath/container\_full\_path/g
+   - cgroups: 欠けていた string.h の include を追加しました <!-- add missing string.h include -->
+   - cgroups: s/base\_cgroup/container\_base\_path/g
+   - autotools: 間違った `AX_CHECK_COMPILE_FLAG` のテストを修正しました <!-- fix wrong AX\_CHECK\_COMPILE\_FLAG test -->
+   - compiler: s/\_\_fallthrough\_\_/\_\_fallthrough/g
+   - compiler: s/\_\_noreturn\_\_/\_\_noreturn/g
+   - tree-wide: `sizeof()` を `SIZEOF2STRLEN()` で置き換えました <!-- replace sizeof() with SIZEOF2STRLEN() -->
+   - compiler: bionic では `__attribute__((noreturn))` を定義するようにしました <!-- \_\_attribute\_\_((noreturn)) on bionic -->
+   - autotools: `-Wcast-align, -Wstrict-prototypes` のサポートを追加しました <!-- support -Wcast-align, -Wstrict-prototypes -->
+   - network: `netns_getifaddrs()` の実装を追加しました <!-- add netns\_getifaddrs() implementation -->
+   - tree\_wide: `netns_getifaddrs()` に切り替えました <!-- switch to netns\_getifaddrs() -->
+   - netns\_ifaddrs: キャストを安全とマークしました <!-- mark casts as safe -->
+   - autotools: ビルドの問題を修正しました <!-- fix some builds -->
+   - stop: freezer が利用可能な場合のみ freeze するようにしました <!-- Only freeze if freezer is available -->
+   - doc: 文書を少し調整しました <!-- tweak documentation a little -->
+   - cgfsng: `get_hierarchy()` で errno を `ENOENT` に設定するようにしました <!-- set errno to ENOENT on get\_hierarchy() -->
+   - cgfsng: s/cgfsng\_destroy/cgfsng\_payload\_destroy/g
+   - cgfsng: s/25/INTTYPE\_TO\_STRLEN(pid\_t)/g
+   - compiler: bionic で `__noreturn` を修正しました <!-- fix \_\_noreturn on bionic -->
+   - compiler: \_\_hot attribute を追加しました <!-- add \_\_hot attribute -->
+   - netns\_ifaddrs: 欠けていた include を追加しました <!-- fix missing include -->
+   - tree-wide: bionic でのビルドを修正するために include を修正しました <!-- fix includes to fix bionic builds -->
+   - template: OCI テンプレートが文字のユーザー情報を扱えるようになりました <!-- oci template supports for char user info -->
+   - btrfs: btrfs コンテナでの問題を修正しました <!-- fix btrfs containers -->
+   - oci-template: `/etc/passwd,group` がない場合のロジックを追加しました <!-- Add logic for no /etc/passwd, group -->
+   - configure: `-Wimplicit-fallthrough` のチェックを修正しました <!-- fix -Wimplicit-fallthrough check -->
+   - utils: `lxc_setup_keyring()` を追加しました <!-- add lxc\_setup\_keyring() -->
+   - autotools: `-z relro` と `-z now` をサポートしました <!-- support -z relro and -z now -->
+   - netns\_ifaddrs: `IFLA_STATS{64}` を正しく扱うようにしました <!-- handle IFLA\_STATS{64} correctly -->
+   - syscall\_wrappers: `pivot_root()` を追加しました <!-- add pivot\_root() -->
+   - raw\_syscalls: `lxc_raw_execveat()` を追加しました <!-- add lxc\_raw\_execveat() -->
+   - raw\_syscalls: `lxc_raw_clone{_cb}()` を追加しました <!-- add lxc\_raw\_clone{_cb}() -->
+   - raw_syscalls: `lxc_raw_getpid()` を追加しました <!-- add lxc\_raw\_getpid() -->
+   - tests: 欠けていたビルド時の依存情報を追加しました <!-- add missing build dependencies -->
+   - netns\_ifaddrs: `struct rtnl_link_stats64` だけを使うようにしました <!-- only use struct rtnl\_link\_stats64 -->
+   - cgroups: 不要な行を削除しました <!-- remove unnecessary line -->
+   - netns\_iaddrs: 使われていない関数を削除しました <!-- remove unused functions -->
+   - parse: `MAP_POPULATE` を使って設定ファイルを prefault するようにしました <!-- prefault config file with MAP\_POPULATE -->
+   - cgfsng: 小さい競合状態を防ぎました <!-- avoid tiny race window -->
+   - utils: `lxc_set_death_signal()` を修正しました <!-- fix lxc\_set\_death\_signal() -->
+   - cgfsng: v1 cpuset 階層を最初に扱うようにしました <!-- handle v1 cpuset hierarchy first -->
+   - syscall\_wrappers: 関数の定義をいくつか移動させました <!-- move some functions definitions -->
+   - raw\_syscalls: `lxc_raw_gettid()` を移動しました <!-- move lxc\_raw\_gettid() -->
+   - tools: lxc-start: 使われていない引数を削除しました <!-- remove unused argument -->
+   - tools: lxc-unshare: 不要な初期化を削除しました <!-- remove unnecessary initialization -->
+   - parse: `access()` のチェックを削除しました <!-- remove access() check -->
+   - parse: 設定のパースに失敗したときはエラーを報告するようにしました <!-- report errors when failing config parsing -->
+   - attach: シグナルマスクのリセットを行うようにしました <!-- reset signal mask -->
+   - start: ログレベルを変更しました <!-- change log level -->
+   - attach: 足りなかった `pthread.h` の include を追加しました <!-- fix missing pthread.h include -->
+   - netns\_ifaddrs: `NETLINK_DUMP_STRICT_CHK` を使ったチェックを行うようにしました <!-- check for NETLINK\_DUMP\_STRICT\_CHK -->
+   - parse: 失敗したログを出力するようにしました <!-- do not mask failed parse -->
+   - test: 不正な設定キーをテストするようにしました <!-- test invalid config keys -->
+   - confile: 使っていない変数を削除しました <!-- remove unused variable -->
+   - parse: 初期化していないぽいんたへのアクセスを修正しました <!-- fix uninitialized pointer access -->
+   - rpm パッケージ作成時の静的ライブラリの問題を修正しました <!-- fix rpm packaging error for static library -->
+   - rpm install の post セクションのスクリプトエラーを修正しました <!-- fix post section script error for rpm install -->
+   - conf: prlimit のセットアップ時のログを出力するようにしました <!-- log prlimit setup -->
+   - conf: `lxc.mount.entry` 後に `verify_start_hooks()` を実行するようにしました <!-- verify\_start\_hooks() after lxc.mount.entry -->
+   - checkpoint: `do_dump()` 実行時の問題を修正しました <!-- fix running do\_dump() -->
+   - monitor: ログのクリーンアップを行いました <!-- log cleanups -->
+   - monitor: モニターのソケット名が長すぎないかチェックするようになりました <!-- checking name too long to make monitor sock name -->
+   - commands\_utils: 抽象（abstract） UNIX ソケット名生成のコードの冗長さを改良しました <!-- improve code redundancy to make abstract unix socket name -->
+   - autools: `-fno-strict-aliasing` を使うようにしました <!-- use -fno-strict-aliasing -->
+   - checkconfig: カーネルバージョンが取得できない場合の処理を追加しました <!-- Handle missing kernel version -->
+   - lxc-init: `/dev/console` にログを出力するようにしました <!-- log to /dev/console -->
+   - autotools: `--disable-commands` を指定した場合のビルドの問題を修正しました <!-- fix \-\-disable-commands builds -->
+   - string\_utils: バッファオーバーフローの問題を修正しました <!-- fix global buffer overflow issue -->
+   - include: `strlcpy()` を簡素化しました <!-- simplify strlcpy() -->
+   - raw\_syscalls: 常に関数が返り値を返すようにしました <!-- ensure function always returns value -->
+   - confile: `append_unexp_config_line()` の問題を修正しました <!-- fix append\_unexp\_config\_line() -->
+   - parse: パース中の設定値の更新から保護するようにしました <!-- protect against config updates during parse -->
+   - parse: 初期化されていない値を修正しました <!-- fix uninitialized value -->
+   - tree-wide: コーディングスタイルの修正を行いました <!-- coding style fixes -->
+   - start, commands: 簡素化しました <!-- simplify -->
+   - autotools: コンパイラベースの hardening を行うようにしました <!-- compiler based hardening -->
+   - confile: グローバル変数を上書きしないようにしました <!-- do not overwrite global variable -->
+   - cgfsng: インクリメントを分岐の外に出しました <!-- move increment out of branch -->
+   - cmd/lxc\_init, monitord, tools: グローバル変数を上書きしないようにしました <!-- do not hide global variable -->
+   - state,conf: チェックの繰り返しを削除しました <!-- remove tautological check -->
+   - conf: `lxc_pivot_root()` 内で `O_CLOEXEC` を使うようにしました <!-- use O\_CLOEXEC in lxc\_pivot\_root() -->
+   - lxccontainer: goto ターゲットからチェックを削除しました <!-- remove check from goto target -->
+   - start: 0 より小さい値を取れないようにしました <!-- prevent values smaller 0 -->
+   - tools/lxc\_stop: 正しくチェックするようにしました <!-- use correct check -->
+   - coverity によって見つかった問題を修正しました <!-- fix coverity-found problems -->
+   - storage\_utils: エラーハンドリングを追加しました <!-- add error handling -->
+   - parse, storage\_utils: クリーンアップしました <!-- cleanups -->
+   - スペルの修正を行いました <!-- fix spellings -->
+   - include: macro.h を正しく include するようにしました <!-- correctly include macro.h -->
+   - 不要なスペースを削除しました <!-- Fix spacing error in namespace.c -->
+   - caps: `read` を `lxc_read_nointr` で置き換えました <!-- replace read with lxc\_read\_nointr -->
+   - log: `write` を `lxc_write_nointr` に置き換えました <!-- replace write with lxc\_write\_nointr -->
+   - pam\_cgfs: ファイルユーティリティ関数の重複を削除しました <!-- remove redundancy file utils -->
+   - cgfs: ユーティリティ関数の重複を削除しました <!-- remove redundancy utils -->
+   - pam\_cgfs: cap と log に対する依存を削除しました <!-- remove dependency from cap & log -->
+   - utils: 例外の場合に errno をログに出力するようにしました <!-- add errno logs for exception case -->
+   - `lvcreate` コマンドに `-qq` オプションを追加しました。これにより LVM サブシステムが `lxc-create` コマンドのハングアップを防ぐために no と答えることを防ぎます <!-- Adds -qq flags to lvcreate commands to avoid answer 'no' to ant questions the LVM subsystem asks to avoid hanging lxc-create command -->
+   - utils: キーリングの割当失敗を致命的としないようにしました <!-- make keyring allocation failure non-fatal -->
+   - autotools: `lxc-{create,copy} のビルドの問題を修正しました <!-- `fix lxc-{create,copy} build -->
+   - cgfsng: 要求仕様から freezer を削除しました <!-- remove freezer requirement -->
+   - start: `cgroup_exit()` を二度呼ばないようにしました <!-- don't call cgroup\_exit() twice -->
+  
+  #### バグ修正（LXCテンプレート） <!-- Bugfixes (LXC templates) -->
+  
+   - alpine: `setpcap` を drop するのをオプショナルにしました <!-- Make dropping setpcap optional -->
+   - plamo: デフォルトバージョンを 7.x にしました <!-- Update the default version to 7.x -->
+   - sabayon: ディレクトリが存在するときに失敗しないようにしました <!-- Don't fail on existing directories -->
+  
+  #### バグ修正（python3 バインディング） <!-- Bugfixes (python3 binding) -->
+  
+   - このリリースでは変更はありません。バージョンを上げただけです <!-- No changes in this release, version bump only -->
+  
+  ### サポートとアップグレード <!-- Support and upgrade -->
+  <!--
+  LXC 3.0.3 is supported until June 2023 and is our current LTS release, users are encouraged to update to the latest bugfix releases as they're made available.
+  -->
+  LXC 3.0.3 は 2023 年 6 月までサポートされる最新の LTS リリースです。
+  利用可能になった最新のバグ修正リリースに更新することをお勧めします。
+  
+  ### ダウンロード <!-- Downloads -->
+   - LXC リリース tarball <!-- Main release tarball -->: [lxc-3.0.3.tar.gz](https://linuxcontainers.org/downloads/lxc/lxc-3.0.3.tar.gz) (GPG: [lxc-3.0.3.tar.gz.asc](https://linuxcontainers.org/downloads/lxc/lxc-3.0.3.tar.gz.asc))
+   - LXC テンプレート tarball <!-- LXC templates tarball -->: [lxc-templates-3.0.3.tar.gz](https://linuxcontainers.org/downloads/lxc/lxc-templates-3.0.3.tar.gz) (GPG: [lxc-templates-3.0.3.tar.gz.asc](https://linuxcontainers.org/downloads/lxc/lxc-templates-3.0.3.tar.gz.asc))
+   - LXC python3 バインディング <!-- LXC python3 bindings tarball -->: [python3-lxc-3.0.3.tar.gz](https://linuxcontainers.org/downloads/lxc/python3-lxc-3.0.3.tar.gz) (GPG: [python3-lxc-3.0.3.tar.gz.asc](https://linuxcontainers.org/downloads/lxc/python3-lxc-3.0.3.tar.gz.asc))
+  

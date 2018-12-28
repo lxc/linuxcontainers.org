@@ -1,0 +1,554 @@
+title: LXC 3.0.0 リリースのお知らせ
+date: 2018/03/27 00:00
+origin: https://discuss.linuxcontainers.org/t/lxc-3-0-0-has-been-released/1449
+content: |-
+  
+  ### はじめに <!-- Introduction -->
+  <!--
+  The LXC team is pleased to announce the release of LXC 3.0.0!
+  -->
+  LXC チームは LXC 3.0.0 のリリースをお知らせできることをうれしく思います！
+  
+  <!--
+  This is the result of over 6 months of intense work since the LXC 2.1.0 release
+  This is the third LTS release for the LXC project and will be supported until June 2023.
+  -->
+  このリリースは LXC 2.1.0 のリリース以来 6 ヶ月に及ぶ集中した作業の成果で、LXC プロジェクトの 3 つ目の LTS リリースとなります。そして、2023 年までサポートされます。
+  
+  
+  ### 主な変更点 <!-- Major changes -->
+  #### すべてのコマンドでの `lxc-start <コンテナ名>` という文法のサポート <!-- All commands support `lxc-start <container-name>` syntax -->
+  
+  <!--
+  The LXC tools now support passing the container name without the `-n` command line flag. For example, you can now run:
+  -->
+  LXC のコマンドラインツールは `-n` を省略してコンテナ名を指定して実行できるようになりました。例えば、以下のように実行できます:
+  
+      chb@conventiont|~
+      > lxc-start xenial
+  
+      chb@conventiont|~
+      > lxc-info xenial
+      Name:           xenial
+      State:          RUNNING
+      PID:            12765
+      Memory use:     15.24 MiB
+      KMem use:       3.72 MiB
+      Link:           veth99VMO3
+       TX bytes:      858 bytes
+       RX bytes:      2.49 KiB
+       Total bytes:   3.33 KiB
+  
+      chb@conventiont|~
+      > lxc-attach xenial
+      root@xenial:/# exit
+  
+      chb@conventiont|~
+      > lxc-stop xenial
+  
+  #### すべてのレガシーな設定項目の削除 <!-- Removed support for all legacy configuration keys -->
+  <!--
+  All legacy configuration keys are unsupported from LXC 3.0 onwards.
+  The full list of deprecated keys and their new counterparts can be gathered from the [LXC 2.1 release announcement](https://discuss.linuxcontainers.org/t/lxc-2-1-has-been-released/487).
+  -->
+  LXC 3.0 以降、レガシーな設定項目はすべてサポートされません。
+  廃止された設定と、対応する新しい設定のすべてのリストは、[LXC 2.1 リリースのお知らせ](http://localhost/ja/lxc/news/#lxc-211-2017-10-19) を参照してください。
+  
+  <!--
+  The `lxc-update-config` tool can be used to convert an older, now invalid, configuration to the new format.
+  -->
+  `lxc-update-config` ツールを使って、古い無効な設定を新しいフォーマットに変換できます。
+  
+  #### リソース制限を含む単一階層の cgroup のフルサポート <!-- Full support for the unified cgroup hierarchy including resource limits -->
+  <!--
+  We are pleased to announce that LXC will fully support the new unified cgroup hierarchy (or cgroup v2, cgroup2). To this end we also introduced a new configuration key `lxc.cgroup2.[controller name]` to configure cgroup limits on the unified cgroup hierarchy.
+  For detailed information you can read [this blogpost](https://brauner.github.io/2018/02/19/lxc-lands-unified-cgroup-hierarchy-support.html).
+  -->
+  LXC が、新しい単一階層構造の cgroup (cgroup v2、cgroup2) を完全にサポートしました。この機能を使い、単一階層構造の cgroup で制限を設定するために、`lxc.cgroup2.[コントローラ名]` という設定項目を追加しました。
+  さらに詳しい情報を得るには、["LXC Lands Unified cgroup Hierarchy Support"](https://brauner.github.io/2018/02/19/lxc-lands-unified-cgroup-hierarchy-support.html) というブログポストをご覧ください。
+  
+  #### レガシーな cgmanager、cgfs cgroup ドライバの削除 <!-- Removal of legacy cgmanager and cgfs cgroup drivers -->
+  <!--
+  LXC removed the `cgmanager` and `cgfs` legacy cgroup drivers cleaning up a lot of code in the process. For detailed information you can read [this blogpost](https://brauner.github.io/2018/02/20/lxc-removes-legacy-cgroup-drivers.html).
+  -->
+  LXC から、`cgmanager` と `cgfs` というレガシーな cgroup ドライバを削除し、多数のコードを削除しました。さらに詳しい情報を得るには、["On The Way To LXC 3.0: Removal of cgmanager And cgfs cgroup Drivers"](https://brauner.github.io/2018/02/20/lxc-removes-legacy-cgroup-drivers.html) というブログポストをご覧ください。
+  
+  #### テンプレートと言語バインディングの分離 <!-- Splitting out templates and language bindings -->
+  <!--
+  LXC removes the legacy template-based container build system in favor of the new project [distrobuilder](https://github.com/lxc/distrobuilder). For detailed information you can read [this blogpost](https://brauner.github.io/2018/02/27/lxc-removes-legacy-template-build-system.html).
+  -->
+  コンテナイメージのビルドシステムの新しいプロジェクトである [distrobuilder](https://github.com/lxc/distrobuilder) が立ち上がりましたので、従来のテンプレートベースのコンテナビルドシステムは削除されました。さらに詳しい情報を得るには、["On The Way To LXC 3.0: Splitting Out Templates And Language Bindings"](https://brauner.github.io/2018/02/27/lxc-removes-legacy-template-build-system.html) というブログポストをご覧ください。
+  
+  <!--
+  Note that to simplify migration, the old template scripts and configuration files remain available in a [separate repository](https://github.com/lxc/lxc-templates) and are released along with LXC 3.0.0 as `lxc-templates`.
+  -->
+  移行を簡単にするために、以前のテンプレートスクリプトと設定ファイルは [別のリポジトリ](https://github.com/lxc/lxc-templates) に残しており、LXC 3.0.0 と同時に `lxc-templates` としてリリースしています。
+  
+  <!--
+  The following templates remain in the LXC 3.0 tree and are fully supported:
+  -->
+  以下のテンプレートは LXC 3.0 ツリーにも残っており、フルサポートされます:
+  
+   - lxc-busybox (通常テストに使われる) <!-- (mostly used for testing) -->
+   - lxc-download (プロジェクトでビルド済みのイメージをダウンロードする) <!-- (download our pre-built images) -->
+   - lxc-local (ローカルでビルドされたイメージをインポートする (例えば distrobuilder などで)) <!-- (import locally build images (e.g. from distrobuilder)) -->
+   - lxc-oci (OCI アプリケーションコンテナイメージを使う) <!-- (use OCI application container images) -->
+  
+  #### cgroup PAM モジュールの LXC ツリーへの移動 <!-- Moving the cgroup PAM module into the LXC tree -->
+  <!--
+  LXC has always supported fully unprivileged containers, i.e. unprivileged containers run by unprivileged users. An important piece in doing so was a PAM module that created writable cgroups for unprivileged users. This has been moved from the LXCFS tree into the LXC tree itself to make it even easier for users to run fully unprivileged containers.
+  For detailed information you can read [this blogpost](https://brauner.github.io/2018/02/28/lxc-includes-cgroup-pam-module.html).
+  -->
+  LXC は常に非特権コンテナを完全にサポートしてきています。非特権コンテナは特権を持たないユーザが実行します。この実行を行うための重要な要素が、特権を持たないユーザが書き込み権を持つ cgroup を作成する PAM モジュールでした。この PAM モジュールが LXCFS から LXC に移されました。これにより、ユーザが完全に非特権のコンテナをさらに簡単に実行できるようになりました。
+  さらに詳細な情報を得るには、["On The Way To LXC 3.0: Moving The Cgroup Pam Module Into The LXC Tree (Including A Detour About Fully Unprivileged Containers)"](https://brauner.github.io/2018/02/28/lxc-includes-cgroup-pam-module.html) というブログポストをご覧ください。
+  
+  #### 新しい `OCI` テンプレートの追加 <!-- New `OCI` template -->
+  <!--
+  This adds support for creating application containers from OCI formats. 
+  Examples:
+  -->
+  このテンプレートで、OCI フォーマットからアプリケーションコンテナを作成できるようになります。例えば:
+  
+  <!--
+  - create a container from a local OCI layout in ../oci:
+  -->
+  - `../oci` にあるローカルの OCI レイアウトからコンテナを作成するには:
+  
+    `sudo lxc-create -t oci -n a1 -- -u oci:../oci:alpine`
+  
+  <!--
+  - create a container pulling from the docker hub.
+  -->
+  - docker hub からイメージを取得してコンテナを作成するには:
+  
+    `sudo lxc-create -t oci -n u1 -- -u docker://ubuntu`
+  
+  <!--
+  The URL is specified in the same format as for `skopeo copy`.
+  -->
+  URL は `skopeo copy` と同じ形式で指定します。
+  
+  #### コンソールのロギング用のシンプルで効率的なリングバッファ <!-- Simple and efficient ringbuffer for console logging -->
+  <!--
+  LXC supports logging the container's console to a file. This had the unfortunate side effect of allowing a user in the container to effectively write as much data as they wanted on the host, possibly bypassing quotas in place for the container.
+  -->
+  LXC はコンテナのコンソールをファイルにロギングする機能をサポートしています。これによりコンテナ内のユーザが、実際にはホスト上で必要なだけたくさんのデータを書き込み、コンテナに与えられたクォータをバイパスできる可能性があるという不幸な副作用をもたらしました。
+  
+  <!--
+  This basic implementation was also somewhat annoying to query, having to read a potentially huge file which wasn't reset on container restart.
+  -->
+  この基本的な実装は、コンテナの再起動ではリセットされない、非常に大きくなる可能性のあるファイルを読む必要があり、照会が少し厄介なものでもありました。
+  
+  <!--
+  LXC 3.0 now introduces a ringbuffer for console logging. This in-memory buffer is size-limited and can be queried through a new function in the LXC API. It can be reset at any time and can be dumped to disk on container shutdown.
+  -->
+  LXC 3.0 ではコンソールロギングにリングバッファが導入されました。このメモリ内のバッファはサイズ制限があり、LXC API の新しい関数で照会できます。いつでもリセットでき、コンテナのシャットダウン時にダンプすることもできます。
+  
+  #### seccomp の引数を使ったシステムコールのフィルタ <!-- Allow seccomp to filter syscalls based on arguments -->
+  <!--
+  In order to support filtering syscalls based on arguments the `seccomp` version `2` specification is extended to the following form:
+  -->
+  引数を使ってシステムコールをフィルタリングするために、`seccomp` バージョン 2 の仕様が以下のような形に拡張されました:
+  
+      syscall_name action [index,value,op,valueTwo] [index,value,op]...
+  
+  <!--
+  where the arguments of the tuple `[index,value,valueTwo,op]` have the following meaning:
+  -->
+  ここでタプル `[index,value,valueTwo,op]` の引数は以下のような意味です:
+  
+  1. index (`uint32_t`):
+         システムコール引数のインデックス。 <!-- The index of the syscall argument. -->
+  2. value (`uint64_t`):
+         "index" で指定されるシステムコール引数の値。 <!-- The value for the syscall argument specified by "index". -->
+  3. valueTwo (`uint64_t`, optional):
+         "index" で指定されるシステムコール引数の値。このオプショナルな値は `SCMP_CMP_MASKED_EQ` との組み合わせで使うときのみ有効です。 <!-- The value for the syscall argument specified by "index". This optional value
+         is only valid in conjunction with `SCMP_CMP_MASKED_EQ`. -->
+  4. op (`char *`):
+         システムコール引数の演算子。有効な演算子は `libseccomp >= v2.3.2` で定義された定数です。 <!-- The operator for the syscall argument. Valid operators are the constants -->
+         - `SCMP_CMP_NE` or `(!=)`
+         - `SCMP_CMP_LE`  or `(<=)`
+         - `SCMP_CMP_EQ` or `(==)`
+         - `SCMP_CMP_GE` or `(>=)`
+         - `SCMP_CMP_GT` or  `(>)`
+         - `SCMP_CMP_MASKED_EQ` or `(&=)`
+  
+        <!-- as defined by `libseccomp >= v2.3.2`.
+        For convenience liblxc also understands the standard operator notation indicated in brackets after the libseccomp constants above as an equivalent notation.
+        Note that it is legal to specify multiple entries for the same syscall. 
+        -->
+        便宜上 liblxc は、上記の libseccomp 定数の後にかっこで示された標準の演算子表記も、同等の表記法として理解します。
+        同じシステムコールに対して複数のエントリを指定することは正しいことに注意してください。
+  
+  <!--
+  An example for an extended seccomp version 2 profile is:
+  -->
+  拡張されたバージョン 2 プロファイルの例:
+  
+      2
+      blacklist allow
+      reject_force_umount  # comment this to allow umount -f;  not recommended
+      [all]
+      kexec_load errno 1 [0,1,SCMP_CMP_LE][3,1,==][5,1,SCMP_CMP_MASKED_EQ,1]
+      open_by_handle_at errno 1
+      init_module errno 1
+      finit_module errno 1
+      delete_module errno 1
+      unshare errno 9 [0,0x10000000,SCMP_CMP_EQ]
+      unshare errno 2 [0,0x20000000,SCMP_CMP_EQ]
+  
+  #### アプリケーションコンテナのデーモン化のサポート <!-- Support for daemonized app containers -->
+  <!--
+  This enables daemonized application containers with our minimal init running as pid one and the requested program running as second pid.
+  -->
+  
+  最小限の動きをする init を pid 1 で実行し、指定したプログラムを pid 2 で実行するアプリケーションコンテナを、デーモンとして起動できるようになりました。
+  
+  #### `lxc-*` ツールからのすべての内部シンボルの削除 <!-- Remove all internal symbols from `lxc-*` tools -->
+  <!--
+  The `lxc-*` tools now only entirely rely on the public LXC API.
+  -->
+  `lxc-*` ツールは、もっぱら公開された LXC API にのみ、依存するようになりました。
+  
+  #### `hidepid={1,2}` プロパティを使ってマウントされた `/proc` の扱い <!-- Handle `/proc` being mounted with the `hidepid={1,2}` property -->
+  <!--
+  This enables attaching to containers when the host's `/proc` filesystem was mounted with the `hidepid={1,2}` option which restricts access to `/proc/PID` directories.
+  -->
+  ホストの `/proc` が、`/proc/PID` ディレクトリに対するアクセスを制限する `hidepid={1,2}` を指定してマウントされている場合でも、コンテナにアタッチできるようになりました。
+  
+  #### マウント時のマウントプロパゲーションのサポート <!-- Support mount propagation for mounts -->
+  <!--
+  This adds support for mount propagation (`private`, `shared`, `slave`, `unbindable`, `rprivate`, `rshared`, `rslave`, `runbindable`) to mount entries specified via `lxc.mount.entry` and `lxc.mount.fstab`.
+  -->
+  `lxc.mount.entry` と `lxc.mount.fstab` で指定されるマウントエントリに、マウントプロパゲーション (`private`, `shared`, `slave`, `unbindable`, `rprivate`, `rshared`, `rslave`, `runbindable`) が指定できるようになりました。
+  
+  #### 確実なスレッドセーフ <!-- Hardened thread-safety -->
+  <!--
+  The details of this can be gathered from [this blogpost](https://brauner.github.io/2018/03/04/locking-in-shared-libraries.html).
+  -->
+  この項目に関する詳細は [Mutexes And fork()ing In Shared Libraries](https://brauner.github.io/2018/03/04/locking-in-shared-libraries.html) というブログポストをご覧ください。
+  
+  #### `aufs` ストレージドライバの削除 <!-- Remove `aufs` storage driver -->
+  <!--
+  The `aufs` storage driver has been deprecated since LXC 2.1 and is now officially removed.
+  -->
+  LXC 2.1 で廃止予定となっていた `aufs` ストレージドライバが、今回正式に削除されました。
+  
+  #### コーディングスタイル、コードのクリーンアップ <!-- Coding style and code cleanups -->
+  <!--
+  Code cleanups have been performed widely across the codebase based on our written down [coding style](https://github.com/lxc/lxc/blob/master/CODING_STYLE.md).
+  -->
+  [コーディングスタイル](https://github.com/lxc/lxc/blob/master/CODING_STYLE.md) に基づいて、コードベース全体に渡って広く、コードのクリーンアップを実行しました。
+  
+  ### 新たな設定項目 <!-- New Configuration Keys -->
+  
+  #### `lxc.cgroup2.[controller name]`
+  <!--
+  Specify the control group value to be set on the unified cgroup shierarchy. The controller name is the literal name of the control group. The permitted names and the syntax of their values is not dictated by LXC, instead it depends on the features of the Linux kernel running at the time  the  container is started, for example, `lxc.cgroup2.memory.high`.
+  -->
+  単一階層構造の cgroup (cgroup v2) に設定する値を指定します。`controller name` はコントロールグループそのままの名前です (訳注: cgroup 以下に現れるファイル名そのまま)。使える名前や指定する値の書式は LXC が指示することはありません。コンテナ実行時点のカーネルの機能に依存します。例えば `lxc.cgroup2.memory.high` のようになります。
+  
+  #### `lxc.hook.version`
+  <!--
+  To pass the arguments in new style via environment variables set to `1` otherwise set to `0` to pass them as arguments.  This  setting  affects  all  hooks arguments  that were traditionally passed as arguments to the script. Specifically, it affects the container name, section (e.g. 'lxc', 'net') and hook type (e.g.  'clone', 'mount', 'pre-mount') arguments. If new-style hooks are used then the arguments will be available as environment  variables. The container name will be set in `LXC_NAME`. (This is set independently of the value used for this config item.) The section will be set `LXC_HOOK_SECTION` and the hook type will be set in `LXC_HOOK_TYPE`.  It also affects how the paths to file descriptors referring to the container's namespaces are  passed. If  set  to  `1`  then  for  each namespace a separate environment variable `LXC_[NAMESPACE IDENTIFIER]_NS` will be set. If set to `0` then the paths will be passed as arguments to the stop hook.
+  -->
+  環境変数経由の新しいスタイルで引数を渡すには 1  に設定します。そうでなく、引数として渡すには  0 に設定します。この設定は、古い方法でスクリプトに引数として渡されているすべてのフック引数に影響します。特に、コンテナ名のセクション (例: 'lxc', 'net') とフックタイプ (例: 'clone', 'mount', 'pre-mount') 引数に影響します。新しいスタイルのフックが使われる場合、引数は環境変数として利用できます。コンテナ名は LXC_NAME に設定されます(これはこの設定項目に設定されている値とは関係なく設定されます)。セクションは LXC_HOOK_SECTION に設定されます。そしてフックタイプは LXC_HOOK_TYPE に設定されます。この設定は、コンテナの名前空間を参照するファイルディスクリプタのパスをどのように渡すかにも影響します。1 に設定した場合、名前空間ごとに別の環境変数 LXC_[NAMESPACE IDENTIFIER]_NS に設定されます。0 に設定すると、パスは stop フックの引数として渡されます。
+  
+  #### `lxc.execute.cmd`
+  <!--
+  Absolute path from container rootfs to the binary to run by default. This configuration options can be set to to specify the default binary for application container started via the `execute()` API call and accompanies the system container based `lxc.init.cmd` configuration key.
+  -->
+  デフォルトで実行するバイナリのコンテナの root からの絶対パスを指定します。このオプションは `execute()` API 経由で呼ばれて実行されるアプリケーションコンテナのデフォルトバイナリを指定するために使います。システムコンテナの `lxc.init.cmd` に相当します。
+  
+  #### `lxc.init.cwd`
+  <!--
+  Absolute path inside the container to use as the working directory.
+  -->
+  ワーキングディレクトリとして使うコンテナ内の絶対パスです。
+  
+  #### `lxc.proc.[proc file name]`
+  <!--
+  Specify the proc file name to be set. The file names available are those listed under the `/proc/PID/` directory.  For example, `lxc.proc.oom_score_adj = 10`.
+  -->
+  設定したい proc 以下のファイル名。指定できるファイル名は `/proc/PID/` 以下に存在するものです。例えば `lxc.proc.oom_score_adj = 10` のように使います。
+  
+  #### `lxc.console.buffer.size`
+  <!--
+  Setting this option instructs LXC to allocate an in-memory ringbuffer. The container's console output will be written to the ringbuffer.  Note  that ringbuffer  must be at least as big as a standard page size. When passed a value smaller than a single page size LXC will allocate a ringbuffer of a single page size. A page size is usually `4kB`.  The keyword `auto` will cause LXC to allocate a ringbuffer of `128kB`.  When manually specifying a size for  the  ringbuffer the value should be a power of `2` when converted to bytes. Valid size prefixes are `kB`, `MB`, `GB`. (Note that all conversions are based on multiples of `1024`. That means `kb == KiB`, `MB == MiB`, `GB == GiB`.)
+  -->
+  このオプションを設定すると、LXC はインメモリのリングバッファを割り当てます。コンテナのコンソールはリングバッファに出力されます。リングバッファは少なくとも標準ページサイズの大きさでなければなりません。ページサイズより小さい値を与えた場合は、LXC はページサイズのリングバッファを割り当てます。ページサイズは通常は `4kB` です。`auto` を指定すると、LXC は `128kB` のリングバッファを割り当てます。リングバッファサイズを数値指定する場合、値がバイトに変換されるときに 2 の累乗になります。サイズ接頭辞付きの単位として `kB`、`MB`、`GB` が使えます。(この場合の変換は 1024 の倍数に基づいています。つまり `kB` == `KiB`、`MB` == `MiB`、`GB` == `GiB` という意味です。)
+  
+  #### `lxc.console.size`
+  <!--
+  Setting this option instructs LXC to place a limit on the size of the console log file specified in `lxc.console.logfile`. Note that size of  the  log file  must  be  at  least as big as a standard page size. When passed a value smaller than a single page size LXC will set the size of log file to a single page size. A page size is usually `4kB`.  The keyword `auto` will cause LXC to place a limit of `128kB` on the log file.  When manually  specifying a size for the log file the value should be a power of `2` when converted to bytes. Valid size prefixes are `kB`, `MB`, `GB`. (Note that all conversions are based on multiples of `1024`. That means `kb == KiB`, `MB == MiB`, `GB == GiB`.)  If users want to mirror the console ringbuffer on  disk they should set `lxc.console.size` equal to `lxc.console.buffer.size`.
+  -->
+  LXC は `lxc.console.logfile` で指定したコンソールログのサイズを、このオプションで設定した値に制限します。ログファイルのサイズは少なくとも標準ページサイズでなければなりません。ページサイズ以下の値を設定した場合は、LXC はログファイルのサイズをページサイズに設定します。ページサイズは通常は `4kB` です。`auto` を指定すると、LXC はログファイルのサイズを `128kB` に制限します。ログファイルサイズの値を数値指定する場合、値がバイトに変換されるときに `2` の累乗になります。サイズ接頭辞付きの単位として `kB`、`MB`、`GB` が使えます。(この場合の変換は 1024 の倍数に基づいています。つまり `kB` == `KiB`、`MB` == `MiB`、`GB` == `GiB` という意味です。) ディスク上のコンソールリングバッファとミラーになるようにしたい場合は、`lxc.console.size` と `lxc.console.buffer.size` の値を同じ値に設定します。
+  
+  
+  #### `lxc.console.rotate`
+  <!--
+  Whether  to rotate the console logfile specified in `lxc.console.logfile`.
+  -->
+  `lxc.console.logfile` で指定したコンソールログファイルをローテートするかどうかを指定します。
+  
+  
+  #### `lxc.mount.entry` の `relative` オプション <!-- `relative` option for `lxc.mount.entry` -->
+  <!--
+  A mountpoint specified with the `relative` property set will be taken to be relative to the mounted container root. For instance,
+  -->
+  マウントポイントの指定で `relative` オプションを付けると、マウントされたコンテナの root からの相対パスとなります。
+  
+      lxc.mount.entry = /dev/null proc/kcore none bind,relative 0 0 
+  
+  <!--
+  Will expand `dev/null` to `${LXC_ROOTFS_MOUNT}/dev/null`, and mount it to `proc/kcore` inside the container.
+  -->
+  は `dev/null` を `${LXC_ROOTFS_MOUNT}/dev/null` と展開し、コンテナ内の `proc/kcore` にマウントします。
+  
+  #### `lxc.mount.auto` で指定する `cgroup` マウントの `force` プロパティ <!-- `force` property for `cgroup` mounts specified via `lxc.mount.auto` -->
+  ##### `cgroup:mixed:force:`
+  <!--
+  The force option will cause LXC to perform the cgroup mounts for the container under all circumstances.  Otherwise it is similar to `cgroup:mixed`.  This is mainly useful when the cgroup namespaces are enabled where LXC will normally leave mounting cgroups to the init binary of the container since it is perfectly safe to do so.
+  -->
+  force を指定すると、LXC はあらゆる状況でコンテナのための cgroup マウントを実行します。それ以外は `cgroup:mixed`  と同様です。これは主に cgroup 名前空間が有効な場合に便利です。この場合は完全に安全ですので、LXC は通常コンテナの init バイナリが cgroup をマウントしたままの状態にしておきます。
+  
+  ##### `cgroup:ro:force:`
+  <!--
+  The force option will cause LXC to perform the cgroup mounts for the container under all circumstances.  Otherwise it is similar to `cgroup:ro`.  This is mainly useful when the cgroup namespaces are enabled where LXC will normally leave mounting cgroups to the init binary of the container since it is perfectly safe to do so.
+  -->
+  force を指定すると、LXC はあらゆる状況でコンテナのための cgroup マウントを実行します。それ以外は `cgroup:ro` と同様です。これは主に cgroup 名前空間が有効な場合に便利です。この場合は完全に安全ですので、LXC は通常コンテナの init バイナリが cgroup をマウントしたままの状態にしておきます。
+  
+  ##### `cgroup:rw:force:`
+  <!--
+  The force option will cause LXC to perform the cgroup mounts for the container under all circumstances.  Otherwise it is similar to `cgroup:rw`.  This is mainly useful when the cgroup namespaces are enabled where LXC will normally leave mounting cgroups to the init binary of the container since it is perfectly safe to do so.
+  -->
+  force を指定すると、LXC はあらゆる状況でコンテナのための cgroup マウントを実行します。それ以外は `cgroup:rw` と同様です。これは主に cgroup 名前空間が有効な場合に便利です。この場合は完全に安全ですので、LXC は通常コンテナの init バイナリが cgroup をマウントしたままの状態にしておきます。
+  
+  ##### `cgroup-full:mixed:force:`
+  <!--
+  The force option will cause LXC to perform the cgroup mounts for the container under all circumstances.  Otherwise it is similar to `cgroup-full:mixed`.  This is mainly useful when the cgroup namespaces are enabled where LXC will normally leave mounting cgroups to the init binary of the container since it is perfectly safe to do so.
+  -->
+  force を指定すると、LXC  はあらゆる状況でコンテナのための  cgroup  マウントを実行します。それ以外は `cgroup-full:mixed` と同様です。これは主に cgroup 名前空間が有効な場合に便利です。この場合は完全に安全ですので、LXC は通常コンテナの init バイナリが cgroup をマウントしたままの状態にしておきます。
+  
+  
+  ##### `cgroup-full:ro:force:`
+  <!--
+  The force option will cause LXC to perform the cgroup mounts for the container under all circumstances.  Otherwise it is similar to `cgroup-full:ro`.  This is mainly useful when the cgroup namespaces are enabled where LXC will normally leave mounting cgroups to the init binary of the container since it is perfectly safe to do so.
+  -->
+  force を指定すると、LXC はあらゆる状況でコンテナのための cgroup マウントを実行します。それ以外は `cgroup-full:ro` と同様です。これは主に cgroup  名前空間が有効な場合に便利です。この場合は完全に安全ですので、LXC は通常コンテナの init バイナリが cgroup をマウントしたままの状態にしておきます。
+  
+  
+  ##### `cgroup-full:rw:force:`
+  <!--
+  The force option will cause LXC to perform the cgroup mounts for the container under all circumstances.  Otherwise it is similar to `cgroup-full:rw`.  This is mainly useful when the cgroup namespaces are enabled where LXC will normally leave mounting cgroups to the init binary of the container since it is perfectly safe to do so.
+  -->
+  force を指定すると、LXC はあらゆる状況でコンテナのための cgroup マウントを実行します。それ以外は `cgroup-full:rw` と同様です。これは主に cgroup  名前空間が有効な場合に便利です。この場合は完全に安全ですので、LXC は通常コンテナの init バイナリが cgroup をマウントしたままの状態にしておきます。
+  
+  #### `lxc.namespace.clone`
+  <!--
+  Specify namespaces which the container is supposed to be created with. The namespaces to create are specified as a space separated list. Each namespace must correspond to one of the standard namespace identifiers as seen in the `/proc/PID/ns` directory. When `lxc.namespace.clone` is not explicitly set all namespaces supported by the kernel and the current configuration will be used.
+  -->
+  コンテナ作成時に作成する名前空間を指定します。作成する名前空間はスペース区切りのリストで指定します。指定する名前空間名は、`/proc/PID/ns` ディレクトリ内に存在する標準の名前空間指示子でなければなりません。`lxc.namespace.clone` を明示的に設定していない場合は、カーネルがサポートするすべての名前空間と現在の設定が使われます。
+  
+  <!--
+  To create a new `mount`, `net` and `ipc` namespace set `lxc.namespace.clone = mount net ipc`.
+  -->
+  新しいマウント、ネット、IPC 名前空間を作る場合は `lxc.namespace.clone=mount net ipc` と指定します。
+  
+  #### `lxc.namespace.keep`
+  <!--
+  Specify  namespaces  which the container is supposed to inherit from the process that created it. The namespaces to keep are specified as a space separated list. Each namespace must correspond to one of the standard namespace identifiers as seen in the `/proc/PID/ns` directory.  The  lxc.namespace.keep is a blacklist option, i.e. it is useful when enforcing that containers must keep a specific set of namespaces.
+  -->
+  コンテナが、作成元のプロセスから継承する (新しい名前空間を作らずに元のプロセスの名前空間のまま実行する) 名前空間を指定します。継承する名前空間はスペース区切りのリストで指定します。指定する名前空間名は、`/proc/PID/ns` ディレクトリ内に存在する標準の名前空間指示子でなければなりません。`lxc.namespace.keep`  はブラックリストを指定するオプションです。つまり、コンテナに特定の名前空間を使い続けることを強制したい場合に便利です。
+  
+  <!--
+  To keep the `network`, `user` and `ipc` namespace set `lxc.namespace.keep = user net ipc`.
+  -->
+  ネットワーク、ユーザ、IPC 名前空間を元のプロセスの名前空間のままで実行したい場合は `lxc.namespace.keep=user net ipc` と指定します。
+  
+  <!--
+  Note that sharing `pid` namespaces will likely not work with most init systems.
+  -->
+  PID 名前空間を共有すると、ほとんどの init で動作しない可能性があることに注意してください。
+  
+  <!--
+  Note  that  if the container requests a new user namespace and the container wants to inherit the network namespace it needs to inherit the user namespace as well.
+  -->
+  コンテナが新しいユーザ名前空間をリクエストし、そのコンテナがネットワーク名前空間は継承したい場合は、ユーザ名前空間も同様に継承する必要があることに注意してください。
+  
+  #### `lxc.namespace.share.[namespace identifier]`
+  <!--
+  Specify a namespace to inherit from another container or process.  The `[namespace identifier]` suffix needs to be replaced with one  of  the  namespaces that appear in the `/proc/PID/ns` directory.
+  -->
+  他のコンテナやプロセスから継承する名前空間を指定します。`[namespace identifier]` には、`/proc/PID/ns` ディレクトリ内に現れる名前空間のひとつが入ります。
+  
+  <!--
+  To  inherit  the  namespace  from  another  process  set  the  `lxc.namespace.share.[namespace identifier]`  to  the PID of the process, e.g. `lxc.namespace.share.net = 42`.
+  -->
+  他のプロセスから名前空間を継承するには、`lxc.namespace.share.[namespace identifier]` の値をプロセスの PID に設定します。例えば `lxc.namespace.share.net=42` のようになります。
+  
+  <!--
+  To inherit the namespace from another container set the `lxc.namespace.share.[namespace identifier]` to  the  name  of  the  container,  e.g. `lxc.namespace.share.pid = c3`.
+  -->
+  他のコンテナから名前空間を継承するには、`lxc.namespace.share.[namespace identifier]` の値をコンテナ名に設定します。例えば `lxc.namespace.share.pid=c3` のようになります。
+  
+  <!--
+  To  inherit the namespace from another container located in a different path than the standard LXC path set the `lxc.namespace.share.[namespace identifier]` to the full path to the container, e.g.  `lxc.namespace.share.user = /opt/c3`.
+  -->
+  標準の liblxc のパスとは異なるコンテナパスに存在する他のコンテナから名前空間を継承するには、`lxc.namespace.share.[namespace identifier]` をそのコンテナのフルパスで指定します。例えば `lxc.namespace.share.user=/opt/c3` のようになります。
+  
+  <!--
+  In order to inherit namespaces the caller needs to have sufficient privilege over the process or container.
+  -->
+  名前空間を継承するためには、呼び出し元が継承元のプロセスまたはコンテナに対して十分な権限を持っている必要があります。
+  
+  <!--
+  Note that sharing pid namespaces between system containers will likely not work with most init systems.
+  -->
+  システムコンテナ間での  PID 名前空間の共有は、ほとんどの init システムではうまく動作しない可能性があることに注意が必要です。
+  
+  <!--
+  Note that if two processes are in different user namespaces and one process wants to inherit the other's network namespace it usually needs to  inherit the user namespace as well.
+  -->
+  ふたつのプロセスが異なるユーザ名前空間に存在し、そのうちのひとつが他のネットワーク名前空間を継承したい場合、通常はユーザ名前空間も同様に継承する必要があることに注意が必要です。
+  
+  #### `lxc.sysctl.[kernel parameters name]`
+  <!--
+  Specify the kernel parameters to be set. The parameters available are those listed under `/proc/sys/`. Note that not all sysctls are namespaced. Changing Non-namespaced sysctls will cause the system-wide setting to be modified.  `sysctl(8)`. If used with no value, LXC will clear the parameters  specified up to this point.
+  -->
+  設定したいカーネルパラメータを指定します。指定できるパラメータは `/proc/sys` 以下に存在するものです。 すべての sysctl パラメータが仮想化（名前空間化）されているわけではないことに注意してください。仮想化されていない sysctl を設定すると、システムワイドで設定が変更されてしまいます。 `sysctl(8)` 値を指定しないでこの設定を指定した場合は、この設定より前に設定されたパラメータをクリアします。
+  
+  #### `lxc.hook.start-host`
+  <!--
+  A hook to be run in the host's namespace after the container has been setup, and immediately before starting the container init.
+  -->
+  コンテナのセットアップが済んだあと、コンテナの init を実行する直前に、ホストの名前空間で実行するためのフックです。
+  
+  <!--
+  This should satisfy several use cases.  One example is support for CNI.
+  For example, replace the network configuration in a root owned container with:
+  -->
+  これはいくつかのユースケースを満たすはずです。一例が CNI のサポートです。
+  例えば、root 所有のコンテナ内のネットワーク設定を次のように置き換えます。
+  
+      lxc.net.0.type = empty
+      lxc.hook.start-host = /bin/lxc-start-netns
+  
+      where /bin/lxc-start-netns contains:
+  
+      =================================
+  
+      echo "starting" > /tmp/debug
+      ip link add host1 type veth peer name peer1
+      ip link set host1 master lxcbr0
+      ip link set host1 up
+      ip link set peer1 netns "${LXC_PID}"
+      =================================
+  
+  <!--
+  The nic 'peer1' was placed into the container as expected.
+  For this to work, we pass the container init's pid as LXC\_PID in an environment variable, since lxc-info cannot work at that point.
+  -->
+  NIC `peer1` は期待通りコンテナ内に配置されました。
+  これが動作するためには、この時点では `lxc-info` は動作しないので、コンテナの init の pid を環境変数 `LXC_PID` として与える必要があります。
+  
+  #### API 拡張 <!-- API extensions -->
+  ##### `console_log()`
+  <!--
+  A new API extension
+  -->
+  新しい API 拡張
+  
+      int console_log(struct lxc_container *c, struct lxc_console_log *log);
+  
+  <!--
+  has been added that supports interacting with the newly added in-memory ringbuffer of the container. The following struct containers available arguments and return values:
+  -->
+  が追加されました。これは、新たに追加されたコンテナのインメモリリングバッファとのやりとりをサポートするために追加されました。次の構造体に利用可能な引数と返り値が含まれています。
+  
+      struct lxc_console_log {
+          /* Clear the console log. */
+          bool clear;
+  
+          /* Retrieve the console log. */
+          bool read;
+  
+          /* This specifies the maximum size to read from the ringbuffer. Setting
+           * it to 0 means that the a read can be as big as the whole ringbuffer.
+           * On return callers can check how many bytes were actually read.
+           * If "read" and "clear" are set to false and a non-zero value is
+           * specified then up to "read_max" bytes of data will be discarded from
+           * the ringbuffer.
+           */
+          uint64_t *read_max;
+  
+          /* Data that was read from the ringbuffer. If "read_max" is 0 on return
+           * "data" is invalid.
+           */
+          char *data;
+      };
+  
+  ##### `reboot2()`
+  <!--
+  This adds `reboot2()` as a new API extension. This function properly wait until a reboot succeeded. It takes a timeout argument. When set to `> 0` `reboot2()` will block until the timeout is reached, if timeout is set to zero `reboot2()` will not block, if set to `-1` `reboot2()` will block indefinitly.
+  -->
+  新しい API 拡張として `reboot2()` が追加されました。この関数は再起動が成功するまで待ちます。この関数は引数としてタイムアウト値を取ります。タイムアウト値が `> 0` の場合、`reboot2()` はタイムアウトに達するまで再起動を待ちます。もしタイムアウトが `0` に設定された場合、`reboot2()` は再起動を待ちません。もし `-1` に設定された場合、`reboot2()` は無期限に再起動を待ちます。
+  
+  ##### CRIU の `migrate()` API 呼び出しに対する `MIGRATE_FEATURE_CHECK` <!-- `MIGRATE_FEATURE_CHECK` for `CRIU` ``migrate()` API call -->
+  <!--
+  For migration optimization features like pre-copy or post-copy migration the support cannot be determined by simply looking at the `CRIU` version.  Features like that depend on the architecture/kernel/criu combination and `CRIU` offers a feature checking interface to query if it is supported.
+  -->
+  pre-copy や post-copy マイグレーションのようなマイグレーションの最適化機能においては、単純に `CRIU` のバージョンを見るだけでは、機能のサポートを判断できません。そのような機能はアーキテクチャ・カーネル・CRIU のコンビネーションに依存し、`CRIU` は機能がサポートされているかどうかを問い合わせるインターフェースを持っています。
+  
+  <!--
+  This adds a LXC interface to query CRIU for those feature via the `migrate()` API call. For the recent pre-copy migration support in LXD this can be used to automatically detect if pre-copy migration should be used.
+  -->
+  `migrate()` API の呼び出し経由で、先に挙げたような機能のサポートを CRIU に問い合わせる LXC インターフェースが追加されました。LXD での最近の pre-copy マイグレーションのサポートでは、この機能が使われ、pre-copy マイグレーションを使うかどうかを自動で検出しています。
+  
+  <!--
+  In addition to the existing `migrate()` API commands this adds a new command: `MIGRATE_FEATURE_CHECK`.
+  -->
+  既存の `migrate()` API コマンドに加えて、新しいコマンド `MIGRATE_FEATURE_CHECK` を追加しました。
+  
+  <!--
+  The `struct migrate_opts` is extended by the member `features_to_check` which is a bitmask defining which `CRIU` features should be queried.
+  -->
+  `struct migrate_opts` は、メンバ `features_to_check` によって拡張されています。これは、`CRIU` の機能を問い合わせるかどうかを指示するビットマスクです。
+  
+  <!--
+  Currently only querying the features `FEATURE_MEM_TRACK` and `FEATURE_LAZY_PAGES` are supported.
+  -->
+  現時点では、`FEATURE_MEM_TRACK` と `FEATURE_LAZY_PAGES` 機能がサポートされているかどうかを問い合わせるだけです。
+  
+  ##### `attach()` API 呼び出しに対する `LXC_ATTACH_TERMINAL` の追加 <!-- add `LXC_ATTACH_TERMINAL` to `attach()` API call -->
+  <!--
+  Allocation of a new terminal has been moved into the API itself. Callers can  now set `LXC_ATTACH_TERMINAL` to request to be attached to a new terminal allocated from the host's `devpts` mount before attaching to the container.
+  -->
+  新しい端末の割り当てが API 自身に移されました。呼び出し元は `LXC_ATTACH_TERMINAL` を設定し、コンテナにアタッチする前に、ホストの `devpts` から割り当てられた新しい端末にアタッチするように要求できます。
+  
+  ### サポートとアップグレード <!-- Support and upgrade -->
+  <!--
+  LXC 3.0.0 will be supported until June 2023 and our current LTS release.
+  LXC 2.0 will now join LXC 1.0 in only getting critical bugfixes and security updates.
+  -->
+  LXC 3.0.0 は 2023 年 6 月までサポートされる最新の LTS リリースです。
+  LXC 1.0 に加えて LXC 2.0 は、致命的なバグ修正とセキュリティ修正のみなされます。
+  
+  <!--
+  We strongly recommend all LXC users to plan an upgrade to the 3.0 branch.
+  Due to the transition of libpam-cgfs to LXC, this should be done at the same time as the upgrade to LXCFS 3.0 to avoid potential conflicts.
+  -->
+  LXC チームは 3.0 ブランチへのアップグレードの計画を立てることを強くおすすめします。libpam-cgfs が LXC へ移動しますので、LXC 3.0 へのアップグレードと同時に LXCFS 3.0 へのアップグレードを行うと、機能のコンフリクトを避けることができるでしょう。
+  
+  ### ダウンロード <!-- Downloads -->
+   - LXC リリース tarball <!--LXC release tarball -->: [lxc-3.0.0.tar.gz](https://linuxcontainers.org/downloads/lxc/lxc-3.0.0.tar.gz) (GPG: [lxc-3.0.0.tar.gz.asc](https://linuxcontainers.org/downloads/lxc/lxc-3.0.0.tar.gz.asc))
+   - LXC テンプレート tarball <!-- LXC templates tarball -->: [lxc-templates-3.0.0.tar.gz](https://linuxcontainers.org/downloads/lxc/lxc-templates-3.0.0.tar.gz) (GPG: [lxc-templates-3.0.0.tar.gz.asc](https://linuxcontainers.org/downloads/lxc/lxc-templates-3.0.0.tar.gz.asc))
+   - LXC python3 バインディング tarball <!-- LXC python3 bindings tarball -->: [python3-lxc-3.0.1.tar.gz](https://linuxcontainers.org/downloads/lxc/python3-lxc-3.0.1.tar.gz) (GPG: [python3-lxc-3.0.1.tar.gz.asc](https://linuxcontainers.org/downloads/lxc/python3-lxc-3.0.1.tar.gz.asc))
+  
+  
+  ### コントリビューター <!-- Contributors -->
+  <!--
+  The LXC 3.0.0 release was brought to you by a total of 42 contributors.
+  -->
+  LXC 3.0.0 のリリースは、全部で 42 名の貢献によりリリースされました。
+  

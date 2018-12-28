@@ -1,0 +1,83 @@
+title: LXC 1.1.0 release announcement
+date: 2015/01/30 00:00
+content: |-
+  The LXC team is pleased to announce the release of LXC 1.1.
+  
+  This release will be supported until January 2016 or 2 months after the next release of LXC,
+  whichever comes last.
+  
+  If you need a long-term supported version of LXC for use in production, we still strongly recommend
+  you stick to LXC 1.0 which is supported with frequent stable releases until April 2019.
+  
+  
+  While not strictly required, it is recommended that LXC 1.1 be used with cgmanager 0.35 (or higher)
+  and lxcfs 0.5 (or higher).
+  
+  ### Highlights
+  LXC 1.1 introduces checkpoint/restore support for containers through CRIU.
+  This allows to serialize the container running state to disk, for live migration or for later local restoration
+  of the container.
+  
+  Support for running systemd as the init system inside the container was also greatly improved
+  and should now work by default both for privileged and unprivileged containers when combined
+  with lxcfs and a recent systemd.
+  
+  Init scripts have now all been updated to provide the same feature set, which means that a lxcbr0 bridge
+  with a DHCP and DNS server (dnsmasq) is now the default for anyone using LXC.
+  We currently provide init scripts for systemd, sysvinit and upstart.
+  
+  This release was made possible by contributions from 84 developers.
+  
+  ### New features
+   * lxc-autostart: New -A/--ignore-auto flag (starts all containers)
+   * lxc-ls: New "interface" field
+   * centos/fedora: Added a root\_password\_expired environment variable (defaults to yes)
+   * oracle: Allow installing from arbitrary yum repositories (including medias)
+   * oracle: Add Oracle Linux 7 support
+   * lxc-ls: Allow filtering containers by group even without --fancy
+   * core: Add support for qcow2 images (through qemu-img)
+   * lxc-autostart: Add support for the NULL group (any container with lxc.start.auto set to 1 but without a group)
+   * core: Track an unexpanded version of the configuration as well as comments (improves formatting of the save configuration)
+   * opensuse: Switch to using common configurations
+   * core: Allow lxc.cap.keep be set to none
+   * archlinux: Switch to using common configurations
+   * ubuntu: use btrfs subvolumes and snapshots when available
+   * seccomp: Set a default seccomp profile for all distros (blocks dangerous syscalls)
+   * core: Add support for Openvswitch bridges
+   * core: Add support for lxc.environment (sets extra environment variables)
+   * init: Add identical support of systemd, upstart and sysvinit scripts
+   * core: Add support for checkpoint and restore of containers using CRIU
+   * core: Add a new aa\_allow\_incomplete flag to allow container startup with partial apparmor support
+   * lxc-top: Now a C binary installed by default (was a lua script)
+   * API: Addition of attach\_interface and detach\_interface
+   * lxc-device: Now a C binary installed by default (was a python3 script)
+   * lxc-config: Now supports querying lxc.cgroup.(use|pattern)
+   * core: Add new lxc.init\_cmd config option to override the default init command (/sbin/init/)
+   * lxc-start-ephemeral: Add new --cdir option (copy-on-write mounts)
+   * opensuse: Support multiple releases
+   * core: lxc.include now allows including directories (includes all the files with a .conf suffix)
+   * core: A new common.conf.d configuration directory is available for users and packages to drop configuration snippets to be applied to all containers
+   * core: The container\_ttys environment variable is now set by LXC
+  
+  ### Change in behavior
+   * lxc-create now requires be passed (-t), use "none" for the old behavior.
+   * snapshots are now stored in the container's directory
+   * lxc.arch for PER\_LINUX32 is now output as i686
+   * lxc-execute: lxc-init is now bind-mounted in the container if it can't be found
+   * lxc-start: containers now start daemonized by default
+   * core: pivot\_root is now done without the use of lxc.pivotdir, as a result this option is now considered deprecated and will be removed in upcoming releases.
+   * core: with the switch to daemonized containers by default, close-all-fds is also now the default.
+   * core: lxc.autodev was reworked, it no longer uses /dev/lxc, instead mounting a tmpfs directly on the container's /dev, it also now works with unprivileged containers
+   * core: lxc.autodev is now on by default (can be overriden with lxc.autodev=0)
+   * core: lxc.kmsg is now disabled by default (can be overriden with lxc.kmsg=1)
+   * core: clear\_config\_item now exclusively affects lists (lxc\_list) entries. set\_config\_item should be used for anything else.
+   * templates: All templates now use lxc.mount.auto = cgroup:mixed proc:mixed sys:mixed (safe default configuration)
+  
+  ### Downloads
+  The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
+  will very soon ship a packaged version of LXC 1.1.0, unless they decide to stick to the long term 1.0 release.
+  
+  Should you be interested in individual changes or just looking at the detailed development history,
+  our master branch is on [Github](https://github.com/lxc/lxc/tree/master).
+  
+  

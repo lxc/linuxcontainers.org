@@ -1,0 +1,31 @@
+title: LXC 1.1.1 release announcement
+date: 2015/03/16 00:00
+content: |-
+  This is the first bugfix release for LXC 1.1.
+  
+  ### Changes
+  
+   * config: Allow FUSE access by default (instead of individually in most templates)
+   * Make /proc/sys/net writable when using proc:mixed (required for network config)
+   * Set the process title of backgrounded LXC to an identifiable name
+   * Fix get\_config\_item with lxc.mount.auto
+   * Fix some tty issues with attach
+   * Add powerpc support to seccomp
+   * oracle: Fix unprivileged lxc-console
+   * centos: Fix unprivileged lxc-console
+   * plamo: Change way to create objects under /dev in the container
+   * lxc-top: Fix long container names rendering
+   * LVM: Use rdepends for non-thinpool container clones
+   * gentoo: Fix base image download
+   * Various manpages update
+  
+  Those stable fixes were brought to you by 13 individual contributors.
+  
+  ### Downloads
+  The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
+  will very soon ship a packaged version of LXC 1.1.1.
+  
+  Should you be interested in individual changes or just looking at the detailed development history,
+  our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-1.1).
+  
+  

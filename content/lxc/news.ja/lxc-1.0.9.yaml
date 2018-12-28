@@ -1,0 +1,177 @@
+title: LXC 1.0.9 リリースのお知らせ
+date: 2016/11/23 00:00
+origin:  <!-- LXC 1.0.9 release announcement -->
+content: |-
+  <!--
+  This is the ninth bugfix release for LXC 1.0.
+  -->
+  このリリースは LXC 1.0 の 9 回目のバグフィックスリリースです。
+  
+  重要な変更<!-- Important -->:
+  
+   * セキュリティホール CVE-2016-8649 の修正 <!-- Security fix for CVE-2016-8649 -->
+  
+  バグ修正<!-- Bugfixes -->:
+  
+   * doc: lxc-create(1) の "-t" オプションを必須としました <!-- change "\-t" option of lxc-create(1) to being required -->
+   * ubuntu-cloud: 様々な修正を行いました <!-- Various fixes -->
+   * coverity: cgmanager の NULL ポインタ参照を回避しました <!-- avoid null pointer dereference in cgmanager -->
+   * プロジェクト全体で /usr/bin/python3 の代わりに /usr/bin/env python3 を使うようにしました <!--  Use /usr/bin/env python3 instead of /usr/bin/python3 project-wide -->
+   * Debian archive GPG キーリングが使えない時は取得するようにしました <!-- Fetch Debian archive GPG keyrings when they're not available -->
+   * preserve\_ns 関数の動作を改良しました (訳注: `/proc/self/ns` 以下のファイルを取得してopenする際のエラーログが細かくでるようになった)<!-- Better handle preserve\_ns behavior -->
+   * lxc\_container struct: 構造体のメンバを足すときに、メンバの順序を変えないよう注意書きをコメントに追記しました <!-- add comment about moving member fns -->
+   * debian: キャッシュがない場合のコンテナ生成のバグを修正しました <!-- Fix container creation on missing cache -->
+   * lxc: lxc-start が wlan phys をサポートしました <!-- let lxc\-start support wlan phys -->
+   * apparmor: lxc.aa\_profile = unchanged をサポートしました <!-- support lxc.aa\_profile = unchanged -->
+   * seccomp: arm64 上の 32bit arm と ppc64 上の 32bit ppc をサポートしました <!-- support 32-bit arm on arm64, and 32-bit ppc on ppc64 -->
+   * ARM と PPC に対しては条件付きのコンパイルを行うようにしました (訳注: それぞれをサポートする環境のみ関係するコードをコンパイルする)<!-- Conditional compilation for ARM and PPC -->
+   * prune\_init\_cgroup: NULL を参照しないようにしました <!-- don't dereference NULL -->
+   * 展開されていない設定をクリアする際に 'lxc.mount.entry' が正しくクリアされない問題を修正しました <!-- fix 'lxc.mount.entry' key when clearing unexpanded config -->
+   * 上記の lxc.mount.entry の問題の Fix に伴う get\_item テストの更新 <!-- Update get\_item test after the lxc.mount.entry fix -->
+   * seccomp プロファイルが定義されていないコンテナの attach 時の問題を修正しました <!-- Fix seccomp profile on attach of undefined container -->
+   * root で実行されていない場合、save\_phys\_nics 関数は即座にリターンするようになりました <!-- Return immediately in save\_phys\_nics if not run as root Physical nic is not instantiated in lxc\_create\_network -->
+   * lxc-checkconfig: zgrep に依存しなくなりました <!-- remove zgrep dependency -->
+   * 条件付きコンパイルのリファクタリングを行いました <!-- Refactoring conditional directives. -->
+   * swap の計算を修正しました <!-- Fix swap calculation -->
+   * python-lxc: コンテナにアタッチした後に PyOS\_AfterFork を呼ぶようにしました <!-- Call PyOS\_AfterFork after attaching to a container -->
+   * ifaddrs.c 内でのバッファオーバーフローを修正しました <!-- fix buffer overflow in ifaddrs.c -->
+   * 値のない lxc.cap.drop の動作をドキュメントにしました <!-- Documenting valueless lxc.cap.drop behaviour -->
+   * nlmsg\_reserver() が NULL を返した場合に NULL ポインタを参照する問題を修正しました <!-- NULL pointer deference if nlmsg\_reserve() returns NULL for ifi -->
+   * apparmor による制限がされている場合には aa ラベルを変更しようとしないようにしました <!-- Don't try to change aa label if we are already apparmor-confined -->
+   * coverity: preserve\_ns は bool を返すので、int が返ることを期待するコードになっていたのを修正しました <!-- preserve\_ns returns bool, not int -->
+   * apparmor: 'unconfined' ラベルを unconfined と認識するようになりました <!-- recognize 'unconfined' as unconfined. -->
+   * bash completion: 'have' コマンドが廃止され '\_have' になったので修正しました <!-- the 'have' command was deprecated in favor of '\_have' -->
+   * ipv6\_gateway を削除した場合に正しく NULL を設定するようにしました <!-- Set the right variable to NULL when unsetting ipv6\_gateway -->
+   * stop フックで継承された fd を保存するようになりました <!-- preserve inherited fds for stop hook -->
+   * エラーメッセージで null 文字列を表示しないようにしました <!-- avoid printing null string in error message -->
+   * Fedora テンプレート内のコメントを修正しました <!-- Fix Comment inside Fedora Template -->
+  <!-- * doc: Add valueless lxc.cap.drop behaviour to Japanese man page -->
+   * リスト形式で指定するオプションの動作をドキュメントに明記しました <!-- Document clear behaviour of list options -->
+   * Python 製 lxc-ls でのロックパスの削除を修正しました <!-- fix lockpath removal in Python lxc-ls -->
+   * ネットワークの設定値をクリアする方法をドキュメントに記載しました <!-- Document network clear option -->
+   * open\_without\_symlink: (訳注: パスをopenするユーティリティ関数で) prefix として与える文字列が空である場合も適切に処理するようになりました <!-- Account when prefix is empty string -->
+   * lxc\_setup\_fs: /dev/shm が存在しない場合は作成するようになりました <!-- Create /dev/shm folder if it doesn't exist -->
+   * cgmanager: tasks と cgroup.procs ファイルを chmod +x しなくなりした <!-- don't make tasks + cgroup.procs +x -->
+   * cleanup: lxc\_container::want\_\* 関数の説明コメントを更新しました <!-- lxc\_container::want\_\* comment descriptions -->
+   * fedora テンプレート内の echo 行を修正しました <!-- Fix echo statement inside fedora template -->
+   * ${UTSNAME} は定義されていないので代わりに ${utsname} を使うようにしました <!-- Use ${utsname} instead of ${UTSNAME} because latter variable is not defined. -->
+   * '.' ではじまる名前のコンテナを無視するようになりました <!-- Ignore any container with a name starting by '.' -->
+   * /dev のサイズを 500k に増やしました <!-- increase /dev size to 500k -->( issue #781)
+   * cgfs: パスから "init.scope" を削除するようにしました <!-- prune the init scope from paths -->
+  <!-- * doc: add clear behaviour of list options to Japanese lxc.container.conf(5) -->
+  <!-- * doc: Add network clear option to Japanese lxc.container.conf(5) -->
+   * apparmor: /run/{,lock} -> /var/run/{,lock/} への bind mount を許可しました <!-- allow binding /run/{,lock/} \-> /var/run/{,lock/} -->
+   * log.c:\_\_lxc\_log\_set\_file: (訳注: ログファイル名を表す引数) fname に NULL は許可されなくなりました <!-- fname cannot be null -->
+   * log.c:\_\_lxc\_log\_set\_file: (訳注: デフォルトのログファイルパスを) 上書きする際、ログファイルを完全にクローズするようにしました <!-- completely close log file when overriding -->
+   * mountall が sysfs を再マウントできるようになりました <!-- Allow sysfs remount by mountall -->
+   * cgroups: device cgroup の設定が EPERM で失敗した場合には処理が失敗しなくなりました <!-- do not fail if setting devices cgroup fails due to EPERM -->
+   * cgfs: devices cgroup に書き込む時は EACCES もチェックするようにしました <!-- also check for EACCES when writing devices -->
+   * lxc: cgfs: lxcfs を扱うようになりました <!-- handle lxcfs -->
+   * lxc manpage の typo を修正しました <!-- Fix typo in lxc manpage -->
+   * cgfs: 有効な cgroup のマウントポイントを確実に使うようにしました <!-- make sure we use valid cgroup mountpoints -->
+   * cgfs: 冗長な出力を減らしました <!-- be less verbose -->
+   * doc: lxc-attach(1) の日本語 man を改良しました <!-- improve Japanese lxc-attach(1) -->
+   * doc: lxc-unshare(1) を改良しました <!-- improve lxc-unshare(1) -->
+   * open\_without\_symlink: ELOOP 以外のエラーでは SYSERROR とならないようになりました <!-- Don't SYSERROR on something else than ELOOP -->
+   * lxc-busybox: コンテナ rootfs 内で /etc/fstab を touch するようにしました <!-- Touch /etc/fstab in the container rootfs -->
+   * sync: 他のプロセスからのエラーをレポートするために LXC\_SYNC\_ERROR を追加しました <!-- add LXC\_SYNC\_ERROR to report errors from another process. -->
+   * start: エラーをレポートするために LXC\_SYNC\_ERROR を使うようになりました <!-- use LXC\_SYNC\_ERROR to report errors. -->
+   * lxc-busybox: ダイナミックリンクされた Busybox に対する警告を削除しました <!-- Remove warning for dynamically linked Busybox -->
+   * out-of-tree (VPATH) ビルドの際のインストールの問題を修正しました <!-- Fix installation of out-of-tree (VPATH) builds -->
+   * デフォルトの Debian のミラーとして httpredir.debian.org を使うようにしました <!-- use httpredir.debian.org as the default Debian mirror -->
+   * Ubuntu の debootstrap 用に常にデフォルトのミラーを定義するようにしました <!-- always provide a default mirror for debootstraping Ubuntu -->
+   * lxc-ubuntu: secondary アーキテクチャでのイメージビルドの問題を修正しました <!-- Fix building on secondary architectures -->
+   * Debian のリリース名を更新しました <!-- update Debian release names -->
+   * btrfs\_recursive\_destroy を修正しました (訳注: 4.2 kernel 以降で非特権コンテナの場合にlxc-destroyが失敗していたのを修正)<!-- fix btrfs\_recursive\_destroy -->
+   * ioctl 直後に errno を保存するようにしました <!-- store errno immediately after ioctl -->
+   * man page の Typo の修正 (Debian のlintian で発覚) <!-- fix spelling mistakes spotted by Debian's lintian -->
+   * netlink\_open: エラー時にソケットをクローズするようにしました <!-- close socket on error -->
+   * lxc\_mount\_auto\_mounts(): 失敗時にメモリを解放するようにしました <!-- free memory on failure -->
+   * doxygen が生成する一時ファイルを無視するようにしました <!-- Ignore temporary files generated by doxygen -->
+   * LXC\_GENERATE\_DATE でより良い日付フォーマットを使うようになり、SOURCE\_DATE\_EPOCH をサポートするようになりました <!-- nicer date format and support for SOURCE\_DATE\_EPOCH in LXC\_GENERATE\_DATE -->
+   * lxc.service.in から廃止された syslog.target を削除しました <!-- drop obsolete syslog.target from lxc.service.in -->
+   * メンテナを更新しました <!-- Update maintainers -->
+   * lxc-checkconfig で標準出力がターミナルかどうかチェックするようになりました <!-- Check if stdout is a terminal in lxc\-checkconfig -->
+   * Container.\_\_init\_\_ が失敗したとき PyErr を設定するようになりました <!-- Fixed \- set PyErr when Container.\_\_init\_\_ fails -->
+   * lxc\_list\_nicconfigs でキーとして `type` を追加しました <!-- Added `type` to keys in lxc\_list\_nicconfigs -->
+   * lxc-alpine: DHCP クライアントに強制的にホスト名を送るようにしました <!-- Force DHCP client to send hostname -->
+   * sync: 想定外のメッセージサイズの時に失敗するようになりました <!-- fail on unexpected message sizes -->
+   * sync.c: 正しい型を使うようになりました (訳注: コード内の変数宣言の話) <!-- use correct types -->
+   * lxc-centos: RHEL 7+ の時に ID = rhel の場合の処理を追加しました <!-- Added OR statement for cases of ID = rhel in RHEL 7+ -->
+   * userns のマッピングを設定した後に netns を unshare するようになりました <!-- Unshare netns after setting the userns mappings -->
+   * 設定ファイルの設定値をクオートできるようになりました <!-- Allow configuration file values to be quoted -->
+   * Fuse ファイルシステム用に fstype=fuse も許可されるようになりました (訳注: AppArmor の Fuse 用ルールに mount fstype=fuse を追加)<!-- Also allow fstype=fuse for fuse filesystems -->
+   * alpine テンプレートのネットワークインターフェース設定内の hostname 設定を修正しました <!-- Fix hostname in interface config for apline template -->
+   * in6\_addr が複数回定義されてしまう問題を修正しました <!-- Fix redefinition of struct in6\_addr -->
+   * lxc-debian: init が必ずインストールされるようにしました <!-- make sure init is installed -->
+   * plamo: テンプレートを改良しました (訳注: 不要なパッケージの削除、起動サービスを最小限に) <!-- Improve Plamo template -->
+   * AppArmor: lxc-start に対してマウントオプション make-rslave のルールを追加しました <!-- add make-rslave to usr.bin.lxc-start -->
+   * Bionic ですべての lxcmntent.h の関数が宣言されるようにしました <!-- Include all lxcmntent.h function declarations on Bionic -->
+   * lxc-debian: wheezy コンテナを作成する際に init が確実にインストールされるように修正しました <!-- fix regression when creating wheezy containers -->
+   * vlan タイプのインターフェースで MTU を設定できるようになりました <!-- Set up MTU for vlan-type interfaces. -->
+   * templates: locale が設定されていないことが原因の perl のノイジーな警告出力を防ぎました (訳注: Debian テンプレート)<!-- avoid noisy perl warnings caused by missing locales -->
+   * lxc.pc に prefix を追加しました <!-- Add a prefix to the lxc.pc -->
+   * conf: pty\_info を解放したあと NULL に設定するようにしました <!-- set pty\_info to NULL after free -->
+   * apparmor: 生成されたファイルをリフレッシュしました <!-- Refresh generated file -->
+   * tools: lxc-create の出力で抜けていた newline を追加しました <!-- add missing newline in lxc-create output -->
+   * (訳注: lxc-download テンプレート内でダウンロード用の鍵で) long ID の代わりに full の GPG フィンガープリントを使うようになりました <!-- Use full GPG fingerprint instead of long IDs. -->
+   * utils: mips 用の signalfd システムコール番号を追加しました <!-- Add mips signalfd syscall numbers -->
+   * seccomp: MIPS で seccomp を扱えるようにしました <!-- Implement MIPS seccomp handling -->
+   * seccomp: lxc\_config\_parse\_arch に mips と mips64 のエントリを追加しました <!-- Add mips and mips64 entries to lxc\_config\_parse\_arch -->
+   * seccomp: strerror() を修正しました (訳注: strerror に与える引数の修正)<!-- fix strerror() -->
+   * confile: より多くのアーキテクチャを扱えるように lxc\_config\_parse\_arch() 関数に定義を追加しました <!-- add more archs to lxc\_config\_parse\_arch() -->
+   * seccomp: s390x のサポートを追加しました <!-- add support for s390x -->
+   * seccomp: 複数回の include 指定を削除し、include の順序を整列させました <!-- remove double include and order includes -->
+   * seccomp: 動作と関係ない変更を行いました (訳注: ソースコードのフォーマット、ログ出力の整形など)<!-- non functional changes -->
+   * templates: fedora テンプレート実行時に openssl コマンドがない場合にインストールするようにしました <!-- fedora requires openssl binary -->
+   * doc/api/Doxyfile に FULL\_PATH\_NAMES=NO を設定しました <!-- set FULL\_PATH\_NAMES=NO in doc/api/Doxyfile -->
+   * console: 正しいログファイル名を使うようにしました <!-- use correct log name -->
+   * lxczfs: 細かな修正を行いました <!-- small fixes -->
+   * rsync に sparse ファイルを効率的に扱わせるようにしました <!-- make rsync deal with sparse files efficiently -->
+   * ppc64el の場合に lxc-create -t debian が失敗するのを修正しました <!-- lxc-create -t debian fails on ppc64el arch -->
+   * utils: lxc\_string\_split() を (訳注: 初期化されていないメモリ領域が返らないように) 修正しました <!-- fix lxc\_string\_split() -->
+   * CentOS テンプレート中の "centos" という文字列を "CentOS" に修正しました <!-- Fix spelling of CentOS in the templates -->
+   * python のサンプルに utf-8 エンコーディングであることを明記しました <!-- mark the python examples as having utf-8 encoding -->
+   * log: snprintf() の返り値の sanity チェックを行うようにしました <!-- sanity check the returned value from snprintf() -->
+   * archlinux: eth0 上で DHCP を実行するようにしました <!-- Do DHCP on eth0 -->
+   * archlinux: 名前解決の修正を行いました <!--  Fix resolving -->
+   * lxc\_strerror() への参照を削除しました (訳注: 昔存在した関数の宣言が残っていたので削除) <!-- Drop leftover references to lxc\_strerror(). -->
+   * s390x: personality の seccomp の扱いを修正しました <!-- Fix seccomp handling of personalities -->
+   * ubuntu: パッケージの更新に proc ファイルシステムが必要だったので修正しました <!-- Fix package upgrades requiring proc -->
+   * (訳注: spec ファイルの) python コードの include に python3\_sitearch を使うようにしました <!-- use python3\_sitearch for including the python code -->
+   * cgfs: 不正な free() を修正しました <!-- fix invalid free() -->
+   * cgfs: print\_cgfs\_init\_debuginfo() を追加しました <!-- add print\_cgfs\_init\_debuginfo() -->
+   * cgfs: /proc/self/cgroup 内の空行をスキップするようにしました <!-- skip empty entries under /proc/self/cgroup -->
+   * tools: lxc-stop で正しい終了コードを使うようにしました <!-- use correct exit code for lxc-stop -->
+   * conf: シャットダウン時のネットワーク名前空間の移動とリネームをマージしました (訳注: シャットダウン時に物理NICをホストの名前空間に戻すときの移動とリネーム処理を単一ステップで行うようにしました)<!-- merge network namespace move & rename on shutdown -->
+   * (訳注: /run を指す) シンボリックリンク /var/run を作成するようにしました <!-- create symlink for /var/run -->
+   * cgfs: NULL を明確にチェックするようにしました <!-- explicitly check for NULL -->
+   * templates: lxc-ubuntu-cloud.in に squashfs サポートを追加しました <!-- add squashfs support to lxc-ubuntu-cloud.in -->
+   * pkg-config が示す場所に bash completion をインストールするようになりました <!-- install bash completion where pkg-config tells us to -->
+   * conf: %m フォーマット指示子を使わないようにしました <!-- do not use %m format specifier -->
+   * debian: libui-dialog-perl に依存しなくなりました <!-- Don't depend on libui-dialog-perl -->
+   * Android でのビルドのために 'index' 関数を 'strchr' 関数に置き換えました <!-- Replace 'index' by 'strchr' for Android build -->
+   * tree-wide: readdir\_r() を readdir() に置き換えました <!-- replace readdir\_r() with readdir() -->
+   * attach: attach するプロセスに procfd を送らないようにしました <!-- do not send procfd to attached process -->
+  
+  ### ダウンロード <!-- Downloads -->
+  <!--
+  The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
+  will very soon ship a packaged version of LXC 1.0.9.
+  -->
+  このリリースの tarball は [ダウンロードページ](/lxc/downloads/) から取得できます。そして、各ディストリビューションがすぐに LXC 1.0.9 のパッケージをリリースするでしょう。
+  
+  <!--
+  Please note that LXC upstream strongly recommends 1.0 users to upgrade to the 2.0 LTS release.
+  The 1.0 branch will keep being supported until June 2019, but at this point,
+  only critical bugfixes and security updates will be backported.
+  -->
+  1.0 ユーザに対して、LXC開発元は 2.0 LTS リリースへのアップグレードを強くおすすめします。
+  1.0 ブランチは 2019 年 6 月までサポートが続きます。しかし現時点では、重大なバグフィックスとセキュリティホール対策のみがバックポートされます。
+  
+  <!--
+  Should you be interested in individual changes or just looking at the detailed development history,
+  our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-1.0).
+  -->
+  個々の変更点に興味がある場合、そして開発の履歴を見たい場合、stable-1.0 ブランチが [Github](https://github.com/lxc/lxc/tree/stable-1.0) にあります。
+  

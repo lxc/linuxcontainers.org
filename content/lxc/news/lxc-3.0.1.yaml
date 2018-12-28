@@ -1,0 +1,187 @@
+title: LXC 3.0.1 release announcement
+date: 2018/06/05 00:00
+origin: https://discuss.linuxcontainers.org/t/lxc-3-0-1-has-been-released/1949
+content: |-
+  ### Introduction
+  The LXC team is pleased to announce the release of LXC 3.0.1!
+  
+  As a stable bugfix release, no major changes have been done, instead focusing on bugfixes and minor usability improvements.
+  
+  #### Highlights
+  
+   * Improvement in thread safety of various part of liblxc
+   * Lots of bugfixes for issues identified by Coverity
+   * Several improvements to Seccomp handling, especially related to personalities
+   * Support for GCC 8
+  
+  #### Bugfixes (LXC)
+  
+   * tools: fix unitialized variable
+   * storage: fix lvm fs uuid generation
+   * lxc-oci: fix Cmd/Entrypoint parsing
+   * lxc-oci: make umoci less verbose
+   * lxclock: use thread-safe `*_OFD_*` fcntl() locks
+   * locktests: fix test suite
+   * conf: ensure umounts don't propagate to host
+   * doc: Tweak Japanese translation in lxc.container.conf(5)
+   * fix signal sending in lxc.init
+   * rootfs pinning: On NFS, make file hidden but don't delete it
+   * conf: fix temporary file creation
+   * ringbuf: fix temporary file creation
+   * Fix compilation with static libcap and shared gnutls
+   * attach: always drop supplementary groups
+   * lxc init: remove dead code
+   * storage/rsync: free memory on error
+   * tools/utils: free memory on error
+   * lxc init: coding style
+   * utils: define \_\_NR\_setns if missing on old glibcs
+   * attach: try to always drop supplementary groups
+   * conf: ret-try devpts mount without gid=5 on error
+   * execute: fix app containers without root mapping
+   * conf: fix net type checks in run\_script\_argv()
+   * seccomp: handle arch inversion
+   * seccomp: handle all errors
+   * seccomp: cleanup compat architecture handling
+   * seccomp: improve logging
+   * tools: document -d/--daemonize for lxc-execute
+   * seccomp: non-functional changes
+   * lxc-oci: mkdir the download directory
+   * do\_lxcapi\_create: set umask
+   * lxc/tools/lxc\_monitor: include missing <stddef.h>
+   * pam-cgfs: ignore the system umask when creating the cgroup hierarchy
+   * Also pass action scripts to CRIU on checkpointing
+   * Fix the memory leak in cgfsng\_attach
+   * Fix memory leak in list\_active\_containers
+   * Fix tool\_utils.c build when HAVE\_SETNS is unset
+   * coverity: #1435210
+   * coverity: #1435208
+   * coverity: #1435207
+   * coverity: #1435206
+   * coverity: #1435205
+   * coverity: #1435203
+   * coverity: #1435200
+   * coverity: #1435198
+   * coverity: #1426734
+   * lxccontainer: non-functional changes
+   * lxccontainer: use thread-safe `*_OFD_*` locks
+   * lxccontainer: do\_lxcapi\_is\_running()
+   * lxccontainer: do\_lxcapi\_freeze()
+   * lxccontainer: do\_lxcapi\_unfreeze()
+   * lxccontainer: use thread-safe open() + write()
+   * coverity: #1435263
+   * fix logic for execute log file
+   * utils: add LXC\_PROC\_PID\_FD\_LEN
+   * execute: use static buffer
+   * execute: do not check inherited fds again
+   * add some TRACE/ERROR reporting
+   * execute: account for -o path option count
+   * execute: set init\_path when existing init is found
+   * genl: remove
+   * coverity: #1248104
+   * coverity: #1248105
+   * coverity: #1425744
+   * utils: account for terminating \0 byte
+   * confile: satisfy gcc-8
+   * network: silence gcc-8
+   * network: adhere to IFNAMSIZ limit
+   * support case ignored suffix for sizes
+   * utils: fix parse\_byte\_size\_string() coding style
+   * strlcpy: add strlcpy() implementation
+   * tree-wide: s/strncpy()/strlcpy()/g
+   * CODING\_STYLE: add section about using strlcpy()
+   * tools: s/strncpy()/strlcpy()/g
+   * Revert "tools: s/strncpy()/strlcpy()/g"
+   * tools: s/strncpy()/memcpy()/
+   * doc: Add "-d/--daemon" option to Japanese lxc-execute(1)
+   * doc: Fix size unit style in Japanese lxc.container.conf(5)
+   * coverity: #1435604
+   * coverity: #1435603
+   * coverity: #1435602
+   * coverity: #1425844
+   * config: allow read-write /sys in user namespace
+   * coverity: #1425836
+   * coverity: #1248106
+   * capabilities: raise ambient capabilities
+   * coverity: #1425802
+   * cgroups: refactor cgroup handling
+   * cgroups: remove freezer\_state()
+   * seccomp: #ifdef SCMP\_ARCH\_AARCH64
+   * conf: simplify write\_id\_mapping()
+   * log: enable per-thread container name prefix
+   * lxc-init: skip signals that can't be caught
+   * execute: use execveat() syscall if supported
+   * tools: only create log file when requested
+   * seccomp: fix off-by-one error in array allocation for sscanf
+   * seccomp: remove confusing comment line
+   * seccomp: remove unnecessary memset
+   * seccomp: fix type mismatch when parsing syscall arguments filters
+   * lxcseccomp: cleanup header
+   * seccomp: parse\_config\_v1()
+   * utils: add remove\_trailing\_newlines()
+   * seccomp: get\_v2\_default\_action()
+   * seccomp: get\_action\_name()
+   * seccomp: get\_v2\_action()
+   * seccomp: fix get\_seccomp\_arg\_value()
+   * seccomp: parse\_v2\_rules()
+   * seccomp: move #ifdefines
+   * seccomp: get\_hostarch()
+   * seccomp: scmp\_filter\_ctx get\_new\_ctx()
+   * seccomp: do\_resolve\_add\_rule()
+   * seccomp: parse\_config\_v2()
+   * seccomp: parse\_config()
+   * seccomp: lxc\_read\_seccomp\_config()
+   * tree-wide: s/sigprocmask/pthread\_sigmask()/g
+   * utils: fix task\_blocking\_signal()
+   * lxccontainer: fix fd leaks when sending signals
+   * confile: order architectures
+   * start: log setns() failure
+   * seccomp: leak fixup
+   * seccomp: re-add action parse error handling
+   * seccomp: refactor line handling of parse\_config
+   * seccomp: error on unrecognized actions
+   * seccomp: lxc\_read\_seccomp\_config()
+   * seccomp: parse\_v2\_rules()
+   * seccomp: make do\_resolve\_add\_rule() more strict
+   * tools: fix lxc-create with global config value
+   * coverity: #1435806
+   * coverity: #1435805
+   * coverity: #1435803
+   * coverity: #1435747
+   * conf: non-functional changes
+   * conf: make is\_execute a boolean
+   * conf: make close\_all\_fds a boolean
+   * conf: reshuffle mount members
+   * conf: simplify tty handling
+   * conf: pts -> pty\_max
+   * utils: fix task\_blocking\_signal()
+   * network: fix socket handle leak
+   * start: do not init ns\_clone\_flags to -1
+   * conf: ensure lxc\_delete\_tty() does not crash
+   * start: add reboot macros
+   * conf: make root idmap structs const
+   * conf: make tmp\_umount\_proc bool
+   * conf: va\_end was not called.
+   * confile: improve strprint()
+   * change defines for return value of handlers
+   * start: fix waitpid() blocking issue
+   * start: log unknown info.si\_code
+   * tree-wide: fix mode of some files
+   * confile\_utils: apply strprint()
+   * templates: actually create DOWNLOAD\_TEMP directory
+   * templates: fix download template
+   * Patch lxc-update-config
+  
+  #### Bugfixes (LXC templates)
+  
+   * sshd: Use lxc.autodev
+   * sshd: Pass the container name to the init script
+  
+  ### Support and upgrade
+  LXC 3.0.1 is supported until June 2023 and is our current LTS release, users are encouraged to update to the latest bugfix releases as they're made available.
+  
+  ### Downloads
+  
+   - Main release tarball: [lxc-3.0.1.tar.gz](https://linuxcontainers.org/downloads/lxc/lxc-3.0.1.tar.gz) (GPG: [lxc-3.0.1.tar.gz.asc](https://linuxcontainers.org/downloads/lxc/lxc-3.0.1.tar.gz.asc))
+   - LXC templates tarball: [lxc-templates-3.0.1.tar.gz](https://linuxcontainers.org/downloads/lxc/lxc-templates-3.0.1.tar.gz) (GPG: [lxc-templates-3.0.1.tar.gz.asc](https://linuxcontainers.org/downloads/lxc/lxc-templates-3.0.1.tar.gz.asc))
+   - LXC python3 bindings tarball: [python3-lxc-3.0.1.tar.gz](https://linuxcontainers.org/downloads/lxc/python3-lxc-3.0.1.tar.gz) (GPG: [python3-lxc-3.0.1.tar.gz.asc](https://linuxcontainers.org/downloads/lxc/python3-lxc-3.0.1.tar.gz.asc))
+  

@@ -1,0 +1,122 @@
+title: LXC 2.0.8 release announcement
+date: 2017/05/11 00:00
+content: |-
+  This is the eighth bugfix release for LXC 2.0.
+  
+  Important:
+  
+   * Security fix for CVE-2017-5985
+   * All templates have been updated to not set default passwords anymore,
+     instead requiring lxc-attach be used to configure users.
+     This may affect some automated environments that were relying on our
+     default (very much insecure) users.
+  
+  Bugfixes:
+  
+   * Make lxc-start-ephemeral Python 3.2-compatible
+   * Fix typo
+   * Allow build without sys/capability.h
+   * lxc-opensuse: fix default value for release code
+   * util: always malloc for setproctitle
+   * util: update setproctitle comments
+   * confile: clear lxc.network.<n>.ipv{4,6} when empty
+   * lxc\_setup\_tios(): Ignore SIGTTOU and SIGTTIN signals
+   * Make lxc-net return non-zero on failure
+   * seccomp: allow x32 guests on amd64 hosts.
+   * Add HAVE\_LIBCAP
+   * c/r: only supply --ext-mount-map for bind mounts
+   * Added 'mkdir -p' functionality in create\_or\_remove\_cgroup
+   * Use LXC\_ROOTFS\_MOUNT in clonehostname hook
+   * squeeze is not a supported release anymore, drop the key
+   * start: dumb down SIGCHLD from WARN() to NOTICE()
+   * log: fix lxc\_unix\_epoch\_to\_utc()
+   * cgfsng: make trim() safer
+   * seccomp: set SCMP\_FLTATR\_ATL\_TSKIP if available
+   * lxc-user-nic: re-order #includes
+   * lxc-user-nic: improve + bugfix
+   * lxc-user-nic: delete link on failure
+   * conf: only try to delete veth when privileged
+   * Fix lxc-containers to support multiple bridges
+   * Fix mixed tab/spaces in previous patch
+   * lxc-alpine: use dl-cdn.a.o as default mirror instead of random one
+   * lxc-checkconfig: verify new[ug]idmap are setuid-root
+   * [templates] archlinux: resolve conflicting files
+   * [templates] archlinux: noneed default\_timezone variable
+   * python3: Deal with potential NULL char\*
+   * lxc-download.in / allow setting keyserver from env
+   * lxc-download.in / Document keyserver change in help
+   * Change variable check to match existing style
+   * tree-wide: include <sys/sysmacros.h> directly
+   * conf/ile: make sure buffer is large enough
+   * tree-wide: include <sys/sysmacros.h> directly
+   * tests: Support running on IPv6 networks
+   * tests: Kill containers (don't wait for shutdown)
+   * Fix opening wrong file in suggest\_default\_idmap
+   * do not set the root password in the debian template
+   * do not set insecure passwords
+   * don't set a default password for altlinux, gentoo, openmandriva and pld
+   * tools: exit with return code of lxc\_execute()
+   * Keep veth.pair.name on network shutdown
+   * Makefile: fix static clang init.lxc build
+   * Avoid waiting for bridge interface if disabled in sysconfig/lxc | lxc-net via USE\_LXC\_BRIDGE
+   * Increased buffer length in print\_stats()
+   * avoid assigning  to a variable which is not POSIX shell proof (bug #1498)
+   * remove obsolete note about api stability
+   * conf: less error prone pointer access
+   * conf: lxc\_map\_ids() non-functional changes
+   * caps: add lxc_{proc,file}_cap\_is\_set()
+   * conf: check for {filecaps,setuid} on new{g,u}idmap
+   * conf: improve log when mounting rootfs
+   * ls: simplify the judgment condition when list active containers
+   * fix typo introduced in #1509
+   * attach|unshare: fix the wrong comment
+   * caps: skip file capability checks on android
+   * autotools: check for cap\_get\_file
+   * caps: return false if caps are not supported
+   * conf: non-functional changes to setup\_pts()
+   * conf: use bind-mount for /dev/ptmx
+   * conf: non-functional changes
+   * utils: use loop device helpers from LXD
+   * create ISSUE\_TEMPLATE.md
+   * cgroups: improve cgfsng debugging
+   * issue template: fix typo
+   * conf: close fd in lxc\_setup\_devpts()
+   * conf: non-functional changes
+   * utils: tweak lxc\_mount\_proc\_if\_needed()
+   * Change sshd template to work with Ubuntu 17.04
+   * conf: order mount options
+   * conf: add MS\_LAZYTIME to mount options
+   * monitor: report errno on exec() error
+   * af unix: allow for maximum socket name
+   * commands: avoid NULL pointer dereference
+   * commands: non-functional changes
+   * lxccontainer: avoid NULL pointer dereference
+   * monitor: simplify abstract socket logic
+   * precise is not the latest LTS, let's use xenial instead
+   * fix the wrong exit status
+   * conf: non-functional changes lxc\_fill\_autodev()
+   * conf: remove /dev/console from lxc\_fill\_autodev()
+   * conf: non-functional changes lxc\_setup()
+   * conf: non-functional changes to console functions
+   * conf: improve lxc\_setup\_dev\_console()
+   * conf: lxc\_setup\_ttydir\_console()
+   * config: remove /dev/console bind mount
+   * doc: document console behavior
+   * utils: add lxc\_unstack\_mountpoint()
+   * conf: unstack all mounts atop /dev/console
+   * console: fail when we cannot allocate peer tty
+   * start: remove umount2()
+   * conf: non-functional changes
+   * utils: handle > 2^31 in lxc\_unstack\_mountpoint()
+   * Install systemd units for CentOS
+   * Merge `ubuntu` and `debian`case
+   * start: add crucial details about lxc\_spawn()
+  
+  ### Downloads
+  The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
+  will very soon ship a packaged version of LXC 2.0.8.
+  
+  Should you be interested in individual changes or just looking at the detailed development history,
+  our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-2.0).
+  
+  

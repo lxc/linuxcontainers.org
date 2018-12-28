@@ -20,8 +20,9 @@
     {"path": "/lxc/news/",
      "title": "LXC - News",
      "menu": ["LXC", "News"],
-     "generator": "markdown",
-     "meta": {"input": "lxc/news.md"}},
+     "generator": "news",
+     "meta": {"dir": "/content/lxc/news/",
+              "input": "lxc/news.md"}},
 
     {"path": "/lxc/getting-started/",
      "title": "LXC - Getting started",

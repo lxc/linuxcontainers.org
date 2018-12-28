@@ -1,0 +1,64 @@
+title: LXC 1.0.10 release announcement
+date: 2017/05/11 00:00
+content: |-
+  This is the tenth bugfix release for LXC 1.0.
+  
+  Important:
+  
+   * Security fix for CVE-2016-10124
+   * Security fix for CVE-2017-5985
+  
+  Bugfixes:
+  
+   * attach: simplify lsm\_openat()
+   * commands: improve logging
+   * utils: add macro \_\_LXC\_NUMSTRLEN
+   * tests; Don't cause test failures on cleanup errors
+   * conf: clearly report to either use drop or keep
+   * attach: close lsm label file descriptor
+   * conf, attach: save errno across call to close
+   * templates/lxc-debian.in: Fix typo in calling dpkg with --print-foreign-architectures option
+   * templates/lxc-debian.in: handle ppc hostarch -> powerpc
+   * Fix regression in errno handling cherry-pick
+   * don't try to get stuff from /usr/lib/systemd on the host
+   * lxc-opensuse: rm poweroff.target -> sigpwr.target copy
+   * Add --enable-gnutls option
+   * tests: skip unpriv tests on broken overlay module
+   * Use AC\_HEADER\_MAJOR to detect major()/minor()/makedev()
+   * Make lxc-start-ephemeral Python 3.2-compatible
+   * systemd: enable delegate in service file
+   * confile: clear lxc.network.<n>.ipv{4,6} when empty
+   * seccomp: allow x32 guests on amd64 hosts.
+   * squeeze is not a supported release anymore, drop the key
+   * seccomp: set SCMP\_FLTATR\_ATL\_TSKIP if available
+   * lxc-checkconfig: verify new[ug]idmap are setuid-root
+   * python3: Deal with potential NULL char\*
+   * lxc-download.in / allow setting keyserver from env
+   * lxc-download.in / Document keyserver change in help
+   * Change variable check to match existing style
+   * tests: Support running on IPv6 networks
+   * tests: Kill containers (don't wait for shutdown)
+   * Fix opening wrong file in suggest\_default\_idmap
+   * lxc\_setup\_tios(): Ignore SIGTTOU and SIGTTIN signals
+   * Increased buffer length in print\_stats()
+   * remove obsolete note about api stability
+   * conf: less error prone pointer access
+   * create ISSUE\_TEMPLATE.md
+   * issue template: fix typo
+   * conf: order mount options
+   * commands: avoid NULL pointer dereference
+   * commands: non-functional changes
+   * lxccontainer: avoid NULL pointer dereference
+  
+  ### Downloads
+  The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
+  will very soon ship a packaged version of LXC 1.0.10.
+  
+  Please note that LXC upstream strongly recommends 1.0 users to upgrade to the 2.0 LTS release.
+  The 1.0 branch will keep being supported until June 2019, but at this point,
+  only critical bugfixes and security updates will be backported.
+  
+  Should you be interested in individual changes or just looking at the detailed development history,
+  our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-1.0).
+  
+  

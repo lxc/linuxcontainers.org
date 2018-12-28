@@ -1,0 +1,133 @@
+title: LXC 2.0.8 リリースのお知らせ
+date: 2017/05/11 00:00
+origin:  <!-- LXC 2.0.8 release announcement -->
+content: |-
+  <!--
+  This is the eighth bugfix release for LXC 2.0.
+  -->
+  このリリースは LXC 2.0 の 7 回目のバグフィックスリリースです。
+  
+  重要な変更 <!-- Important -->:
+  
+   * セキュリティホール <!-- Security fix for -->CVE-2017-5985 の修正
+   * このバージョンで、すべてのテンプレートでデフォルトのパスワードは設定されなくなりました。代わりに、lxc-attach を使ってユーザの設定を行います。この変更により、(かなり安全性に問題のある) デフォルトユーザを使うように設定された、自動化された環境に影響があるでしょう。
+     <!-- All templates have been updated to not set default passwords anymore,
+     instead requiring lxc-attach be used to configure users.
+     This may affect some automated environments that were relying on our
+     default (very much insecure) users. -->
+  
+  バグ修正 <!-- Bugfixes -->:
+  
+   * lxc-start-ephemeral を Python 3.2 互換にしました <!-- Make lxc-start-ephemeral Python 3.2-compatible -->
+   * Typo を修正しました <!-- Fix typo -->
+   * sys/capability.h なしでもビルドできるようになりました <!-- Allow build without sys/capability.h -->
+   * lxc-opensuse: リリースコード用のデフォルト値を修正しました <!-- fix default value for release code -->
+   * util: setproctitle 関数では常に malloc するようにしました (訳注: Issue #1407 の修正)<!-- always malloc for setproctitle -->
+   * util: setproctitle 関数のコメントを更新しました <!-- update setproctitle comments -->
+   * confile: lxc.network.<n>.ipv{4,6} が空の時、設定をクリアするようにしました <!-- clear lxc.network.<n>.ipv{4,6} when empty -->
+   * lxc\_setup\_tios(): SIGTTOU と SIGTTIN シグナルを無視するようにしました <!-- Ignore SIGTTOU and SIGTTIN signals -->
+   * lxc-net が失敗時には 0 でない値を返すようになりました <!-- Make lxc-net return non-zero on failure -->
+   * seccomp: amd64 ホスト上で x32 ゲストを許可するようにしました <!-- allow x32 guests on amd64 hosts. -->
+   * HAVE\_LIBCAP を追加しました (訳注: libcap に関係するビルド時の問題の解決) <!-- Add HAVE\_LIBCAP -->
+   * c/r: bind マウントのときは --ext-mount-map だけを与えるようにしました <!-- only supply \-\-ext-mount-map for bind mounts -->
+   * create\_or\_remove\_cgroup 関数内で 'mkdir -p' を行うようにしました <!-- Added 'mkdir -p' functionality in create\_or\_remove\_cgroup -->
+   * clonehostname フック内では LXC\_ROOTFS\_MOUNT を使うようにしました <!-- Use LXC\_ROOTFS\_MOUNT in clonehostname hook -->
+   * squeeze はサポート外のリリースとなったのでキーを削除しました <!-- squeeze is not a supported release anymore, drop the key -->
+   * start: SIGCHLD 時は WARN() から NOTICE() にレベルを下げました <!-- dumb down SIGCHLD from WARN() to NOTICE() -->
+   * log: lxc\_unix\_epoch\_to\_utc() を修正しました <!-- fix lxc\_unix\_epoch\_to\_utc() -->
+   * cgfsng: trim() 関数をより安全にしました <!-- make trim() safer -->
+   * seccomp: SCMP\_FLTATR\_ATL\_TSKIP が利用可能であれば設定するようにしました <!-- set SCMP\_FLTATR\_ATL\_TSKIP if available -->
+   * lxc-user-nic: #include 宣言を順序よく並べ直しました <!-- re-order #includes -->
+   * lxc-user-nic: 改良とバグフィックスを行いました <!-- improve + bugfix -->
+   * lxc-user-nic: 失敗時はリンクを削除するようにしました <!-- delete link on failure -->
+   * conf: 特権コンテナのときだけ veth を削除しようとするようにしました <!-- only try to delete veth when privileged -->
+   * lxc-containers が複数のブリッジをサポートするよう修正しました <!-- Fix lxc-containers to support multiple bridges -->
+   * コードでタブとスペースが混在していたのを修正しました <!-- Fix mixed tab/spaces in previous patch -->
+   * lxc-alpine: デフォルトミラーをランダムで選択する代わりに dl-cdn.a.o を使うようにしました <!-- use dl-cdn.a.o as default mirror instead of random one -->
+   * lxc-checkconfig: new[ug]idmap が setuid root されているか確認するようになりました <!-- verify new[ug]idmap are setuid-root -->
+   * [templates] archlinux: ファイルのコンフリクトを解決しました <!-- resolve conflicting files -->
+   * [templates] archlinux: default\_timezone 変数は不要なので削除しました <!-- noneed default\_timezone variable -->
+   * python3: char\* が NULL になる可能性がある場合の対処を行いました <!-- Deal with potential NULL char\* -->
+   * lxc-download.in / 鍵サーバ (keyserver) が環境変数で設定できるようなりました <!--allow setting keyserver from env -->
+   * lxc-download.in / 鍵サーバの変更をヘルプに追加しました <!-- Document keyserver change in help -->
+   * 変数チェックを既存のスタイルに合わせるように変更しました <!-- Change variable check to match existing style -->
+   * tree-wide: <sys/sysmacros.h> を直接 include するようにしました <!-- include <sys/sysmacros.h> directly -->
+   * conf/ile: バッファが十分な長さになるようにしました <!-- make sure buffer is large enough -->
+   * tree-wide: <sys/sysmacros.h> を直接 include するようにしました <!-- include <sys/sysmacros.h> directly -->
+   * tests: IPv6 ネットワーク上の実行をサポートしました <!-- Support running on IPv6 networks -->
+   * tests: コンテナを kill するようにしました (shutdown を待たなくなりました) <!-- Kill containers (don't wait for shutdown) -->
+   * suggest\_default\_idmap で間違ったファイルを open していたのを修正しました <!-- Fix opening wrong file in suggest\_default\_idmap -->
+   * debian テンプレートで root のパスワードを設定しないようにしました <!-- do not set the root password in the debian template -->
+   * 安全でないパスワードを設定しないようにしました <!-- do not set insecure passwords -->
+   * altlinux、gentoo、openmandriva、pld テンプレートでデフォルトのパスワードを設定しないようにしました <!-- don't set a default password for altlinux, gentoo, openmandriva and pld -->
+   * tools: lxc\_execute() がリターンコードを返して exit するようになりました <!-- exit with return code of lxc\_execute() -->
+   * ネットワークのシャットダウン時には veth.pair.name を維持するようにしました <!-- Keep veth.pair.name on network shutdown -->
+   * Makefile: static での clang の init.lxc ビルドを修正しました <!-- fix static clang init.lxc build -->
+   * /etc/sysconfig/lxc または lxc-net で USE\_LXC\_BRIDGE を使ってブリッジが無効化されている場合はブリッジの起動を待たなくなりました <!-- Avoid waiting for bridge interface if disabled in sysconfig/lxc | lxc-net via USE\_LXC\_BRIDGE -->
+   * print\_stats() のバッファサイズを増やしました <!-- Increased buffer length in print\_stats() -->
+   * POSIX シェル互換でない変数割当を修正しました <!-- avoid assigning  to a variable which is not POSIX shell proof -->(bug #1498)
+   * APIの不変性に関する注意書きを削除しました (訳注: 1.0 より前の記述があった)<!-- remove obsolete note about api stability -->
+   * conf: ポインタアクセスでよりエラーになりにくくしました <!-- less error prone pointer access -->
+   * conf: lxc\_map\_ids() で動作とは関係のない変更を行いました <!-- lxc\_map\_ids() non-functional changes -->
+   * caps: lxc\_{proc,file}\_cap\_is\_set() 関数を追加しました <!-- add lxc_{proc,file}_cap\_is\_set() -->
+   * conf: new{g,u}idmap コマンドのケーパビリティとsetuid をチェックするようになりました <!-- check for {filecaps,setuid} on new{g,u}idmap -->
+   * conf: rootfs をマウントする際のログ出力を改良しました <!-- improve log when mounting rootfs -->
+   * ls: アクティブなコンテナの条件判断を簡単にしました <!-- simplify the judgment condition when list active containers -->
+   * \#1509 で混入した Typo を修正しました <!-- fix typo introduced in #1509 -->
+   * attach|unshare: 間違ったコメントを修正しました <!-- fix the wrong comment -->
+   * caps: Android ではファイルのケーパビリティチェックをスキップするようにしました <!-- skip file capability checks on android -->
+   * autotools: cap\_get\_file のチェックを追加しました <!-- check for cap\_get\_file -->
+   * caps: ケーパビリティがサポートされていない場合は false を返すようにしました <!-- return false if caps are not supported -->
+   * conf: setup\_pts() での動作とは関係のない変更を行いました <!-- non-functional changes to setup\_pts() -->
+   * conf: /dev/ptmx では bind マウントを使うようにしました <!-- use bind-mount for /dev/ptmx -->
+   * conf: 動作とは関係のない変更を行いました <!-- non-functional changes -->
+   * utils: LXD 向けの loop device ヘルパーを使うようにしました <!-- use loop device helpers from LXD -->
+   * ISSUE\_TEMPLATE.md を作成しました <!-- create ISSUE\_TEMPLATE.md -->
+   * cgroups: cgfsng のデバッグを改良しました <!-- improve cgfsng debugging -->
+   * issue template: Typo の修正を行いました <!-- fix typo -->
+   * conf: lxc\_setup\_devpts() で fd をクローズするようにしました <!-- close fd in lxc\_setup\_devpts() -->
+   * conf: 動作とは関係のない変更を行いました <!-- non-functional changes -->
+   * utils: lxc\_mount\_proc\_if\_needed() の調整を行いました <!-- tweak lxc\_mount\_proc\_if\_needed() -->
+   * sshd テンプレートを Ubuntu 17.04 で動作するように修正しました <!-- Change sshd template to work with Ubuntu 17.04 -->
+   * conf: マウントオプションを昇順で並べ直しました <!-- order mount options -->
+   * conf: マウントオプションに MS\_LAZYTIME を追加しました <!-- add MS\_LAZYTIME to mount options -->
+   * monitor: exec() のエラー時に errno を報告するようになりました <!-- report errno on exec() error -->
+   * af unix: ソケット名を最大長まで使えるようになりました <!-- allow for maximum socket name -->
+   * commands: NULL ポインタの参照を行わないようにしました <!-- avoid NULL pointer dereference -->
+   * commands: 動作とは関係のない変更を行いました <!-- non-functional changes -->
+   * lxccontainer: NULL ポインタの参照を行わないようにしました <!-- avoid NULL pointer dereference -->
+   * monitor: abstract ソケットのロジックを簡素化しました <!-- simplify abstract socket logic -->
+   * precise は最新の LTS ではないので、代わりに xenial を使うようにしました <!-- precise is not the latest LTS, let's use xenial instead -->
+   * 間違った exit ステータスを修正しました <!-- fix the wrong exit status -->
+   * conf: lxc\_fill\_autodev() の動作とは関係のない変更を行いました <!-- non-functional changes lxc\_fill\_autodev() -->
+   * conf: lxc\_fill\_autodev() から /dev/console を削除しました <!-- remove /dev/console from lxc\_fill\_autodev() -->
+   * conf: lxc\_setup() の動作とは関係のない変更を行いました <!-- non-functional changes lxc\_setup() -->
+   * conf: コンソール関数の動作とは関係のない変更を行いました <!-- non-functional changes to console functions -->
+   * conf: lxc\_setup\_dev\_console() を改良しました <!-- improve lxc\_setup\_dev\_console() -->
+   * conf: lxc\_setup\_ttydir\_console() (訳注: 設定に従ってコンテナの /dev/console のマウント先を変更してマウントできるようにした)
+   * config: /dev/console の bind マウントを削除しました <!-- remove /dev/console bind mount -->
+   * doc: コンソールの振る舞いについてマニュアルに追加しました <!-- document console behavior -->
+   * utils: lxc\_unstack\_mountpoint() 関数を追加しました <!-- add lxc\_unstack\_mountpoint() -->
+   * conf: /dev/console 上のすべてのマウントをアンマウントするようにしました <!-- unstack all mounts atop /dev/console -->
+   * console: ピアの tty が割当できない場合に失敗するようになりました <!-- fail when we cannot allocate peer tty -->
+   * start: umount2() を削除しました <!-- remove umount2() -->
+   * conf: 動作とは関係のない変更を行いました  <!-- non-functional changes -->
+   * utils: lxc\_unstack\_mountpoint() で umount 回数が 2^31 より大きなケースを扱えるようにしました <!-- handle > 2^31 in lxc\_unstack\_mountpoint() -->
+   * CentOS でも systemd ユニットファイルをインストールするようにしました <!-- Install systemd units for CentOS -->
+   * (訳注: configure で) `ubuntu` と `debian` の case をマージしました <!-- Merge `ubuntu` and `debian`case -->
+   * start: lxc\_spawn() に重要なコメントを追加しました <!-- add crucial details about lxc\_spawn() -->
+  
+  ### ダウンロード <!-- Downloads -->
+  <!--
+  The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
+  will very soon ship a packaged version of LXC 2.0.8.
+  -->
+  このリリースの tarball は [ダウンロードページ](/lxc/downloads/) から取得できます。そして、各ディストリビューションがすぐに LXC 2.0.8 のパッケージをリリースするでしょう。
+  
+  <!--
+  Should you be interested in individual changes or just looking at the detailed development history,
+  our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-2.0).
+  -->
+  個々の変更点に興味がある場合、そして開発の履歴を見たい場合、stable-2.0 ブランチが [Github](https://github.com/lxc/lxc/tree/stable-2.0) にあります。
+  
+  

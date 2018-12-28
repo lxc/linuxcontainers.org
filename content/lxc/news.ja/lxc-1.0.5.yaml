@@ -1,0 +1,101 @@
+title: LXC 1.0.5 リリースのお知らせ
+date: 2014/07/14 00:00
+content: |-
+  
+  <!-- This is the fifth bugfix release for the LXC 1.0 series. -->このリリースは LXC 1.0 シリーズの 5 回目のバグフィックスとなるリリースです。
+  
+  ### seccomp profile
+  
+    <!--
+        Outside of the usual bugfixes, this release also introduces
+        one important change. For systems where LXC is built with seccomp
+        support, containers will now have a seccomp profile enabled
+        which will prevent calls to the following syscalls:
+        kexec_load, open_by_handle_at, init_module, finit_module,
+        delete_module.
+      -->
+    通常のバグフィックス以外に、このリリースは重要な変更を一つ含みます。LXC が seccomp サポートでビルドされているシステムでは、コンテナは seccomp プロファイルが有効になります。このプロファイルにより、以下のシステムコールの呼び出しを防ぎます: kexec_load, open_by_handle_at, init_module, finit_module, delete_module.
+  
+  
+  <!-- This will amongst other things prevent exploits like the
+          recently release "shocker" exploit. -->
+    これは特に、最近よく見られる "shocker" エクスプロイトのような攻撃を防ぐでしょう。
+  
+  
+  <!-- This profile will be applied to any new or existing containers
+          using the new-style LXC configurations (using lxc.include of common
+          configs), so currently the following distributions:
+          centos, debian, fedora, gentoo, oracle, plamo and ubuntu. -->
+    このプロファイルは新しいコンテナや、(共通の設定を lxc.include で読み込んでいる) 新しいスタイルの LXC 設定ファイルを使ったコンテナに適用されます。つまり、現時点では以下のディストリビューションに適用されます: centos, debian, fedora, gentoo, oracle, plamo, ubuntu.
+  
+  
+  <!-- You can turn this off by adding "lxc.seccomp =" in your
+          container's configuration. -->
+    コンテナの設定で "lxc.seccomp =" を追加することにより、このプロファイルの適用をオフにできます。
+  
+  
+  <!-- If you want to manually turn this on for a container which
+          doesn't use the common config mechanism, you can add something like
+          "lxc.seccomp = /usr/share/lxc/config/common.seccomp" to the container
+          configuration. -->
+    共通の設定を読み込む仕組みを使っていないコンテナでこの機能をオンにしたい場合は、"lxc.seccomp = /usr/share/lxc/config/common.seccomp" というような設定を、コンテナの設定ファイルに追加します。
+  
+  
+  ### <!-- Changes -->変更点
+  
+  
+  * <!-- core: Fix unprivileged containers to work with recent
+               kernels. -->core: 最近のカーネルで非特権コンテナが動作するように修正しました(訳注: 最近のカーネル = 3.15.1 or 3.14.8 以降)
+  * <!-- core: Fix building with -Werror=maybe-uninitialized. -->core: -Werror=maybe-uninitialized を付けた時のビルドの問題を修正しました
+  * <!-- core: seccomp: Don't fail on unresolvable syscalls. -->core: seccomp: 解決できないシステムコールを使った時に失敗しないようにしました
+  * <!-- core: lxc-init: Don't force dropping capabilities. -->core: lxc-init: ケーパビリティのドロップを強制しないようにしました
+  * <!-- core: configure: Split -lcap and -lselinux out of LIBS. -->core: configure: LIBS から -lcap と -lselinux を分けました
+  * <!-- core: configure: Fix expansion of libexecdir. -->core: configure: libexecdir の展開の問題を修正しました
+  * <!-- core: seccomp: Support 'all' arch sections. -->core: seccomp: セクションで使えるアーキテクチャとして 'all' をサポートしました
+  * <!-- core: seccomp: Fix 32-bit rules. -->core: seccomp: 32-bit のルールを修正しました
+  * <!-- core: seccomp: Enable a default filter for all templates. -->core: seccomp: すべてのテンプレートに対してデフォルトのフィルタを有効にしました
+  * <!-- core: Fix corruption in write_config. -->core: write_config 内のデータの破損を修正しました (訳注: 設定ファイルを書き出す際にデータが破損する可能性があったのを修正しました)
+  * <!-- core: attach: Fix querying for the current personality. -->core: attach: 現在のパーソナリティ (personality) の問い合わせができていなかったのを修正しました
+  * <!-- core: cgmanager: Have cgm_set and cgm_get use absolute
+               paths when possible. -->core: cgmanager: cgm_set と cgm_get は可能であれば絶対パスを使います (訳注: 非特権コンテナを起動したログインセッションと別のセッションから lxc-info, lxc-cgroup を実行できるようになりました)
+  * <!-- core: cgmanager: Make sure @value is null-terminated in
+               cgm_get. -->core: cgmanager: cgm_get 内で @value が確実に NULL で終わるようにしました
+  * <!-- core: optimization of signal filtering/parsing code. -->core: cgmanager: シグナルのフィルタリング・パース部分のコードの最適化を行いました
+  * <!-- core: apparmor: Allow hugetlbfs by default (similar to
+               tmpfs and restricted by the hugetlb cgroup controller). -->core: apparmor: デフォルトで hugetlbfs を使えるようにしました (tmpfs と同様に hugetlb cgroup コントローラの使用が制限されていました)
+  * <!-- core: Fix find_fstype_cb to ignore blank lines and
+               comments. -->find_fstype_db が空白行とコメント行を無視するようになりました (訳注: fstab ファイルで空白とコメント行が無視できるようになりました)
+  * <!-- lxc-autostart: Actually respect -P when passed. -->lxc-autostart: -P が与えられた場合、適切に扱うようになりました (訳注: -P はログの設定にのみ使い、コンテナリストの取得には使わなくなりました)
+  * <!-- lxc-attach: Fix typo in usage. -->lxc-attach: 使い方の typo を修正しました
+  * <!-- lxc-start: propagate the container exit code. -->lxc-start: コンテナの終了コードを取得できるようにしました
+  * <!-- lxc-stop: Fix incorrect timeout handling. -->lxc-stop: 不適切なタイムアウトの扱いを修正しました
+  * <!-- lxc-device: Support --version. -->lxc-device: --version オプションをサポートしました
+  * <!-- lxc-ls: Support --version. -->lxc-ls: --version オプションをサポートしました
+  * <!-- lxc-start-ephemeral: Support --version. -->lxc-start-ephemeral: --version オプションをサポートしました
+  * <!-- tests: Avoid the download template when possible. -->tests: 可能な限りダウンロードテンプレートを使わないようにしました
+  * <!-- tests: Don't fail when HOME isn't defined. -->HOME が定義されていないとき失敗しなくなりました
+  * <!-- tests: apparmor: Always end messages with a newline. -->tests: apparmor: 常に newline を付けた終了メッセージが出力されるようにしました
+  * <!-- tests: Clarify error message and fix return codes. -->tests: エラーメッセージを明確にし、リターンコードを修正しました
+  * <!-- tests: lxc-test-ubuntu doesn't actually need bind9-host. -->tests: lxc-test-ubuntu は bind9-host を必要としなくなりました
+  * <!-- lxc-debian: standardize formatting. -->lxc-debian: コード表記の統一化
+  * <!-- lxc-debian: fix formatting. -->lxc-debian: コード表記の修正
+  * <!-- python3: Fix attach_wait and threads. -->python3: attach_wait とスレッドを修正しました
+  
+  <!-- Those stable fixes were brought to you by 11 individual
+          contributors. -->これらの stable の修正は 11 名のコントリビュータによってなされました。
+  
+  ### <!-- Downloads -->ダウンロード
+  <!-- The release tarballs may be found on our
+          [download page</a> and we expect most
+          distributions will very soon ship a packaged version of LXC 1.0.5. -->
+    このリリースの tarball は [ダウンロードページ](/lxc/downloads/) から取得できます。
+    そして、各ディストリビューションがすぐに LXC 1.0.5 のパッケージをリリースするでしょう。
+  
+  
+  <!-- Should you be interested in individual changes or just
+          looking at the detailed development history, our stable branch is
+          on <a href="https://github.com/lxc/lxc/tree/stable-1.0">Github</a>. -->
+    個々の変更点に興味がある場合、そして開発の履歴を見たい場合、stable ブランチは <a href="https://github.com/lxc/lxc/tree/stable-1.0">Github</a> にあります。
+  
+  
+  
