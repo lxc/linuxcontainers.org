@@ -1,0 +1,10 @@
+title: LXCFS 0.3 release announcement
+date: 2015/01/21 00:00
+content: |-
+
+  This release is identical to 0.2 except for a fixed installation path of the LXC configuration file.
+  
+  ### Downloads
+  The release tarballs can be found on our [download page](/lxcfs/downloads/).
+  
+  

@@ -1,0 +1,15 @@
+title: LXCFS 0.2 release announcement
+date: 2015/01/20 00:00
+content: |-
+
+  Packager-friendly release of LXCFS 0.2.
+  
+  This release now installs /usr/share/lxcfs/lxc.mount.hook and /usr/share/lxc/common.conf.d/00-lxcfs.conf
+  which when combined with LXC 1.1 will automatically enable lxcfs for all containers.
+  
+  Additionally this release also includes some fixes to the testsuite.
+  
+  ### Downloads
+  The release tarballs can be found on our [download page](/lxcfs/downloads/).
+  
+  

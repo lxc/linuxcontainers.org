@@ -1,0 +1,15 @@
+title: LXCFS 0.8 release announcement
+date: 2015/05/07 00:00
+content: |-
+
+  ### Changes
+   * Use direct io
+   * Cache file and dir open work and re-use at read/write
+   * Force the fuse options we need (especially threading)
+   * Fix some errors in the manpage
+   * Fix handling of cpusets
+   * Some fixes for the lxc hook
+  
+  ### Downloads
+  The release tarballs can be found on our [download page](/lxcfs/downloads/).
+  
