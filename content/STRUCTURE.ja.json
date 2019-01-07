@@ -184,8 +184,9 @@
     {"path": "/lxcfs/news/",
      "title": "LXCFS - ニュース",
      "menu": ["LXCFS", "ニュース"],
-     "generator": "markdown",
-     "meta": {"input": "lxcfs/news.ja.md"}},
+     "generator": "news",
+     "meta": {"dir": "/content/lxcfs/news.ja/",
+              "input": "lxcfs/news.md"}},
 
     {"path": "/lxcfs/getting-started/",
      "title": "LXCFS - はじめに",

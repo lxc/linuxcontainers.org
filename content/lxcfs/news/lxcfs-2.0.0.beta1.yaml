@@ -1,0 +1,12 @@
+title: LXCFS 2.0.0.beta1 release announcement
+date: 2016/02/09 00:00
+content: |-
+
+  ### Changes
+   * Add support for /proc/swaps
+   * Create or chown systemd cgroups if asked
+   * Move liblxcfs.so to /usr/lib/lxcfs.
+  
+  ### Downloads
+  The release tarballs can be found on our [download page](/lxcfs/downloads).
+  

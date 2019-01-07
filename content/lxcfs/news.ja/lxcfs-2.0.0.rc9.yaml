@@ -1,0 +1,8 @@
+title: LXCFS 2.0.0.rc9 リリースのお知らせ
+date: 2016/03/29 00:00
+content: |-
+
+  
+   * このリリースは 2.0.0 に対する第 9 のリリース候補版です <!-- This is the ninth release candidate for 2.0.0 -->
+   * fuse file info を複数回解放する可能性からの保護を行いました <!-- This guards against potential double-releasing of fuse file info. -->
+  

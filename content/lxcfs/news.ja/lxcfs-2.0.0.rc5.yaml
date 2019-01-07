@@ -1,0 +1,8 @@
+title: LXCFS 2.0.0.rc5 リリースのお知らせ
+date: 2016/03/14 00:00
+content: |-
+
+  
+   * このリリースは 2.0.0 に対する第 5 のリリース候補版です <!-- This is the fifth release candidate for 2.0.0 -->
+   * 例えば 'sudo' が実行された場合に、libpam-cgfs が systemd の cgroup を誤って chown する問題を修正しました <!-- Fixes libpam-cgfs mis-chowning systemd cgroups when running (for instance) 'sudo'. -->
+  

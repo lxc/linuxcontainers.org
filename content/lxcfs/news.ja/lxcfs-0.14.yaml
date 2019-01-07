@@ -1,0 +1,17 @@
+title: LXCFS 0.14 リリースのお知らせ
+date: 2016/01/07 00:00
+content: |-
+
+  ### 変更点
+   * cgroup namespace を LXC が扱えるかどうかをチェックするようになりました <!-- Listen to hint from lxc regarding cgroup namespaces. -->
+   * libnih からの移行時に混入したいくつかの重要なバグの修正を行いました <!-- Several important bugfixes in code introduced during the switch from libnih. -->
+   * swap 使用量のレポートの修正を行いました <!-- Fix to swap usage reporting. -->
+   * root cgroup 内のタスクに対する過度な可視性のチェックを修正しました <!-- Fix overly strict visibility checks for tasks in root cgroup. -->
+   * テストの多数のバグ修正を行いました <!-- Many fixes to the tests. -->
+  
+  ### ダウンロード <!-- Downloads -->
+  <!--
+  The release tarballs can be found on our [download page](/lxcfs/downloads/).
+  -->
+  このリリースの tarball は [ダウンロードページ](/lxcfs/downloads/) から取得できます。
+  

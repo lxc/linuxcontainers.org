@@ -1,0 +1,9 @@
+title: LXCFS 2.0.0.rc7 リリースのお知らせ
+date: 2016/03/21 00:00
+content: |-
+
+  
+   * このリリースは 2.0.0 に対する第 7 のリリース候補版です <!-- This is the seventh release candidate for 2.0.0 -->
+   * このリリースには、upstart job と (LXC 用の) マウントフックに関する重要な修正がいくつか含まれています <!-- This includes some important fixes to the upstart jobs and mount hooks -->
+   * リロードハンドラを async セーフにしました。また、posix 互換に関する修正をいくつか行いました <!-- Makes the reload handler async-safe, and a few more posix compliancy fixes. -->
+  

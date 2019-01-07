@@ -1,0 +1,8 @@
+title: LXCFS 2.0.0.rc8 release announcement
+date: 2016/03/21 00:00
+content: |-
+
+  
+   * This is the eight release candidate for 2.0.0
+   * This implements access(2) which is required by the lxcfs cgfsng driver.
+  

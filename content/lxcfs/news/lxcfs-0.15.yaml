@@ -1,0 +1,11 @@
+title: LXCFS 0.15 release announcement
+date: 2016/01/07 00:00
+content: |-
+
+  Bugfix release.
+  
+   * Fixing a critical memory allocation bug which makes 0.14 unusable.
+  
+  ### Downloads
+  The release tarballs can be found on our [download page](/lxcfs/downloads).
+  

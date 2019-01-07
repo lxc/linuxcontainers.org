@@ -1,0 +1,17 @@
+title: LXCFS 0.15 リリースのお知らせ
+date: 2016/01/07 00:00
+content: |-
+
+  <!--
+  Bugfix release.
+  -->
+  バグフィックスのためのリリースです。
+  
+   * 深刻なメモリアロケーションに関するバグの修正を行いました。このバグがあるので 0.14 は使用に適しません <!-- Fixing a critical memory allocation bug which makes 0.14 unusable. -->
+  
+  ### ダウンロード <!-- Downloads -->
+  <!--
+  The release tarballs can be found on our [download page](/lxcfs/downloads).
+  -->
+  このリリースの tarball は [ダウンロードページ](/lxcfs/downloads) から取得できます。
+  

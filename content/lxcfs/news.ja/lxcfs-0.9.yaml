@@ -1,0 +1,17 @@
+title: LXCFS 0.9 リリースのお知らせ
+date: 2015/06/03 00:00
+content: |-
+
+  <!--
+  Bugfix release.
+  -->
+  バグフィックスのためのリリースです。
+  
+  * lxcfs のクラッシュを修正する Michael McCracken 氏からの修正をマージしました <!-- Fixes from Michael McCracken to fix lxcfs crashes -->
+  
+  ### ダウンロード <!-- Downloads -->
+  <!--
+  The release tarballs can be found on our [download page](/lxcfs/downloads/).
+  -->
+  このリリースの tarball は [ダウンロードページ](/lxcfs/downloads/) から取得できます。
+  

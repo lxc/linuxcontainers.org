@@ -225,8 +225,9 @@
     {"path": "/lxcfs/news/",
      "title": "LXCFS - News",
      "menu": ["LXCFS", "News"],
-     "generator": "markdown",
-     "meta": {"input": "lxcfs/news.md"}},
+     "generator": "news",
+     "meta": {"dir": "/content/lxcfs/news/",
+              "input": "lxcfs/news.md"}},
 
     {"path": "/lxcfs/getting-started/",
      "title": "LXCFS - Getting started",

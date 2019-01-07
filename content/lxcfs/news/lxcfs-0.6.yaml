@@ -1,0 +1,13 @@
+title: LXCFS 0.6 release announcement
+date: 2015/02/16 00:00
+content: |-
+
+  Bugfix release.
+  
+   * Fixes some memory and fd leaks.
+   * Fixes cpu-average in /proc/stat.
+  
+  ### Downloads
+  The release tarballs can be found on our [download page](/lxcfs/downloads/).
+  
+  

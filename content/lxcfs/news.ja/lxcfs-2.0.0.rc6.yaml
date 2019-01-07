@@ -1,0 +1,8 @@
+title: LXCFS 2.0.0.rc6 リリースのお知らせ
+date: 2016/03/17 00:00
+content: |-
+
+  
+   * このリリースは 2.0.0 に対する第 6 のリリース候補版です <!-- This is the sixth release candidate for 2.0.0 -->
+   * 14.04 で使用する systemd の cgroup 命名方式のサポートを追加しました <!-- Adds support for the systemd cgroup naming scheme used in 14.04. -->
+  

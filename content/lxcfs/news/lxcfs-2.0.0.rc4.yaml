@@ -1,0 +1,8 @@
+title: LXCFS 2.0.0.rc4 release announcement
+date: 2016/03/11 00:00
+content: |-
+
+  
+   * This is the fourth release candidate for 2.0.0
+   * Fix from stgraber to the mount hook and upstart job.
+  

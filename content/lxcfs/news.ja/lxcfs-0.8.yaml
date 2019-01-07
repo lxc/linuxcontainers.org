@@ -1,0 +1,18 @@
+title: LXCFS 0.8 リリースのお知らせ
+date: 2015/05/07 00:00
+content: |-
+
+  ### 変更点
+   * (FUSE の) direct_io モードを使うようになりました <!-- Use direct io -->
+   * ファイルとディレクトリのオープンにキャッシュを使うようになり、読み書きの際に再利用するようになりました <!-- Cache file and dir open work and re-use at read/write -->
+   * (特に Threading に) 必要な FUSE のオプションを強制するようになりました <!-- Force the fuse options we need (especially threading) -->
+   * man ページのエラーをいくつか修正しました <!-- Fix some errors in the manpage -->
+   * cpuset の扱いを修正しました <!-- Fix handling of cpusets -->
+   * lxc のフックの修正をいくつか行いました <!-- Some fixes for the lxc hook -->
+  
+  ### ダウンロード <!-- Downloads -->
+  <!--
+  The release tarballs can be found on our [download page](/lxcfs/downloads/).
+  -->
+  このリリースの tarball は [ダウンロードページ](/lxcfs/downloads/) から取得できます。
+  

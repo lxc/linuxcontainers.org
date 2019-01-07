@@ -1,0 +1,20 @@
+title: LXCFS 0.5 リリースのお知らせ
+date: 2015/01/28 00:00
+content: |-
+
+  <!--
+  Bugfix release.
+  -->
+  バグフィックスのリリースです。
+  
+  <!--
+  This tweaks configure.ac to detect cgmanager version and tweak the LXC hook.
+  -->
+  このバージョンでは cgmanager のバージョンの検出のために configure.ac を調整しました。また、LXC のフックも調整しました。
+  
+  ### ダウンロード <!-- Downloads -->
+  <!--
+  The release tarballs can be found on our [download page](/lxcfs/downloads/).
+  -->
+  このリリースの tarball は [ダウンロードページ](/lxcfs/downloads/) から取得できます。
+  

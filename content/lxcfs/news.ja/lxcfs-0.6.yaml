@@ -1,0 +1,18 @@
+title: LXCFS 0.6 リリースのお知らせ
+date: 2015/02/16 00:00
+content: |-
+
+  <!--
+  Bugfix release.
+  -->
+  バグフィックスのリリースです。
+  
+   * メモリとファイルディスクリプタのリークをいくつか修正しました <!-- Fixes some memory and fd leaks. -->
+   * /proc/stat の cpu-average の修正を行いました <!-- Fixes cpu-average in /proc/stat. -->
+  
+  ### ダウンロード <!-- Downloads -->
+  <!--
+  The release tarballs can be found on our [download page](/lxcfs/downloads/).
+  -->
+  このリリースの tarball は [ダウンロードページ](/lxcfs/downloads/) から取得できます。
+  

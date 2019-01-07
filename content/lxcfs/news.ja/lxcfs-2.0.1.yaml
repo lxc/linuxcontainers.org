@@ -1,0 +1,22 @@
+title: LXCFS 2.0.1 リリースのお知らせ
+date: 2016/05/16 00:00
+content: |-
+
+  
+  <!--
+  This is the first bugfix release for LXCFS 2.0.0.
+  -->
+  これは LXCFS 2.0.0 に対する最初のバグフィックスとなるリリースです。
+  
+  <!--
+  This includes the following bugfixes:
+  -->
+  このリリースでは以下のバグが修正されています。
+  
+   * s390x での cpuinfo の修正 <!-- Fix cpuinfo on s390x. -->
+   * diskstats で cgroup の値として recursive ファイルを使うようにしました <!-- Use recursive cgroup values in diskstats. -->
+   * コントローラのディレクトリへの traversal (rx) が可能になりました <!-- Allow traversal (rx) to controller directories. -->
+   * do\_mount\_cgroups() が失敗時にクラッシュするのを修正しました <!-- Fix do\_mount\_cgroups() crash on failure. -->
+   * パスを処理する関数のエラーハンドリングを改良しました <!-- Better error handling in a number of path processing functions. -->
+   * スワップの計算でのエラーハンドリングを改良しました <!-- Better error handling in swap calculation. -->
+  

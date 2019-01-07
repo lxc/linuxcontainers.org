@@ -1,0 +1,16 @@
+title: LXCFS 2.0.1 release announcement
+date: 2016/05/16 00:00
+content: |-
+
+  
+  This is the first bugfix release for LXCFS 2.0.
+  
+  This includes the following bugfixes:
+  
+   * Fix cpuinfo on s390x.
+   * Use recursive cgroup values in diskstats.
+   * Allow traversal (rx) to controller directories.
+   * Fix do\_mount\_cgroups() crash on failure.
+   * Better error handling in a number of path processing functions.
+   * Better error handling in swap calculation.
+  
