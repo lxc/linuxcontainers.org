@@ -1,0 +1,26 @@
+title: LXCFS 0.4 リリースのお知らせ
+date: 2015/01/23 00:00
+content: |-
+
+  <!--
+  Critical bug/security fix update for LXCFS.
+  -->
+  このリリースは LXCFS の重大なバグとセキュリティホールの修正のためのアップデートです。
+  
+  <!--
+  Prior versions of LXCFS would replace the host's /proc with the container's
+  when a read to /proc/uptime was done on a system with / mounted rshared (default on systemd).
+  -->
+  LXCFS のこれまでのバージョンは、/ が rshared でマウントされているシステム (systemd のデフォルトです) で /proc/uptime が読まれたとき、ホストの /proc をコンテナの /proc で置き換えていました。
+  
+  <!--
+  This release includes ONLY this bugfix and should be immediately deployed by anyone currently using lxcfs.
+  -->
+  このリリースはバグの修正**のみ**を含みます。lxcfsを現在使っている場合はいかなる場合でもすぐに新しいバージョンに置き換えるべきです。
+  
+  ### ダウンロード <!-- Downloads -->
+  <!--
+  The release tarballs can be found on our [download page](/lxcfs/downloads/).
+  -->
+  このリリースの tarball は [ダウンロードページ](/lxcfs/downloads/) から取得できます。
+  

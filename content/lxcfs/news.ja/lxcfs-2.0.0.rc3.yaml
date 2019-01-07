@@ -1,0 +1,10 @@
+title: LXCFS 2.0.0.rc3 リリースのお知らせ
+date: 2016/03/07 00:00
+content: |-
+
+  
+   * このリリースは 2.0.0 に対する第 3 のリリース候補版です <!-- This is the third release candidate for 2.0.0 -->
+   * このリリースでは以下を修正しました <!-- Fixes in this release: -->
+       * コンテナで /sys/fs/cgroup がマウントされていないときに、lxcfs の proc ファイル群がマウントされない問題 <!-- Not mounting lxcfs procfiles when /sys/fs/cgroup is not mounted in container. -->
+       * まれに free -m の出力が壊れる問題 <!-- Occasional corrupted output in free -m. -->
+  

@@ -1,0 +1,18 @@
+title: LXCFS 0.13 リリースのお知らせ
+date: 2015/11/25 00:00
+content: |-
+
+  <!--
+  Bugfix release.
+  -->
+  バグフィックスのためのリリースです。
+  
+   * 新しいバージョンの systemd ベースのコンテナが起動しないバグをいくつか修正しました。加えて他にもバグを修正しています。 <!-- This fixes several bugs which prevented newer systemd-based containers from
+     starting, and some more general bugs. -->
+  
+  ### ダウンロード <!-- Downloads -->
+  <!--
+  The release tarballs can be found on our [download page](/lxcfs/downloads/).
+  -->
+  このリリースの tarball は [ダウンロードページ](/lxcfs/downloads/) から取得できます。
+  

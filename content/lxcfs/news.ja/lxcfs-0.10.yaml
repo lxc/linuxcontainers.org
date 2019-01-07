@@ -1,0 +1,21 @@
+title: LXCFS 0.10 リリースのお知らせ
+date: 2015/09/03 00:00
+content: |-
+
+  <!--
+  Bugfix release.
+  -->
+  バグフィックスのためのリリースです。
+  
+   * libnih のスレッドサポートを検出し、使える場合は使います <!-- Detect libnih threading support and use when available. -->
+   * DBus 関連のスレッディングの問題を修正しました <!-- Fix threading issues related to DBus. -->
+   * memory cgroup がない場合も動作ができるようになりました <!-- Handle missing memory cgroup. -->
+   * libdbus と使う場合に起こる問題のため、全体的にスレッディングを止めました <!-- Turn off threading globally because of problems with libdbus. -->
+   * より systemd に適応するために lxcfs マウントを調整しました <!-- Tweak lxcfs mounts to better accomodate systemd. -->
+  
+  ### ダウンロード <!-- Downloads -->
+  <!--
+  The release tarballs can be found on our [download page](/lxcfs/downloads/).
+  -->
+  このリリースの tarball は [ダウンロードページ](/lxcfs/downloads/) から取得できます。
+  
