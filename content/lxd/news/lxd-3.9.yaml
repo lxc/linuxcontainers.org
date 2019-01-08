@@ -1,0 +1,52 @@
+title: LXD 3.9 release announcement
+date: 2019/01/08 00:00
+origin: https://discuss.linuxcontainers.org/t/lxd-3-9-has-been-released/3732
+content: |-
+  ### Introduction
+  The LXD team is very excited to announce the release of LXD 3.9!
+
+  As the development period for this LXD release was right over the holidays, no new features were merged during this time, making this effectively a bugfix release on top of LXD 3.8.
+
+  Enjoy!
+
+  ### Bugs fixed
+
+   - bash: Add snapshot keys
+   - client: Use exported DownloadFileHash
+   - doc: Clarify measurement units
+   - doc: Cleanup security.md
+   - doc: Update doc links in README
+   - i18n: Update translations from weblate
+   - image-handling.md: 'release' should be a string and not a list
+   - lxc/monitor: Fix rendering
+   - lxc/storage: Fix argument count check for delete
+   - lxc-to-lxd: Fix go test
+   - lxd/cluster: Fix schema upgrades
+   - lxd/containers: Adapt to go-lxc Release
+   - lxd/containers: bind default value is host
+   - lxd/containers: Fix unix devices with liblxc 3.1
+   - lxd/containers: Handle projects in forkmount
+   - lxd/db: Re-generate the fresh schema, bumping the schema version
+   - lxd: Fix go test
+   - lxd/forkmount: Fix version detection
+   - lxd/forkmount: Require mount_injection_file
+   - lxd/main_forkmount: Remove debug statements
+   - lxd/projects: Fix crashes on project list
+   - lxd/storage/zfs: Fix dataset handling on copy
+   - shared: Read certificates from host
+   - shared/util: Export DownloadFileHash
+   - tests: Add env variable to skip static analysis
+   - tests: Drop startup sleep for cluster
+   - tests: Reduce clustering delays
+   - tests: Reduce delays in devlxd test
+   - tests: Reduce sleep in network test
+   - tests: Reduce sleeps in proxy tests
+   - tests: Reduce teardown delays
+   - tests: Remove sleep in console test
+   - tests: Speed up basic tests
+
+  ### Try it for yourself
+  This new LXD release is already available for you to try on our [demo service](https://linuxcontainers.org/lxd/try-it/).
+
+  ### Downloads
+  The release tarballs can be found on our [download page](https://linuxcontainers.org/lxd/downloads/).
