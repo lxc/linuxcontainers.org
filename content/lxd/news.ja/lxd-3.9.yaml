@@ -1,0 +1,64 @@
+title: LXD 3.9 リリースのお知らせ
+date: 2019/01/08 00:00
+origin: https://discuss.linuxcontainers.org/t/lxd-3-9-has-been-released/3732
+content: |-
+  ### はじめに <!-- Introduction -->
+  <!--
+  The LXD team is very excited to announce the release of LXD 3.9!
+  -->
+  LXD チームは LXD 3.9 のリリースをお知らせすることにとてもワクワクしています!
+
+  <!--
+  As the development period for this LXD release was right over the holidays, no new features were merged during this time, making this effectively a bugfix release on top of LXD 3.8.
+  -->
+  このリリースの開発期間はちょうど休日だったので、この期間は新しい機能はマージしなかったため、実質的に LXD 3.8 のバグフィックスリリースになりました。
+
+  Enjoy!
+
+  ### バグ修正 <!-- Bugs fixed -->
+
+   - bash: スナップショット用のキーを追加しました <!-- Add snapshot keys -->
+   - client: export した DownloadFileHash を使うようにしました <!-- Use exported DownloadFileHash -->
+   - doc: 単位をわかりやすく書きました <!-- Clarify measurement units -->
+   - doc: security.md のクリーンアップをしました <!-- Cleanup security.md -->
+   - doc: README 内のドキュメントへのリンクを更新しました <!-- Update doc links in README -->
+   - i18n: weblate から翻訳を更新しました <!-- Update translations from weblate -->
+   - image-handling.md: ドキュメント内の 'release' の表記を修正しました <!-- 'release' should be a string and not a list -->
+   - lxc/monitor: json の生成部分を修正しました <!-- Fix rendering -->
+   - lxc/storage: 引数の数のチェックのバグを修正しました <!-- Fix argument count check for delete -->
+   - lxc-to-lxd: go test を修正しました <!-- Fix go test -->
+   - lxd/cluster: スキーマのアップグレードの問題を修正しました <!-- Fix schema upgrades -->
+   - lxd/containers: go-lxc のリリースに合うように変更しました <!-- Adapt to go-lxc Release -->
+   - lxd/containers: proxy デバイスの "bind" の値のチェックを修正しました <!-- bind default value is host -->
+   - lxd/containers: liblxc 3.1 の場合の unix デバイスの問題を修正しました <!-- Fix unix devices with liblxc 3.1 -->
+   - lxd/containers: forkmount でプロジェクトを扱えるようにしました <!-- Handle projects in forkmount -->
+   - lxd/db: フレッシュなスキーマを再生成し、スキーマのバージョンを上げました <!-- Re-generate the fresh schema, bumping the schema version -->
+   - lxd: go test を修正しました <!-- Fix go test -->
+   - lxd/forkmount: バージョン検出を修正しました <!-- Fix version detection -->
+   - lxd/forkmount: （LXC 3.1で導入の）ファイルのマウントインジェクションの場合は `mount_injection_file` API が必要なので修正しました <!-- Require mount_injection_file -->
+   - lxd/main_forkmount: デバッグ用のステートメントを削除しました <!-- Remove debug statements -->
+   - lxd/projects: プロジェクトのリスト表示の際のクラッシュを修正しました <!-- Fix crashes on project list -->
+   - lxd/storage/zfs: copy 時のデータセットの扱いを修正しました <!-- Fix dataset handling on copy -->
+   - shared: ホストから証明書を読むようにしました <!-- Read certificates from host -->
+   - shared/util: DownloadFileHash 関数を export するようにしました <!-- Export DownloadFileHash -->
+   - tests: コード解析をスキップする環境変数を追加しました <!-- Add env variable to skip static analysis -->
+   - tests: クラスターのスタートアップ時の sleep を削除しました <!-- Drop startup sleep for cluster -->
+   - tests: クラスタリングのテストの遅延時間を減らしました <!-- Reduce clustering delays -->
+   - tests: devlxd テストの遅延時間を減らしました <!-- Reduce delays in devlxd test -->
+   - tests: ネットワークテストの遅延時間を減らしました <!-- Reduce sleep in network testt -->
+   - tests: プロキシーテストの遅延時間を減らしました <!-- Reduce sleeps in proxy tests -->
+   - tests: teardown のテストの遅延時間を減らしました <!-- Reduce teardown delays -->
+   - tests: コンソールテストの sleep を削除しました <!-- Remove sleep in console test -->
+   - tests: 基本テストのスピードアップを行いました <!-- Speed up basic tests -->
+
+  ### 試用環境 <!-- Try it for yourself -->
+  <!--
+  This new LXD release is already available for you to try on our [demo service](https://linuxcontainers.org/lxd/try-it/).
+  -->
+  この新しい LXD リリースは私たちの [デモサービス](https://linuxcontainers.org/ja/lxd/try-it/) で利用できます。
+
+  ### ダウンロード <!-- Downloads -->
+  <!--
+  The release tarballs can be found on our [download page](https://linuxcontainers.org/lxd/downloads/).
+  -->
+  このリリースの tarball は [ダウンロードページ](/lxd/downloads/) から取得できます。
