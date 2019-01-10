@@ -25,7 +25,7 @@ content: |-
    - i18n: weblate から翻訳を更新しました <!-- Update translations from weblate -->
    - image-handling.md: ドキュメント内の 'release' の表記を修正しました <!-- 'release' should be a string and not a list -->
    - lxc/monitor: json の生成部分を修正しました <!-- Fix rendering -->
-   - lxc/storage: 引数の数のチェックのバグを修正しました <!-- Fix argument count check for delete -->
+   - lxc/storage: 削除の際の引数の数のチェックのバグを修正しました <!-- Fix argument count check for delete -->
    - lxc-to-lxd: go test を修正しました <!-- Fix go test -->
    - lxd/cluster: スキーマのアップグレードの問題を修正しました <!-- Fix schema upgrades -->
    - lxd/containers: go-lxc のリリースに合うように変更しました <!-- Adapt to go-lxc Release -->
