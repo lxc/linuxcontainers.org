@@ -414,8 +414,9 @@ structure = load_json("STRUCTURE.json")
 if os.path.exists(TARGET_PATH):
     shutil.rmtree(TARGET_PATH)
 os.mkdir(TARGET_PATH)
-shutil.copytree("static", "%s/static" % TARGET_PATH)
+shutil.copytree("assets", "%s/assets" % TARGET_PATH)
 shutil.copytree("downloads", "%s/downloads" % TARGET_PATH)
+shutil.copytree("static", "%s/static" % TARGET_PATH)
 os.symlink("static/img/favicon.ico", "%s/favicon.ico" % TARGET_PATH)
 
 with open("%s/static/css/pygments.css" % TARGET_PATH, "w+") as fd:

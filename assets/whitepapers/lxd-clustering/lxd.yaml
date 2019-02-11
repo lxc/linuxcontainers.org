@@ -1,0 +1,22 @@
+#cloud-config
+snap:
+  commands:
+    00: "apt-get remove --purge --yes lxd lxd-client liblxc1 lxcfs"
+    01: "snap install lxd"
+
+write_files:
+  - content: |-
+      # LXD specific sysctl tweaks (taken from upstream doc)
+      fs.inotify.max_queued_events=1048576
+      fs.inotify.max_user_instances=1048576
+      fs.inotify.max_user_watches=1048576
+      vm.max_map_count=262144
+      kernel.dmesg_restrict=1
+      net.ipv4.neigh.default.gc_thresh3=8192
+      net.ipv6.neigh.default.gc_thresh3=8192
+      kernel.keys.maxkeys=2000
+    path: /etc/sysctl.d/99-lxd.conf
+    permissions: "0644"
+
+runcmd:
+  - "sysctl -p /etc/sysctl.d/99-lxd.conf"
