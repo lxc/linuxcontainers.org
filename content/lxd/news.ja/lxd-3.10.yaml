@@ -43,52 +43,52 @@ content: |-
   -->
   コンテナのバックアップをどのストレージプールにインポートするかを選択できるようになりました。コマンドラインでは `--storage` で指定します。
 
-  ### Bugs fixed
+  ### バグ修正 <!-- Bugs fixed -->
 
-   - client: Properly reset listener on error
-   - client: Strip trailing slashes in URLs
-   - doc: Document btrfs resize
-   - doc: Fixed typo in backup.md
-   - global: Rename {Creation,LastUsed}Date to {Created,LastUsed}At
-   - i18n: Fix duplicate language
-   - i18n: Update translations from weblate
-   - i18n: Update translation templates
-   - lxc/image: Fix help
-   - lxd/apparmor: Tweak default set of rules
-   - lxd/backups: Don't waste memory during unpack
-   - lxd/backups: Fix fd leak
-   - lxd/backups: Handle missing storage pool for backups properly
-   - lxd/backups: Send progress info for export and import operations
-   - lxd/cluster: Don't prompt for internal config keys
-   - lxd/containers: Always delete container on create error
-   - lxd/containers: Call storage unmount on detach
-   - lxd/containers: Fix disk limits at creation
-   - lxd/containers: Fix error handling for auto-snap
-   - lxd/containers: Fix lxc.mount.entry for musl
-   - lxd/containers: Refuse refresh on running containers
-   - lxd/images: calculate sha256 as image is written
-   - lxd/images: change compressFile to take io.Reader and io.Writer
-   - lxd/images: Send metadata in CreateImage error importing image
-   - lxd/images: Send metadata in CreateImage error response
-   - lxd/images: Tar and compress in a combined stream when packing an image
-   - lxd/internal: Add internal command to trigger GC
-   - lxd/migration: Fix race in abort
-   - lxd/migration: Fix sender side errors handling
-   - lxd/migration: Handle crashing rsync
-   - lxd/storage/ceph: Create custom mountpoints if missing
-   - lxd/storage/ceph: Fix validation of CEPH config
-   - lxd/storage/ceph: Unmap on unmount
-   - lxd/storage/ceph: Unmap volume after creation
-   - lxd/storage/lvm: Use right VG name for exports
-   - lxd/tasks: Fix possible segfaults in tasks
-   - shared: Add support for a ProgressTracker during unpack
-   - shared: Progress metadata as a map
-   - shared: Properly handle uncompressed tarballs
-   - shared/osarch: Add armhfp (centos)
-   - storage: Add ioprogress.ProgressTracker field to storage
-   - tests: Add more container snapshot tests
-   - tests: Delete leftover container
-   - tests: Extend backup import tests
+   - client: エラー時に適切にリスナーをリセットするようにしました <!-- Properly reset listener on error -->
+   - client: URL の末尾のスラッシュを削除するようにしました <!-- Strip trailing slashes in URLs -->
+   - doc: btrfs のリサイズについて記載しました <!-- Document btrfs resize -->
+   - doc: backup.md の Typo を修正しました <!-- Fixed typo in backup.md -->
+   - global: {Creation,LastUsed}Date から {Created,LastUsed}At へリネームしました <!-- Rename {Creation,LastUsed}Date to {Created,LastUsed}At -->
+   - i18n: 重複していた言語を修正しました <!-- Fix duplicate language -->
+   - i18n: 翻訳をWeblate から更新しました <!-- Update translations from weblate -->
+   - i18n: 翻訳テンプレートを更新しました <!-- Update translation templates -->
+   - lxc/image: ヘルプを修正しました <!-- Fix help -->
+   - lxd/apparmor: ルールのデフォルトを調整しました <!-- Tweak default set of rules -->
+   - lxd/backups: unpack 時にメモリを浪費しないようにしました <!-- Don't waste memory during unpack -->
+   - lxd/backups: fd のリークを修正しました <!-- Fix fd leak -->
+   - lxd/backups: バックアップ時にストレージプールがない場合を適切に扱うようにしました <!-- Handle missing storage pool for backups properly -->
+   - lxd/backups: export と import 操作の進捗情報を送るようにしました <!-- Send progress info for export and import operations -->
+   - lxd/cluster: 内部的な設定値を表示しないようにしました <!-- Don't prompt for internal config keys -->
+   - lxd/containers: 作成エラーの際はコンテナを常に削除するようにしました <!-- Always delete container on create error -->
+   - lxd/containers: デタッチ時はストレージのアンマウントを呼ぶようにしました <!-- Call storage unmount on detach -->
+   - lxd/containers: 作成時のディスクの制限値の設定時の問題を修正しました <!-- Fix disk limits at creation -->
+   - lxd/containers: 自動スナップショットのエラーの扱いを修正しました <!-- Fix error handling for auto-snap -->
+   - lxd/containers: musl ライブラリ使用時の lxc.mount.entry の問題を修正しました <!-- Fix lxc.mount.entry for musl -->
+   - lxd/containers: 実行中のコンテナのリフレッシュを拒否するようにしました <!-- Refuse refresh on running containers -->
+   - lxd/images: イメージの書き込み中に sha256 を計算するようにしました <!-- calculate sha256 as image is written -->
+   - lxd/images: compressFile の引数として io.Reader、io.Write を取るように変更しました <!-- change compressFile to take io.Reader and io.Writer -->
+   - lxd/images: イメージのインポート中の CreateImage のエラーではメタデータを送るようにしました <!-- Send metadata in CreateImage error importing image -->
+   - lxd/images: CreateImage のエラーの際にレスポンスにメタデータを送るようにしました <!-- Send metadata in CreateImage error response -->
+   - lxd/images: イメージ作成時に tar と圧縮を組み合わせたストリームで行うようにしました <!-- Tar and compress in a combined stream when packing an image -->
+   - lxd/internal: GCをトリガーするための内部コマンドを追加しました <!-- Add internal command to trigger GC -->
+   - lxd/migration: アボート時の競合状態を修正しました <!-- Fix race in abort -->
+   - lxd/migration: 送出側のエラーハンドリングを修正しました <!-- Fix sender side errors handling -->
+   - lxd/migration: rsync のクラッシュを扱うようにしました <!-- Handle crashing rsync -->
+   - lxd/storage/ceph: 存在しない場合にカスタムのマウントポイントを作成するようにしました <!-- Create custom mountpoints if missing -->
+   - lxd/storage/ceph: CEPH 設定のバリデーションを修正しました <!-- Fix validation of CEPH config -->
+   - lxd/storage/ceph: アンマウント時に unmap するようにしました <!-- Unmap on unmount -->
+   - lxd/storage/ceph: 作成後にボリュームを unmap するようにしました <!-- Unmap volume after creation -->
+   - lxd/storage/lvm: エクスポート時に正しい VG 名を使うようにしました <!-- Use right VG name for exports -->
+   - lxd/tasks: タスクで segfaults が起こる可能性があったのを修正しました <!-- Fix possible segfaults in tasks -->
+   - shared: unpack 中の ProgressTracker サポートを追加しました <!-- Add support for a ProgressTracker during unpack -->
+   - shared: 進捗メタデータを map にしました <!-- Progress metadata as a map -->
+   - shared: 圧縮されていない tarball を適切に扱うようにしました <!-- Properly handle uncompressed tarballs -->
+   - shared/osarch: armhfp (centos) を追加しました <!-- Add armhfp (centos) -->
+   - storage: ストレージに ioprogress.ProgressTracker を追加しました <!-- Add ioprogress.ProgressTracker field to storage -->
+   - tests: コンテナのスナップショットテストをさらに追加しました <!-- Add more container snapshot tests -->
+   - tests: 残ったコンテナを削除するようにしました <!-- Delete leftover container -->
+   - tests: バックアップのインポートテストを拡張しました <!-- Extend backup import tests -->
    - tests: Fix bad test in clustering
    - tests: Fix bad test in container local pool handling
    - tests: Fix bad test in external_auth
@@ -124,10 +124,16 @@ content: |-
    - tests: Fix negative tests in template.sh
    - tests: Fix volume list in cluster
    - tests: Fix volume list in projects
-   - tests: Tweak fdleak test
+   - tests: fd リークのテストを調整しました <!-- Tweak fdleak test -->
 
-  ### Try it for yourself
+  ### 試用環境 <!-- Try it for yourself -->
+  <!--
   This new LXD release is already available for you to try on our [demo service](https://linuxcontainers.org/lxd/try-it/).
+  -->
+  この新しい LXD リリースは私たちの [デモサービス](https://linuxcontainers.org/ja/lxd/try-it/) で利用できます。
 
-  ### Downloads
+  ### ダウンロード <!-- Downloads -->
+  <!--
   The release tarballs can be found on our [download page](https://linuxcontainers.org/lxd/downloads/).
+  -->
+  このリリースの tarball は [ダウンロードページ](/lxd/downloads/) から取得できます。
