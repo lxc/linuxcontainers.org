@@ -91,12 +91,6 @@ p:empty {
   margin-top: 0;
 }
 
-#tryit_console {
-  margin-bottom: -10px;
-  margin-left: -10px;
-  margin-right: -10px;
-}
-
 #tryit_console_measurement {
   border-color: black;
   border-style: solid;
