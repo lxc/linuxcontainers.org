@@ -273,6 +273,12 @@ pre {
   background-color: #f7f7f7;
 }
 
+@media (min-width: 769px) {
+  .p-language-switcher {
+    margin-left: auto;
+  }
+}
+
 /* Custom strip */
 .is-x-shallow {
   padding: .5rem 0;
