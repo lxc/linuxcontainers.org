@@ -277,3 +277,8 @@ pre {
 .is-x-shallow {
   padding: .5rem 0;
 }
+
+/* Override for wider notifications - specifically for the Try-It terminal */
+.p-notification__response {
+    max-width: none;
+}
