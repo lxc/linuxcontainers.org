@@ -1,107 +1,86 @@
-<div id="navigation" class="p-navigation">
-    <div class="row">
-        <div class="p-navigation__logo">
-            <a class="p-navigation__link" href="/">Linux Containers</a>
-        </div>
+<header id="navigation" class="p-navigation">
+  <div class="row">
+    <div class="p-navigation__banner">
+      <div class="p-navigation__logo">
+        <a class="p-navigation__link" href="/">
+          Linux containers
+        </a>
+      </div>
+      {% if menu %}
         <a href="#navigation" class="p-navigation__toggle--open" title="menu">Menu</a>
         <a href="#navigation-closed" class="p-navigation__toggle--close" title="close menu">Close menu</a>
-
-        <nav class="p-navigation__nav">
-            <span class="u-off-screen">
-                <a href="#main-content">Jump to main content</a>
-            </span>
-{% if menu %}
-            <ul class="p-navigation__links">
-    {% for entry in menu %}
-        {% if entry[0] is string %}
-            {% if page_path == entry[0] %}
-                <li class="p-navigation__link is-active"><a href="#">{{ entry[1] }}</a></li>
-            {% else %}
-                <li class="p-navigation__link"><a href="{{ entry[0] }}">{{ entry[1] }}</a></li>
-            {% endif %}
-        {% else %}
-            {% if page_menu and page_menu[0] == entry[1] %}
-            <li class="p-navigation__link is-active">
-            {% else %}
-            <li class="p-navigation__link">
-            {% endif %}
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ entry[1] }}</a>
-
-                <ul class="hover-menu " role="menu">
-
-            {% for sub_entry in entry[0] %}
-                {% if not sub_entry[0] %}
-                    <li class="divider"></li>
-                    {% if sub_entry[1] %}
-                        <li>{{ sub_entry[1] }}</li>
-                    {% endif %}
-                {% else %}
-                    {% if sub_entry[0] is string %}
-                        {% if page_path == sub_entry[0] %}
-                        <li><a href="#">{{ sub_entry[1] }}</a></li>
-                        {% else %}
-                        <li><a href="{{ sub_entry[0] }}">{{ sub_entry[1] }}</a></li>
-                        {% endif %}
-                    {% else %}
-                        {% if page_menu[1] == sub_entry[1] %}
-                        <li class="is-active dropdown-submenu">
-                        {% else %}
-                        <li class="dropdown-submenu">
-                        {% endif %}
-                            <a href="#">{{ sub_entry[1] }}</a>
-
-                        {% if sub_entry[0]|length > 15 %}
-                            <ul class="dropdown-menu columns" role="menu">
-                        {% else %}
-                            <ul class="dropdown-menu" role="menu">
-                        {% endif %}
-                        {% for sub_sub_entry in sub_entry[0] %}
-                            {% if not sub_sub_entry[0] %}
-                                {% if sub_sub_entry[1] %}
-                                <li class="dropdown-header">{{ sub_sub_entry[1] }}</li>
-                                {% endif %}
-                            {% else %}
-                                {% if page_path == sub_sub_entry[0] %}
-                                <li class="is-active"><a href="#">{{ sub_sub_entry[1] }}</a></li>
-                                {% else %}
-                                <li><a href="{{ sub_sub_entry[0] }}">{{ sub_sub_entry[1] }}</a></li>
-                                {% endif %}
-                            {% endif %}
-                        {% endfor %}
-                            </ul>
-                        </li>
-                    {% endif %}
-                {% endif %}
-            {% endfor %}
-            </ul>
-        </li>
-        {% endif %}
-    {% endfor %}
-        </ul>
-{% endif %}
-
-{% if languages %}
-            <nav class="p-navigation__nav u-float-right">
-                <ul class="p-navigation__links">
-                    <li class="p-navigation__link">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ page_language[2] }} <span class="caret"></span></a>
-                        <ul class="hover-menu" role="menu">
-        {% for language in languages %}
-            {% if page_language[0] == language[0] %}
-                            <li class="is-active"><a href="#">{{ language[1] }}</a></li>
-            {% else %}
-                {% if language[0] %}
-                            <li><a href="/{{ language[0] }}{{ page_raw_path }}">{{ language[1] }}</a></li>
-                {% else %}
-                            <li><a href="{{ page_raw_path }}">{{ language[1] }}</a></li>
-                {% endif %}
-            {% endif %}
-        {% endfor %}
-                        </ul>
-                    </li>
-                </ul>
-            </nav>
-{% endif %}
-        </div>
+      {% endif %}
     </div>
-</nav>
+
+    {% if menu %}
+      <nav class="p-navigation__nav" role="menubar">
+        <span class="u-off-screen">
+          <a href="#main-content">Jump to main content</a>
+        </span>
+        <ul class="p-navigation__links" role="menu">
+          {% for entry in menu %}
+            {% if entry[0] is string %}
+              <li class="p-navigation__link{% if page_menu and page_menu[0] == entry[1] %} is-selected{% endif %}">
+                <a href="{{ entry[0] }}">{{ entry[1] }}</a>
+              </li>
+            {% else %}
+              <li class="p-navigation__link p-dropdown__toggle {% if page_menu and page_menu[0] == entry[1] %} is-selected{% endif %}" id="{{ entry[1] }}">
+                <a href="#{{ entry[1] }}-menu" class="p-dropdown__toggle-link">{{ entry[1] }}</a>
+                <ul class="p-navigation__sub-links p-dropdown" id="{{ entry[1] }}-menu">
+                  {% for sub_entry in entry[0] %}
+                    {% if not sub_entry[0] and sub_entry[0] is string %}
+                      <!-- SEPARATOR / HEADING -->
+                      <li>
+                        <hr class="u-no-margin--bottom">
+                        {% if sub_entry[1] %}
+                          <h3 class="p-heading--five p-navigation__sub-link u-no-margin--bottom">{{ sub_entry[1] }}</h3>
+                        {% endif %}
+                      </li>
+                    {% else %}
+                      {% if sub_entry[0] is string %}
+                        <li>
+                          <a href="{{ sub_entry[0] }}"  class="p-navigation__sub-link{% if page_menu[1] == sub_entry[1] %} is-selected{% endif %} p-dropdown__link">{{ sub_entry[1] }}</a>
+                        </li>
+                      {% else %}
+                        <li class="p-dropdown__toggle" id="{{ entry[1] }}-{{ sub_entry[1] }}">
+                          <a class="p-navigation__sub-link{% if page_menu[1] == sub_entry[1] %} is-selected{% endif %} p-dropdown__toggle-link" href="#{{ entry[1] }}-{{ sub_entry[1] }}-menu">{{ sub_entry[1] }}</a>
+                          <ul class="p-navigation__sub-links p-dropdown is-split" id="{{ entry[1] }}-{{ sub_entry[1] }}-menu">
+                            {% for sub_sub_entry in sub_entry[0] %}
+                              <li>
+                                <a class="p-navigation__sub-link p-dropdown__link" href="{{ sub_sub_entry[0] }}">{{ sub_sub_entry[1] }}</a>
+                              </li>
+                            {% endfor %}
+                          </ul>
+                        </li>
+                      {% endif %}
+                    {% endif %}
+                  {% endfor %}
+                </ul>
+              </li>
+            {% endif %}
+          {% endfor %}
+        {% endif %}
+      </ul>
+      <ul class="p-navigation__links p-language-switcher" role="menu">
+        {% if languages %}
+          <li class="p-navigation__link p-dropdown__toggle">
+            <a href="#languages" class="p-dropdown__toggle-link">{{ page_language[2] }}</a>
+            <ul class="p-navigation__sub-links p-dropdown" role="menu" id="languages">
+              {% for language in languages %}
+                {% if page_language[0] == language[0] %}
+                  <li><a href="#" class="p-navigation__sub-link p-dropdown__link is-active">{{ language[1] }}</a></li>
+                {% else %}
+                  {% if language[0] %}
+                    <li><a href="/{{ language[0] }}{{ page_raw_path }}"  class="p-navigation__sub-link p-dropdown__link">{{ language[1] }}</a></li>
+                  {% else %}
+                    <li><a href="{{ page_raw_path }}"  class="p-navigation__sub-link p-dropdown__link">{{ language[1] }}</a></li>
+                  {% endif %}
+                {% endif %}
+              {% endfor %}
+            </ul>
+          </li>
+        {% endif %}
+      </ul>
+    </nav>
+  </div>
+</header>

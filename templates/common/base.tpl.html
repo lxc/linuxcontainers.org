@@ -1,60 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-{% block head %}
-        <meta charset="utf-8"/>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-        <link rel="icon" href="/static/img/favicon.ico"/>
+<head>
+  {% block head %}
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="icon" href="/static/img/favicon.ico"/>
 
-{% if page_title %}
-        <title>Linux Containers - {{ page_title }}</title>
-{% else %}
-        <title>Linux Containers</title>
-{% endif %}
-        <link rel="stylesheet" href="https://assets.ubuntu.com/v1/vanilla-framework-version-1.6.3.min.css" />
-        <link href="/static/css/local.css" rel="stylesheet"/>
-        <link href="/static/css/pygments.css" rel="stylesheet"/>
+  {% if page_title %}
+  <title>Linux Containers - {{ page_title }}</title>
+  {% else %}
+  <title>Linux Containers</title>
+  {% endif %}
+  <link rel="stylesheet" href="https://assets.ubuntu.com/v1/vanilla-framework-version-1.8.0.min.css" />
+  <link href="/static/css/local.css" rel="stylesheet"/>
+  <link href="/static/css/pygments.css" rel="stylesheet"/>
 
-        <!-- Analytics -->
-        <script>
-          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  <!-- Analytics -->
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-          ga('create', 'UA-45204001-1', 'auto');
-          ga('send', 'pageview');
-        </script>
-{% endblock %}
-    </head>
+    ga('create', 'UA-45204001-1', 'auto');
+    ga('send', 'pageview');
+  </script>
+  {% endblock %}
+</head>
 
-    <body role="document">
-{% include "common/header.tpl.html" %}
+<body role="document">
+  {% include "common/header.tpl.html" %}
 
-<div class="p-breadcrumbs nav-secondary clearfix">
-    <div class="row nav-secondary__row">
-        <div class="col-12 u-no-margin--bottom">
-            <ul class="p-breadcrumbs u-no-margin--bottom">
-{% if page_menu %}
-    {% for entry in page_menu %}
-                <li class="p-breadcrumbs__item">{{ entry }}</li>
-    {% endfor %}
-{% endif %}
-            </ul>
-        </div>
+  <section class="p-strip--light is-x-shallow">
+    <div class="row">
+      <ul class="p-breadcrumbs u-no-margin--bottom">
+        {% if page_menu %}
+          {% for entry in page_menu %}
+          <li class="p-breadcrumbs__item">{{ entry }}</li>
+          {% endfor %}
+        {% endif %}
+      </ul>
     </div>
-</div>
+  </section>
 
-<div class="wrapper u-no-margin--top">
+  <div class="wrapper u-no-margin--top">
     <div class="inner-wrapper" id="main-content">
-        {% block content %}{% endblock %}
+      {% block content %}{% endblock %}
     </div>
+  </div>
+
+  {% include ["common/footer." + page_language[0] + ".tpl.html", "common/footer.tpl.html"] %}
+
+  <script src="/static/js/jquery.min.js"></script>
+  <script src="/static/js/bootstrap-rating.min.js"></script>
+  <script src="/static/js/navigation.js"></script>
 </div>
-
-{% include ["common/footer." + page_language[0] + ".tpl.html", "common/footer.tpl.html"] %}
-
-            <script src="/static/js/jquery.min.js"></script>
-            <script src="/static/js/bootstrap-rating.min.js"></script>
-        </div>
-    </body>
+</body>
 </html>
