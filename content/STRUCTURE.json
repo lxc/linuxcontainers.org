@@ -175,11 +175,6 @@
     {"path": "/lxd/external-resources/",
      "menu": ["LXD", "External resources"]},
 
-    {"path": "/lxd/product/",
-     "menu": ["LXD", "Product page"],
-     "generator": "link",
-     "meta": {"url": "http://www.ubuntu.com/cloud/tools/lxd"}},
-
     {"path": "/lxd/articles/",
      "title": "LXD - Articles & videos",
      "menu": ["LXD", "Articles & videos"],

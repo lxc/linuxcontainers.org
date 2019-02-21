@@ -156,11 +156,6 @@
     {"path": "/lxd/external-resources/",
      "menu": ["LXD", "외부 자료"]},
 
-    {"path": "/lxd/product/",
-     "menu": ["LXD", "제품 페이지"],
-     "generator": "link",
-     "meta": {"url": "http://www.ubuntu.com/cloud/tools/lxd"}},
-
     {"path": "/lxd/articles/",
      "title": "LXD - 기사",
      "menu": ["LXD", "기사"],
