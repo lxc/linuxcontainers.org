@@ -38,6 +38,7 @@ Starting from [OpenNebula EDGE](https://opennebula.org/get-your-hands-on-v-5-8-e
 
 Key features:
 - Enables **qcow2 backed containers** and regular KVM-like images, giving users more flexibility when deploying their workloads
+- Support for snap installed LXD nodes.
 - Ceph storage pools shared across all virtualization nodes (both KVM and LXD)
 - Seamless LXD public image servers integration in a marketplace-like style. Supports https://images.linuxcontainers.org,  https://www.turnkeylinux.org and also the [OpenNebula marketplace](https://marketplace.opennebula.systems/appliance)
 - [Multi-container services deployment](https://docs.opennebula.org/5.8/advanced_components/application_flow_and_auto-scaling/overview.html) with auto-scaling.
