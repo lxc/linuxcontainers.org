@@ -33,6 +33,19 @@ Some of the biggest features of LXD are:
  * Network management (bridge creation and configuration, cross-host tunnels, ...)
  * Storage management (support for multiple storage backends, storage pools and storage volumes)
 
+# Integration with OpenNebula
+Starting from [OpenNebula EDGE](https://opennebula.org/get-your-hands-on-v-5-8-edge/) this cloud management platform packs official drivers to manage LXD compute nodes.
+
+Key features:
+- Enables **qcow2 backed containers** and regular KVM-like images, giving users more flexibility when deploying their workloads
+- Support for snap installed LXD nodes.
+- Ceph storage pools shared across all virtualization nodes (both KVM and LXD)
+- Seamless LXD public image servers integration in a marketplace-like style. Supports https://images.linuxcontainers.org,  https://www.turnkeylinux.org and also the [OpenNebula marketplace](https://marketplace.opennebula.systems/appliance)
+- [Multi-container services deployment](https://docs.opennebula.org/5.8/advanced_components/application_flow_and_auto-scaling/overview.html) with auto-scaling.
+- Heterogeneus hypervisors cloud deployments with KVM, LXD and VMWare vCenter managed by the same cloud orchestration system
+
+You can check more about the integration in the [OpenNebula doc](http://docs.opennebula.org/5.8/deployment/open_cloud_host_setup/lxd_driver.html)
+
 # Integration with OpenStack
 The "nova-lxd" project provides an OpenStack Nova plugin that seamlessly integrates
 system containers into a regular OpenStack deployment.
