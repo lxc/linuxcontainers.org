@@ -57,6 +57,27 @@ LXDの主要な特長には以下のようなものがあります:
  * ネットワーク管理 (ブリッジの作成と設定、ホスト間のトンネルなど)<!-- Network management (bridge creation and configuration, cross-host tunnels, ...) -->
  * ストレージ管理 (複数のストレージバックエンド、ストレージプール、ストレージボリュームのサポート) <!-- Storage management (support for multiple storage backends, storage pools and storage volumes) -->
 
+# OpenNebula との統合 <!-- Integration with OpenNebula -->
+
+<!--
+Starting from [OpenNebula EDGE](https://opennebula.org/get-your-hands-on-v-5-8-edge/) this cloud management platform packs official drivers to manage LXD compute nodes.
+-->
+[OpenNebula EDGE](https://opennebula.org/get-your-hands-on-v-5-8-edge/) から、OpenNebula では LXD コンピュートノードを管理するためのオフィシャルなドライバを同梱するようになりました。
+
+主な機能 <!-- Key features-->:
+
+* **qcow2 形式イメージのコンテナ**と通常の KVM 形式のイメージのコンテナを有効にしており、ユーザーが自身の作業をデプロイする際の柔軟性を高めています <!-- **Enables **qcow2 backed containers** and regular KVM-like images, giving users more flexibility when deploying their workloads -->
+* snap でインストールした LXD ノードのサポート <!-- Support for snap installed LXD nodes. -->
+* 全仮想ノード（KVM と LXD の両方）で共有される Ceph ストレージプール <!-- Ceph storage pools shared across all virtualization nodes (both KVM and LXD) -->
+* マーケットプレイス風でのシームレスな LXD 公開イメージサーバーの統合。[LXD 公開イメージサーバー](https://images.linuxcontainers.org)、[TurnkeyLinux](https://www.turnkeylinux.org)、[OpenNebula marketplace](https://marketplace.opennebula.systems/appliance) をサポート <!-- Seamless LXD public image servers integration in a marketplace-like style. Supports [LXD public image server](https://images.linuxcontainers.org),  [TurnkeyLinux](https://www.turnkeylinux.org) and also the [OpenNebula marketplace](https://marketplace.opennebula.systems/appliance) -->
+* オートスケーリングによる [複数コンテナを使ったサービスデプロイメント](https://docs.opennebula.org/5.8/advanced_components/application_flow_and_auto-scaling/overview.html) <!-- [Multi-container services deployment](https://docs.opennebula.org/5.8/advanced_components/application_flow_and_auto-scaling/overview.html) with auto-scaling. -->
+* KVM、LXD、VMWare vCenter といった異なったハイパーバイザーを同じクラウドオーケストレーションシステムから管理 <!-- Heterogeneous hypervisors cloud deployments with KVM, LXD and VMWare vCenter managed by the same cloud orchestration system -->
+
+<!--
+You can check more about the integration in the [OpenNebula doc](http://docs.opennebula.org/5.8/deployment/open_cloud_host_setup/lxd_driver.html)
+-->
+[OpenNebula のドキュメント](http://docs.opennebula.org/5.8/deployment/open_cloud_host_setup/lxd_driver.html) でこの統合についてもっと調べることができます。
+
 # OpenStack との統合 <!-- Integration with OpenStack -->
 <!--
 The "nova-lxd" project provides an OpenStack Nova plugin that seemlessly integrates
