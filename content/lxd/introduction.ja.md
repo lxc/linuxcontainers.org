@@ -70,7 +70,7 @@ Starting from [OpenNebula EDGE](https://opennebula.org/get-your-hands-on-v-5-8-e
 * snap でインストールした LXD ノードのサポート <!-- Support for snap installed LXD nodes. -->
 * 全仮想ノード（KVM と LXD の両方）で共有される Ceph ストレージプール <!-- Ceph storage pools shared across all virtualization nodes (both KVM and LXD) -->
 * マーケットプレイス風でのシームレスな LXD 公開イメージサーバーの統合。[LXD 公開イメージサーバー](https://images.linuxcontainers.org)、[TurnkeyLinux](https://www.turnkeylinux.org)、[OpenNebula marketplace](https://marketplace.opennebula.systems/appliance) をサポート <!-- Seamless LXD public image servers integration in a marketplace-like style. Supports [LXD public image server](https://images.linuxcontainers.org),  [TurnkeyLinux](https://www.turnkeylinux.org) and also the [OpenNebula marketplace](https://marketplace.opennebula.systems/appliance) -->
-* オートスケーリングによる [複数コンテナによるサービスデプロイメント](https://docs.opennebula.org/5.8/advanced_components/application_flow_and_auto-scaling/overview.html) <!-- [Multi-container services deployment](https://docs.opennebula.org/5.8/advanced_components/application_flow_and_auto-scaling/overview.html) with auto-scaling. -->
+* オートスケーリングによる [複数コンテナを使ったサービスデプロイメント](https://docs.opennebula.org/5.8/advanced_components/application_flow_and_auto-scaling/overview.html) <!-- [Multi-container services deployment](https://docs.opennebula.org/5.8/advanced_components/application_flow_and_auto-scaling/overview.html) with auto-scaling. -->
 * KVM、LXD、VMWare vCenter といった異なったハイパーバイザーを同じクラウドオーケストレーションシステムから管理 <!-- Heterogeneous hypervisors cloud deployments with KVM, LXD and VMWare vCenter managed by the same cloud orchestration system -->
 
 <!--
