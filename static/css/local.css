@@ -89,6 +89,7 @@ p:empty {
 /* Terminal */
 #tryit_console * {
   margin-top: 0;
+  line-height: 1.5;
 }
 
 #tryit_console_measurement {
