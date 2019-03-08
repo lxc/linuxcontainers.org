@@ -135,6 +135,12 @@
      "generator": "markdown",
      "meta": {"input": "lxd/getting-started-openstack.md"}},
 
+    {"path": "/lxd/getting-started-opennebula/",
+     "title": "LXD - Getting started - OpenNebula",
+     "menu": ["LXD", "Getting started - OpenNebula"],
+     "generator": "markdown",
+     "meta": {"input": "lxd/getting-started-opennebula.md"}},
+
     {"path": "/lxd/documentation",
      "menu": ["LXD", "Documentation"],
      "generator": "link",
