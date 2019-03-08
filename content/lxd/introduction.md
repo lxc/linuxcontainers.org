@@ -45,7 +45,7 @@ Key features:
 * [Multi-container services deployment](https://docs.opennebula.org/5.8/advanced_components/application_flow_and_auto-scaling/overview.html) with auto-scaling.
 * Heterogeneous hypervisors cloud deployments with KVM, LXD and VMWare vCenter managed by the same cloud orchestration system
 
-You can check more about the integration in the [OpenNebula doc](http://docs.opennebula.org/stable/deployment/open_cloud_host_setup/lxd_driver.html)
+To learn more about LXD and OpenNebula, take a look at our [getting started guide](/lxd/getting-started-opennebula/).
 
 # Integration with OpenStack
 The "nova-lxd" project provides an OpenStack Nova plugin that seamlessly integrates
