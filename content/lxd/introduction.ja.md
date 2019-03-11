@@ -76,7 +76,7 @@ Starting from [OpenNebula EDGE](https://opennebula.org/get-your-hands-on-v-5-8-e
 <!--
 You can check more about the integration in the [OpenNebula doc](http://docs.opennebula.org/5.8/deployment/open_cloud_host_setup/lxd_driver.html)
 -->
-[OpenNebula のドキュメント](http://docs.opennebula.org/5.8/deployment/open_cloud_host_setup/lxd_driver.html) でこの統合についてもっと調べることができます。
+[OpenNebula のドキュメント](http://docs.opennebula.org/stable/deployment/open_cloud_host_setup/lxd_driver.html) でこの統合についてもっと調べることができます。
 
 # OpenStack との統合 <!-- Integration with OpenStack -->
 <!--
