@@ -2,7 +2,7 @@
 
 [<img src="/static/img/one-logo.png" alt="OpenNebula GUI"/ style="display:block;float:none;margin-left:auto;margin-right:auto;padding-top:1em;padding-bottom:1em;">](https://opennebula.org)
 
-This guide provides a walkthrough of the basics of the OpenNebula cloud orchestration system on LXD. First we use the simple MinONE tool to build a single-node cloud environment inside a single physical or virtual machine for users looking to try out OpenNebula, then we show a typical working session with the GUI and the CLI, and finally we provide the links to build a distributed production environment.
+This guide provides a walkthrough of the basics of the OpenNebula cloud orchestration system on LXD. First we use the simple MiniONE tool to build a single-node cloud environment inside a single physical or virtual machine for users looking to try out OpenNebula, then we show a typical working session with the GUI and the CLI, and finally we provide the links to build a distributed production environment.
 
 ## Automated Deployment with MiniONE
 

@@ -108,6 +108,12 @@
      "generator": "markdown",
      "meta": {"input": "lxd/getting-started-openstack.ja.md"}},
 
+    {"path": "/lxd/getting-started-opennebula/",
+     "title": "LXD - はじめに - OpenNebula",
+     "menu": ["LXD", "はじめに - OpenNebula"],
+     "generator": "markdown",
+     "meta": {"input": "lxd/getting-started-opennebula.ja.md"}},
+
      {"path": "/lxd/documentation",
      "menu": ["LXD", "ドキュメント"],
      "generator": "link",
