@@ -146,14 +146,14 @@ def md2html(content):
     """
         Given path to Markdown file, return rendered HTML content.
     """
-    hilite_config = [('linenums', None),
-                     ('guess_lang', False),
-                     ('noclasses', False)]
-    codehilite = markdown.extensions.codehilite.makeExtension(hilite_config)
+    codehilite = markdown.extensions.codehilite.CodeHiliteExtension(
+        linenums=None,
+        guess_lang=False,
+        noclasses=False)
 
     # Using toc extension to generate HTML anchors for paragraphs
     anchors = markdown.extensions.toc.TocExtension(
-        configs=[("permalink", 1)])
+        permalink=1)
 
     return markdown.markdown(content, extensions=[codehilite, anchors])
 
