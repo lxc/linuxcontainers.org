@@ -2,16 +2,16 @@ title: LXD 3.0.0 release announcement
 date: 2018/04/02 00:00
 origin: https://discuss.linuxcontainers.org/t/lxd-3-0-0-has-been-released/1491
 content: |-
-  ### Introduction
+  # Introduction
   The LXD team is pleased to announce the release of LXD 3.0.0!
   This is the second LTS release for the LXD project and will be supported until June 2023.
 
-  ### New features (since 2.21)
+  # New features (since 2.21)
   LXD 3.0 is going to be our main LTS release for the next two years, receiving frequent bugfix updates backported from the current feature release.
 
   We spent over 3 months since the LXD 2.21 release to land all the features we wanted to see in LXD 3.0 and clean up a lot of existing code to make it maintainable for the duration of the LTS, below are the main highlights.
 
-  #### Clustering
+  ## Clustering
   The biggest new feature for LXD 3.0 is the introduction of clustering support.
   This allows for identically configured LXD servers to be joined together as part of a cluster, appearing to the outside world as one big LXD server.
 
@@ -20,22 +20,22 @@ content: |-
   No special system configuration or services are required to setup LXD clustering, all you need is a few available machines or VMs with similar network and storage properties, then `lxd init` will walk you through the process of creating the cluster and then joining some servers into it.
 
   Here's a short recording of setting up a LXD cluster on 3 nodes using MAAS to allocate machines and networks:
-  <iframe width="560" height="315" src="https://www.youtube.com/embed/RnBu7t2wD4U?rel=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+  https://www.youtube.com/watch?v=RnBu7t2wD4U
 
   The main contributor for this feature, Free Ekanayaka also gave a longer presentation on LXD clustering at FOSDEM 2018 which you can check out here:
-  <iframe width="560" height="315" src="https://www.youtube.com/embed/DVqMeo3lvv0?rel=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+  https://www.youtube.com/watch?v=DVqMeo3lvv0
 
-  You can also check the documentation here: [https://lxd.readthedocs.io/en/stable-3.0/clustering/](https://lxd.readthedocs.io/en/stable-3.0/clustering/)
+  You can also check the documentation here: https://lxd.readthedocs.io/en/stable-3.0/clustering/
 
-  #### Physical to container migration with `lxd-p2c`
+  ## Physical to container migration with `lxd-p2c`
   A new tool called `lxd-p2c` makes it possible to import a system's filesystem into a LXD container using the LXD API.
 
   After building a copy of the tool, the resulting binary can be transferred to any system that you want to turn into a container. Point it to a remote LXD server and the entire system's filesystem will be transferred over the LXD migration API and a new container be created.
 
   The main contributor for this feature, Stéphane Graber, also gave a presentation about it at FOSDEM 2018, the video is available here:
-  <iframe width="560" height="315" src="https://www.youtube.com/embed/JKztAWZOj9g?rel=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+  https://www.youtube.com/watch?v=JKztAWZOj9g
 
-  #### Support for NVIDIA runtime passthrough
+  ## Support for NVIDIA runtime passthrough
   A common issue for those using NVIDIA GPUs inside containers is the requirement to keep the userspace libraries in sync with the kernel driver.
 
   This is made particularly difficult if the container's owner isn't also the host's owner as the two are then likely to become out of sync at any time and without warning.
@@ -44,9 +44,9 @@ content: |-
 
   This lets you save a lot of space and greatly simplifies maintenance.
 
-  <a href="https://asciinema.org/a/174076" target="_blank"><img src="https://asciinema.org/a/174076.png" /></a>
+  [<img src='/uploads/default/original/1X/9a5250359953dd84b660525e5b301c2763074959.png' alt='asciicast'>](https://asciinema.org/a/174076)
 
-  #### Hotplug support for `unix-char` and `unix-block` devices
+  ## Hotplug support for `unix-char` and `unix-block` devices
   A new `required` property has been added to all unix type devices. When set to false, LXD will wait until the requested path is available on the host before automatically passing it into the container.
 
   This allows for something like this:
@@ -55,177 +55,199 @@ content: |-
 
   The `c1` container will now get access to that USB serial device as soon as it's plugged into the system and it will automatically be removed from the container when unplugged.
 
-  #### Local copy/move of storage volumes
+  ## Local copy/move of storage volumes
   It's now possible to copy and move custom storage volumes between storage pools.
 
-      stgraber@castiana:~$ lxc storage volume copy ssd/example default/example
-      Storage volume copied successfully!
+  ```bash
+  stgraber@castiana:~$ lxc storage volume copy ssd/example default/example
+  Storage volume copied successfully!
 
-      stgraber@castiana:~$ lxc storage volume move ssd/example default/example
-      Storage volume moved successfully!
+  stgraber@castiana:~$ lxc storage volume move ssd/example default/example
+  Storage volume moved successfully!
+  ```
 
-  #### Remote transfer of custom storage volumes
+  ## Remote transfer of custom storage volumes
   A new storage migration API was introduced allowing for the exact same operations as shown above to work between LXD servers as well, using the same syntax as would be used for container migration.
 
-  #### `proxy` device type to forward network connections
+  ## `proxy` device type to forward network connections
   The new `proxy` device type allows for forwarding TCP connections between host and containers.
 
   For example, to forward any connection to port 80 on the host to container c1 on it's localhost IP on port 80:
 
-      lxc config device add c1 http proxy listen=tcp:0.0.0.0:80 connect=tcp:127.0.0.1:80 
+  ```
+  lxc config device add c1 http proxy listen=tcp:0.0.0.0:80 connect=tcp:127.0.0.1:80 
+  ```
 
-  #### Events through /dev/lxd
+  ## Events through /dev/lxd
   The REST API endpoint exposed inside the container can now be used to receive events whenever a configuration key or device is added, removed or modified.
 
-      root@c1:~# curl -i -N -H "Connection: Upgrade" -H "Upgrade: websocket" --header "Sec-WebSocket-Version: 13" --header "Sec-WebSocket-Key: SGVsbG8sIHdvcmxkIQ==" --unix-socket /dev/lxd/sock lxd/1.0/events
-      HTTP/1.1 101 Switching Protocols
-      Upgrade: websocket
-      Connection: Upgrade
-      Sec-WebSocket-Accept: qGEgH3En71di5rrssAZTmtRTyFk=
+  ```
+  root@c1:~# curl -i -N -H "Connection: Upgrade" -H "Upgrade: websocket" --header "Sec-WebSocket-Version: 13" --header "Sec-WebSocket-Key: SGVsbG8sIHdvcmxkIQ==" --unix-socket /dev/lxd/sock lxd/1.0/events
+  HTTP/1.1 101 Switching Protocols
+  Upgrade: websocket
+  Connection: Upgrade
+  Sec-WebSocket-Accept: qGEgH3En71di5rrssAZTmtRTyFk=
 
-      {"metadata":{"key":"user.foo","old_value":"","value":"bar"},"timestamp":"2018-04-02T23:58:54.433992023-04:00","type":"config"}
-      {"metadata":{"action":"added","config":{"path":"/home","source":"/home","type":"disk"},"name":"home"},"timestamp":"2018-04-02T23:59:25.65007597-04:00","type":"device"}
+  {"metadata":{"key":"user.foo","old_value":"","value":"bar"},"timestamp":"2018-04-02T23:58:54.433992023-04:00","type":"config"}
+  {"metadata":{"action":"added","config":{"path":"/home","source":"/home","type":"disk"},"name":"home"},"timestamp":"2018-04-02T23:59:25.65007597-04:00","type":"device"}
+  ```
 
-  #### Switched command line parser
+  ## Switched command line parser
   Our previous command line parser, gnuflag, didn't match our command line structure particularly well, causing confusing help and error messages. We have now transitioned to using the [cobra](https://github.com/spf13/cobra) command line parser, joining a number of other major Go projects.
 
-  #### Process count column in `lxc list`
+  ## Process count column in `lxc list`
   An optional "processes" column was added to `lxc list` showing the number of processes running inside the container.
 
-      stgraber@castiana:~$ lxc list -c nsN c1
-      +------+---------+-----------+
-      | NAME |  STATE  | PROCESSES |
-      +------+---------+-----------+
-      | c1   | RUNNING | 33        |
-      +------+---------+-----------+
+  ```bash
+  stgraber@castiana:~$ lxc list -c nsN c1
+  +------+---------+-----------+
+  | NAME |  STATE  | PROCESSES |
+  +------+---------+-----------+
+  | c1   | RUNNING | 33        |
+  +------+---------+-----------+
+  ```
 
-  #### `lxc storage info` sub-command
+  ## `lxc storage info` sub-command
   A new `info` subcommand was added as a way to get easy human readable information about a storage pool:
 
-      stgraber@castiana:~$ lxc storage info ssd
-      info:
-        description: ""
-        driver: dir
-        name: ssd
-        space used: 9.29GB
-        total space: 173.12GB
-      used by: {}
+  ```bash
+  stgraber@castiana:~$ lxc storage info ssd
+  info:
+    description: ""
+    driver: dir
+    name: ssd
+    space used: 9.29GB
+    total space: 173.12GB
+  used by: {}
+  ```
 
-  #### Option for alternate IPv4 gateway
+  ## Option for alternate IPv4 gateway
   A new `ipv4.dhcp.gateway` option is now available for LXD managed bridges. This lets you set a gateway other than LXD itself and can be useful when mixing LXD bridges with physical networks.
 
-  #### Support for symlinks in file transfer
+  ## Support for symlinks in file transfer
   When doing recursive file transfers including some symlinks, those will be properly created as symlinks on the target, rather than the content of the file they point to be pushed or pulled.
 
-  #### Pretty rendering of log entries in `lxc monitor`
+  ## Pretty rendering of log entries in `lxc monitor`
   The LXD log messages have always been available over the event interface, accessible through the `lxc monitor` tool. However those raw events were sometimes pretty hard to read.
 
   The command line client now knows how to filter and re-format those log events to look exactly as if you were looking at the server's log output.
 
-      stgraber@castiana:~$ lxc monitor --pretty --loglevel=info --type=logging
-      INFO[04-02|22:57:39] Stopping container                       action=stop created="2018-02-27 18:02:02 -0500 EST" ephemeral=false name=snapcraft stateful=false used="2018-03-29 15:33:05 -0400 EDT"
-      INFO[04-02|22:57:40] Stopped container                        action=stop created="2018-02-27 18:02:02 -0500 EST" ephemeral=false name=snapcraft stateful=false used="2018-03-29 15:33:05 -0400 EDT"
-      INFO[04-02|22:57:40] Starting container                       action=start created="2018-02-27 18:02:02 -0500 EST" ephemeral=false name=snapcraft stateful=false used="2018-03-29 15:33:05 -0400 EDT"
-      INFO[04-02|22:57:41] Started container                        action=start created="2018-02-27 18:02:02 -0500 EST" ephemeral=false name=snapcraft stateful=false used="2018-03-29 15:33:05 -0400 EDT"
+  ```bash
+  stgraber@castiana:~$ lxc monitor --pretty --loglevel=info --type=logging
+  INFO[04-02|22:57:39] Stopping container                       action=stop created="2018-02-27 18:02:02 -0500 EST" ephemeral=false name=snapcraft stateful=false used="2018-03-29 15:33:05 -0400 EDT"
+  INFO[04-02|22:57:40] Stopped container                        action=stop created="2018-02-27 18:02:02 -0500 EST" ephemeral=false name=snapcraft stateful=false used="2018-03-29 15:33:05 -0400 EDT"
+  INFO[04-02|22:57:40] Starting container                       action=start created="2018-02-27 18:02:02 -0500 EST" ephemeral=false name=snapcraft stateful=false used="2018-03-29 15:33:05 -0400 EDT"
+  INFO[04-02|22:57:41] Started container                        action=start created="2018-02-27 18:02:02 -0500 EST" ephemeral=false name=snapcraft stateful=false used="2018-03-29 15:33:05 -0400 EDT"
+  ```
 
-  #### `lxc network list-leases` sub-command
+  ## `lxc network list-leases` sub-command
   DHCP leases on LXD managed bridges can now be queried directly through the API and the command line tool.
 
-      stgraber@castiana:~$ lxc network list-leases lxdbr0
-      +-----------+-------------------+---------------+---------+
-      | HOSTNAME  |    MAC ADDRESS    |  IP ADDRESS   |  TYPE   |
-      +-----------+-------------------+---------------+---------+
-      | bar       | 00:16:3e:e0:36:3a | 10.166.11.185 | DYNAMIC |
-      +-----------+-------------------+---------------+---------+
-      | snapcraft | 00:16:3e:be:f1:87 | 10.166.11.120 | DYNAMIC |
-      +-----------+-------------------+---------------+---------+
+  ```bash
+  stgraber@castiana:~$ lxc network list-leases lxdbr0
+  +-----------+-------------------+---------------+---------+
+  | HOSTNAME  |    MAC ADDRESS    |  IP ADDRESS   |  TYPE   |
+  +-----------+-------------------+---------------+---------+
+  | bar       | 00:16:3e:e0:36:3a | 10.166.11.185 | DYNAMIC |
+  +-----------+-------------------+---------------+---------+
+  | snapcraft | 00:16:3e:be:f1:87 | 10.166.11.120 | DYNAMIC |
+  +-----------+-------------------+---------------+---------+
+  ```
 
-  #### `lxc alias` command
+  ## `lxc alias` command
   It's now possible to list, create and delete command line aliases directly from the command line tool, rather than having to manually edit the configuration file.
 
-      stgraber@castiana:~$ lxc alias list
-      +--------+-------------------------------------------+
-      | ALIAS  |                  TARGET                   |
-      +--------+-------------------------------------------+
-      | delete | delete -f                                 |
-      +--------+-------------------------------------------+
-      | ls     | list -c ns46S                             |
-      +--------+-------------------------------------------+
-      | ubuntu | exec @ARGS@ -- sudo --login --user ubuntu |
-      +--------+-------------------------------------------+
+  ```bash
+  stgraber@castiana:~$ lxc alias list
+  +--------+-------------------------------------------+
+  | ALIAS  |                  TARGET                   |
+  +--------+-------------------------------------------+
+  | delete | delete -f                                 |
+  +--------+-------------------------------------------+
+  | ls     | list -c ns46S                             |
+  +--------+-------------------------------------------+
+  | ubuntu | exec @ARGS@ -- sudo --login --user ubuntu |
+  +--------+-------------------------------------------+
+  ```
 
-  #### `lxc config device override` sub-command
+  ## `lxc config device override` sub-command
   To override a particular option of a device that's inherited from a profile, such as the default network interface, you need to create a device that's local to the container and uses the same name as the one from the profile. This device will then take priority over the one coming from the profile and let you set any configuration you want.
 
   To simplify this process, this can all be done now by using `lxc config device override`, passing it the container, device and configuration keys that should be changed.
 
-      stgraber@castiana:~$ lxc launch ubuntu:16.04 c1
-      Creating c1
-      Starting c1
-      stgraber@castiana:~$ lxc config device override c1 eth0 ipv4.address=10.166.11.42
-      Device eth0 overridden for c1
-      stgraber@castiana:~$ lxc restart c1
-      stgraber@castiana:~$ lxc list c1
-      +------+---------+---------------------+----------------------------------------------+------------+-----------+
-      | NAME |  STATE  |        IPV4         |                     IPV6                     |    TYPE    | SNAPSHOTS |
-      +------+---------+---------------------+----------------------------------------------+------------+-----------+
-      | c1   | RUNNING | 10.166.11.42 (eth0) | 2001:470:b368:4242:216:3eff:fed1:aff3 (eth0) | PERSISTENT | 0         |
-      +------+---------+---------------------+----------------------------------------------+------------+-----------+
+  ```bash
+  stgraber@castiana:~$ lxc launch ubuntu:16.04 c1
+  Creating c1
+  Starting c1
+  stgraber@castiana:~$ lxc config device override c1 eth0 ipv4.address=10.166.11.42
+  Device eth0 overridden for c1
+  stgraber@castiana:~$ lxc restart c1
+  stgraber@castiana:~$ lxc list c1
+  +------+---------+---------------------+----------------------------------------------+------------+-----------+
+  | NAME |  STATE  |        IPV4         |                     IPV6                     |    TYPE    | SNAPSHOTS |
+  +------+---------+---------------------+----------------------------------------------+------------+-----------+
+  | c1   | RUNNING | 10.166.11.42 (eth0) | 2001:470:b368:4242:216:3eff:fed1:aff3 (eth0) | PERSISTENT | 0         |
+  +------+---------+---------------------+----------------------------------------------+------------+-----------+
+  ```
 
-  #### Operations now have a description
+  ## Operations now have a description
   A new `description` field is now present in the API for all background operations and is exposed in the command line tool.
 
-      stgraber@castiana:~$ lxc operation list
-      +--------------------------------------+-----------+---------------------+---------+------------+----------------------+
-      |                  ID                  |   TYPE    |     DESCRIPTION     | STATUS  | CANCELABLE |       CREATED        |
-      +--------------------------------------+-----------+---------------------+---------+------------+----------------------+
-      | 343b1700-c0bd-44fa-8b1f-e6a8fdb91b42 | WEBSOCKET | Migrating container | RUNNING | NO         | 2018/04/03 02:51 UTC |
-      +--------------------------------------+-----------+---------------------+---------+------------+----------------------+
-      | 65494c6e-7643-4ed5-8abf-497e57cfdd5c | WEBSOCKET | Executing command   | RUNNING | NO         | 2018/04/03 02:51 UTC |
-      +--------------------------------------+-----------+---------------------+---------+------------+----------------------+
+  ```bash
+  stgraber@castiana:~$ lxc operation list
+  +--------------------------------------+-----------+---------------------+---------+------------+----------------------+
+  |                  ID                  |   TYPE    |     DESCRIPTION     | STATUS  | CANCELABLE |       CREATED        |
+  +--------------------------------------+-----------+---------------------+---------+------------+----------------------+
+  | 343b1700-c0bd-44fa-8b1f-e6a8fdb91b42 | WEBSOCKET | Migrating container | RUNNING | NO         | 2018/04/03 02:51 UTC |
+  +--------------------------------------+-----------+---------------------+---------+------------+----------------------+
+  | 65494c6e-7643-4ed5-8abf-497e57cfdd5c | WEBSOCKET | Executing command   | RUNNING | NO         | 2018/04/03 02:51 UTC |
+  +--------------------------------------+-----------+---------------------+---------+------------+----------------------+
+  ```
 
-  #### `lifecycle` type events
+  ## `lifecycle` type events
   A new event class called `lifecycle` has been introduced, to provide much easier tracking of what LXD is doing from scripts or other API clients, without having to interpret LXD's log messages.
 
-      stgraber@castiana:~$ lxc monitor --type=lifecycle
-      metadata:
-        action: container-updated
-        source: /1.0/containers/bar
-      timestamp: "2018-04-02T22:53:06.742745596-04:00"
-      type: lifecycle
+  ```bash
+  stgraber@castiana:~$ lxc monitor --type=lifecycle
+  metadata:
+    action: container-updated
+    source: /1.0/containers/bar
+  timestamp: "2018-04-02T22:53:06.742745596-04:00"
+  type: lifecycle
 
 
-      metadata:
-        action: container-started
-        source: /1.0/containers/bar
-      timestamp: "2018-04-02T22:53:07.234066242-04:00"
-      type: lifecycle
+  metadata:
+    action: container-started
+    source: /1.0/containers/bar
+  timestamp: "2018-04-02T22:53:07.234066242-04:00"
+  type: lifecycle
 
 
-      metadata:
-        action: container-shutdown
-        source: /1.0/containers/bar
-      timestamp: "2018-04-02T22:53:19.885795751-04:00"
-      type: lifecycle
+  metadata:
+    action: container-shutdown
+    source: /1.0/containers/bar
+  timestamp: "2018-04-02T22:53:19.885795751-04:00"
+  type: lifecycle
 
 
-      metadata:
-        action: container-deleted
-        source: /1.0/containers/bar
-      timestamp: "2018-04-02T22:53:23.813480386-04:00"
-      type: lifecycle
+  metadata:
+    action: container-deleted
+    source: /1.0/containers/bar
+  timestamp: "2018-04-02T22:53:23.813480386-04:00"
+  type: lifecycle
+  ```
 
-  ### Requirements
+  # Requirements
   LXD 3.0 now requires Go 1.9 or higher. While it may be possible to build it with an older version at this point, there is no guarantee that we won't start making use of newer Go functions in later bugfix releases.
 
-  ### Support and upgrade
+  # Support and upgrade
   LXD 3.0.0 will be supported until June 2023 and our current LTS release, LXD 2.0 will now switch to a slower maintenance pace, only getting critical bugfixes and security updates.
 
   Users of the LXD feature branch (currently at 2.21) should update to 3.0 to keep being supported and get all the bugfixes and new features that LXD 3.0 provides.
 
   Users of the LXD LTS branch (2.0.11) can choose to stay on LXD 2.0 and keep getting critical security fixes or upgrade to LXD 3.0. Those using LXD LTS in critical production environments will likely want to start upgrading a few test systems to LXD 3.0 to check for any potential issue and then upgrade the rest of their machines after LXD 3.0.1 is released.
 
-  ### Availability as a snap package from upstream
+  # Availability as a snap package from upstream
   The recommended way to install and keep LXD up to date is by using the upstream provided snap package. This ensures that all systems are running the exact same copy of LXD and simplifies the bug reporting and debugging process.
 
   For the LXD snap, 3 tracks are provided:
@@ -252,9 +274,9 @@ content: |-
 
   Switching between tracks and channels is possible by using `snap refresh` but note that LXD doesn't support downgrading and will fail to start if you attempt it.
 
-  ### Downloads
+  # Downloads
    - Main release tarball: [lxd-3.0.0.tar.gz](https://linuxcontainers.org/downloads/lxd/lxd-3.0.0.tar.gz)
    - GPG signature: [lxd-3.0.0.tar.gz.asc](https://linuxcontainers.org/downloads/lxd/lxd-3.0.0.tar.gz.asc)
 
-  ### Contributors
+  # Contributors
   The LXD 3.0.0 release was brought to you by a total of 18 contributors.

@@ -3,127 +3,127 @@ date: 2017/11/15 00:00
 origin: https://discuss.linuxcontainers.org/t/lxd-2-20-has-been-released/798
 content: |-
   ### The changes in this release include
-  Features:
+    Features:
 
-   * New `lxc console` subcommand and console API to attach to the container's boot console or retrieve the boot log
-   * New `lxc operation` subcommand to list and cancel background operations.
-   * Added support for SR-IOV network devices (nictype=sriov) including dynamic allocation of new virtual functions
-   * Support for delegated external authentication through macarroons (using the go-bakery v2 protocol)
+     * New `lxc console` subcommand and console API to attach to the container's boot console or retrieve the boot log
+     * New `lxc operation` subcommand to list and cancel background operations.
+     * Added support for SR-IOV network devices (nictype=sriov) including dynamic allocation of new virtual functions
+     * Support for delegated external authentication through macarroons (using the go-bakery v2 protocol)
 
-  Bugfixes:
+    Bugfixes:
 
-   * client: Add GetOperationUUIDs and GetOperations
-   * client: Name all the return values in interfaces
-   * doc: Fix markdown escaping
-   * doc: Sort container config keys
-   * doc: Sort network config keys
-   * doc: Sort server.md config keys
-   * doc: Sort storage config keys
-   * extra: Update bash completion for all the new keys
-   * global: Fix a number of unchecked variables
-   * global: Fix some typos
-   * global: Revert "Temporary workaround for log15 API breakage"
-   * global: Switch to the built-in log15
-   * lxc/file: Log downloads/uploads (Issue #4018)
-   * lxc/network: Fix error message
-   * lxd-benchmark: use NewConfig to get a default configuration
-   * lxd/containers: Detect version at runtime (Issue #3934)
-   * lxd/containers: Don't allow removing lxc.conf or lxc.log
-   * lxd/containers: Rename container.StateObject() to container.DaemonObject()
-   * lxd/daemon: Add a endpoints.Endpoints class for managing HTTP endpoints
-   * lxd/daemon: Add cpu profiling and goroutines printing to the debug sub-package
-   * lxd/daemon: Add error messages to lxdTestSuite setup and teardown
-   * lxd/daemon: Add initial Go-level daemon integration-like test
-   * lxd/daemon: Add lxd/config sub-package implementing structured config maps
-   * lxd/daemon: Add lxd/task sub-package for running functions periodically
-   * lxd/daemon: Add new debug sub-package with support for memory profiling
-   * lxd/daemon: Add node.Config high-level API for modifying node-level config
-   * lxd/daemon: Cleanup test state at every test, to improve isolation.
-   * lxd/daemon: Control all goroutines spawned in Daemon.Ready() using task.Task
-   * lxd/daemon: Don't skip Daemon.Ready() in tests, it can be run unconditionally
-   * lxd/daemon: Don't use global path variables in sys.OS
-   * lxd/daemon: Drop logging setup in Daemon.Init()
-   * lxd/daemon: Drop support for "setup mode"
-   * lxd/daemon: Drop the containerLXC.OS() convenience
-   * lxd/daemon: Drop unnecessary checks on MockMode
-   * lxd/daemon: Extract initialization of the REST and /dev/lxd http Server
-   * lxd/daemon: Gracefully cancel tasks on daemon shutdown
-   * lxd/daemon: Improve error on invalid config key (Issue #3925)
-   * lxd/daemon: Move directory initialization to sys.OS.
-   * lxd/daemon: Move execPath global variable to sys.OS.ExecPath
-   * lxd/daemon: Move global aaAdmin global variable to sys.OS
-   * lxd/daemon: Move global aaAvailable global variable to sys.OS
-   * lxd/daemon: Move global aaConfined global variable to sys.OS
-   * lxd/daemon: Move global aaStacking global variable to sys.OS
-   * lxd/daemon: Move global cgBlkioController global variable to sys.OS
-   * lxd/daemon: Move global cgCpuController global variable to sys.OS
-   * lxd/daemon: Move global runningInUserns global variable to sys.OS
-   * lxd/daemon: Move optional Daemon config values to DaemonConfig
-   * lxd/daemon: Move remaining global cgXXX global variables to sys.OS
-   * lxd/daemon: Move util.AppArmorCanStack to a private appArmorCanStack in lxd/sys
-   * lxd/daemon: Streamline Daemon init and shutdownn
-   * lxd/daemon: Track the lifecycle of the goroutine performing log expiration
-   * lxd/daemon: Tweak schedule function for pruning images
-   * lxd/daemon: Use instance-level cache dir variable instead of the environment one
-   * lxd/daemon: Use instance-level log dir variable instead of the environment one
-   * lxd/daemon: Use instance-level var dir variable instead of the environment one
-   * lxd/daemon: Wire debug utilities into main_daemon.go
-   * lxd/daemon: Wire endpoints.Endpoints into Daemon
-   * lxd/db: Add a db.NodeTx structure to abstract away low-level transactions
-   * lxd/db: Add a Schema.Fresh() method to set a "bootstrap" SQL statement
-   * lxd/db: Add db APIs for fetching and changing node-local config values
-   * lxd/db: Add db.NewTestNode helper for database-related unit tests
-   * lxd/db: Add low-level query helpers for changing config tables
-   * lxd/db: Add query.Count utility
-   * lxd/db: Add Schema.ExerciseUpdate() for testing a individual update
-   * lxd/db: Add support for gracefully aborting schema.Ensure
-   * lxd/db: Complete moving schema creation logic to schema.Schema
-   * lxd/db: Convert a few call sites of sql.DB.Begin to db.DB.Begin
-   * lxd/db: Convert remaining call sites of the low-level db.Begin function
-   * lxd/db: Drop all references to Daemon.nodeDB
-   * lxd/db: Fix spurious tx.Exec argument in lxd/db/schema/query.go
-   * lxd/db: Move certificate db APIs to the db.Node facade
-   * lxd/db: Move container db APIs to the db.Node facade
-   * lxd/db: Move devices db APIs to the db.Node facade
-   * lxd/db: Move image db APIs to the db.Node facade
-   * lxd/db: Move network db APIs to the db.Node facade
-   * lxd/db: Move node-level schema updates to their own db/local/ sub-package.
-   * lxd/db: Move patches db APIs to the db.Node facade
-   * lxd/db: Move profile db APIs to the db.Node facade
-   * lxd/db: Move storage db APIs to the db.Node facade
-   * lxd/db: Remove direct use of the low-level db.Exec() func outside of lxd/db/
-   * lxd/db: Rename Daemon.db to Daemon.nodeDB
-   * lxd/db: Rename db.Exec to db.exec, making it unexported
-   * lxd/db: Rename db.QueryScan to db.queryScan, making it unexported
-   * lxd/db: Rename db_test.go to db_internal_test.go, since it's white box
-   * lxd/db: Rename State.DB to State.NodeDB
-   * lxd/db: Return the initial schema version in Schema.Ensure()
-   * lxd/import: Use the right VG name on delete
-   * lxd/main: Fix output of --print-goroutines-every
-   * lxd/networks: Don't require a 1400 MTU with tunnels (Issue #3999)
-   * lxd/seccomp: Fix security.syscalls.blacklist handling
-   * lxd/storage: Drop the storageShared.OS() convenience
-   * lxd/storage: Generate new UUID on thinpools for btrfs
-   * lxd/storage/zfs: Try to import missing zpools (Issue #3976)
-   * lxd/storage/zfs: Update for newer ZFS releases (Issue #3986)
-   * shared: Add a shared.KeyPairAndCA function to get coventionally named certs
-   * shared: Fix file transfers to/from stdin/stdout in snap
-   * shared: Make current gofmt happy
-   * shared/api: Add API extension label to AuthMethods
-   * shared/log15: Vendor a copy of log15 in shared/log15
-   * shared/logger: Add helper to redirect the global logger to the testing logger
-   * shared/logging: Add freebsd build conditional to log_posix.go
-   * shared/version: Extract the APIExtensions list from api10Get
-   * shared/version: Split version declarations in shared/version into several files
-   * tests: Add test for unique btrfs UUID generation
-   * tests: Add test for unused variables
-   * tests: Check for typos
-   * tests: Don't use godeps for import check
-   * tests: Skip prlimits on liblxc < 2.1
-   * tests: Update for new dependencies
+     * client: Add GetOperationUUIDs and GetOperations
+     * client: Name all the return values in interfaces
+     * doc: Fix markdown escaping
+     * doc: Sort container config keys
+     * doc: Sort network config keys
+     * doc: Sort server.md config keys
+     * doc: Sort storage config keys
+     * extra: Update bash completion for all the new keys
+     * global: Fix a number of unchecked variables
+     * global: Fix some typos
+     * global: Revert "Temporary workaround for log15 API breakage"
+     * global: Switch to the built-in log15
+     * lxc/file: Log downloads/uploads (Issue #4018)
+     * lxc/network: Fix error message
+     * lxd-benchmark: use NewConfig to get a default configuration
+     * lxd/containers: Detect version at runtime (Issue #3934)
+     * lxd/containers: Don't allow removing lxc.conf or lxc.log
+     * lxd/containers: Rename container.StateObject() to container.DaemonObject()
+     * lxd/daemon: Add a endpoints.Endpoints class for managing HTTP endpoints
+     * lxd/daemon: Add cpu profiling and goroutines printing to the debug sub-package
+     * lxd/daemon: Add error messages to lxdTestSuite setup and teardown
+     * lxd/daemon: Add initial Go-level daemon integration-like test
+     * lxd/daemon: Add lxd/config sub-package implementing structured config maps
+     * lxd/daemon: Add lxd/task sub-package for running functions periodically
+     * lxd/daemon: Add new debug sub-package with support for memory profiling
+     * lxd/daemon: Add node.Config high-level API for modifying node-level config
+     * lxd/daemon: Cleanup test state at every test, to improve isolation.
+     * lxd/daemon: Control all goroutines spawned in Daemon.Ready() using task.Task
+     * lxd/daemon: Don't skip Daemon.Ready() in tests, it can be run unconditionally
+     * lxd/daemon: Don't use global path variables in sys.OS
+     * lxd/daemon: Drop logging setup in Daemon.Init()
+     * lxd/daemon: Drop support for "setup mode"
+     * lxd/daemon: Drop the containerLXC.OS() convenience
+     * lxd/daemon: Drop unnecessary checks on MockMode
+     * lxd/daemon: Extract initialization of the REST and /dev/lxd http Server
+     * lxd/daemon: Gracefully cancel tasks on daemon shutdown
+     * lxd/daemon: Improve error on invalid config key (Issue #3925)
+     * lxd/daemon: Move directory initialization to sys.OS.
+     * lxd/daemon: Move execPath global variable to sys.OS.ExecPath
+     * lxd/daemon: Move global aaAdmin global variable to sys.OS
+     * lxd/daemon: Move global aaAvailable global variable to sys.OS
+     * lxd/daemon: Move global aaConfined global variable to sys.OS
+     * lxd/daemon: Move global aaStacking global variable to sys.OS
+     * lxd/daemon: Move global cgBlkioController global variable to sys.OS
+     * lxd/daemon: Move global cgCpuController global variable to sys.OS
+     * lxd/daemon: Move global runningInUserns global variable to sys.OS
+     * lxd/daemon: Move optional Daemon config values to DaemonConfig
+     * lxd/daemon: Move remaining global cgXXX global variables to sys.OS
+     * lxd/daemon: Move util.AppArmorCanStack to a private appArmorCanStack in lxd/sys
+     * lxd/daemon: Streamline Daemon init and shutdownn
+     * lxd/daemon: Track the lifecycle of the goroutine performing log expiration
+     * lxd/daemon: Tweak schedule function for pruning images
+     * lxd/daemon: Use instance-level cache dir variable instead of the environment one
+     * lxd/daemon: Use instance-level log dir variable instead of the environment one
+     * lxd/daemon: Use instance-level var dir variable instead of the environment one
+     * lxd/daemon: Wire debug utilities into main_daemon.go
+     * lxd/daemon: Wire endpoints.Endpoints into Daemon
+     * lxd/db: Add a db.NodeTx structure to abstract away low-level transactions
+     * lxd/db: Add a Schema.Fresh() method to set a "bootstrap" SQL statement
+     * lxd/db: Add db APIs for fetching and changing node-local config values
+     * lxd/db: Add db.NewTestNode helper for database-related unit tests
+     * lxd/db: Add low-level query helpers for changing config tables
+     * lxd/db: Add query.Count utility
+     * lxd/db: Add Schema.ExerciseUpdate() for testing a individual update
+     * lxd/db: Add support for gracefully aborting schema.Ensure
+     * lxd/db: Complete moving schema creation logic to schema.Schema
+     * lxd/db: Convert a few call sites of sql.DB.Begin to db.DB.Begin
+     * lxd/db: Convert remaining call sites of the low-level db.Begin function
+     * lxd/db: Drop all references to Daemon.nodeDB
+     * lxd/db: Fix spurious tx.Exec argument in lxd/db/schema/query.go
+     * lxd/db: Move certificate db APIs to the db.Node facade
+     * lxd/db: Move container db APIs to the db.Node facade
+     * lxd/db: Move devices db APIs to the db.Node facade
+     * lxd/db: Move image db APIs to the db.Node facade
+     * lxd/db: Move network db APIs to the db.Node facade
+     * lxd/db: Move node-level schema updates to their own db/local/ sub-package.
+     * lxd/db: Move patches db APIs to the db.Node facade
+     * lxd/db: Move profile db APIs to the db.Node facade
+     * lxd/db: Move storage db APIs to the db.Node facade
+     * lxd/db: Remove direct use of the low-level db.Exec() func outside of lxd/db/
+     * lxd/db: Rename Daemon.db to Daemon.nodeDB
+     * lxd/db: Rename db.Exec to db.exec, making it unexported
+     * lxd/db: Rename db.QueryScan to db.queryScan, making it unexported
+     * lxd/db: Rename db_test.go to db_internal_test.go, since it's white box
+     * lxd/db: Rename State.DB to State.NodeDB
+     * lxd/db: Return the initial schema version in Schema.Ensure()
+     * lxd/import: Use the right VG name on delete
+     * lxd/main: Fix output of --print-goroutines-every
+     * lxd/networks: Don't require a 1400 MTU with tunnels (Issue #3999)
+     * lxd/seccomp: Fix security.syscalls.blacklist handling
+     * lxd/storage: Drop the storageShared.OS() convenience
+     * lxd/storage: Generate new UUID on thinpools for btrfs
+     * lxd/storage/zfs: Try to import missing zpools (Issue #3976)
+     * lxd/storage/zfs: Update for newer ZFS releases (Issue #3986)
+     * shared: Add a shared.KeyPairAndCA function to get coventionally named certs
+     * shared: Fix file transfers to/from stdin/stdout in snap
+     * shared: Make current gofmt happy
+     * shared/api: Add API extension label to AuthMethods
+     * shared/log15: Vendor a copy of log15 in shared/log15
+     * shared/logger: Add helper to redirect the global logger to the testing logger
+     * shared/logging: Add freebsd build conditional to log_posix.go
+     * shared/version: Extract the APIExtensions list from api10Get
+     * shared/version: Split version declarations in shared/version into several files
+     * tests: Add test for unique btrfs UUID generation
+     * tests: Add test for unused variables
+     * tests: Check for typos
+     * tests: Don't use godeps for import check
+     * tests: Skip prlimits on liblxc < 2.1
+     * tests: Update for new dependencies
 
   ### Try it for yourself
-  This new LXD release is already available for you to try on our [demo service](/lxd/try-it/).
+  This new LXD release is already available for you to try on our [demo service](https://linuxcontainers.org/lxd/try-it/).
 
   ### Downloads
-  The release tarballs can be found on our [download page](/lxd/downloads/).
+  The release tarballs can be found on our [download page](https://linuxcontainers.org/lxd/downloads/).

@@ -6,16 +6,19 @@ content: |-
   New features:
 
    * Ceph RBD can now be used as a LXD storage backend (including "lxd init" support).
-   * A new security.idmap.base key has been added to control what base uid/gid to use on the host when using security.idmap.isolated.
+   * A new security.idmap.base key has been added.
+      This controls what base uid/gid to use on the host when using security.idmap.isolated.
    * Image downloads can now be interrupted.
    * File transfers now support sending symlinks
    * "lxc copy" and "lxc move" will now show progress information
-   * "lxc copy" and "lxc move" now support "relay" and "push" modes to go around firewalls and NAT (--mode option)
+   * "lxc copy" and "lxc move" now support "relay" and "push" modes to go around firewalls and NAT
    * Custom storage volumes can now have their size set and modified
    * "lxc image import" now supports reading from a directory containing an unpacked image
-   * The "vlan" property can now be set on "physical" network interfaces (was previously restricted to "macvlan")
-   * It's now possible to delete image volumes from a storage pool. This allows removing a storage pool without having to remove the images from the image store.
-   * The image metadata and template files can now be created or modified through the API prior to publish a container as an image.
+   * The "vlan" property can now be set on "physical" network interfaces (was just "macvlan")
+   * It's now possible to delete image volumes from a storage pool.
+     This allows removing a storage pool without having to remove the images from the image store.
+   * The image metadata and template files can now be created and modified over the API.
+     This allows fine tuning of all image metadata prior to publishing.
    * Stateful snapshots can now be restored as a new container on a remote host.
 
   Bugfixes:
@@ -108,7 +111,7 @@ content: |-
    * zfs: Use tryMount when mounting filesystem
 
   ### Try it for yourself
-  This new LXD release is already available for you to try on our [demo service](/lxd/try-it/).
+  This new LXD release is already available for you to try on our [demo service](https://linuxcontainers.org/lxd/try-it/).
 
   ### Downloads
-  The release tarballs can be found on our [download page](/lxd/downloads/).
+  The release tarballs can be found on our [download page](https://linuxcontainers.org/lxd/downloads/).

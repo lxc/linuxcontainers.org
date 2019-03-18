@@ -2,12 +2,12 @@ title: LXD 3.0.1 release announcement
 date: 2018/06/05 00:00
 origin: https://discuss.linuxcontainers.org/t/lxd-3-0-1-has-been-released/1954
 content: |-
-  ### Introduction
+  # Introduction
   The LXD team is pleased to announce the release of LXD 3.0.1!
 
   As a stable bugfix release, no major changes have been done, instead focusing on bugfixes and minor usability improvements.
 
-  #### Minor improvements
+  ## Minor improvements
 
    * Added `version` subcommands to `lxc` and `lxd`
    * Reworked `lxd init` for clustering a bit to offer better network configuration options
@@ -15,17 +15,19 @@ content: |-
    * Reworked the `lxd sql` subcommand to support both local and global databases
    * `lxd init --auto` now also configures a default bridge
 
-  #### Bugfixes
+  ## Bugfixes
 
    * lxc: Fix mistakenly hidden commands
    * i18n: Update translation templates
    * lxd/migration: Pre-validate profiles
    * client: Improve remote operation errors
    * Fix some typos and wording.
+   * Wording fix.
    * lxc/image: Fix crash due to bad arg parsing
    * lxd: add missing limits.h include
    * lxd/init: Fix --auto with network config
    * lxc: Consistent naming of clustering terms
+   * i18n: Update translation templates
    * lxc/file: Fix pushing files to remote
    * lxd/init: Don't setup a remote storage pool by default
    * Fix lxd init failing to join a cluster in interactive mode with an existing zfs dataset
@@ -33,12 +35,14 @@ content: |-
    * lxc/help: Make help respect --all too
    * Fix typo in help of "lxc network"
    * Properly filter node-level storage configs by pool ID
+   * i18n: Update translation templates
    * lxd/init: Consistency
    * Make new gofmt happy
    * lxc/file: Allow using -r to follow symlinks
    * Replace juju/idmclient with CanonicalLtd/candidclient
    * lxc/config: Fix adding trust cert on snap
    * lxc/alias: Fix example in help message
+   * i18n: Update translation templates
    * client: Introduce LXD_SOCKET
    * Makefile: Add a manifest
    * containers: fix snapshot deletion
@@ -49,9 +53,13 @@ content: |-
    * devices: fail if Nvidia device minor is missing
    * Add db.ContainersNodeList
    * storage: createContainerMountpoint() fix perms
-   * ceph, lvm, storage utils, zfs, btrfs: fix permissions
+   * ceph: s/0755/0711/g
+   * lvm: s/0755/0711/g
+   * storage utils: s/0755/0711/g
+   * zfs: s/0755/0711/g
    * patches: add "storage_api_path_permissions"
    * sys/fs: s/MkdirAll/Mkdir/g
+   * btrfs: fix permissions
    * Pass a logger to raft-http
    * Add new cluster.Promote function to turn a non-database node into a database one
    * Add new cluster.Rebalance function to check if we need to add database nodes
@@ -105,6 +113,7 @@ content: |-
    * Make Unavailable accept an error parameter
    * Add a new Schema.File() method to load extra queries from a file
    * Add support for patch.local.sql and patch.global.sql
+   * Add integration tests
    * Add shared.DirCopy to recursively copy a directory.
    * Update database.md
    * Backup global database if non-clustered
@@ -139,7 +148,9 @@ content: |-
    * ceph: ensure fs consistency when snapshotting
    * ceph: ensure fs consistency when restoring
    * ceph: add doContainerCreate()
-   * ceph, lvm, zfs: add doContainerMount()
+   * ceph: add doContainerMount()
+   * lvm: add doContainerMount()
+   * zfs: add doContainerMount()
    * zfs: add do*() helpers
    * lvm: use internal pool name
    * lxd-p2c: Handle target URL smarter
@@ -164,9 +175,9 @@ content: |-
    * Drop manual GC calls
    * lxd/containers: Fix fd leak in metadata
 
-  ### Support and upgrade
+  # Support and upgrade
   LXD 3.0.1 is supported until June 2023 and is our current LTS release, users are encouraged to update to the latest bugfix releases as they're made available.
 
-  ### Downloads
+  # Downloads
    - Main release tarball: [lxd-3.0.1.tar.gz](https://linuxcontainers.org/downloads/lxd/lxd-3.0.1.tar.gz)
    - GPG signature: [lxd-3.0.1.tar.gz.asc](https://linuxcontainers.org/downloads/lxd/lxd-3.0.1.tar.gz.asc)

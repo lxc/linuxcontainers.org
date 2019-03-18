@@ -4,97 +4,97 @@ origin: https://discuss.linuxcontainers.org/t/lxc-3-0-2-has-been-released/2504
 content: |-
   ### Introduction
   The LXC team is pleased to announce the release of LXC 3.0.2!
-  
+
   As a stable bugfix release, no major changes have been done, instead focusing on bugfixes and minor usability improvements.
-  
+
   #### Highlights
-  
-   - Adapt to changes in Linux `4.18` which allows to create but not to open devices nodes in user namespaces
-   - Allocate network namespace id on container startup
-   - Build a static `liblxc`
-     This is helpful to efficiently retrieve network interfaces and their addresses via Netlink.
-   - Hardened thread-safety across the whole codebase
-   - Added efficient `strlcpy()` and `strlcat()` implementations to all instances of `strncpy()` and `strncat()` to make string handling more secure
-   - The `lxc-*` tools (e.g. `lxc-attach`, `lxc-start`)  share symbols with the `liblxc` shared library
-     This significantly reduced the size of the codebase.
-   - Tree-wide coding style fixes
-  
+
+  - Adapt to changes in Linux `4.18` which allows to create but not to open devices nodes in user namespaces
+  - Allocate network namespace id on container startup
+  - Build a static `liblxc`
+    This is helpful to efficiently retrieve network interfaces and their addresses via Netlink.
+  - Hardened thread-safety across the whole codebase
+  - Added efficient `strlcpy()` and `strlcat()` implementations to all instances of `strncpy()` and `strncat()` to make string handling more secure
+  - The `lxc-*` tools (e.g. `lxc-attach`, `lxc-start`)  share symbols with the `liblxc` shared library
+    This significantly reduced the size of the codebase.
+  - Tree-wide coding style fixes
+
   ##### CVE-2018-6556
-  
+
   This release fixes [CVE-2018-6556](http://seclists.org/oss-sec/2018/q3/81) via commit [CVE 2018-6556: verify netns fd in lxc-user-nic](https://github.com/lxc/lxc/commit/c1cf54ebf251fdbad1e971679614e81649f1c032): `lxc-user-nic` when asked to delete a network interface will unconditionally open a user provided path. 
-  
+
   This code path may be used by an unprivileged user to check for the existence of a path which they wouldn't otherwise be able to reach. It may also be used to trigger side effects by causing a (read-only) open of special kernel files (`ptmx`, `proc`, `sys`).
-  
+
   Affected releases are LXC: 2.0 versions above and including 2.0.9; 3.0 versions above and including 3.0.0, prior to 3.0.2.
-  
+
   #### Bugfixes (LXC)
-  
-   - fixed a range of bugs found by Coverity
-   - lxc-usernsexec: cleanup and bugfixes
-   - log: add  CMD\_SYSINFO()
-   - log: add  CMD\_SYSERROR()
-   - state: s/sleep()/nanosleep()/
-   - lxclock: improve file locking
-   - lxccontainer: improve file locking
-   - lxccontainer: fix F\_OFD\_GETLK checks
-   - netlink: add \_\_netlink\_{send,recv,transaction}
-   - netns: allocate network namespace id
-   - MAINTAINERS: add Wolfgang Bumiller
-   - CVE 2018-6556: verify netns fd in lxc-user-nic
-   - pam\_cgfs: cleanups
-   - log: add default log priority
-   - tree-wide: pass unsigned long to prctl()
-   - macro: add new macro header
-   - conf: mount devpts without "max" on EINVAL
-   - tree-wide: handle EINTR in read() and write()
-   - tree-wide: replace pipe() with pipe2()
-   - confile: split mount options into flags and data
-   - conf: improve rootfs setup
-   - autotools: default to -Wvla -std=gnu11
-   - tree-wide: remove VLAs
-   - tree-wide: replace strtok\_r() with lxc\_iterate\_parts()
-   - utils: add lxc\_iterate\_parts()
-   - apparmor: allow start-container to change to lxc-\*\*
-   - apparmor: update current profiles
-   - apparmor: Allow /usr/lib\* paths for mount and pivot\_root
-   - conf: the atime flags are locked in userns
-   - conf: handle partially functional device nodes
-   - conf: create /dev directory
-   - autotools: build both a shared and static liblxc
-   - namespace: add api to convert namespaces to standard identifiers
-   - tree-wide: set MSG\_NOSIGNAL
-   - tree-wide: use mknod() to create dummy files
-   - cgfsng: respect lxc.cgroup.use
-   - cgroups: remove is\_crucial\_cgroup\_subsystem()
-   - tree-wide: remove unneeded log prefixes
-   - tests: cleanup all tests
-   - terminal: set FD\_CLOEXEC on pty file descriptors
-   - conf: simplify lxc\_setup\_dev\_console()
-   - tools: rework tools
-   - autodev: adapt to changes in Linux 4.18
-   - log: change DEBUG, INFO, TRACE, NOTICE macro using strerror to SYS\* macro
-   - log: add lxc\_log\_strerror\_r macro
-   - network: unpriv lxc will run lxc.net.[i].script.up now
-   - conf: only use newuidmap and newgidmap when necessary
-   - autotools: support tls in cross-compile
-  
+
+  - fixed a range of bugs found by Coverity
+  - lxc-usernsexec: cleanup and bugfixes
+  - log: add  CMD_SYSINFO()
+  - log: add  CMD_SYSERROR()
+  - state: s/sleep()/nanosleep()/
+  - lxclock: improve file locking
+  - lxccontainer: improve file locking
+  - lxccontainer: fix F_OFD_GETLK checks
+  - netlink: add \_\_netlink_{send,recv,transaction}
+  - netns: allocate network namespace id
+  - MAINTAINERS: add Wolfgang Bumiller
+  - CVE 2018-6556: verify netns fd in lxc-user-nic
+  - pam_cgfs: cleanups
+  - log: add default log priority
+  - tree-wide: pass unsigned long to prctl()
+  - macro: add new macro header
+  - conf: mount devpts without "max" on EINVAL
+  - tree-wide: handle EINTR in read() and write()
+  - tree-wide: replace pipe() with pipe2()
+  - confile: split mount options into flags and data
+  - conf: improve rootfs setup
+  - autotools: default to -Wvla -std=gnu11
+  - tree-wide: remove VLAs
+  - tree-wide: replace strtok_r() with lxc_iterate_parts()
+  - utils: add lxc_iterate_parts()
+  - apparmor: allow start-container to change to lxc-**
+  - apparmor: update current profiles
+  - apparmor: Allow /usr/lib* paths for mount and pivot_root
+  - conf: the atime flags are locked in userns
+  - conf: handle partially functional device nodes
+  - conf: create /dev directory
+  - autotools: build both a shared and static liblxc
+  - namespace: add api to convert namespaces to standard identifiers
+  - tree-wide: set MSG_NOSIGNAL
+  - tree-wide: use mknod() to create dummy files
+  - cgfsng: respect lxc.cgroup.use
+  - cgroups: remove is_crucial_cgroup_subsystem()
+  - tree-wide: remove unneeded log prefixes
+  - tests: cleanup all tests
+  - terminal: set FD_CLOEXEC on pty file descriptors
+  - conf: simplify lxc_setup_dev_console()
+  - tools: rework tools
+  - autodev: adapt to changes in Linux 4.18
+  - log: change DEBUG, INFO, TRACE, NOTICE macro using strerror to SYS* macro
+  - log: add lxc_log_strerror_r macro
+  - network: unpriv lxc will run lxc.net.[i].script.up now
+  - conf: only use newuidmap and newgidmap when necessary
+  - autotools: support tls in cross-compile
+
   #### Bugfixes (LXC templates)
-  
+
    - fedora: support Fedora 28
    - templates: opensuse: Add support for openSUSE Leap 15
    - templates: opensuse: Drop support for EOL distributions
    - templates: lxc-opensuse.in: Ensure cache is fully populated
    - templates: lxc-opensuse.in: Fix openSUSE Leap 15 cache url
-  
+
   #### Bugfixes (python3 binding)
-  
+
    - Fix typo in README.md
-  
+
   ### Support and upgrade
   LXC 3.0.2 is supported until June 2023 and is our current LTS release, users are encouraged to update to the latest bugfix releases as they're made available.
-  
+
   ### Downloads
    - Main release tarball: [lxc-3.0.2.tar.gz](https://linuxcontainers.org/downloads/lxc/lxc-3.0.2.tar.gz) (GPG: [lxc-3.0.2.tar.gz.asc](https://linuxcontainers.org/downloads/lxc/lxc-3.0.2.tar.gz.asc))
    - LXC templates tarball: [lxc-templates-3.0.2.tar.gz](https://linuxcontainers.org/downloads/lxc/lxc-templates-3.0.2.tar.gz) (GPG: [lxc-templates-3.0.2.tar.gz.asc](https://linuxcontainers.org/downloads/lxc/lxc-templates-3.0.2.tar.gz.asc))
    - LXC python3 bindings tarball: [python3-lxc-3.0.2.tar.gz](https://linuxcontainers.org/downloads/lxc/python3-lxc-3.0.2.tar.gz) (GPG: [python3-lxc-3.0.2.tar.gz.asc](https://linuxcontainers.org/downloads/lxc/python3-lxc-3.0.2.tar.gz.asc))
-  
+

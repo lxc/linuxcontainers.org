@@ -18,9 +18,9 @@ content: |-
 
   ### The changes in this release include
   Features:
-
    - Introduced a new backup API and ability to export/import containers using it.
-     In the CLI those are new `lxc export` and `lxc import` commands.
+     In the CLI those are new `lxc export` and `lxc import` commands:
+     [<img src='/uploads/default/original/1X/7abc018bd123ef5b7809ec88fcd11d101cb2218a.png' alt='asciicast'>](https://asciinema.org/a/181906)
    - Made it possible to override the LXD socket path with `LXD_SOCKET`
    - Made it possible to disable the use of privileges containers through a new `LXD_UNPRIVILEGED_ONLY` environment variable.
    - Improved the `lxd sql` command to support interacting with both databases, support making database and schema dumps, run multiple queries an read from a script.
@@ -29,7 +29,6 @@ content: |-
    - Extended `lxd init --auto` to also auto-configure an initial network
 
   Bugfixes:
-
    - client: Expose http URL in ConnectionInfo
    - client: Improve remote operation errors
    - doc: Document how to dump the content or schema of databases
