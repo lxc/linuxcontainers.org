@@ -405,4 +405,3 @@ content: |-
    - Main release tarball: [lxc-3.0.3.tar.gz](https://linuxcontainers.org/downloads/lxc/lxc-3.0.3.tar.gz) (GPG: [lxc-3.0.3.tar.gz.asc](https://linuxcontainers.org/downloads/lxc/lxc-3.0.3.tar.gz.asc))
    - LXC templates tarball: [lxc-templates-3.0.3.tar.gz](https://linuxcontainers.org/downloads/lxc/lxc-templates-3.0.3.tar.gz) (GPG: [lxc-templates-3.0.3.tar.gz.asc](https://linuxcontainers.org/downloads/lxc/lxc-templates-3.0.3.tar.gz.asc))
    - LXC python3 bindings tarball: [python3-lxc-3.0.3.tar.gz](https://linuxcontainers.org/downloads/lxc/python3-lxc-3.0.3.tar.gz) (GPG: [python3-lxc-3.0.3.tar.gz.asc](https://linuxcontainers.org/downloads/lxc/python3-lxc-3.0.3.tar.gz.asc))
-

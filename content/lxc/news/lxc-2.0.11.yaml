@@ -80,7 +80,6 @@ content: |-
   #### Everything else
   2.0.11 includes almost a year and a half of bugfixes cherry-picked from current LXC, the entire list can be found below.
 
-  [details="Full changelog"]
 
    - tools: allow lxc-attach to undefined containers
    - utils: move memfd_create() definition
@@ -709,7 +708,6 @@ content: |-
    - autotools: add memory_utils.h to Makefile.am
    - change version to 2.0.11 in configure.ac
 
-  [/details]
 
 
   ### Downloads
