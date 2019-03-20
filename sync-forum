@@ -1,0 +1,95 @@
+#!/usr/bin/python3
+import dateutil.parser
+import glob
+import json
+import os
+from urllib.request import urlopen
+import ruamel.yaml
+
+API_URL = "https://discuss.linuxcontainers.org"
+API_USERNAME = "system"
+API_KEY = os.environ["API_KEY"]
+
+PROJECTS = ("lxc", "lxcfs", "lxd")
+
+
+def load_json(url):
+    url = url.split(API_URL)[-1]
+    url = "%s/%s.json?api_username=%s&api_key=%s" % \
+        (API_URL, url, API_USERNAME, API_KEY)
+    return json.loads(urlopen(url).read().decode())
+
+
+# Update all existing posts
+updated = []
+for project in PROJECTS:
+    for post in glob.glob("content/%s/news/*.yaml" % project):
+        yaml = ruamel.yaml.YAML()
+
+        with open(post, "r") as fd:
+            entry = yaml.load(fd)
+
+        if "origin" not in entry:
+            continue
+
+        dis_topic = load_json(entry["origin"])
+        dis_post = load_json("/posts/%s" %
+                             dis_topic["post_stream"]["posts"][0]["id"])
+
+        old_entry = entry
+        entry["content"] = dis_post["raw"]
+        entry["title"] = dis_topic["title"]
+        date = dateutil.parser.parse(dis_topic["created_at"])
+        entry["date"] = date.strftime("%Y/%m/%d %H:%m")
+
+        if entry != old_entry:
+            with open(post, "w+") as fd:
+                yaml.dump(entry, fd)
+            print("%s => updated" % dis_topic["title"])
+        else:
+            print("%s => skipping (up to date)" % dis_topic["title"])
+
+        updated.append(dis_topic["id"])
+
+# Import new posts
+news = load_json("/c/news")
+for topic in news["topic_list"]["topics"]:
+    if topic["id"] in updated:
+        print("%s => skipping (already exists)" % topic["title"])
+        continue
+
+    dis_topic = load_json("/t/%s" % topic["id"])
+    dis_post = load_json("/posts/%s" %
+                         dis_topic["post_stream"]["posts"][0]["id"])
+
+    if "release" not in dis_topic["tags"]:
+        continue
+
+    for project in PROJECTS:
+        if project not in dis_topic["tags"]:
+            continue
+
+        path = "content/%s/news/%s.yaml" % (project, dis_topic["slug"])
+        break
+    else:
+        print("%s => skipping (unknown project: %s)" % (dis_topic["title"],
+                                                        dis_topic["tags"]))
+        continue
+
+    yaml = ruamel.yaml.YAML()
+    entry = yaml.load("""
+title: foo
+date: bar
+content: |-
+  baz""")
+    entry["content"] = dis_post["raw"]
+    entry["title"] = dis_topic["title"]
+    date = dateutil.parser.parse(dis_topic["created_at"])
+    entry["date"] = date.strftime("%Y/%m/%d %H:%m")
+    entry["origin"] = "%s/t/%s/%s" % (API_URL, dis_topic["slug"],
+                                      dis_topic["id"])
+
+    with open(path, "w+") as fd:
+        yaml.dump(entry, fd)
+
+    print("%s => imported" % dis_topic["title"])
