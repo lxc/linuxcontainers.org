@@ -27,20 +27,27 @@ for project in PROJECTS:
         yaml = ruamel.yaml.YAML()
 
         with open(post, "r") as fd:
-            entry = yaml.load(fd)
+            old_entry = yaml.load(fd)
 
-        if "origin" not in entry:
+        if "origin" not in old_entry:
             continue
 
-        dis_topic = load_json(entry["origin"])
+        dis_topic = load_json(old_entry["origin"])
         dis_post = load_json("/posts/%s" %
                              dis_topic["post_stream"]["posts"][0]["id"])
 
-        old_entry = entry
+        entry = yaml.load("""
+title: foo
+date: bar
+origin: baz
+content: |-
+  blah""")
         entry["content"] = dis_post["raw"]
         entry["title"] = dis_topic["title"]
         date = dateutil.parser.parse(dis_topic["created_at"])
         entry["date"] = date.strftime("%Y/%m/%d %H:%m")
+        entry["origin"] = "%s/t/%s/%s" % (API_URL, dis_topic["slug"],
+                                          dis_topic["id"])
 
         if entry != old_entry:
             with open(post, "w+") as fd:
@@ -80,8 +87,9 @@ for topic in news["topic_list"]["topics"]:
     entry = yaml.load("""
 title: foo
 date: bar
+origin: baz
 content: |-
-  baz""")
+  blah""")
     entry["content"] = dis_post["raw"]
     entry["title"] = dis_topic["title"]
     date = dateutil.parser.parse(dis_topic["created_at"])
