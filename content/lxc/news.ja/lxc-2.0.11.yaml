@@ -134,7 +134,7 @@ content: |-
   <!--
   For example, systemd based containers wouldn't start since systemd needs to mount cgroups (named systemd hierarchy for legacy    cgroups and the unified hierarchy for unified cgroups) to track processes. This problem was solved by detecting whether the container had CAP_SYS_ADMIN. If it didn't we performed the cgroup mounts for it.
   -->
-  例えば systemd ベースのコンテナは、systemd がプロセスを追跡するために cgroup をマウントする必要があるので起動しません（legacy cgroup（cgroup v1）の場合は `systemd` という名前の階層、unified cgroup（cgroup v2）の場合は単一の階層）。
+  例えば systemd ベースのコンテナは、systemd がプロセスを追跡するために cgroup をマウントする必要があるので起動しません（legacy cgroup（cgroup v1）の場合は `systemd` という名前の階層、unified cgroup（cgroup v2）の場合は単一の階層）。この問題は、コンテナが `CAP_SYS_ADMIN` を持っているかどうかを検出して解決しました。もし持っていない場合は、LXC が cgroup のマウントを実行します。
 
   <!--
   However, there are more cases when we should be able to mount cgroups for the container when cgroup namespaces are supported:
