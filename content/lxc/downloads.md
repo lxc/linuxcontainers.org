@@ -19,14 +19,16 @@ And for those who want development snapshots:
  * [lxc-git-master](https://launchpad.net/~ubuntu-lxc/+archive/lxc-git-master): "master" branch
  * [lxc-git-stable-1.0](https://launchpad.net/~ubuntu-lxc/+archive/lxc-git-stable-1.0): "stable-1.0" branch
  * [lxc-git-stable-2.0](https://launchpad.net/~ubuntu-lxc/+archive/lxc-git-stable-2.0): "stable-2.0" branch
+ * [lxc-git-stable-3.0](https://launchpad.net/~ubuntu-lxc/+archive/lxc-git-stable-3.0): "stable-3.0" branch
 
 # Current development version
 
-LXC has three active git branches:
+LXC has four active git branches:
 
  * **master**: Current development branch
  * **stable-1.0**: Stable update branch for LXC 1.0.x
  * **stable-2.0**: Stable update branch for LXC 2.0.x
+ * **stable-3.0**: Stable update branch for LXC 3.0.x
 
 You can clone those directly with:
 
