@@ -2,6 +2,7 @@ title: LXD 2.20 リリースのお知らせ
 date: 2017/11/15 00:00
 origin: https://discuss.linuxcontainers.org/t/lxd-2-20-has-been-released/798
 content: |-
+
   新機能 <!-- Features -->:
 
    * `lxc console` サブコマンドと console API が追加されました。これにより、コンテナのブートコンソールにアタッチできたり、ブートログを取得したりできます <!-- New `lxc console` subcommand and console API to attach to the container's boot console or retrieve the boot log -->

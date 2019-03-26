@@ -37,17 +37,19 @@ And for those who want development snapshots:
  * [lxc-git-master](https://launchpad.net/~ubuntu-lxc/+archive/lxc-git-master): "master" ブランチ <!-- "master" branch -->
  * [lxc-git-stable-1.0](https://launchpad.net/~ubuntu-lxc/+archive/lxc-git-stable-1.0): "stable-1.0" ブランチ <!-- "stable-1.0" branch -->
  * [lxc-git-stable-2.0](https://launchpad.net/~ubuntu-lxc/+archive/lxc-git-stable-2.0): "stable-2.0" ブランチ <!-- "stable-2.0" branch -->
+ * [lxc-git-stable-3.0](https://launchpad.net/~ubuntu-lxc/+archive/lxc-git-stable-3.0): "stable-3.0" ブランチ <!-- "stable-3.0" branch -->
 
 # 現時点の開発バージョン <!-- Current development version -->
 
 <!--
 LXC has two active git branches:
 -->
-LXC にはアクティブな git ブランチが 3 つ存在します:
+LXC にはアクティブな git ブランチが 4 つ存在します:
 
  * **master**: 現在の開発ブランチ <!-- Current development branch -->
  * **stable-1.0**: LXC 1.0.x 向けの Stable 更新用ブランチ <!-- Stable update branch for LXC 1.0.x -->
  * **stable-2.0**: LXC 2.0.x 向けの Stable 更新用ブランチ <!-- Stable update branch for LXC 2.0.x -->
+ * **stable-3.0**: LXC 3.0.x 向けの Stable 更新用ブランチ <!-- Stable update branch for LXC 3.0.x -->
 
 <!--
 You can clone those directly with:
