@@ -25,6 +25,8 @@ The following API clients have been submitted by third-party contributors.  They
 are neither supported nor endorsed by the LXD project.
 
 * Ruby: [Hyperkit](http://jeffshantz.github.io/hyperkit)
-* Node.js: [node-lxd](http://github.com/alandoherty/node-lxd)
+* Node.js:
+  * [ts-lxd](http://github.com/trufflesuite/ts-lxd)
+  * [node-lxd](http://github.com/alandoherty/node-lxd)
 * Java: [jlxd](http://github.com/digitalspider/jlxd)
 * Haskell: [lxd-client](https://hackage.haskell.org/package/lxd-client)

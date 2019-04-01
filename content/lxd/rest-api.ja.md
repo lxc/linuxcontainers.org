@@ -45,6 +45,8 @@ are neither supported nor endorsed by the LXD project.
 以下の API クライアントはサードパーティのコントリビュータが提供しているものです。これらは LXD プロジェクトがサポートしているわけでも、承認しているわけでもありません。
 
 * Ruby: [Hyperkit](http://jeffshantz.github.io/hyperkit)
-* Node.js: [node-lxd](http://github.com/alandoherty/node-lxd)
+* Node.js:
+  * [ts-lxd](http://github.com/trufflesuite/ts-lxd)
+  * [node-lxd](http://github.com/alandoherty/node-lxd)
 * Java: [jlxd](http://github.com/digitalspider/jlxd)
 * Haskell: [lxd-client](https://hackage.haskell.org/package/lxd-client)
