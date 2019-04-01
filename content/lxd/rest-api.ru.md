@@ -25,5 +25,7 @@
 никогда не поддерживались и не продвигались проектом LXD project.
 
 * Ruby: [Hyperkit](http://jeffshantz.github.io/hyperkit)
-* Node.js: [node-lxd](http://github.com/alandoherty/node-lxd)
+* Node.js:
+  * [ts-lxd](http://github.com/trufflesuite/ts-lxd)
+  * [node-lxd](http://github.com/alandoherty/node-lxd)
 * Haskell: [lxd-client](https://hackage.haskell.org/package/lxd-client)
