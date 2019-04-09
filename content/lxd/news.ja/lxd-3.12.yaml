@@ -41,7 +41,7 @@ content: |-
   <!--
   LXD managed networks that span multiple cluster members now show a unified view of their DHCP leases, showing hostname, MAC, address and the cluster member's name for each lease.
   -->
-  複数のクラスターメンバーにまたがった LXD 管理ネットワークは、DHCP リース情報を統一して表示します。それぞれのリースに対して、ホスト名、MAC アドレス、クラスターメンバー名を表示します。
+  複数のクラスターメンバーにまたがった LXD 管理ネットワークは、DHCP リース情報を統一して表示します。それぞれのリースに対して、ホスト名、MAC アドレス、IP アドレス、クラスターメンバー名を表示します。
 
       root@edfu:~# lxc network list-leases lxdfan0
       +----------+-------------------+--------------+---------+----------+
