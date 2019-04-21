@@ -22,8 +22,6 @@ Instructions on how to use the AUR package for LXD can be [found here](https://w
 
 Alternatively, the snap package can also be used on ArchLinux (see below).
 
-Note that in both cases, you will need to build and install the linux-userns kernel.
-
 ### Fedora
 Instructions on how to use the COPR repository for LXD can be [found here](https://copr.fedorainfracloud.org/coprs/ganto/lxd/).
 
