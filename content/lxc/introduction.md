@@ -52,8 +52,10 @@ typically means until the next stable release is out.
 Commercial support for LXC on Ubuntu LTS releases can be obtained from [Canonical Ltd](http://www.canonical.com).
 
 ## Extended support
-LXC 1.0 and LXC 2.0 are long term support releases.
-LXC 1.0 will be supported until June 1st 2019 and LXC 2.0 until June 1st 2021.
+LXC 1.0, 2.0 and 3.0 are long term support releases:
+ - LXC 1.0 will be supported until June 1st 2019
+ - LXC 2.0 will be supported until June 1st 2021
+ - LXC 3.0 will be supported until June 1st 2023
 
 This is thanks to [Canonical Ltd](http://www.canonical.com) and Ubuntu who include
 the long term support releases of LXC into their own LTS releases and work closely
