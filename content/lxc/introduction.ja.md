@@ -90,11 +90,15 @@ Ubuntu LTS リリースに含まれる LXC に対する商用サポートは [Ca
 ## 延長サポート <!-- Extended support -->
 
 <!--
-LXC 1.0 and LXC 2.0 are long term support releases.
-LXC 1.0 will be supported until June 1st 2019 and LXC 2.0 until June 1st 2021.
+LXC 1.0, 2.0 and 3.0 are long term support releases:
+ - LXC 1.0 will be supported until June 1st 2019
+ - LXC 2.0 will be supported until June 1st 2021
+ - LXC 3.0 will be supported until June 1st 2023
 -->
-LXC 1.0 と 2.0 は長期サポート版のリリースです。
-LXC 1.0 は 2019 年 6 月 1 日までサポートされます。そして LXC 2.0 は 2021 年 6 月 1 日までサポートされます。
+LXC 1.0、2.0、3.0 は長期サポート版のリリースです。
+ - LXC 1.0 は 2019 年 6 月 1 日までサポートされます
+ - LXC 2.0 は 2021 年 6 月 1 日までサポートされます
+ - LXC 3.0 は 2023 年 6 月 1 日までサポートされます
 
 <!--
 This is thanks to [Canonical Ltd](http://www.canonical.com) and Ubuntu who include

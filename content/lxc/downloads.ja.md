@@ -16,10 +16,11 @@ You may want to look for that, especially if your distribution doesn't include L
 LXC 1.0 や 2.0 がディストリビューションの stable リリースに含まれない場合は特に、それを使うことも選択肢の一つでしょう。
 
 <!--
-For production environment, try to stick to LXC 1.0.x or 2.0.x as these are the long term,
-stable releases which we will support until April 2019 (1.0.x) or April 2021 (2.0.x).
+For production environment, try to stick to LXC 1.0.x, 2.0.x or 3.0.x as these are the long term,
+stable releases which we will support until June 2019 (1.0.x), June 2021 (2.0.x)
+and June 2023 (3.0.x) respectively.
 -->
-Production 環境では、長期サポート版の stable リリースである LXC 1.0.x もしくは 2.0.x を使い続けることをお勧めします。1.0.x は 2019 年 4 月まで、2.0.x は 2021 年 4 月までサポートします。
+Production 環境では、長期サポート版の stable リリースである LXC 1.0.x もしくは 2.0.x もしくは 3.0.x を使い続けることをお勧めします。それぞれ 2019 年 6 月（1.0.x）、2021 年 6 月（2.0.x）、2023 年 6 月（3.0.x）までサポートします。
 
 <!--
 For Ubuntu users, we have official PPAs for LXC:
