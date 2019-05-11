@@ -32,12 +32,32 @@ To install the feature branch of LXD, run:
 
     emerge --ask lxd
 
-### Ubuntu 14.04 LTS
+### Ubuntu
+#### Ubuntu (all releases)
+The recommended way to install LXD these days is with the snap.
+
+For the latest stable release, use:
+
+    snap install lxd
+
+For the LXD 3.0 stable release, use:
+
+    snap install lxd --channel=3.0/stable
+
+For the LXD 2.0 stable release, use:
+
+    snap install lxd --channel=2.0/stable
+
+If you previously had the LXD deb package installed, you can migrate all your existing data over with:
+
+    lxd.migrate
+
+#### Ubuntu 14.04 LTS (LXD 2.0 deb)
 To install the LTS branch of LXD, run:
 
     apt install -t trusty-backports lxd lxd-client
 
-### Ubuntu 16.04 LTS
+#### Ubuntu 16.04 LTS (LXD 3.0 deb)
 To install the LTS branch of LXD, run:
 
     apt install lxd lxd-client
@@ -56,6 +76,8 @@ For those distributions, you should first install snapd using [those instruction
 After that, you can install LXD with:
 
     snap install lxd
+
+Alternatively, pass `--channel=3.0/stable` for the LXD 3.0 LTS release or `--channel=2.0/stable` for the LXD 2.0 LTS release.
 
 ### MacOS builds
 LXD upstream publishes builds of the LXD client for macOS through [Homebrew](https://brew.sh/).
