@@ -1,0 +1,435 @@
+title: LXD 3.13 リリースのお知らせ
+date: 2019/05/09 03:05
+origin: https://discuss.linuxcontainers.org/t/lxd-3-13-has-been-released/4738
+content: |-
+  ### はじめに <!-- Introduction -->
+  <!--
+  The LXD team is very excited to announce the release of LXD 3.13!
+  -->
+  LXD チームは、LXD 3.13 のリリースをお知らせすることにとてもワクワクしています!
+
+  <!--
+  This is another very exciting LXD release, packed with useful features and a lot of bugfixes and performance improvements!
+  -->
+  これまでのリリースと同様に、このリリースもまたとてもエキサイティングな LXD のリリースです。便利な機能、多数のバグフィックスと改良が含まれています!
+  
+  <!--
+  The latest addition to the LXD team, @tomp has been busy improving the LXD networking experience with quite a few new features and bugfixes already making it into this release.
+  -->
+  LXD チームに最近加わった @tomp が忙しく作業した結果、このリリースに新機能とバグ修正を組み込むことができ、LXD のネットワーク体験を向上させることができました。
+
+  <!--
+  We've also gotten all the plumbing needed for system call interception done and in place in this release, currently handling `mknod` on supported systems.
+  -->
+  このリリースで、システムコールのインターセプションに必要な実装がすべて完了し、今ではサポートされているシステム上では `mknod` を処理しています。
+
+  <!--
+  Cluster users will enjoy this release too, thanks to scaling improvements, reducing the load on the leader a bit and improving container copies and migration, especially on CEPH clusters.
+  -->
+  このリリースでは、スケーリングの改善、リーダーの負荷の軽減、コンテナのコピーとマイグレーションの改良が、特に CEPH クラスターで行われ、クラスターユーザーもこのリリースを楽しめるでしょう。
+
+  <!--
+  Enterprise users will like the addition of Role Based Access Control through the external Canonical RBAC service, making it possible to control permissions to individual projects on your LXD servers and assign roles to your users and groups.
+  -->
+  エンタープライズユーザーは、外部の Canonical RBAC サービスを通して、ロールベースアクセス制御（Role Based Acess Control）を追加すると良いでしょう。LXD サーバーでプロジェクトごとのパーミッションを制御し、ユーザーとグループに役割（ロール）を割り当てることができます。
+
+  <!--
+  And we've even managed to get quotas working for the `dir` storage backend at last, thanks to the addition of filesystem project quotas in recent kernels.
+  -->
+  そして、最近のカーネルにファイルシステムプロジェクトのクオータが追加されたおかげで、ついに `dir` ストレージバックエンドにクオータが使えるようになりました。
+
+  Enjoy!
+
+  ### 新機能 <!-- New features -->
+  #### クラスター: ハートビート間隔の改良 <!-- Cluster: Improved heartbeat interval -->
+  <!--
+  In a LXD cluster, the current leader periodically sends a hearbeat to all other cluster members. The main purpose of this is to detect offline cluster members, marking them as offline in the database so that queries no longer block on them. A secondary use for those hearbeats is to refresh the list of database nodes.
+  -->
+  LXD クラスターでは、現在のリーダーが定期的に全クラスターメンバーにハートビートを送信します。この主な目的はオフラインのクラスターメンバーを検出し、データーベースにオフラインであることを記録し、クエリーがオフラインのメンバーにブロックされないようにすることです。ハートビートのふたつめの目的は、データベースノードのリストをリフレッシュすることです。
+
+  <!--
+  Previously, this was done every 4s with all cluster members being contacted at the same time, resulting in spikes in CPU and network traffic, especially on the current cluster leader.
+  -->
+  以前は、これは 4 秒ごとに、すべてのクラスターメンバーが同時にアクセスを行っていましたが、その結果、特に現在クラスターリーダーとなっているホスト上で CPU とネットワークトラフィックのスパイクを生んでいました。
+
+  <!--
+  LXD 3.13 changes that by bumping the interval to 10s and by adding randomization to the timing of the hearbeats so that not all cluster members are contacted at the same time. Extra logic was also added to detect cluster members that get added during a hearbeat run.
+  -->
+  LXD 3.13 では、この間隔を 10 秒に増加させました。そして、すべてのクラスターメンバーが同時にアクセスしないように、ハートビートのタイミングにランダム化を追加しています。ハートビート実行中に追加されたクラスターメンバーを検出するためのロジックも追加されました。
+
+  #### クラスターでの内部的なコンテナコピー <!-- Cluster Internal container copy -->
+  <!--
+  LXD 3.13 now properly implements one step container copies, similar to how you would normally copy a container on a standalone LXD instance. Prior to this, the client had to know whether to perform a copy (if staying on the same cluster member) or a migration (if going to another cluster member), this is now all done internally.
+  -->
+  LXD 3.13 では、通常スタンドアローンの LXD インスタンス上でコンテナのコピーを行うのと同様に、適切にワンステップでコンテナのコピーが行われるように実装されました。以前は、クライアントは（同じクラスターメンバーに留まる場合）コピーを実行するのか、（他のクラスターメンバーに移動する場合）マイグレーションを実行するのかを知っている必要がありましたが、これはすべて内部的に行われるようになりました。
+
+  <!--
+  A side benefit of this fix is that all CEPH copies are now near instantaneous on clusters as those do not require any migration at all.
+  -->
+  この修正による思わぬ効果として、クラスタ上のすべての CEPH コピーがほぼ瞬時に行われるようになりました。これはマイグレーションを行う必要がまったくないためです。
+
+  #### システムコールインターセプションのサポートの初期実装 <!-- Initial syscall interception support -->
+  <!--
+  LXD 3.13 when combined with a 5.0 or higher kernel, as well as the very latest libseccomp and liblxc can now intercept and mediate system calls in userspace.
+  -->
+  LXD 3.13 を 5.0 以上のカーネル、最新の libseccomp、liblxc と組み合わせると、ユーザー空間でシステムコールをインターセプトして仲介できるようになりました。
+
+  <!--
+  For this first pass, we have focused on `mknod`, implementing a basic allow list of devices which can now be created by unprivileged containers.
+  -->
+  この機能を使って最初に `mknod` に焦点を当て、特権のないコンテナで作ることができるデバイスの基本的な許可リストを実装しました。
+
+  <!--
+  It will take a little while before this feature can be commonly used as we will need an upstream release of both libseccomp and liblxc and are waiting for further improvements to the feature in the kernel too.
+  -->
+  libseccomp と liblxc の両方で開発元でのリリースが必要であり、カーネル内でも機能の更なる改良を待っているため、この機能が一般的に使われるまでには少し時間が必要でしょう。
+
+  <!--
+  We will be building upon this capability to allow specific filesystems to be mounted inside unprivileged containers in the future as well as allow things like kernel module loading and more (all will require opt-in from the administrator).
+  -->
+  将来的には、特定のファイルシステムを非特権コンテナ内でマウントしたり、カーネルモジュールをロードしたりするような機能ができるように、この機能を使って実装する予定です（すべて管理者のオプトインが必要になる予定）。
+
+  #### ロールベースアクセス制御（RBAC） <!-- Role Based Access Control (RBAC) -->
+  <!--
+  Users of the Canonical RBAC service can now integrate LXD with it.
+  -->
+  Canonical RBAC サービスのユーザーは、LXD との統合が行えます。
+
+  <!--
+  LXD will register all its projects with RBAC, allowing administrators to assign roles to users/groups for specific projects or for the entire LXD instance.
+  -->
+  LXD は RBAC にすべてのプロジェクトを登録します。管理者は特定のプロジェクトまたは LXD インスタンス全体のユーザー・グループに役割（role）を割り当てることができます。
+
+  <!--
+  Currently this includes the following permissions:
+  -->
+  現時点では、次のパーミッションを含みます:
+
+   - LXD への完全な管理アクセス <!-- Full administrative access to LXD -->
+   - コンテナの管理（作成、削除、再設定、…） <!-- Management of containers (creation, deletion, re-configuration, ...) -->
+   - コンテナの操作（起動/停止/再起動、実行（exec）、コンソール、…） <!-- Operation of containers (start/stop/restart, exec, console, ...) -->
+   - イメージの管理（作成、削除、エイリアス、…） <!-- Management of images (creation, deletion, aliases, ...) -->
+   - プロファイルの管理（作成、削除、再設定、…） <!-- Management of profiles (creation, deletion, re-configuration, ...) -->
+   - プロジェクト自身の管理（再設定） <!-- Management of the project itself (re-configuration) -->
+   - 読み取り専用アクセス（プロジェクトに関するすべての表示） <!-- Read-only access (view everything tied to a project) -->
+
+  <!--
+  This gets us one step closer to being able to run a shared LXD cluster with unprivileged users being able to run containers on it without concerns of them escalating their privileges.
+  -->
+  これにより、非特権ユーザーが特権を昇格させることなくクラスター上でコンテナを実行できる、共有 LXD クラスターの実行に一歩近づくことができます。
+
+  #### IPVLAN サポート <!-- IPVLAN support -->
+  <!--
+  LXD can now make use of the recent implementation of `ipvlan` in LXC.
+  When running a suitably recent version of LXC, IPVLAN can now be configured in LXD through a `nic` device:
+  -->
+  LXD で、LXC に最近実装された `ipvlan` が使えるようになりました。
+  機能をサポートする最近のバージョンの LXC を実行している場合、LXD の `nic` デバイスで IPVLAN を設定できます。
+
+   - `nictype` プロパティへの `ipvlan` の設定 <!-- Setting the `nictype` property to `ipvlan` -->
+   - 期待する出力デバイスへの `parent` プロパティの設定 <!-- Setting the `parent` property to the expected outgoing device -->
+   - IPv4 では、`ipv4.address` を設定したいアドレスに設定 <!-- For IPv4, setting `ipv4.address` to the desired address -->
+   - IPv6 では、`ipv6.address` を設定したいアドレスに設定 <!-- For IPv6, setting `ipv6.address` to the desired address -->
+
+  <!--
+  Here is an example of it in action:
+  -->
+  実際の動作例を示します:
+
+      stgraber@castiana:~$ lxc init ubuntu:18.04 ipvlan
+      Creating ipvlan
+      stgraber@castiana:~$ lxc config device add ipvlan eth0 nic nictype=ipvlan parent=wlan0 ipv4.address=172.17.0.100 ipv6.address=2001:470:b0f8:1000:1::100
+      Device eth0 added to ipvlan
+      stgraber@castiana:~$ lxc start ipvlan
+      stgraber@castiana:~$ lxc exec ipvlan bash
+      root@ipvlan:~# ifconfig 
+      eth0: flags=4291<UP,BROADCAST,RUNNING,NOARP,MULTICAST>  mtu 1500
+              inet 172.17.0.100  netmask 255.255.255.255  broadcast 255.255.255.255
+              inet6 2001:470:b0f8:1000:1::100  prefixlen 128  scopeid 0x0<global>
+              inet6 fe80::28:f800:12b:bdf8  prefixlen 64  scopeid 0x20<link>
+              ether 00:28:f8:2b:bd:f8  txqueuelen 1000  (Ethernet)
+              RX packets 0  bytes 0 (0.0 B)
+              RX errors 0  dropped 0  overruns 0  frame 0
+              TX packets 0  bytes 0 (0.0 B)
+              TX errors 0  dropped 5 overruns 0  carrier 0  collisions 0
+      
+          lo: flags=73<UP,LOOPBACK,RUNNING>  mtu 65536
+              inet 127.0.0.1  netmask 255.0.0.0
+              inet6 ::1  prefixlen 128  scopeid 0x10<host>
+              loop  txqueuelen 1000  (Local Loopback)
+              RX packets 0  bytes 0 (0.0 B)
+              RX errors 0  dropped 0  overruns 0  frame 0
+              TX packets 0  bytes 0 (0.0 B)
+              TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+      
+      root@ipvlan:~# ip -4 route show
+      default dev eth0 
+      
+      root@ipvlan:~# ip -6 route show
+      2001:470:b0f8:1000:1::100 dev eth0 proto kernel metric 256 pref medium
+      fe80::/64 dev eth0 proto kernel metric 256 pref medium
+      default dev eth0 metric 1024 pref medium
+      
+      root@ipvlan:~# ping 8.8.8.8
+      PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
+      64 bytes from 8.8.8.8: icmp_seq=1 ttl=57 time=14.4 ms
+      --- 8.8.8.8 ping statistics ---
+      1 packets transmitted, 1 received, 0% packet loss, time 0ms
+      rtt min/avg/max/mdev = 14.476/14.476/14.476/0.000 ms
+      
+      root@ipvlan:~# ping6 -n 2607:f8b0:400b:800::2004
+      PING 2607:f8b0:400b:800::2004(2607:f8b0:400b:800::2004) 56 data bytes
+      64 bytes from 2607:f8b0:400b:800::2004: icmp_seq=1 ttl=57 time=21.2 ms
+      --- 2607:f8b0:400b:800::2004 ping statistics ---
+      1 packets transmitted, 1 received, 0% packet loss, time 0ms
+      rtt min/avg/max/mdev = 21.245/21.245/21.245/0.000 ms
+      root@ipvlan:~# 
+   
+  #### `dir` ストレージバックエンドでのクォータ（quota）サポート <!-- Quota support on `dir` storage backend -->
+  <!--
+  Support for the `project quota` feature of recent Linux kernels has been added.
+  -->
+  `project quota` 機能が、最近 Linux カーネルに追加されました。
+
+  <!--
+  When the backing filesystem for a `dir` type storage pool is suitably configured, container quotas can now be set as with other storage backends and disk usage is also properly reported.
+  -->
+  `dir` タイプのストレージプールに対するファイルシステムが適切に設定されている場合、他のストレージバックエンドの場合と同様にコンテナのクォータが設定できるようになり、ディスク使用量も適切に報告されるようになりました。
+
+      stgraber@castiana:~$ sudo truncate -s 10G /tmp/ext4.img
+      stgraber@castiana:~$ sudo mkfs.ext4 /tmp/ext4.img 
+      mke2fs 1.44.6 (5-Mar-2019)
+      Discarding device blocks: done                            
+      Creating filesystem with 2621440 4k blocks and 655360 inodes
+      Filesystem UUID: d8ab56d9-1e84-40ee-921a-c68c06ad6625
+      Superblock backups stored on blocks: 
+      	32768, 98304, 163840, 229376, 294912, 819200, 884736, 1605632
+      
+      Allocating group tables: done                            
+      Writing inode tables: done                            
+      Creating journal (16384 blocks): done
+      Writing superblocks and filesystem accounting information: done     
+      stgraber@castiana:~$ sudo tune2fs -O project -Q prjquota /tmp/ext4.img 
+      tune2fs 1.44.6 (5-Mar-2019)
+      
+      stgraber@castiana:~$ sudo mount -o prjquota /tmp/ext4.img /mnt/
+      stgraber@castiana:~$ sudo rmdir /mnt/lost+found/
+      stgraber@castiana:~$ lxc storage create mnt dir source=/mnt
+      Storage pool mnt created
+      
+      stgraber@castiana:~$ lxc launch ubuntu:18.04 c1 -s mnt
+      Creating c1
+      Starting c1
+      stgraber@castiana:~$ lxc exec c1 -- df -h
+      Filesystem                                           Size  Used Avail Use% Mounted on
+      /var/lib/lxd/storage-pools/mnt/containers/c1/rootfs  9.8G  742M  8.6G   8% /
+      none                                                 492K     0  492K   0% /dev
+      udev                                                 7.7G     0  7.7G   0% /dev/tty
+      tmpfs                                                100K     0  100K   0% /dev/lxd
+      tmpfs                                                100K     0  100K   0% /dev/.lxd-mounts
+      tmpfs                                                7.8G     0  7.8G   0% /dev/shm
+      tmpfs                                                7.8G  152K  7.8G   1% /run
+      tmpfs                                                5.0M     0  5.0M   0% /run/lock
+      tmpfs                                                7.8G     0  7.8G   0% /sys/fs/cgroup
+      
+      stgraber@castiana:~$ lxc config device set c1 root size 1GB
+      stgraber@castiana:~$ lxc exec c1 -- df -h
+      Filesystem                                           Size  Used Avail Use% Mounted on
+      /var/lib/lxd/storage-pools/mnt/containers/c1/rootfs  954M  706M  249M  74% /
+      none                                                 492K     0  492K   0% /dev
+      udev                                                 7.7G     0  7.7G   0% /dev/tty
+      tmpfs                                                100K     0  100K   0% /dev/lxd
+      tmpfs                                                100K     0  100K   0% /dev/.lxd-mounts
+      tmpfs                                                7.8G     0  7.8G   0% /dev/shm
+      tmpfs                                                7.8G  152K  7.8G   1% /run
+      tmpfs                                                5.0M     0  5.0M   0% /run/lock
+      tmpfs                                                7.8G     0  7.8G   0% /sys/fs/cgroup
+      
+      stgraber@castiana:~$ lxc info c1
+      Name: c1
+      Location: none
+      Remote: unix://
+      Architecture: x86_64
+      Created: 2019/05/09 16:09 UTC
+      Status: Running
+      Type: persistent
+      Profiles: default
+      Pid: 10096
+      Ips:
+        eth0:	inet	10.166.11.38	vethKM0DFY
+        eth0:	inet6	2001:470:b368:4242:216:3eff:fe4b:2c3	vethKM0DFY
+        eth0:	inet6	fe80::216:3eff:fe4b:2c3	vethKM0DFY
+        lo:	inet	127.0.0.1
+        lo:	inet6	::1
+      Resources:
+        Processes: 24
+        Disk usage:
+          root: 739.77MB
+        CPU usage:
+          CPU usage (in seconds): 7
+        Memory usage:
+          Memory (current): 104.91MB
+          Memory (peak): 229.67MB
+        Network usage:
+          lo:
+            Bytes received: 1.23kB
+            Bytes sent: 1.23kB
+            Packets received: 12
+            Packets sent: 12
+          eth0:
+            Bytes received: 480.35kB
+            Bytes sent: 27.21kB
+            Packets received: 332
+            Packets sent: 277
+
+  #### コンテナの NIC デバイスでのルーティング <!-- Routes on container NIC devices -->
+  <!--
+  New `ipv4.routes` and `ipv6.routes` options on the `nic` devices make it possible to tie a particular route to a specific container, making it follow the container as it's moved between hosts.
+  -->
+  `nic` デバイス上で、新たに追加された `ipv4.routes` と `ipv6.routes` オプションを設定することで、特定のルートを特定のコンテナに結び付けられるようになります。ホスト間でコンテナが移動する際もコンテナに追従させられます。
+
+  <!--
+  This will usually be a better option than using the similarly named key on the network itself.
+  -->
+  これは通常、ネットワーク自身で同じような名前のキーを使うよりも良いオプションです。
+
+  #### NAT ソースアドレスが設定可能に <!-- Configurable NAT source address -->
+  <!--
+  New `ipv4.nat.address` and `ipv6.nat.address` properties on LXD networks now make it possible to override the outgoing IP address for a particular bridge.
+  -->
+  LXD ネットワーク上で、新たに追加された `ipv4.nat.address` と `ipv6.nat.address` プロパティを設定することで、特定のブリッジに対する発信 IP アドレスを上書きできます。
+
+  #### API 経由での LXC 機能のエクスポート <!-- LXC features exported in API -->
+  <!--
+  Similar to what was done in the previous release with kernel features, specific LXC features which LXD can use when present are now exported by the LXD API so that clients can check what advanced feature to expect on the target.
+  -->
+  以前のリリースで、カーネルの機能に関して行ったのと同様に、LXD が使える特定の LXC の機能を LXD API を使ってエクスポートできるようになりました。これにより、クライアントはターゲットで期待する高度な機能を確認できるようになります。
+
+        lxc_features:
+          mount_injection_file: "true"
+          network_gateway_device_route: "true"
+          network_ipvlan: "true"
+          network_l2proxy: "true"
+          seccomp_notify: "true"
+
+
+  ### Bugs fixed
+   - client: Consider volumeOnly option when migrating
+   - client: Copy volume config and description
+   - client: Don't crash on missing stdin
+   - client: Fix copy from snapshot
+   - client: Fix copying between two unix sockets
+   - doc: Adds missing packages to install guide
+   - doc: Correct host_name property
+   - doc: Update storage documentation
+   - i18n: Update translations from weblate
+   - lxc/copy: Don't strip volatile keys on refresh
+   - lxc/utils: Updates progress to stop outputting if msg is longer than window
+   - lxd/api: Rename alias* commands to imageAlias*
+   - lxd/api: Rename apiProject* to project*
+   - lxd/api: Rename certificateFingerprint* to certficate*
+   - lxd/api: Rename operation functions for consistency
+   - lxd/api: Rename serverResources to api10Resources
+   - lxd/api: Rename snapshotHandler to containerSnapshotHandler
+   - lxd/api: Replace Command with APIEndpoint
+   - lxd/api: Sort API commands list
+   - lxd/candid: Cleanup config handling
+   - lxd/certificates: Make certificate add more robust
+   - lxd/certificates: Port to APIEndpoint
+   - lxd/cluster: Avoid panic in Gateway
+   - lxd/cluster: Fix race condition during join
+   - lxd/cluster: Port to APIEndpoint
+   - lxd/cluster: Use current time for hearbeat
+   - lxd/cluster: Workaround new raft logging
+   - lxd/containers: Avoid costly storage calls during snapshot
+   - lxd/containers: Change disable_ipv6=1 to accept_ra=0 on host side interface
+   - lxd/containers: Don't fail on old libseccomp
+   - lxd/containers: Don't needlessly mount snapshots
+   - lxd/containers: Early check for running container refresh
+   - lxd/containers: Fix bad operation type
+   - lxd/containers: Fix profile snapshot settings
+   - lxd/containers: Moves network limits to network up hook
+   - lxd/containers: Only run network up hook for nics that need it
+   - lxd/containers: Optimize snapshot retrieval
+   - lxd/containers: Port to APIEndpoint
+   - lxd/containers: Remove unused arg from network limits function
+   - lxd/containers: Speed up simple snapshot list
+   - lxd/daemon: Port to APIEndpoint
+   - lxd: Don't allow remote access to internal API
+   - lxd: Fix volume migration with snapshots
+   - lxd: Have Authenticate return the protocol
+   - lxd: More reliably grab interface host name
+   - lxd: Port from HasApiExtension to LXCFeatures
+   - lxd: Rename parseAddr to proxyParseAddr
+   - lxd: Use idmap.Equals
+   - lxd/db: Fix substr handling for containers
+   - lxd/db: Parent filter for ContainerList
+   - lxd/db/profiles: Fix cross-project updates
+   - lxd/db: Properly handle unsetting keys
+   - lxd/event: Port to APIEndpoint
+   - lxd/images: Fix project handling on copy
+   - lxd/images: Fix simplestreams cache expiry
+   - lxd/images: Port to APIEndpoint
+   - lxd/images: Properly handle invalid protocols
+   - lxd/images: Replicate images to the right project
+   - lxd/internal: Port to APIEndpoint
+   - lxd/migration: Fix feature negotiation
+   - lxd/network: Filter leases by project
+   - lxd/network: Fix DNS records for projects
+   - lxd/network: Port to APIEndpoint
+   - lxd/operation: Port to APIEndpoint
+   - lxd/patches: Fix LVM VG name
+   - lxd/profiles: Optimize container updates
+   - lxd/profiles: Port to APIEndpoint
+   - lxd/projects: Port to APIEndpoint
+   - lxd/proxy: Correctly handle unix: path rewriting with empty bind=
+   - lxd/proxy: Don't wrap string literal
+   - lxd/proxy: Fix goroutine leak
+   - lxd/proxy: Handle mnts for abstract unix sockets
+   - lxd/proxy: Make helpers static
+   - lxd/proxy: Make logfile close on exec
+   - lxd/proxy: Only attach to mntns for unix sockets
+   - lxd/proxy: Retry epoll on EINTR
+   - lxd/proxy: Use standard macros on exit
+   - lxd/proxy: Validate the addresses
+   - lxd/resource: Port to APIEndpoint
+   - lxd/storage: Don't hardcode default project
+   - lxd/storage: Fix error message on differing maps
+   - lxd/storage: Handle XFS with leftover journal entries
+   - lxd/storage: Port to APIEndpoint
+   - lxd/storage/btrfs: Don't make ro snapshots when unpriv
+   - lxd/storage/ceph: Don't mix stderr with json
+   - lxd/storage/ceph: Fix snapshot of running containers
+   - lxd/storage/ceph: Fix snapshot of running xfs/btrfs
+   - lxd/storage/ceph: Fix UUID re-generation
+   - lxd/storage/ceph: Only rewrite UUID once
+   - lxd/sys: Cleanup State struct
+   - scripts/bash: Add bash completion for profile/container device get, set, unset
+   - shared: Add StringMapHasStringKey helper function
+   - shared: Fix $SNAP handling under new snappy
+   - shared: Fix Windows build
+   - shared/idmap: Add comparison function
+   - shared/netutils: Adapt to kernel changes
+   - shared/netutils: Add AbstractUnixReceiveFdData()
+   - shared/netutils: Export peer link id in getifaddrs
+   - shared/netutils: Handle SCM_CREDENTIALS when receiving fds
+   - shared/netutils: Move network cgo to shared/netutils
+   - shared/netutils: Move send/recv fd functions
+   - shared/network: Fix reporting of down interfaces
+   - shared/network: Get HostName field when possible
+   - shared/osarch: Add i586 to arch aliases
+   - tests: Extend migration tests
+   - tests: Handle built-in shiftfs
+   - tests: Updates config tests to use host_name for nic tests
+
+  ### 試用環境 <!-- Try it for yourself -->
+  <!--
+  This new LXD release is already available for you to try on our [demo service](https://linuxcontainers.org/lxd/try-it/).
+  -->
+  この新しい LXD リリースは私たちの [デモサービス](https://linuxcontainers.org/ja/lxd/try-it/) で利用できます。
+
+  ### ダウンロード <!-- Downloads -->
+  <!--
+  The release tarballs can be found on our [download page](https://linuxcontainers.org/lxd/downloads/).
+  -->
+  このリリースの tarball は [ダウンロードページ](/lxd/downloads/) から取得できます。
