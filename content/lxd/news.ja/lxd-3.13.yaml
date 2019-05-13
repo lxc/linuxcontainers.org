@@ -31,7 +31,7 @@ content: |-
   <!--
   Enterprise users will like the addition of Role Based Access Control through the external Canonical RBAC service, making it possible to control permissions to individual projects on your LXD servers and assign roles to your users and groups.
   -->
-  エンタープライズユーザーは、外部の Canonical RBAC サービスを通して、ロールベースアクセス制御（Role Based Acess Control）を追加すると良いでしょう。LXD サーバーでプロジェクトごとのパーミッションを制御し、ユーザーとグループに役割（ロール）を割り当てることができます。
+  エンタープライズユーザーは、外部の Canonical RBAC サービスを用いたロールベースアクセス制御（Role Based Acess Control）が追加されたのを気に入るでしょう。LXD サーバーでプロジェクトごとのパーミッションを制御し、ユーザーとグループに役割（ロール）を割り当てることができます。
 
   <!--
   And we've even managed to get quotas working for the `dir` storage backend at last, thanks to the addition of filesystem project quotas in recent kernels.
@@ -66,7 +66,7 @@ content: |-
   <!--
   A side benefit of this fix is that all CEPH copies are now near instantaneous on clusters as those do not require any migration at all.
   -->
-  この修正による思わぬ効果として、クラスタ上のすべての CEPH コピーがほぼ瞬時に行われるようになりました。これはマイグレーションを行う必要がまったくないためです。
+  この修正による副次的な効果として、クラスタ上のすべての CEPH コピーがほぼ瞬時に行われるようになりました。これはマイグレーションを行う必要がまったくないためです。
 
   #### システムコールインターセプションのサポートの初期実装 <!-- Initial syscall interception support -->
   <!--
@@ -189,7 +189,7 @@ content: |-
   <!--
   Support for the `project quota` feature of recent Linux kernels has been added.
   -->
-  `project quota` 機能が、最近 Linux カーネルに追加されました。
+  最近の Linux カーネルに追加された `project quota` 機能をサポートするようになりました。
 
   <!--
   When the backing filesystem for a `dir` type storage pool is suitably configured, container quotas can now be set as with other storage backends and disk usage is also properly reported.
