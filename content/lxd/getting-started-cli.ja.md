@@ -59,7 +59,42 @@ LXD のフィーチャーブランチをインストールするには、以下�
 
     emerge --ask lxd
 
-### Ubuntu 14.04 LTS
+### Ubuntu
+#### Ubuntu (全リリース <!-- all releases -->)
+<!--
+The recommended way to install LXD these days is with the snap.
+-->
+最近では、snap を使って LXD をインストールするのがオススメの方法です。
+
+<!--
+For the latest stable release, use:
+-->
+最新の stable リリースの場合は次のように実行します:
+
+    snap install lxd
+
+<!--
+For the LXD 3.0 stable release, use:
+-->
+LXD 3.0 stable リリースの場合は次のように実行します:
+
+    snap install lxd --channel=3.0/stable
+
+<!--
+For the LXD 2.0 stable release, use:
+-->
+LXD 2.0 stable リリースの場合は次のように実行します:
+
+    snap install lxd --channel=2.0/stable
+
+<!--
+If you previously had the LXD deb package installed, you can migrate all your existing data over with:
+-->
+以前、LXD の deb パッケージをインストールしていた場合は、次のような方法で既存データをすべて移行できます:
+
+    lxd.migrate
+
+#### Ubuntu 14.04 LTS (LXD 2.0 deb)
 <!--
 To install the LTS branch of LXD, run:
 -->
@@ -67,7 +102,7 @@ LXD の LTS ブランチをインストールするには、以下を実行し�
 
     apt install -t trusty-backports lxd lxd-client
 
-### Ubuntu 16.04 LTS
+#### Ubuntu 16.04 LTS (LXD 3.0 deb)
 <!--
 To install the LTS branch of LXD, run:
 -->
@@ -104,6 +139,11 @@ After that, you can install LXD with:
 その後、LXD を以下のようにインストールできます:
 
     snap install lxd
+
+<!--
+Alternatively, pass `--channel=3.0/stable` for the LXD 3.0 LTS release or `--channel=2.0/stable` for the LXD 2.0 LTS release.
+-->
+あるいは、LXD 3.0 LTS リリースをインストールするために `--channel=3.0/stable` を、LXD 2.0 LTS リリースをインストールするために `--channel=2.0/stable` を指定できます。
 
 ### MacOS 用クライアント<!-- MacOS builds -->
 <!--
