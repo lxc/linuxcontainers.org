@@ -109,6 +109,11 @@ You can then add trusted users to it. Anyone added to this group will have full 
 Because group membership is normally only applied at login, you may need to either re-open your user session
 or use the "newgrp lxd" command in the shell you're going to use to talk to LXD.
 
+**WARNING**: Anyone with access to the LXD socket can fully control LXD,
+which includes the ability to attach host devices and filesystems, this
+should therefore only be given to users who would be trusted with root
+access to the host. You can learn more about LXD security [here](https://lxd.readthedocs.io/en/latest/security).
+
 # Creating and using your first container
 Creating your first container is as simple as:
 
