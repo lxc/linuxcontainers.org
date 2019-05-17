@@ -97,7 +97,7 @@ Before you can create containers, you need to tell LXD a little bit about your s
 
 This is all done with:
 
-    sudo lxd init
+    lxd init
 
 ## Access control
 Access control for LXD is based on group membership.
