@@ -181,7 +181,7 @@ This is all done with:
 -->
 この設定は以下のように実行して行います:
 
-    sudo lxd init
+    lxd init
 
 ## アクセスコントロール <!-- Access control -->
 <!--
@@ -203,6 +203,17 @@ Because group membership is normally only applied at login, you may need to eith
 or use the "newgrp lxd" command in the shell you're going to use to talk to LXD.
 -->
 グループメンバーシップはログイン時にのみ追加されるので、追加後にあなたのユーザセッションを閉じて再度開くか、LXD と通信したいシェル上で "newgrp lxd" コマンドを実行する必要があります
+
+<!--
+**WARNING**: Anyone with access to the LXD socket can fully control LXD,
+which includes the ability to attach host devices and filesystems, this
+should therefore only be given to users who would be trusted with root
+access to the host. You can learn more about LXD security [here](https://lxd.readthedocs.io/en/latest/security).
+-->
+**警告**: LXD ソケットにアクセスできる人であれば誰でも LXD を完全にコントロールできます。
+これには、ホストのデバイスやファイルシステムにアタッチする権限も含まれます。
+したがって、ホストへの root アクセスで信頼できるユーザにのみ与えられるべきです。
+さらに LXD のセキュリティについて学びたい場合は[こちら](https://lxd-ja.readthedocs.io/ja/latest/security/)をご覧ください。
 
 # コンテナの作成と使用 <!-- Creating and using your first container -->
 <!--
