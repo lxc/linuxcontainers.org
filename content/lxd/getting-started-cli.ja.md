@@ -221,20 +221,20 @@ Creating your first container is as simple as:
 -->
 コンテナを作成するのは簡単です:
 
-    lxc launch ubuntu:16.04 first
+    lxc launch ubuntu:18.04 first
 
 <!--
 That will create and start a new Ubuntu 16.04 container as can be confirmed with:
 -->
-これで、新しい Ubuntu 16.04 コンテナが作成され、起動します。このコンテナは以下のように確認できます:
+これで、新しい Ubuntu 18.04 コンテナが作成され、起動します。このコンテナは以下のように確認できます:
 
     lxc list
 
 <!--
 Your container here is called "first". You also could let LXD give it a random name by
-just calling "lxc launch ubuntu:16.04" without a name.
+just calling "lxc launch ubuntu:18.04" without a name.
 -->
-ここで作成し、起動したコンテナは "first" という名前です。"lxc launch ubuntu:16.04" のように名前を指定せずにコマンドを実行し、ランダムな名前になるように LXD を実行することもできます。
+ここで作成し、起動したコンテナは "first" という名前です。"lxc launch ubuntu:18.04" のように名前を指定せずにコマンドを実行し、ランダムな名前になるように LXD を実行することもできます。
 
 <!--
 Now that your container is running, you can get a shell inside it with:
@@ -309,8 +309,8 @@ To start a container from them, simply do:
 -->
 これらのビルトインのリモートサーバからコンテナを起動するには、以下のように実行します:
 
-    lxc launch ubuntu:14.04 my-ubuntu
-    lxc launch ubuntu-daily:16.04 my-ubuntu-dev
+    lxc launch ubuntu:16.04 my-ubuntu
+    lxc launch ubuntu-daily:18.04 my-ubuntu-dev
     lxc launch images:centos/6/amd64 my-centos
 
 ## イメージサーバとしてリモートサーバを使う <!-- Using a remote LXD as an image server -->

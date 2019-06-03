@@ -73,11 +73,11 @@ such as a recent bugfix release of LXC 1.0.
 最初に LXC を使う場合は、LXC 1.0 の最新のバグフィックスのなされたバージョンのような、最新のサポート版リリースをお使いになることを推奨します。
 
 <!--
-If using Ubuntu, we recommend you use Ubuntu 14.04 LTS as your container host.
+If using Ubuntu, we recommend you use Ubuntu 18.04 LTS as your container host.
 LXC bugfix releases are available directly in the distribution package repository
 shortly after release and those offer a clean (unpatched) upstream experience.
 -->
-Ubuntu を使っている場合、コンテナホストとして Ubuntu 14.04 LTS を使うことを推奨します。
+Ubuntu を使っている場合、コンテナホストとして Ubuntu 18.04 LTS を使うことを推奨します。
 LXC のバグフィックスリリースは、リリース後すぐに直接ディストリビューションのパッケージリポジトリ経由で利用可能で、パッチの当たっていないクリーンな最新版を提供します。
 
 <!--
@@ -89,9 +89,9 @@ Ubuntu は、安全な非特権の LXC コンテナのために必要な全て�
 <!--
 On such an Ubuntu system, installing LXC is as simple as:
 -->
-Ubuntu では、LXC をインストールするのは以下のように簡単です:
+Ubuntu では、LXC をインストールするのは次のように簡単です:
 
-    sudo apt-get install lxc
+    sudo apt-get install lxc or sudo snap install lxc
 
 <!--
 Your system will then have all the LXC commands available, all its templates
@@ -207,10 +207,10 @@ And now, create your first container with:
 
 <!--
 The download template will show you a list of distributions, versions and architectures to choose from.
-A good example would be "ubuntu", "trusty" (14.04 LTS) and "i386".
+A good example would be "ubuntu", "bionic" (18.04 LTS) and "i386".
 -->
 ダウンロードテンプレートが選択できるディストリビューション、バージョン、アーキテクチャのリストを表示します。
-例として一番良いのは "ubuntu"、"trusty" (14.04 LTS)、"i386" でしょう。
+例として一番良いのは "ubuntu"、"bionic" (18.04 LTS)、"i386" でしょう。
 
 <!--
 A few seconds later your container will be created and you can start it with:
