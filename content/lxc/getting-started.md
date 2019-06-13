@@ -34,7 +34,7 @@ For your first LXC experience, we recommend you use a recent supported release,
 such as a recent bugfix release of LXC 1.0.
 
 
-If using Ubuntu, we recommend you use Ubuntu 14.04 LTS as your container host.
+If using Ubuntu, we recommend you use Ubuntu 18.04 LTS as your container host.
 LXC bugfix releases are available directly in the distribution package repository
 shortly after release and those offer a clean (unpatched) upstream experience.
 
@@ -43,7 +43,7 @@ with everything that's needed for safe, unprivileged LXC containers.
 
 On such an Ubuntu system, installing LXC is as simple as:
 
-    sudo apt-get install lxc
+    sudo apt-get install lxc or sudo snap install lxc
 
 Your system will then have all the LXC commands available, all its templates
 as well as the python3 binding should you want to script LXC.
@@ -103,7 +103,7 @@ And now, create your first container with:
     lxc-create -t download -n my-container
 
 The download template will show you a list of distributions, versions and architectures to choose from.
-A good example would be "ubuntu", "trusty" (14.04 LTS) and "i386".
+A good example would be "ubuntu", "bionic" (18.04 LTS) and "i386".
 
 
 A few seconds later your container will be created and you can start it with:

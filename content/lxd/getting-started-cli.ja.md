@@ -181,7 +181,7 @@ This is all done with:
 -->
 この設定は以下のように実行して行います:
 
-    sudo lxd init
+    lxd init
 
 ## アクセスコントロール <!-- Access control -->
 <!--
@@ -204,26 +204,37 @@ or use the "newgrp lxd" command in the shell you're going to use to talk to LXD.
 -->
 グループメンバーシップはログイン時にのみ追加されるので、追加後にあなたのユーザセッションを閉じて再度開くか、LXD と通信したいシェル上で "newgrp lxd" コマンドを実行する必要があります
 
+<!--
+**WARNING**: Anyone with access to the LXD socket can fully control LXD,
+which includes the ability to attach host devices and filesystems, this
+should therefore only be given to users who would be trusted with root
+access to the host. You can learn more about LXD security [here](https://lxd.readthedocs.io/en/latest/security).
+-->
+**警告**: LXD ソケットにアクセスできる人であれば誰でも LXD を完全にコントロールできます。
+これには、ホストのデバイスやファイルシステムにアタッチする権限も含まれます。
+したがって、ホストへの root アクセスで信頼できるユーザにのみ与えられるべきです。
+さらに LXD のセキュリティについて学びたい場合は[こちら](https://lxd-ja.readthedocs.io/ja/latest/security/)をご覧ください。
+
 # コンテナの作成と使用 <!-- Creating and using your first container -->
 <!--
 Creating your first container is as simple as:
 -->
 コンテナを作成するのは簡単です:
 
-    lxc launch ubuntu:16.04 first
+    lxc launch ubuntu:18.04 first
 
 <!--
 That will create and start a new Ubuntu 16.04 container as can be confirmed with:
 -->
-これで、新しい Ubuntu 16.04 コンテナが作成され、起動します。このコンテナは以下のように確認できます:
+これで、新しい Ubuntu 18.04 コンテナが作成され、起動します。このコンテナは以下のように確認できます:
 
     lxc list
 
 <!--
 Your container here is called "first". You also could let LXD give it a random name by
-just calling "lxc launch ubuntu:16.04" without a name.
+just calling "lxc launch ubuntu:18.04" without a name.
 -->
-ここで作成し、起動したコンテナは "first" という名前です。"lxc launch ubuntu:16.04" のように名前を指定せずにコマンドを実行し、ランダムな名前になるように LXD を実行することもできます。
+ここで作成し、起動したコンテナは "first" という名前です。"lxc launch ubuntu:18.04" のように名前を指定せずにコマンドを実行し、ランダムな名前になるように LXD を実行することもできます。
 
 <!--
 Now that your container is running, you can get a shell inside it with:
@@ -298,8 +309,8 @@ To start a container from them, simply do:
 -->
 これらのビルトインのリモートサーバからコンテナを起動するには、以下のように実行します:
 
-    lxc launch ubuntu:14.04 my-ubuntu
-    lxc launch ubuntu-daily:16.04 my-ubuntu-dev
+    lxc launch ubuntu:16.04 my-ubuntu
+    lxc launch ubuntu-daily:18.04 my-ubuntu-dev
     lxc launch images:centos/6/amd64 my-centos
 
 ## イメージサーバとしてリモートサーバを使う <!-- Using a remote LXD as an image server -->
