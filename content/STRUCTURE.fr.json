@@ -46,7 +46,7 @@
      "menu": ["LXC", "IRC"]},
 
     {"path": "/lxc/github/",
-     "menu": ["LXC", "Github"]},
+     "menu": ["LXC", "GitHub"]},
 
     {"path": "/lxc/jenkins-ci/",
      "menu": ["LXC", "Jenkins CI"]},
@@ -100,7 +100,7 @@
      "menu": ["LXD", "IRC"]},
 
     {"path": "/lxd/github/",
-     "menu": ["LXD", "Github"]},
+     "menu": ["LXD", "GitHub"]},
 
     {"path": "/lxd/travis-ci/",
      "menu": ["LXD", "Travis CI"]},
@@ -147,7 +147,7 @@
      "menu": ["CGManager", "IRC"]},
 
     {"path": "/cgmanager/github/",
-     "menu": ["CGManager", "Github"]},
+     "menu": ["CGManager", "GitHub"]},
 
     {"path": "/cgmanager/travis-ci/",
      "menu": ["CGManager", "Travis CI"]}

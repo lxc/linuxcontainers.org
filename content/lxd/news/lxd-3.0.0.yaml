@@ -75,7 +75,7 @@ content: |-
   For example, to forward any connection to port 80 on the host to container c1 on it's localhost IP on port 80:
 
   ```
-  lxc config device add c1 http proxy listen=tcp:0.0.0.0:80 connect=tcp:127.0.0.1:80 
+  lxc config device add c1 http proxy listen=tcp:0.0.0.0:80 connect=tcp:127.0.0.1:80
   ```
 
   ## Events through /dev/lxd

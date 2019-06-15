@@ -41,4 +41,4 @@ Bug reports can be filed at https://github.com/lxc/linuxcontainers.org/issues/ne
 Fixes and new content are greatly appreciated but please read our
 [contributing guidelines](CONTRIBUTING.md) first.
 
-Contributions to this project should be sent as pull requests on github.
+Contributions to this project should be sent as pull requests on GitHub.

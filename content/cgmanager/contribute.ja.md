@@ -1,8 +1,8 @@
 # ソースコード <!-- Source code -->
 <!--
-The current development version of CGManager can be cloned from Github with:
+The current development version of CGManager can be cloned from GitHub with:
 -->
-CGManager の最新の開発バージョンは Github からクローンできます:
+CGManager の最新の開発バージョンは GitHub からクローンできます:
 
     git clone git://github.com/lxc/cgmanager
 

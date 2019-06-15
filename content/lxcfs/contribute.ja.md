@@ -1,8 +1,8 @@
 # ソースコード <!-- Source code -->
 <!--
-The current development version of LXCFS can be cloned from Github with:
+The current development version of LXCFS can be cloned from GitHub with:
 -->
-LXCFS の最新の開発バージョンは Github からクローンできます:
+LXCFS の最新の開発バージョンは GitHub からクローンできます:
 
     git clone git://github.com/lxc/lxcfs
 
@@ -14,7 +14,7 @@ and not on stable releases, unless the bug only affects a stable release.
 
 # パッチの提案プロセス<!-- Patch submission process -->
 <!--
-Contributions to LXCFS must be submitted as Github pull-requests.
+Contributions to LXCFS must be submitted as GitHub pull-requests.
 -->
 
-LXCFS への貢献は Github のプルリクエストとして提出しなければいけません。
+LXCFS への貢献は GitHub のプルリクエストとして提出しなければいけません。

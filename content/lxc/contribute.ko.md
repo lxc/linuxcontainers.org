@@ -1,5 +1,5 @@
 # 소스 코드
-LXC의 현재 배포 버전은 아래 명령어를 통해 Github에서 클론할 수 있습니다.
+LXC의 현재 배포 버전은 아래 명령어를 통해 GitHub에서 클론할 수 있습니다.
 
     git clone git://github.com/lxc/lxc
 
@@ -25,4 +25,4 @@ LXC에 기여하기 위하여 패치나 패치셋을 직접 [lxc-devel 메일링
 ## pull-request를 사용하는 방법
 저장소를 fork한 뒤, 브랜치를 만들어, 작업하신 사항을 commit하고 (반드시 -s와 함께!), 푸시하시면 됩니다.
 
-그리고 나서 [github 설명서 - pull request 하는 법](https://help.github.com/articles/creating-a-pull-request/) 대로 진행하시면 됩니다.
+그리고 나서 [GitHub 설명서 - pull request 하는 법](https://help.github.com/articles/creating-a-pull-request/) 대로 진행하시면 됩니다.

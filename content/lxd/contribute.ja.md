@@ -1,9 +1,9 @@
 # ソースコード <!-- Source code -->
 
 <!--
-The current development version of LXD can be cloned from Github with:
+The current development version of LXD can be cloned from GitHub with:
 -->
-LXD の現時点の開発バージョンは Github からクローンできます:
+LXD の現時点の開発バージョンは GitHub からクローンできます:
 
     git clone git://github.com/lxc/lxd
 
@@ -15,9 +15,9 @@ and not on stable releases, unless the bug only affects a stable release.
 
 # パッチの提案プロセス <!-- Patch submission process -->
 <!--
-Contributions to LXD must be submitted as Github pull-requests and we require them to be signed-off.
+Contributions to LXD must be submitted as GitHub pull-requests and we require them to be signed-off.
 -->
-LXD への貢献は Github のプルリクエストとして提出しなければいけません。そして、Signed-off-by による署名 (サインオフ) が必要です。
+LXD への貢献は GitHub のプルリクエストとして提出しなければいけません。そして、Signed-off-by による署名 (サインオフ) が必要です。
 
 <!--
 More details on contribution guidelines may be found [here](https://github.com/lxc/lxd/blob/master/CONTRIBUTING.md)

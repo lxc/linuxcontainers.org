@@ -84,7 +84,7 @@
      "meta": {"url": "https://webchat.freenode.net/?channels=#lxcontainers"}},
 
     {"path": "/lxc/github/",
-     "menu": ["LXC", "Github"],
+     "menu": ["LXC", "GitHub"],
      "generator": "link",
      "meta": {"url": "https://github.com/lxc/lxc"}},
 
@@ -167,7 +167,7 @@
      "meta": {"url": "https://webchat.freenode.net/?channels=#lxcontainers"}},
 
     {"path": "/lxd/github/",
-     "menu": ["LXD", "Github"],
+     "menu": ["LXD", "GitHub"],
      "generator": "link",
      "meta": {"url": "https://github.com/lxc/lxd"}},
 
@@ -232,7 +232,7 @@
      "meta": {"url": "https://webchat.freenode.net/?channels=#lxcontainers"}},
 
     {"path": "/lxcfs/github/",
-     "menu": ["LXCFS", "Github"],
+     "menu": ["LXCFS", "GitHub"],
      "generator": "link",
      "meta": {"url": "https://github.com/lxc/lxcfs"}},
 
@@ -304,7 +304,7 @@
      "meta": {"url": "https://webchat.freenode.net/?channels=#lxcontainers"}},
 
     {"path": "/cgmanager/github/",
-     "menu": ["CGManager", "Github"],
+     "menu": ["CGManager", "GitHub"],
      "generator": "link",
      "meta": {"url": "https://github.com/lxc/cgmanager"}},
 

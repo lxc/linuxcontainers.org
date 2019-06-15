@@ -66,7 +66,7 @@ content: |-
 
   When cgroup namespaces are supported LXC will not mount cgroups for the container since it assumes that the init system will mount cgroups itself if it wants to. This assumption already broke when users wanted to run containers without CAP_SYS_ADMIN.
 
-  For example, systemd based containers wouldn't start since systemd needs to mount cgroups (named systemd hierarchy for legacy    cgroups and the unified hierarchy for unified cgroups) to track processes. This problem was solved by detecting whether the container had CAP_SYS_ADMIN. If it didn't we performed the cgroup mounts for it.  
+  For example, systemd based containers wouldn't start since systemd needs to mount cgroups (named systemd hierarchy for legacy    cgroups and the unified hierarchy for unified cgroups) to track processes. This problem was solved by detecting whether the container had CAP_SYS_ADMIN. If it didn't we performed the cgroup mounts for it.
 
   However, there are more cases when we should be able to mount cgroups for the container when cgroup namespaces are supported:
 
@@ -711,8 +711,8 @@ content: |-
 
 
   ### Downloads
-  The release tarballs may be found on our [download page](https://linuxcontainers.org/lxc/downloads/) and we expect most distributions  
+  The release tarballs may be found on our [download page](https://linuxcontainers.org/lxc/downloads/) and we expect most distributions
   will very soon ship a packaged version of LXC 2.0.11.
 
-  Should you be interested in individual changes or just looking at the detailed development history,  
-  our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-2.0).
+  Should you be interested in individual changes or just looking at the detailed development history,
+  our stable branch is on [GitHub](https://github.com/lxc/lxc/tree/stable-2.0).

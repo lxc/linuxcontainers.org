@@ -1,5 +1,5 @@
 # Исходный код
-Текущая разрабатываемая версия LXC может быть склонирована с Github:
+Текущая разрабатываемая версия LXC может быть склонирована с GitHub:
 
     git clone git://github.com/lxc/lxc
 
@@ -27,4 +27,4 @@
 ## Способ с пулл-реквестом
 Форкните репозиторий, создайте ветку, закоммитьте свою работу (with -s !), и пушните ее.
 
-А затем следуйте [помощи github's](https://help.github.com/articles/creating-a-pull-request/).
+А затем следуйте [помощи GitHub's](https://help.github.com/articles/creating-a-pull-request/).

@@ -18,7 +18,7 @@ content: |-
   will very soon ship a packaged version of LXC 1.0.
   
   Should you be interested in individual changes or just looking at the detailed development history,
-  our main repository is on [Github](https://github.com/lxc/lxc).
+  our main repository is on [GitHub](https://github.com/lxc/lxc).
   
   ### New features
   LXC 1.0 is the result of 10 months of development and over a thousand commits, including a major rework of the way LXC is structured.
@@ -56,8 +56,8 @@ content: |-
   and save themselves the trouble of having to manually follow our stable branch.
   
   ### Bug reports and contact information
-  Bug reports should be filed on [Github](https://github.com/lxc/lxc/issues) or if you do not wish to create an account, by e-mail to the appropriate [mailing-list](https://lists.linuxcontainers.org).
-  The same goes for your patches. We tend to prefer patches sent to lxc-devel but we also accept pull request directly on Github.
+  Bug reports should be filed on [GitHub](https://github.com/lxc/lxc/issues) or if you do not wish to create an account, by e-mail to the appropriate [mailing-list](https://lists.linuxcontainers.org).
+  The same goes for your patches. We tend to prefer patches sent to lxc-devel but we also accept pull request directly on GitHub.
   
   LXC 1.0 is also the first release after the change of project maintainers which occurred in September 2013.
   We'd like to thank Daniel Lezcano for all the great work and efforts he's put in LXC over the years

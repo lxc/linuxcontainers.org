@@ -1,5 +1,5 @@
 # Source code
-The current development version of LXC can be cloned from Github with:
+The current development version of LXC can be cloned from GitHub with:
 
     git clone git://github.com/lxc/lxc
 
@@ -27,4 +27,4 @@ Beware of "copy/paste" on mail clients as they can break tabs and lines (see `gi
 ## The pull-request way
 Fork the repository, create a branch, commit you work (with -s !), and push it.
 
-Then follow the [github's doc](https://help.github.com/articles/creating-a-pull-request/).
+Then follow the [GitHub's doc](https://help.github.com/articles/creating-a-pull-request/).
