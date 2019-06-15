@@ -27,8 +27,8 @@ content: |-
   
   <!-- Should you be interested in individual changes or just
           looking at the detailed development history, our main repository is
-          on <a href="https://github.com/lxc/lxc">Github</a>. -->
-    どのような変更がされ、開発がどのように進んだのかをご覧になりたい場合は、メインリポジトリが <a href="https://github.com/lxc/lxc">Github</a> にあります。
+          on <a href="https://github.com/lxc/lxc">GitHub</a>. -->
+    どのような変更がされ、開発がどのように進んだのかをご覧になりたい場合は、メインリポジトリが <a href="https://github.com/lxc/lxc">GitHub</a> にあります。
   
   
   ### <!-- New features -->新機能について
@@ -95,15 +95,15 @@ content: |-
   
   ### <!-- Bug reports and contact information -->バグレポートと連絡先
   <!-- Bug reports should be filed on
-          <a href="https://github.com/lxc/lxc/issues">Github</a>
+          <a href="https://github.com/lxc/lxc/issues">GitHub</a>
           or if you do not wish to create an account, by e-mail to the
           appropriate
           <a href="https://lists.linuxcontainers.org"> mailing-list</a>.
           The same goes for your patches. We tend to prefer patches
           sent to lxc-devel but we also accept pull request directly on
-          Github. -->
-    バグレポートは <a href="https://github.com/lxc/lxc/issues">Github</a> に提出するようにおねがいします。Github のアカウントを作成したくない場合は、メールで適切な <a href="https://lists.linuxcontainers.org">メーリングリスト</a> に送ってください。
-    パッチについても同様です。どちらかというと lxc-devel メーリングリストに直接パッチを送ってもらえる方がうれしいですが、Github に直接 pull request を送ってもらっても受け付けます。
+          GitHub. -->
+    バグレポートは <a href="https://github.com/lxc/lxc/issues">GitHub</a> に提出するようにおねがいします。GitHub のアカウントを作成したくない場合は、メールで適切な <a href="https://lists.linuxcontainers.org">メーリングリスト</a> に送ってください。
+    パッチについても同様です。どちらかというと lxc-devel メーリングリストに直接パッチを送ってもらえる方がうれしいですが、GitHub に直接 pull request を送ってもらっても受け付けます。
   
   
   <!-- LXC 1.0 is also the first release after the change of project

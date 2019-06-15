@@ -1,6 +1,6 @@
 # Pull requests:
 
-Changes to this project should be proposed as pull requests on Github
+Changes to this project should be proposed as pull requests on GitHub
 at: https://github.com/lxc/linuxcontainers.org
 
 Proposed changes will then go through code review there and once acked,

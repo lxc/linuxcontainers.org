@@ -1,6 +1,6 @@
 # Source code
 
-The current development version of LXD can be cloned from Github with:
+The current development version of LXD can be cloned from GitHub with:
 
     git clone git://github.com/lxc/lxd
 
@@ -9,7 +9,7 @@ and not on stable releases, unless the bug only affects a stable release.
 
 # Patch submission process
 
-Contributions to LXD must be submitted as Github pull-requests and we require them to be signed-off.
+Contributions to LXD must be submitted as GitHub pull-requests and we require them to be signed-off.
 
 More details on contribution guidelines may be found [here](https://github.com/lxc/lxd/blob/master/CONTRIBUTING.md)
 

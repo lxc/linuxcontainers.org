@@ -1,5 +1,5 @@
 # Исходный код
-Текущая разрабатываемая версия CGManager может быть склонирована с Github:
+Текущая разрабатываемая версия CGManager может быть склонирована с GitHub:
 
     git clone git://github.com/lxc/cgmanager
 

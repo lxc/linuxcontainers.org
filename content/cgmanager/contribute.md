@@ -1,5 +1,5 @@
 # Source code
-The current development version of CGManager can be cloned from Github with:
+The current development version of CGManager can be cloned from GitHub with:
 
     git clone git://github.com/lxc/cgmanager
 

@@ -1,9 +1,9 @@
 # <!-- Source code -->ソースコード
 
 <!--
-The current development version of LXC can be cloned from Github with:
+The current development version of LXC can be cloned from GitHub with:
 -->
-LXC の現時点の開発バージョンは Github からクローンできます:
+LXC の現時点の開発バージョンは GitHub からクローンできます:
 
     git clone git://github.com/lxc/lxc
 
@@ -59,6 +59,6 @@ Fork the repository, create a branch, commit you work (with -s !), and push it.
 リポジトリをforkし、ブランチを作成し、行った作業をコミットし ("-s" を忘れないで！)、その変更をpushします。
 
 <!--
-Then follow the [github's doc](https://help.github.com/articles/creating-a-pull-request/).
+Then follow the [GitHub's doc](https://help.github.com/articles/creating-a-pull-request/).
 -->
-そして[github's doc](https://help.github.com/articles/creating-a-pull-request/)にあるようにプルリクエストを作成してください。
+そして[GitHub's doc](https://help.github.com/articles/creating-a-pull-request/)にあるようにプルリクエストを作成してください。

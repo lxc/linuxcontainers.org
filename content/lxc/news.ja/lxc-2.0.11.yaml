@@ -149,11 +149,11 @@ content: |-
     - read-only cgroups:
       It is useful to be able to mount cgroups read-only to e.g. prevent changing cgroup limits from inside the container while at the same time allowing the applications to perform introspection on their own cgroups. This again is mostly useful for application containers. System containers running systemd will usually not work correctly when cgroups are mounted read-only.
   -->
-    - init システムが自身では cgroup をマウントしない:  
+    - init システムが自身では cgroup をマウントしない:
       cgroup をマウントしない init システムでは、コンテナ内部で cgroup がマウントされるのを防ぐためにカスタムの LSM プロファイルと組み合わされた場合に、cgroup が利用できません
-    - アプリケーションコンテナ:  
+    - アプリケーションコンテナ:
       アプリケーションコンテナは通常自身では cgroup をマウントしません
-    - read-only cgroup:  
+    - read-only cgroup:
       例えば、アプリケーションに自身が所属する cgroup の内部を見せつつ、コンテナ内から cgroup の制限を変更するのを防ぐには cgroup を read-only でマウントすることができれば便利です。これもアプリケーションコンテナには便利です。systemd が動作しているシステムコンテナは、通常は cgroup が read-only でマウントされていると動作しません。
 
   #### その他のバグフィックス <!-- Everything else -->
@@ -793,13 +793,13 @@ content: |-
 
   ### ダウンロード <!-- Downloads -->
   <!--
-  The release tarballs may be found on our [download page](https://linuxcontainers.org/lxc/downloads/) and we expect most distributions  
+  The release tarballs may be found on our [download page](https://linuxcontainers.org/lxc/downloads/) and we expect most distributions
   will very soon ship a packaged version of LXC 2.0.11.
   -->
   このリリースの tarball は [ダウンロードページ](https://linuxcontainers.org/lxc/downloads/) から取得できます。そして、各ディストリビューションがすぐに LXC 2.0.11 のパッケージをリリースするでしょう。
 
   <!--
-  Should you be interested in individual changes or just looking at the detailed development history,  
-  our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-2.0).
+  Should you be interested in individual changes or just looking at the detailed development history,
+  our stable branch is on [GitHub](https://github.com/lxc/lxc/tree/stable-2.0).
   -->
-  個々の変更点に興味がある場合、そして開発の履歴を見たい場合、stable-2.0 ブランチが [Github](https://github.com/lxc/lxc/tree/stable-2.0) にあります。
+  個々の変更点に興味がある場合、そして開発の履歴を見たい場合、stable-2.0 ブランチが [GitHub](https://github.com/lxc/lxc/tree/stable-2.0) にあります。
