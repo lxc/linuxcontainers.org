@@ -1,0 +1,160 @@
+title: LXD 3.14 リリースのお知らせ
+date: 2019/06/17 21:06
+origin: https://discuss.linuxcontainers.org/t/lxd-3-14-has-been-released/5045
+content: |-
+  ### はじめに <!-- Introduction -->
+  <!--
+  The LXD team is very excited to announce the release of LXD 3.14!
+  -->
+  LXD チームは、LXD 3.14 のリリースをお知らせすることにとてもワクワクしています!
+
+  <!--
+  This release's focus is on stability and performance with a strong focus on networking and clustering.
+  -->
+  このリリースは、ネットワークとクラスタリングの安定性とパフォーマンスに特にフォーカスを当てています。
+
+  <!--
+  Users of advanced networking features will see a lot of improvements in interface tracking, restoration of past state and error handling. On the clustering side, some database improvements should reduce overall load when containers start/stop and DNS handling with Ubuntu Fan bridges was completely reworked for a much better experience.
+  -->
+  高度なネットワーク機能のユーザーは、インターフェースのトラッキング、過去の状態のリストア、エラーハンドリングが大幅に改良されます。クラスタリングに関しては、データベースの改良をいくつか行ったので、コンテナの起動・停止の全体的な負荷が軽減されます。そして、Ubuntu Fan ブリッジでの DNS ハンドリングを完全に再実装し、処理が大幅に改善されました。
+
+  Enjoy!
+
+  ### 新機能 <!-- New features -->
+  #### クラスター: DNS フォワーディング処理の変更 <!-- Cluster: Re-worked DNS forwarding -->
+  <!--
+  The DNS forwarding logic used for clusters using Ubuntu Fan bridges has been updated to better handle nodes joining/leaving the cluster as well as now handling PTR (reverse DNS) records.
+  -->
+  Ubuntu Fan ブリッジを使ったクラスタで使う DNS フォワーディングロジックを更新しました。ノードのクラスターへの参加、クラスターからの削除処理と、PTR（逆引きレコード）の処理が改善されました。
+
+  #### LXD を初期状態にリセットするためのスクリプト <!-- Script to factory reset LXD -->
+  <!--
+  A [new script](https://github.com/lxc/lxd/blob/master/scripts/empty-lxd.sh) is now included for those users who would like to completely empty a LXD server of all containers, images, profiles, networks and projects. This can be particularly useful as part of cleanly removing LXD from the system.
+  -->
+  LXD サーバーのコンテナ、イメージ、プロファイル、ネットワーク、プロジェクトを完全に空にしたいユーザー向けの[スクリプト](https://github.com/lxc/lxd/blob/master/scripts/empty-lxd.sh)が新たに含まれるようになりました。特にシステムから LXD をきれいに削除したい場合に便利です。
+
+  #### システムコールインターセプト機能の改良 <!-- Improvements to syscall interception -->
+  <!--
+  The syscall interception feature got some nice improvements, adding support for the `mknodat` syscall alongside the existing `mknod` syscall, offloading of some of the argument comparison to the kernel so only device nodes request get intercepted and overlayfs' whiteout file has been added to the list of allowed syscalls, resolving a number of issues with running Docker inside of LXD.
+  -->
+  システムコールのインターセプト機能が改良され、既存の `mknod` システムコールに加えて `mknodat` システムコールのサポートが追加されました。引数比較の一部をカーネルへオフロードし、デバイスノードのリクエストだけがインターセプトされ、overlayfs のホワイトアウトファイルが許可されたシステムコールに追加され、LXD 内部で Docker を実行する際の問題がいくつか解決されました。
+
+  <!--
+  This feature requires a 5.0 kernel or higher, a current git snapshot of libseccomp and a current git snapshot of liblxc, so it will not be widely available in distributions shipping LXD but the `edge` snap package, combined with a suitable kernel will have all the needed bits in place.
+  -->
+  この機能は 5.0 以上のカーネル、libseccomp の最新の git スナップショット、liblxc の最新の git スナップショットが必要です。このため、LXD パッケージをリリースしているディストリビューションではほとんど利用できません。しかし、`edge` snap パッケージを適切なカーネルと組み合わせると、必要な条件がすべて整います。
+
+  ### Bugs fixed
+
+   - doc: Add IPVLAN required sysctls to container docs
+   - doc: Add section on container security
+   - doc: Clarify API security and options to restrict
+   - doc: Fix typo in networks.md
+   - doc: IPVLAN doc tweaks for gateway and DNS nameservers
+   - doc: Remove trailing whitespace
+   - doc: Re-structures container nic docs into each nic type
+   - doc: s/HTTPs/HTTPS/g
+   - doc: Upate volatile keys used for physical mtu and mac restoration
+   - i18n: Update translations from weblate
+   - lxc: Transition to `golang.org/x/sys`
+   - lxc/move: Start container when appropriate
+   - lxc-to-lxd: Transition to `golang.org/x/sys`
+   - lxd/api: Expose LXC network_phys_macvlan_mtu feature
+   - lxd: Satisfy static analysis
+   - lxd: Transition to `golang.org/x/sys`
+   - lxd/backup: Fix crash when renaming non-existent backup
+   - lxd/backups: Fix backup.Pool.Name check error message
+   - lxd/cluster: Fix missing return on SmartError
+   - lxd/cluster: Trigger the upgrade if we detect a higher dqlite client version
+   - lxd/containers: Add detachInterfaceRename() function
+   - lxd/containers: Add IPVLAN L3S mode l2proxy sysctl checks
+   - lxd/containers: Add OnStopNS() function run by LXC's stop hook feature
+   - lxd/containers: Add snapshotPhysicalNic function
+   - lxd/containers: Add static routes for bridged veth devices
+   - lxd/containers: Be consistent with timestamps
+   - lxd/containers: Don't diff go-lxc structs
+   - lxd/containers: Don't start on migration
+   - lxd/containers: Fix bad error
+   - lxd/containers: Fix copy/paste error in error removeNetworkDevice
+   - lxd/containers: Fixes custom MTU not being applied on hot plug
+   - lxd/containers: Fix ipvlan support check
+   - lxd/containers: Fix minute rollover issue in scheduled snapshots
+   - lxd/containers: Fix missing return on InternalError
+   - lxd/containers: Make static routes use boot proto for tracking
+   - lxd/containers: Move IPVLAN init code into own function
+   - lxd/containers: Record host_name from LXC on p2p/bridged nic start
+   - lxd/containers: Record hotplugged p2p/bridged nic host_name in volatile data
+   - lxd/containers: Remove unused getHostInterface()
+   - lxd/containers: Remove volatile host_name from fillNetworkDevice()
+   - lxd/containers: Replace ConfigKeySet with VolatileSet
+   - lxd/containers: Restore physical parent mtu and mac on device removal
+   - lxd/containers: Run network up hook for all p2p and bridged nics
+   - lxd/containers: Store mtu and mac of parent physical nic before start
+   - lxd/daemon: Add forkdns server list refresh task to cluster tasks
+   - lxd/db: Introduce ContainerConfigUpdate
+   - lxd/db: Sort container snapshots by creation date
+   - lxd/forkdns: Add constants for forkdns servers path and file
+   - lxd/forkdns: Answer PTR and A requests from leases file
+   - lxd/forkdns: Ensure forkdns remains running when LXD exits
+   - lxd/forkdns: Implement logging
+   - lxd/forkdns: Remove unused includes
+   - lxd/forkdns: Restore usage output text when running with no arguments
+   - lxd/forkdns: Update forkdns to live reload from config files
+   - lxd/forkmknod: Attach to mntns when task is chrooted
+   - lxd/images: Fix compressErr return
+   - lxd/networks: Add container boot route functions
+   - lxd/networks: Add forkdns servers file refresh functions
+   - lxd/networks: Add networkGetDevMAC function
+   - lxd/networks: Add networkGetDevMTU function
+   - lxd/networks: Add networkSetDevMAC function
+   - lxd/networks: Add networkSetDevMTU function
+   - lxd/networks: Add networkUpdateForkdnsServersTask function
+   - lxd/networks: Add refreshForkdnsServerAddresses function
+   - lxd/networks: Create forkdns.servers directory and empty config file
+   - lxd/networks: DNS clustered mode is correctly detected during LXD init
+   - lxd/networks: Fix ETag handling on clusters
+   - lxd/networks: Log failures to reload
+   - lxd/networks: Refactor fan mtu detection to use networkGetDevMTU
+   - lxd/networks: Remove __internal dnsmasq domain
+   - lxd/networks: Remove own address from addresses passed to forkdns
+   - lxd/networks: Save/restore container (boot proto) routes when starting
+   - lxd/networks: Simplify spawnForkDNS to not get cluster server list
+   - lxd/patches: Fix handling of containers-snapshots
+   - lxd/seccomp: Filter based on arguments
+   - lxd/seccomp: Fix building on older kernels
+   - lxd/seccomp: Fix missing ";"
+   - lxd/storage: Allow quota on dir custom volumes
+   - lxd/storage: Drop useless call to createContainerMountpoint
+   - lxd/storage/btrfs: Delete any orphaned *.ro snapshots
+   - lxd/storage/btrfs: Fix argument ordering
+   - lxd/storage/btrfs: Fix copy of nested subvolumes
+   - lxd/storage/btrfs: Fix qgroup handling
+   - lxd/storage/zfs: Fix snapshot restore on project
+   - lxd/storage/zfs: Handle projects correctly
+   - lxd-p2c: Transition to `golang.org/x/sys`
+   - shared: Transition to `golang.org/x/sys`
+   - shared/idmap: Shift ro btrfs subvolumes
+   - tests: Add DNS clustering tests
+   - tests: Add further p2p nic tests for various scenarios
+   - tests: Add more tests for container nics
+   - tests: Add tests for container backup renames
+   - tests: Have ipvlan test activates ipv4 forwarding
+   - tests: Ignore vendor/
+   - tests: Re-work nic p2p and bridged tests to check for static routes working
+   - tests: Test for physical mtu and mac application and restoration
+   - tests: Update forkdns tests to work with double fork
+   - tests: Update macvlan tests to detect MTU support in LXC
+   - tests: Update physical tests to detect MTU support in LXC
+   - vendor: Temporary Raft vendoring
+
+  ### 試用環境 <!-- Try it for yourself -->
+  <!--
+  This new LXD release is already available for you to try on our [demo service](https://linuxcontainers.org/lxd/try-it/).
+  -->
+  この新しい LXD リリースは私たちの [デモサービス](https://linuxcontainers.org/ja/lxd/try-it/) で利用できます。
+
+  ### ダウンロード <!-- Downloads -->
+  <!--
+  The release tarballs can be found on our [download page](https://linuxcontainers.org/lxd/downloads/).
+  -->
+  このリリースの tarball は [ダウンロードページ](/lxd/downloads/) から取得できます。
