@@ -1,0 +1,413 @@
+title: LXC 3.0.4 has been released
+date: 2019/06/21 22:06
+origin: https://discuss.linuxcontainers.org/t/lxc-3-0-4-has-been-released/5080
+content: |-
+  ### Introduction
+  The LXC team is pleased to announce the release of LXC 3.0.4!
+
+  As a stable bugfix release, no major changes have been done, instead focusing on bugfixes and minor usability improvements.
+
+  #### Highlights
+  ##### [Fix for runC CVE-2019-5763](https://nvd.nist.gov/vuln/detail/CVE-2019-5736)
+  This release comes with  a fix for the privileged container breakout discovered earlier this year. As per our policy we don't consider privileged containers root safe and thus LXC as not received a CVE for this. However, we still provide a fix in this release. For more details see [this blog post](https://people.kernel.org/brauner/runtimes-and-the-curse-of-the-privileged-container).
+
+  ##### Add `--template-option` argument to `lxc-create`
+  This allows users to pass template options to the template called by `lxc-create` explicitly instead of relying on the `--` mechanism.
+
+  ##### Prefix veth interface names with caller's uid
+  To make it easier for users to inspect veth devices LXC will now prefix the uid of the caller for the host veth device.
+
+  ##### Improve using LXC on Android devices
+  This makes LXC look for standard tools in locations such as `/system/bin` that are specific to Android.
+  Additionally, it is now possible to correctly allocate loop devices on Android.
+
+  ##### Backport all compiler hardening options which are standard on current master.
+  This backports:
+
+      -fdiagnostics-color
+      -Wimplicit-fallthrough=5
+      -Wcast-align
+      -Wstrict-prototypes
+      -fno-strict-aliasing
+      -fstack-clash-protection
+      -fstack-protector-strong
+      --param=ssp-buffer-size=4
+      -g
+      --mcet -fcf-protection
+      -Werror=implicit-function-declaration
+      -Wlogical-op
+      -Wmissing-include-dirs 
+      -Wold-style-definition
+      -Winit-self
+      -Wfloat-equal
+      -Wsuggest-attribute=noreturn
+      -Werror=return-type
+      -Werror=incompatible-pointer-types
+      -Wformat=2
+      -Wshadow
+      -Wendif-labels
+      -Werror=overflow
+      -fdiagnostics-show-option
+      -Werror=shift-count-overflow
+      -Werror=shift-overflow=2
+      -Wdate-time
+      -Wnested-externs
+      -fasynchronous-unwind-tables
+      -pipe
+      -fexceptions
+      -z relro
+      -z now
+
+  ##### Remove all stack allocation (`alloca()`)
+  As is already the case on master, all stack allocations via `alloca()` have been wiped from the codebase to increase security.
+
+  ##### Added support for [LGTM](https://lgtm.com/projects/g/lxc/lxc/overview/)
+  This adds support for the [LGTM](https://lgtm.com/projects/g/lxc/lxc/overview/) code quality checker.
+
+  ##### Add support for [coccinelle](https://github.com/coccinelle/coccinelle) code transformation tool
+  This allows us to automatically detect, remove, or add code to the LXC codebase to improve security and reliability.
+
+  ##### Compiler based resource cleanup
+  The codebase will be slowly switched over to make user of cleanup attributes supported by compilers such as `gcc` and `clang`.
+
+  ##### Remove `fgets()` from the codebase
+  To improve security all uses of `fgets()` have been removed from the codebase. Use of this function in new code is strongly discouraged.
+
+  ##### Improve `cgroup2` handling
+  With this release `cgroup2` layouts will be better supported.
+
+  ##### Setup `lxc.mount.entry` right after `lxc.mount.fstab`
+  This allows us to unify the mounting logic in LXC.
+
+  ##### Expand namespace sharing options
+  When inheriting a namespace a pathname to a namespace file descriptor can now be specified.
+
+  ##### Expand close-on-exec usage
+  All file descriptors that can be made close-on-exec are now close-on-exec.
+
+  ##### Support `pidfd` api
+  Newer kernel versions allow interaction with processes through process file descriptors (`pidfd`s). This eliminates various race conditions when e.g. sending signals or retrieving process information. This LXC version make use of the `pidfd_send_signal()` syscall and the `CLONE_PIDFD` flag with the `clone()` syscall.
+
+  #### Bugfixes (LXC)
+
+  - Fix cgroup deletion by not prematurely freeing the path to delete
+  - Fix `lxc-usernsexec` when falling back to the default id mapping
+  - Fix building LXC when the `stack-protector` option is not supported by the compiler
+  - Remove various unused functions from the codebase
+  - Make sure that `lxc-cgroup` gives output in all relevant cases
+  - Remove the handler for the `SIGWINCH` signal from the internal command handler since this is now handled via `signalfd`
+  - Fix copying containers by stripping the storage type prefix from the target path
+  - Ensure that veth device names can container all ASCII alphabetical characters
+  - Fix Android builds
+  - Handle kernels that do not support `CLONE_NEWCGROUP`
+  - Free memory used to record inherited namespaces
+  - Remove various deprecated headers
+  - Ensure `lxc-init` reports error in all failure paths
+  - Make various functions `static`
+  - Improve setting the parent death handling
+  - Fix network device removal
+  - Update `zfs` storage backend to new `zfs` tool syntax
+  - Fix `vlan` device handling through upscripts
+  - Dynamically allocate a stack for `clone()` and use standard 8MB stack size
+  - Improve static linking
+  - Ensure that the `cgroup.mems` value of the correct ancestor is initialized in the `cpuset` cgroup
+
+  Full commit list:
+
+   - apparmor: allow various remount,bind options
+   - Merge pull request #2758 from Blub/2018-12-17/stable-3.0/apparmor-bind-remount
+   - cgfsng: do not free container_full_path on error
+   - Merge pull request #2772 from brauner/2018-01-09/fix_cgroup_deletion_stable-3.0
+   - caps: check uid and euid
+   - Merge pull request #2830 from brauner/2019-02-08/capabilities_stable-3.0
+   - CVE-2019-5736 (runC): rexec callers as memfd
+   - include: add fexecve() for Android's Bionic
+   - rexec: handle old kernels
+   - lxc-usernsexec: fix default map functionality
+   - fix install error when using --disable-commands option
+   - Add template-options to help output
+   - stringutils: include stdarg for va_list
+   - configure.ac: fix build without stack-protector
+   - storage: remove unused function
+   - fix lxc-cgroup not giving output
+   - tools: add newline to lxc-cgroup output
+   - terminal: remove sigwinch command
+   - Set c to NULL after freeing it
+   - conf: use SYSERROR on lxc_write_to_file errors
+   - Revert "Set c to NULL after freeing it"
+   - lxccontainer: fix container copy
+   - fix: unprivileged veth devices (e.g. vethFWABHX) never contain 'Z' character in the randomly generated device name part because for modulo one does not need to substract 1 from strlen().
+   - Fixing compile error when compiling for android
+   - start: handle missing CLONE_NEWCGROUP
+   - network: prefix veth interface name with uid info
+   - Revert "conf: remove extra MS_BIND with sysfs:mixed"
+   - conf.c: fix memory leak and mount error
+   - Fix memory leak in cgroup_exit
+   - Fixing hooks functionality Android where 'sh' is placed under /system/bin
+   - Handle alternative loop device location on Android
+   - Avoid risk of "too far memory read"
+   - Installation of default.script for udhcpc
+   - conf: check for successful mount entry parse
+   - Use BUSYBOX_EXE variable in configure_busybox()
+   - Create /var/run
+   - /etc/resolv.conf grows indefinitely
+   - compiler: remove deprecated and unneeded header
+   - prlimit: remove deprecated and unneeded header
+   - More accurate error msg for template file
+   - fix rpm packaging for bash completion directory.
+   - compiler: -Wlogical-op hardening
+   - compiler: -Wmissing-include-dirs hardening
+   - compiler: -Wold-style-definition hardening
+   - compiler: -Winit-self hardening
+   - compiler: -Wfloat-equal hardening
+   - compiler: -Wsuggest-attribute=noreturn hardening
+   - compiler: -Werror=return-type hardening
+   - compiler: -Werror=incompatible-pointer-types
+   - compiler: -Wformat=2 hardening
+   - compiler: set -Wimplicit-fallthrough to 5
+   - compiler: -Wshadow hardening
+   - compiler: -Wendif-labels hardening
+   - compiler: -Werror=overflow hardening
+   - compiler: -fdiagnostics-show-option
+   - compiler: fix -fstack-protector-strong
+   - compiler: -Werror=shift-count-overflow hardening
+   - compiler: -Werror=shift-overflow=2 hardening
+   - compiler: -Wdate-time hardening
+   - compiler: -Wnested-externs hardening
+   - lxcmntent: remove stack allocations
+   - cgroups: remove stack allocations
+   - lxc_user_nic: remove stack allocations
+   - commands: remove stack allocations
+   - commands_utils: remove stack allocations
+   - conf: remove stack allocations
+   - confile: remove stack allocations
+   - lxccontainer: remove stack allocations
+   - monitor: remove stack allocations
+   - namespace: remove stack allocations
+   - network: remove stack allocations
+   - pam_cgfs: remove stack allocations
+   - start: remove stack allocations
+   - storage: remove stack allocations
+   - string_utils: remove stack allocations
+   - terminal: remove stack allocations
+   - loop: remove stack allocations
+   - lvm: remove stack allocations
+   - nbd: remove stack allocations
+   - rbd: remove stack allocations
+   - overlay: remove stack allocations
+   - lxc-unshare: remove stack allocations
+   - README: add LGTM
+   - commands: remove unnecessary check
+   - cgfsng: remove unnecessary check
+   - start: prevent signed-issues
+   - lxc-init: exit with error on wait failure
+   - coccinelle: add coccinelle support
+   - coccinelle: s/while({1,true})/for(;;)/
+   - coccinelle: use standard exit identifiers
+   - parse: handle \r
+   - compiler: fix wrong licensing
+   - ringbuf.h: fix wrong licensing
+   - syscall_wrappers: fix wrong licensing
+   - string_utils.h: fix wrong licensing
+   - apparmor: catch config file opening error
+   - apparmor: Improve testing on apparmor python script
+   - conf: do not log devpts umount2() failure
+   - network: do not log false friends
+   - start: move variable into tighter scope
+   - af_unix: use __do_free
+   - attach: use __do_free
+   - cgroup_utils: use __do_free
+   - lxc-init: use cleanup macros
+   - lxc-user-nic: use cleanup macros
+   - lxc-usernsexec: use cleanup macros
+   - commands: move declaration into tighter scope
+   - commands: cleanup macros in lxc_cmd_console()
+   - macro: introduce steal_fd()
+   - commands: use __do_close_prot_errno
+   - commands: cleanup macros lxc_cmd()
+   - commands: cleanup macros lxc_cmd_add_state_client
+   - commands: cleanup macros lxc_cmd_accept()
+   - commands: cleanup macros lxc_cmd_init
+   - commands: cleanup macros lxc_cmd_init()
+   - tree-wide: s/steal_fd/move_fd/g
+   - cve-2019-5736: add test
+   - commands_utils: auto close lxc_cmd_sock_get_state
+   - commands_utils: auto free lxc_add_state_client
+   - conf: auto free run_buffer
+   - conf: cleanup macros run_script_argv
+   - conf: cleanup macros pin_rootfs
+   - conf: cleanup macros lxc_mount_auto_mounts
+   - conf: cleanup macros lxc_chroot
+   - conf: cleanup macros parse_mntopts
+   - conf: cleanup macros parse_propagationopts
+   - conf: cleanup macros mount_entry_create_dir_file
+   - conf: cleanup macros mount_entry_on_generic
+   - conf: cleanup macros setup_sysctl_parameters
+   - conf: cleanup macros setup_proc_filesystem
+   - conf: cleanup macros idmaptool_on_path_[...]
+   - conf: cleanup macros remount_all_slave
+   - conf: cleanup macros lxc_execute_bind_init
+   - conf: cleanup macros get_minimal_idmap
+   - conf: cleanup macros get{g,u}name
+   - conf: cleanup macros suggest_default_idmap
+   - travis: run coccinelle
+   - travis: run coccinelle
+   - attach: cleanup macros lxc_proc_close_ns_fd
+   - attach: cleanup macros in_same_namespace
+   - attach: cleanup macros lxc_put_attach_clone_[...]
+   - attach: cleanup macros lxc_attach_terminal_[...]
+   - .travis: give coverity one more try
+   - .travis: remove coverity
+   - lxc-attach: switch to attach_run_wait
+   - conf: simplify idmaptool_on_path_and_privileged
+   - conf: cleanup macros remount_all_slave
+   - conf: cleanup macros lxc_chroot
+   - conf: cleanup macros lxc_pivot_root
+   - conf: cleanup macros lxc_fill_autodev
+   - conf: cleanup macros make_anonymous_mount_file
+   - conf: cleanup macros setup_mount_entries
+   - conf: cleanup macros write_id_mapping
+   - conf: cleanup macros suggest_default_idmap
+   - attach: use move_fd in lxc_proc_close_ns_fd
+   - gpg: use proxy, if http_proxy is set
+   - conf: remove fgets() from run_buffer()
+   - conf: remove fgets() from lxc_chroot()
+   - initutils: remove fgets() from lxc_global_con[...]
+   - initutils: remove fgets() from setproctitle()
+   - conf: remove unused variable
+   - confile: shut up gcc
+   - CODING_STYLE: update
+   - Fix android compilation
+   - commands_utils.c: fix wrong licensing
+   - commands_utils.h: fix wrong licensing
+   - file_utils.c: fix wrong licensing
+   - string_utils.c: fix wrong licensing
+   - attach: remove unused variable
+   - attacg: shut up gcc
+   - lxccontainer: shut up gcc and remove unused variables.
+   - network: shut up gcc.
+   - monitor: shut up gcc.
+   - start: shut up gcc.
+   - storage: shut up gcc and remove unused variables.
+   - cmd: shut up gcc.
+   - confile_utils: lxc_config_net_is_hwaddr()
+   - confile_utils: make update_hwaddr() static
+   - confile: make parse_limit_value() static
+   - conf: Fixes unitialised variable.
+   - Revert "conf: Fixes unitialised variable."
+   - conf: avoid compiler warning
+   - Fix lxc.cgroup2.<controller> on cgroup2-only systems
+   - hooks: drop namespace references before post-stop
+   - btrfs: ensure \0 byte at end
+   - compiler: -fasynchronous-unwind-tables hardening
+   - compiler: -pipe
+   - compiler: -fexceptions hardening
+   - utils: fix handling of PID namespaces in lxc_set_death_signal
+   - start: fix parent PID passed to lxc_set_death_signal
+   - hardening: enable address sanitizer build
+   - start: backport monitor_pid handling
+   - cgfsng: fix cgroup2 handling
+   - cgroups: fix potential nullderef
+   - cgfsng: backport new cgroup handling logic
+   - Merge pull request #2944 from brauner/lxc/stable-3.0
+   - raw_syscalls: lxc_raw_clone()
+   - hooks/nvidia: handle spaces in NVIDIA_REQUIRE variables
+   - Travis: Adds -Wall and -Werror gcc flags to automatic build.
+   - travis: Attempt to fix src/lxc/cmd/lxc_init.c:251: undefined reference to `pthread_sigmask
+   - lvm: Updates lvcreate to wipe signatures if supported, fallbacks to old command if not.
+   - network: fix network device removal
+   - Fix user namespace pdeathsig handling
+   - lxc-user-nic: small tweaks
+   - doc: update lxc-user-nic manpage
+   - lxc-user-nic: validate request
+   - doc: update Japanese lxc-user-nic manpage
+   - fix: #2927 api doc generation fails under out of source build.
+   - storage: prevent unitialized variable warning
+   - storage: update zfs
+   - conf: do lxc.mount.entry mounts right after lxc.mount.fstab
+   - netns_getifaddrs: adapt to kernel changes
+   - lxc-start: remove bad doc
+   - Fix 'zfs get' command order
+   - commands: partially backport seccomp notify
+   - af_unix: backport helper functions
+   - start: silence clang
+   - network: Fixes a little typo in an error message
+   - network: Adds upscript handling for vlan network type
+   - network: Fixes vlan hook script
+   - tests: Updates .gitignore to ignore test build artefacts
+   - network: Fixes bug in macvlan mode selection
+   - seccomp: notifier fixes
+   - namespaces: allow a pathname to a nsfd for namespace to share
+   - tree-wide: make socket SOCK_CLOEXEC
+   - compiler: add __returns_twice attribute
+   - raw_syscalls: add initial support for pidfd_send_signal()
+   - Devices created in rootfs instead of rootfs/dev
+   - utils: improve switch_to_ns()
+   - raw_syscalls: simplify assembly
+   - clone: add infrastructure for CLONE_PIDFD
+   - network: Adds mtu support for phys and macvlan types
+   - namespace: support CLONE_PIDFD with lxc_clone()
+   - network: Restores phys device MTU on container shutdown
+   - start: use CLONE_PIDFD
+   - Redirect error messages to stderr
+   - coding style: update
+   - New --bbpath option and unecessary --rootfs checks
+   - lxccontainer: do not display if missing privileges
+   - Option --busybox-path instead of --bbpath
+   - criu: Use -v4 instead of -vvvvvv
+   - criu: Remove unnecessary return after _exit()
+   - lvm: Fix return value if lvm_create_clone fails
+   - zfs: Fix return value on zfs_snapshot error
+   - initutils: Fix memleak on realloc failure
+   - Config: check for %m availability
+   - Use %m instead of strerror() when available
+   - Error prone semicolon
+   - configure: handle checks when cross-compiling
+   - network: move phys netdevs back to monitor's net ns rather than pid 1's
+   - network: Fixes bug that stopped down hook from running for phys netdevs
+   - attach: do not reload container
+   - lxccontainer: cleanup attach functions
+   - lxccontainer: remove unused function
+   - start: remove unused label
+   - configure: remove additional comma
+   - lxc_clone: pass non-stack allocated stack to clone
+   - doc: add a little note about shared ns + LSMs
+   - lxc_clone: get rid of some indirection
+   - cgroups: handle offline cpus in v1 hierarchy
+   - fix issue 2765
+   - lxc_clone: bump stack size to 8MB
+   - lxc_clone: add a comment about stack size
+   - getgrgid_r fails with ERANGE if buffer is too small. Retry with a larger buffer.
+   - lxc_usernsexec: continuing after unshare fails leads to confusing and misleading error messages
+   - start: fix handler memory leak at lxc_init failed
+   - cgroups: prevent segfault
+   - Make /tmp accessible to any user
+   - proposed fix for #2892 - fix lxcbasename in lxc/lxccontainer.c
+   - start: generate new boot id on container start
+   - Centralize hook names
+   - doc: add a note about shared ns + LSMs to Japanese doc
+   - Switch from gnutls to openssl for sha1
+   - network: fix lxc_netdev_rename_by_index()
+   - Fixed file descriptor leak for network namespace
+   - lxc.pc.in: add libs.private for static linking
+   - parse.c: fix fd leak from memfd_create
+   - cgfsng: write cpuset.mems of correct ancestor
+
+
+  #### Bugfixes (LXC templates)
+
+   - Add new dependency for wget for lxc-slackware template
+   - plamo: Workaround for building plamo 32bit 6.x container on current 7.x
+   - plamo: Support https as download scheme and default to https
+
+  #### Bugfixes (python3 binding)
+
+   - No changes in this release, version bump only
+
+  ### Support and upgrade
+  LXC 3.0.4 is supported until June 2023 and is our current LTS release, users are encouraged to update to the latest bugfix releases as they're made available.
+
+  ### Downloads
+   - Main release tarball: [lxc-3.0.4.tar.gz](https://linuxcontainers.org/downloads/lxc/lxc-3.0.4.tar.gz) (GPG: [lxc-3.0.4.tar.gz.asc](https://linuxcontainers.org/downloads/lxc/lxc-3.0.4.tar.gz.asc))
+   - LXC templates tarball: [lxc-templates-3.0.4.tar.gz](https://linuxcontainers.org/downloads/lxc/lxc-templates-3.0.4.tar.gz) (GPG: [lxc-templates-3.0.4.tar.gz.asc](https://linuxcontainers.org/downloads/lxc/lxc-templates-3.0.4.tar.gz.asc))
+   - LXC python3 bindings tarball: [python3-lxc-3.0.4.tar.gz](https://linuxcontainers.org/downloads/lxc/python3-lxc-3.0.4.tar.gz) (GPG: [python3-lxc-3.0.4.tar.gz.asc](https://linuxcontainers.org/downloads/lxc/python3-lxc-3.0.4.tar.gz.asc))
