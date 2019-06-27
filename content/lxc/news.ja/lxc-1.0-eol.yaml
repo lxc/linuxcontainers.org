@@ -1,0 +1,57 @@
+title: LXC 1.0 - サポート終了（EOL）のお知らせ
+date: 2019/06/26 16:06
+origin: https://discuss.linuxcontainers.org/t/lxc-1-0-end-of-life-announcement/5111
+content: |-
+  # はじめに <!-- Introduction -->
+  <!--
+  The LXC 1.0 LTS branch has reached its end of life.
+  -->
+  LXC 1.0 LTS ブランチは EOL（End of life）を迎えました。
+
+  <!--
+  Released on the 20th of February 2014, it received over 5 years of bugfixes and security updates from the LXC team as part of our commitment to Long Term Stable releases.
+  -->
+  2014 年 2 月 20 日にリリースされ、長期 Stable リリースに対する約束の一環として、LXC チームから 5 年に渡るバグフィックスとセキュリティアップデートを提供しました。
+
+  <!--
+  With it reaching the end of its supported life, we will no longer be accepting fixes to the `stable-1.0` branch, nor run CI on this branch.
+  -->
+  サポート期間が終了しましたので、`stable-1.0` ブランチへの修正は受理されませんし、このブランチに対する CI も実行されません。
+
+  <!--
+  All remaining users should upgrade to a supported release as soon as possible.
+  -->
+  まだお使いのユーザーはできるだけ早く、サポートされているリリースへのアップグレードを行う必要があります。
+
+  # 長期サポートリリース <!-- Long term support releases -->
+  <!--
+  LXC upstream commits to 5 years support for its LTS branches.
+  Such branches exist for LXC, LXCFS and LXD and see bugfixes and security fixes backported to them.
+  -->
+  LXC 開発チームは LTS ブランチに対して 5 年間のサポートを約束します。
+  LTS ブランチは LXC、LXCFS、LXD に存在し、それらに対してバグ修正やセキュリティ修正をバックポートします。
+
+  <!--
+  No new features get added to those branches and only the latest LTS branch sees most bugfixes backported, once a new LTS branch is released, the previous one will only get security and critical bugfixes.
+  -->
+  LTS ブランチには新機能は追加されず、最新の LTS ブランチにはほとんどのバグフィックスがバックポートされます。新しい LTS ブランチがリリースされると、前の LTS リリースにはセキュリティ修正と重大なバグフィックスのみが行われます。
+
+  # 移行パス <!-- Migration paths -->
+  <!--
+  LXC 1.0 users can upgrade to LXC 2.0 LTS without any expected disruption nor configuration changes required.
+  -->
+  LXC 1.0 ユーザーは、システム停止や設定の変更を行うことなく、LXC 2.0 LTS へアップグレードできます。
+
+  <!--
+  Upgrading to LXC 3.0 LTS is also possible and doesn't require an intermediate upgrade to 2.0, however as 3.0 has a number of updated configuration options, you will need to run `lxc-update-config` and may need to manually handle some changes yourself.
+  -->
+  LXC 3.0 LTS へのアップグレードも可能で、一旦 2.0 へアップグレードする必要はありません。しかし 3.0 では設定オプションに多数の更新があるため、`lxc-update-config` を実行する必要があり、手動で変更をいくつか行う必要があるかもしれません。
+
+  # 現在サポート中のリリース <!-- Currently supported releases -->
+  <!--
+  There are currently 3 supported releases of LXC:
+  -->
+  現在、LXC にはサポート中のリリースが 3 つ存在します:
+   - LXC 2.0 LTS (2021 年 6 月までサポート<!-- supported until June 2021 -->)
+   - LXC 3.0 LTS (2023 年 6 月までサポート<!-- supported until June 2023 -->)
+   - LXC 3.1 (フィーチャー（機能追加）リリース、3.2 がリリースされた時点で EOL <!-- feature release, end of life when 3.2 is released -->)
