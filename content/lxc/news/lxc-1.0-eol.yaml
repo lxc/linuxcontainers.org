@@ -24,6 +24,7 @@ content: |-
 
   # Currently supported releases
   There are currently 3 supported releases of LXC:
+
    - LXC 2.0 LTS (supported until June 2021)
    - LXC 3.0 LTS (supported until June 2023)
    - LXC 3.1 (feature release, end of life when 3.2 is released)

@@ -52,6 +52,7 @@ content: |-
   There are currently 3 supported releases of LXC:
   -->
   現在、LXC にはサポート中のリリースが 3 つ存在します:
+
    - LXC 2.0 LTS (2021 年 6 月までサポート<!-- supported until June 2021 -->)
    - LXC 3.0 LTS (2023 年 6 月までサポート<!-- supported until June 2023 -->)
    - LXC 3.1 (フィーチャー（機能追加）リリース、3.2 がリリースされた時点で EOL <!-- feature release, end of life when 3.2 is released -->)
