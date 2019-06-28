@@ -10,10 +10,10 @@ LXC は大部分の Linux ディストリビューションに含まれていま
 
 <!--
 Distributions also often provide backports of newer versions of LXC for their stable releases.
-You may want to look for that, especially if your distribution doesn't include LXC 1.0 or 2.0.
+You may want to look for that, especially if your distribution doesn't include LXC 2.0 or 3.0.
 -->
 ディストリビューションでは、ディストリビューションの stable リリースに対する LXC のより新しいバージョンのバックポートが提供されるケースも多いでしょう。
-LXC 1.0 や 2.0 がディストリビューションの stable リリースに含まれない場合は特に、それを使うことも選択肢の一つでしょう。
+LXC 2.0 や 3.0 がディストリビューションの stable リリースに含まれない場合は特に、それを使うことも選択肢の一つでしょう。
 
 <!--
 For production environment, try to stick to LXC 1.0.x, 2.0.x or 3.0.x as these are the long term,
@@ -36,7 +36,6 @@ And for those who want development snapshots:
 開発中のスナップショットが必要な場合はこちらです:
 
  * [lxc-git-master](https://launchpad.net/~ubuntu-lxc/+archive/lxc-git-master): "master" ブランチ <!-- "master" branch -->
- * [lxc-git-stable-1.0](https://launchpad.net/~ubuntu-lxc/+archive/lxc-git-stable-1.0): "stable-1.0" ブランチ <!-- "stable-1.0" branch -->
  * [lxc-git-stable-2.0](https://launchpad.net/~ubuntu-lxc/+archive/lxc-git-stable-2.0): "stable-2.0" ブランチ <!-- "stable-2.0" branch -->
  * [lxc-git-stable-3.0](https://launchpad.net/~ubuntu-lxc/+archive/lxc-git-stable-3.0): "stable-3.0" ブランチ <!-- "stable-3.0" branch -->
 
@@ -48,7 +47,6 @@ LXC has two active git branches:
 LXC にはアクティブな git ブランチが 4 つ存在します:
 
  * **master**: 現在の開発ブランチ <!-- Current development branch -->
- * **stable-1.0**: LXC 1.0.x 向けの Stable 更新用ブランチ <!-- Stable update branch for LXC 1.0.x -->
  * **stable-2.0**: LXC 2.0.x 向けの Stable 更新用ブランチ <!-- Stable update branch for LXC 2.0.x -->
  * **stable-3.0**: LXC 3.0.x 向けの Stable 更新用ブランチ <!-- Stable update branch for LXC 3.0.x -->
 
@@ -66,4 +64,4 @@ Stable release tarballs are available for download below.
 All the post 1.0 ones are GPG signed by one of the maintainers.
 -->
 Stable リリース版の tarball は以下から取得できます。
-1.0 の過去のリリースは全てメンテナの GPG による署名が行われています。
+過去のリリースは全てメンテナの GPG による署名が行われています。

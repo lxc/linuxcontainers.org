@@ -68,9 +68,9 @@ Either directly in the distribution's package repository or through some backpor
 
 <!--
 For your first LXC experience, we recommend you use a recent supported release,
-such as a recent bugfix release of LXC 1.0.
+such as a recent bugfix release of LXC 3.0.
 -->
-最初に LXC を使う場合は、LXC 1.0 の最新のバグフィックスのなされたバージョンのような、最新のサポート版リリースをお使いになることを推奨します。
+最初に LXC を使う場合は、LXC 3.0 の最新のバグフィックスのなされたバージョンのような、最新のサポート版リリースをお使いになることを推奨します。
 
 <!--
 If using Ubuntu, we recommend you use Ubuntu 18.04 LTS as your container host.
