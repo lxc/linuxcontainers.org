@@ -35,4 +35,4 @@ You can clone those directly with:
 # Release tarballs
 
 Stable release tarballs are available for download below.
-All the post 1.0 ones are GPG signed by one of the maintainers.
+All the tarballs are GPG signed by one of the maintainers.
