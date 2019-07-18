@@ -167,7 +167,7 @@ content: |-
   <!--
   Ceph FS was added as a storage driver for LXD. Support is limited to custom storage volumes though, containers will not be allowed on Ceph FS and it's indeed recommended to use Ceph RBD for them.
   -->
-  Ceph FS が LXD のストレージドライバとして追加されました。使用はカスタムストレージボリュームに限定されていますので、Ceph FS 上にコンテナ置くことはできません。コンテナには Ceph RBD を使うことをおすすめします。
+  Ceph FS が LXD のストレージドライバとして追加されました。使用はカスタムストレージボリュームに限定されていますので、Ceph FS 上にコンテナを置くことはできません。コンテナには Ceph RBD を使うことをおすすめします。
 
   <!--
   Ceph FS support includes size restrictions (quota) and native snapshot supports when the server, server configuration and client kernel support those features.
