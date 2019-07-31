@@ -158,7 +158,7 @@ content: |-
      - Added architecture name
    - Memory
      - Added NUMA node reporting
-     - Added hugepages trtacking
+     - Added hugepages tracking
    - GPU
      - Added sub-section for DRM information
      - Now detecting cards which aren't bound to a DRM driver
