@@ -9,25 +9,25 @@ content: |-
 
   #### New features
 
-  - Add support for per-container cpu usage in `/proc/stat`
+  #### Add support for per-container cpu usage in `/proc/stat`
   Newer LXCFS releases make it possible to virtualize cpu usage per container by using the `cpuacct` cgroup.
 
-  - Add support for load average (`loadavg`) virtualization
+  #### Add support for load average (`loadavg`) virtualization
   LXCFS now supports virtualizing `/proc/loadavg`. It will calculate the loadavg for a container based on the `cpu` cgroup.
 
-  - Display cpus in `/proc/cpuinfo` based on cpu quotas
+  #### Display cpus in `/proc/cpuinfo` based on cpu quotas
   LXCFS will virtualize the cpus displayed in `/proc/cpuinfo` using the `cpu` cgroup and quotas calculated there.
 
-  - Allow to disable swap in `/proc/meminfo` output
+  #### Allow to disable swap in `/proc/meminfo` output
   This adds the `-u` option to disable swap info output in `/proc/meminfo`.
 
-  - Virtualize `/sys/devices/system/cpu/online`
+  #### Virtualize `/sys/devices/system/cpu/online`
   LXCFS now also partially virtualizes `sysfs`. The first file to virtualize is `/sys/devices/system/cpu/online` per container.
 
-  - Enable higher precision output in `/proc/uptime`
+  #### Enable higher precision output in `/proc/uptime`
   The calculations for `/proc/uptime` are now more correct.
 
-  - Add support for FUSE `nonempty` option
+  #### Add support for FUSE `nonempty` option
   The `lxcfs` binary can now be passed the `-d` option. When passed, `lxcfs` will also start when the mountpoint is not empty.
 
   #### Bugfixes
