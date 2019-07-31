@@ -1,0 +1,328 @@
+title: LXC 3.2.1 has been released
+date: 2019/07/24 02:07
+origin: https://discuss.linuxcontainers.org/t/lxc-3-2-1-has-been-released/5322
+content: |-
+  ### Introduction
+  The LXC team is pleased to announce the release of LXC 3.2.1!
+
+  Because of an issue in the 3.2.0 release process, we ended up having to roll a 3.2.1 release almost immediately, fixing an issue in the `configure.ac` file identifying the release as stable.
+
+  ### New features
+
+  #### seccomp: Support syscall forwarding to userspace
+  Newer kernels allow seccomp to forward intercepted syscalls to a dedicated file descriptor. These messages can be read, the syscall arguments inspected, and if found secure, a sufficiently privileged userspace process can perform the actions normally done by the kernel for the container.
+  LXC introduces a new protocol to send and receive messages to another process. User can specify a unix socket address via `lxc.seccomp.notify.proxy` in the format `unix:<path>` to which LXC will forwared the intercepted syscalls and will wait for an appropriate response.
+  User can set a cookie via `lxc.seccomp.notify.cookie` that LXC will send back to process that reads forwarded syscalls. This will e.g. allow the listening process to identify which container sent a message.
+  With this feature LXD e.g. supports device node creation via the `mknod()` and `mknodat()` system calls that are usually forbidden in containers for a well-defined set of secure devices.
+
+  #### Add `lxc.seccomp.allow_nesting` configuration key
+  This release adds the lxc.seccomp.allow_nesting api extension. If `lxc.seccomp.allow_nesting` is set to 1 then seccomp profiles will be stacked. This way nested containers can load their own seccomp policy on top of the policy that the outer container might have applied.
+
+  #### Networking: Add IPVLAN support
+  LXC has gained support for IPVLAN. Here is an example how to setup the network:
+
+      lxc.net[i].type=ipvlan
+      lxc.net[i].ipvlan.mode=[l3|l3s|l2] (defaults to l3)
+      lxc.net[i].ipvlan.flags=[bridge|private|vepa] (defaults to bridge)
+      lxc.net[i].link=eth0
+      lxc.net[i].flags=up
+
+  #### Networking: Add layer 2 (ARP/NDP) proxy mode
+  LXC now supports layer 2 ARD/NDP proxy mode. This can be enabled by using:
+
+      lxc.net.[i].l2proxy = [0,1] (defaults to 0)
+
+
+  #### Networking: Add gateway device route mode
+  LXC now supports specifying `lxc.net.[i].ipv4.gateway` and/or `lxc.net.[i].ipv6.gateway` with a value of `dev`. This will cause LXC to set a device route as default gateway.
+
+  #### Networking: Add support for static routes
+  This release introudces two new configuration keys
+
+      lxc.net.[i].veth.ipv4.route
+      lxc.net.[i].veth.ipv6.route
+
+  which allow users to set static routes on a veth type interfaces.
+
+  #### pidfd: Add initial support for the new pidfd api
+  Newer kernel versions allow interaction with processes through process file descriptors (pidfds). This eliminates various race conditions when e.g. sending signals or retrieving process information. This LXC version make use of the pidfd_send_signal() syscall and the CLONE_PIDFD flag with the clone() syscall.
+
+  #### Hardening: Add more compiler based hardening
+  Over the last few releases we enabled options compilers provide to harden C codebases. This release enables:
+
+      -Wlogical-op
+      -Wmissing-include-dirs
+      -Wold-style-definition
+      -Winit-self
+      -Wfloat-equal
+      -Wsuggest-attribute=noreturn
+      -Werror=return-type
+      -Werror=incompatible-pointer-types
+      -Wformat=2
+      -Wimplicit-fallthrough=5
+      -Wshadow
+      -Wendif-labels
+      -Werror=overflow
+      -fdiagnostics-show-option
+      -fstack-protector-strong
+      -Werror=shift-count-overflow
+      -Werror=shift-overflow=2
+      -Wdate-time
+      -Wnested-externs
+      -fasynchronous-unwind-tables
+      -pipe
+      -fexceptions
+
+  #### Hardening: Remove all stack allocations
+  Stack-based memory allocations (e.g. through `alloca()`) can cause quite severe memory bugs. LXC has therefore removed all stack-based memory allocations and will not allow new code to add any.
+
+  #### Hardening: Add support for [LGTM](https://lgtm.com/projects/g/lxc/lxc/overview/)
+  LXC has gained support for the LGTM code analysis tool. We're happy that LXC's code is currently ranked as A+.
+
+  #### Hardening: Add support for [coccinelle](https://en.wikipedia.org/wiki/Coccinelle_(software))
+  LXC has gained support for the coccinelle code transformation tool. This allows us to automatically change code eliminating error caused by manually replacing e.g. deprecated functions such as `alloca()`.
+
+  #### Hardening: Compiler based resource cleanup
+  The codebase will be slowly switched over to make user of cleanup attributes supported by compilers such as `gcc` and `clang`.
+
+  #### Hardening: Remove `fgets()` from the codebase
+  To improve security all uses of `fgets()` have been removed from the codebase. Use of this function in new code is strongly discouraged.
+
+  #### Hardening: Expand close-on-exec usage
+  All file descriptors that can be made close-on-exec are now close-on-exec.
+
+  #### Use `/sys/kernel/cgroup/delegate` file for cgroup v2
+  This  file  exports  a  list  of  the  cgroups  v2  files  (one  per line) that are delegatable (i.e., whose ownership  should  be  changed  to  the  user  ID  of  the delegatee). LXC will use this to determine how to correctly delegate cgroups.
+
+  #### Handle layouts without cgroups
+  This lets LXC start containers on systems without writable cgroups.
+
+  #### Handle offline cpus in cpuset
+  In addition to removing isolated cpus from a container's cgroup LXC will now also remove offline cpus from the container's cpuset.
+
+  #### Generate new boot id for each container
+  LXC will now generate a new random boot id for each container and mount it to `/proc/sys/kernel/random/boot_id`. This will allow `systemd` to recognize the boots of each container.
+
+  #### Unified network creation
+  LXC has a new unified way of creating networks for privileged and unprivileged containers greatly simplifying the code.
+
+  #### Security: [Fix for runC CVE-2019-5736](https://nvd.nist.gov/vuln/detail/CVE-2019-5736)
+  This release comes with  a fix for the privileged container breakout discovered earlier this year. As per our policy we don't consider privileged containers root safe and thus LXC as not received a CVE for this. However, we still provide a fix in this release. For more details see [this blog post](https://people.kernel.org/brauner/runtimes-and-the-curse-of-the-privileged-container).
+
+  ### Bugfixes
+  - lxc-download: Pre-release bump of compat
+  - seccomp: open memfd read-write
+  - doc: Documents the lxc.net.[i].veth.mode option
+  - network: Adds veth router mode static routes and proxy entries
+  - network: Adds mode param (bridge, router) to veth network setting
+  - lxc/log: Adds error_log_errno macro
+  - doc: Add lxc.comp.notify.cookie to Japanese lxc.container.conf(5)
+  - cgroup: check for non-empty conf
+  - seccomp: coding style
+  - af_unix: remove unused variable
+  - seccomp: send caller pidfd along with proxied requests
+  - seccomp: recvmsg with MSG_TRUNC
+  - doc: document lxc.seccomp.notify.cookie
+  - seccomp: defer reconnecting to the proxy
+  - seccomp: keep retrying to reconnect to proxy
+  - seccomp: send default response when there's no proxy
+  - seccomp: retry connecting to the proxy once
+  - seccomp: don't ignore syscalls when there's no proxy
+  - seccomp: remove reconnect-loop
+  - seccomp: use SOCK_SEQPACKET for the notify proxy
+  - seccomp: assert that __reserved is 0 in notify responses
+  - seccomp: update notify api
+  - conf: add lxc.seccomp.notify.cookie
+  - file_utils: add lxc_recvmsg_nointr_iov
+  - af_unix: add lxc_unix_connect_type
+  - af_unix: add lxc_abstract_unix_recv_fds_iov()
+  - af_unix: add lxc_abstract_unix_send_fds_iov
+  - pidf_send_signal: fix return value
+  - lxccontainer: properly cleanup on mount injection failure
+  - start: call lxc_find_gateway_addresses early
+  - network: simplify lxc_network_move_created_netdev_priv()
+  - network: send names for all non-trivial network types
+  - network: record created_name for instantiate_phys()
+  - network: simplify instantiate_phys()
+  - network: record created_name for instantiate_vlan()
+  - network: simplify instantiate_vlan()
+  - network: record created_name for instantiate_ipvlan()
+  - network: simplify instantiate_ipvlan()
+  - network: stash created_name in instantiate_macvlan()
+  - network: simplify instantiate_macvlan()
+  - network: s/loDev/loop_device/g
+  - cgroups: hande cpuset initialization race
+  - network: remove faulty restriction
+  - fix memory leak in do_storage_create
+  - cgroups: move variable into tighter scope
+  - cgroups: correctly order variables
+  - cgroups: simplify cgfsng_nrtasks()
+  - cgroups: simplify cgfsng_setup_limits()
+  - cgfsng: fix memory leak in lxc_cpumask_to_cpulist
+  - lxccontainer: rework seccomp notify api function
+  - cgfsng: write cpuset.mems of correct ancestor
+  - parse.c: fix fd leak from memfd_create
+  - lxc.pc.in: add libs.private for static linking
+  - Fixed file descriptor leak for network namespace
+  - network: fix lxc_netdev_rename_by_index()
+  - Switch from gnutls to openssl for sha1
+  - doc: add a note about shared ns + LSMs to Japanese doc
+  - seccomp: do not set SECCOMP_FILTER_FLAG_NEW_LISTENER
+  - Centralize hook names
+  - seccomp: add ifdefine for SECCOMP_FILTER_FLAG_NEW_LISTENER
+  - seccomp: s/SCMP_FLTATR_NEW_LISTENER/SECCOMP_FILTER_FLAG_NEW_LISTENER/g
+  - seccomp: s/HAVE_DECL_SECCOMP_NOTIF_GET_FD/HAVE_DECL_SECCOMP_NOTIFY_FD/g
+  - seccomp: /sseccomp_notif_free/seccomp_notify_free/g
+  - seccomp: s/seccomp_notif_alloc/seccomp_notify_alloc/g
+  - seccomp: s/seccomp_notif_id_valid/seccomp_notify_id_valid/g
+  - seccomp: s/seccomp_notif_send_resp/seccomp_notify_respond/g
+  - seccomp: s/seccomp_notif_receive/seccomp_notify_receive/g
+  - seccomp: s/seccomp_notif_get_fd/seccomp_notify_fd/g
+  - seccomp: s/SCMP_ACT_USER_NOTIF/SCMP_ACT_NOTIFY/g
+  - cgroups: prevent segfault
+  - start: fix handler memory leak at lxc_init failed
+  - lxc_usernsexec: continuing after unshare fails leads to confusing and misleading error messages
+  - getgrgid_r fails with ERANGE if buffer is too small. Retry with a larger buffer.
+  - lxc_clone: add a comment about stack size
+  - lxc_clone: bump stack size to 8MB
+  - configure: remove additional comma
+  - lxccontainer: cleanup attach functions
+  - attach: do not reload container
+  - network: Fixes bug that stopped down hook from running for phys netdevs
+  - network: move phys netdevs back to monitor's net ns rather than pid 1's
+  - lxc_clone: get rid of some indirection
+  - doc: add a little note about shared ns + LSMs
+  - lxc_clone: pass non-stack allocated stack to clone
+  - configure: handle checks when cross-compiling
+  - Use %m instead of strerror() when available
+  - Config: check for %m availability
+  - initutils: Fix memleak on realloc failure
+  - zfs: Fix return value on zfs_snapshot error
+  - lvm: Fix return value if lvm_create_clone fails
+  - criu: Remove unnecessary return after _exit()
+  - criu: Use -v4 instead of -vvvvvv
+  - Option --busybox-path instead of --bbpath
+  - New --bbpath option and unecessary --rootfs checks
+  - coding style: update
+  - start: use CLONE_PIDFD
+  - api: Adds the network_phys_macvlan_mtu extension
+  - network: Restores phys device MTU on container shutdown
+  - network: Adds mtu support for phys and macvlan types
+  - raw_syscalls: simplify assembly
+  - utils: improve switch_to_ns()
+  - doc: Fix and improve Japanese translation
+  - doc: Update Japanese lxc.container.conf(5)
+  - network: Re-works veth gateway logic
+  - network: Makes vlan network interfaces set mtu before upscript called
+  - network: Adds custom mtu support for ipvlan interfaces
+  - seccomp: document path calculation
+  - compiler: add __returns_twice attribute
+  - seccomp: send process memory fd
+  - namespaces: allow a pathname to a nsfd for namespace to share
+  - seccomp: ensure fields are set to 0
+  - seccomp: remove alignment requirements
+  - seccomp: notifier fixes
+  - network: Makes some routing functions static
+  - network: Fixes bug in macvlan mode selection
+  - network: Fixes vlan hook script
+  - network: Fixes a little typo in an error message
+  - start: silence clang
+  - Fix 'zfs get' command order
+  - lxc-start: remove bad doc
+  - netns_getifaddrs: adapt to kernel changes
+  - configure: s/LDLAGS/LDFLAGS/
+  - conf: do lxc.mount.entry mounts right after lxc.mount.fstab
+  - raw_syscalls: lxc_raw_clone()
+  - hooks/nvidia: handle spaces in NVIDIA_REQUIRE variables
+  - storage: update zfs
+  - storage: prevent unitialized variable warning
+  - cgroups: fix potential nullderef
+  - attach: use tighter scope for fd variable
+  - fix: #2927 api doc generation fails under out of source build.
+  - Fix monitor pdeathsig handling
+  - Fix user namespace pdeathsig handling
+  - network: fix network device removal
+  - doc: Add the description of apparmor profile generation to man pages
+  - doc: Add lxc.rootfs.managed to lxc.container.conf(5)
+  - doc: Add lxc.cgroup.relative to lxc.container.conf(5)
+  - lvm: Updates lvcreate to wipe signatures if supported, fallbacks to old command if not.
+  - lxccontainer: check do_lxcapi_init_pid() for failure
+  - start: fix parent PID passed to lxc_set_death_signal
+  - utils: fix handling of PID namespaces in lxc_set_death_signal
+  - btrfs: ensure \0 byte at end
+  - Fix lxc.cgroup2.<controller> on cgroup2-only systems
+  - conf: avoid compiler warning
+  - confile: make parse_limit_value() static
+  - confile_utils: make update_hwaddr() static
+  - confile_utils: lxc_config_net_is_hwaddr()
+  - cgroups: remove unused variables
+  - attach: remove unused variable
+  - Fix android compilation
+  - CODING_STYLE: update
+  - conf: remove unused variable
+  - gpg: use proxy, if http_proxy is set
+  - conf: simplify idmaptool_on_path_and_privileged
+  - lxc-attach: switch to attach_run_wait
+  - travis: run coccinelle
+  - Fix existing mount target check
+  - cve-2019-5736: add test
+  - rexec: try sendfile() fallback to fd_to_fd()
+  - [V2] rexec: handle legacy kernels
+  - rexec: use __do_close_prot_errno
+  - memory_utils: introduce __do_close_prot_errno
+  - macro: introduce steal_fd()
+  - commands: move declaration into tighter scope
+  - start: move variable into tighter scope
+  - mount: Cleanup allow over-mounting
+  - mount: Allow over-mounting
+  - network: do not log false friends
+  - conf: do not log devpts umount2() failure
+  - rexec: remove envp parsing in favour of environ
+  - apparmor: Improve testing on apparmor python script
+  - apparmor: catch config file opening error
+  - rexec: make rexecution opt-in for library callers
+  - include: add fexecve() for Android's Bionic
+  - parse: handle \r
+  - cgfsng: fix cgroup creation
+  - coccinelle: use standard exit identifiers
+  - coccinelle: s/while({1,true})/for(;;)/
+  - lxc-init: exit with error on wait failure
+  - start: prevent signed-issues
+  - cgfsng: remove unnecessary check
+  - commands: remove unnecessary check
+  - caps: check uid and euid
+  - memory_utils: add memory_utils.h
+  - fix rpm packaging for bash completion directory.
+  - cgroups: use of /sys/kernel/cgroup/delegate file
+  - doc: Add lxc.seccomp.allow_nesting to Japanese lxc.container.conf(5)
+  - prlimit: remove deprecated and unneeded header
+  - compiler: remove deprecated and unneeded header
+  - conf: append 0 0 to nesting helpers mount entries
+  - Use BUSYBOX_EXE variable in configure_busybox()
+  - conf: check for successful mount entry parse
+  - Installation of default.script for udhcpc
+  - Avoid double lxc-freeze/unfreeze
+  - Update freezer.c
+  - Handle alternative loop device location on Android
+  - Fixing hooks functionality Android where 'sh' is placed under /system/bin
+  - Fix memory leak in cgroup_exit
+  - conf.c: fix memory leak and mount error
+  - start: __lxc_start return -1 when start fails
+  - network: prefix veth interface name with uid info
+  - start: handle missing CLONE_NEWCGROUP
+  - Fixing compile error when compiling for android
+  - Merge pull request #2774 from hn/master
+  - fix: unprivileged veth devices (e.g. vethFWABHX) never contain 'Z' character in the randomly generated device name part because for modulo one does not need to substract 1 from strlen().
+  - cgfsng: do not free container_full_path on error
+  - confile: add lxc.seccomp.allow_nesting
+  - lxccontainer: fix container copy
+  - conf: use SYSERROR on lxc_write_to_file errors
+  - lxccontainer: fix mount api (mount_injection_file)
+  - storage: do not destroy pre-existing rootfs
+  - terminal: remove sigwinch command
+
+  ### Support and upgrade
+  LXC 3.2 isn't a LTS release and so will only be supported until such time as LXC 3.3 is released. We recommend users that need a stronger support commitment to stay on one of our LTS releases.
+
+  ### Downloads
+   - LXC release tarball: [lxc-3.2.1.tar.gz](https://linuxcontainers.org/downloads/lxc/lxc-3.2.1.tar.gz) (GPG: [lxc-3.2.1.tar.gz.asc](https://linuxcontainers.org/downloads/lxc/lxc-3.2.1.tar.gz.asc))
