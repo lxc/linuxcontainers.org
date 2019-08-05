@@ -28,10 +28,9 @@ content: |-
       lxc.net[i].flags=up
 
   #### Networking: Add layer 2 (ARP/NDP) proxy mode
-  LXC now supports layer 2 ARD/NDP proxy mode. This can be enabled by using:
+  LXC now supports layer 2 ARP/NDP proxy mode. This can be enabled by using:
 
       lxc.net.[i].l2proxy = [0,1] (defaults to 0)
-
 
   #### Networking: Add gateway device route mode
   LXC now supports specifying `lxc.net.[i].ipv4.gateway` and/or `lxc.net.[i].ipv6.gateway` with a value of `dev`. This will cause LXC to set a device route as default gateway.
@@ -43,6 +42,33 @@ content: |-
       lxc.net.[i].veth.ipv6.route
 
   which allow users to set static routes on a veth type interfaces.
+
+  #### Networking: Add router veth mode
+  LXC has gained a new router mode for veth networking. This "router" mode will configure the host machine as a router for the container by adding static routes for the container's IPs on the host pointing to the container's host-side veth interface. It will also add static IP proxy entries of either the host's link interface IP or a statically set IP on the host-side veth interface to provide the container a gateway to the host.
+
+  Here is an example how to setup the network:
+
+      lxc.net.0.type = veth
+      lxc.net.0.veth.mode = router
+      lxc.net.0.link = eth0
+      lxc.net.0.flags = up
+      lxc.net.0.ipv4.address = 192.168.1.x/32
+      lxc.net.0.ipv6.address = 2a02:xxx:xxx:1::x/128
+      lxc.net.0.ipv4.gateway = auto
+      lxc.net.0.ipv6.gateway = auto
+      lxc.net.0.link = host-eth0
+      lxc.net.0.l2proxy = 1
+     
+  This provides an ipvlan-like networking mode that has the following properties:
+
+  * Works on older kernels.
+  * Uses the host's routing table (and netfilter rules) to route packets (potentially out of different interfaces or between containers), unlike ipvlan.
+  * Prevents containers from altering their IP.
+  * Prevents broadcast/multicast traffic to/from containers.
+  * Provides same MAC externally for all containers.
+  * No bridge interface to manage.
+  * Supports layer 3 only mode for setups where BGP (or other routing protocols) are running on the host to distribute container's IPs in the local routing table to the wider network.
+  * Containers can optionally have IPs accessible on local LAN at layer 2 using the existing  `l2proxy` and  `link`  settings.
 
   #### pidfd: Add initial support for the new pidfd api
   Newer kernel versions allow interaction with processes through process file descriptors (pidfds). This eliminates various race conditions when e.g. sending signals or retrieving process information. This LXC version make use of the pidfd_send_signal() syscall and the CLONE_PIDFD flag with the clone() syscall.
