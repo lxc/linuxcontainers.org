@@ -11,7 +11,7 @@ content: |-
 
   #### seccomp: Support syscall forwarding to userspace
   Newer kernels allow seccomp to forward intercepted syscalls to a dedicated file descriptor. These messages can be read, the syscall arguments inspected, and if found secure, a sufficiently privileged userspace process can perform the actions normally done by the kernel for the container.
-  LXC introduces a new protocol to send and receive messages to another process. User can specify a unix socket address via `lxc.seccomp.notify.proxy` in the format `unix:<path>` to which LXC will forwared the intercepted syscalls and will wait for an appropriate response.
+  LXC introduces a new protocol to send and receive messages to another process. User can specify a unix socket address via `lxc.seccomp.notify.proxy` in the format `unix:<path>` to which LXC will forward the intercepted syscalls and will wait for an appropriate response.
   User can set a cookie via `lxc.seccomp.notify.cookie` that LXC will send back to process that reads forwarded syscalls. This will e.g. allow the listening process to identify which container sent a message.
   With this feature LXD e.g. supports device node creation via the `mknod()` and `mknodat()` system calls that are usually forbidden in containers for a well-defined set of secure devices.
 
