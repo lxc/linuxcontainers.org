@@ -89,6 +89,7 @@ content: |-
   The system call interception logic was extended to support `setxattr` on top of the existing `mknod`. At the same time, the feature was moved under a configuration key with each system call being individually toggable.
 
   The two new options are:
+
    - security.syscall.intercept.mknod
    - security.syscall.intercept.setxattr
 
@@ -227,12 +228,14 @@ content: |-
 
   #### `--format` option for all lists in client
   Another command line tool improvement is that all of the `list` commands now behave the same and support the same `--format` option, allowing output in:
+
    - table (default)
    - csv
    - json
    - yaml
 
   The full list of such commands is:
+
    - lxc alias list
    - lxc cluster list
    - lxc config template list
