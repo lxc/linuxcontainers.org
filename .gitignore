@@ -2,6 +2,6 @@
 output/*
 manpages/*
 content/lxc/apidoc/*
-content/lxd/doc/*
+content/lxd/docs/*
 .vscode
 .idea
