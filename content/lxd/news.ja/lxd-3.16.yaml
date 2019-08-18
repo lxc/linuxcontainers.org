@@ -16,7 +16,7 @@ content: |-
   <!--
   Behind the scenes, a lot of work has gone into reworking the infrastructure used for container devices with the `nic`, `infiniband` and `proxy` devices having switched over to the new logic. This should result in much cleaner code that is easier to debug, better tests and more thorough error handling and configuration validation.
   -->
-  水面下では、インフラの再構築に多くの作業が費やされました。それはコンテナデバイスで使われるもので、`nic`、`infiniband`、`proxy`といったデバイスが新しいロジックに切り替わりました。
+  水面下では、インフラの再構築に多くの作業が費やされました。それはコンテナデバイスで使われるもので、`nic`、`infiniband`、`proxy`といったデバイスが新しいロジックに切り替わりました。この結果、これまでよりずっとクリーンなコードになり、デバッグがしやすくなり、テストも改善され、エラーハンドリングと設定のバリデーションもより網羅的になりました。
 
   Enjoy!
 
