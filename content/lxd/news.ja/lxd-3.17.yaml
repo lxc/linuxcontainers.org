@@ -1,0 +1,528 @@
+title: LXD 3.17 リリースのお知らせ
+date: 2019/09/06 04:09
+origin: https://discuss.linuxcontainers.org/t/lxd-3-17-has-been-released/5679
+content: |-
+  ### はじめに <!-- Introduction -->
+  <!--
+  The LXD team is very excited to announce the release of LXD 3.17!
+  -->
+  LXD チームは、LXD 3.17 のリリースをお知らせすることにとてもワクワクしています!
+
+  <!--
+  The main new feature for this release is the ability to use LXD storage pools to store container tarballs and images rather than the host's root filesystem.
+  -->
+  このリリースの主な新機能は、ホストのルートファイルシステムではなく、LXD のストレージプールにコンテナの tarball やイメージを保存できるようになったことです。
+
+  <!--
+  Most of the rest of the changes in this release are refactoring and porting existing logic to new internal APIs. This work while invisible to our users has let us uncover a number of long time issues, improve our testing and simplify a lot of complex logic.
+  -->
+  このリリースの変更点の残りのほとんどは、新しい内部 API のリファクタリングと新しい内部 API への既存のコードの移植です。この作業はユーザーには見えませんが、多数の長期間の問題を発見し、テストを改善し、多数の複雑なロジックを単純化しました。
+
+  Enjoy!
+
+  ### 新機能 <!-- New features -->
+  #### イメージの tarball とバックアップのストレージプールへの保存 <!-- Storage pool backed image tarballs and backups -->
+  <!--
+  Two new server configuration keys have been introduced:
+  -->
+  新しいサーバー設定項目をふたつ追加しました:
+
+   - `storage.backups_volume`
+   - `storage.images_volume`
+
+  <!--
+  They can each be set to a different, unused, storage volume using a `POOL-NAME/VOLUME-NAME` syntax. Existing data stored on the system will be moved to the storage volume.
+  -->
+  このふたつは `POOL-NAME/VOLUME-NAME` という形式を使って、未使用のストレージボリュームを設定できます。それぞれ異なる値を設定できます。
+
+  <!--
+  This allows for systems with very limited available space on their root filesystem to run LXD with almost all data stored onto LXD managed storage pools.
+  -->
+  この機能により、ルートファイルシステムの空き容量が非常に限られているシステム上で、ほぼすべてのデータを LXD が管理するストレージプールに保存して LXD を実行できます。
+
+      stgraber@castiana:~$ lxc storage volume create default backups
+      Storage volume backups created
+      stgraber@castiana:~$ lxc storage volume create default images
+      Storage volume images created
+      stgraber@castiana:~$ lxc config set storage.backups_volume default/backups
+      stgraber@castiana:~$ lxc config set storage.images_volume default/images
+
+  #### `lxc init` と `lxc launch` での YAML のコンテナ設定 <!-- Container configuration as YAML on `lxc init` and `lxc launch` -->
+  <!--
+  It is now possible to pass complex configuration and devices right at container creation time by having those stored in a YAML file which is read from standard input during `lxc init` and `lxc launch`.
+  -->
+  YAML ファイルに保存した設定を標準入力から読み込ませることで、コンテナの作成時に複雑な設定やデバイスを `lxc init` と `lxc launch` に渡せるようになりました。
+
+      stgraber@castiana:~$ cat gui.yaml 
+      config:
+        environment.DISPLAY: :0
+        environment.PULSE_LATENCY_MSEC: "30"
+        environment.PULSE_SERVER: /mnt/.pulse-native
+        environment.QT_X11_NO_MITSHM: "1"
+      devices:
+        gpu:
+          type: gpu
+        pulse:
+          bind: container
+          connect: unix:/run/user/1000/pulse/native
+          listen: unix:/mnt/.pulse-native
+          mode: "0666"
+          security.gid: "1000"
+          security.uid: "1000"
+          type: proxy
+        x11:
+          bind: container
+          connect: unix:@/tmp/.X11-unix/X0
+          listen: unix:@/tmp/.X11-unix/X0
+          security.gid: "1000"
+          security.uid: "1000"
+          type: proxy
+
+      stgraber@castiana:~$ lxc launch ubuntu:18.04 gui-steam < gui.yaml 
+      Creating gui-steam
+      Starting gui-steam
+
+      stgraber@castiana:~$ lxc config show gui-steam
+      architecture: x86_64
+      config:
+        environment.DISPLAY: :0
+        environment.PULSE_LATENCY_MSEC: "30"
+        environment.PULSE_SERVER: /mnt/.pulse-native
+        environment.QT_X11_NO_MITSHM: "1"
+        image.architecture: amd64
+        image.description: ubuntu 18.04 LTS amd64 (release) (20190813.1)
+        image.label: release
+        image.os: ubuntu
+        image.release: bionic
+        image.serial: "20190813.1"
+        image.version: "18.04"
+        volatile.base_image: 2dd611e2689a8efc45807bd2a86933cf2da0ffc768f57814724a73b5db499eac
+        volatile.eth0.host_name: vethe8c1ff8b
+        volatile.eth0.hwaddr: 00:16:3e:65:36:88
+        volatile.idmap.base: "0"
+        volatile.idmap.current: '[{"Isuid":true,"Isgid":false,"Hostid":1000000,"Nsid":0,"Maprange":1000000000},    {"Isuid":false,"Isgid":true,"Hostid":1000000,"Nsid":0,"Maprange":1000000000}]'
+        volatile.idmap.next: '[{"Isuid":true,"Isgid":false,"Hostid":1000000,"Nsid":0,"Maprange":1000000000},    {"Isuid":false,"Isgid":true,"Hostid":1000000,"Nsid":0,"Maprange":1000000000}]'
+        volatile.last_state.idmap: '[]'
+        volatile.last_state.power: RUNNING
+      devices:
+        gpu:
+          type: gpu
+        pulse:
+          bind: container
+          connect: unix:/run/user/1000/pulse/native
+          listen: unix:/mnt/.pulse-native
+          mode: "0666"
+          security.gid: "1000"
+          security.uid: "1000"
+          type: proxy
+        x11:
+          bind: container
+          connect: unix:@/tmp/.X11-unix/X0
+          listen: unix:@/tmp/.X11-unix/X0
+          security.gid: "1000"
+          security.uid: "1000"
+          type: proxy
+      ephemeral: false
+      profiles:
+      - default
+      stateful: false
+      description: ""
+
+  ### 変更点 <!-- Notes -->
+  #### バックアップ API の一貫性 <!-- Backup API consistency -->
+  <!--
+  This release contains a small API breakage which is very unlikely to affect any of our users as it's not in a part of the LXD API which is used by any of the existing tools.
+  -->
+  このリリースには小さな API の非互換性が含まれています。しかし、既存のツールで使われている LXD API の一部ではないため、ユーザーに影響を与える可能性は非常に低いです。
+
+  <!--
+  This renames:
+  -->
+  次のようなリネームがされています:
+
+   - `creation_date` が `created_at` に（Go バインディングで `CreateAt`）<!-- `creation_date` to `created_at` (`CreatedAt` in Go binding) -->
+   - `expiry_date` が `expires_at` に（Go バインディングで `ExpiresAt`）<!-- `expiry_date` to `expires_at` (`ExpiresAt` in Go binding) -->
+
+  <!--
+  This makes that API consistent with the other endpoints which expose timestamps.
+  -->
+  これにより、タイムスタンプを公開する他のエンドポイントとの API の一貫性が保たれます。
+
+  #### 新しいドキュメントサイト <!-- New documentation website -->
+  <!--
+  A new documentation website is now being published at: https://linuxcontainers.org/lxd/docs/master/
+  -->
+  新しいドキュメントサイトが公開されました: [https://linuxcontainers.org/lxd/docs/master/](https://linuxcontainers.org/lxd/docs/master/)
+
+  <!--
+  Effort was put into better titles and grouping of topics to be easier to get started with LXD.
+  All content still comes straight from the `doc` directory in the upstream repository, making it easy for anyone to send updates on Github.
+  -->
+  LXD を使いやすくするために、より良いタイトルとトピックのグルーピングに取り組みました。
+  すべてのコンテンツは、開発リポジトリの `doc` ディレクトリから直接生成されているので、誰でも Github 上で更新を簡単に送れます。
+
+  #### Windows/MacOS ユーザーの使い勝手の改良 <!-- Improved initial user experience on Windows/MacOS -->
+  <!--
+  Windows and MacOS builds of the LXD client still default to a `local` remote, despite the fact that the LXD daemon cannot work on those operating systems.
+  -->
+  Windows と MacOS では LXD デーモンが動かないにもかかわらず、LXD クライアントの Windows と MacOS ビルドはデフォルトでリモートが `local` を向いています。
+
+  <!--
+  This caused some confusion to users in the past, so rather than showing a confusing error about a missing unix socket, those users are now greeted with:
+  -->
+  これまでは、これが原因でユーザーが混乱する場合がありました。このため、このような Unix ソケットに関する混乱するエラーを表示するのではなく、次のような表示をするようになりました:
+
+      C:\Users\stgraber>lxc list
+      This client hasn't been configured to use a remote LXD server yet.
+      As your platform can't run native Linux containers, you must connect to a remote LXD server.
+      
+      If you already added a remote server, make it the default with "lxc remote switch NAME".
+      To easily setup a local LXD server in a virtual machine, consider using: https://multipass.run
+
+  #### final dqlite 1.0 への移植 <!-- Ported to final Dqlite 1.0 -->
+  <!--
+  Dqlite 1.0 final has now [been released](https://dqlite.io) and as part of the release effort a number of improvements and small design changes went in.
+  LXD 3.17 is now based on that final 1.0 version.
+  -->
+  dqlite 1.0 final が[リリース](https://dqlite.io)されました。リリース作業の一部で、多数の改良と小さなデザインの変更が行われました。
+  LXD 3.17 はこの final 1.0 バージョンをベースにしています。
+
+  #### データベースの見直し <!-- Database rework -->
+  <!--
+  This release comes with some internal database reshuffling.
+  All the `containers` tables have now been renamed to `instances` and snapshots have now been split out to their own set of `instances_snapshots` tables, making it easier to enforce consistency through the schema.
+  -->
+  このリリースでは、内部的なデータベースの再編成がいくつか行われています。
+  `containers` テーブルはすべて `instances` にリネームされ、スナップショットは独自の `instances_snapshots` テーブルに分割されました。これにより、スキーマを通して一貫性を強制するのが容易になりました。
+
+  <!--
+  If you have custom scripts that directly look for data in the database, they may very well need updating for this.
+  -->
+  もし、直接データベースを見るカスタムスクリプトがあるのであれば、これに対応した更新が必要になるでしょう。
+
+  #### コンテナデバイスの再実装 <!-- Container devices rework -->
+  <!--
+  LXD 3.17 concludes our effort to split out all our device handling code, making it much more modular and improve coding patterns and testing. LXD 3.16 had the `nic`, `infiniband` and `proxy` devices ported, 3.17 now ports `unix-char`, `unix-block`, `usb`, `gpu` and `disk`, completing the set.
+  -->
+  LXD 3.17 で、すべてのデバイスを扱うコードを分割し、よりモジュール構造とし、コーディングパターンとテストを改良する取組を終了します。LXD 3.16 には `nic`、`infiniband`、`proxy` デバイスが移植され、3.17 には `unix-char`、`unix-block`、`usb`、`gpu`、`disk` が移植され、完成しました。
+
+  #### ストレージの再実装 <!-- Storage rework -->
+  <!--
+  A first set of commit has been included in this release which cleans up some of our storage backends and similar to the devices rework will begin us moving every storage backend to a new cleaner structure.
+  -->
+  このリリースには、ストレージバックエンドの一部をクリーンアップする最初のコミットセットが含まれています。そして、デバイスの再実装と同様に、すべてのストレージバックエンドを新しいクリーンな構造に移行し始めます。
+
+  ### バグ修正（翻訳なし） <!-- Bugs fixed -->
+
+   - client: Use PathEscape rather than QueryEscape for URL part parts
+   - doc: Add documentation metadata
+   - doc: Add required property to disk device type
+   - doc: Update infiniband hwaddr docs
+   - doc: Update NIC MTU descriptions
+   - doc/server: Add missing key namespaces
+   - doc/server: Add scope column
+   - doc/server: Fix defaults for rbac
+   - doc/storage: Clarify defaults for size
+   - global: Remove accidentally included lxc.exe
+   - i18n: Update translations from weblate
+   - i18n: Update translation templates
+   - lxc: Better error handling on non-Linux
+   - lxc: Don't show header in CSV output
+   - lxc: Just show help on missing subcommand
+   - lxc: Update for fixed backup fields
+   - lxc/config: Detect non-Linux systems
+   - lxc/copy: Really always strip volatile.last_state.power
+   - lxc/file: Fix error handling
+   - lxc/file: Intercept user cancelation
+   - lxc/init: Fix usage with no args
+   - lxc/remote: Add basic auth example
+   - lxc-to-lxd: Remove dependency of lxd/device/config package
+   - lxc-to-lxd: Remove dependency on deviceConfig package
+   - lxd: Add call to devicesRegister function on startup
+   - lxd: Add unit test for creating a snapshot
+   - lxd: Check RemoveAll() error properly
+   - lxd: Remove MS_LAZYTIME definition
+   - lxd: Reorganised the uevent and inotify event handler startup
+   - lxd/apparmor: Prevent writes to /proc/acpi/**
+   - lxd/backup: Call tar with --numeric-owner
+   - lxd/containers: Add DeviceEventHandler
+   - lxd/containers: Add DeviceEventHandler to interface
+   - lxd/containers: Add deviceHandleMounts to handle mount and unmount
+   - lxd/containers: Add safety net for deviceStop() in case no device returned
+   - lxd/containers: Fix description
+   - lxd/containers: Fix inotify dynamic hotplug on existing container start
+   - lxd/containers: Further switchover to lxd/device/config Device types
+   - lxd/containers: Improve error messages
+   - lxd/containers: Modify deviceStop and deviceRemove to skip validation errors
+   - lxd/containers: Move device folder creation before device setup during boot
+   - lxd/containers: Move disk device to use device package
+   - lxd/containers: Move missing device type validation into device package
+   - lxd/containers: Remove deviceAttachMounts
+   - lxd/containers: Remove device Register() after device start
+   - lxd/containers: Remove gpu validation as moved to device package
+   - lxd/containers: Remove old moved rootfs quota code
+   - lxd/containers: Remove reference to non-existent infiniband nictype
+   - lxd/containers: Remove unused arg from deviceAddCgroupRules
+   - lxd/containers: Remove unused setupUnixDevice()
+   - lxd/containers: Remove unused unix-char and unix-block code
+   - lxd/containers: Remove unused unix-char and unix-block validation
+   - lxd/containers: Remove unused USB code
+   - lxd/containers: Remove unused USB related code
+   - lxd/containers: Remove volatile device keys when device is actually removed
+   - lxd/containers: Rename runConfig vars to runConf for consistency
+   - lxd/containers: Simplify device validation now all devices are ported
+   - lxd/containers: Supply all old devices to device Update() function
+   - lxd/containers: Update all device major/minor parsing to use uint32
+   - lxd/containers: Update deviceShiftMounts to ignore unmount requests
+   - lxd/containers: Update deviceStart to call device's Register() function
+   - lxd/containers: Update gpu device support to use device package
+   - lxd/containers: Update use of shared.RunCommandSplit
+   - lxd/containers: Use shared.GetRootDiskDevice for dup root device detection
+   - lxd/db: Adapt lxd/cluster to new dqlite sub-packages
+   - lxd/db: Adapt lxd/cluster to Server -> Node rename
+   - lxd/db: Adapt lxd/db/cluster to Server -> Node rename
+   - lxd/db: Adapt lxd/db package to new dqlite driver import
+   - lxd/db: Adapt lxd/db to new dqlite driver package
+   - lxd/db: Adapt lxd/db to Server -> Node rename
+   - lxd/db: Adapt main package to new dqlite sub packages
+   - lxd/db: Adapt main package to Server -> Node rename
+   - lxd/db: Adapt to changed dqlite.New() signature, not requiring NodeInfo
+   - lxd/db: Adapt to new Server.Leader() API
+   - lxd/db: Add basic unit tests for generated snapshot code
+   - lxd/db: Add copy of cluster schema version 14
+   - lxd/db: Add Delete and Rename methods to Snapshot db model
+   - lxd/db: Add Dump parameter to db.OpenCluster()
+   - lxd/db: Add initial Snapshot db model
+   - lxd/db: Add project column to views
+   - lxd/db: Add schema update 16 adding the instances_snapshots table
+   - lxd/db: Add schema update function to rename containers-related tables
+   - lxd/db: Add type column to images table
+   - lxd/db: Amend InstanceFilter docstring
+   - lxd/db: At shutdown, wait a bit for the in-flight force request to settle
+   - lxd/db: Change container special-casing in db code generator
+   - lxd/db: Change db code generator to comply with Go naming standards
+   - lxd/db: Convert containerCreateInternal to use InstanceSnapshotCreate()
+   - lxd/db: Convert dump to new client API
+   - lxd/db: Create instances_snapshots_config in schema update 16
+   - lxd/db: Create instances_snapshots_config_ref view
+   - lxd/db: Create instances_snapshots_devices_config in schema update 16
+   - lxd/db: Create instances_snapshots_devices in schema update 16
+   - lxd/db: Create instances_snapshots_devices_ref view
+   - lxd/db: Detect possible leadership change through ougoing dqlite connections
+   - lxd/db: Drop obsolete snapshot-related tests
+   - lxd/db: Drop Parent filter from Instance
+   - lxd/db: Drop unneeded logic to relink snapshots to new nodes
+   - lxd/db: Drop unused Container and ContainerFilter structs
+   - lxd/db: Extract configUpdate method from ContainerConfigUpdate
+   - lxd/db: Fix failing unit test
+   - lxd/db: Fix selecting NULL description columns
+   - lxd/db: Generate Snapshot db mapping code
+   - lxd/db: Improve dqlite proxy error messages and abort both sides on error
+   - lxd/db: Invoke data migration from db.OpenCluster, before schema updates
+   - lxd/db: Make the db code generator handle indirect foreign key
+   - lxd/db: Migrate snapshots to the new tables
+   - lxd/db: No need to manually bootstrap
+   - lxd/db: Pass a context to server.Cluster()
+   - lxd/db: Properly account for project when moving ceph-based containers
+   - lxd/db: Regenerate db code
+   - lxd/db: Re-generate db mapper code
+   - lxd/db: Regenerate db mappers code
+   - lxd/db: Regenerate db schema
+   - lxd/db: Regenerate global db schema
+   - lxd/db: Remove legacy unit test making use of old snapshot apis
+   - lxd/db: Replace references to the "containers" table with "instances"
+   - lxd/db: Skip clustering-related unit tests, see issue #6122
+   - lxd/db: Update db code generator to handle composite entity names
+   - lxd/db: Update top-level daemon package to new auto-generated method names
+   - lxd/db: Update unit tests after containers -> instances conversion
+   - lxd/db: Use Client.Add() API
+   - lxd/db: Use Client.Cluster() API
+   - lxd/db: Use Client.Leader() API
+   - lxd/db: Use Client.Remove() API
+   - lxd/db: Use correct db APIs depending on the container type
+   - lxd/db: Use new LeaderAddress() api
+   - lxd/db: Use new snapshot db APIs in ClusterTx.SnapshotIDsAndNames()
+   - lxd/db: Use new snapshots APIs in ContainerGetSnapshotsFull
+   - lxd/db: Use new snapshots tables in ContainerNextSnapshot()
+   - lxd/db: Use new snapshot tables in Cluster.ContainerGetSnapshots()
+   - lxd/db: Use new snapshot tables in daemon patches
+   - lxd/db: Use query.Transaction instead of manual tx management
+   - lxd/db: Use WithServerBindAddress
+   - lxd/devices: Add Register function and links USB implementation
+   - lxd/devices: Change Update() to accept all old devices
+   - lxd/devices: Fix dynamic hotplug of unix devices when they exist on startup
+   - lxd/devices: Link gpu device
+   - lxd/devices: Link up disk device
+   - lxd/devices: Link up unix-char and unix-block devices
+   - lxd/devices: Modify New function to return device even if validation fails
+   - lxd/devices: Move empty device type validation into device package
+   - lxd/devices: Move USB event handling into device package
+   - lxd/devices: Remove disk related functions
+   - lxd/devices: Remove gpu related code moved to device package
+   - lxd/devices: Remove inotify code
+   - lxd/devices: Rename USBDevice to USBEvent
+   - lxd/devices: Update sorted devices usage
+   - lxd/devices: Update use of Device type
+   - lxd/devices/config: Change Devices type to map[string]Device
+   - lxd/devices/config: Make device set sorting exported
+   - lxd/devices/config: Replace DeviceNames() with Sorted() and Reversed()
+   - lxd/devices/config/validate: Move function to be attached to Device type
+   - lxd/devices/device: Link up none device type
+   - lxd/devices/device/utils/usb/events: Add USB event handler functions
+   - lxd/devices/device/utils/usb: Move bits into usb and device_utils_usb_events
+   - lxd/devices/disk: Add disk device implementation
+   - lxd/devices/disk: Add StorageVolumeMount and StorageVolumeUmount functions
+   - lxd/devices/disk: Add validation for root disk having a pool property
+   - lxd/devices/disk: Link StorageRootFSApplyQuota
+   - lxd/devices/gpu: Add gpu implementation
+   - lxd/devices/gpu: Move nvidia device loading to use resources package
+   - lxd/devices/gpu: Update all device major/minor parsing to use uint32
+   - lxd/devices/gpu: Update unix function usage
+   - lxd/devices/gpu: Use device package validation functions
+   - lxd/devices/gpu: Validate vendorid and productid
+   - lxd/devices/infiniband: Add IB MAC functions
+   - lxd/devices/infiniband: Remove unused code after switch to resources package
+   - lxd/devices/infiniband: Update use of unix functions
+   - lxd/devices/infiniband: Workaround weird sysfs behavior
+   - lxd/devices/infiniband/physical: Improve MAC address support
+   - lxd/devices/infiniband/physical: Switch to use resources package
+   - lxd/devices/infiniband/physical: Update unix function usage
+   - lxd/devices/infiniband/physical: Update use of unix device functions
+   - lxd/devices/infiniband/sriov: Improve MAC address support
+   - lxd/devices/infiniband/sriov: Switches to use resources package
+   - lxd/devices/infiniband/sriov: Update unix function usage
+   - lxd/devices/infiniband/sriov: Update use of unix device functions
+   - lxd/devices/inotify: Move inotify functions to device package
+   - lxd/devices/instance: Add DeviceEventHandler function
+   - lxd/devices/instance: Add LocalDevices() to interface
+   - lxd/devices/instance: Add RootfsPath() to InstanceIdentifier interface
+   - lxd/devices/network: Add networkValidMAC
+   - lxd/devices/network: MTU inheriting from parent on bridged devices
+   - lxd/devices/network: Remove NetworkSRIOVGetFreeVFInterface
+   - lxd/devices/nic: Update bridged and p2p types to new Update signature
+   - lxd/devices/nic: Update nic validation of hwaddr
+   - lxd/devices/nic/bridged: DHCP release fixes
+   - lxd/devices/nic/sriov: Add getFreeVFInterface after moving from shared utils
+   - lxd/devices/none: Add none device type
+   - lxd/devices/proxy: Update validation to use d.instance.ExpandedDevices()
+   - lxd/devices/proxy: Use device package validation functions
+   - lxd/devices/runconfig: Add RootFS support
+   - lxd/devices/runconfig: Add Uevents slice
+   - lxd/devices/runconfig: Change mount Shift to OwnerShift
+   - lxd/devices/runconfig: Fix typo in comment
+   - lxd/devices/unix: Add implementation for unix-char and unix-block devices
+   - lxd/devices/unix: Add unix event handling functions
+   - lxd/devices/unix: Clarify required property logic
+   - lxd/devices/unix: Comment clarification
+   - lxd/devices/unix: Device management function rework
+   - lxd/devices/unix: Ensure unix devices are mounted with MountOwnerShiftStatic
+   - lxd/devices/unix: Fix double device name encoding in file name
+   - lxd/devices/unix: Make unixDeviceAttributes unexported
+   - lxd/devices/unix: Move some config validation functions into device package
+   - lxd/devices/unix: Update all device major/minor parsing to uin32
+   - lxd/devices/unix: Update device removal functions to accept file filter
+   - lxd/devices/unix: Update use of unixDeviceAttributes
+   - lxd/devices/unix: Various small improvements
+   - lxd/devices/usb: Add unexported usbIsOurDevice and switch to USBEvent
+   - lxd/devices/usb: Add USB device implementation
+   - lxd/devices/usb: Add USB event handling functions
+   - lxd/devices/usb: Clarify required property logic
+   - lxd/devices/usb: Remove unused function
+   - lxd/devices/usb: Update Register() to be called by post start hook
+   - lxd/dnsmasq: Update version check to use shared.RunCommandCLocale
+   - lxd/main_forkuevent: Fix error when >3 arguments used (normal case)
+   - lxd/migration: Remove unused Snapshots() function from interface
+   - lxd/networks: Handle error from dnsmasq version check
+   - lxd/networks: Remove old dnsmasq.leases file on network start
+   - lxd/patches: Update sorted devices usage
+   - lxd/projects: Remove dependency on deviceConfig package
+   - lxd/response: Show wrapped errors
+   - lxd/seccomp: Update use of shared.RunCommandSplit
+   - lxd/storage: Add storageRootFSApplyQuota
+   - lxd/storage: Add storageVolumeMount and storageVolumeUmount
+   - lxd/storage: Fix bad UsedBy check
+   - lxd/storage: Move btrfs migration code
+   - lxd/storage: Move ceph migration code
+   - lxd/storage: Move ContainerGetParentAndSnapshotName to shared
+   - lxd/storage: Move ContainerPath() to storage package
+   - lxd/storage: Move Create{Container,Snapshot}Mountpoint to storage
+   - lxd/storage: Move get*MountPoint() to storage package
+   - lxd/storage: Move storage cgo to storage package
+   - lxd/storage: Move storage_utils to storage/utils
+   - lxd/storage: Move zfs migration code
+   - lxd/storage: Remove ContainerCanRestore from storage interface
+   - lxd/storage: Remove Image{Umount,Mount} from storage interface
+   - lxd/storage: Remove shared code from backends
+   - lxd/storage/lvm: Log actual error
+   - lxd/storage/quota: Move use of Major and Minor functions to unix package
+   - lxd/storage/zfs: Fix error reporting
+   - lxd/sys: Add CGroupBlkioWeightController check
+   - lxd: Update for fixed backup fields
+   - lxd: Update tests to use updated Devices type
+   - lxd: Update top-level unit-tests for DB changes
+   - lxd: Update use of Devices type
+   - lxd: Use unix.MS_LAZYTIME
+   - Makefile: Fix sqlite manifest path
+   - Makefile: Fix update-schema target
+   - shared: Handle symlinks in FileCopy()
+   - shared/api: Fix backup timestamps
+   - shared/container: Add IsDeviceID validation
+   - shared/container: Improve comments on IsRootDiskDevice
+   - shared/container: Move global hex regex into specific function
+   - shared/container: Remove device related validation functions
+   - shared/containerwriter: Updates use of GetFileStat
+   - shared/simplestreams: Make golint clean
+   - shared/simplestreams: Record all images
+   - shared/simplestreams: Remove dead code
+   - shared/simplestreams: Rename index structs
+   - shared/simplestreams: Rename internal functions
+   - shared/simplestreams: Rename product structs
+   - shared/simplestreams: Rename SimpleStreamsFile
+   - shared/simplestreams: Rename ssDefaultOS
+   - shared/simplestreams: Split index/manifest out
+   - shared/simplestreams: Split out sortedImages
+   - shared/util: Add RunCommandCLocale() and update RunCommandSplit()
+   - shared/util: Remove Major and Minor functions
+   - tests: Add golint for storage package
+   - tests: Add infiniband MAC tests
+   - tests: Add more bridged DHCP release tests
+   - tests: Add proxy tests for invalid config
+   - tests: Add GPU tests
+   - tests: Add simplestreams to golint
+   - tests: Add storage quota tests
+   - tests: Add test for bridged MTU parent inheritance
+   - tests: Add test for ipvlan MTU parent inheritance
+   - tests: Add test for macvlan MTU parent inheritance
+   - tests: Add tests for unix-char and unix-block devices
+   - tests: Enable quota checks for ceph engine
+   - tests: Fix broken lxd import integration test
+   - tests: Fix CEPH RBD leakage
+   - tests: Fix typo in comment
+   - tests: Remove MAC tests from infiniband tests
+   - tests: Remove the attached testvolume
+   - tests: Remove tmpfs references from gpu tests
+   - tests: Remove use of uppercase chars in MAC tests
+   - tests: Split server tests
+   - tests: Update backup test for new error
+   - tests: Update integration tests for DB changes
+
+  ### 試用環境 <!-- Try it for yourself -->
+  <!--
+  This new LXD release is already available for you to try on our [demo service](https://linuxcontainers.org/lxd/try-it/).
+  -->
+  この新しい LXD リリースは私たちの [デモサービス](https://linuxcontainers.org/ja/lxd/try-it/) で利用できます。
+
+  ### ダウンロード <!-- Downloads -->
+  <!--
+  The release tarballs can be found on our [download page](https://linuxcontainers.org/lxd/downloads/).
+  -->
+  このリリースの tarball は [ダウンロードページ](/lxd/downloads/) から取得できます。
+
+  <!--
+  Binary builds are also available for:
+  -->
+  ビルド済みバイナリーは次のように使えます:
+
+   - **Linux:** snap install lxd
+   - **MacOS:** brew install lxc
+   - **Windows:** choco install lxc
