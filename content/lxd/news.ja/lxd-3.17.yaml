@@ -33,7 +33,7 @@ content: |-
   <!--
   They can each be set to a different, unused, storage volume using a `POOL-NAME/VOLUME-NAME` syntax. Existing data stored on the system will be moved to the storage volume.
   -->
-  このふたつは `POOL-NAME/VOLUME-NAME` という形式を使って、未使用のストレージボリュームを設定できます。それぞれ異なる値を設定できます。
+  このふたつは `POOL-NAME/VOLUME-NAME` という形式を使って、未使用のストレージボリュームを設定できます。それぞれ異なる値を設定できます。システムのルートファイルシステムに保存されているデータがある場合は、指定したストレージボリュームに移動されます。
 
   <!--
   This allows for systems with very limited available space on their root filesystem to run LXD with almost all data stored onto LXD managed storage pools.
