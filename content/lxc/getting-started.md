@@ -43,7 +43,11 @@ with everything that's needed for safe, unprivileged LXC containers.
 
 On such an Ubuntu system, installing LXC is as simple as:
 
-    sudo apt-get install lxc or sudo snap install lxc
+    sudo apt-get install lxc
+
+or
+
+    sudo snap install lxc
 
 Your system will then have all the LXC commands available, all its templates
 as well as the python3 binding should you want to script LXC.
@@ -59,7 +63,7 @@ to escape the container, they'll find themselves with about as many rights as a 
 
 Unfortunately this also means that the following common operations aren't allowed:
 
-  * mounting most of filesystems
+  * mounting of most filesystems
   * creating device nodes
   * any operation against a uid/gid outside of the mapped set
 
