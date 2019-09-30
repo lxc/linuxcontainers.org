@@ -112,7 +112,7 @@ or use the "newgrp lxd" command in the shell you're going to use to talk to LXD.
 **WARNING**: Anyone with access to the LXD socket can fully control LXD,
 which includes the ability to attach host devices and filesystems, this
 should therefore only be given to users who would be trusted with root
-access to the host. You can learn more about LXD security [here](https://lxd.readthedocs.io/en/latest/security).
+access to the host. You can learn more about LXD security [here](/lxd/docs/master/security/).
 
 # Creating and using your first container
 Creating your first container is as simple as:

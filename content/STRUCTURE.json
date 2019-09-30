@@ -144,7 +144,7 @@
     {"path": "/lxd/documentation",
      "menu": ["LXD", "Documentation"],
      "generator": "link",
-     "meta": {"url": "https://lxd.readthedocs.io/en/latest/"}},
+     "meta": {"url": "/lxd/docs/master/"}},
 
     {"path": "/lxd/rest-api/",
      "title": "LXD - REST API",
