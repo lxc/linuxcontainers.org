@@ -1,0 +1,373 @@
+title: LXD 3.18 has been released
+date: 2019/10/02 20:10
+origin: https://discuss.linuxcontainers.org/t/lxd-3-18-has-been-released/5869
+content: |-
+  ### Introduction
+  The LXD team is very excited to announce the release of LXD 3.18!
+
+  This release includes a lot of the preliminary work needed in order to implement [virtual machine support](https://github.com/lxc/lxd/issues/6205) alongside containers in future LXD releases. LXD 3.18 comes with a number of API additions and changes to the Go client and CLI tools to allow driving virtual machines.
+
+  The bulk of this is the slow replacement of `containers` in the API and internal code base for the more generic `instances` which will then encompass both containers and virtual machines.
+
+  The vast majority of that work will currently be invisible to our normal users, everything was done to make this fully backward compatible, so older API clients will keep working as usual.
+
+  As far as immediately usable improvements, this release extends our resources API to expose more disk information, adds the ability to alter image expiry dates, switches to a new clustering role mechanism and allows some more configuration options when using Fan networking.
+
+  Enjoy!
+
+  ### New features
+  #### New /1.0/instances endpoint
+  Part of the move to supporting virtual machines is the replacement of our current `/1.0/containers` API with a new `/1.0/instances` API which will then return both containers and virtual machines. The structure of this new API endpoint is identical and the former endpoint is now just a type filter on top of the new one.
+
+  For consistency, once virtual machine support is ready, we will also be providing a `/1.0/virtual-machines` endpoint, which will similarly type filter `/1.0/instances` and only show virtual machines.
+
+  As part of this work, the Go client package was also modified to include new functions for all the `/1.0/instances` endpoints, detecting the availability of that new API and falling back to the old one when interacting with an older LXD server.
+
+  Our command line tool (`lxc`) was then updated to use those new functions too.
+
+  #### Support for storing VM images
+  This release of LXD is able to query virtual machine images from other LXD servers and from simplestreams servers where such images are already available.
+  Current the only two servers which have such images are `ubuntu:` and `ubuntu-daily:`.
+
+      stgraber@castiana:~$ lxc image list ubuntu: serial=20190918 release=bionic architecture=amd64
+      +-------------+--------------+--------+---------------------------------------------+--------+-----------------+----------+-------------------------------+
+      |    ALIAS    | FINGERPRINT  | PUBLIC |                 DESCRIPTION                 |  ARCH  |      TYPE       |   SIZE   |          UPLOAD DATE          |
+      +-------------+--------------+--------+---------------------------------------------+--------+-----------------+----------+-------------------------------+
+      | b (11 more) | 8d1e0577b1d1 | yes    | ubuntu 18.04 LTS amd64 (release) (20190918) | x86_64 | VIRTUAL-MACHINE | 328.25MB | Sep 18, 2019 at 12:00am (UTC) |
+      +-------------+--------------+--------+---------------------------------------------+--------+-----------------+----------+-------------------------------+
+      | b (11 more) | 9ff5784302bf | yes    | ubuntu 18.04 LTS amd64 (release) (20190918) | x86_64 | CONTAINER       | 177.98MB | Sep 18, 2019 at 12:00am (UTC) |
+      +-------------+--------------+--------+---------------------------------------------+--------+-----------------+----------+-------------------------------+
+      |             | be760b6a51a0 | yes    | ubuntu 18.04 LTS amd64 (release) (20190918) | x86_64 | CONTAINER       | 141.19MB | Sep 18, 2019 at 12:00am (UTC) |
+      +-------------+--------------+--------+---------------------------------------------+--------+-----------------+----------+-------------------------------+
+
+  In the example above, we can see 3 versions of the same image, the first being a qcow2 virtual machine image, the second being a squashfs container image and the third being a tar.xz container image.
+
+  VM images can be copied to a local LXD server:
+
+      stgraber@castiana:~$ lxc image copy ubuntu:b local: --vm --alias b-vm
+      Image copied successfully!                   
+      stgraber@castiana:~$ lxc image list
+      +-------+--------------+--------+---------------------------------------------+--------+-----------------+----------+-----------------------------+
+      | ALIAS | FINGERPRINT  | PUBLIC |                 DESCRIPTION                 |  ARCH  |      TYPE       |   SIZE   |         UPLOAD DATE         |
+      +-------+--------------+--------+---------------------------------------------+--------+-----------------+----------+-----------------------------+
+      | b-vm  | 8d1e0577b1d1 | no     | ubuntu 18.04 LTS amd64 (release) (20190918) | x86_64 | VIRTUAL-MACHINE | 328.25MB | Oct 2, 2019 at 8:22pm (UTC) |
+      +-------+--------------+--------+---------------------------------------------+--------+-----------------+----------+-----------------------------+
+      |       | 0c3ce5efa22e | no     | Ubuntu bionic amd64 (20191002_07:42)        | x86_64 | CONTAINER       | 93.79MB  | Oct 2, 2019 at 5:51pm (UTC) |
+      +-------+--------------+--------+---------------------------------------------+--------+-----------------+----------+-----------------------------+
+
+  Note that while all of this works already, without LXD being able to run virtual machines, we don't expect this to be particularly useful to anyone at this point.
+
+  #### Extended disk resources information
+  The `storage` section of our `/1.0/resources` API was extended to provide more information on a variety of disks, this now includes:
+   - Firmware version
+   - Device path
+   - Serial number
+   - RPM
+   - A more detailed `type`, including detection of cdrom drives
+
+  Example output on a system with a variety of drives:
+
+      root@lantea:~# lxc query /1.0/resources | jq .storage
+      {
+        "disks": [
+          {
+            "block_size": 512,
+            "device": "8:0",
+            "device_path": "pci-0000:05:00.0-sas-phy0-lun-0",
+            "firmware_version": "05.00K05",
+            "id": "sda",
+            "model": "WDC WD1001FALS-0",
+            "numa_node": 0,
+            "partitions": [],
+            "read_only": false,
+            "removable": false,
+            "rpm": 7200,
+            "serial": "WD-WMATV0861474",
+            "size": 1000204886016,
+            "type": "sata"
+          },
+          {
+            "block_size": 512,
+            "device": "8:16",
+            "device_path": "pci-0000:05:00.0-sas-phy1-lun-0",
+            "firmware_version": "05.00K05",
+            "id": "sdb",
+            "model": "WDC WD1001FALS-0",
+            "numa_node": 0,
+            "partitions": [],
+            "read_only": false,
+            "removable": false,
+            "rpm": 7200,
+            "serial": "WD-WMATV0724608",
+            "size": 1000204886016,
+            "type": "sata"
+          },
+          {
+            "block_size": 512,
+            "device": "8:32",
+            "device_path": "pci-0000:05:00.0-sas-phy2-lun-0",
+            "firmware_version": "CC45",
+            "id": "sdc",
+            "model": "ST33000651AS",
+            "numa_node": 0,
+            "partitions": [],
+            "read_only": false,
+            "removable": false,
+            "rpm": 7200,
+            "serial": "Z2912RXB",
+            "size": 3000592982016,
+            "type": "sata"
+          },
+          {
+            "block_size": 4096,
+            "device": "8:48",
+            "device_path": "pci-0000:05:00.0-sas-phy3-lun-0",
+            "firmware_version": "CC27",
+            "id": "sdd",
+            "model": "ST3000DM001-1CH1",
+            "numa_node": 0,
+            "partitions": [],
+            "read_only": false,
+            "removable": false,
+            "rpm": 7200,
+            "serial": "W1F46QP2",
+            "size": 3000592982016,
+            "type": "sata"
+          },
+          {
+            "block_size": 512,
+            "device": "8:64",
+            "device_path": "pci-0000:00:1f.2-ata-1",
+            "firmware_version": "EXT0CB6Q",
+            "id": "sde",
+            "model": "Samsung SSD 840",
+            "numa_node": 0,
+            "partitions": [],
+            "read_only": false,
+            "removable": false,
+            "rpm": 0,
+            "serial": "S1D5NSCF560605W",
+            "size": 120034123776,
+            "type": "sata"
+          },
+          {
+            "block_size": 512,
+            "device": "8:80",
+            "device_path": "pci-0000:00:1f.2-ata-2",
+            "firmware_version": "300i",
+            "id": "sdf",
+            "model": "INTEL SSDSC2CT12",
+            "numa_node": 0,
+            "partitions": [
+              {
+                "device": "8:81",
+                "id": "sdf1",
+                "partition": 1,
+                "read_only": false,
+                "size": 120033058304
+              }
+            ],
+            "read_only": false,
+            "removable": false,
+            "rpm": 0,
+            "serial": "CVMP213200L8120BGN",
+            "size": 120034123776,
+            "type": "sata"
+          },
+          {
+            "block_size": 0,
+            "device": "11:0",
+            "device_path": "pci-0000:00:1f.2-ata-3",
+            "firmware_version": "C108",
+            "id": "sr0",
+            "model": "DVD+-RW GSA-H73N",
+            "numa_node": 0,
+            "partitions": [],
+            "read_only": false,
+            "removable": true,
+            "rpm": 0,
+            "size": 1073741312,
+            "type": "cdrom"
+          }
+        ],
+        "total": 8
+      }
+
+  #### Modification of image expiry date
+  Thanks to a contribution from students at the University of Texas in Austin, it is now possible to edit the expiry of an image in the LXD image store.
+
+  This can be done through `lxc image edit`, modifying the `expires_at` timestamp.
+
+  #### Clustering roles
+  In preparation for future clustering work, a new way to report the role of cluster members has been added. This is a list of roles attached directly to the member. Currently, the only role supported is `database` and indicates that the cluster member is one of the database servers.
+
+      root@lantea:~# lxc cluster show lantea
+      server_name: lantea
+      url: https://[2001:470:b0f8:1016:d250:99ff:fec2:9263]:8443
+      database: true
+      status: Online
+      message: fully operational
+      roles:
+      - database
+
+  This feature will soon be used as the basis for two new roles:
+
+  ##### eventhub
+  Cluster members with this role will be receiving events from other cluster members and syncronise events with other event hubs. This will replace the current event handling approach of having every cluster member notify every other cluster member, reducing bandwidth and CPU usage when sending events.
+
+  ##### database_standby
+  Cluster members with this role will be receiving the live database stream, similar to normal database members. The difference is that those will not be voting members in the raft consensus, meaning that such members can be added without increasing the time needed for a database transaction to be committed.
+
+  Those standby database nodes can then be promoted to voting members very quickly, making clusters much more resilient and allowing for maintenance activities like rolling updates without the risk of taking down the cluster database.
+
+  #### IPv4 configuration when in Fan mode
+  Networks in Fan mode may now configure:
+   - ipv4.dhcp.expiry
+   - ipv4.firewall
+   - ipv4.nat
+   - ipv4.nat.order
+
+  ### Bugs fixed
+   - api: Add instances extension
+   - client: Rename ContainerServer to InstanceServer
+   - client/interfaces: Populate InstanceServer with rest of functions
+   - client/instances: Add instance related functions
+   - doc: Initial Github code of conduct
+   - doc: Initial Github security policy
+   - doc: Update remaining reference to readthedocs
+   - doc/index: Point to https://linuxcontainers.org/lxd/docs/master/
+   - doc/storage: Typo and example fix
+   - i18n: Update translations from weblate
+   - i18n: Update translation templates
+   - lxc: Don't print first-use on init/launch
+   - lxc: Switch cli tool to use InstanceServer
+   - lxc: Switch to using client Instance functions
+   - lxc/exec: Fix usage for --cwd
+   - lxc/remote: Trailing space in translatable string
+   - lxd: Add instance interface
+   - lxd: Add instance-type query param filter to LXD API
+   - lxd: Add support for InstanceOnly in API requests
+   - lxd: Add type field to instance API output
+   - lxd: Make import alias of device config package consistent throughout codebase
+   - lxd: Migrate storage references to container interface to instance interface
+   - lxd: Move events to new events package
+   - lxd: Move operations to its own package
+   - lxd: Move response to its own package
+   - lxd: Remove unix cred functions/types and updates usage to ucred package
+   - lxd: Rename containerLoadByID to instanceLoadById and returns Instance type
+   - lxd: Rename containerLoadByProjectAndName to instanceLoadByProjectAndName
+   - lxd: Rename containerLoadNodeAll to instanceLoadNodeAll
+   - lxd: Rename use of instance package to instancetype package
+   - lxd: Replace CType with instance.Type
+   - lxd: Require "ip" be installed
+   - lxd: Switch over to Instance types
+   - lxd: Switch to new event structure
+   - lxd: Update to use seccomp package
+   - lxd: Update usage of ContainerArgs to InstanceArgs
+   - lxd: Update usage of ContainerBackupArgs to InstanceBackupArgs
+   - lxd: Update use of device.Instance interface
+   - lxd: Update use of ForwardedResponseIfContainerIsRemote to supply instanceType
+   - lxd: Update use of string instance.Type to int type
+   - lxd/api: Contructs endpoint alias routes
+   - lxd/api: Rename container endpoint vars to instance prefix
+   - lxd/apparmor: Move apparmor into its own package
+   - lxd/backup: Change container field to instance type
+   - lxd/cluster/connect: Add instanceType filter to ConnectIfContainerIsRemote
+   - lxd/cluster/upgrade: Prevent crash if heartbeat occurs before dqlite init
+   - lxd/config: Allow modifying cluster.https_address
+   - lxd/containers: Embed the Instance interface into the container interface
+   - lxd/containers: Remove lxcSupportSeccompNotify
+   - lxd/containers: Update use of apparmor package
+   - lxd/containers: Fix comment
+   - lxd/containers: Migrate container_lxc to use operationlock package
+   - lxd/containers: Respect raw.lxc on stop/shutdown
+   - lxd/containers: Tigthen directory ownership
+   - lxd/containers: Update containerLoadNodeProjectAll to support Type filtering
+   - lxd/containers: Validate POST instance type field and stores in DB
+   - lxd/daemon: Add Name and Aliases support to APIEndpoint
+   - lxd/daemon: Fix logging events
+   - lxd/daemon: Update to use seccomp package
+   - lxd/db: Band aid for https://github.com/canonical/dqlite/issues/163
+   - lxd/db: Flush any leftover operation on startup
+   - lxd/db: Use consts for cluster roles
+   - lxd/db/containers: Add db:ignore tag to Instance.Snapshot field
+   - lxd/db/containers: Add instanceType filter to ContainerNodeAddress
+   - lxd/db/containers: Fix tests
+   - lxd/db/containers: Remove ContainerType, CTypeRegular and CTypeSnapshot
+   - lxd/db/containers: Rename ContainerArgs to InstanceArgs
+   - lxd/db/containers: Rename ContainerBackupArgs to InstanceBackupArgs
+   - lxd/db/containers: Update container filtering functions for instance.Type
+   - lxd/db/instances: Re-run db generate
+   - lxd/db/instances: Update InstanceList to use instance.TypeAny
+   - lxd/devices: Allow uppercase in MACs
+   - lxd/devices: Update instance interface inline with others
+   - lxd/devices/disk: Properly return error messages
+   - lxd/devices/network: Fix typo in comment
+   - lxd/devices/nic: Set MTU on both side of veth
+   - lxd/devlxd: Fix handling of projects
+   - lxd/dnsmasq: Support uppercase MACs in UpdateStaticEntry
+   - lxd/events: Support multiple servers
+   - lxd/images: Fix image type during refresh
+   - lxd/images: Tweak wrapping
+   - lxd/images: Use native tar parser for metadata
+   - lxd/main_forkdns: Don't setup event logger
+   - lxd/main_init: Properly handle ceph/cephfs
+   - lxd/instance: Add functions to convert to/from instance.Type and string
+   - lxd/instance: Change instance types to own int type
+   - lxd/instance: Add operationlock package
+   - lxd/instance: Rename instance to instancetype
+   - lxd/instance: Use API instance types for string comparison
+   - lxd/networks: Allow ipv6.dhcp=true with ipv6.firewall=false
+   - lxd/networks: Properly return error messages
+   - lxd/networks: Reduce calls to iptables clear
+   - lxd/networks: Split functions and pass oldConfig
+   - lxd/operations: Fix operation events
+   - lxd/operations: Use state struct
+   - lxd/patches: Properly return error messages
+   - lxd/resources: Implement NVIDIA device fallback
+   - lxd/response: Add instanceType filter to ForwardedResponseIfContainerIsRemote
+   - lxd/seccomp: Add seccomp package
+   - lxd/state: Carry event server instances
+   - lxd/storage: Consistent error messages
+   - lxd/storage/btrfs: Fix bug with BTRFS snapshot copy
+   - lxd/storage/btrfs: Properly return error messages
+   - lxd/storage/ceph: Fix volume snapshot handling
+   - lxd/storage/cephfs: Fix querying volume on cluster
+   - lxd/storage/dir: Don't hide error message
+   - lxd/storage/lvm: Properly return error messages
+   - lxd/storage/zfs: Better handle broken images
+   - lxd/storage/zfs: Fix error handling in ImageCreate
+   - lxd/storage/zfs: Tweak destroy logic
+   - lxd/ucred: Add ucred package for ucred functions and types
+   - shared: Use Lchown when copying symlinks
+   - shared/api: Add new instance types
+   - shared/api: Add InstanceOnly field to InstancePost and InstanceSource
+   - shared/api: Location field of Event as omitempty
+   - shared/api: Make some NVIDIA fields omitempty
+   - shared/generate: Add support for `db:"ignore"` tag on fields
+   - shared/generate: Re-run update-schema
+   - shared/generate: Support instance.Type
+   - shared/netutils: Update NetnsGetifaddrs to use Instance types
+   - tests: Add apparmor to static analysis
+   - tests: Add events package to static analysis test
+   - tests: Add operations package to static analysis
+   - tests: Add response package to static analysis
+   - tests: Add seccomp package to static analysis
+   - tests: Add unixcred to static analysis
+   - tests: Fix static analysis for ucred package
+   - tests: Switch to instance.Type
+   - tests: Tunes ZFS quota tests after intermittent failures
+   - tests: Update devlxd tests to use ucred package
+   - tests: Update security test
+
+  ### Try it for yourself
+  This new LXD release is already available for you to try on our [demo service](https://linuxcontainers.org/lxd/try-it/).
+
+  ### Downloads
+  The release tarballs can be found on our [download page](https://linuxcontainers.org/lxd/downloads/).
+
+  Binary builds are also available for:
+
+   - **Linux:** snap install lxd
+   - **MacOS:** brew install lxc
+   - **Windows:** choco install lxc
