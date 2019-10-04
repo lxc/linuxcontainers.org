@@ -91,7 +91,11 @@ On such an Ubuntu system, installing LXC is as simple as:
 -->
 Ubuntu では、LXC をインストールするのは次のように簡単です:
 
-    sudo apt-get install lxc or sudo snap install lxc
+    sudo apt-get install lxc 
+	
+もしくは
+	
+	sudo snap install lxc
 
 <!--
 Your system will then have all the LXC commands available, all its templates
@@ -120,7 +124,7 @@ Unfortunately this also means that the following common operations aren't allowe
 残念ながら、このことは同時に以下のような操作が非特権コンテナでは許可されないことを意味します:
 
 <!--
-  * mounting most of filesystems
+  * mounting of most filesystems
   * creating device nodes
   * any operation against a uid/gid outside of the mapped set
   -->

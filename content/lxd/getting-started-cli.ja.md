@@ -213,7 +213,7 @@ access to the host. You can learn more about LXD security [here](https://lxd.rea
 **警告**: LXD ソケットにアクセスできる人であれば誰でも LXD を完全にコントロールできます。
 これには、ホストのデバイスやファイルシステムにアタッチする権限も含まれます。
 したがって、ホストへの root アクセスで信頼できるユーザにのみ与えられるべきです。
-さらに LXD のセキュリティについて学びたい場合は[こちら](https://lxd-ja.readthedocs.io/ja/latest/security/)をご覧ください。
+さらに LXD のセキュリティについて学びたい場合は[ドキュメントのセキュリティのセクション（日本語版）](https://lxd-ja.readthedocs.io/ja/latest/security/) （または[英語版](/lxd/docs/master/security/)）をご覧ください。
 
 # コンテナの作成と使用 <!-- Creating and using your first container -->
 <!--
