@@ -59,6 +59,7 @@ content: |-
 
   #### Extended disk resources information
   The `storage` section of our `/1.0/resources` API was extended to provide more information on a variety of disks, this now includes:
+
    - Firmware version
    - Device path
    - Serial number
@@ -222,12 +223,14 @@ content: |-
 
   #### IPv4 configuration when in Fan mode
   Networks in Fan mode may now configure:
+
    - ipv4.dhcp.expiry
    - ipv4.firewall
    - ipv4.nat
    - ipv4.nat.order
 
   ### Bugs fixed
+
    - api: Add instances extension
    - client: Rename ContainerServer to InstanceServer
    - client/interfaces: Populate InstanceServer with rest of functions
