@@ -162,8 +162,8 @@ lxc exec first -- free -m</pre>
           <h3>Snapshots</h3>
           <p>LXD supports snapshoting and restoring container snapshots. <br /> Before making a snapshot, lets do some changes to the container, for example, updating it:</p>
           <pre>lxc exec first -- apt-get update
-lxc exec first -- apt-get dist-upgrade -y
-lxc exec first -- apt-get autoremove --purge -y</pre>
+lxc exec first -- apt-get install sl -y
+lxc exec first -- /usr/games/sl</pre>
           <p>Now that the container is all updated and cleaned, let's make a snapshot called "clean":</p>
           <pre>lxc snapshot first clean</pre>
           <p>Let's break our container:</p>
