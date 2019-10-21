@@ -213,6 +213,7 @@
      "meta": {"url": "https://travis-ci.org/lxc/lxd"}},
 
 
+
     {"path": "/lxcfs/",
      "generator": "alias",
      "meta": {"target": "/lxcfs/introduction/"}},
@@ -277,6 +278,72 @@
      "menu": ["LXCFS", "GitHub"],
      "generator": "link",
      "meta": {"url": "https://github.com/lxc/lxcfs"}},
+
+
+
+    {"path": "/distrobuilder/",
+     "generator": "alias",
+     "meta": {"target": "/distrobuilder/introduction/"}},
+
+    {"path": "/distrobuilder/introduction/",
+     "title": "distrobuilder - Introduction",
+     "menu": ["distrobuilder", "Introduction"],
+     "generator": "markdown",
+     "meta": {"input": "distrobuilder/introduction.md"}},
+
+    {"path": "/distrobuilder/news/",
+     "title": "distrobuilder - News",
+     "menu": ["distrobuilder", "News"],
+     "generator": "news",
+     "meta": {"dir": "/content/distrobuilder/news/",
+              "input": "distrobuilder/news.md"}},
+
+    {"path": "/distrobuilder/documentation",
+     "menu": ["distrobuilder", "Documentation"],
+     "generator": "link",
+     "meta": {"url": "https://github.com/lxc/distrobuilder/tree/master/doc"}},
+
+    {"path": "/distrobuilder/contribute/",
+     "title": "distrobuilder - Contribute",
+     "menu": ["distrobuilder", "Contribute"],
+     "generator": "markdown",
+     "meta": {"input": "distrobuilder/contribute.md"}},
+
+    {"path": "/distrobuilder/downloads/",
+     "title": "distrobuilder - Downloads",
+     "menu": ["distrobuilder", "Downloads"],
+     "generator": "downloads",
+     "meta": {"dir": "/downloads/distrobuilder",
+              "input": "distrobuilder/downloads.md"}},
+
+    {"path": "/distrobuilder/external-resources/",
+     "menu": ["distrobuilder", "External resources"]},
+
+    {"path": "/distrobuilder/forum/",
+     "menu": ["distrobuilder", "Forum"],
+     "generator": "link",
+     "meta": {"url": "https://discuss.linuxcontainers.org"}},
+
+    {"path": "/distrobuilder/mailing-lists/",
+     "menu": ["distrobuilder", "Mailing lists"],
+     "generator": "link",
+     "meta": {"url": "https://lists.linuxcontainers.org"}},
+
+    {"path": "/distrobuilder/irc/",
+     "menu": ["distrobuilder", "IRC"],
+     "generator": "link",
+     "meta": {"url": "https://webchat.freenode.net/?channels=#lxcontainers"}},
+
+    {"path": "/distrobuilder/github/",
+     "menu": ["distrobuilder", "GitHub"],
+     "generator": "link",
+     "meta": {"url": "https://github.com/lxc/distrobuilder"}},
+
+    {"path": "/distrobuilder/travis-ci/",
+     "menu": ["distrobuilder", "Travis CI"],
+     "generator": "link",
+     "meta": {"url": "https://travis-ci.org/lxc/distrobuilder"}},
+
 
 
     {"path": "/cgmanager/",

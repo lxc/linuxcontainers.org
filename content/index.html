@@ -72,12 +72,37 @@
       <p><a class="p-button" href="/lxcfs/introduction/" role="button">Learn more</a></p>
     </div>
   </div>
+  <div class="row u-equal-height">
+    <div class="p-card col-8">
+      <h3>distrobuilder</h3>
+      <p>Image building tool for LXC/LXD:
+        <ul>
+          <li>Complex image definition as a simple YAML document.</li>
+          <li>Multiple output formats (chroot, LXD, LXC).</li>
+          <li>Support for a lot of distributions and architectures.</li>
+        </ul>
+      </p>
+
+      <p>distrobuilder was created as a replacement for the old shell scripts
+        that were shipped as part of LXC to generate images.
+        Its modern design uses pre-built official images whenever available,
+        uses a declarative image definition (YAML) and supports a variety of
+        modifications on the base image.</p>
+
+      <p><a class="p-button" href="/distrobuilder/introduction/" role="button">Learn more</a></p>
+    </div>
+  </div>
 </div>
 
-<div class="p-strip">
+<div class="p-strip--light">
   <div class="row">
     <div class="col-8">
       <h2>Deprecated projects</h2>
+    </div>
+  </div>
+
+  <div class="row u-equal-height">
+    <div class="p-card col-8">
       <h3>CGManager</h3>
       <p>CGManager is our cgroup manager daemon. It's
         designed to allow nested unprivileged containers
