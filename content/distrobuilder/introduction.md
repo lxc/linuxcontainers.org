@@ -13,7 +13,7 @@ build process.
 
 The output is either a plain root filesystem, a LXD image or a LXC image.
 
-You can see it at work here: https://jenkins.linuxcontainers.org/view/Images/
+You can see it at work here: [https://jenkins.linuxcontainers.org/view/Images/](https://jenkins.linuxcontainers.org/view/Images/)
 
 # Installing it
 Release tarballs can be found in the [Downloads](/distrobuilder/downloads) section.
