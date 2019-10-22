@@ -301,7 +301,7 @@
     {"path": "/distrobuilder/documentation",
      "menu": ["distrobuilder", "Documentation"],
      "generator": "link",
-     "meta": {"url": "https://github.com/lxc/distrobuilder/tree/master/doc"}},
+     "meta": {"url": "https://distrobuilder.readthedocs.io/en/latest/"}},
 
     {"path": "/distrobuilder/contribute/",
      "title": "distrobuilder - Contribute",
