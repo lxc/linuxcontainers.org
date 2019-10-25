@@ -237,6 +237,71 @@
 
 
 
+    {"path": "/distrobuilder/",
+     "generator": "alias",
+     "meta": {"target": "/distrobuilder/introduction/"}},
+
+    {"path": "/distrobuilder/introduction/",
+     "title": "distrobuilder - イントロダクション",
+     "menu": ["distrobuilder", "イントロダクション"],
+     "generator": "markdown",
+     "meta": {"input": "distrobuilder/introduction.ja.md"}},
+
+    {"path": "/distrobuilder/news/",
+     "title": "distrobuilder - ニュース",
+     "menu": ["distrobuilder", "ニュース"],
+     "generator": "news",
+     "meta": {"dir": "/content/distrobuilder/news/",
+              "input": "distrobuilder/news.md"}},
+
+    {"path": "/distrobuilder/documentation",
+     "menu": ["distrobuilder", "ドキュメント"],
+     "generator": "link",
+     "meta": {"url": "https://distrobuilder.readthedocs.io/en/latest/"}},
+
+    {"path": "/distrobuilder/contribute/",
+     "title": "distrobuilder - コントリビュート",
+     "menu": ["distrobuilder", "コントリビュート"],
+     "generator": "markdown",
+     "meta": {"input": "distrobuilder/contribute.ja.md"}},
+
+    {"path": "/distrobuilder/downloads/",
+     "title": "distrobuilder - ダウンロード",
+     "menu": ["distrobuilder", "ダウンロード"],
+     "generator": "downloads",
+     "meta": {"dir": "/downloads/distrobuilder",
+              "input": "distrobuilder/downloads.ja.md"}},
+
+    {"path": "/distrobuilder/external-resources/",
+     "menu": ["distrobuilder", "外部リソース"]},
+
+    {"path": "/distrobuilder/forum/",
+     "menu": ["distrobuilder", "フォーラム"],
+     "generator": "link",
+     "meta": {"url": "https://discuss.linuxcontainers.org"}},
+
+    {"path": "/distrobuilder/mailing-lists/",
+     "menu": ["distrobuilder", "メーリングリスト"],
+     "generator": "link",
+     "meta": {"url": "https://lists.linuxcontainers.org"}},
+
+    {"path": "/distrobuilder/irc/",
+     "menu": ["distrobuilder", "IRC"],
+     "generator": "link",
+     "meta": {"url": "https://webchat.freenode.net/?channels=#lxcontainers"}},
+
+    {"path": "/distrobuilder/github/",
+     "menu": ["distrobuilder", "GitHub"],
+     "generator": "link",
+     "meta": {"url": "https://github.com/lxc/distrobuilder"}},
+
+    {"path": "/distrobuilder/travis-ci/",
+     "menu": ["distrobuilder", "Travis CI"],
+     "generator": "link",
+     "meta": {"url": "https://travis-ci.org/lxc/distrobuilder"}},
+
+
+
     {"path": "/cgmanager/introduction/",
      "title": "CGManager - イントロダクション",
      "menu": ["CGManager", "イントロダクション"],

@@ -118,9 +118,35 @@
       <p><a class="p-button" href="/ja/lxcfs/introduction/" role="button">詳しく見る</a></p>
     </div>
   </div>
+  <div class="row u-equal-height">
+    <div class="p-card col-8">
+      <h3>distrobuilder</h3>
+      <p>LXC/LXD 用のイメージ作成ツールです: <!-- Image building tool for LXC/LXD: -->
+        <ul>
+          <li>複雑なイメージの定義をシンプルな YAML で定義します <!-- Complex image definition as a simple YAML document. --></li>
+          <li>複数の出力フォーマットに対応します（chroot, LXD, LXC） <!-- Multiple output formats (chroot, LXD, LXC). --></li>
+          <li>多数のディストリビューションとアーキテクチャに対応します <!-- Support for a lot of distributions and architectures. --></li> 
+        </ul>
+      </p>
+
+      <p>
+	<!--
+	distrobuilder was created as a replacement for the old shell scripts
+        that were shipped as part of LXC to generate images.
+        Its modern design uses pre-built official images whenever available,
+        uses a declarative image definition (YAML) and supports a variety of
+        modifications on the base image.
+	-->
+	distrobuilder は、以前 LXC の一部に含まれていた、古いシェルスクリプトの置き換えとして開発しました。
+	利用できる場合にはあらかじめ構築されている公式イメージを使い、宣言型のイメージ定義（YAML）を採用し、ベースとなるイメージに対する色々な変更をサポートする、現代的な設計です。
+      </p>
+
+      <p><a class="p-button" href="/distrobuilder/introduction/" role="button">Learn more</a></p>
+    </div>
+  </div>
 </div>
 
-<div class="p-strip">
+<div class="p-strip--light">
   <div class="row">
     <div class="col-8">
       <h2>廃止予定のプロジェクト <!-- Deprecated projects --></h2>
