@@ -218,8 +218,8 @@ lxc exec first -- free -m</pre>
               <br />
               スナップショットを作成する前に、コンテナに少し変更を加えてみましょう。例えば、以下のようにアップデートします。
               <pre>lxc exec first -- apt-get update
-lxc exec first -- apt-get dist-upgrade -y
-lxc exec first -- apt-get autoremove --purge -y</pre>
+lxc exec first -- apt-get install sl -y
+lxc exec first -- /usr/games/sl</pre>
             </p>
 
             <p>
