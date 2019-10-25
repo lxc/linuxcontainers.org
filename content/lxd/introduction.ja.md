@@ -123,7 +123,7 @@ with the added features that come from being controllable over the network.
 -->
 LXD は基本的には LXC ツールとディストリビューションテンプレートの仕組みの代わりとなる新しいもので、ネットワーク経由でコントロールできる特長を追加したものです。
 
-# 言語、ラインセンス、コントリビューション <!-- Language, licensing and contributions -->
+# 言語、ライセンス、コントリビューション <!-- Language, licensing and contributions -->
 <!--
 LXD is written in Go, it's free software and is developed under the Apache 2 license.
 -->
