@@ -147,7 +147,7 @@ def md2html(content):
         Given path to Markdown file, return rendered HTML content.
     """
     codehilite = markdown.extensions.codehilite.CodeHiliteExtension(
-        linenums=None,
+        linenums=False,
         guess_lang=False,
         noclasses=False)
 
