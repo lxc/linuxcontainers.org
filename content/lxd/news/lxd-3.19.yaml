@@ -29,6 +29,29 @@ content: |-
 
   Here is a basic example of creating an Ubuntu 18.04 VM, installing the agent and querying details and getting a shell inside it:
 
+      stgraber@castiana:~$ lxc profile create vm
+      stgraber@castiana:~$ lxc profile edit vm
+      stgraber@castiana:~$ lxc profile show vm
+      config:
+        user.user-data: |
+          #cloud-config
+          ssh_pwauth: yes
+          apt_mirror: http://us.archive.ubuntu.com/ubuntu/
+          users:
+            - name: ubuntu
+              passwd: "$6$s.wXDkoGmU5md$d.vxMQSvtcs1I7wUG4SLgUhmarY7BR.5lusJq1D9U9EnHK2LJx18x90ipsg0g3Jcomfp0EoGAZYfgvT22qGFl/"
+              lock_passwd: false
+              groups: lxd
+              shell: /bin/bash
+              sudo: ALL=(ALL) NOPASSWD:ALL
+      description: VM specific configuration
+      devices:
+        config:
+          source: cloud-init:config
+          type: disk
+      name: vm
+      used_by:
+
       stgraber@castiana:~$ lxc launch ubuntu:18.04 v1 --vm --profile default --profile vm
       Creating v1
       Starting v1
@@ -99,14 +122,14 @@ content: |-
   As part of the virtual machine work, we have completely rewritten our storage layer.
   This was done partly to add support for storing the block devices backing the virtual machines and to cleanup a lot of cruft that's been accumulating over the years and evolution of the storage layer.
 
-  This has no user visible repercusions, if it works properly, the new logic should be acting exactly like the old one, though possibly with quite a few less bugs.
+  This has no user visible repercussions, if it works properly, the new logic should be acting exactly like the old one, though possibly with quite a few less bugs.
 
   It is now easier than ever to add support for a new storage driver and thanks to good abstractions having been put in place, the vast majority of the storage operations now use shared logic, significantly reducing code duplication and risk of duplicated bugs throughout the codebase.
 
   As with any work of this magnitude, there will be bugs. We will try to be as reactive as we can to address any issue reported to us and would strongly recommend testing LXD 3.19 on some less important systems through the `candidate` channel ahead of it hitting stable.
 
   #### Contributions by students of the University of Texas
-  A number of group of sutdents from the University of Texas in Austin have been contributing LXD features as part of an assignment in their virtualization class.
+  A number of group of students from the University of Texas in Austin have been contributing LXD features as part of an assignment in their virtualization class.
 
   For this release, this includes:
 
@@ -383,7 +406,7 @@ content: |-
   For those wanting separate OSD pools for their data and metadata, a new configuration key `ceph.osd.data_pool_name` was added allowing control of where the data should be stored. The metadata will be stored at the pool referenced by `ceph.osd.pool_name`.
 
   #### LVM striping support
-  LVM striping is now supported, it can be configured through the `lvm.volume.stripes` and `lvm.volume.stripes.size`.
+  LVM striping is now supported, it can be configured through the `volume.lvm.stripes` and `volume.lvm.stripes.size`.
 
   #### Initial CGroup2 resource restrictions
   A new CGroup abstraction layer was added to LXD as well as an initial mapping for v2 resource controlers. This combined with recent improvements to liblxc should allow for most resource constraints to function in a CGroup V2 environment.
