@@ -202,12 +202,13 @@ content: |-
       | v3     | STOPPED | VIRTUAL-MACHINE |        | lxdbr0 |
       +--------+---------+-----------------+--------+--------+
 
-  #### Routed networking mode
+  #### routed ネットワークモード <!-- Routed networking mode -->
   <!--
   A new `routed` mode (`nictype`) for network interfaces is now supported.
   This requires a very recent feature of underlying liblxc and will effectively setup a point to point link between the container and host and will then route an IP to the container over it.
   -->
   新たにネットワークインターフェースの `nictype` に `routed` モードを追加しました。
+  `routed`モードには下層の liblxc につい最近追加された機能が必要です。そして、このモードは実質的にコンテナとホスト間のポイント・ツー・ポイントのリンクを設定し、そのリンクを使って IP をコンテナへルーティングします。
 
       stgraber@castiana:~$ lxc config device add c1 eth0 nic nictype=routed ipv4.address=10.255.243.155
       Device eth0 added to c1
@@ -251,6 +252,7 @@ content: |-
   It takes an arbitrary list of comma separated mount options to be used when attaching the disk to the container.
   -->
   新たに `disk` デバイスに対して `raw.mount_options` の設定が追加されました。
+  これは任意に設定可能なリストで、コンテナにディスクをアタッチする際に使うマウントオプションをカンマ区切りで指定します。
 
   #### イメージへのプロファイルのアタッチ <!-- Attaching profiles to images -->
   <!--
@@ -531,7 +533,7 @@ content: |-
   <!--
   The compression algorithm used for backups can be configured through `backups.compression_algorithm` but this is a global setting which will apply to all new backups.
   -->
-  `backups.compression_algorithm` を設定することで、バックアップで使う圧縮アルゴリズムが設定できます。しかし、これはすべての新しいバックアップに適用されるグローバルな設定です。
+  `backups.compression_algorithm` を設定することで、バックアップで使う圧縮アルゴリズムが設定できます。これはすべての新しいバックアップに適用されるグローバルな設定です。
 
   <!--
   In line with instance publishing (`lxc publish`), it is now possible to override the compression algorithm of backups at the time of their creation. This is exposed through `lxc export --compression-algorithm`.
