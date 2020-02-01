@@ -127,16 +127,18 @@ content: |-
   The dqlite-based cluster database logic was extended to make use of newly supported standby and idle roles in dqlite.
 
   With this change in place, all cluster members will now be integrated with dqlite, they will then each hold one of the following three roles:
+
    - voting member
    - standby member
    - idle member
 
-  The configuration is for 3 voting members, followed by 5 standby members with the rest of the members being idle. In the event of a loss of a voting member, after a short timeout a non-voting member will get auto-promoted to voting. Idle members will be promoted to non-voting as needed to keep the set number of voting and standby members.
+  The configuration is for 3 voting members, followed by 2 standby members with the rest of the members being idle. In the event of a loss of a voting member, after a short timeout a non-voting member will get auto-promoted to voting. Idle members will be promoted to non-voting as needed to keep the set number of voting and standby members.
 
   The end result is a much more resilient LXD cluster which will better handle cluster members going offline for maintenance or power failure.
 
   #### VM: Extended NIC support
   With this release, `nic` devices for virtual machines now support:
+
    - macvlan (using `macvtap`)
    - sriov
    - physical
