@@ -17,10 +17,12 @@ To install the feature branch of LXD, run:
 
     apk add lxd
 
-### ArchLinux
-Instructions on how to use the AUR package for LXD can be [found here](https://wiki.archlinux.org/index.php/LXD)
+### Arch Linux
+To install the feature branch of LXD, run:
 
-Alternatively, the snap package can also be used on ArchLinux (see below).
+    pacman -S lxd
+
+Alternatively, the snap package can also be used on Arch Linux (see below).
 
 ### Fedora
 Instructions on how to use the COPR repository for LXD can be [found here](https://copr.fedorainfracloud.org/coprs/ganto/lxd/).
@@ -66,7 +68,7 @@ To install the feature branch of LXD, run:
 
     apt install -t xenial-backports lxd lxd-client
 
-### Snap package (ArchLinux, Debian, Fedora, OpenSUSE and Ubuntu)
+### Snap package (Arch Linux, Debian, Fedora, OpenSUSE and Ubuntu)
 LXD upstream publishes and tests a snap package which works for a number of Linux distributions.
 
 The list of Linux distributions we currently test our snap for can be [found here](https://jenkins.linuxcontainers.org/job/lxd-test-snap-latest-stable/).
