@@ -1,0 +1,242 @@
+title: LXD 3.21 has been released
+date: 2020/02/13 23:02
+origin: https://discuss.linuxcontainers.org/t/lxd-3-21-has-been-released/6802
+content: |-
+  ### Introduction
+  The LXD team is very excited to announce the release of LXD 3.21!
+
+  This was another shorter two weeks development cycle for us, full of storage, VM and network bugfixes and refactoring.
+
+  On the feature side of things, we have a new easier way to attach network interfaces, clustering database configurations and a variety of virtual machine improvements.
+
+  Enjoy!
+
+  ### Highlights
+  #### New way to attach to LXD managed networks
+  When using a bridge network that's directly managed by LXD (see `lxc network list`), you can now attach instances to it directly by using:
+
+      eth0:
+          type: nic
+          network: lxdbr0
+          name: eth0
+
+  Or `lxc config device add c1 eth0 nic network=lxdbr0 name=eth0`
+
+  No need to set `nictype: bridged` or the `parent: lxdbr0` property. Instead just set `network` to the name of the LXD network and you're done.
+
+  In this mode, the bridge MTU is automatically inherited by the network interface, IPv4/IPv6 addresses are validated against the network's configured subnets and the MAAS IPv4 and IPv6 subnets can now be configured through the network rather than the individual interfaces.
+
+  #### Ceph ported to new storage driver infrastructure
+  The Ceph storage driver is the latest and last storage driver to be ported to the new storage infrastructure. This should be an invisible change to users, but we would recommend users of Ceph on LXD try upgrading non-critical systems to 3.21 first and prompty report any issue related to storage.
+
+  With this last driver ported, we can now begin the work of removing all the old storage infrastructure from the LXD codebase, which should make things significantly easier to maintain going forward.
+
+  #### Clustering: Configurable number of active and standby database members
+  Two new configuration options have been added for clusters.
+
+   - `cluster.max_voters` configures the expected number of active database cluster members (voting)
+   - `cluster.max_standby` configures the expected number of standby database cluster members (non-voting)
+
+  The default configuration is for 3 voting members and 2 standby members. When a voting member goes down, a standby immediately gets promoted to voting and a spare idle member may then get promoted to standby.
+
+  Increasing the number of voting members will slow down the database performance as more members will need to agree on a change. Increasing the number of standby members will not affect database performance but will increase network load as more members will need to get the database binary stream.
+
+  Only the largest of clusters where loosing 2 or 3 members almost immediately is a possibility should consider increasing those default values.
+
+  #### VM: CPU pinning and topology
+  The `limits.cpu` key can now be set to specific CPU IDs just as is supported for containers. An example would be `limits.cpu: 0,2` or `limits.cpu: 0-3`.
+
+  On top of pinning the VM's virtual CPUs to those listed physical CPUs (or threads), LXD also attempts to match up the CPU topology of the VM.
+
+  In the example above, `limits.cpu: 0,2`, on a dual-core Intel system with hyper-threading, this refers to the first core and its hyper-thread. The resulting virtual machine will therefore be configured with a single socket, single core, hyper-threaded CPU and have both threads be pinned to match the physical hardware.
+
+  The same logic supports, multi-socket, multi-core systems with or without hyperthreading. So long as the CPUs listed in `limits.cpu` correspond to a realistic hardware configuration (same number of cores coming from each socket, same number of threads on all cores, ...), then LXD will make the VM configuration match and will ensure that the pinning is done to match too.
+
+  If the requested configuration isn't correct (doesn't line up with hardware), LXD will fallback to providing a single socket, multi-core VM without hyperthreading, treating each of the list CPU IDs as a core. This obviously isn't ideal and a warning will be logged to the LXD log when this happens.
+
+  #### VM: Network and storage optimizations
+  For improved network performance, LXD now uses `vhost_net` for its network devices.
+
+  On the storage front, `discard` is now enabled on our virtio-scsi drives, allowing for blocks to be discarded, shrinking the underlying file storage or allowing backing drives to better manage their blocks.
+
+  #### VM: Agent-less reporting of IPv6 addresses
+  Up until now, virtual-machine IP addresses were retrieved only from LXD's DHCP server.
+  This works quite reliably for IPv4, but most IPv6 deployments use SLAAC which doesn't come with a DHCPv6 lease and so wouldn't be reported by LXD.
+
+  One way around this was to rely on the LXD agent as when it's running inside the VM, it will be used to retrieve the network information for the virtual machine.
+
+  But for cases where that's not possible, LXD now also looks at the IPv6 neighborhood records for any matching IPv6 addresses.
+
+      stgraber@castiana:~$ lxc list win10
+      +-------+---------+----------------------+----------------------------------------------+-----------------+-----------+
+      | NAME  |  STATE  |         IPV4         |                     IPV6                     |      TYPE       | SNAPSHOTS |
+      +-------+---------+----------------------+----------------------------------------------+-----------------+-----------+
+      | win10 | RUNNING | 10.166.11.118 (eth0) | 2001:470:b368:4242:9dff:908:98a9:c0c3 (eth0) | VIRTUAL-MACHINE | 0         |
+      +-------+---------+----------------------+----------------------------------------------+-----------------+-----------+
+
+
+  ### Complete changelog
+  Here is a complete list of all changes in this release:
+
+   * lxd/migrate/container: Fixes migrate refresh final sync snapshot bug
+   * lxd/migration/migration/volumes: Comment on Data property of VolumeSourceArgs
+   * lxd/storage/drivers/driver/zfs/volumes: Explain use of volSrcArgs.Data for migration
+   * lxd/instance/drivers/load: Pass copy of device config to device.Validate
+   * lxd/device/nic/bridged: Updates use of network pkg functions
+   * lxd/device/nic/bridged: Uses network.LoadByName to access n.HasDHCPvX() helpers
+   * lxd/device: networkRandomDevName usage
+   * lxd/network/network/load: Adds LoadByName function
+   * lxd/network: Adds network type in network pkg
+   * lxd/network/network/utils: Moves network utils from main pkg
+   * lxd/instance/instance/utils: Removes NetworkUpdateStatic function link
+   * lxd/instance/instance/utils: Adds more instance load functions
+   * lxd/container: Removes instance load functions moved to instance pkg
+   * container/lxc: network.UpdateDNSMasqStatic usage
+   * lxd: instance.LoadNodeAll usage
+   * lxd: instance.LoadByProject usage
+   * lxd: instance.LoadByProjectAndName usage
+   * lxd/device/device/utils/network: Updates network package usage
+   * lxd/device/device/utils/network: Unexports some non-shared functions
+   * lxd/network/utils: Removes network utils functions used by network type
+   * lxd/networks/config: Removes networkFillAuto function
+   * lxd/networks: Removes network type and networkLoadByName function
+   * lxd/device: networkCreateVlanDeviceIfNeeded and networkRandomDevName usage
+   * lxd: network package usage
+   * test: static analysis of network pkg
+   * lxd/instance/drivers/driver/qemu: network.GetLeaseAddresses usage
+   * lxd/instance/instance/utils: Removes linked function NetworkGetLeaseAddresses var
+   * lxd/network/network/utils: Adds GetMACSlice and GetLeaseAddresses functions
+   * lxd/networks: Removes networkGetLeaseAddresses functions
+   * lxd/networks/utils: Removes networkGetMacSlice function
+   * lxd/instances: Fix URLs to use /1.0/instances
+   * seccomp: make device number checking more robust
+   * Define MS_LAZYTIME for compatibility with old glibc
+   * lxd/vm: Use vhost_net
+   * lxd/vm: Enable block discard
+   * shared/archive: Fix out of space logic
+   * lxd/vm: Set Documentation in systemd units
+   * lxd/vm: Silence writeback warning for config drive
+   * lxd/device/nic/bridged: Load br_netfilter kernel module when using IPv6 filtering
+   * lxd/networks/configs: Adds maas.subnet.ipv{4,6} to allowed network keys
+   * lxd: Device name quoting in device errors
+   * lxd/device/nic: Adds network as valid nic property
+   * lxd/networks: Uses HasDHCPv6 function and updates comment
+   * lxd/network: Adds DHCP range parsing functions
+   * lxd/device/nic/bridged: Updates to use network type DHCP ranges functions and types
+   * lxd/device/nic/bridged: Adds support for network property
+   * doc: Adds API extension for instance_nic_network
+   * shared/version/api: Adds API extension for instance_nic_network
+   * test/suites/container/devices/nic/bridged: Adds network property tests
+   * doc: Adds network property to instance NIC bridged device
+   * lxd/storage/zfs: Fix argument ordering
+   * unix hotplug: skip devices without associated devpath or major/minor
+   * lxd: Switches to simpler conn.WriteMessage function
+   * lxd/storage/drivers: Add MountedRoot to Info
+   * lxd/storage: Honor MountedRoot in pool actions
+   * lxd/networks: Consider IPv6 neighborhood entries
+   * lxd: Uses gorilla WriteJSON where possible
+   * lxd/storage/drivers: Set MountedRoot option
+   * lxd/main_checkfeature: add explicit _exit() even if it's not needed
+   * lxd/main_checkfeature: s/exit()/_exit()/g
+   * cgo: export wait_for_pid() helper
+   * lxd/main_checkfeature: close listener
+   * lxd/main_checkfeature: don't depend on kcmp header
+   * lxd/device: Async CEPH unmap
+   * lxd/storage/drivers/driver/lvm: Uses d.thinpoolName() rather than d.config["lvm.thinpool_name"]
+   * lxd/patches: setupStorageDriver usage
+   * lxd/storage: Renames SetupStorageDriver to setupStorageDriver for consistency
+   * lxd/storage/drivers/driver/zfs: Adds zfs kernel module load fail detection
+   * lxd/daemon: setupStorageDriver usage
+   * lxd/daemon: Comment consistency
+   * lxd/storage/drivers/driver/lvm: Makes lvm.vg_name required for mounting
+   * lxd/db/cluster/update: Adds updateFromV23 for ensuring lvm.vg_name key is set
+   * lxd/db/cluster/update: Superfluous trailing whitespace
+   * lxd/db/cluster/schema: v24 update
+   * lxd/device/config/devices: Adds NICType function on Device type
+   * lxd: Device.NICType usage
+   * lxd/device/nic/bridged: Bans use of nictype when using network property
+   * test: Updates nic bridged tests for NICType logic
+   * lxd/network/network/utils: Fix network in use detection
+   * lxd-agent/exec: Logs signal forwarding as info rather than error
+   * lxd/container/exec: Only log finished mirror websocket when go routine exits
+   * lxd/instance/drivers/driver/qemu: Fix go routine leak and hanging lxc clients
+   * shared: Upper case first character of some debug messages
+   * lxd/device/nic/bridged: Switches to dnsmasq.DHCPAllocatedIPs()
+   * lxd/device/nic/bridged: Switches to dnsmasq.DHCPStaticIPs()
+   * test/suites/container/devices/nic/bridged: Adds test to detect leaked filters
+   * lxd/device/nic/bridged: Fixes bug that leaks ebtables filters
+   * lxd/project: Adds InstanceParts() function for separating project prefixed Instance name
+   * lxd/storage/load: Updates volIDFuncMake to use project.InstanceParts()
+   * lxd/util: Fix IP/host tests on other distros
+   * lxd/storage/drivers: Add Ceph driver
+   * lxd: Use new storage code for Ceph clustering
+   * Unlock when isLeader failure
+   * lxd/storage/ceph: Function ordering and comments
+   * lxd/storage/ceph: Properly handle os.Remove
+   * lxd/storage/ceph: Comment consistency
+   * lxd/storage/ceph: Set DirectIO
+   * lxd/storage/ceph: Unwrap if statement
+   * lxd/storage/ceph: Unwrap function signatures
+   * lxd/storage/ceph: Rework MountVolume
+   * lxd/patches: Re-run VM path creation
+   * tests: Add ceph to list of new drivers
+   * lxd/firewall: Moves iptables/xtables implementation into firewall/drivers package
+   * Consider the default port when checking address overlap
+   * lxd/firewall: Updates interface and loader for new pkg
+   * lxd: firewall/drivers pkg usage
+   * lxd/device/config/device/proxyaddress: Moves ProxyAddress type
+   * lxd/main/forkproxy: Updates use of ProxyAddress type
+   * lxd/device/proxy: Switches to use firewall.InstanceSetupProxyNAT()
+   * lxd/firewall/firewall/interface: Reworks firewall interface
+   * Re-disable clustering upgrade test
+   * lxd: Fix error message when deleting storage pools
+   * lxd/firewall/drivers/drivers/xtables: Implements xtables driver
+   * lxd/network/network/utils: Adds UsesIPv4Firewall and UsesIPv6Firewall functions
+   * lxd/device/nic/bridged: Switches to firewall.InstanceSetupBridgeFilter and InstanceClearBridgeFilter
+   * lxd/network/network: firewall.NetworkSetupForwardingPolicy usage
+   * lxd/network: firewall.NetworkSetupOutboundNAT usage
+   * lxd/network: Updates firewall DHCP/DNS function usage
+   * lxd/firewall/drivers/consts: Removes unused constants
+   * lxd/network: Updates to use firewall helper functions
+   * lxd/dnsmasq: Makes DHCPStaticIPs project aware
+   * lxd/device/nic/bridged: dnsmasq.DHCPStaticIPs project usage
+   * lxd/network/network/utils: dnsmasq.DHCPStaticIPs project usage
+   * test: Removes old iptables package from static analysis
+   * test: Fixes iptables rule leak in clustering test
+   * shared: Add HostPathFollow
+   * lxc/file: Follow symlinks on individual file transfers
+   * lxd/container: Protect file push/pull from shift
+   * Add cluster.n_voters and cluster.n_standby configuration keys
+   * Load configuration keys when checking for n of voters/stand-by
+   * doc/clustering.md: describe usage of clustering size config keys
+   * Drive-by: fix check for degraded cluster
+   * doc/server.md: add cluster.max_voters/max_standby
+   * api: Add clustering_sizing extension
+   * Revert "lxd/instance/drivers/driver/qemu: Fix go routine leak and hanging lxc clients"
+   * lxd/instance: Move ParseCpuset
+   * lxd/vm/qmp: Allow retrieving vCPU pids
+   * lxd/vm: Implement CPU pinning
+   * shared: get_poll_revents(): handle EAGAIN in addition to EINTR
+   * lxc: send SIGTERM when there's no controlling terminal
+   * shared: Add Uint64InSlice
+   * lxd/vm: Template sockets/cores/threads config
+   * lxd/vm: Attempt to line up CPU topology
+   * lxd init: Don't allow empty strings for the cluster host name
+   * node/config.go: Don't allow wild card addresses for cluster.https_address
+   * idmap:acl: don't add but update the acls
+   * shared/util: Tweak HostPathFollow to use readlink
+   * lxc/file: Expand complex symlink chains
+   * i18n: Update translations from weblate
+
+
+  ### Try it for yourself
+  This new LXD release is already available for you to try on our [demo service](https://linuxcontainers.org/lxd/try-it/).
+
+  ### Downloads
+  The release tarballs can be found on our [download page](https://linuxcontainers.org/lxd/downloads/).
+
+  Binary builds are also available for:
+
+   - **Linux:** snap install lxd
+   - **MacOS:** brew install lxc
+   - **Windows:** choco install lxc
