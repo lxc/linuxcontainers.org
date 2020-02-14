@@ -27,7 +27,7 @@ content: |-
   In this mode, the bridge MTU is automatically inherited by the network interface, IPv4/IPv6 addresses are validated against the network's configured subnets and the MAAS IPv4 and IPv6 subnets can now be configured through the network rather than the individual interfaces.
 
   #### Ceph ported to new storage driver infrastructure
-  The Ceph storage driver is the latest and last storage driver to be ported to the new storage infrastructure. This should be an invisible change to users, but we would recommend users of Ceph on LXD try upgrading non-critical systems to 3.21 first and prompty report any issue related to storage.
+  The Ceph storage driver is the latest and last storage driver to be ported to the new storage infrastructure. This should be an invisible change to users, but we would recommend users of Ceph on LXD try upgrading non-critical systems to 3.21 first and promptly report any issue related to storage.
 
   With this last driver ported, we can now begin the work of removing all the old storage infrastructure from the LXD codebase, which should make things significantly easier to maintain going forward.
 
