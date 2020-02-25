@@ -61,6 +61,29 @@ content: |-
   -->
   Ubuntu 18.04 VM の作成し、エージェントをインストールし、詳細を問い合わせ、内部でシェルを取得する基本的な例を示します:
 
+      stgraber@castiana:~$ lxc profile create vm
+      stgraber@castiana:~$ lxc profile edit vm
+      stgraber@castiana:~$ lxc profile show vm
+      config:
+        user.user-data: |
+          #cloud-config
+          ssh_pwauth: yes
+          apt_mirror: http://us.archive.ubuntu.com/ubuntu/
+          users:
+            - name: ubuntu
+              passwd: "$6$s.wXDkoGmU5md$d.vxMQSvtcs1I7wUG4SLgUhmarY7BR.5lusJq1D9U9EnHK2LJx18x90ipsg0g3Jcomfp0EoGAZYfgvT22qGFl/"
+              lock_passwd: false
+              groups: lxd
+              shell: /bin/bash
+              sudo: ALL=(ALL) NOPASSWD:ALL
+      description: VM specific configuration
+      devices:
+        config:
+          source: cloud-init:config
+          type: disk
+      name: vm
+      used_by:
+
       stgraber@castiana:~$ lxc launch ubuntu:18.04 v1 --vm --profile default --profile vm
       Creating v1
       Starting v1
@@ -136,7 +159,7 @@ content: |-
   これにより、仮想マシン向けのブロックデバイスの保存サポートを追加し、長年に渡って蓄積してきた多くの問題を解決し、ストレージレイヤーの進化のために行われました。
 
   <!--
-  This has no user visible repercusions, if it works properly, the new logic should be acting exactly like the old one, though possibly with quite a few less bugs.
+  This has no user visible repercussions, if it works properly, the new logic should be acting exactly like the old one, though possibly with quite a few less bugs.
   -->
   これにはユーザーに見える影響はありません。適切に動作すれば、新しいロジックは以前のロジックと全く同じように動作するはずですが、バグがある可能性はあります。
 
@@ -152,7 +175,7 @@ content: |-
 
   #### テキサス大学の学生による貢献 <!-- Contributions by students of the University of Texas -->
   <!--
-  A number of group of sutdents from the University of Texas in Austin have been contributing LXD features as part of an assignment in their virtualization class.
+  A number of group of students from the University of Texas in Austin have been contributing LXD features as part of an assignment in their virtualization class.
   -->
   オースティンのテキサス大学のたくさんの学生グループが、仮想化クラスの課題の一部として LXD 機能への貢献を行ってきています。
 
@@ -519,9 +542,9 @@ content: |-
 
   #### LVM ストライピングサポート <!-- LVM striping support -->
   <!--
-  LVM striping is now supported, it can be configured through the `lvm.volume.stripes` and `lvm.volume.stripes.size`.
+  LVM striping is now supported, it can be configured through the `volume.lvm.stripes` and `volume.lvm.stripes.size`.
   -->
-  LVM ストライピングがサポートされるようになりました。`lvm.volume.stripes` と `lvm.volume.stripes.size` で設定できます。
+  LVM ストライピングがサポートされるようになりました。`volume.lvm.stripes` と `volume.lvm.stripes.size` で設定できます。
 
   #### cgroup2 リソース制限の初期サポート <!-- Initial CGroup2 resource restrictions -->
   <!--
