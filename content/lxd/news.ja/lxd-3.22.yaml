@@ -53,6 +53,7 @@ content: |-
   On startup, LXD will detect which is currently in use by your system and then go on using that one.
   -->
   このリリースの LXD で、新しいバックエンドとして、nft が既存の xtables 実装に加わりました。
+  起動時に LXD はシステムでどちらが現在使用されているかを検出し、以降はそれを使い続けます。
 
   <!--
   The existing backend can be found in `lxc info`.
@@ -147,7 +148,7 @@ content: |-
   <!--
   Adding templates to custom images now works identicallty to containers and can be seen in use by our own VM images on the images: remote.
   -->
-  カスタムイメージへのテンプレートの追加がコンテナと同様に動作するようになり、イメージ上の自身の独自 VM イメージ内で使われるのが確認できます。
+  カスタムイメージへのテンプレートの追加がコンテナと同様に動作するようになり、LXD のイメージサーバー [images:](https://images.linuxcontainers.org/) （https://images.linuxcontainers.org/）でも使われています。
 
   ### 完全な ChangeLog（翻訳なし） <!-- Complete changelog -->
   Here is a complete list of all changes in this release:
