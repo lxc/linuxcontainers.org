@@ -64,9 +64,9 @@ content: |-
       total 0
 
   #### VM: Support for 9p disk devices
-  One long awaited feature of LXD virtual machines was the ability to pass arbitrary paths from the host into the container.
+  One long awaited feature of LXD virtual machines was the ability to pass arbitrary paths from the host into the virtual machine.
 
-  LXD 3.21 now supports that through a combination of logic in LXD itself and in the agent.
+  LXD 3.22 now supports that through a combination of logic in LXD itself and in the agent.
 
   This can then be used by both containers and virtual machines through profiles.
 
