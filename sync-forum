@@ -5,6 +5,7 @@ import json
 import os
 from urllib.request import urlopen
 import ruamel.yaml
+import time
 
 API_URL = "https://discuss.linuxcontainers.org"
 API_USERNAME = "system"
@@ -14,6 +15,7 @@ PROJECTS = ("lxc", "lxcfs", "lxd", "distrobuilder")
 
 
 def load_json(url):
+    time.sleep(1)
     url = url.split(API_URL)[-1]
     url = "%s/%s.json?api_username=%s&api_key=%s" % \
         (API_URL, url, API_USERNAME, API_KEY)
