@@ -101,14 +101,14 @@ content: |-
 
   #### VM: 9p ディスクデバイスのサポート <!-- VM: Support for 9p disk devices -->
   <!--
-  One long awaited feature of LXD virtual machines was the ability to pass arbitrary paths from the host into the container.
+  One long awaited feature of LXD virtual machines was the ability to pass arbitrary paths from the host into the virtual machine.
   -->
-  LXD の仮想マシンに長く待望されていた機能のひとつが、ホストからコンテナに任意のパスを渡す機能でした。
+  LXD の仮想マシンに長く待望されていた機能のひとつが、ホストから仮想マシンに任意のパスを渡す機能でした。
 
   <!--
-  LXD 3.21 now supports that through a combination of logic in LXD itself and in the agent.
+  LXD 3.22 now supports that through a combination of logic in LXD itself and in the agent.
   -->
-  LXD 3.21 で LXD 自身とエージェントのロジックを組み合わせることでこれを可能にしました。
+  LXD 3.22 で LXD 自身とエージェントのロジックを組み合わせることでこれを可能にしました。
 
   <!--
   This can then be used by both containers and virtual machines through profiles.
