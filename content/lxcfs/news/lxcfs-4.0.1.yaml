@@ -8,7 +8,7 @@ content: |-
   This is the first bugfix release for LXCFS 4.0 which is supported until June 2025.
 
   ### Bugfixes
-  This release fixes a number of issues that were reported shortly following the original 4.0.0 release. Some of the highlights include:
+  This release fixes a number of issues that were reported shortly following the [original 4.0.0 release](https://discuss.linuxcontainers.org/t/lxcfs-4-0-lts-has-been-released/7031). Some of the highlights include:
 
    - CPU view (CFS) on CgroupV2 systems
    - Incorrect meminfo on CgroupV2 systems
