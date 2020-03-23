@@ -11,7 +11,7 @@ content: |-
   <!--
   This should be the last release of the `3.x` series with LXD 4.0 planned to be released next week with very minimal changes on top of that (a few backward-incompatible CLI tweaks).
   -->
-  このリリースは最後の `3.x` リリーズのリリースです。来週リリース予定の LXD 4.0 に少しの変更（いくつかの後方互換性のない CLI の調整）を加えています。
+  このリリースは最後の `3.x` シリーズのリリースです。来週リリース予定の LXD 4.0 に少しの変更（いくつかの後方互換性のない CLI の調整）を加えています。
 
   <!--
   This is also a rather feature packed release, especially for those using custom storage volumes, projects or virtual machines.
