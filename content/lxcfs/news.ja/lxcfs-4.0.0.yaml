@@ -1,0 +1,157 @@
+title: LXCFS 4.0 LTS リリースのお知らせ
+date: 2020/03/06 23:03
+origin: https://discuss.linuxcontainers.org/t/lxcfs-4-0-lts-has-been-released/7031
+content: |-
+  ### はじめに <!-- Introduction -->
+
+  <!--
+  The LXCFS team is pleased to announce the release of LXCFS 4.0.0!
+  -->
+  LXCFS チームは LXCFS 4.0.0 のリリースをお知らせできることをうれしく思います!
+
+  <!--
+  This is the result of two years of work since the LXCFS 3.0.0 release and is the third LTS release for the LXCFS project. This release will be supported until June 2025.
+  -->
+  これは LXCFS 3.0.0 リリース以来、2 年に渡る作業の結果であり、LXCFS プロジェクトにとって 3 つめの LTS リリースとなります。このリリースは 2025 年 6 月までサポートされます。
+
+  ### 主な変更点 <!-- Major changes -->
+  #### リポジトリの再構成 <!-- Repository re-organization -->
+  <!--
+  The `LXCFS` repo has been completely reorganized. Prior to LXCFS 4.0 all functionality used to live in a single file. This used to work fine for a long time since LXCFS encompassed a very small set of features. Over the years LXCFS has grown a range of new abilities and has seen major improvements in how various aspects of the system are virtualized for containers. This meant that the single file approach was not feasible anymore.
+  -->
+  `LXCFS` リポジトリは完全に再構成されました。LXCFS 4.0 までは、すべての機能が単一のファイル内に納められていました。これは、LXCFS が非常に小さな機能から成っていたために長期間うまく機能していました。長い年月をかけて、LXCFS はさまざまな新しい機能を追加し、コンテナでシステムのさまざまなものを仮想化する方法を大きく改善してきました。これは、もはや単一ファイルによるアプローチは実現できなくなっていることを表していました。
+
+  <!--
+  With LXCFS 4.0 various large virtualization features have been moved into separate files under a common source directory. This has also necessitated various changes to the build system. While we have stuck with the autotools build suite we have had to make significant changes how LXCFS is built. The most obvious change is that the location of the compiled binaries has changed from the top level directory under the source directory. For distributions packaging LXCFS this might mean that the package tooling needs to be made aware of this.
+  -->
+  LXCFS 4.0 で、さまざまな広範囲の仮想化機能を、共通のソースディレクトリー以下の分割されたファイルに移動しました。これにより、ビルドシステムにもさまざまな変更が必要になりました。私たちは autotools ビルドスイートを使い続けてきましたが、LXCFS のビルド方法にも大きな変更が必要になりました。もっとも明らかな変更は、コンパイルされたバイナリーがトップレベルのディレクトリーからソースディレクトリー配下に生成されるようになったことです。LXCFS パッケージを作成しているディストリビューションでは、パッケージツールにこの変更を認識させる必要があるかもしれません。
+
+  #### cgroup2: 新しい単一 cgroup 階層のサポート <!-- Support for the new unified cgroup hierarchy -->
+  <!--
+  The virtualization abilities of LXCFS are often centered around cgroups, i.e. cgroups are used to calculate container specific values that are shown in various files that provide access to system resources. So far, LXCFS has only supported virtualization based on the legacy cgroup hierarchy. With more systems slowly migrating to the unified cgroup hierarchy we have extended LXCFS to provide the same virtualization abilities based on the unified cgroup hierarchy whenever possible. The qualifying "whenever possible" clause needs to be highlighted. Currently, there are various smaller features that can't be virtualized based on the current implementation of the unified cgroup hierarchy. That might change over time as the unified cgroup hierarchy grows new features in the upstream kernel but we can't guarantee that it will provide full feature parity with the legacy cgroup hierarchy as there is no such guarantee or intention from the kernel developers. We hope however, to come to feature parity in what LXCFS provides.
+  When sending patches upstream we would appreciate if you could try to make sure that the legacy cgroup and unified cgroup hierarchy support the new feature alike and provide both implementations in one go whenever possible.
+  -->
+  LXCFS の仮想化機能の多くは cgroup を中心に構成されています。すなわち、cgroup はシステムリソースへのアクセスを提供する様々なファイルが表示するコンテナ固有の値を計算するのに使われているということです。これまでは、LXCFS は cgroup v1（レガシーな cgroup）階層をもとにした仮想化のみをサポートしてきました。多くのシステムはゆっくりと cgroup v2（単一 cgroup）階層に移行するので、LXCFS を拡張して、可能な限り cgroup v2 階層を元にした同じ仮想化機能を提供するようにしました。
+
+  この「可能な限り」という言葉は強調する必要があります。現時点で、cgroup v2 階層の現在の実装にもとづいて仮想化できないさまざまな細かい機能があります。これは upstream のカーネルの cgroup v2 機能が成長するにつれて変わるかもしれません。しかし、カーネル開発者が cgroup v2 が cgroup v1 と完全に同じ機能を提供する意図を持っておらず保証もしていないため、完全に同じ機能を提供できることは保証できません。しかし、私たちは LXCFS が提供するものと同等の機能を提供できることを願っています。
+
+  パッチを送る際には、cgroup v1 と v2 階層が新機能を同様にサポートすることを確認し、可能な限り両方の実装を一度に提供していただけるとありがたいです。
+
+  #### cpu shares にもとづく `/proc/cpuinfo` と `/proc/stat` の CPU 情報出力 <!-- `/proc/cpuinfo` and cpu output in `/proc/stat` based on cpu shares -->
+  <!--
+  CPU information provided in `cpuinfo` and `stat` in `procfs` can now be based on cpu shares. This can provide a more fine-grained and precise view then the regular virtualization we do but requires more state be kept by LXCFS. For full functionality the legacy `cpu` and `cpuacct` controllers need to be enabled on the system. When the unified hierarchy is used only a very rough approximation can be provided though we expec the `cpu` controller in the unified hierarchy to support some of the features that the `cpu` and `cpuacct` controllers in the legacy hierarchy support. This feature can be enabled by passing the `--enable-cfs` flag to LXCFS.
+  -->
+  `procfs` 内の `cpuinfo` と `stat` が提供する CPU 情報が cpu shares にもとづいて提供されるようになりました。これにより、通常の仮想化よりも詳細で正確な情報を提供できますが、LXCFS でより多くの状態を保持する必要があります。全機能を使用するには、cgroup v1（レガシー）の `cpu` と `cpuacct` コントローラーがシステム上で有効になっている必要があります。
+
+  cgroup v2（単一階層）が使われた場合は、非常におおまかな近似値のみしか提供できません。cgroup v2 の `cpu`  コントローラーが、cgroup v1 の `cpu` と `cpuacct` コントローラーの機能の一部をサポートすることが期待されます。この機能は `--enable-cfs` フラグを LXCFS に与えると有効になります。
+
+  #### コマンドラインオプションの改良 <!-- Improved command line options -->
+  <!--
+  LXCFS has grown support for features over time and they have mostly been placed behind new command line options. Some of the options had no long or short options and so the experience could feel a little dated. With LXCFS 4.0 we have updated our command line experience. The following options are now supported:
+  -->
+  LXCFS は時間の経過とともに機能を拡張しており、拡張した機能はコマンドラインオプションとして設定されてきました。オプションの中には長いもしくは短いオプションがなく、使い勝手は少し時代遅れに感じるかもしれませんでした。LXCFS 4.0 でコマンドラインの使い方が更新されました。次のオプションが使えます:
+
+      Usage: lxcfs <directory>
+      
+      lxcfs set up fuse- and cgroup-based virtualizing filesystem
+      
+      Options :
+        -d, --debug          Run lxcfs with debugging enabled
+        --disable-cfs        Disable cpu virtualization via cpu shares
+        -f, --foreground     Run lxcfs in the foreground
+        -n, --help           Print help
+        -l, --enable-loadavg Enable loadavg virtualization
+        -o                   Options to pass directly through fuse
+        -p, --pidfile=FILE   Path to use for storing lxcfs pid
+                             Default pidfile is /run/lxcfs.pid
+        -u, --disable-swap   Disable swap virtualization
+        -v, --version        Print lxcfs version
+        --enable-pidfd       Use pidfd for process tracking
+
+  #### `/proc/loadavg` の仮想化 <!-- `/proc/loadavg` virtualization -->
+  <!--
+  It is now possible for LXCFS to virtualize `loadavg` output. If  `--enable-loadavg` is passed that LXCFS will provide a container-specific `/proc/loadavg` view based on cgroups.
+  -->
+  LXCFS が `loadavg` 出力を仮想化できるようになりました。`--enable-loadavg` を指定すると、LXCFS は cgroup にもとづいたコンテナ固有の `/proc/loadavg` を提供します。
+
+  #### `pidfd` がサポートするプロセスの追跡 <!-- `pidfd` supported process tracking -->
+  <!--
+  LXCFS needs to keep track of each container's init process in order to correctly virtualize various values. This means LXCFS needs to detect when a container's process has died. Detecting this is suspect to the usual pid reuse races which have plagued Linux for a long time. Newer kernels provide the concept of a pidfd which solves pid reuse problems. When LXCFS is started with `--enable-pidfd` it will make use of this feature when the underlying kernel supports it. This will ensure reliable process tracking.
+  -->
+  LXCFS は様々な値を正しく仮想化するために、コンテナごとの init プロセスを追跡し続ける必要があります。これは、コンテナのプロセスが死んだときに検出する必要があるということです。この検出では、長い間 Linux を悩ませてきた通常の PID の再利用の競合を疑うことになります。
+
+  新しいカーネルでは、PID 再利用の問題を解決する pidfd の考え方が提供されています。LXCFS を `--enable-pidfd` 付きで起動した場合、カーネルがサポートしている場合はこの機能を使います。これによりプロセス追跡の信頼性が保証されます。
+
+  #### コンパイラベースのハードニング <!-- Compiler based hardening -->
+  <!--
+  For a long time LXC has supported compiler based hardening, i.e. a set of well-known compiler and linker options are automatically enabled whenever the compiler or linker support them. The set of currently supported hardening flags is:
+  -->
+  長い間、LXC はコンパイラーベースのハードニングをサポートしてきました。つまり、コンパイラーやリンカーがサポートしている場合は、既知のコンパイラーやリンカーのオプションが自動的に有効になります。現時点でサポートされているハードニングフラグは次の通りです:
+
+      -Wimplicit-fallthrough=5
+      -Wcast-align
+      -Wstrict-prototypes
+      -fno-strict-aliasing
+      -fstack-clash-protection
+      -fstack-protector-strong
+      --param=ssp-buffer-size=4
+      -g
+      --mcet -fcf-protection
+      -Werror=implicit-function-declaration
+      -Wlogical-op
+      -Wmissing-include-dirs
+      -Wold-style-definition
+      -Winit-self
+      -Wunused-but-set-variable
+      -Wfloat-equal
+      -Wsuggest-attribute=noreturn
+      -Werror=return-type
+      -Werror=incompatible-pointer-types
+      -Wformat=2
+      -Wshadow
+      -Wendif-labels
+      -Werror=overflow
+      -fdiagnostics-show-option
+      -Werror=shift-count-overflow
+      -Werror=shift-overflow=2
+      -Wdate-time
+      -Wnested-externs
+      -fasynchronous-unwind-tables
+      -pipe
+      -fexceptions
+      -fvisibility=hidden
+
+
+  #### コンパイラによる最小限のリソースマネージメント <!-- Minimal compiler based resource management -->
+  <!--
+  As has been the case a long time for LXC, LXCFS will now make use of the cleanup macro feature of `clang` and `gcc` to provide automatic cleanup of resources such as memory and file descriptors. For LXC this has significantly reduced the number of resource leaks and we expect the same to be the case for LXCFS.
+  -->
+  これまで長い間 LXC で行ってきたのと同様に、LXCFS でも `clang` と `gcc` のクリーンアップマクロ機能を利用して、メモリーやファイルディスクリプターのようなリソースの自動クリーニングを提供します。LXC では、これによりリソースリークの数が大幅に減少しました。LXCFS でも同様になることが期待できます。
+
+  #### サポートする全アーキテクチャーで完全に有効なテストスイート <!-- Full test suite enabled on all supported architectures -->
+  <!--
+  Prior to the LXCFS 4.0 release we have finally come around to enabling our test-suite on all supported architectures. This will ensure more rigorous testing going forward.
+  -->
+  LXCFS 4.0 リリースに先立って、サポートする全アーキテクチャーでテストスイートを有効にしました。これにより、今後はより厳格なテストを行うことが保証されます。
+
+  ### サポートとアップグレード <!-- Support and upgrade -->
+  <!--
+  LXCFS 4.0.0 will be supported until June 2025 and our current LTS release, LXCFS 3.0 will now switch to a slower maintenance pace, only getting critical bugfixes and security updates.
+  -->
+  LXCFS 4.0.0 は 2025 年の 6 月までサポートされる最新の LTS リリースです。LXCFS 3.0 はメンテナンスのペースが低頻度になり、重要なバグフィックスとセキュリティアップデートのみ提供されるようになります。
+
+  <!--
+  We strongly recommend all LXCFS users to plan an upgrade to the 4.0 branch.
+  -->
+  すべての LXCFS ユーザーは 4.0 ブランチへアップデートすることを強く推奨します。
+
+  ### ダウンロード <!-- Downloads -->
+
+   - リリース tarball <!-- Main release tarball -->: [lxcfs-4.0.0.tar.gz](https://linuxcontainers.org/downloads/lxcfs/lxcfs-4.0.0.tar.gz)
+   - GPG シグネチャ <!-- GPG signature -->: [lxcfs-4.0.0.tar.gz.asc](https://linuxcontainers.org/downloads/lxcfs/lxcfs-4.0.0.tar.gz.asc)
+
+  ### コントリビューター <!-- Contributors -->
+  <!--
+  The LXCFS 4.0.0 release was brought to you by a total of 15 contributors.
+  -->
+  LXCFS 4.0.0 は 15 名のコントリビューターによりリリースされました。
