@@ -340,6 +340,7 @@ content: |-
   The new configuration options are:
   -->
   新しい設定オプションは次の通りです:
+
    - security.syscalls.intercept.mount (機能の有効・無効を設定 <!-- enable/disable the feature -->)
    - security.syscalls.intercept.mount.allowed (マウントを許可するファイルシステムのリスト <!-- list of filesystems to allow mounting -->)
    - security.syscalls.intercept.mount.fuse (FUSE へのリダイレクトをするファイルシステムリスト <!-- list of filesystems to redirect to FUSE -->)
