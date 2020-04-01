@@ -90,7 +90,7 @@ content: |-
   <!--
   The restrictions enforced by the unified cgroup hierarchy also mean, that in order to start fully unprivileged containers cooperation is needed on distributions that make use of an init system which manages cgroups. This applies to all distributions that use systemd as their init system. When a container is started from the shell via `lxc-start` or other means one either needs to be root to allow LXC to escape to the root cgroup or the init system needs to be instructed to delegate an empty cgroup. In such scenarios it is wise to set the configuration key `lxc.cgroup.relative` to `1` to prevent LXC from escaping to the root cgroup.
   -->
-  cgroup v2（単一）階層が強制する制限は、完全に非特権のコンテナを起動するには、cgroup を管理する init システムを使ったディストリビューションの協力が必要であるということも意味します。コンテナがシェルから `lxc-start` や他の手段で起動した場合、LXC が root cgroup にエスケープするために root になる必要があるか、もしくは init システムが空の cgroup を委任するように指示する必要があります。このようなシナリオでは、LXC が root cgroup へエスケープするのを防ぐように、`lxc.cgroup.relative` を `1` に設定するのが賢明です。
+  cgroup v2（単一）階層が強制する制限は、完全に非特権のコンテナを起動するには、cgroup を管理する init システムを使ったディストリビューションの協力が必要であるということも意味します。これは init システムとして systemd を使うすべてのディストリビューションに当てはまります。コンテナがシェルから `lxc-start` や他の手段で起動した場合、LXC が root cgroup にエスケープするために root になる必要があるか、もしくは init システムが空の cgroup を委任するように指示する必要があります。このようなシナリオでは、LXC が root cgroup へエスケープするのを防ぐように、`lxc.cgroup.relative` を `1` に設定するのが賢明です。
 
   #### cgroups: cgroup v2 での freezer サポート <!-- Freezer support in CGroup2 -->
   <!--
