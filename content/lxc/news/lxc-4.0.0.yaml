@@ -64,7 +64,7 @@ content: |-
   #### AppArmor: Deny access to `/proc/acpi/**`
   The default AppArmor profile now denies access to `/proc/acpi/` improving safety.
 
-  #### config: Add `lxc.autodev.tmps.size` configuration key
+  #### config: Add `lxc.autodev.tmpfs.size` configuration key
   LXC supports creating a useable minimal `/dev` directory for the container by setting `lxc.autodev = 1` in the container's config file. To do this LXC sets up a `tmpfs` mount on `/dev`. This `tmpfs` mount could not be restricted in prior releases. Now it is possible to set a limit on the size of the `tmpfs` mount by setting `lxc.autodev.tmpfs.size` to the number of bytes that the `tmpfs` should be restricted to use.
 
   #### config: Add `lxc.selinux.context.keyring` key
