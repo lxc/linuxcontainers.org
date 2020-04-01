@@ -1,0 +1,499 @@
+title: LXC 4.0 LTS リリースのお知らせ
+date: 2020/03/25 13:03
+origin: https://discuss.linuxcontainers.org/t/lxc-4-0-lts-has-been-released/7182
+content: |-
+  ### はじめに <!-- Introduction -->
+  <!--
+  The LXC team is pleased to announce the release of LXC 4.0.0!
+  -->
+  LXC チームは LXC 4.0.0 のリリースをお知らせできてとてもうれしいです!
+
+  <!--
+  This is the result of two years of work since the LXC 3.0.0 release and is the third LTS release for the LXC project. This release will be supported until June 2025.
+  -->
+  このリリースは LXC 3.0.0 リリース以来 2 年に渡る作業の結果で、LXC プロジェクトにとって 3 つめの LTS リリースです。このリリースは 2025 年 6 月までサポートされます。
+
+  ### 主な変更点 <!-- Major changes -->
+
+  #### cgroups: cgroup2 のフルサポート <!-- Full cgroup2 support -->
+  <!--
+  LXC 4.0 now fully supports the unified cgroup hierarchy. For this to work the whole cgroup driver had to be rewritten. A consequence of this work is that the cgroup layout for LXC containers had to be changed. Older versions of LXC used the layout:
+  -->
+  LXC 4.0 は cgroup v2（単一）階層を完全にサポートするようになりました。この作業のために、cgroup ドライバーを完全に書き直しました。この作業の結果、LXC コンテナの cgroup レイアウトが変更されました。古いバージョンの LXC は次のようなレイアウトを使っていました:
+
+      /sys/fs/cgroup/<controller>/<container-name>/
+
+  <!--
+  For example, in the legacy cgroup hierarchy the `cpuset` hierarchy would place the container 's init process into
+  -->
+  例えば、cgroup v1 の `cpuset` 階層では、コンテナの init プロセスは次の場所に置かれていました。
+
+      /sys/fs/cgroup/cpuset/c1/
+
+  <!--
+  The supervising monitor process would stay in
+  -->
+  監視モニタープロセスは次の場所にありました。
+
+      /sys/fs/cgroup/cpuset/
+
+  <!--
+  LXC 4.0 uses the layout:
+  -->
+  LXC 4.0 は次のようなレイアウトを使います:
+
+      /sys/fs/cgroup/<controller>/lxc.payload.<container-name>/
+
+  <!--
+  For the `cpuset` controller in the legacy cgroup hierarchy for the container `f2` the cgroup would be:
+  -->
+  コンテナ `f2` 用の cgroup v1 階層内の `cpuset` コントローラーは次のようになります:
+
+      /sys/fs/cgroup/cpuset/lxc.payload.f2/
+
+  <!--
+  The monitor process now moves into a separate cgroup as well:
+  -->
+  モニタープロセスも別の場所に移動しました:
+
+      /sys/fs/cgroup/<controller>/lxc.monitor.<container-name>/
+
+  <!--
+  For our example this would be:
+  -->
+  前述の例だと、モニタープロセスの場所は次のようになります:
+
+      /sys/fs/cgroup/cpuset/lxc.monitor.f2/
+
+  <!--
+  The monitor's and the container's cgroup will be placed on the same level in the corresponding cgroup hierarchy.
+  These changes apply to the legacy and the unified hierarchy alike and are not arbitrary. The new, unified cgroup hierarchy imposes specific restrictions where and how a process can be migrated in the cgroup hierarchy.  The most important restriction is the leaf-node restriction. This means that only leaf nodes can contain live processes, i.e. if you have the following cgroup tree
+  -->
+  モニターとコンテナの cgroup は一致する cgroup 階層の同じレベルに置かれます。
+  この変更は cgroup v1 と v2（単一）階層の両方に適用されます。任意に設定できるものではありません。新しい cgroup v2（単一）階層では、プロセスを cgroup 階層のどこにどのように移動できるかに特定の制限が課されます。もっとも重要な制限はリーフノード制限です。これはリーフ（末端の）ノードのみがプロセスを持てるということです。つまり、次のような cgroup ツリーがあったとします
+
+   
+      /sys/fs/cgroup/a/f2-monitor/f2-container/
+
+  <!--
+  then only `f2-container` can contain live processes whereas non-leaf nodes `a` and `f2-monitor` do not. This has the consequence that the old cgroup layout LXC used where the monitor process would have lived in `f2-monitor` and the container's init process would have lived in `f2-container` is not possible anymore. The kernel disallows this layout. Instead, the monitor process and the container's init process need to be moved into two leaf-node cgroups on the same level in the cgroup hierarchy. This would mean for a container `f2` the layout will be:
+  -->
+  この場合、`f2-container` のみがプロセスを持てます。いっぽうでリーフノードではない `a` と `f2-monitor` はプロセスを持てません。これは、モニタープロセスが `f2-monitor` 内に、コンテナの init プロセスが `f2-container` 内にいるような LXC が使っていた古い cgroup レイアウトは今後は持てないということです。カーネルがこのレイアウトを認めません。代わりに、モニタープロセスとコンテナの init プロセスを cgroup 階層の同じレベルとなるふたつのリーフノードに移動させる必要があります。これによりコンテナ `f2` のレイアウトは次のようになります:
+
+
+      /sys/fs/cgroup/lxc.monitor.f2/
+
+  そして
+
+      /sys/fs/cgroup/lxc.payload.f2/
+
+  <!--
+  The restrictions enforced by the unified cgroup hierarchy also mean, that in order to start fully unprivileged containers cooperation is needed on distributions that make use of an init system which manages cgroups. This applies to all distributions that use systemd as their init system. When a container is started from the shell via `lxc-start` or other means one either needs to be root to allow LXC to escape to the root cgroup or the init system needs to be instructed to delegate an empty cgroup. In such scenarios it is wise to set the configuration key `lxc.cgroup.relative` to `1` to prevent LXC from escaping to the root cgroup.
+  -->
+  cgroup v2（単一）階層が強制する制限は、完全に非特権のコンテナを起動するには、cgroup を管理する init システムを使ったディストリビューションの協力が必要であるということも意味します。これは init システムとして systemd を使うすべてのディストリビューションに当てはまります。コンテナがシェルから `lxc-start` や他の手段で起動した場合、LXC が root cgroup にエスケープするために root になる必要があるか、もしくは init システムが空の cgroup を委任するように指示する必要があります。このようなシナリオでは、LXC が root cgroup へエスケープするのを防ぐように、`lxc.cgroup.relative` を `1` に設定するのが賢明です。
+
+  #### cgroups: cgroup v2 での freezer サポート <!-- Freezer support in CGroup2 -->
+  <!--
+  As part of the cgroup2 support work for LXC 4.0 we also added support for cgroup2's implementation of the freezer controller which allows to poll until the cgroup is frozen or unfrozen making freezing and unfreezing container's way more reliable than before.
+  -->
+  LXC 4.0 での cgroup v2 サポートの一部として、cgroup v2 の freezer コントローラー実装のサポートも追加しました。cgroup が凍結または解凍されるまでポーリングできるようになり、コンテナの凍結と解凍が以前より信頼性が以前より増しました。
+
+  #### cgroups: cgroup v2 での eBPF デバイスコントローラーのサポート <!-- eBPF device controller support in CGroup2 -->
+  <!--
+  LXC 4.0 can now make proper use of the cgroup2 device controller. It will automatically create, load, and attach a eBPF program to the container's cgroup and supports dynamic additional and removal of rules. The configuration format is the same as for the legacy cgroup controller. Only the `lxc.cgroup2.devices.` prefix instead of the legacy `lxc.cgroup.devices` prefix needs to be used. LXC continues to support both black- and whitelists.
+  -->
+  LXC 4.0 は cgroup v2 のデバイスコントローラーをより適切に利用できるようになりました。これはコンテナの cgroup の作成、ロード、eBPF プログラムのアタッチが自動的に行われ、ルールの動的な追加・削除をサポートします。設定フォーマットは cgroup v1 コントローラーのものと同じです。`lxc.cgroup.devices` の代わりに `lxc.cgroup2.devices` だけを使う必要があります。LXC はブラックリストとホワイトリストの両方をサポートし続けます。
+
+  #### AppArmor: `/proc/acpi/**` へのアクセス拒否 <!-- Deny access to `/proc/acpi/**` -->
+  <!--
+  The default AppArmor profile now denies access to `/proc/acpi/` improving safety.
+  -->
+  デフォルトの AppArmor プロファイルは、安全性の向上のために `/proc/acpi` へのアクセスを拒否するようになりました。
+
+  #### config: `lxc.autodev.tmpfs.size` 設定キーの追加 <!-- Add `lxc.autodev.tmpfs.size` configuration key -->
+  <!--
+  LXC supports creating a useable minimal `/dev` directory for the container by setting `lxc.autodev = 1` in the container's config file. To do this LXC sets up a `tmpfs` mount on `/dev`. This `tmpfs` mount could not be restricted in prior releases. Now it is possible to set a limit on the size of the `tmpfs` mount by setting `lxc.autodev.tmpfs.size` to the number of bytes that the `tmpfs` should be restricted to use.
+  -->
+  LXC はコンテナが使用可能な最小の `/dev` ディレクトリの作成をサポートしています。これは `lxc.autodev = 1` で設定します。この作成のために、LXC は `/dev` に `tmpfs` マウントを設定します。この `tmpfs` マウントはこれまでのバージョンでは制限できませんでした。この `tmpfs` マウントのサイズ制限が設定できるようになりました。これは `lxc.autodev.tmpfs.size` に `tmpfs` が使用する制限をバイト数で設定します。
+
+  #### config: `lxc.selinux.context.keyring` 設定キーの追加 <!-- Add `lxc.selinux.context.keyring` key -->
+  <!--
+  This allows to specify the `selinux` context to be used for the keyring the container uses.
+  -->
+  この設定で、コンテナが使うキーリングに使う `selinux` コンテキストを指定できます。
+
+  #### config: `lxc.keyring.session`　設定キーの追加 <!-- Add `lxc.keyring.session` -->
+  <!--
+  Setting this to `1` (default) will cause LXC to create a new session keyring.
+  -->
+  これを `1` （デフォルト）に設定すると LXC に新しいセッションキーリングを作成します。
+
+  #### file utils: `fopen_cached()` と `fdopen_cached` の追加 <!-- Add `fopen_cached()` and `fdopen_cached` -->
+  <!--
+  These helpers first read a whole file and then make it available as a stream to be read via regular file-based libc apis. This makes LXC's handling of various files more robust where the underlying file can change while it is read.
+  -->
+  これらのヘルパーは、最初に全ファイルを読み込み、通常のファイルベースの libc API 経由で読むためにストリームとして使えるようにします。これにより、読み込まれている間に元となるファイルが変更される可能性がある場合に、LXC のさまざまなファイルの扱いがより強固になります。
+
+  #### api: 新しい `init_pidfd()` メンバーの追加 <!-- Add new `init_pidfd()` member -->
+  <!--
+  LXC 4.0 fully supports the new pidfd kernel api the LXC team has merged in the upstream Linux kernel. The `pidfd` of the container's init process can be requested via `c->init_pidfd(c)`.
+  -->
+  LXC 4.0 では、LXC チームがアップストリームのカーネルにマージした新しい pidfd カーネル API を完全にサポートします。コンテナの init プロセスの `pidfd` は `c->init_pidfd(c)` 経由でリクエストできます。
+
+  #### memory utils: Add new cleanup api
+  <!--
+  LXC 4.0 expands the usage of the compiler's cleanup attribute by introducing new internal apis to define and call cleanup macros for complex resource allocations. We have had extremely positive results decreasing bugs around file descriptor and memory leaks significantly by switching to this new way of cleaning up resources.
+  -->
+  LXC 4.0 で、複雑なリソース割り当てのためのクリーンアップマクロを定義し、呼ぶための新しい内部 API を導入し、コンパイラーのクリーンアップ属性の使用を拡張しました。このリソースクリーンアップの新しい方法に切り替えることで、ファイルディスクリプターとメモリーリークが大幅に減少し、非常に良い結果が得られました。
+
+  #### lxc-usernsexec: 自身の uid をマップするのが簡単に <!-- Make it easy to map own uid -->
+  <!--
+  The `lxc-usernsexec` binary now finds a default mapping as specified in `/etc/subuid` and `/etc/subgid` and writes it via `newuidmap` and `newgidmap`.
+  -->
+  `lxc-usernsexec` バイナリーは `/etc/subuid` と `/etc/subgid` で指定するデフォルトのマッピングを参照し、それを `newuidmap` と `newgidmap` で書くようになりました。
+
+  #### seccomp: s390 サポートの追加 <!-- Add s390 support -->
+  <!--
+  LXC 4.0's seccomp implementation now supports s390 as architecture.
+  -->
+  LXC 4.0 の seccomp 実装はアーキテクチャーとして s390 をサポートするようになりました。
+
+  #### syscalls: マニュアルでのシステムコール実装を改良 <!-- Improve manual syscall implementations -->
+  <!--
+  Whenever a given syscall is not supported or exposed by the underlying `C` library of the system LXC will define syscall stubs for important syscalls or new features it deems extremely valuable. This used to be done by checking for `__NR_<syscall-name>` being defined. But `__NR_<syscall-name>` being defined depended on the correct headers for the currently running kernel LXC was compiled on being installed and would be problematic whenever LXC was compiled on a system running an older kernel but used or deployed on systems that use a new kernel. In such scenarios LXC could not make use of new kernel features even though it should. We now introduce definitions for `__NR_<syscall-name>` whenever the system does not define it already and it is an architecture we support (which is basically any architecture). This way we better handle kernel <-> header version mismatches and compilation <-> deployment kernel mismatches.
+  -->
+  与えたシステムコールがシステムで使用中の `C` ライブラリーでサポートされていなかったり公開されていなかったりするときはいつでも、LXC は重要なシステムコールだったり非常に有用であると判断できる新機能のためにシステムコールのスタブを定義します。これは以前は `__NR_<syscall-name>` が定義されているかどうかをチェックすることで行っていました。しかし `__NR_<syscall-name>` が定義されているかどうかは、LXC がコンパイルされた際に実行されていたカーネルの正しいヘッダーがインストールされているかどうかに依存しています。そして古いカーネルが実行されているシステムでコンパイルされた LXC が、新しいカーネルを使うシステム上で使われたりインストールされたりした場合は常に問題になります。このようなシナリオでは LXC は新しいカーネルの機能を使えたにも関わらず使えません。
+
+  システムがまだ定義しておらず、我々がサポートするアーキテクチャーである場合（基本的にどのようなアーキテクチャーであっても）、`__NR_<syscall-name>` を定義するようにしました。この方法で、カーネルとヘッダーのバージョン、コンパイルとインストールする環境のカーネルのミスマッチをより良く扱えるようになりました。
+
+  #### network: ネットワークデバイスの作成と削除の改良 <!-- Improved network device creation and removal -->
+  <!--
+  We have reworked how network devices are created, tracked, moved between network namespaces, and are removed making low-level network management way more reliable.
+  -->
+  ネットワークデバイスの作成方法、追跡方法、ネットワーク名前空間の間の移動方法、削除方法を再構築し、低レベルのネットワーク管理方法をより信頼性の高いものにしました。
+
+  #### network: ワイヤレスデバイスの移動が可能に <!-- Allow moving wireless devices -->
+  <!--
+  LXC allowed to move wireless network devices (`nl80211`) into containers. This was broken for a while. With 4.0 the abilito to move wireless network devices is restored and improved.
+  -->
+  LXC でワイヤレスネットワークデバイス（`nl80211`）をコンテナ内に移動できるようになりました。これはしばらくの間壊れていました。4.0 でワイヤレスネットワークを移動する機能が復活し、改良されました。
+
+  ### 完全な ChangeLog（翻訳なし） <!-- Complete changelog -->
+  Here is a complete list of all changes in this release:
+
+  - cgroups: fix attaching to the unified cgroup
+  - dir: improve dir backend
+  - dir: use cleanup macro in dir_mount()
+  - tree-wide: harden mount option parsing
+  - lxc_init: add missing O_CLOEXEC
+  - lxc_init: move main() down
+  - configure.ac: Reset devel flag post-release
+  - make dist: add missing files
+  - lxc-download: Pre-release bump of compat
+  - conf: fix read-only bind mounts
+  - utils: allow removal of immutable files
+  - lxc-local: remove -l/--list from help
+  - lvm: don't generate uuid for ext4 snapshots
+  - lxc-update-config: handle lxc.rootfs.backend correctly
+  - lxc_copy: only overmount overlay subdirectory with tmpfs
+  - overlay: rewrite and simplify
+  - lxc-user-nic: enable uid-marked veth devices for uids with 5 digits
+  - network: introduce lxc_ifname_alnum_case_sensitive()
+  - log: fix cmd logging
+  - cgroups: simplify
+  - ringbuf: fix cleanup operations
+  - mainloop: cleanup
+  - log: add missing variable and fix CMD_SYSINFO()
+  - log: cleanup
+  - log: add missing \
+  - start: move reading seccomp profile after pre-start hook
+  - lxc_user_nic: rework device creation
+  - nl: improve how we surface errors
+  - network: use cleanup macros
+  - network: use cleanup attributes
+  - network: cleanup galore
+  - network: use is_empty_string() everywhere
+  - network: fix ovs removal
+  - log: use global variable to catch statements in loggers
+  - cgroups: don't call statements from loggers
+  - conf: flatten logic in mount_entry()
+  - conf: don't accidently double-mount
+  - network: fix moving network devices with custom name
+  - network: introduce and use is_empty_string()
+  - Makefile: fix typo
+  - lxc-unshare: add syscall_wrappers.h to build requirements
+  - tree-wide: introduce and use syscall number header
+  - raw_syscalls: define __NR_pidfd_send_signal if missing
+  - tools: fix -g -u parameters for lxc-execute and lxc-attach
+  - ISSUE_TEMPLATE: fix -l -o order
+  - lxc_user_nic: don't depend on MAP_FIXED
+  - busybox: Mark mqueue optional
+  - Auto-create /dev/shm and /dev/mqueue
+  - busybox: Fix bad lxc.mount.entry
+  - doc: Fix grammar
+  - Trigger the mounting of shm file system
+  - tree-wide: s/lxc_fini()/lxc_end()/g
+  - tree-wide: remove "name" argument from lxc_{fini,abort}()
+  - {_}lxc_start: remove "name" argument
+  - start: add missing TRACE() call
+  - start: better goto target naming in __lxc_start()
+  - start: rework cleanup code in __lxc_start()
+  - start: simplify lxc_init()
+  - conf: don't wrap strings
+  - tree-wide: remove last -1 fd initialization with cleanup macros in favor of -EBADF
+  - tree-wide: s/__do_close_prot_errno/__do_close/g
+  - memory_utils: adapt to new infrastructure
+  - tree-wide: port cgroup cleanup to call_cleaner(cgroup_exit)
+  - caps: port to call_cleaner() based cleanup
+  - memory_utils: add call_cleaner() helper
+  - travis: enable all architectures
+  - travis: remove libgnutls-dev
+  - utils: cleanup
+  - file_utils: cleanup macros and improvements
+  - api-extensions: use correct headings
+  - api-extensions: document "network_veth_router" api extension
+  - api-extensions: reflow "seccomp_allow_nesting" api extension
+  - api-extensions: reflow "seccomp_notify" api extension
+  - api-extensions: reflow "cgroup2_devices" extensions
+  - api-extensions: reflow "cgroup2" api extension
+  - api-extensions: add "pidfd" api extension
+  - lxccontainer: switch to pidfd polling when shutting down containers
+  - lxccontainer: switch to pidfds whenever possible
+  - start: add ability to detect whether kernel supports pidfds
+  - lxccontainer: add init_pidfd() API extension
+  - commands: LXC_CMD_GET_INIT_PIDFD
+  - lxccontainer.h: document seccomp_notify_fd()
+  - commands: use LXC_CMD_REAP_CLIENT_FD in lxc_cmd_get_cgroup2_fd_callback()
+  - commands: add ability to audit fd connection and cleanup path
+  - doc: Fix typo
+  - doc: Add keyring options to Japanese lxc.containers.conf(5)
+  - commands: simplify lxc_cmd_fd_cleanup()
+  - commands_utils: fix command socket hashing
+  - af_unix: fix return value
+  - start: cleanup file descriptor closing
+  - commands: make sure to always close the client fd
+  - commands: improve state client cleanup
+  - commands: switch to pid_t to send around pid
+  - share_ns: improve error handling
+  - share_ns: improve error handling
+  - file_utils: handle libcs without fmemopen()
+  - cgroups: cleanup
+  - cgfsng: use __do_free_string_list all over
+  - file_utils: include stdio.h for fmemopen()
+  - tests/share_ns: always call pthread_exit()
+  - memory_utils: remove unneeded inclusion of mntent.h
+  - cgroups: fix memory leak and simplify code
+  - tests/share_ns: bugfixes
+  - conf: cleanup
+  - commands_utils: cleanup
+  - commands: cleanup
+  - tree-wide: more cleanup macros
+  - lxccontainer: increase cleanup macro usage
+  - autotools: fix lxc-init build with clang-10
+  - tree-wide: improve logging
+  - tree-wide: make files cloexec whenever possible
+  - attach: cleanup various helpers
+  - attach: use logging helpers when handling no new privileges
+  - attach: use cleanup macros and logging helpers when fetching seccomp
+  - attach: use LXC_INVALID_{G,U}ID macros
+  - attach: use cleanup macros in lxc_attach_getpwshell()
+  - attach: fix fd leak
+  - attach: cleanup
+  - cgroup2_devices: fix logic error
+  - commands: remove unused variables
+  - commands_utils: fix socket leak when adding state client
+  - commands_utils: indicate taking ownership of state_client_fd in
+  - lxc_add_state_client()
+  - commands_utils: fix socket leak in when adding state client
+  - af_unix: cleanup
+  - network: Uses netlink for IP neighbour proxy management
+  - utils: only move_fd() when fdopen() has been successful
+  - api-extensions: document cgroup2_devices and cgroup2 api extensions
+  - src/lxc/raw_syscalls.c: fix sparc assembly
+  - cgroups: honor lxc.cgroup.pattern if set explicitly II
+  - cgroups: honor lxc.cgroup.pattern if set explicitly
+  - cgroups: remove unused method and cleanup cgroup_exit()
+  - tree-wide: improve setgroups() dropping
+  - lxclock: fix a small memory leak
+  - container.conf: Document that order is important in config_jump_table
+  - container.conf: Fix option ordering in config_jump_table
+  - Currently lxc.selinux.context.keyring is placed after
+  - container.conf: Fix off by 2 in option parsing
+  - doc: Add doc for keyring options
+  - container.conf: Add option to disable session keyring creation
+  - container.conf: Add option to set keyring SELinux context
+  - cgroups: fix default cgroup pattern
+  - start: fix container killing logic
+  - network: Restore fixed MTU functionality
+  - test: increase timeout for api reboot tests
+  - cgroup.c: fix memory leak at cgroup init failed
+  - network: rework network device creation
+  - network: fix network device removal
+  - tests: log api reboot test failures
+  - network: fix typ and formatting in comment
+  - network: improve veth device creation
+  - start: handle kernel header and kernel incompatability
+  - tests: timeout after 60 seconds
+  - mainloop: add missing \n
+  - Suppress useless udhcpc directory
+  - start: remove procfs pidfd support
+  - create_run_template(): Double "will mount" in a comment
+  - cmd: fix shebang
+  - travis: enable -fsanitize=undefined
+  - fd: only add valid fd to mainloop
+  - seccomp: support s390 seccomp
+  - api_extensions: advertise cgroup2 support
+  - cgroups/cgfsng: do not prematurely close file descriptors
+  - cgroups/cgfsng: improve cgroup creation and removal
+  - cgroups/cgfsng: rework cgroup removal
+  - cgroups/cgfsng: rework legacy cpuset handling
+  - cgroupfs/cgfsng: pass cgroup to cg_legacy_handle_cpuset_hierarchy() as const char *
+  - cgroups: use explicit unsigned type for bitfield
+  - cgroups: flatten hierarchy
+  - file_utils: use O_NOCTTY | O_NOFOLLOW
+  - cgroups/devices: enable devpath semantics for cgroup2 device controller
+  - cgroups/cgfsng: replace lxc_write_file()
+  - cgroups/cgfsng: cgfsng_devices_activate()
+  - cgroups/cgfsng: rework cgfsng_nrtasks()
+  - cgroups/cgfsng: rework cgfsng_mount()
+  - cgroups/cgfsng: rework cgfsng_chown()
+  - cgroups/cgfsng: rework cgfsng_attach()
+  - cgroups/cgfsng: rework cgfsng_setup_limits()
+  - cgroups/cgfsng: rework cgfsng_setup_limits_legacy()
+  - cgroups/cgfsng: rework cgfsng_{get,set}()
+  - cgroups/cgfsng: rework cgfsng_unfreeze()
+  - cgroups/cgfsng: rework cgfsng_get_hierarchies()
+  - cgroups/cgfsng: rework cgfsng_num_hierarchies()
+  - cgroups/cgfsng: rework cgfsng_escape()
+  - cgroups/cgfsng: rework cgfsng_payload_enter()
+  - cgroups/cgfsng: rework cgfsng_payload_create()
+  - tree-wide: s/__unused/__lxc_unused/g
+  - cgroups/cgfsng: rework cgroup attach
+  - cgroups/cgfsng: don't dereference NULL-pointer
+  - cgroups/cgfsng: log chown_cgroup_wrapper()
+  - cgroups/cgfsng: rework cgroup2 unprivileged delegation
+  - cgroups/cgfsng: rework cgfsng_{monitor,payload}_delegate_controllers()
+  - cgroups/cgfsng: rework cgfsng_monitor_enter()
+  - cgroups/cgfsng: rework cgfsng_monitor_create()
+  - cgroups/cgfsng: rework cgfsng_monitor_destroy()
+  - cgroups/cgfsng: rework cgfsng_payload_destroy()
+  - log: remove unused compiler attribute
+  - start: replace compiler attributes
+  - log: replace compiler attributes
+  - attach: replace closing helpers
+  - compiler: add __unused attribute
+  - {log, macro}: remove unused logging functions
+  - lxccontainer: replace logging functions
+  - confile_utils: replace logging functions
+  - cgroups: rework return values of some functions
+  - cgroups/cgroup2_devices: replace logging functions
+  - cgroups/cgroup: replace logging functions
+  - cgroups/cgfsng: replace logging functions
+  - confile: replace logging helpers
+  - network: replace logging helpers
+  - commands: replace logging helpers
+  - attach: s/minus_one_set_errno(/ret_set_errno(-1, /g
+  - af_unix: s/minus_one_set_errno(/ret_set_errno(-1, /g
+  - macro: add ret_errno()
+  - log: rearrange
+  - cgroup2: rework controller delegation
+  - "busy" field set to -1 instead of 0
+  - "busy" field set to 1 instead of 0
+  - Init "busy" field to -1 as 0 is valid fd
+  - config: Fix parsing of mount options
+  - cgroups/devices: correctly verify bpf device useability in cgfsng_devices_activate()
+  - cgroups: improve container cgroup attaching
+  - lxc: switch to SPDX
+  - commands: use logging return helpers
+  - cgfsng: rework cgroup2 attach
+  - cgroups/devices: do not log error when bpf device feature is not available
+  - freezer: cleanup
+  - cgroups/freezer: fix and improve cgroup2 freezer implementation
+  - cgroups: add DEFAULT_MOUNTPOINT #define
+  - cgroups/devices: use dedicated enums
+  - cgroups/devices: introduce ebpf device cgroup global rule types
+  - cgroups/devices: handle NULL
+  - configure: enable -Wunused-but-set-variable
+  - cgroups/cgfsng: implement cgroup2 device controller live update
+  - conf: record cgroup2 devices in parsed format
+  - cgroups/cgfsng: "atomically" replace bpf device programs
+  - macro: remove unused macros
+  - api_extension: add cgroup2_devices api extension
+  - cgroups: add cgroup2 device controller support
+  - cgfsng: return attach fail if container stopped
+  - conf: fix memory leak for set config rootfs options
+  - fix wrong order of bridge/nic in error message
+  - Typo in a comment
+  - tests: use /dev/loop-control instead of /dev/network_latency
+  - configure.ac: fix build on toolchain without SSP
+  - Update cgroup.h
+  - terminal: prevent returning invalid pointer
+  - terminal: make lxc_terminal_signal_fini() static
+  - lxc-usernsexec: support easily mapping own uid
+  - tests: add tests making sure the exit code is appropriate.
+  - terminal: return NULL on error in terminal_signal_init
+  - terminal: prevent memory leak for lxc_terminal_state
+  - apparmor: Prevent writes to /proc/acpi/**
+  - syscall_wrappers: rename internal memfd_create to memfd_create_lxc
+  - lxc/tools/lxc/destroy: Restores error message on container destroy
+  - Update lxc.containers.conf(5) in Japanese
+  - Bad sgml/man translation
+  - Add more info about lxc.start.order in Japanese man
+  - Add autodev.tmpfs.size to Japanese lxc.container.conf(5)
+  - lxc-destroy: send successful output messages to log info instead of error.
+  - doc: Add more info about 'lxc.start.order'
+  - update obsolete functions
+  - Add autodev.tmpfs.size config parameter
+  - start: handle setting pdeath signal in new pidns
+  - start: pidfds obviously start - like any fd - at 0
+  - Fix lxc-update-config in network.address
+  - allow users to configure the option --enable-feature or --with-package, if an option is given run shell commands action-if-given
+  - Set minimun autoconf version to 2.69 and change obsolete function AC_HELP_STRING for AS_HELP_STRING
+  - doc: Add the lxc.net.[i].veth.mode option in Japanese lxc.container.conf(5)
+  - doc: Add Japanese pam_cgfs(8) man page
+  - doc: add man page for pam_cgfs
+  - Ensures OpenSSL compatibility with older versions of EVP API.
+  - utils: Copying source filename to avoid missing info.
+  - cgroups: unify cgfsng_{un}freeze()
+  - cgroups: initialize cgroup root directory - encore
+  - cgroups: check for empty cgroups on freeze/unfreeze
+  - cgroups: initialize cgroup root directory
+  - [aa-profile] Deny access to /proc/acpi/**
+  - lxc-attach: make sure exit status of command is returned
+  - cgfsng: mount pure unified cgroup layout correctly
+  - lxc-create: check absoule path for param '--dir'
+  - cgroups: support cgroup2 freezer
+  - attach: don't close stdout of getent
+  - utils: Fix wrong integer of a function parameter.
+  - try to fix search user instead of search substring
+  - lxccontainer: do_lxcapi_detach_interface to support detaching wlan devices
+  - cgroups: initialize cpuset properly
+  - network: restore ability to move nl80211 devices
+  - pidfds: don't print a scary warning on ENOSYS
+  - tree-wide: initialize all auto-cleanup variables
+  - suppress false-negative error in templates and nvidia hook
+  - Container's specific file/directory names
+  - Use file/directory names from macro.h
+  - tree-wide: fix wrong copy-paste for licenses
+
+  ### サポートとアップグレード <!-- Support and upgrade -->
+  <!--
+  LXC 4.0.0 will be supported until June 2025 and our current LTS release, LXC 3.0 will now switch to a slower maintenance pace, only getting critical bugfixes and security updates.
+  -->
+  LXC 4.0.0 は 2025 年 6 月までサポートされる最新の LTS リリースです。LXC 3.0 はメンテナンスのペースが低頻度になり、重大なバグ修正とセキュリティアップデートのみが提供されます。
+
+  <!--
+  We strongly recommend all LXC users to plan an upgrade to the 4.0 branch.
+  -->
+  すべての LXC ユーザーは 4.0 ブランチへのアップグレードを計画することを強く推奨します。
+
+  ### ダウンロード <!-- Downloads -->
+
+   - リリース tarball <!-- Main release tarball -->: [lxc-4.0.0.tar.gz](https://linuxcontainers.org/downloads/lxc/lxc-4.0.0.tar.gz)
+   - GPG シグネチャ <!-- GPG signature -->: [lxc-4.0.0.tar.gz.asc](https://linuxcontainers.org/downloads/lxc/lxc-4.0.0.tar.gz.asc)
+
+  ### コントリビューター <!-- Contributors -->
+  <!--
+  The LXC 4.0.0 release was brought to you by a total of 30 contributors.
+  -->
+  LXC 4.0.0 は 30 名のコントリビューターによりリリースされました。
