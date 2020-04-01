@@ -95,7 +95,7 @@ content: |-
   We have reworked how network devices are created, tracked, moved between network namespaces, and are removed making low-level network management way more reliable.
 
   #### network: Allow moving wireless devices
-  LXC allowed to move wireless network devices (`nl80211`) into containers. This was broken for a while. With 4.0 the abilito to move wireless network devices is restored and improved.
+  LXC allowed to move wireless network devices (`nl80211`) into containers. This was broken for a while. With 4.0 the ability to move wireless network devices is restored and improved.
 
   ### Complete changelog
   Here is a complete list of all changes in this release:
