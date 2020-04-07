@@ -82,7 +82,7 @@ LXD has two kind of releases:
  * LTS releases
  * Feature releases
 
-The current LTS is LXD 3.0 which is supported until June 2023 and gets frequent bugfix and security updates
+The current LTS is LXD 4.0 which is supported until June 2025 and gets frequent bugfix and security updates
 but does not receive any feature addition.
 
 Feature releases are pushed out every month or so and contain new features as well as bugfixes.
