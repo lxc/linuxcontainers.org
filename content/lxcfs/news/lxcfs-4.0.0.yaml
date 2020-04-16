@@ -29,7 +29,7 @@ content: |-
       
       Options :
         -d, --debug          Run lxcfs with debugging enabled
-        --disable-cfs        Disable cpu virtualization via cpu shares
+        --enable-cfs        Enable cpu virtualization via cpu shares
         -f, --foreground     Run lxcfs in the foreground
         -n, --help           Print help
         -l, --enable-loadavg Enable loadavg virtualization

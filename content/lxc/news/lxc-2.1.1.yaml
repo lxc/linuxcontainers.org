@@ -1,10 +1,11 @@
-title: LXC 2.1.1 release announcement
-date: 2017/10/19 00:00
+title: LXC 2.1.1 has been released
+date: 2017/10/19 20:10
+origin: https://discuss.linuxcontainers.org/t/lxc-2-1-1-has-been-released/676
 content: |-
   This is the first bugfix release for LXC 2.1.
-  
+
   Bugfixes:
-  
+
    * apparmor: Drop useless apparmor denies
    * cgfsng: Check whether we have a conf
    * cgfsng: Fail when limits fail to apply
@@ -65,12 +66,10 @@ content: |-
    * utils: Duplicate stderr as well in lxc\_popen()
    * utils: Fix lxc\_popen()/lxc\_pclose()
    * utils: Remove dead assignments in lxc\_popen()
-  
+
   ### Downloads
-  The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
+  The release tarballs may be found on our [download page](https://linuxcontainers.org/lxc/downloads/) and we expect most distributions  
   will very soon ship a packaged version of LXC 2.1.1.
-  
-  Should you be interested in individual changes or just looking at the detailed development history,
-  our stable branch is on [GitHub](https://github.com/lxc/lxc/tree/stable-2.1).
-  
-  
+
+  Should you be interested in individual changes or just looking at the detailed development history,  
+  our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-2.1).
