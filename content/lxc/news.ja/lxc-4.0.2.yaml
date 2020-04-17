@@ -1,0 +1,82 @@
+title: LXC 4.0.2 LTS リリースのお知らせ
+date: 2020/04/16 19:04
+origin: https://discuss.linuxcontainers.org/t/lxc-4-0-2-lts-has-been-released/7449
+content: |-
+  ### はじめに <!-- Introduction -->
+  <!--
+  The LXC team is pleased to announce the release of LXC 4.0.2!
+  -->
+  LXC チームは LXC 4.0.2 のリリースをお知らせできてとてもうれしいです!
+
+  <!--
+  This is the second bugfix release for LXC 4.0 which is supported until June 2025.
+  -->
+  このリリースは 2025 年 6 月までサポートされる LXC 4.0 に対する 2 回目のバグフィックスリリースです。
+
+  ### バグ修正 <!-- Bugfixes -->
+  <!--
+  This release fixes a number of issues that were reported shortly following the original [4.0.0](https://discuss.linuxcontainers.org/t/lxc-4-0-lts-has-been-released/7182) and [4.0.1](https://discuss.linuxcontainers.org/t/lxc-4-0-1-lts-has-been-released/7310) releases. Some of the highlights include:
+  -->
+  このリリースでは、[4.0.0](/ja/lxc/news/#lxc-40-lts) と [4.0.1](ja/lxc/news/#lxc-401-lts) リリース後に報告された多数の問題を修正しています。主なものは次の通りです:
+
+   - RISC-V 64bit サポート <!-- RISC-V 64bit support -->
+   - `lxc-user-nic` でのより良いグループの扱い <!-- Better group handling in lxc-user-nic -->
+   - 新しいカーネルでのシステムコールインターセプションの問題を修正 <!-- Seccomp syscall interception fix for newer kernels -->
+   - cgroup v2 システム上では cgroup v1 の制限を自動的にスキップするように <!-- CGroup v1 limits are now automatically skipped on v2 systems -->
+   - Coverity Scan サービスが指摘したさまざまな問題の修正 <!-- Fix a variety of issues identified by the Coverity Scan service -->
+
+  <!--
+  The full list of commits is available below:
+  -->
+  コミットの全リストは次の通りです（翻訳なし）:
+
+   - start: ensure all file descriptors are closed during exec
+   - syscall_numbers: handle riscv
+   - lxc_user_nic: simplify group retrieval
+   - lxc_user_nic: continue when we failed to find a group
+   - cgroups: whitespace fixes
+   - seccomp: newer kernels require the buffer to be zeroed
+   - network: Make it possible to set the mode of IPVLAN to L2
+   - src/lxc/network: ipvlan comment and code style tweak
+   - conf: tweak get_minimal_idmap()
+   - conf: use macros all around in lxc_map_ids()
+   - conf: move_ptr() in all cases in mapped_hostid_add()
+   - lxc-update-config: Fix bad handling of lxc.logfile
+   - tests/no-new-privs: Don't mess with /etc/lxc
+   - cgroups: ignore legacy limits on pure cgroup2 systems
+   - Fix lxc-oci template with loop backingstore
+   - cgroup: fix wrong use of cgfd_con in cgroup_exit
+   - travis: add back coverity
+   - memory_utils: directly NULL ptr in free_disarm()
+   - conf: fix tty cleanup
+   - cgroups: do not pass NULL pointer
+   - uuid: close fd
+   - cgroups: fix cgroup2 devices
+   - rexec: avoid double-close
+   - cgroups: use correct NULL pointer check
+   - conf: don't double free in get_minimal_idmap()
+   - criu: make explicit that we're ignoring rmdir() return value
+   - zfs: fix resource leak
+   - commands: add additional check to lxc_cmd_sock_get_state()
+   - network: log warning on network deconfiguration failures
+   - log: restore non-local value
+   - attach: move check for valid config earlier
+   - rexec: free argv array on failure
+   - conf: correctly cleanup memory in get_minimal_idmap()
+   - log: set GNU_SOURCE as it might help coverity along
+   - travis: coverity gets confused about the %m printf extension in glibc
+   - cgroups: fix cgroup limit braino
+   - configure: fix coverity builds
+
+  ### サポートとアップグレード <!-- Support and upgrade -->
+  <!--
+  The LXC 4.0 branch is supported until June 2025.
+  Only bugfixes and securitiy issues get included into the stable bugfix releases, so it's always safe and recommended to keep up and run the latest bugfix release.
+  -->
+  LXC 4.0 ブランチは 2025 年 6 月までサポートされます。
+  stable のバグフィックスリリースでは、バグとセキュリティに関する問題に対する修正のみが行われますので、常に安全です。最新のバグフィックスリリースの状態を維持し、実行することをおすすめします。
+
+  ### ダウンロード <!-- Downloads -->
+
+   - リリース tarball <!-- Main release tarball -->: [lxc-4.0.2.tar.gz](https://linuxcontainers.org/downloads/lxc/lxc-4.0.2.tar.gz)
+   - GPG シグネチャー <!-- GPG signature -->: [lxc-4.0.2.tar.gz.asc](https://linuxcontainers.org/downloads/lxc/lxc-4.0.2.tar.gz.asc)
