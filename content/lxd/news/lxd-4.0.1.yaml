@@ -13,9 +13,9 @@ content: |-
   Some of the highlights include:
 
    - Tweaked and improved the resources API
-     - NUMA node tracked on a per core basis
-     - Support for CPUs using the die_id kernel attribute
-     - DMI information now available in a `system` section
+      - NUMA node tracked on a per core basis
+      - Support for CPUs using the die_id kernel attribute
+      - DMI information now available in a `system` section
    - Added `os` and `os_version` to Environment data in /1.0
    - Added `lxd cluster remove-raft-node` disaster recovery function
    - Improved `activateifneeded` to consider VMs and scheduled snapshots
