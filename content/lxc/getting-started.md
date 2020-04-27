@@ -47,7 +47,7 @@ On such an Ubuntu system, installing LXC is as simple as:
 
 or
 
-    sudo snap install lxc
+    sudo snap install lxd
 
 Your system will then have all the LXC commands available, all its templates
 as well as the python3 binding should you want to script LXC.
