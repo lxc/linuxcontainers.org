@@ -95,7 +95,7 @@ Ubuntu では、LXC をインストールするのは次のように簡単です
 	
 もしくは
 	
-	sudo snap install lxc
+	sudo snap install lxd
 
 <!--
 Your system will then have all the LXC commands available, all its templates
