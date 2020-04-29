@@ -25,7 +25,7 @@ To install the feature branch of LXD, run:
 Alternatively, the snap package can also be used on Arch Linux (see below).
 
 ### Fedora
-Instructions on how to use the COPR repository for LXD can be [found here](https://copr.fedorainfracloud.org/coprs/ganto/lxd/).
+Instructions on how to use the COPR repository for LXD can be [found here](https://copr.fedorainfracloud.org/coprs/ganto/lxc3/).
 
 Alternatively, the snap package can also be used on Fedora (see below).
 

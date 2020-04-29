@@ -42,9 +42,9 @@ Alternatively, the snap package can also be used on ArchLinux (see below).
 
 ### Fedora
 <!--
-Instructions on how to use the COPR repository for LXD can be [found here](https://copr.fedorainfracloud.org/coprs/ganto/lxd/).
+Instructions on how to use the COPR repository for LXD can be [found here](https://copr.fedorainfracloud.org/coprs/ganto/lxc3/).
 -->
-LXD の COPR リポジトリの使い方については [こちら](https://copr.fedorainfracloud.org/coprs/ganto/lxd/) をご覧ください。
+LXD の COPR リポジトリの使い方については [こちら](https://copr.fedorainfracloud.org/coprs/ganto/lxc3/) をご覧ください。
 
 <!--
 Alternatively, the snap package can also be used on Fedora (see below).
