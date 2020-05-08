@@ -34,14 +34,7 @@ content: |-
   `ipvlan` devices in LXD default to layer 3 symmetric mode (l3s) but a new `mode` option was now introduced allowing for layer 2 mode (l2) to be used as well.
 
   #### Tweaks to the resources API
-  A new `system` section was added, exposing many DMI fields as well as tThis is the 3rd LTS release for LXD and a very busy and exciting one!
-  The changelog below is split so that both users of LXD 3.23 and LXD 3.0 can see what we have in store for them.
-
-  As with all our other LTS releases, this one will be supported for 5 years (June 2025) and will receive a number of bugfix and security point releases over that time.
-
-  As for LXD 3.0, we're hoping to release one last bugfix release as 3.0.5 in the near future before we enter security-only maintenance mode for its remaining 3 years.
-
-  he type of system used to run LXD (physical, virtual or container).
+  A new `system` section was added, exposing many DMI fields as well as the type of system used to run LXD (physical, virtual or container).
 
   Additionally, NUMA nodes are now tracked at the CPU thread level and CPU die information is also recorded at the per-core level.
 
