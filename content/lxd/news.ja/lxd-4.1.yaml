@@ -1,0 +1,861 @@
+title: LXD 4.1 リリースのお知らせ
+date: 2020/05/08 20:05
+origin: https://discuss.linuxcontainers.org/t/lxd-4-1-has-been-released/7737
+content: |-
+  ### はじめに <!-- Introduction -->
+  <!--
+  The LXD team is very excited to announce the release of LXD 4.1!
+  -->
+  LXD チームは、LXD 4.1 のリリースをお知らせすることにとてもワクワクしています！
+
+  <!--
+  This is the first feature release following the release of 4.0 LTS.
+  As a normal feature release, LXD 4.1 is only supported until 4.2 is released, usually about a month afterwards.
+  -->
+  このリリースは 4.0 LTS リリースに続く初めてのフィーチャーリリースです。
+  通常のフィーチャーリリースですので、LXD 4.1 は、通常は約 1 ヶ月後にリリースされる 4.2 リリースまでのみサポートされます。
+
+  <!--
+  The bulk of the changes are bugfixes and refactoring we've done since the 4.0 release, but there are also a number of smaller features and improvements.
+  -->
+  変更の大部分は、4.0 リリース以来行ってきたバグフィックスとリファクタリングです。しかし、多数の小さい機能の追加や改良が多数あります。
+  
+  Enjoy!
+
+  ### 新機能とハイライト <!-- New features and highlights -->
+  #### イメージのプッシュとリレーのサポート <!-- Push and relay support for images -->
+  <!--
+  Similar to instance copy/move, it's now possible to have the source server push an image directly to the target server or have the client tool relay between servers.
+  -->
+  インスタンスのコピー・移動と同様に、ソースサーバーが直接ターゲットサーバーにイメージをプッシュしたり、クライアントツールがサーバー間を中継したりできるようになりました。
+
+  <!--
+  This makes it easier to deal with firewalls in between servers.
+  -->
+  これにより、サーバー間に存在するファイアウォールに対応するのが容易になります。
+
+      lxc image copy source:some-image target: --mode=push
+      lxc image copy source:some-image target: --mode=relay
+
+  #### `routed` NIC デバイスのルーティングテーブルサポート <!-- Routing table support for `routed` NIC devices -->
+  <!--
+  Two new options were added on `routed` NIC devices:
+  -->
+  `routed` NIC デバイスに新たにオプションがふたつ追加されました:
+
+   - ipv4.host_table
+   - ipv6.host_table
+
+  <!--
+  Those control what routing table to insert the routing rules into.
+  By default, this is the main routing table, but some users have indicated wanting to use alternative routing tables which this enables.
+  -->
+  このオプションは、どのルーティングテーブルにルーティングルールを挿入するかをコントロールします。
+  デフォルトでは、これはメインのルーティングテーブルですが、これを有効にすることで代替のルーティングテーブルを使いたいというユーザーがいました。
+
+  #### `ipvlan` NIC デバイスの L2 モード <!-- L2 mode for `ipvlan` NIC devices -->
+  <!--
+  `ipvlan` devices in LXD default to layer 3 symmetric mode (l3s) but a new `mode` option was now introduced allowing for layer 2 mode (l2) to be used as well.
+  -->
+  LXD の `ipvlan` デバイスはデフォルトでは Layer 3 シンメトリックモード（l3s）です。しかし、新たな `mode` オプションが導入され、Layer 2 モード（l2）も使えるようになりました。
+
+  #### リソース API の調整 <!-- Tweaks to the resources API -->
+  <!--
+  A new `system` section was added, exposing many DMI fields as well as the type of system used to run LXD (physical, virtual or container).
+  -->
+  新たに `system` セクションが追加され、多数の DMI フィールドと LXD を実行するのに使っているシステムのタイプ（物理、仮想、コンテナ）が表示されるようになりました。
+
+  <!--
+  Additionally, NUMA nodes are now tracked at the CPU thread level and CPU die information is also recorded at the per-core level.
+  -->
+  加えて、NUMA ノードが CPU スレッドレベルでトラッキングされるようになり、CPU ダイの情報もコアレベルで記録されるようになりました。
+
+  <!--
+  Example CPU output:
+  -->
+  次は CPU 出力の例です:
+
+      stgraber@castiana:~$ lxc query /1.0/resources | jq .cpu
+      {
+        "architecture": "x86_64",
+        "sockets": [
+          {
+            "cache": [
+              {
+                "level": 1,
+                "size": 32768,
+                "type": "Data"
+              },
+              {
+                "level": 1,
+                "size": 32768,
+                "type": "Instruction"
+              },
+              {
+                "level": 2,
+                "size": 262144,
+                "type": "Unified"
+              },
+              {
+                "level": 3,
+                "size": 3145728,
+                "type": "Unified"
+              }
+            ],
+            "cores": [
+              {
+                "core": 0,
+                "die": 0,
+                "frequency": 639,
+                "threads": [
+                  {
+                    "id": 0,
+                    "numa_node": 0,
+                    "online": true,
+                    "thread": 0
+                  },
+                  {
+                    "id": 2,
+                    "numa_node": 0,
+                    "online": true,
+                    "thread": 1
+                  }
+                ]
+              },
+              {
+                "core": 1,
+                "die": 0,
+                "frequency": 658,
+                "threads": [
+                  {
+                    "id": 1,
+                    "numa_node": 0,
+                    "online": true,
+                    "thread": 0
+                  },
+                  {
+                    "id": 3,
+                    "numa_node": 0,
+                    "online": true,
+                    "thread": 1
+                  }
+                ]
+              }
+            ],
+            "frequency": 648,
+            "frequency_minimum": 400,
+            "frequency_turbo": 3500,
+            "name": "Intel(R) Core(TM) i5-7300U CPU @ 2.60GHz",
+            "socket": 0,
+            "vendor": "GenuineIntel"
+          }
+        ],
+        "total": 4
+      }
+
+  <!--
+  Example system output:
+  -->
+  次はシステム出力の例です:
+
+      stgraber@castiana:~$ lxc query /1.0/resources | jq .system
+      {
+        "chassis": {
+          "serial": "PF0QD1U7",
+          "type": "Notebook",
+          "vendor": "LENOVO",
+          "version": "None"
+        },
+        "family": "ThinkPad X1 Carbon 5th",
+        "firmware": {
+          "date": "02/17/2020",
+          "vendor": "LENOVO",
+          "version": "N1MET60W (1.45 )"
+        },
+        "motherboard": {
+          "product": "20HRCTO1WW",
+          "serial": "L1HF6CX006Y",
+          "vendor": "LENOVO",
+          "version": "Not Defined"
+        },
+        "product": "20HRCTO1WW",
+        "serial": "PF0QD1U7",
+        "sku": "LENOVO_MT_20HR_BU_Think_FM_ThinkPad X1 Carbon 5th",
+        "type": "physical",
+        "uuid": "7fa1c0cc-2271-11b2-a85c-aab32a05d71a",
+        "vendor": "LENOVO",
+        "version": "ThinkPad X1 Carbon 5th"
+      }
+
+  #### サーバー情報への OS データの追加 <!-- Addition of OS data in the server information -->
+  <!--
+  OS information is now exposed in `/1.0` and `lxc info`:
+  -->
+  OS 情報が `/1.0` と `lxc info` で出力されるようになりました:
+
+      stgraber@castiana:~$ lxc info | grep os_
+        os_name: Ubuntu
+        os_version: "20.04"
+
+  #### 新たな `lxd cluster remove-raft-node` コマンド <!-- New `lxd cluster remove-raft-node` command -->
+  <!--
+  This new command can be used to force the removal of a database member when LXD is unable to start due to missing database quorum.
+  -->
+  この新たに追加されたコマンドは、LXD がデータベースのクオラムの不足で起動できない場合に、強制的にデータベースメンバーを削除するのに使えます。
+
+  #### コマンドラインツールの表のソートの改良 <!-- Improved table sorting in the command line tool -->
+  <!--
+  Lists are now sorted by natural order, making numbered items sort properly.
+  Additionally, in volume listings, snapshots are now listed immediately following their parent.
+  -->
+  リストは自然な順序でソートされるようになり、番号付きのアイテムが適切にソートされるようになりました。
+  加えて、ボリュームのリストでは、スナップショットが親のすぐ後に表示されるようになりました。
+
+  ### すべての変更点（翻訳なし）<!-- Complete changelog -->
+  <!--
+  Here is a complete list of all changes in this release:
+  -->
+  以下はこのリリースでの全変更の完全なリストです:
+
+   - doc/instances: Fix escaping
+   - lxc/network: Updates network detach checks to use bridged network property
+   - lxd/network/network/utils: Updates network setting detection in IsInUse
+   - lxd/instance/drivers/driver/qemu: Adds host_name info to RenderState when lxd-agent is running
+   - Merge pull request #7115 from tomponline/tp-bridged-network
+   - lxd/networks: Fix clustered configs
+   - Merge pull request #7114 from stgraber/master
+   - shared/api: Move NUMANode to thread
+   - lxd/resources: Set NUMANode on a per-thread basis
+   - lxc/info: Update for NUMANode on thread
+   - i18n: Update translation templates
+   - api: resources_cpu_threads_numa
+   - Merge pull request #7118 from stgraber/master
+   - api: resources_cpu_core_die
+   - lxd/resources: Parse and report die_id
+   - lxd/storage/drivers/driver/lvm/volumes: Mount xfs snapshot with nouuid option
+   - Merge pull request #7120 from stgraber/master
+   - lxd/storage/drivers/driver/ceph/volumes: Adds mounting logging
+   - lxd/instance/drivers/driver/lxc: Updates Render() to accept options arguments
+   - lxd/instance/drivers/driver/qemu: Updates Render() to accept options arguments
+   - lxd/instance/instance/interface: Updates Render() to accept options arguments
+   - lxd/storage/drivers/utils: Zeros btrfs transaction log in regenerateFilesystemBTRFSUUID
+   - lxd/storage/utils: Removes unused functions and constants
+   - lxd/storage/utils: Adds RenderSnapshotUsage function
+   - lxd/instance/snapshot: Adds storagePools.RenderSnapshotUsage to Render() in containerSnapshotsGet and snapshotGet
+   - lxd/instance/drivers/driver/lxc: Use storagePools.RenderSnapshotUsage in RenderFull()
+   - lxd/instance/drivers/driver/qemu: Use storagePools.RenderSnapshotUsage in RenderFull()
+   - lxd/instance/instance/utils: Removes unused WriteBackupFile
+   - lxd/storage/drivers/utils: Changes regenerateFilesystemUUID to use expanded arg definitions
+   - lxd/storage/drivers/driver/ceph/utils: Changes generateUUID to not map device
+   - lxd/storage/drivers/driver/ceph/volumes: d.generateUUID updated signature usage
+   - lxd/storage/drivers/driver/ceph/volumes: Adds BTRFS UUID regeneration to MountVolumeSnapshot
+   - lxd/storage/drivers/driver/zfs/volumes: Comment clarification
+   - lxd/storage/drivers/volume: Adds support for setting custom mount path
+   - lxd/storage/drivers/driver/btrfs/volumes: Create temporary snapshot in BackupVolume()
+   - lxd/storage/drivers/driver/btrfs/volumes: Renames container vars to instance
+   - lxd/storage/drivers/driver/btrfs/volumes: Consistent quoting of error message variables
+   - Merge pull request #7117 from tomponline/tp-storage-mountsnapshots-uuid
+   - Merge pull request #7122 from tomponline/tp-storage-export-snapshots
+   - lxd/main_activateifneeded: s/container/instance/
+   - lxd/instance/drivers: Removes storagePools.RenderSnapshotUsage from RenderFull()
+   - lxd/storage/drivers/driver/zfs/volumes: Create temporary snapshot in BackupVolume()
+   - lxd/storage/backend/lxd: Checks for existance of volume before deleting
+   - lxd/instance: Switches to revert package for instanceCreateAsSnapshot
+   - lxd/storage/backend/lxd: Comment tweak
+   - lxd/storage/drivers/driver/ceph/volumes: Tweaks HasVolume detection
+   - Merge pull request #7129 from tomponline/tp-storage-renderfull
+   - Merge pull request #7131 from tomponline/tp-storage-export-snapshots-zfs
+   - shared/subprocess/proc: Fixes race in process stopping
+   - Merge pull request #7132 from tomponline/tp-storage-delete-volume-checks
+   - lxd/main_activateifneeded: Retrieve all instances
+   - lxd/main_activateifneeded: Check for scheduled instance snapshots
+   - lxd/main_activateifneeded: Check for scheduled volume snapshots
+   - test/suites/basic: Update activateifneeded tests
+   - lxd/main_activateifneeded: Use defer statement to close db
+   - Merge pull request #7128 from monstermunchkin/issues/7126
+   - lxd/storage/btrfs: Workaround permission issue
+   - Merge pull request #7134 from stgraber/master
+   - lxd/cluster: add RemoveRaftNode() to force removing a raft node
+   - api: Add "DELETE /internal/cluster/raft/<address>" endpoint
+   - Increase timeout when calling dqlite.Client.Add() to join the cluster
+   - Merge pull request #7139 from freeekanayaka/increase-join-timeout
+   - lxd/storage/drivers/driver/zfs/volumes: Comment
+   - lxd/storage/drivers/driver/lvm/volumes: Always return -1/ErrNotSupported for snapshot usage
+   - lxd/storage/drivers/driver/dir/volumes: Always return -1/ErrNotSupported for snapshot usage
+   - lxd/storage/drivers/driver/zfs/volumes: Always used 'used' property for ZFS snapshot usage
+   - lxd/storage/drivers/driver/cephfs/volumes: Always return -1/ErrNotSupported for snapshot usage
+   - lxd/storage/drivers/driver/btrfs/volumes: Return -1/ErrNotSupported when no quota available
+   - lxd/instance: Fix typo in comment
+   - lxc/action: Fix typo in help message
+   - i18n: Update translation templates
+   - Merge pull request #7142 from stgraber/master
+   - lxd: Add "lxd cluster remove-raft-node" recovery command
+   - doc: Add paragraph about "lxd cluster remove-raft-node"
+   - test: Add test exercising "lxd cluster remove-raft-node"
+   - Merge pull request #7141 from tomponline/tp-storage-snapshot-usage
+   - Merge pull request #7138 from freeekanayaka/remove-raft-node
+   - lxd/storage/lvm: Always call vgchange on mount
+   - Merge pull request #7146 from stgraber/master
+   - lxd/patches: Fix snapshot migration
+   - tests: Fix btrfs storage usage
+   - Merge pull request #7147 from stgraber/master
+   - lxd/storage/drivers/volume: Only chmod if needed in EnsureMountPath
+   - lxd/storage/drivers/volume: Removes unnecessary variable
+   - lxd/storage/drivers/driver/zfs/volumes: Ensure volumes created from copy have correct perms
+   - lxd/storage/drivers: Call EnsureMountPath() in MountVolume()
+   - lxd/storage/drivers: Call EnsureMountPath() in MountVolumeSnapshot()
+   - lxd/storage/drivers/driver/btrfs/volumes: Adds revert to CreateVolume
+   - lxd/storage/drivers/driver/btrfs/volumes: Comment in CreateVolumeFromCopy
+   - lxd/storage/drivers/driver/lvm/utils: EnsureMountPath after copying thin volume
+   - lxd/storage/drivers/driver/cephfs/volumes: typo
+   - lxd/storage/drivers/driver/cephfs/volumes: Calls vol.EnsureMountPath after filling
+   - lxd/storage/drivers/driver/ceph/volumes: Calls EnsureMountPath to fix perms after copying volume
+   - lxd/storage/drivers/driver/lvm/volumes: Fixes temporary snapshot volume cleanup for VMs
+   - Merge pull request #7144 from tomponline/tp-storage-snapshot-mnt-create
+   - lxd/storagr/drivers/driver/ceph/volumes: Adds support for snapshot usage reporting
+   - lxd/storage/drivers/driver/lvm/volumes: Clarifies comments on LVM volume usage reporting
+   - Merge pull request #7151 from tomponline/tp-storage-ceph-snapshot-usage
+   - shared/osarch: Coding style
+   - shared/osarch: Don't fail on missing os-release
+   - shared/api: Add OS information
+   - lxd/api: Add OS information
+   - api: Add api_os
+   - lxc: Use natural string sorting
+   - lxc: Group snapshot and parent
+   - lxd/main: Move forkzfs mntns to cgo
+   - Merge pull request #7154 from stgraber/master
+   - Merge pull request #7155 from stgraber/cli
+   - Merge pull request #7156 from stgraber/zfs
+   - doc/networks: Adds note about firewalld and DHCP/DNS
+   - Merge pull request #7158 from tomponline/tp-bridged-firewalld
+   - lxd/device/nic/routed: Improves validation of sysctl settings when using vlan option
+   - lxd/device/nic/routed: Corrects misleading error message when setting sysctls
+   - Merge pull request #7159 from tomponline/tp-nic-routed-validation
+   - lxd/storage/drivers/generic/vfs: Log when creating snapshots
+   - lxd/storage/drivers/driver/zfs/volumes: Fix migrating VM block volumes in MigrateVolume
+   - lxd/storage/memorypipe: Adds context support for cancellation
+   - lxd/storage/backend/lxd: memorypipe cancellation usage
+   - lxd/device/nic/sriov: Updates networkGetVirtFuncInfo to use json output from ip tool
+   - Merge pull request #7160 from tomponline/tp-storage-vm-migration
+   - doc: Add missing os_api extension
+   - Merge pull request #7165 from stgraber/master
+   - Merge pull request #7163 from tomponline/tp-nic-sriov
+   - lxd/storage/drivers/driver/dir/utils: Removes default project quota
+   - Merge pull request #7166 from tomponline/tp-storage-dir-quota
+   - forkexec: mark fd cloexec so the attaching process doesn't inherit it
+   - Merge pull request #7167 from brauner/2020-04-10/fixes
+   - forkexec: close all inherited fds
+   - Merge pull request #7168 from brauner/2020-04-10/fixes
+   - forkexec: log unexpected fds
+   - Merge pull request #7169 from brauner/2020-04-10/fixes
+   - lxd/daemon: Ignore .zfs in volumes
+   - Merge pull request #7170 from stgraber/master
+   - lxd/network: Push MTU over DHCP
+   - Merge pull request #7171 from stgraber/master
+   - shared/api: Drop invalid Managed key in NetworksPost
+   - lxd: Drop invalid use of Managed property
+   - Merge pull request #7173 from stgraber/network
+   - lxd/devices/disk: Prevent recursive & readonly
+   - Merge pull request #7177 from stgraber/master
+   - lxc/instance/drivers: Set new name before renaming backups
+   - test: Extend backup rename
+   - lxd/instance/drivers: Add revert steps when renaming instance
+   - Merge pull request #7182 from monstermunchkin/issues/7176
+   - lxd/instance/drivers/driver/qemu: Allow up to 8 NIC devices
+   - lxd/instance/drivers/driver/qemu/templates: Note that lxd_ disk device name prefix should not be changed
+   - Merge pull request #7185 from tomponline/tp-vm-pci
+   - Merge pull request #7183 from tomponline/tp-vm-device-comment
+   - doc/instances: Clarify config conditions
+   - doc/index: Clarify bind-mount in FAQ
+   - Merge pull request #7186 from stgraber/master
+   - lxd/instances: Better use userRequested on Update
+   - Merge pull request #7190 from stgraber/master
+   - lxd/device/nic: Adds host_table setting validation rule
+   - lxd/device/nic/routed: Fix sysctl command suggestion when using vlans
+   - lxd/device/nic/routed: Add host_table support
+   - api: Adds container_nic_routed_host_table extension
+   - doc: Adds documentation for routed NIC host_table setting
+   - suites/container/devices/nic/routed: Adds tests for custom routing tables
+   - Merge pull request #7192 from tomponline/tp-nic-routed-hosttable
+   - lxd/device/nic/ipvlan: Improve validation of sysctl settings when vlan setting used
+   - lxd/device/nic/ipvlan: Adds host_table setting support
+   - api: Adds container_nic_ipvlan_host_table extension
+   - doc: Adds documentation for ipvlan NIC host_table setting
+   - test/suites/container/devices/nic/ipvlan: Adds tests for custom routing tables
+   - test/clustering: increase timing to detect offline node
+   - Merge pull request #7193 from tomponline/tp-nic-ipvlan-hosttable
+   - api: Adds container_nic_ipvlan_mode extension
+   - lxd/device/nic/ipvlan: Adds support for l2 mode
+   - doc/instances: Documents ipvlan l2 mode
+   - test/suites/container/devices/nic/ipvlan: Adds l2 mode tests
+   - Merge pull request #7197 from freeekanayaka/tweak-clustering-membership-test-timings
+   - Merge pull request #7196 from tomponline/tp-nic-ipvlan-l2
+   - shared/version/api: Add resources_system API extension
+   - doc/api-extensions: Add resources_system
+   - shared/api/resource: Add system resources
+   - lxd/resources: Add new system resources
+   - lxd/resources: Retrieve system information
+   - shared/util: Never look into the snap
+   - Merge pull request #7194 from monstermunchkin/issues/7189
+   - Merge pull request #7198 from stgraber/master
+   - lxd/resources: serial/uuid may not be accessible
+   - Merge pull request #7201 from stgraber/master
+   - doc/instances: Fixes default ceph.cluster_name value
+   - lxd/device/disk: Adds support to use ceph: prefix for disk source for VMs
+   - Merge pull request #7206 from tomponline/tp-vm-disk-ceph
+   - firewalld & lxd : how to let Firewalld control the LXD's iptables rules this is related to https://github.com/lxc/lxd/pull/7195 but this a bit more generic
+   - Update networks.md
+   - Merge pull request #7204 from kerphi/patch-2
+   - doc/networks: Fix typo
+   - i18n: Update translations from weblate
+   - Update networks.md
+   - Merge pull request #7210 from ckd/patch-1
+   - lxd/storage/ceph: Suppport alternate conf syntax
+   - Merge pull request #7211 from stgraber/master
+   - lxd/init: Try to bind LXD network address when running interactively
+   - lxd/instance/drivers/driver/qemu/templates: Use static PCIe address prefix for 9p devices
+   - lxd/instance/drivers/drivers/qemu: Adds support for 9p disk device PCIe indexes
+   - Merge pull request #7213 from freeekanayaka/validate-listen-address
+   - Merge pull request #7214 from tomponline/tp-vm-pcie
+   - lxd/device/nic/bridged: Dont load br_netfilter
+   - Merge pull request #7217 from tomponline/tp-nic-bridged-brnetfilter
+   - doc/instances: Fix swapped description
+   - Merge pull request #7219 from stgraber/master
+   - index.md: add PATH env variable to sudo command example
+   - Merge pull request #7220 from rafaeldtinoco/master
+   - shared/simplestreams: Fix VM image preference
+   - Merge pull request #7225 from stgraber/master
+   - lxd/devoce/device/utils/disk: Comment on diskCephfsOptions
+   - lxd/device/disk: Adds cephfs support for VMs
+   - lxd/device/proxy: Check for br_netfilter enabled and log warning if not
+   - lxd/firewall/drivers/driver/xtables: Adds MASQUERADE hairpin proxy NAT rule
+   - lxd/firewall/drivers/drivers/xtables: comments
+   - Merge pull request #7226 from tomponline/tp-vm-disk-cephfs
+   - lxd/device/proxy: Sets bridge port hairpin mode on when br_netfilter loaded
+   - lxd/firewall/drivers/drivers/xtables: Renames toDest to connectDest
+   - lxd/firewall/drivers/drivers/nftables: Renames toDest to connectDest
+   - lxd/init: Improve error messages when failing to bind an address
+   - lxd/firewall/drivers/drivers/nftables: Adds MASQUERADE hairpin proxy NAT rule
+   - Merge pull request #7227 from freeekanayaka/improve-cant-listen-error-message
+   - test/suites/container/devices/proxy: Updates tests for checking hairpin rule
+   - Merge pull request #7228 from tomponline/tp-nic-bridged-nat-hairpin
+   - lxd/instance/drivers/driver/qemu: Wait for onStop when restarting
+   - lxd/instance/drivers/driver/qemu: Makes onStop unexported
+   - lxd/instance/drivers/driver/qemu: Comment
+   - Merge pull request #7229 from tomponline/tp-vm-restart
+   - lxd/instance/lxc: Don't crash in setNetworkPriority
+   - Merge pull request #7230 from stgraber/master
+   - lxd/instances: Export type to templates
+   - lxd-agent: Reboot after cloud-init seed
+   - lxd/util: Tweak NetworkInterfaceAddress to only return global
+   - Merge pull request #7231 from stgraber/master
+   - Merge pull request #7232 from stgraber/net
+   - lxd/net/util: Updates comment on NetworkInterfaceAddress behaviour change
+   - Merge pull request #7234 from tomponline/tp-util-networkinterfaceaddress
+   - shared/usbid: Use system database
+   - Merge pull request #7235 from stgraber/master
+   - lxd-agent: Support systemd-notify
+   - lxd/qemu: Switch default unit type to notify
+   - Merge pull request #7236 from stgraber/master
+   - lxd/storage/backend/lxd: Updates CreateInstanceFromImage to use reverter
+   - lxd/storage/drivers/errors: Adds ErrCannotBeShrunk error
+   - lxd/storage/drivers/utils: Updates to shrinkFileSystem ErrCannotBeShrunk error
+   - lxd/storage/backend/lxd: Updates CreateInstanceFromImage to detect ErrCannotBeShrunk
+   - lxd/storage/drivers: Returns ErrCannotBeShrunk when block volume cannot be shrunk
+   - lxd/device/proxy: Dont allow proxy_protocol to be set when in nat mode
+   - lxd/device/proxy: Dont wrap lines
+   - lxd/device/proxy: Improves validation
+   - test/suites/container/devices/proxy: Updates tests with new validation rules
+   - Merge pull request #7238 from tomponline/tp-storage-cached-size
+   - lxd: Updates snapshotProtobufToInstanceArgs to support instance type
+   - Merge pull request #7240 from tomponline/tp-proxy-validation
+   - Merge pull request #7241 from tomponline/tp-migration-inst-type
+   - lxd/qemu: Match basic NUMA layout
+   - Merge pull request #7243 from stgraber/master
+   - lxd/storage/drivers/driver/zfs/volumes: Delete volume on error in CreateVolumeFromCopy
+   - lxd-agent/main/agent: Adds comment about reason for systemd-notify usage
+   - Merge pull request #7245 from tomponline/tp-vm-agentstart
+   - lxd/cgroup: Fix memory controller detection
+   - Merge pull request #7244 from tomponline/tp-storage-zfz-revert
+   - lxd/migration/migrate/proto: Fix alignment
+   - lxd/migration: Adds volumeSize field to MigrationHeader
+   - lxd/migrate: Adds VolumeSize to MigrationSinkArgs
+   - lxd/migration/migration/volumes: Adds VolumeSize to VolumeTargetArgs
+   - lxd/migrate/instance: Use VolumeSize from offer header in Do()
+   - lxd/storage/backend/lxd: Use VolumeSize from migration header in CreateInstanceFromMigration
+   - lxd/storage/drivers: Exports BlockDevSizeBytes function
+   - lxd/storage/utils: Adds InstanceDiskBlockSize
+   - lxd/migrate/instance: Populate offerHeader.VolumeSize for VMs
+   - lxd/storage/backend/lxd: Adds VM volume size hint to CreateInstanceFromCopy
+   - Merge pull request #7248 from stgraber/master
+   - Merge pull request #7246 from tomponline/tp-migration-volsize
+   - lxd/device/utils: Do not add the Ceph mon port if already present in /etc/ceph config file
+   - Merge pull request #7249 from leopaul36/master
+   - lxd/instance/qemu: Add comment on cpuTopology
+   - lxd/storage/ceph: Support port in URL
+   - Merge pull request #7251 from stgraber/master
+   - lxd/storage/drivers/utils: Makes minBlockBoundary available to other functions
+   - lxd/storage/drivers/driver/zfs/utils: Updates createVolume to use minBlockBoundary
+   - lxd/storage/drivers/driver/zfs/volumes: Updates SetVolumeQuota to use minBlockBoundary
+   - lxd/storage/drivers/zfs/volumes: Updates CreateVolume to allow regeneration of deleted image volumes
+   - lxd/storage/drivers/driver/zfs/volumes: Dont revert on rename success
+   - Merge pull request #7250 from tomponline/tp-storage-image-regeneration
+   - shared/version/api: Add API extension images_push_relay
+   - doc: Add images_push_relay
+   - client/interfaces: Add Mode to ImageCopyArgs
+   - lxc/image: Add mode flag to image copy
+   - client: Add relay mode for image copy
+   - lxd/images: Return token response in push mode
+   - lxd/images: Allow authentication using secret
+   - shared/api/image: Add ImageExportPost
+   - client: Add ExportImage to ImageServer
+   - lxd/images: Add POST /1.0/images/fingerprint/export
+   - client: Add push mode for image copy
+   - client: Add GetOperationWaitSecret
+   - lxd/images: Use metadata from the client
+   - lxd/images: Return operation on token validation
+   - lxd/images: Add secret metadata on image create
+   - client/lxd_images: Set fingerprint and secret headers
+   - lxd/operations: Allow untrusted clients for /1.0/operations/{id}/wait
+   - doc/rest-api: Add POST /1.0/images/<fingerprint>/export
+   - test/suites/remote: Add image copy push and relay mode
+   - po: Update translations
+   - lxd/daemon: Remove duplicated logic
+   - Merge pull request #7130 from monstermunchkin/issues/6805
+   - lxd/instance/qemu: Announce LXD in SMBIOS
+   - Merge pull request #7255 from stgraber/master
+   - share/usbid: Don't print error when missing
+   - Merge pull request #7257 from stgraber/master
+   - lxd/init: Auto-detect and use Ubuntu ZFS setup
+   - Merge pull request #7261 from stgraber/master
+   - lxc/config: Add --expanded to get
+   - i18n: Update translation templates
+   - Merge pull request #7267 from stgraber/master
+   - Resolve both core.https_address and cluster.https_address when comparing IPs
+   - Merge pull request #7269 from freeekanayaka/allow-using-hostnames-as-cluster-addresses
+   - lxd/storage/drivers/generic/vfs: Skip missing files during export
+   - Merge pull request #7271 from tomponline/tp-backup-walk-missing
+   - lxd/images: Fixes hang in export when invalid --compression argument passed
+   - Merge pull request #7272 from tomponline/tp-export-hang
+   - lxd/storage/drivers/driver/btrfs/volumes: CreateVolumeFromCopy only use expanded volume size when source is image
+   - Merge pull request #7276 from tomponline/tp-storage-createfromcopy-size-btrfs
+   - lxd/storage/drivers/driver/ceph/volumes: Allow cached volume regeneration in CreateVolume
+   - lxd/storage/drivers/driver/ceph/utils: Uses defaultBlockSize rather than hardcoded 10GB
+   - lxd/storage/drivers/driver/ceph/volumes: Adds getVolumeSize function
+   - lxd/storage/drivers/driver/ceph/volumes: Removes unnecessary mount/unmount
+   - lxd/storage/drivers/driver/zfs/volumes: Clarify clone comments
+   - lxd/storage/drivers/driver/ceph/volumes: Dont wrap lines
+   - lxd/storage/drivers/driver/ceph/volumes: Dont use clone mode when creating volume from cached image when it is disabled
+   - lxd/storage/utils: VolumeDBCreate comment formatting
+   - lxd/storage/drivers/driver/lvm/volumes: CreateVolumeFromCopy only set volume size from expanded config when source is image
+   - lxd/storage/drivers/driver/zfs/volumes: CreateVolumeFromCopy only set volume size from expanded config when source is image
+   - lxc/storage/drivers/driver/ceph/utils: Reworks parseParent to return a Volume struct
+   - lxd/storage/drivers/driver/ceph/utils: Adds tests for parseParent
+   - lxd/storage/drivers/driver/ceph/utils: Adds cephVolumeTypeZombieImage constant
+   - lxd/storage/drivers/driver/ceph/utils: Updates rbdCreateVolume to accept string size
+   - lxd/storage/drivers/driver/ceph/utils: Pass volume config in rbdMarkVolumeDeleted
+   - lxd/storage/drivers/driver/ceph/utils: Pass volume config in rbdRenameVolume
+   - lxd/storage/drivers/driver/ceph/utils: Replaces getRBDSize with volumeSize
+   - lxd/storage/drivers/driver/ceph/utils: Dont wrap lines
+   - lxd/storage/drivers/driver/ceph/utils: Updates usage of d.parseParent in deleteVolume
+   - lxd/storage/drivers/driver/ceph/utils: Updates RBD naming logic in getRBDVolumeName
+   - lxd/storage/drivers/driver/ceph/volumes: Ensures CreateVolumeFromCopy correctly sizes new volume
+   - lxd/storage/drivers/driver/ceph/volumes: If volume doesnt exist in DeleteVolume do nothing
+   - lxd/storage/drivers/driver/ceph/utils: Dont wrap lines
+   - lxd/db: Rename CertificatesGet to GetCertificates
+   - lxd/db: Rename CertificateGet to GetCertificate
+   - lxd/db: Rename CertSave to CreateCertificate
+   - lxd/db: Rename CertDelete to DeleteCertificate
+   - lxd/db: Rename CertUpdate to UpdateCertificate
+   - lxd/db: Drop unused ConfigValueSet
+   - lxd/instances/post: Fix revert in createFromBackup
+   - lxd/storage/drivers/volume: Adds allowUnsafeResize bool to Volume struct
+   - lxd/storage/backend/lxd: Adds cannot shrink error handling in CreateInstanceFromBackup
+   - lxd/storage/drivers/generic/vfs: Sets block volume size to file size of volume in tarball in genericVFSBackupUnpack
+   - lxd/storage/drivers/driver/btrfs/volumes: No need to move GPT header if no filler used in CreateVolume
+   - lxd/storage/drivers/driver/btrfs/volumes: Skip GPT header move in SetVolumeQuota when allowUnsafeResize is enabled
+   - lxd/storage/drivers/driver/dir/volumes: Skip GPT header move in SetVolumeQuota when allowUnsafeResize is enabled
+   - lxd/storage/drivers/driver/lvm/volumes: Allow unsafe shrinking when allowUnsafeResize is enabled
+   - lxd/storage/drivers/driver/zfs/volumes: Allow unsafe shrinking when allowUnsafeResize is enabled
+   - Merge pull request #7280 from tomponline/tp-storage-createfromcopy
+   - lxd/storage/drivers/driver/ceph/volumes: Allow unsafe shrinking when allowUnsafeResize is enabled
+   - Merge pull request #7282 from tomponline/tp-storage-backuprestore-size
+   - Merge pull request #7270 from tomponline/tp-storage-image-regeneration-ceph
+   - lxd/db: Rename InstanceNames to GetInstanceNames
+   - lxd/db: Rename ContainerNodeAddress to GetNodeAddressOfInstance
+   - lxd/db: Rename ContainersListByNodeAddress to GetInstanceNamesByNodeAddress
+   - lxd/db: Rename ContainersByNodeName to GetInstanceToNodeMap
+   - lxd/db: Rename ContainerNodeMove to UpdateInstanceNode
+   - lxd/db: Rename ContainerNodeProjectList to GetLocalInstancesInProject
+   - lxd/db: Rename ContainerConfigInsert to CreateInstanceConfig
+   - lxd/db: Rename ContainerConfigUpdate to UpdateInstanceConfig
+   - lxd/db: Rename InstanceRemove to RemoveInstance
+   - lxd/db: Rename ContainerProjectAndName to GetInstanceProjectAndName
+   - lxd/db: Rename ContainerConfigClear to DeleteInstanceConfig
+   - lxd/db: Rename ContainerConfigGet to GetInstanceConfig
+   - lxd/db: Rename ContainerConfigRemove to DeleteInstanceConfigKey
+   - lxd/db: Rename ContainerSetStateful to UpdateInstanceStatefulFlag
+   - lxd/db: Rename ContainerProfilesInsert to AddProfilesToInstance
+   - lxd/db: Drop unused ContainerProfiles
+   - lxd/db: Drop unused ContainerConfig
+   - lxd/db: Remove unused ContainersNodeList
+   - lxd/db: Rename ContainersResetState to ResetInstancesPowerState
+   - lxd/db: Rename ContainerSetState to UpdateInstancePowerState
+   - lxd/db: Rename ContainerUpdate to UpdateInstance
+   - lxd/db: Rename InstanceSnapshotCreationUpdate to UpdateInstanceSnapshotCreationDate
+   - lxd/db: Rename ContainerLastUsedUpdate to UpdateInstanceLastUsedDate
+   - lxd/db: Rename ContainerGetSnapshots to GetInstanceSnapshotsNames
+   - lxd/db: Rename ContainerNextSnapshot to GetNextInstanceSnapshotIndex
+   - lxd/db: Rename InstancePool to GetInstancePool
+   - lxd/db: Rename ContainerBackupID to getInstanceBackupID
+   - Rename ContainerGetBackup to GetInstanceBackup
+   - lxd/db: Rename InstanceCreateBackup to CreateInstanceBackup
+   - lxd/db: Rename InstanceBackupRemove to DeleteInstanceBackup
+   - lxd/db: ContainerBackupRename to RenameInstanceBackup
+   - lxd/db: Rename ContainerBackupsGetExpired to GetExpiredInstanceBackups
+   - lxd/storage/drivers/utils: Updates roundVolumeBlockFileSizeBytes and ensureVolumeBlockFile to take size as bytes
+   - lxd/storage/drivers/generic/vfs: Updates genericVFSResizeBlockFile to accept size as bytes
+   - lxd/storage/drivers/driver/btrfs/utils: Adds volumeSize function
+   - lxd/storage/drivers/driver/btrfs/volumes: Updates CreateVolume to use volumeSize()
+   - lxd/storage/drivers/driver/btrfs/volumes: Updates SetVolumeQuota to be byte oriented internally
+   - lxd/storage/drivers/driver/ceph/utils: Updates volumeSize comment for consistency
+   - lxd/storage/drivers/driver/ceph/volumes: Updates CreateVolumeFromCopy to use volumeSize()
+   - lxd/storage/drivers/driver/ceph/volumes: Updates SetVolumeQuota to be byte oriented internally
+   - lxd/storage/drivers/driver/dir/utils: Adds volumeSize function
+   - lxd/storage/drivers/driver/dir/volumes: Updates CreateVolume to use volumeSize
+   - lxd/storage/drivers/driver/dir/volumes: Updates SetVolumeQuota to be byte oriented internally
+   - lxd/storage/drivers/driver/lvm/utils: Updates copyThinpoolVolume to use volumeSize()
+   - lxd/storage/drivers/driver/lvm/volumes: Updates SetVolumeQuota variables and comments
+   - lxd/storage/drivers/driver/zfs/utils: Adds volumeSize function
+   - lxd/storage/drivers/driver/zfs/volumes: Updates CreateVolume to use volumeSize()
+   - lxd/storage/drivers/driver/zfs/volumes: Updates CreateVolumeFromCopy to use volumeSize()
+   - lxd/storage/drivers/driver/zfs/volumes: Updates SetVolumeQuota to be byte oriented internally
+   - Merge pull request #7281 from freeekanayaka/cleanup-db-function-names
+   - lxd/db: Rename DevicesAdd to AddDevicesToEntity
+   - lxd/storage/backend/lxd: Detect cached image filesystem changes for VM images too
+   - lxd/db: Remove unused Devices
+   - lxd/db: Rename ImagesGetLocal to GetLocalImages
+   - lxd/db: Rename ImagesGet to GetImages
+   - lxd/db: Rename ImagesGetExpired to GetExpiredImages
+   - lxd/db: Rename ImageSourceInsert to CreateImageSource
+   - lxd/db: Rename ImageSourceGet to GetImageSource
+   - lxd/db: Rename ImageGet to GetImage
+   - lxd/db: Rename ImageGetFromAnyProject to GetImageFromAnyProject
+   - lxd/db: Rename ImageLocate to LocateImage
+   - lxd/db: Rename ImageAssociateNode to AddImageToLocalNode
+   - lxd/db: Rename ImageDelete to DeleteImage
+   - lxd/db: Rename ImageAliasesGet GetImageAliases
+   - lxd/db: Rename ImageAliasGet to GetImageAlaias
+   - lxd/db: Rename ImageAliasRename to RenameImageAlias
+   - lxd/db: Rename ImageAliasDelete to DeleteImageAlias
+   - lxd/db: Rename ImageAliasesMove to MoveImageAlias
+   - lxd/db: Rename ImageAliasAdd to CreateImageAlias
+   - lxd/db: Rename ImageAliasUpdate to UpdateImageAlias
+   - lxd/db: Rename ImageCopyDefaultProfiles to CopyDefaultImageProfiles
+   - lxd/db: Rename ImageLastAccessUpdate to UpdateImageLastUseDate
+   - lxd/db: Rename ImageLastAccessInit to InitImageLastUseDate
+   - lxd/db: Rename ImageUpdate to UpdateImage
+   - lxd/db: Rename ImageInsert to CreateImage
+   - lxd/db: Rename ImageGetPools to GetPoolsWithImage
+   - lxd/db: Rename ImageGetPoolNamesFromIDs to GetPoolNamesFromIDs
+   - lxd/db: Rename ImageUploadedAt to UpdateImageUploadDate
+   - lxd/db: Rename ImagesGetOnCurrentNode to GetImagesOnLocalNode
+   - lxd/db: Rename ImagesGetByNodeID to GetImagesOnNode
+   - lxd/db: Replace ImageGetNodesWithImage with GetNodesWithImage
+   - lxd/db: Rename ImageGetNodesWithoutImage to GetNodesWithoutImage
+   - lxc/image: Actually refresh multiple images
+   - Merge pull request #7286 from freeekanayaka/cleanup-db-function-names-part-2
+   - Merge pull request #7288 from stgraber/master
+   - Merge pull request #7285 from tomponline/tp-storage-filesystem-regen
+   - Merge pull request #7283 from tomponline/tp-storage-volsize-consistency
+   - lxd/resources: Use permanent MAC when available
+   - Merge pull request #7290 from stgraber/master
+   - lxd/qemu: Restrict NUMA layout to x86_64
+   - Merge pull request #7293 from stgraber/master
+   - Consider all nodes when looking for the leader, not only voters
+   - Only attempt to transfer leadership if we are not standalone
+   - Merge pull request #7297 from freeekanayaka/try-all-nodes-when-looking-for-leader
+   - lxd/db: Rename NetworksNodeConfig to GetNetworksLocalConfig
+   - lxd/db: Rename NetworkIDsNotPending to GetNonPendingNetworkIDs
+   - lxd/db: Rename NetworkID to GetNetworkID
+   - lxd/db: Rename NetworkConfigAdd to CreateNetworkConfig
+   - lxd/db: Rename Networks to GetNetworks
+   - lxd/db: Rename NetworksNotPending to GetNonPendingNetworks
+   - lxd/db: Rename NetworksNotPending to GetNonNetworks
+   - lxd/db: Rename NetworkGetInterface to GetNetworkWithInterface
+   - lxd/db: Rename NetworkConfig to getNetworkConfig
+   - lxd/db: Rename NetworkCreate to CreateNetwork
+   - lxd/db: Rename NetworkUpdate to UpdateNetwork
+   - lxd/db: Rename NetworkConfigClear to clearNetworkConfig
+   - lxd/db: Rename NetworkDelete to DeleteNetwork
+   - lxd/db: Rename NetworkRename to RenameNetwork
+   - lxd/db: Rename NetworkNodeConfigKeys to NodeSpecificNetworkNodeConfig
+   - Merge pull request #7299 from freeekanayaka/cleanup-db-function-names-part-3
+   - lxd/daemon: Detect nodev and improve errors
+   - Merge pull request #7300 from stgraber/master
+   - lxd/db: Rename NodeByAddress to GetNodeByAddress
+   - lxd/db: Rename NodePendingByAddress to GetPendingNodeByAddress
+   - lxd/db: Rename NodeByName to GetNodeByName
+   - lxd/db: Rename NodeName to GetLocalNodeName
+   - lxd/db: Rename NodeAddress to GetLocalNodeAddress
+   - lxd/db: Rename Nodes to GetNodes
+   - lxd/db: Rename NodesCount to GetNodesCount
+   - lxd/db: Rename NodeRename to RenameNode
+   - lxd/db: Rename NodeAdd to CreateNode
+   - lxd/db: Rename NodeAddWithArch to CreateNodeWithArch
+   - lxd/db: Rename NodePending to SetNodePendingFlag
+   - lxd/db: Rename NodeUpdate to UpdateNode
+   - lxd/db: Rename NodeAddRole to CreateNodeRole
+   - lxd/db: Rename NodeRemoveRole to RemoveNodeRole
+   - lxd/db: Rename NodeUpdateRoles to UpdateNodeRoles
+   - lxd/db: Rename NodeRemove to RemoveNode
+   - lxd/db: Rename NodeHeartbeat to SetNodeHeartbeat
+   - lxd/db: Rename NodeOfflineThreshold to GetNodeOfflineThreshold
+   - lxd/db: Rename NodeClear to ClearNode
+   - lxd/db: Rename NodeWithLeastContainers to GetNodeWithLeastInstances
+   - lxd/db: Rename NodeUpdateVersion to SetNodeVersion
+   - lxd/db: Rename Operations to GetLocalOperations
+   - lxd/db: Rename OperationsUUIDs to GetLocalOperationsUUIDs
+   - lxd/db: Rename OperationNodes to GetNodesWithRunningOperations
+   - lxd/db: Rename OperationByUUID to GetOperationByUUID
+   - lxd/db: Rename OperationAdd to CreateOperation
+   - lxd/db: Rename OperationRemove to RemoveOperation
+   - lxd/db: Rename OperationFlush to removeNodeOperations
+   - lxd/db: Rename Patches to GetAppliedPatches
+   - lxd/db: Rename PatchesMarkApplied to MarkPatchAsApplied
+   - lxd/db: Rename Profiles to GetProfileNames
+   - lxd/db: Rename ProfileGet to GetProfile
+   - lxd/db: Rename ProfilesGet to GetProfiles
+   - lxd/db: Drop ProfileConfig
+   - lxd/db: Rename ProfileDescriptionUpdate to UpdateProfileDescription
+   - lxd/db: Rename ProfileConfigClear to ClearProfileConfig
+   - lxd/db: Rename ProfileConfigAdd to CreateProfileConfig
+   - lxd/db: Rename ProfileContainersGet to GetInstancesWithProfile
+   - lxd/db: Rename ProfileCleanupLeftover to RemoveUnreferencedProfiles
+   - lxd/db: Rename ProfilesExpandConfig to ExpandInstanceConfig
+   - lxd/db: Rename ProfilesExpandDevices to ExpandInstanceDevices
+   - Merge pull request #7302 from freeekanayaka/rename-db-function-names-part4
+   - lxd/storage/drivers/generic/vfs: Dont require access to block device when excluding root image file from rsync in genericVFSMigrateVolume
+   - lxd/storage/drivers/driver/zfs/volumes: Updates MigrateVolume to avoid need to premount snapshot volume
+   - Merge pull request #7304 from tomponline/tp-storage-zfs-migration
+   - ethtool: add ethtoolGset() helper
+   - test/suites/storage/volume/attach: Adds test for custom volume root perm persistence
+   - lxd/storage/drivers: Fixes custom volume root mount perm issue for BTRFS and DIR
+   - lxc/storage/drivers/volume: Removes keepDevice from Volume
+   - lxd/storage/drivers/driver/ceph/volumes: Removes keepDevice usage
+   - lxc/storage/drivers/driver/ceph/volumes: Mount changes
+   - lxd/storage/drivers/driver/ceph/volumes: UnmountVolume modifications
+   - lxd/storage/drivers/driver/ceph/volumes: Esnure permission on volume root set in CreateVolume
+   - lxd/resources: Skip NVME multipath entries
+   - lxd/db: Rename ProjectNames to GetProjectNames
+   - lxd/db: Rename ProjectMap to GetProjectIDsToNames
+   - lxd/db: Rename ProjectUpdate to UpdateProject
+   - Merge pull request #7310 from tomponline/tp-storage-customvol-chmod
+   - lxd/db: Rename ProjectLaunchWithoutImages to InitProjectWithoutImages
+   - lxd/db: Rename RaftNodes to GetRaftNodes
+   - lxd/db: Rename RaftNodeAddresses to GetRaftNodeAddresses
+   - lxd/db: Rename RaftNodeAddress to GetRaftNodeAddress
+   - lxd/db: Rename RaftNodeFirst to CreateFirstRaftNode
+   - lxd/db: Rename RaftNodeAdd to CreateRaftNode
+   - lxd/db: Rename RaftNodeDelete to RemoveRaftNode
+   - lxd/db: Rename RaftNodesReplace to ReplaceRaftNodes
+   - lxd/db: Rename InstanceSnapshotConfigUpdate to UpdateInstanceSnapshotConfig
+   - lxd/db: Rename InstanceSnapshotID to GetInstanceSnapshotID
+   - lxd/db: Rename StoragePoolsNodeConfig to GetStoragePoolsLocalConfig
+   - lxd/db: Rename StoragePoolID to GetStoragePoolID
+   - lxd/db: Rename StoragePoolDriver to GetStoragePoolDriver
+   - lxd/db: Rename StoragePoolIDsNotPending to GetNonPendingStoragePoolsNamesToIDs
+   - lxd/db: Rename StoragePoolNodeJoin to UpdateStoragePoolAfterNodeJoin
+   - lxd/db: Rename StoragePoolConfigAdd to CreateStoragePoolConfig
+   - lxd/db: Rename StoragePoolNodeConfigs to GetStoragePoolNodeConfigs
+   - lxd/db: Rename StoragePools to GetStoragePoolNames
+   - lxd/db: Rename StoragePoolsNotPending to GetNonPendingStoragePoolNames
+   - lxd/db: Rename StoragePoolsGetDrivers to GetStoragePoolDrivers
+   - lxd/db: Rename StoragePoolGetID to GetStoragePoolID
+   - lxd/db: Rename StoragePoolGet to GetStoragePool
+   - lxd/db: Rename StoragePoolConfigGet to getStoragePoolConfig
+   - lxd/db: Rename StoragePoolCreate to CreateStoragePool
+   - lxd/db: Rename StoragePoolUpdate to UpdateStoragePool
+   - Merge pull request #7314 from stgraber/master
+   - lxd/db: Rename StoragePoolConfigClear to clearStoragePoolConfig
+   - lxd/db: Rename StoragePoolDelete to RemoveStoragePool
+   - lxd/db: Rename StoragePoolVolumesGetNames to GetStoragePoolVolumesNames
+   - lxd/db: Rename StoragePoolVolumesGetAllByType to GetStoragePoolVolumesWithType
+   - lxd/db: Rename StoragePoolVolumesGet to GetStoragePoolVolumes
+   - lxd/db: Rename StoragePoolNodeVolumesGet to GetLocalStoragePoolVolumes
+   - lxd/db: Rename StoragePoolVolumeSnapshotsGetType to GetLocalStoragePoolVolumeSnapshotsWithType
+   - lxd/db: Rename StoragePoolNodeVolumesGetType to GetLocalStoragePoolVolumesWithType
+   - lxd/db: Rename StoragePoolNodeVolumeGetTypeByProject to GetLocalStoragePoolVolume
+   - lxd/db: Rename StoragePoolVolumeUpdateByProject to UpdateStoragePoolVolume
+   - lxd/db: Rename StoragePoolVolumeDelete to RemoveStoragePoolVolume
+   - lxd/db: Rename StoragePoolVolumeRename to RenameStoragePoolVolume
+   - lxd/db: Rename StoragePoolVolumeCreate to CreateStoragePoolVolume
+   - lxd/db: Rename StoragePoolNodeVolumeGetTypeIDByProject to GetStoragePoolNodeVolumeID
+   - lxd/db: Rename StoragePoolInsertZfsDriver to FillMissingStoragePoolDriver
+   - Merge pull request #7312 from tomponline/tp-storage-ceph-shrink
+   - Merge pull request #7315 from freeekanayaka/rename-db-function-names-part-5
+   - lxd/storage/zfs: Use TryUnmount
+   - Merge pull request #7317 from stgraber/master
+   - Support two-phase creation of a storage pool on single-node cluster
+   - Merge pull request #7325 from freeekanayaka/storage-creation-on-single-node
+   - lxd/storage/drivers/driver/btrfs/utils: Adds setSubvolumeReadonlyProperty function
+   - lxd/storag/drivers/driver/btrfs/volumes: Removes readonly argument from snapshotSubvolume
+   - lxd/storage/drivers/driver/btrfs: d.setSubvolumeReadonlyProperty and d.snapshotSubvolume usage
+   - lxd/db: Rename StoragePoolVolumeGetType to GetStoragePoolVolume
+   - lxd/db: Rename StoragePoolVolumeSnapshotCreate to CreateStorageVolumeSnapshot
+   - lxd/db: Rename StoragePoolVolumeSnapshotUpdateByProject to UpdateStoragePoolVolumeSnapshot
+   - lxd/db: Rename StorageVolumeSnapshotExpiryGet to GetStorageVolumeSnapshotExpiry
+   - lxd/db: Rename StorageVolumeSnapshotsGetExpired to GetExpiredStorageVolumeSnapshots
+   - resources/ethtool: implement ETHTOOL_GLINKSETTINGS
+   - lxd/storage/drivers/driver/btrfs/utils: Adds getSubvolumesMetaData function
+   - lxd/storage/drivers/driver/btrfs/volumes: Maintain subvolume readonly state in snapshot
+   - lxd/storage/driversr/driver/btrfs/utils: Allow ro subvolumes to be deleted in deleteSubvolume
+   - lxd/storag/drivers/driver/btrfs/volumes: Updates MigrateVolume to send subvolumes
+   - lxd/storage/drivers/driver/btrfs/volumes: Fail backup when cleanup fails in BackupVolume
+   - lxd/storage/drivers/driver/btrfs/volumes: Better naming of variables in unpackVolume
+   - lxd/migration/migrate/proto: Adds BTRFS Features to offer header
+   - lxd/migration/utils: Adds GetBtrfsFeaturesSlice function
+   - lxd/migration/migration/volumes: Adds BTRFS feature support to TypesToHeader
+   - lxd/migration/migration/volumes: Adds BTRFS feature support to MatchTypes
+   - lxd/storage/drivers/driver/btrfs: Adds BTRFS features to MigrationTypes
+   - lxd/storage/memorypipe: Dont make ioutil.ReadAll panic on cancel
+   - lxd/storage/drivers/driver/btrfs/utils: Kill btrfs send on error in sendSubvolume
+   - lxd/storage/drivers/driver/btrfs/utils: Support subvolumes in receiveSubvolume
+   - lxd/storage/drivers/driver/btrfs/utils: Adds metadataHeader function
+   - lxd/storage/drivers/driver/btrfs/volumes: Updates CreateVolumeFromMigration to receive subvolumes
+   - Merge pull request #7327 from brauner/2020-05-06/ethtool
+   - Merge pull request #7326 from tomponline/tp-storage-btrfs-snapshot
+   - lxd/db: Rename StorageVolumeNodeAddresses to GetStorageVolumeNodeAddresses
+   - lxd/db: Rename StorageVolumeDescriptionGet to GetStorageVolumeDescription
+   - lxd/db: Rename StorageVolumeNextSnapshot to GetNextStorageVolumeSnapshotIndex
+   - lxd/db: Rename StorageVolumeCleanupImages to RemoveStorageVolumeImages
+   - lxd/db: Rename StorageVolumeMoveToLVMThinPoolNameKey to UpgradeStorageVolumConfigToLVMThinPoolNameKey
+   - lxd/db: Update naming pattern for generated database code
+   - Merge pull request #7316 from tomponline/tp-storage-btrfs-subvols
+   - Merge pull request #7328 from freeekanayaka/rename-db-function-names-part-6
+   - client/lxd_images: Fix backward compatibility
+   - Merge pull request #7329 from stgraber/master
+   - lxd/storage/btrfs: Fix migration from snapshot
+   - Merge pull request #7330 from stgraber/master
+   - i18n: Update translations from weblate
+
+  ### 試用環境 <!-- Try it for yourself -->
+  <!--
+  This new LXD release is already available for you to try on our [demo service](https://linuxcontainers.org/lxd/try-it/).
+  -->
+  この新しい LXD リリースは私たちの [デモサービス](https://linuxcontainers.org/ja/lxd/try-it/) で利用できます。
+
+  ### ダウンロード <!-- Downloads -->
+  <!--
+  The release tarballs can be found on our [download page](https://linuxcontainers.org/lxd/downloads/).
+  -->
+  このリリースの tarball は [ダウンロードページ](/lxd/downloads/) から取得できます。
+
+  <!--
+  Binary builds are also available for:
+  -->
+  ビルド済みバイナリーは次のように使えます:
+
+   - **Linux:** snap install lxd
+   - **MacOS:** brew install lxc
+   - **Windows:** choco install lxc
