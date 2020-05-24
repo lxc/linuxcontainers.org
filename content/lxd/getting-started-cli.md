@@ -86,9 +86,9 @@ After that, you can install LXD with:
 Alternatively, pass `--channel=4.0/stable` for the LXD 4.0 LTS release, `--channel=3.0/stable` for the LXD 3.0 LTS release or `--channel=2.0/stable` for the LXD 2.0 LTS release.
 
 ### MacOS builds
-LXD upstream publishes builds of the LXD client for macOS through [Homebrew](https://brew.sh/).
+LXD upstream publishes builds of the LXC client for macOS through [Homebrew](https://brew.sh/).
 
-To install the feature branch of LXD, run:
+To install the feature branch of LXC, run:
 
     brew install lxc
 
