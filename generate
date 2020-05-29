@@ -21,6 +21,11 @@ import json
 import markdown
 import markdown.extensions.codehilite
 import markdown.extensions.toc
+import markdown.extensions.extra
+import markdown.extensions.tables
+import markdown.extensions.footnotes
+import markdown.extensions.admonition
+import markdown.extensions.wikilinks
 import pygments.formatters
 import os
 import re
@@ -155,7 +160,28 @@ def md2html(content):
     anchors = markdown.extensions.toc.TocExtension(
         permalink=1)
 
-    return markdown.markdown(content, extensions=[codehilite, anchors])
+    # adds tables
+    tables = markdown.extensions.tables.TableExtension(
+     )
+
+    # adds wiki-style footnotes
+    footnotes = markdown.extensions.footnotes.FootnoteExtension(
+     )
+
+    # adds special note/warning boxes
+    admonition = markdown.extensions.admonition.AdmonitionExtension(
+     )
+
+    # will convert any [[bracketed]] word to a link
+    # links will go to the LXD documentation
+    wikilinks = markdown.extensions.wikilinks.WikiLinkExtension(
+        base_url='/lxd/docs/master/',
+        # base_url='https://linuxcontainers.org/lxd/docs/master/',
+        end_url='.html')
+
+    return markdown.markdown(content, extensions=[codehilite, anchors,
+                                                  tables, footnotes,
+                                                  admonition, wikilinks])
 
 
 def download_sort_key(download_name):
