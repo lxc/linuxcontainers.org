@@ -91,6 +91,22 @@ As a container connected to a bridge can transmit any level 2 traffic that it wi
 When running untrusted containers or when allowing untrusted users to run containers, one should ideally create one bridge per user or per
 group of untrusted containers and configure /etc/lxc/lxc-usernet such that users may only use the bridges that they have been allocated.
 
+### Securing IPv6 Router Advertisements acceptance
+
+In addition to this, one must take care to consider the possibility of containers modifying the LXC host's IPv6
+routing table through IPv6 router advertisements. This is because the default LXC bridge is configured with
+IPv4 addresses only. This means that the value of `/proc/sys/net/ipv6/conf/default/accept_ra` is applied to the
+lxcbr0 interface. If it is a value > 0 then the LXC host will accept (potentially malicious) router advertisements
+from the containers connected to the bridge.
+
+To avoid this you can either configure IPv6 addresses on the default bridge by setting the `LXC_IPV6_*` variables
+in `/etc/default/lxc-net` (this will enable `/proc/sys/net/ipv6/conf/lxcbr0/forwarding` which causes
+`/proc/sys/net/ipv6/conf/lxcbr0/accept_ra` to be effectively disabled if the value is `1`. See
+https://www.kernel.org/doc/Documentation/networking/ip-sysctl.txt for more info), or you can set the
+`/proc/sys/net/ipv6/conf/default/accept_ra` setting to `0` so that when `lxcbr0` is created it's `accept_ra` is
+disabled. However if you are using IPv6 on the LXC host and relying on router advertisements from the external
+network then you should ensure that `accept_ra` is enabled for the external interface to avoid losing connectivity.
+
 # Reporting security issues
 To ensure security issues can be fixed as quickly as possible and simultaneously
 in all Linux distributions, issues should be reported either:
