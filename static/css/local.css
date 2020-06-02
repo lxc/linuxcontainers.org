@@ -283,26 +283,3 @@ pre {
 .p-notification__response {
     max-width: none;
 }
-
-/* tables */
-table {
-  border-collapse: collapse;
-  width: auto;
-  table-layout: auto;
-}
-
-table, th, td {
-  border: 1px solid black;
-  background-color: #141414;
-}
-
-td {
-  text-align: center;
-  padding: 8px;
-}
-
-th {
-  font-weight: bold;
-  padding: 8px;
-  text-align: center;
-}
