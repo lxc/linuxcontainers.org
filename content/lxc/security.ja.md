@@ -169,6 +169,28 @@ group of untrusted containers and configure /etc/lxc/lxc-usernet such that users
 -->
 信頼できないコンテナが実行されていたり、信頼できないユーザにコンテナの実行を許可している場合、理想的には信頼できないコンテナのユーザもしくはグループごとにひとつブリッジを作成すべきです。そして、ユーザに対して割り当てられたブリッジだけを使えるように /etc/lxc/lxc-usernet を設定すべきです。
 
+### IPv6 ルータ広告の受け入れをセキュアにする <!-- Securing IPv6 Router Advertisements acceptance -->
+
+<!--
+In addition to this, one must take care to consider the possibility of containers modifying the LXC host's IPv6
+routing table through IPv6 router advertisements. This is because the default LXC bridge is configured with
+IPv4 addresses only. This means that the value of `/proc/sys/net/ipv6/conf/default/accept_ra` is applied to the
+lxcbr0 interface. If it is a value > 0 then the LXC host will accept (potentially malicious) router advertisements
+from the containers connected to the bridge.
+-->
+これに加えて、コンテナが IPv6 のルータ広告（Router Advertisement）を通して LXC ホストの IPv6 ルーティングテーブルを変更する可能性を考慮しておかなければなりません。これは、デフォルトの LXC のブリッジが IPv4 のみで構成されているからです。これは `/proc/sys/net/ipv6/conf/default/accept_ra` の値が lxcbr0 インターフェースに対しても適用されるということです。この値が 0 より大きな場合、LXC ホストはブリッジに接続されたコンテナからの（悪意がある可能性がある）ルータ広告を受け入れます。
+
+<!--
+To avoid this you can either configure IPv6 addresses on the default bridge by setting the `LXC_IPV6_*` variables
+in `/etc/default/lxc-net` (this will enable `/proc/sys/net/ipv6/conf/lxcbr0/forwarding` which causes
+`/proc/sys/net/ipv6/conf/lxcbr0/accept_ra` to be effectively disabled if the value is `1`. See
+https://www.kernel.org/doc/Documentation/networking/ip-sysctl.txt for more info), or you can set the
+`/proc/sys/net/ipv6/conf/default/accept_ra` setting to `0` so that when `lxcbr0` is created it's `accept_ra` is
+disabled. However if you are using IPv6 on the LXC host and relying on router advertisements from the external
+network then you should ensure that `accept_ra` is enabled for the external interface to avoid losing connectivity.
+-->
+これを防ぐため、`/etc/default/lxc-net` ファイルで `LXC_IPV6_*` 変数を設定することで、デフォルトブリッジ上での IPv6 アドレスを設定できます（これは `/proc/sys/net/ipv6/conf/lxcbr0/forwarding` を有効にします。このファイルの値が 1 の場合は、`/proc/sys/net/ipv6/conf/lxcbr0/accept_ra` を事実上無効化します。詳しくは https://www.kernel.org/doc/Documentation/networking/ip-sysctl.txt をご覧ください）。もしくは、`lxcbr0` が作成された時に `accept_ra` が無効になるように、`/proc/sys/net/ipv6/conf/default/accept_ra` を `0` に設定することもできます。しかし、もし LXC ホストで IPv6 を使っており、外部ネットワークからのルータ広告に依存しているのであれば、外部との接続が失われるのを防ぐために、外部インターフェースで確実に `accept_ra` が有効になっているようにすべきです。
+
 # セキュリティ上の問題の報告 <!-- Reporting security issues -->
 <!--
 To ensure security issues can be fixed as quickly as possible and simultaneously
