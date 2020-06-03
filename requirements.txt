@@ -1,5 +1,5 @@
 beautifulsoup4
 jinja2
-markdown==3.0.0
+markdown
 pygments
 pyyaml
