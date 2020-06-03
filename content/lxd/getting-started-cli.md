@@ -1,3 +1,6 @@
+##### Contents
+
+[TOC]
 
 # Installation
 ## Choose your release
