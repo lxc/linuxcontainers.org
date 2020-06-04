@@ -1,3 +1,6 @@
+##### 目次
+
+[TOC]
 
 # インストール<!-- Installation -->
 ## リリースを選択する <!-- Choose your release -->
