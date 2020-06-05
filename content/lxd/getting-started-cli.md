@@ -124,7 +124,7 @@ Instructions on building and installing LXD from source [can be found here](http
 !!! note "Note:"
 	`instances`
 	: means both `containers` and `virtual machines`.
-	{: .p-notebrf }
+	{: .p-noteadm }
 
 Before you can create an instance, you need to configure LXD.
 
@@ -158,10 +158,9 @@ You can then add trusted users to it. Anyone added to this group will have full 
 Because group membership is normally only applied at login, you may need to either re-open your user session
 or use the "newgrp lxd" command in the shell you're going to use to talk to LXD.
 
-**WARNING**: Anyone with access to the LXD socket can fully control LXD,
-which includes the ability to attach host devices and filesystems, this
-should therefore only be given to users who would be trusted with root
-access to the host. You can learn more about LXD security [here](/lxd/docs/master/security).
+!!! note "Warning:"
+	Anyone with access to the LXD socket can fully control LXD, which includes the ability to attach host devices and filesystems, this should therefore only be given to users who would be trusted with root access to the host. You can learn more about LXD security [here](/lxd/docs/master/security).
+	{: .p-noteadm }
 
 # Creating and using your first container
 Creating your first container is as simple as:
