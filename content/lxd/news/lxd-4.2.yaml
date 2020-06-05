@@ -1,0 +1,444 @@
+title: LXD 4.2 has been released
+date: 2020/06/05 23:06
+origin: https://discuss.linuxcontainers.org/t/lxd-4-2-has-been-released/8071
+content: |-
+  ### Introduction
+  The LXD team is very excited to announce the release of LXD 4.2!
+
+  This release brings quite a few new features and a lot of background stability and speed improvements.
+
+  The networking improvements in this release mark the beginning of more work we've set for ourselves with the final goal of having per-project virtual networks implemented through OVN. As part of this, we've done some fixes in our existing OVS handling and added VLAN filtering and some useful config reporting to LXD.
+
+  Quite a bit of effort is also going in improving our database and clustering logic, fixing issues, improving test coverage and improving performance.
+
+  One last area of focus is security where we've now begun to reap the benefits from some upstream kernel work we've been doing for the past few months/years, using those features to avoid race conditions and speed up LXD in general.
+
+  Enjoy!
+
+  ### New features and highlights
+  #### VLAN filtering on bridges
+  Those familiar with physical network switches are no doubt used to configuring your untagged and tagged VLANs for your ports or bonds. Linux software switching allows for the exact same thing, per-port selection of your untagged VLAN and a list of tagged VLANs.
+
+  Now LXD exposes that with support for both native Linux bridging and OVS.
+
+  This is implemented through the `vlan` and `vlan.tagged` config keys on a bridged `nic` device. The `vlan` property controls the untagged VLAN while `vlan.tagged` is a comma separated list of tagged VLANs to let through.
+
+  #### Expanded network state information
+  The `/1.0/networks/NAME/state` API endpoint was expanded to show bond and bridge specific details. This makes it easier to remotely inspect a LXD host, particularly useful when in a cluster.
+
+  The bond details look like this:
+
+      stgraber@castiana:~$ lxc query /1.0/networks/bond0/state | jq .bond
+      {
+        "down_delay": 500,
+        "lower_devices": [
+          "dum0",
+          "dum1"
+        ],
+        "mii_frequency": 100,
+        "mii_state": "up",
+        "mode": "balance-rr",
+        "transmit_policy": "layer2",
+        "up_delay": 100
+      }
+
+  The bridge details look like this:
+
+      stgraber@castiana:~$ lxc query /1.0/networks/lxdbr0/state | jq .bridge
+      {
+        "forward_delay": 1500,
+        "id": "8000.06099e00b912",
+        "stp": false,
+        "upper_devices": [
+          "tap1053b4fd",
+          "tapef45d46d",
+          "veth1651f83f",
+          "veth8eb3fb1a"
+        ],
+        "vlan_default": 1,
+        "vlan_filtering": true
+      }
+
+  #### Support for custom search domains
+  A new `domain.search` config key on networks can be used to set a comma-separate listed of search domains to advertise to the instances.
+
+  #### New IPv4 and IPv6 columns in network lists
+  The default output of `lxc network list` now shows the IPv4 and IPv6 subnets.
+  This makes it quite a bit easier to recognize your networks.
+
+      stgraber@castiana:~$ lxc network list
+      +--------+----------+---------+----------------+---------------------------+-------------+---------+
+      |  NAME  |   TYPE   | MANAGED |      IPV4      |           IPV6            | DESCRIPTION | USED BY |
+      +--------+----------+---------+----------------+---------------------------+-------------+---------+
+      | bond0  | bond     | NO      |                |                           |             | 0       |
+      +--------+----------+---------+----------------+---------------------------+-------------+---------+
+      | eth0   | physical | NO      |                |                           |             | 0       |
+      +--------+----------+---------+----------------+---------------------------+-------------+---------+
+      | eth1   | physical | NO      |                |                           |             | 0       |
+      +--------+----------+---------+----------------+---------------------------+-------------+---------+
+      | lxdbr0 | bridge   | YES     | 10.166.11.1/24 | fd42:4c81:5770:1eaf::1/64 |             | 16      |
+      +--------+----------+---------+----------------+---------------------------+-------------+---------+
+      | wlan0  | physical | NO      |                |                           |             | 0       |
+      +--------+----------+---------+----------------+---------------------------+-------------+---------+
+
+  #### mips & riscv64 support for containers and s390x support for VMs
+  Support for various MIPS variants has been added, allowing LXD to be built and run on MIPS systems.
+
+  RISC-V 64bit support was also added and confirmed to work with containers.
+
+      ubuntu@riscv64:~$ lxc list -cns46ta
+      +------+---------+----------------------+-----------------------------------------------+-----------+--------------+
+      | NAME |  STATE  |         IPV4         |                     IPV6                      |   TYPE    | ARCHITECTURE |
+      +------+---------+----------------------+-----------------------------------------------+-----------+--------------+
+      | b1   | RUNNING | 10.108.12.160 (eth0) | fd42:5832:5781:1eaf:216:3eff:fedd:884d (eth0) | CONTAINER | riscv64      |
+      +------+---------+----------------------+-----------------------------------------------+-----------+--------------+
+
+  In both cases, image selection is effectively non-existent, so you're pretty much stuck with Busybox for now!  
+
+
+  On the VM front, we've added support for s390x virtual machines.
+
+  #### Using pidfds for all container subprocesses
+  LXD frequently spawns subprocesses that are fed a PID coming from a container.
+  This can be racy in some situations, allowing for the process to exit and the PID be recycled before we interact with it, causing us to accidentally interact with the wrong thing.
+
+  That's what @brauner's work on pidfds in the Linux kernel is meant to fix and LXD and LXC now make us of those whenever possible, passing a file descriptor to a particular process rather than passing its PID.
+
+  #### LVM volumes only active when needed
+  LVM now behaves in the same way as ZFS and CEPH by keeping LVs inactive unless the instance is running. This reduces clutter in /dev and can lead to some small performance improvements.
+
+  #### DB query tracing support
+  A new `trace` option has been added for debugging database queries in LXD.
+  Starting the daemon with `--debug --trace database` will have all SQL queries logged.
+
+  #### Better cluster life-cycle handling
+  We've recently been expanding our automated testing for our external dqlite/raft/libco projects, fixed a number of issues found by other downstream users and moved some of LXD's logic into the upstream codebases.
+
+  LXD's clustering tests have also been expanded to test more cases of leadership changes, node restarts and handling of degraded setups.
+
+  A common source of issues with any clustered environment is time skew.
+  You get more than a few seconds and it can wreck havoc on scheduled tasks, events and more. To help with this, LXD now uses its internal heartbeats as a way to detect time skews and will log a warning in its log whenever one is detected or resolved.
+
+  #### Cleaned up database functions
+  Still on the database front, a lot more of the database logic has been moved over to our code generator, limiting the risk of mistakes when writing that code. A number of functions have been deprecated as a result and some codepaths optimized to run within a single transation.
+
+  ### Complete changelog
+  Here is a complete list of all changes in this release:
+
+   - shared/generate/db: Fix generation of Exists method
+   - lxd/db: Make generated code stable across "make update-schema" runs
+   - lxd/db: Leverage code-generation for certificates
+   - shared: Rewrite OpenPty without cgo
+   - openpty: use O_CLOEXEC directly
+   - openpty: use fchown()
+   - openpty: first unlock the master, then get a slave fd
+   - openpty: use TIOCGPTPEER if available
+   - lxd/storage/drivers/driver/lvm/utils: Adds lvmSnapshotSeparator constant and updates lvmFullVolumeName to use it
+   - lxd/storage/drivers/driver/lvm/utils: Adds lvmEscapedHyphen and updates lvmFullVolumeName usage
+   - lxd/storage/drivers/driver/lvm/utils: Adds parseLogicalVolumeSnapshot function
+   - lxd/storage/drivers/driver/lvm/utils: Adds tests for parseLogicalVolumeSnapshot
+   - lxd/storage/drivers/driver/lvm/volumes: Updates VolumeSnapshots to use parseLogicalVolumeSnapshot
+   - test: Adds tests for snapshot naming conflicts
+   - lxd/firewall/drivers: Fix nft syntax
+   - lxc/project: Fix remote handling
+   - tests: Fix bad project switch call
+   - lxd/seccomp: Fix profile conflict between projects
+   - lxd/storage/drivers/driver/lvm/utils: Adds activateVolume and deactivateVolume functions
+   - lxd/storage/drivers/driver/lvm/utils: Set --setactivationskip on in createLogicalVolume
+   - lxd/storage/drivers/driver/lvm/utils: Set --setactivationskip on in createLogicalVolumeSnapshot
+   - lxd/storage/drivers/driver/lvm/utils: Activate volume in copyThinpoolVolume when regeneration FS UUID
+   - lxd/storage/drivers/driver/lvm: Dont activate all volumes on pool mount
+   - lxd/storage/drivers/driver/lvm/volumes: Activate volume before generic copy in CreateVolumeFromCopy
+   - lxd/storage/drivers/driver/lvm/volumes: Activate volume in SetVolumeQuota
+   - lxd/storage/drivers/driver/lvm/volumes: Activate volume in MountVolume
+   - lxd/storage/drivers/driver/lvm/volumes: Deactivate volume in UnmountVolume
+   - lxd/storage/drivers/driver/lvm/volumes: Acticate volume before generic migrate in MigrateVolume
+   - lxd/storage/drivers/driver/lvm/volumes: Activate volume in MountVolumeSnapshot
+   - lxd/storage/drivers/driver/lvm/volumes: Deactivate volume in UnmountVolumeSnapshot
+   - lxd/storage/drivers/driver/lvm/volumes: Activate volume before FS UUID regen in RestoreVolume
+   - openpty: fix TIOCGPTPEER usage
+   - Make network address bind error fatal when clustered
+   - lxd/storage/drivers/driver/btrfs/utils: Renames metadatHeader to restorationHeader
+   - lxd/storage/drivers/driver/btrfs/volumes: d.restorationHeader usage
+   - lxd/storage/drivers/driver/btrfs/volumes: Clarifies comments in MigrateVolume
+   - lxd/storage/drivers/driver/btrfs/volumes: Adds safety net against failed matching of subvolumes
+   - lxd/storage/drivers/driver/btrfs/utils: Fix deleteSubvolume to support recursive delete with intermediate ro subvols
+   - lxd/storage/drivers/utils: Mark BTRFSSubVolumeMakeRo and BTRFSSubVolumeMakeRw deprecated
+   - lxd/storage/drivers/driver/btrfs/volumes: Updates RestoreVolume to restore subvolume ro property
+   - test: Adds BTRFS subvolume tests
+   - lxd/storage/memorypipe: Fixes issue with partial reads losing data
+   - lxd/storage/drivers/driver/btrfs/volumes: Restores subvolumes ro property in CreateVolumeFromCopy
+   - lxd/storage/drivers/driver/btrfs/utils: Adds marshal tags to BTRFSSubVolume and BTRFSMetaDataHeader
+   - lxd/device/nic/bridged: Updates github.com/mdlayher/netx/eui64
+   - fix IPVLAN docs
+   - lxd/cluster: Don't run a connection proxy when connecting with the Go dqlite client
+   - lxd/cluster: Extract dqlite network proxy logic to standalone function and support cancellation
+   - lxd/cluster: Use dqliteProxy in raftDial
+   - lxd/cluster: Use ReadClose() to gracefully stop the dqlite proxy
+   - lxd/device/device/utils/generic: Removes deviceNameEncode and deviceNameDecode
+   - lxd/storage/drivers/utils: Adds PathNameEncode and PathNameDecode
+   - lxd/device/device: PathNameEncode and PathNameDecode usage
+   - lxd/storage/drivers/driver/types: Adds OptimizedBackupHeader field to Info
+   - lxd/backup/backup: Adds OptimizedHeader field to Info struct
+   - lxd/backup: Updates backupWriteIndex to populate the OptimizedHeader field
+   - lxd/storage/drivers/driver/btrfs: Sets OptimizedBackupHeader to true in Info struct response
+   - lxd/storage/drivers/driver/btrfs/utils: Adds warning to BTRFSSubVolume and BTRFSMetaDataHeader about shared usage
+   - lxd/storage/drivers/driver/btrfs/volumes: Updates BackupVolume to add subvolumes to optimized backup file
+   - lxd/storage/drivers/interface: Update CreateVolumeFromBackup to pass srcBackup backup.Info
+   - lxd/storage/backend/lxd: Pass srcBackup in CreateInstanceFromBackup
+   - lxd/storage/drivers: CreateVolumeFromBackup srcBackup backup.Info usage
+   - lxd/backup/backup: Updates GetInfo to set optimizedHeaderFalse false if not present in yaml file
+   - lxd/storage/drivers/driver/btrfs/utils: Adds loadOptimizedBackupHeader
+   - lxd/storage/drivers/driver/btrfs/volumes: Updates CreateVolumeFromBackup to restore subvolumes using optimized header file
+   - lxd/storage/drivers/driver/btrfs/volumes: Simplifies parent volume logic in BackupVolume
+   - lxd/storage/drivers/driver/btrfs/volumes: Simplifies parent volume logic for MigrateVolume
+   - test: Adds BTRFS backup subvolume tests
+   - lxd/storage/drivers/driver/btrfs/utils: Removes receiveSubvolume
+   - lxd/storage/drivers/driver/btrfs/utils: Adds receiveSubVolume function
+   - lxd/storage/drivers/driver/btrfs/volumes: Updates CreateVolumeFromMigration to use receiveSubVolume
+   - lxd/resources/memory: Fix memory calculation
+   - lxd: Improve logging of shutdown errors
+   - lxd/instances/post: Delete restored instance on backup post hook failure
+   - Fix 'how to mount home directory' shiftfs FAQ
+   - shared: build fs_{32,64}bit.go on mips*
+   - lxd/util: build fs_{32,64}bit.go on mips*
+   - lxd/rsync: Adds optional rsync arguments to LocalCopy
+   - lxd/storage/utils: Fixes ImageUnpack to not erase generated rootfs block file when doing rsync
+   - ethtool: don't report -1 for speed in ethtoolLink()
+   - lxd/storage/quota/projectquota: Fixes leaking file handles in quota_set_path and quota_get_path
+   - lxd/storage/quota/projectquota: Adds inherit argument to quota_set_path
+   - lxd/storage/quota/projectquota: Updates SetProject to recursively set project and support non-directory files
+   - lxd/storage/drivers/driver/dir/utils: Updates deleteQuota to use DeleteProject
+   - lxd/storage/drivers/driver/dir/volumes: Adds quota revert in CreateVolumeFromBackup post hook
+   - Always skip offline servers when rebalancing
+   - When demoting a voter to spare, transition to stand-by first
+   - test/clustering: Make sure that a killed voter can't dsirupt current leader
+   - lxd/cluster: Use a dedicated channel to stop the dqlite proxy
+   - lxd: Call Deamon.Kill() also when receiving signals (so db transactions won't be retried)
+   - lxd/db: Add Cluster.Kill() method to prevent retrying upon shutdown
+   - lxd/firewall/drivers/driver/nftables/templates: Fixes proxy nat rule dynamic family
+   - shared/util_linux.go: cast Rdev uint64 for mips
+   - lxd/storage/quota/projectquota.go: cast Rdev uint64 for mips
+   - lxd/device/device_utils_unix.go: cast Rdev uint64 for mips
+   - lxd/device/gpu.go: cast Rdev uint64 for mips
+   - shared: Reimplement GetPollRevents without cgo
+   - lxd-agent: Build statically
+   - Drop gccgo
+   - lxd-p2c: Drop cgo
+   - shared/ucred: Cleanup package
+   - lxd/api: Don't strip double slashes
+   - lxd/operations: Improve error message when database insertion fails
+   - lxd/db: Change UpdateCertificate to RenameCertificate (only renaming supported)
+   - lxd/db: Rename containers.go to instances.go
+   - shared/generate/db: Statement for deleting references (config and devices)
+   - lxd/db: Generate delete stements for profile config and devices
+   - shared/generate/db: update statement: take ID instead of natural key
+   - shared/generate/db: Handle config and devices in Update method
+   - lxd/db: Generate Update method for profiles
+   - lxd: Plug new UpdateProfile() db method into doProfileUpdate
+   - lxd: Plug new UpdateProfile() db method into updatePoolPropertyForAllObjects
+   - lxd/db: Generate delete statements for instance config, devices and profiles
+   - lxd/db: Generate UpdateInstance method
+   - lxd/instance: Plug the new UpdateInstance method and replace legacy logic
+   - lxd/db: Drop AddDevicesToEntity
+   - lxd/storage/drivers/driver/common: Logging quoting consistency
+   - lxd/storage/drivers: Adds storage_lvm_skipactivation patch
+   - test: Drive-by fix for flaky clustering rebalance test
+   - Recommend to increase the value of aio-max-nr for production use
+   - lxd/firewall/firewall/interface: Change definition of Compat() to return compat issue error
+   - lxd/firewall/drivers/driver/nftables: Updates Compat() to return compat issues as error
+   - lxd/firewall/drivers/drivers/xtables: Updates Compat() to return compat issues as error
+   - shared/simplestreams: Support uefi1.img
+   - lxd/firewall/firewall/load: Updates driver detection to warn when falling back to non-compatible xtables
+   - lxd/storage/pools: Improves delete pool error info
+   - instance_exec: don't panic
+   - lxd/qemu: Handle quoted raw.qemu
+   - lxd/main_forkproxy: Reduce logging
+   - lxd/networks: Warn on small IPv6 subnets
+   - lxd/network: Force DHCP custom gateway
+   - api: Add network_dns_search
+   - lxd/network: Support specifying search domain
+   - lxc/list: Add disk and memory columns
+   - i18n: Update translation template
+   - lxd/storage/drivers: Make sure tar reader context is cancelled before defer
+   - lxc/list: Fix test
+   - shared/archive: Wraps cancelFunc to wait until unpacker process has finished in CompressedTarReader
+   - lxd/cluster: Transfer leadership before adjusting roles, not after
+   - lxd/cluster: Add time skew detection
+   - test: Wait a few more seconds for the rebalance to happen
+   - lxd/daemon.go: Don't try to rebalance after shutdown sequence has started
+   - lxd/cluster: Don't try to rebalance a standalone node
+   - lxc/ucred: Simplify logic
+   - lxd/qemu: Cleanup arch checks
+   - lxd/qemu: Add s390x support
+   - lxd/api: Fail /internal/ready requests made after shutdown has started
+   - lxc/config: Add -e shorthand
+   - lxc/network: Add IPv4/IPv6 columns
+   - forkfile: port to using pidfds
+   - forkmount: port to using pidfds
+   - forkproxy: port to using pidfds
+   - syscall_numbers: update
+   - forknet: port to pidfds
+   - forkuevent: port to pidfds
+   - forksyscall: port to pidfds
+   - daemon: record "pidfd" extension
+   - api: Add container_nic_routed_limits
+   - lxd/device/nic/routed: Add limits support
+   - lxd/storage/lvm: Correct bad VG name in patch
+   - shared/subprocess: Better handle slow systems
+   - tests: Don't assume bridge MTU can be forced up
+   - lxd/db: Use query.SelectString helper in GetLocalImages()
+   - lxd/db: Use query.SelectString helper in GetImagesFingerprints()
+   - shared/generate/db: Support int64 fields
+   - lxd/db: Initial code generation for images (without references)
+   - lxd/db: Use the generated GetImages code to implement GetExpiredImages
+   - lxd/db: Use query.SelectObjects helper in GetImageSource
+   - lxd/db: Use query.SelectStrings helper in ImageSourceGetCachedFingerprint
+   - lxd/db: Use query.Count helper in ImageExists
+   - lxd/db: Use query.Count helper in ImageIsReferencedByOtherProjects
+   - lxd/db: Use query.UpsertObject helper in CreateImageSource
+   - lxd/db: Use auto-generated GetImages() to implement GetImage()
+   - lxd/cluster: Drive-by fix for flaky rebalance test
+   - lxd/db: Use auto-generated GetImages to implement GetImageFromAnyProject
+   - lxd/db: Usage query.DeleteObject to implement DeleteImage
+   - lxd/db: Use query.SelectStrings to implement GetImageAliases
+   - lxd/db: Use a single transaction in GetImageAlias
+   - lxd/db: Use a single transaction in DeleteImageAlias
+   - lxd/db: Use single transaction in CreateImageAlias
+   - lxd/db: Usage single transaction in CreateImage
+   - lxd/db: Use query.SelectIntegers helper in GetPoolsWithImage
+   - lxd/db: Use a single transaction in GetPoolNamesFromIDs
+   - lxd/db: Use explicit transaction in GetInstanceProjectAndName
+   - lxd/db: Drop unused DeleteInstanceConfig
+   - fork*: add "--" to not misinterpret negative integers as flags
+   - lxd/storage/utils: Removes unused name arg from VolumeFillDefault
+   - lxd/instance/drivers: storagePools.VolumeFillDefault usage
+   - lxd/patches: driver.VolumeFillDefault usage
+   - lxd/storage/utils: VolumeFillDefault usage
+   - lxd/storage/utils: Updates VolumeValidateConfig to require volume type
+   - lxd/storage/utils: Adds VolumeDBTypeToType function
+   - lxd/storage/utils: Updates VolumeDBCreate to pass volume type
+   - lxd/storage/drivers/utils: Updates ensureVolumeBlockFile to reject unsafe volume shrinking
+   - lxd/storage/drivers/geneirc/vfs: Removes genericVFSResizeBlockFile
+   - lxd/storage/drivers: ensureVolumeBlockFile usage
+   - lxd/storage/drivers/volume: Adds SetQuota function
+   - lxd/storage/drivers/volume: Adds config functions
+   - lxd/storage/drivers/driver/lvm/utils: Removes functions moved into Volume struct
+   - lxd/storage/drivers/driver/lvm/utils: Usage of volume config functions
+   - lxd/storage/drivers/driver/lvm/volumes: Volume config function usage
+   - lxd/storage/drivers: Replace volumeSize() with vol.ConfigSize()
+   - forknet: add missing "--" to forknet invocation on detach
+   - process_utils: remove a bunch of unused functions
+   - lxd: Make use of ExitCode
+   - share/subprocess: Reduce sleep back to 5
+   - lxd/instances/lxc: Fix calls to forknet
+   - forkmount: prevent interpreting negative numbers as flags
+   - shared/subprocess: Ensure monitor routine exits
+   - shared/subprocess: Properly reset state
+   - tests: Fix btrfs test on non-shiftfs
+   - tests: Old kernels don't let you rmdir btrfs
+   - shared/subprocess: Fix Stop handling
+   - lxd/storage/utils: Updates ImageUnpack to detect too small volume for qcow2 image and increase size before unpack
+   - lxd/storage/utils: Adds checks to ImageUnpack before enlarging volume
+   - lxd/storage/drivers/driver/types: Updates VolumeFiller Fill function to take a Volume
+   - lxd/storage: Updates volume filler usage to supply Volume rather than mount path
+   - lxd/storage/drivers/volume: Adds ConfigSizeFromSource function
+   - lxd/storage/drivers/driver/lvm/utils: Updates copyThinpoolVolume to only use vol.config["size"] for resizing
+   - lxd/storage/drivers/driver/lvm/utils: Updates Volume type in createLogicalVolumeSnapshot definition
+   - lxd/storage/drivers/driver/common: Adds runFiller function
+   - lxd/storage/backend/lxd: Updates imageFiller to return volume size
+   - lxd/storage/backend/lxd: Updates CreateInstanceFromImage to load image vol DB record
+   - lxd/storage/backend/lxd: Updates EnsureImage to record volatile.rootfs.size for block images
+   - lxd/storage/drivers/driver/types: Updates VolumeFiller definition to store size
+   - lxd/storage/utils: Validates volatile.rootfs.size key for image volumes in validateVolumeCommonRules
+   - lxd/storage/utils: Updates ImageUnpack to return image virtual size
+   - lxd/storage/drivers/driver/btrfs/volumes: d.runFiller usage
+   - lxd/storage/drivers/driver/ceph/volumes: d.runFiller usage
+   - lxd/storage/drivers/driver/cephfs/volumes: d.runFiller usage
+   - lxd/storage/drivers/driver/dir/volumes: d.runFiller usage
+   - lxd/storage/drivers/driver/lvm/volumes: d.runFiller usage
+   - lxd/storage/drivers/driver/zfs/volumes: d.runFiller usage
+   - lxd/storage/drivers/volume: Adds SetConfigSize function
+   - lxd/storage/backend/lxd: Updates CreateInstanceFromImage to use vol.ConfigSizeFromSource to dervice volume size
+   - lxd/storage/drivers: Updates CreateVolumeFromCopy to only use vol.config["size"] for resizing
+   - lxd: Reduce number of transactions in containerPostClusteringMigrate
+   - lxd/db: Use query.SelectStrings helper in LegacyContainersList
+   - lxd/db: Rename dbDeviceTypeToString to deviceTypeToString
+   - lxd/db: Group ClusterTx image methods together
+   - lxd/db: Rename ImageSourceGetCachedFingerprint to GetCachedImageSourceFingerprint
+   - lxd/storage/drivers/utils: ensureVolumeBlockFile comment clarification
+   - lxd/storage/drivers/utils: Renames BlockDevSizeBytes to BlockDiskSizeBytes
+   - lxd/storage/utils: drivers.BlockDiskSizeBytes usage
+   - lxd/storage/utils: Simplifies InstanceDiskBlockSize with drivers.BlockDiskSizeBytes usage
+   - lxd/storage/drivers/generic/vfs: Simplifies genericVFSBackupVolume with drivers.BlockDiskSizeBytes usage
+   - lxd/storage/backend/lxd: Whitespace in CreateInstanceFromBackup
+   - lxd/storage/drivers/driver/ceph/volumes: BlockDiskSizeBytes usage in SetQuota
+   - lxd/storage/drivers: Updates dir and btrfs to support filler volume enlargement
+   - lxd/db: Group ClusterTx instance methods together
+   - lxd/db: Rename AddProfilesToInstance to addProfilesToInstance
+   - lxd/db: Move instance backup methods to backups.go
+   - lxd/db: Rename InstanceBackupArgs to InstanceBackup
+   - lxd/db: Remove unused profile functions
+   - lxd/db: Move storage volumes methods to storage_volumes.go
+   - lxd/storage/drivers/volume/test: Adds tests for Volume.ConfigSizeFromSource()
+   - forkuevent: fix slice allocation
+   - lxd/images: Set CreatedAt on publish
+   - unix-hotplug: fix uevent injection
+   - lxd: New command line option to trace SQL statements
+   - lxd/firewall/drivers/drivers/xtables: Updates iptablesInUse to kill process once first rule found
+   - lxd/backup: Fixes hang in backupCreate when invalid compression argument supplied
+   - lxd/storage/utils: Removes duplicated qemu-img call in ImageUnpack
+   - lxd/storage/utils: Switch to qemu-img dd mode in ImageUnpack
+   - lxd/storage/drivers/utils: Exports MinBlockBoundary
+   - lxd/storage/drivers: MinBlockBoundary usage
+   - lxd/resources: Handle missing cache size/type
+   - Update documentation with backup compression
+   - lxd/rbac: New notification API
+   - lxd/firewall/nft: Enhance support detection
+   - lxd/device/device/utils/network: Adds networkValidVLAN and networkValidVLANList functions
+   - lxd/network/network/utils: Adds linux bridge VLAN management functions
+   - lxd/network: Enable VLAN filtering for managed Linux bridges
+   - lxd/device/nic: Changes nicValidationRules to properly validation vlan
+   - lxd/device/nic/bridged: Adds vlan validation
+   - lxd/device/nic/bridged: Adds revert for veth pair cleanup on error
+   - lxd/device/nic/bridged: Adds support for untagged and tagged vlan membership
+   - doc: Documents NIC bridged vlan and vlan.tagged settings
+   - api: Adds API extension instance_nic_bridged_vlan
+   - lxd/firewall/drivers/drivers/xtables: Drops tagged vlan frames when using IP filtering
+   - lxd/firewall/drivers/drivers/nftables: Drops tagged vlan frames when using IP filtering
+   - test: Adds bridged VLAN tests
+   - Fix regression in GetImageFromAnyProject
+   - doc/security: Adds notes about IPv6 router advertisement security
+   - lxd/device/nic/bridged: Corrects vlan comment
+   - lxd/network/network/utils: Improve comments on ovs switch attach/detach
+   - lxd/network/network/utils: Improves arg name in network attach/detach functions
+   - lxd/device/bic/bridged: Fixes openvswitch port leak when device is stopped
+   - lxd/network/utils: Adds IsNativeBridge function
+   - lxd/device/device/utils/network: Allow VLAN ID 0 in networkValidVLAN
+   - test: Updates bridged vlan ID range tests
+   - lxd/device/nic/bridged: Adds openvswitch vlan support
+   - test: Adds LXD_NIC_BRIDGED_DRIVER test environment variable
+   - lxd/maas: Fix support for multiple subnets
+   - lxd/maas: Support projects
+   - lxd/dnsmasq: Add project suffix
+   - Remove incorrect statement about supported network devices with virtual machines According documentation supported types with virtual machines are physical, bridged, macvlan, p2p, sriov
+   - lxd/rbac: Fix auth for non-RBAC trusted clients
+   - global: Add riscv64 to build tags
+   - Stop using Driver.SetContextTimeout() which is a no-op
+   - use the coreos fork of boltdb since the original is archived/abandoned
+   - i18n: Update translations from weblate
+   - api: Add network_state_bond_bridge
+   - shared/api: Extend NetworkState for bridge/bond
+   - lxd/networks: Add bridge/bond details
+
+  ### Try it for yourself
+  This new LXD release is already available for you to try on our [demo service](https://linuxcontainers.org/lxd/try-it/).
+
+  ### Downloads
+  The release tarballs can be found on our [download page](https://linuxcontainers.org/lxd/downloads/).
+
+  Binary builds are also available for:
+
+   - **Linux:** snap install lxd
+   - **MacOS:** brew install lxc
+   - **Windows:** choco install lxc
