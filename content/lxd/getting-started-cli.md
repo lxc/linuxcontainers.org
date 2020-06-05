@@ -120,11 +120,33 @@ Native builds of the LXD client for Windows can be [found here](https://ci.appve
 Instructions on building and installing LXD from source [can be found here](https://github.com/lxc/lxd/#installing-lxd-from-source).
 
 # Initial configuration
-Before you can create containers, you need to tell LXD a little bit about your storage and network needs.
 
-This is all done with:
+!!! note "Note:"
+	`instances`
+	: means both `containers` and `virtual machines`.
+	{: .p-notebrf }
+
+Before you can create an instance, you need to configure LXD.
+
+Run the following as root:
 
     lxd init
+
+
+**Overview of the configuration options:**
+
+`default=no`
+: means the feature is disabled by default
+
+| Feature:  | Description: | Basic Configuration Options: | More Information: |
+| --- | ------------- | --- | --- |
+| Clustering | A Cluster combines several LXD-servers. They share the same distributed database and can be managed uniformly using the LXD-client (lxc) or the REST API. | default=`no`; <br> If set to `yes`, you can either connect to an existing cluster or create a new one. | LXD-documentation: <br> [[clustering]] |
+| MAAS server | "MAAS is an open-source tool that lets you build a data centre from bare-metal servers." | default=`no`; <br> If set to `yes`, you can connect to an existing MAAS-server and specify the `name`, `URL` and `API key`. | - [maas.io](https://maas.io/) <br> - [maas - install with lxd](https://maas.io/docs/install-with-lxd) |
+| Network bridge | Provides network access for the instances. | You can either use an existing bridge (or interface) or let LXD create a new bridge (recommended option). <br> You can also create additional bridges and assign them to instances later. | LXD-documentation: <br> - [[networks]] <br> - [Network interface](https://linuxcontainers.org/lxd/docs/master/instances#type-nic) |
+| Storage pools | Instances etc. are stored in storage pools. | For testing purposes you can create a loop-backed storage pool. <br> But for production use it is recommended to use a partition (or full disk) instead of loop-backed storages (Reasons include: loop-backed pools are slower and their size can't be reduced). <br> The recommended backends are `ZFS` and `btrfs`. <br> You can also create additional storage pools later. | LXD-documentation: <br> - [[storage]] <br> - [Backend Comparison Chart](https://linuxcontainers.org/lxd/docs/master/storage#feature-comparison) |
+| Network Access | Allows access to the server over network. |  default=`no`; <br> If set to `yes`, you can connect to the server over network. <br> You can set a `password` or accept the client certificate manually. | - |
+| Automatic Image Update | You can download Images from Image servers, in this case images can be updated automatically. | default=`yes`; <br> If set to `yes`, LXD will update the downloaded images regularly. | LXD-documentation: <br> [[image-handling]] |
+| "YAML lxd init preseed" | Will display a summary of your chosen configuration options in the terminal. | default=`no` | - |
 
 ## Access control
 Access control for LXD is based on group membership.
