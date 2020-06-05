@@ -290,7 +290,6 @@ pre {
     margin-left: 15px;
     border: 1px solid transparent;
     border-radius: 1px;
-    padding-bottom: 10px;
     width: 50%;
 }
 
@@ -310,4 +309,8 @@ pre {
 
 .p-noteadm {
     padding: 5px;
+}
+
+code {
+  background-color: #a19d9d;
 }
