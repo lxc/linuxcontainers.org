@@ -97,6 +97,11 @@ Alternatively, pass:
 `--channel=2.0/stable` for the LXD 2.0 LTS release.   
 
 ### MacOS builds
+
+!!! note "Note:"
+	The builds for MacOS only include the client, not the server.
+	{: .p-noteadm }
+
 LXD upstream publishes builds of the LXD client for macOS through [Homebrew](https://brew.sh/).
 
 To install the feature branch of LXD, run:
@@ -104,6 +109,11 @@ To install the feature branch of LXD, run:
     brew install lxc
 
 ### Windows builds
+
+!!! note "Note:"
+	The builds for Windows only include the client, not the server.
+	{: .p-noteadm }
+
 Native builds of the LXD client for Windows can be [found here](https://ci.appveyor.com/project/lxc/lxd/branch/master/artifacts).
 
 ### Installing from source
