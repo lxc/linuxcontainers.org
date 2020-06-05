@@ -117,7 +117,7 @@ To install the feature branch of LXD, run:
 Native builds of the LXD client for Windows can be [found here](https://ci.appveyor.com/project/lxc/lxd/branch/master/artifacts).
 
 ### Installing from source
-Instructions on building and installing LXD from source [can be found here](https://github.com/lxc/lxd/).
+Instructions on building and installing LXD from source [can be found here](https://github.com/lxc/lxd/#installing-lxd-from-source).
 
 # Initial configuration
 Before you can create containers, you need to tell LXD a little bit about your storage and network needs.
