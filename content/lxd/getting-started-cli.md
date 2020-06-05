@@ -2,6 +2,8 @@
 
 [TOC]
 
+---
+
 # Installation
 ## Choose your release
 LXD upstream maintains three release branches in parallel:
@@ -15,30 +17,33 @@ and security updates but will not see new features added or any kind of behavior
 To get all the latest features and monthly updates to LXD, use the feature release branch instead.
 
 ## Getting the packages
-### Alpine Linux
+
+### Linux
+
+#### Alpine Linux
 To install the feature branch of LXD, run:
 
     apk add lxd
 
-### Arch Linux
+#### Arch Linux
 To install the feature branch of LXD, run:
 
     pacman -S lxd
 
-Alternatively, the snap package can also be used on Arch Linux (see below).
+Alternatively, the snap package can also be used on Arch Linux ([see below](#snap-package-arch-linux-debian-fedora-opensuse-and-ubuntu)).
 
-### Fedora
+#### Fedora
 Instructions on how to use the COPR repository for LXD can be [found here](https://copr.fedorainfracloud.org/coprs/ganto/lxc3/).
 
-Alternatively, the snap package can also be used on Fedora (see below).
+Alternatively, the snap package can also be used on Fedora ([see below](#snap-package-arch-linux-debian-fedora-opensuse-and-ubuntu)).
 
-### Gentoo
+#### Gentoo
 To install the feature branch of LXD, run:
 
     emerge --ask lxd
 
-### Ubuntu
-#### Ubuntu (all releases)
+#### Ubuntu
+##### Ubuntu (all releases)
 The recommended way to install LXD these days is with the snap.
 
 For the latest stable release, use:
@@ -61,12 +66,12 @@ If you previously had the LXD deb package installed, you can migrate all your ex
 
     lxd.migrate
 
-#### Ubuntu 14.04 LTS (LXD 2.0 deb)
+##### Ubuntu 14.04 LTS (LXD 2.0 deb)
 To install the LTS branch of LXD, run:
 
     apt install -t trusty-backports lxd lxd-client
 
-#### Ubuntu 16.04 LTS (LXD 3.0 deb)
+##### Ubuntu 16.04 LTS (LXD 3.0 deb)
 To install the LTS branch of LXD, run:
 
     apt install lxd lxd-client
@@ -75,7 +80,7 @@ To install the feature branch of LXD, run:
 
     apt install -t xenial-backports lxd lxd-client
 
-### Snap package (Arch Linux, Debian, Fedora, OpenSUSE and Ubuntu)
+#### Snap package (Arch Linux, Debian, Fedora, OpenSUSE and Ubuntu)
 LXD upstream publishes and tests a snap package which works for a number of Linux distributions.
 
 The list of Linux distributions we currently test our snap for can be [found here](https://jenkins.linuxcontainers.org/job/lxd-test-snap-latest-stable/).
@@ -86,7 +91,10 @@ After that, you can install LXD with:
 
     snap install lxd
 
-Alternatively, pass `--channel=4.0/stable` for the LXD 4.0 LTS release, `--channel=3.0/stable` for the LXD 3.0 LTS release or `--channel=2.0/stable` for the LXD 2.0 LTS release.
+Alternatively, pass:   
+`--channel=4.0/stable` for the LXD 4.0 LTS release,   
+`--channel=3.0/stable` for the LXD 3.0 LTS release or   
+`--channel=2.0/stable` for the LXD 2.0 LTS release.   
 
 ### MacOS builds
 LXD upstream publishes builds of the LXD client for macOS through [Homebrew](https://brew.sh/).
