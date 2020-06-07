@@ -40,7 +40,7 @@ content: |-
   <!--
   Now LXD exposes that with support for both native Linux bridging and OVS.
   -->
-  現在、LXD はネイティブな Linux のブリッジと OVS の両方をサポートしています。
+  今回のリリースで、LXD はネイティブな Linux のブリッジと OVS の両方をサポートするようになりました。
 
   <!--
   This is implemented through the `vlan` and `vlan.tagged` config keys on a bridged `nic` device. The `vlan` property controls the untagged VLAN while `vlan.tagged` is a comma separated list of tagged VLANs to let through.
@@ -121,7 +121,7 @@ content: |-
       | wlan0  | physical | NO      |                |                           |             | 0       |
       +--------+----------+---------+----------------+---------------------------+-------------+---------+
 
-  #### コンテナで mips と riscv64 の、VM で s390x のサポート <!-- mips & riscv64 support for containers and s390x support for VMs -->
+  #### コンテナで mips と riscv64 の VM で s390x のサポート <!-- mips & riscv64 support for containers and s390x support for VMs -->
   <!--
   Support for various MIPS variants has been added, allowing LXD to be built and run on MIPS systems.
   -->
@@ -155,7 +155,7 @@ content: |-
   This can be racy in some situations, allowing for the process to exit and the PID be recycled before we interact with it, causing us to accidentally interact with the wrong thing.
   -->
   LXD はコンテナ由来の PID を受け取るサブプロセスを頻繁に生成します。
-  これは状況次第では際どい状況になる可能性があります。プロセスが終了し、我々がそれを検知する前に PID がリサイクルされる可能性があり、偶然間違った相手とやりとりしてしまう可能性があります。
+  これは状況次第では競合状態になる可能性があります。プロセスが終了し、我々がそれを検知する前に PID がリサイクルされる可能性があり、偶然間違った相手とやりとりしてしまう可能性があります。
 
   <!--
   That's what @brauner's work on pidfds in the Linux kernel is meant to fix and LXD and LXC now make us of those whenever possible, passing a file descriptor to a particular process rather than passing its PID.
@@ -191,13 +191,13 @@ content: |-
   A common source of issues with any clustered environment is time skew.
   You get more than a few seconds and it can wreck havoc on scheduled tasks, events and more. To help with this, LXD now uses its internal heartbeats as a way to detect time skews and will log a warning in its log whenever one is detected or resolved.
   -->
-  クラスター化された環境でよくある問題の原因は時間のズレ（Time skew）です。数秒以上かかると、スケジュールされたタスクやイベントなどで大混乱が引き起こされる可能性があります。これを解決するために、LXD は時間のズレを検出する方法として内部的なハートビートを使います。そして検出されたり解決された場合にログに警告を出力するようになりました。
+  クラスター化された環境でよくある問題の原因は時間のズレ（Time skew）です。数秒以上ずれると、スケジュールされたタスクやイベントなどで大混乱が引き起こされる可能性があります。これを解決するために、LXD は時間のズレを検出する方法として内部的なハートビートを使います。そして検出されたり解決された場合にログに警告を出力するようになりました。
 
   #### データベース関数のクリーンアップ <!-- Cleaned up database functions -->
   <!--
   Still on the database front, a lot more of the database logic has been moved over to our code generator, limiting the risk of mistakes when writing that code. A number of functions have been deprecated as a result and some codepaths optimized to run within a single transation.
   -->
-  データベースの面では、データベースロジックのより多くがコードジェネレーターに移動され、コードを書く際にミスをするリスクを制限しています。その結果、多数の関数が非推奨となり、コードパスの一部が単一の変換内で実行されるように最適化されました。
+  データベースの面では、データベースロジックのより多くがコードジェネレーターに移動され、コードを書く際にミスをするリスクを制限しています。その結果、多数の関数が非推奨となり、コードパスの一部が単一のトランザクション内で実行されるように最適化されました。
 
   ### すべての変更点（翻訳なし）<!-- Complete changelog -->
   Here is a complete list of all changes in this release:
