@@ -283,3 +283,34 @@ pre {
 .p-notification__response {
     max-width: none;
 }
+
+/*admonition*/
+.admonition {
+    margin-bottom: 10px;
+    margin-left: 15px;
+    border: 1px solid transparent;
+    border-radius: 1px;
+    width: 50%;
+}
+
+.admonition.note {
+	 color: #000000;
+    border-color: #000000;
+}
+
+.admonition-title {
+	 color: #3a87ad;
+    font-weight: bold;
+    text-align: left;
+    background-color: rgb(37, 62, 78);
+    padding: 8px;
+    display: block;
+}
+
+.p-noteadm {
+    padding: 5px;
+}
+
+code {
+  background-color: #a19d9d;
+}

@@ -2,6 +2,8 @@
 
 [TOC]
 
+---
+
 # Installation
 ## Choose your release
 LXD upstream maintains three release branches in parallel:
@@ -15,30 +17,33 @@ and security updates but will not see new features added or any kind of behavior
 To get all the latest features and monthly updates to LXD, use the feature release branch instead.
 
 ## Getting the packages
-### Alpine Linux
+
+### Linux
+
+#### Alpine Linux
 To install the feature branch of LXD, run:
 
     apk add lxd
 
-### Arch Linux
+#### Arch Linux
 To install the feature branch of LXD, run:
 
     pacman -S lxd
 
-Alternatively, the snap package can also be used on Arch Linux (see below).
+Alternatively, the snap package can also be used on Arch Linux ([see below](#snap-package-arch-linux-debian-fedora-opensuse-and-ubuntu)).
 
-### Fedora
+#### Fedora
 Instructions on how to use the COPR repository for LXD can be [found here](https://copr.fedorainfracloud.org/coprs/ganto/lxc3/).
 
-Alternatively, the snap package can also be used on Fedora (see below).
+Alternatively, the snap package can also be used on Fedora ([see below](#snap-package-arch-linux-debian-fedora-opensuse-and-ubuntu)).
 
-### Gentoo
+#### Gentoo
 To install the feature branch of LXD, run:
 
     emerge --ask lxd
 
-### Ubuntu
-#### Ubuntu (all releases)
+#### Ubuntu
+##### Ubuntu (all releases)
 The recommended way to install LXD these days is with the snap.
 
 For the latest stable release, use:
@@ -61,12 +66,12 @@ If you previously had the LXD deb package installed, you can migrate all your ex
 
     lxd.migrate
 
-#### Ubuntu 14.04 LTS (LXD 2.0 deb)
+##### Ubuntu 14.04 LTS (LXD 2.0 deb)
 To install the LTS branch of LXD, run:
 
     apt install -t trusty-backports lxd lxd-client
 
-#### Ubuntu 16.04 LTS (LXD 3.0 deb)
+##### Ubuntu 16.04 LTS (LXD 3.0 deb)
 To install the LTS branch of LXD, run:
 
     apt install lxd lxd-client
@@ -75,7 +80,7 @@ To install the feature branch of LXD, run:
 
     apt install -t xenial-backports lxd lxd-client
 
-### Snap package (Arch Linux, Debian, Fedora, OpenSUSE and Ubuntu)
+#### Snap package (Arch Linux, Debian, Fedora, OpenSUSE and Ubuntu)
 LXD upstream publishes and tests a snap package which works for a number of Linux distributions.
 
 The list of Linux distributions we currently test our snap for can be [found here](https://jenkins.linuxcontainers.org/job/lxd-test-snap-latest-stable/).
@@ -86,9 +91,17 @@ After that, you can install LXD with:
 
     snap install lxd
 
-Alternatively, pass `--channel=4.0/stable` for the LXD 4.0 LTS release, `--channel=3.0/stable` for the LXD 3.0 LTS release or `--channel=2.0/stable` for the LXD 2.0 LTS release.
+Alternatively, pass:   
+`--channel=4.0/stable` for the LXD 4.0 LTS release,   
+`--channel=3.0/stable` for the LXD 3.0 LTS release or   
+`--channel=2.0/stable` for the LXD 2.0 LTS release.   
 
 ### MacOS builds
+
+!!! note "Note:"
+	The builds for MacOS only include the client, not the server.
+	{: .p-noteadm }
+
 LXD upstream publishes builds of the LXD client for macOS through [Homebrew](https://brew.sh/).
 
 To install the feature branch of LXD, run:
@@ -96,17 +109,44 @@ To install the feature branch of LXD, run:
     brew install lxc
 
 ### Windows builds
+
+!!! note "Note:"
+	The builds for Windows only include the client, not the server.
+	{: .p-noteadm }
+
 Native builds of the LXD client for Windows can be [found here](https://ci.appveyor.com/project/lxc/lxd/branch/master/artifacts).
 
 ### Installing from source
-Instructions on building and installing LXD from source [can be found here](https://github.com/lxc/lxd/).
+Instructions on building and installing LXD from source [can be found here](https://github.com/lxc/lxd/#installing-lxd-from-source).
 
 # Initial configuration
-Before you can create containers, you need to tell LXD a little bit about your storage and network needs.
 
-This is all done with:
+!!! note "Note:"
+	`instances`
+	: means both `containers` and `virtual machines`.
+	{: .p-noteadm }
+
+Before you can create an instance, you need to configure LXD.
+
+Run the following as root:
 
     lxd init
+
+
+**Overview of the configuration options:**
+
+`default=no`
+: means the feature is disabled by default
+
+| Feature:  | Description: | Basic Configuration Options: | More Information: |
+| --- | ------------- | --- | --- |
+| Clustering | A Cluster combines several LXD-servers. They share the same distributed database and can be managed uniformly using the LXD-client (lxc) or the REST API. | default=`no`; <br> If set to `yes`, you can either connect to an existing cluster or create a new one. | LXD-documentation: <br> [[clustering]] |
+| MAAS server | "MAAS is an open-source tool that lets you build a data centre from bare-metal servers." | default=`no`; <br> If set to `yes`, you can connect to an existing MAAS-server and specify the `name`, `URL` and `API key`. | - [maas.io](https://maas.io/) <br> - [maas - install with lxd](https://maas.io/docs/install-with-lxd) |
+| Network bridge | Provides network access for the instances. | You can either use an existing bridge (or interface) or let LXD create a new bridge (recommended option). <br> You can also create additional bridges and assign them to instances later. | LXD-documentation: <br> - [[networks]] <br> - [Network interface](https://linuxcontainers.org/lxd/docs/master/instances#type-nic) |
+| Storage pools | Instances etc. are stored in storage pools. | For testing purposes you can create a loop-backed storage pool. <br> But for production use it is recommended to use a partition (or full disk) instead of loop-backed storages (Reasons include: loop-backed pools are slower and their size can't be reduced). <br> The recommended backends are `ZFS` and `btrfs`. <br> You can also create additional storage pools later. | LXD-documentation: <br> - [[storage]] <br> - [Backend Comparison Chart](https://linuxcontainers.org/lxd/docs/master/storage#feature-comparison) |
+| Network Access | Allows access to the server over network. |  default=`no`; <br> If set to `yes`, you can connect to the server over network. <br> You can set a `password` or accept the client certificate manually. | - |
+| Automatic Image Update | You can download Images from Image servers, in this case images can be updated automatically. | default=`yes`; <br> If set to `yes`, LXD will update the downloaded images regularly. | LXD-documentation: <br> [[image-handling]] |
+| "YAML lxd init preseed" | Will display a summary of your chosen configuration options in the terminal. | default=`no` | - |
 
 ## Access control
 Access control for LXD is based on group membership.
@@ -118,10 +158,9 @@ You can then add trusted users to it. Anyone added to this group will have full 
 Because group membership is normally only applied at login, you may need to either re-open your user session
 or use the "newgrp lxd" command in the shell you're going to use to talk to LXD.
 
-**WARNING**: Anyone with access to the LXD socket can fully control LXD,
-which includes the ability to attach host devices and filesystems, this
-should therefore only be given to users who would be trusted with root
-access to the host. You can learn more about LXD security [here](/lxd/docs/master/security).
+!!! note "Warning:"
+	Anyone with access to the LXD socket can fully control LXD, which includes the ability to attach host devices and filesystems, this should therefore only be given to users who would be trusted with root access to the host. You can learn more about LXD security [here](/lxd/docs/master/security).
+	{: .p-noteadm }
 
 # Creating and using your first container
 Creating your first container is as simple as:
