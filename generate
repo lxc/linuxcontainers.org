@@ -26,6 +26,7 @@ import markdown.extensions.tables
 import markdown.extensions.footnotes
 import markdown.extensions.admonition
 import markdown.extensions.wikilinks
+import markdown.extensions.attr_list
 import pygments.formatters
 import os
 import re
@@ -180,9 +181,13 @@ def md2html(content):
         # base_url='https://linuxcontainers.org/lxd/docs/master/',
         end_url='.html')
 
+    attr_list = markdown.extensions.attr_list.AttrListExtension(
+     )
+
     return markdown.markdown(content, extensions=[codehilite, anchors,
                                                   tables, footnotes,
-                                                  admonition, wikilinks])
+                                                  admonition, wikilinks,
+                                                  attr_list])
 
 
 def download_sort_key(download_name):
