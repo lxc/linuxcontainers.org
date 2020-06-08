@@ -11,7 +11,7 @@ Extra dependencies for lxc-attach:
 
 Extra dependencies for unprivileged containers:
 
- * libpam-cgfs, cgmanager or another CGroup manager configuring your system for unprivileged CGroups operation
+ * libpam-cgfs configuring your system for unprivileged CGroups operation
  * A recent version of shadow including newuidmap and newgidmap
  * Linux kernel >= 3.12
 
@@ -71,8 +71,9 @@ Because of that, most distribution templates simply won't work with those.
 Instead you should use the "download" template which will provide you with pre-built images
 of the distributions that are known to work in such an environment.
 
-Now, everything below assumes a recent Ubuntu system or another Linux distribution which offers
-a similar experience (recent kernel, recent version of shadow, cgmanager and default uid/gid allocation).
+The following instructions assume the use of a recent Ubuntu system or an alternate Linux 
+distribution offering a similar experience, i.e., a recent kernel and a recent version of 
+shadow, as well as libpam-cgfs and default uid/gid allocation.
 
 First of all, you need to make sure your user has a uid and gid map defined in /etc/subuid and /etc/subgid.
 On Ubuntu systems, a default allocation of 65536 uids and gids is given to every new user on the system,
@@ -97,10 +98,15 @@ With that done, the last step is to create an LXC configuration file.
 Those values should match those found in /etc/subuid and /etc/subgid, the values above are those expected
 for the first user on a standard Ubuntu system.
 
-Just before you create your first container, you probably should logout and login again,
-or even reboot your machine to make sure that your user is placed in the right cgroups.
-(This is only required if cgmanager wasn't installed on your machine prior to you installing LXC.)
+Running unprivileged containers as an unprivileged user only works if you delegate a cgroup in 
+advance (the cgroup2 delegation model enforces this restriction, not liblxc). Use the following 
+systemd command to delegate the cgroup:
 
+    systemd-run --unit=myshell --user --scope -p "Delegate=yes" lxc-start <container-name>
+
+NOTE: If libpam-cgfs was not installed on the host machine prior to installing LXC, you need to 
+ensure your user belongs to the right cgroups before creating your first container. You can accomplish 
+this by logging out and logging back in, or by rebooting the host machine.
 
 And now, create your first container with:
 
