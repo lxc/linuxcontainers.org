@@ -1,6 +1,26 @@
-##### Contents
+## Contents
 
-[TOC]
+* [Installation](#installation)
+    * [Choose your release](#choose-your-release)
+    * [Getting the packages](#getting-the-packages)
+        * [Linux](#linux)
+            * [Alpine Linux](#alpine-linux)
+            * [Arch Linux](#arch-linux)
+            * [Fedora](#fedora)
+            * [Gentoo](#gentoo)
+            * [Ubuntu](#ubuntu)
+            * [Snap package (Arch Linux, Debian, Fedora, OpenSUSE and Ubuntu)](#snap-package-arch-linux-debian-fedora-opensuse-and-ubuntu)
+        * [MacOS builds](#macos-builds)
+        * [Windows builds](#windows-builds)
+        * [Installing from source](#installing-from-source)
+* [Initial configuration](#initial-configuration)
+    * [Access control](#access-control)
+* [Creating and using your first container](#creating-and-using-your-first-container)
+* [Container images](#container-images)
+    * [Using the built-in image remotes](#using-the-built-in-image-remotes)
+    * [Using a remote LXD as an image server](#using-a-remote-lxd-as-an-image-server)
+    * [Manually importing an image](#manually-importing-an-image)
+* [Multiple hosts](#multiple-hosts)
 
 ---
 

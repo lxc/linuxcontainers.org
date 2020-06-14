@@ -27,6 +27,7 @@ import markdown.extensions.footnotes
 import markdown.extensions.admonition
 import markdown.extensions.wikilinks
 import markdown.extensions.attr_list
+import markdown.extensions.fenced_code
 import pygments.formatters
 import os
 import re
@@ -159,8 +160,7 @@ def md2html(content):
 
     # Using toc extension to generate HTML anchors for paragraphs
     anchors = markdown.extensions.toc.TocExtension(
-        permalink=1,
-        toc_depth="1-4")
+        permalink=1,)
 
     # adds tables
     tables = markdown.extensions.tables.TableExtension(
@@ -184,10 +184,13 @@ def md2html(content):
     attr_list = markdown.extensions.attr_list.AttrListExtension(
      )
 
+    fenced_code = markdown.extensions.fenced_code.FencedCodeExtension(
+     )
+
     return markdown.markdown(content, extensions=[codehilite, anchors,
                                                   tables, footnotes,
                                                   admonition, wikilinks,
-                                                  attr_list])
+                                                  attr_list, fenced_code])
 
 
 def download_sort_key(download_name):
