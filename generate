@@ -159,8 +159,7 @@ def md2html(content):
 
     # Using toc extension to generate HTML anchors for paragraphs
     anchors = markdown.extensions.toc.TocExtension(
-        permalink=1,
-        toc_depth="1-4")
+        permalink=1,)
 
     # adds tables
     tables = markdown.extensions.tables.TableExtension(
