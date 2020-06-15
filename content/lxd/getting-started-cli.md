@@ -1,4 +1,4 @@
-## Contents
+## Contents 
 
 * [Installation](#installation)
     * [Choose your release](#choose-your-release)
@@ -15,12 +15,26 @@
         * [Installing from source](#installing-from-source)
 * [Initial configuration](#initial-configuration)
     * [Access control](#access-control)
-* [Creating and using your first container](#creating-and-using-your-first-container)
-* [Container images](#container-images)
-    * [Using the built-in image remotes](#using-the-built-in-image-remotes)
-    * [Using a remote LXD as an image server](#using-a-remote-lxd-as-an-image-server)
-    * [Manually importing an image](#manually-importing-an-image)
-* [Multiple hosts](#multiple-hosts)
+* [Note about Virtual machines](#note-about-virtual-machines)
+* [LXD-Client](#lxd-client)
+    * [Overview](#overview)
+    * [Launch an instance](#launch-an-instance)
+        * [Launch a container](#launch-a-container)
+            * [Ubuntu Container](#example-for-ubuntu) <!-- wrong place, intended -->
+        * [Launch a virtual machine](#launch-a-virtual-machine)
+    * [Images](#images)
+        * [Remote image servers](#use-remote-image-servers)
+            * [List images on server](#list-images-on-server)
+            * [Search for images](#search-for-images)
+        * [Images for Virtual Machines](#images-for-virtual-machines)
+    * [Instance management](#instance-management)
+        * [Start/Stop](#startstop)
+        * [Shell inside Container](#shellterminal-inside-container)
+        * [Run Command from Host terminal](#run-command-from-host-terminal)
+        * [Shell inside Virtual Machine](#shellterminal-inside-virtual-machine)
+        * [Copy between container and host](#copy-files-and-folders-between-container-and-host)
+        * [Remove instance](#remove-instance)
+* [Further Information & Links](#further-information-links)
 
 ---
 
@@ -182,103 +196,217 @@ or use the "newgrp lxd" command in the shell you're going to use to talk to LXD.
 	Anyone with access to the LXD socket can fully control LXD, which includes the ability to attach host devices and filesystems, this should therefore only be given to users who would be trusted with root access to the host. You can learn more about LXD security [here](/lxd/docs/master/security).
 	{: .p-noteadm }
 
-# Creating and using your first container
-Creating your first container is as simple as:
+# Note about Virtual machines
+Since version 4.0 LXD also natively supports virtual machines and thanks to a built-in agent, they can be used almost like containers.
 
-    lxc launch ubuntu:18.04 first
+LXD uses `qemu` to provide the VM functionality.
 
-That will create and start a new Ubuntu 18.04 container as can be confirmed with:
+See [below](#launch-a-virtual-machine) for how to start a virtual machine.
+
+You can find more information about virtual machines in our forum[^1].
+<!-- You can find more information in the Advanced Guide. -->
+
+!!! note "Note:"
+	For now virtual machines support less features than containers.     
+    <!-- See [Advanced Guide - Instance configuration](/lxd/advanced-guide#difference-between-containers-and-virtual-machines) for details.-->
+    {: .p-noteadm }
+
+
+# LXD-Client 
+The LXD-client `lxc` is a command tool to manage your LXD servers.
+
+## Overview
+The following command will give you an overview of all available commands and options:
+
+	lxc
+
+## Launch an instance
+You can launch an instance with command `lxc launch`:
+
+##### Launch a container
+	
+	lxc launch imageserver:imagename instancename	
+
+##### Launch a virtual machine
+	
+	lxc launch imageserver:imagename instancename --vm
+
+Replace:
+
+- `imageserver` with the name of a built-in or added image server (e.g. `ubuntu` or `images`) and 
+- `imagename` with the name of an image (e.g. `20.04` or `debian/11`).   See [Section "Images"](#images) for details.
+- `instancename` with a name of your choice (e.g. `ubuntuone`), if left empty LXD will pick a random name.
+
+### Example for Ubuntu
+
+	lxc launch ubuntu:20.04 ubuntuone
+
+this will create a container based on the Ubuntu `Focal Fossa` Image (provided by LXD) with the instancename `ubuntuone`.
+
+
+<!--## Configuration of instances
+See [Advanced Guide - Instance Configuration](/lxd/advanced-guide#configuration-of-instances). -->
+
+
+## Images
+Instances are based on Images, which contain a basic operating system (for example a linux distribution) and some other LXD-related information.
+
+In the following we will use the built-in remote image servers ([see below](#use-remote-image-servers)).
+
+<!-- For more options see [Advanced Guide - Advanced options for Images](/lxd/advanced-guide#advanced-options-for-images). -->
+
+### Use remote image servers
+The easiest way is to use a built-in remote image server.
+
+You can get a list of built-in image servers with:
+
+	lxc remote list
+
+LXD comes with 3 default servers:
+
+ 1. `ubuntu:` (for stable Ubuntu images)
+ 2. `ubuntu-daily:` (for daily Ubuntu images)
+ 3. `images:` (for a [bunch of other distros](https://images.linuxcontainers.org))
+
+#### List images on server
+
+To get a list of remote images on server `images`, type:
+	
+	lxc image list images:
+
+**Details:**   
+_Most details in the list should be self-explanatory._
+
+- Alias with `cloud`
+: refers to images with built-in cloud-init support (see <!--[Advanced Guide - Cloud-Init](/lxd/advanced-guide#cloud-init) and-->[official cloud-init documentation](https://cloudinit.readthedocs.io/en/latest/))
+
+#### Search for images
+You can search for images, by applying specific elements (e.g. the name of a distribution).
+
+Show all Debian images:
+
+	lxc image list images: debian  
+
+Show all 64-bit Debian images:
+
+	lxc image list images: debian amd64
+
+### Images for Virtual Machines
+It is recommended to use the `cloud` variants of images (visible by the `cloud`-tag in their `ALIAS`).   
+They include cloud-init and the LXD-agent.   
+They also increase their size automatically and are tested daily.
+
+## Instance management
+List all Instances:
 
     lxc list
 
-Your container here is called "first". You also could let LXD give it a random name by
-just calling "lxc launch ubuntu:18.04" without a name.
+#### Start/Stop  
+Start an instance:
 
-Now that your container is running, you can get a shell inside it with:
+	lxc start instancename
 
-    lxc exec first -- /bin/bash
+Stop an instance:
 
-Or just run a command directly:
+    lxc stop instancename
 
-    lxc exec first -- apt-get update
+#### Shell/Terminal inside Container   
+Get a shell inside a container:
 
-To pull a file from the container, use:
+    lxc exec instancename -- /bin/bash
 
-    lxc file pull first/etc/hosts .
+By default you are logged in as root:
 
-To push one, use:
+```bash
+root@containername:~#
 
-    lxc file push hosts first/tmp/
+```
 
-To stop the container, simply do:
+##### To login as a user instead, run:   
+**Note:** In many containers you need to create a user first.
 
-    lxc stop first
+	lxc exec instancename -- su --login username
 
-And to remove it entirely:
+Exit the container shell, with:
 
-    lxc delete first
+```bash
+root@containername:~# exit
 
-# Container images
-LXD is image based. Containers must be created from an image and so the image store
-must get some images before you can do much with LXD.
+```
 
-There are three ways to feed that image store:
+#### Run Command from Host terminal   
+Run a single command from host's terminal:
 
- 1. Use one of the the built-in image remotes
- 2. Use a remote LXD as an image server
- 3. Manually import an image tarball
+    lxc exec containername -- apt-get update
 
-## Using the built-in image remotes
-LXD comes with 3 default remotes providing images:
+#### Shell/Terminal inside Virtual Machine
+You can see your VM boot with:
 
- 1. ubuntu: (for stable Ubuntu images)
- 2. ubuntu-daily: (for daily Ubuntu images)
- 3. images: (for a [bunch of other distros](https://images.linuxcontainers.org))
+	lxc console instancename
 
-To start a container from them, simply do:
+(detach with ctrl+a-q)
 
-    lxc launch ubuntu:16.04 my-ubuntu
-    lxc launch ubuntu-daily:18.04 my-ubuntu-dev
-    lxc launch images:centos/6/amd64 my-centos
+Once booted, VMs with the LXD-agent built-in, can be accessed with:
 
-## Using a remote LXD as an image server
-Using a remote image server is as simple as adding it as a remote and just using it:
+	lxc exec instancename bash
 
-    lxc remote add my-images 1.2.3.4
-    lxc launch my-images:image-name your-container
+Exit the VM shell, with:
 
-An image list can be obtained with:
+	exit
 
-    lxc image list my-images:
+#### Copy files and folders between container and host
+##### Copy from an instance to host
 
-## Manually importing an image
-If you already have a lxd-compatible image file, you can import it with:
+Pull a file with:
 
-    lxc image import <file> --alias my-alias
+    lxc file pull instancename/path-in-container path-on-host
 
-And then start a container using:
+Pull a folder with:
 
-    lxc launch my-alias my-container
+    lxc file pull -r instancename/path-in-container path-on-host
 
-See the [image specification for more details](https://github.com/lxc/lxd/blob/master/doc/image-handling.md).
+For example:  
+    
+    lxc file pull instancename/etc/hosts .
 
-# Multiple hosts
-The "lxc" command line tool can talk to multiple LXD servers and defaults to talking to the local one.
+##### Copy from host to instance
 
-Remote operations require the following two commands having been run on the remote server:
+Push a file with:
 
-    lxc config set core.https_address "[::]"
-    lxc config set core.trust_password some-password
+    lxc file push path-on-host instancename/path-in-container
 
-The former tells LXD to bind all addresses on port 8443. The latter sets a trust password to be used by new clients.
+Push a folder with:
 
-Now to talk to that remote LXD, you can simply add it with:
+    lxc file push -r path-on-host instancename/path-in-container
 
-    lxc remote add host-a <ip address or DNS>
+#### Remove instance
 
-This will prompt you to confirm the remote server fingerprint and then ask you for the password.
+!!! note "Warning:"
+	This will delete the instance including all snapshots.   
+	Deletion will be final in most cases and restore is unlikely!   
+    <!-- See [Tips & Tricks in Advanced Guide](/lxd/advanced-guide/#prevent-accidential-deletion-of-an-instance) on how to avoid accidential deletion. -->
+	{: .p-noteadm }
 
-And after that, use all the same command as above but prefixing the container
-and images name with the remote host like:
+Use:
 
-    lxc exec host-a:first -- apt-get update
+    lxc delete instancename
+
+
+# Further Information & Links
+
+You find more information on the following pages:
+
+<!-- - [Advanced Guide](/lxd/advanced-guide) -->
+
+- [LXD documentation](/lxd/docs/master/index)
+    - [Security](/lxd/docs/master/security)
+    - [FAQ](/lxd/docs/master/faq)
+
+- [Forum](https://discuss.linuxcontainers.org/)
+    - [Tutorials Section](https://discuss.linuxcontainers.org/c/tutorials)
+
+
+ 
+ <!-- footnotes -->
+ 
+ [^1]: [Running virtual machines with lxd](https://discuss.linuxcontainers.org/t/running-virtual-machines-with-lxd-4-0/7519), including a short howto for a Microsoft Windows VM.
