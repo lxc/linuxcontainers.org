@@ -140,6 +140,12 @@
      "menu": ["LXD", "Getting started - OpenNebula"],
      "generator": "markdown",
      "meta": {"input": "lxd/getting-started-opennebula.md"}},
+     
+    {"path": "/lxd/advanced-guide/",
+     "title": "LXD - Advanced guide",
+     "menu": ["LXD", "Advanced guide"],
+     "generator": "markdown",
+     "meta": {"input": "lxd/advanced-guide.md"}},
 
     {"path": "/lxd/documentation",
      "menu": ["LXD", "Documentation"],

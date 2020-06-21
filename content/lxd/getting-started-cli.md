@@ -396,7 +396,7 @@ Use:
 
 You find more information on the following pages:
 
-<!-- - [Advanced Guide](/lxd/advanced-guide) -->
+- [Advanced Guide](/lxd/advanced-guide)
 
 - [LXD documentation](/lxd/docs/master/index)
     - [Security](/lxd/docs/master/security)
