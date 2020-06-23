@@ -208,7 +208,7 @@ You can find more information about virtual machines in our forum[^1].
 
 !!! note "Note:"
 	For now virtual machines support less features than containers.     
-    <!-- See [Advanced Guide - Instance configuration](/lxd/advanced-guide#difference-between-containers-and-virtual-machines) for details.-->
+    See [Advanced Guide - Instance configuration](/lxd/advanced-guide#difference-between-containers-and-virtual-machines) for details.
     {: .p-noteadm }
 
 
@@ -244,8 +244,8 @@ Replace:
 this will create a container based on the Ubuntu `Focal Fossa` Image (provided by LXD) with the instancename `ubuntuone`.
 
 
-<!--## Configuration of instances
-See [Advanced Guide - Instance Configuration](/lxd/advanced-guide#configuration-of-instances). -->
+## Configuration of instances
+See [Advanced Guide - Instance Configuration](/lxd/advanced-guide#configuration-of-instances).
 
 
 ## Images
@@ -396,7 +396,7 @@ Use:
 
 You find more information on the following pages:
 
-<!-- - [Advanced Guide](/lxd/advanced-guide) -->
+- [Advanced Guide](/lxd/advanced-guide)
 
 - [LXD documentation](/lxd/docs/master/index)
     - [Security](/lxd/docs/master/security)
