@@ -278,7 +278,7 @@ To get a list of remote images on server `images`, type:
 _Most details in the list should be self-explanatory._
 
 - Alias with `cloud`
-: refers to images with built-in cloud-init support (see <!--[Advanced Guide - Cloud-Init](/lxd/advanced-guide#cloud-init) and-->[official cloud-init documentation](https://cloudinit.readthedocs.io/en/latest/))
+: refers to images with built-in cloud-init support (see [Advanced Guide - Cloud-Init](/lxd/advanced-guide#cloud-init) and [official cloud-init documentation](https://cloudinit.readthedocs.io/en/latest/))
 
 #### Search for images
 You can search for images, by applying specific elements (e.g. the name of a distribution).
