@@ -253,7 +253,7 @@ Instances are based on Images, which contain a basic operating system (for examp
 
 In the following we will use the built-in remote image servers ([see below](#use-remote-image-servers)).
 
-<!-- For more options see [Advanced Guide - Advanced options for Images](/lxd/advanced-guide#advanced-options-for-images). -->
+For more options see [Advanced Guide - Advanced options for Images](/lxd/advanced-guide#advanced-options-for-images).
 
 ### Use remote image servers
 The easiest way is to use a built-in remote image server.
@@ -384,7 +384,7 @@ Push a folder with:
 !!! note "Warning:"
 	This will delete the instance including all snapshots.   
 	Deletion will be final in most cases and restore is unlikely!   
-    <!-- See [Tips & Tricks in Advanced Guide](/lxd/advanced-guide/#prevent-accidential-deletion-of-an-instance) on how to avoid accidential deletion. -->
+    See [Tips & Tricks in Advanced Guide](/lxd/advanced-guide/#prevent-accidental-deletion-of-an-instance) on how to avoid accidental deletion.
 	{: .p-noteadm }
 
 Use:
