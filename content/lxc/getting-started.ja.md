@@ -28,11 +28,11 @@ Extra dependencies for unprivileged containers:
 非特権のコンテナが動作するのに必要な環境:
 
 <!--
- * libpam-cgfs, cgmanager or another CGroup manager configuring your system for unprivileged CGroups operation
+ * libpam-cgfs configuring your system for unprivileged CGroups operation
  * A recent version of shadow including newuidmap and newgidmap
  * Linux kernel >= 3.12
  -->
- * libpam-cgfs, cgmanager もしくは非特権の cgroup の操作が可能な他の cgroup マネージャ
+ * libpam-cgfs 非特権の cgroup 操作を行うためにシステムを設定する PAM モジュール
  * newuidmap、newgidmap を含む最新バージョンの shadow
  * Linux カーネル 3.12 以上
 
@@ -44,7 +44,7 @@ Recommended libraries:
 <!--
  * libcap (to allow for capability drops)
  * libapparmor (to set a different apparmor profile for the container)
- * libselinux (to set a different seccomp context for the container)
+ * libselinux (to set a different selinux context for the container)
  * libseccomp (to set a seccomp policy for the container)
  * libgnutls (for various checksumming)
  * liblua (for the LUA binding)
@@ -68,9 +68,9 @@ Either directly in the distribution's package repository or through some backpor
 
 <!--
 For your first LXC experience, we recommend you use a recent supported release,
-such as a recent bugfix release of LXC 3.0.
+such as a recent bugfix release of LXC 4.0.
 -->
-最初に LXC を使う場合は、LXC 3.0 の最新のバグフィックスのなされたバージョンのような、最新のサポート版リリースをお使いになることを推奨します。
+最初に LXC を使う場合は、LXC 4.0 の最新のバグフィックスのなされたバージョンのような、最新のサポート版リリースをお使いになることを推奨します。
 
 <!--
 If using Ubuntu, we recommend you use Ubuntu 18.04 LTS as your container host.
@@ -95,7 +95,7 @@ Ubuntu では、LXC をインストールするのは次のように簡単です
 	
 もしくは
 	
-	sudo snap install lxd
+    sudo snap install lxd
 
 <!--
 Your system will then have all the LXC commands available, all its templates
@@ -134,17 +134,18 @@ Unfortunately this also means that the following common operations aren't allowe
 
 <!--
 Because of that, most distribution templates simply won't work with those.
-Instead you should the "download" template which will provide you with pre-built images
+Instead you should use the "download" template which will provide you with pre-built images
 of the distributions that are known to work in such an environment.
 -->
 このため、ほとんどのディストリビューションのコンテナテンプレートは動作しないでしょう。
 代わりに、このような非特権の環境でも動くことを確認した、あらかじめビルド済みのディストリビューションのイメージを提供する "download" テンプレートを使う必要があります。
 
 <!--
-Now, everything below assumes a recent Ubuntu system or another Linux distribution which offers
-a similar experience (recent kernel, recent version of shadow, cgmanager and default uid/gid allocation).
+The following instructions assume the use of a recent Ubuntu system or an alternate Linux 
+distribution offering a similar experience, i.e., a recent kernel and a recent version of 
+shadow, as well as libpam-cgfs and default uid/gid allocation.
 -->
-現在、最新の Ubuntu か最新の Ubuntu と同じような環境 (最新のカーネル、最新バージョンの shadow、cgmanager、デフォルトの uid/gid 割り当て) の他の Linux ディストリビューションで、同様に以下のような操作ができるはずです。
+このあとの説明は、最新のカーネル、最新バージョンの shadow、libpam-cgfs、デフォルトの uid/gid 割り当てと言った、最新の Ubuntu や同等の Linux ディストリビューションを使用していると仮定して行います。
 
 <!--
 First of all, you need to make sure your user has a uid and gid map defined in /etc/subuid and /etc/subgid.
@@ -195,12 +196,20 @@ for the first user on a standard Ubuntu system.
 ここで設定した値は /etc/subuid と /etc/subgid にある値と一致している必要があり、標準の Ubuntu システムの初期ユーザのために存在が必要です。
 
 <!--
-Just before you create your first container, you probably should logout and login again,
-or even reboot your machine to make sure that your user is placed in the right cgroups.
-(This is only required if cgmanager wasn't installed on your machine prior to you installing LXC.)
+Running unprivileged containers as an unprivileged user only works if you delegate a cgroup in 
+advance (the cgroup2 delegation model enforces this restriction, not liblxc). Use the following 
+systemd command to delegate the cgroup:
 -->
-最初のコンテナを作成するまえに、おそらく一度ログアウトしてログインするか、マシンのリブートが必要になるでしょう。これはお使いのユーザが使う cgroup が正しく作成されていることを確実にするためです。
-(これは LXC をインストールする前にあなたのマシンに cgmanager がインストールされていなかった場合のみ必要なことです。)
+非特権ユーザとして非特権ユーザーとして実行するには、事前に cgroup の権限委譲（delegate）が必要です（liblxc でなく cgroup2 の権限委譲モデルがこれを強制します）。次の systemd コマンドで cgroup の権限委譲を行います:
+
+    systemd-run --unit=myshell --user --scope -p "Delegate=yes" lxc-start <container-name>
+
+<!--
+NOTE: If libpam-cgfs was not installed on the host machine prior to installing LXC, you need to 
+ensure your user belongs to the right cgroups before creating your first container. You can accomplish 
+this by logging out and logging back in, or by rebooting the host machine.
+-->
+注意: もし、LXC をインストールする前に libpam-cgfs がホストマシン上にインストールされていない場合、最初のコンテナを作成する前にそのユーザが正しい cgroup に確実に所属しているようにする必要があります。これはログアウト・ログインするか、ホストマシンをリブートするとそのようになるでしょう。
 
 <!--
 And now, create your first container with:
