@@ -1,0 +1,91 @@
+title: LXCFS 4.0.4 LTS リリースのお知らせ
+date: 2020/06/18 20:06
+origin: https://discuss.linuxcontainers.org/t/lxcfs-4-0-4-lts-has-been-released/8212
+content: |-
+  ### はじめに <!-- Introduction -->
+  <!--
+  The LXCFS team is pleased to announce the release of LXCFS 4.0.4!
+  -->
+  LXCFS チームは LXCFS 4.0.4 のリリースをお知らせします!
+
+  <!--
+  This is the fourth bugfix release for LXCFS 4.0 which is supported until June 2025.
+  -->
+  これは 2025 年 6 月までサポートされる LXCFS 4.0 の 4 回目のバグフィックスリリースです。
+
+  ### バグ修正 <!-- Bugfixes -->
+  <!--
+  Some of the highlights for this release are:
+  -->
+  このリリースで修正された主な項目は次のとおりです:
+
+   - 内部キャッシュの修正（大きくパフォーマンスが向上します）<!-- Fix internal cache (big performance improvement) -->
+   - 多数のメモリーリークの修正（特にロードアベレージトラッキング部分）<!-- Fix many memory leaks (especially in loadavg tracking) -->
+   - swap 使用量ロジックの変更 <!-- Reworked swap usage logic -->
+
+  <!--
+  The full list of commits is available below:
+  -->
+  コミットの全リストは次のとおりです（翻訳なし）:
+
+   - proc_fuse: silence error when we find no memlimit
+   - sysfs: cpuinfo: show cgroup cpuset value
+   - sysfs_fuse: remove logically dead code
+   - Fix https://github.com/lxc/lxcfs/issues/404
+   - coverity: Use build custom build script
+   - bindings: fix init pid hashing
+   - bindings: make opts pointer const
+   - bindings: use brackets to make logic clearer
+   - bindings: cleanup cache locking
+   - bindings: cleanup init pid verification
+   - cpuview: fix /proc/stat virtualization
+   - bindings: s/get_init_pid_for_task()/scm_init_pid()/g
+   - proc_loadavg: don't leak getline() memory in calc_pid()
+   - proc_loadavg: ensure pointer is NULL when passing to calc_pid()
+   - proc_loadavg: don't leak getline() memory
+   - proc_loadavg: replace malloc() with asprintf() in calc_pid()
+   - macro: use ISO C compatible __typeof__
+   - proc_loadavg(): use strdup() in calc_pid()
+   - proc_loadavg: simplify calc_pid()
+   - bindings: wipe initpid cache on library reload
+   - bindings: avoid dynamic stack allocations in clone()
+   - lxcfs: free opts on lxcfs binary exit
+   - proc_fuse: use zalloc()
+   - proc_loadavg: use must_* alloc helpers
+   - proc_loadavg: remove dummy variable
+   - proc_loadavg: avoid needless memory allocation
+   - proc_fuse: move get_reaper_busy() down
+   - proc_fuse: cleanup proc_uptime_read() a little
+   - utils: don't leak fds in in_same_namespace()
+   - proc_fuse: improve swap calculation a little
+   - proc_fuse: don't cause invalid swap values
+   - proc_fuse: cap swap to global values
+   - proc_cpuview: tweak cpuacct.percpu_usage fallback
+   - proc_fuse: more swap tweaks
+   - proc_cpuview: cleanup new_proc_stat_node()
+   - proc_cpuview: use more descriptive labels in add_proc_stat_node()
+   - proc_cpuview: reduce variable scope in cpuview_free_head()
+   - proc_cpuview: cleanup add_proc_stat_node()
+   - proc_cpuview: use correct comment style
+   - proc_cpuview: clean up expand_proc_stat_node()
+   - proc_cpuview: clean up prune_proc_stat_list()
+   - proc_cpuview: clean up find_or_create_proc_stat_node()
+   - proc_cpuview: cleanup add_cpu_usage()
+   - proc_cpuview: cleanup read_cpu_cfs_param()
+   - proc_cpuview: fix exact_cpu_count()
+   - proc_cpuview: fix max_cpu_count()
+   - proc_cpuview: cleanup cpuview_proc_stat()
+   - proc_cpuview: cleanup cpuview_init_head()
+
+  ### サポートとアップグレード <!-- Support and upgrade -->
+  <!--
+  The LXCFS 4.0 branch is supported until June 2025.
+  Only bugfixes and securitiy issues get included into the stable bugfix releases, so it's always safe and recommended to keep up and run the latest bugfix release.
+  -->
+  LXCFS 4.0 ブランチは 2025 年 6 月までサポートされます。
+  stable のバグフィックスリリースでは、バグとセキュリティに関する問題に対する修正のみが行われますので、常に安全です。最新のバグフィックスリリースの状態を維持し、実行することをおすすめします。
+
+  ### ダウンロード <!-- Downloads -->
+
+   - リリース tarball <!-- Main release tarball -->: [lxcfs-4.0.4.tar.gz](https://linuxcontainers.org/downloads/lxcfs/lxcfs-4.0.4.tar.gz)
+   - GPG シグネチャー <!-- GPG signature -->: [lxcfs-4.0.4.tar.gz.asc](https://linuxcontainers.org/downloads/lxcfs/lxcfs-4.0.4.tar.gz.asc)
