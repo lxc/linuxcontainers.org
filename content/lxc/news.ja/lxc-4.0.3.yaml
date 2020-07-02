@@ -1,0 +1,111 @@
+title: LXC 4.0.3 LTS リリースのお知らせ
+date: 2020/06/29 14:06
+origin: https://discuss.linuxcontainers.org/t/lxc-4-0-3-lts-has-been-released/8285
+content: |-
+  ### はじめに <!-- Introduction -->
+  <!--
+  The LXC team is pleased to announce the release of LXC 4.0.3!
+  -->
+  LXC チームが LXC 4.0.3 のリリースをお知らせします!
+
+  <!--
+  This is the third bugfix release for LXC 4.0 which is supported until June 2025.
+  -->
+  このリリースは 2025 年 6 月までサポートされる LXC 4.0 に対する 3 回目のバグフィックスリリースです。
+
+  ### バグ修正 <!-- Bugfixes -->
+  <!--
+  Some of the highlights for this release are:
+  -->
+  このリリースで修正された主な項目は次のとおりです:
+
+   - cgroup v1 と cgroup v2 の処理の改良 <!-- Improvement to cgroupv1/cgroupv2 handling -->
+   - lxc-usernsexec のさまざまな改良とテストの追加 <!-- Various improvements and tests for lxc-usernsexec -->
+
+  <!--
+  The full list of commits is available below:
+  -->
+  コミットの全リストは次の通りです（翻訳なし）:
+
+   - apparmor: Allow boot_id
+   - src/lxc/network: Fixes netlink attribute type 1 has an invalid length message
+   - cgroups: ignore cgroup2 limits on non-cgroup2 layouts
+   - common.conf: add cgroup2 default device limits
+   - cgroups: premount cgroups on cgroup2-only systems
+   - conf: introduce userns_exec_mapped_root()
+   - conf: support console setup on containers without rootfs
+   - terminal: remove unneeded if condition
+   - gcc: add -Warray-bounds, -Wrestrict, -Wreturn-local-addr, -Wstringop-overflow
+   - compiler: support new access attributes
+   - tree-wide: this is all rather TODO than FIXME
+   - yum: remove unused module
+   - tools/lxc-ls: shutup lgtm
+   - tools/lxc-ls: shut up lgtm more
+   - confile: fix order independence of network keys
+   - lxccontainer: small cleanup to lxc_check_inherited() calls
+   - start: remove unused lxc_zero_handler()
+   - lxccontainer: use close_prot_errno_disarm() on state_socket_pair
+   - start: fix container reboot
+   - start: cleanup file descriptor inheritance
+   - log: cleanup syslog handling
+   - console: only create detached mount when a console is requested
+   - syscall_numbers: handle ia64 syscall numbers correctly
+   - syscall_numbers: add clone3()
+   - process_utils: introduce new process_utils.{c,h}
+   - process_utils: add clone3() support
+   - mainloop: add lxc_mainloop_add_handler_events
+   - cgfsng: deduplicate freeze code
+   - cgfsng: use EPOLLPRI when polling cgroup.events
+   - process_utils: make lxc use clone3() whenever possible
+   - network: restore old behavior
+   - network: fix {mac,ip,v}lan device creation
+   - bionic: s/lxc_raw_execveat()/execveat()/g
+   - network: use __instantiate_ns_common() in instantiate_ns_phys() too
+   - lxc-usernsexec: dumb down from error to warning message
+   - lxc-usernsexec: don't fail on setgroups()
+   - travis: Restrict coverity to gcc on bionic on amd64
+   - introduce lxc.cgroup.dir.{monitor,container,container.inner}
+   - cgroups: remove unused variable
+   - cgroup isolation: handle devices cgroup early
+   - improve LXC_CMD_GET_CGROUP compatibility
+   - cgroups: be less alarming when creating cgroups
+   - commands: make limiting cgroup callbacks unreachable
+   - api_extensions: add "pidfd"
+   - Add test of lxc-usernsexec
+   - lxc-test-usernsexec: If user is root, then create and use non-root user.
+   - .gitignore: Ignores COPYING file created by make
+   - macro: Adds UINT_TO_PTR and PTR_TO_USHORT helpers
+   - network: Adds check for bridge link interface existence in instantiate_veth
+   - network: Updates netlink_open handling in lxc_ipvlan_create
+   - network: Removes unused ip_proxy_args
+   - cgroups: initialize lxc.pivot cpuset
+   - conf: remove faulty flags
+   - conf: always use target_fd in userns_exec_mapped_root()
+   - conf: add some more logging to userns_exec_mapped_root()
+   - conf: kill old chown_mapped_root()
+   - lxccontainer: remove pointless string duplication
+   - containertests: fix null pointer defereference
+   - tree-wide: use "ptmx" and "pts" as terminal terms
+   - tree-wide: wipe references to questionable apis from our public logs
+   - tree-wide: use "primary" in networking code
+   - network: Rename primary to master
+   - openpty: adapt variable naming
+   - CODING_STYLE: adapt code example
+   - doc: update terminology
+   - test: update terminology
+   - lxccontainer: fix non-blocking container stop
+   - lxc-net: Set broadcast
+   - commands: don't flood logs
+
+  ### サポートとアップグレード <!-- Support and upgrade -->
+  <!--
+  The LXC 4.0 branch is supported until June 2025.
+  Only bugfixes and securitiy issues get included into the stable bugfix releases, so it's always safe and recommended to keep up and run the latest bugfix release.
+  -->
+  LXC 4.0 ブランチは 2025 年 6 月までサポートされます。
+  stable のバグフィックスリリースでは、バグとセキュリティに関する問題に対する修正のみが行われますので、常に安全です。最新のバグフィックスリリースの状態を維持し、実行することをおすすめします。
+
+  ### ダウンロード <!-- Downloads -->
+
+   - リリース tarball <!-- Main release tarball -->: [lxc-4.0.3.tar.gz](https://linuxcontainers.org/downloads/lxc/lxc-4.0.3.tar.gz)
+   - GPG シグネチャー <!-- GPG signature -->: [lxc-4.0.3.tar.gz.asc](https://linuxcontainers.org/downloads/lxc/lxc-4.0.3.tar.gz.asc)
