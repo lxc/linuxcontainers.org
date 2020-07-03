@@ -91,7 +91,7 @@ content: |-
   <!--
   One can directly connect to that socket using a client like `spicy` but this will soon change and instead have LXD allow remote access to this through websocket using `lxc console`.
   -->
-  `spicy` のようなクライアントを使ってソケットに直接接続できます。しかし、接続するとすぐにその代わりに LXD が `lxc console` を使った websocket 経由でリモートアクセスできるように変更します。
+  現状、`spicy` のようなクライアントを使ってソケットに直接接続できます。しかし、すぐに　LXD で `lxc console` を使った websocket 経由でリモートアクセスできるようになるでしょう。
 
   #### VM: PCIe レイアウトの見直し <!-- VM: Rework of PCIe layout -->
   <!--
