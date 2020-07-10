@@ -1,6 +1,42 @@
 ##### 目次
 
-[TOC]
+* [インストール](#_2)
+    * [リリースを選択する](#_3)
+    * [パッケージの取得](#_4)
+        * [Linux](#linux)
+            * [Alpine Linux](#alpine-linux)
+            * [Arch Linux](#arch-linux)
+            * [Fedora](#fedora)
+            * [Gentoo](#gentoo)
+            * [Ubuntu](#ubuntu)
+            * [Snap パッケージ (Arch Linux, Debian, Fedora, OpenSUSE, Ubuntu)](#snap-archlinux-debian-fedora-opensuse-ubuntu)
+        * [MacOS 用クライアント](#macos)
+        * [Windows 用クライアント](#windows)
+        * [ソースからのインストール](#_5)
+* [初期設定](#_6)
+    * [アクセスコントロール](#_7)
+* [仮想マシンについての注意](#_8)
+* [LXDクライアント](#lxd)
+    * [概観](#_9)
+    * [インスタンスの起動](#_10)
+        * [コンテナの起動](#_11)
+            * [Ubuntu の例](#ubuntu_2) <!-- wrong place, intended -->
+        * [仮想マシンの起動](#_12)
+    * [イメージ](#_14)
+        * [リモートのイメージサーバーを使う](#_15)
+            * [イメージサーバー上のイメージのリスト](#_16)
+            * [イメージの検索](#_17)
+        * [仮想マシンのイメージ](#_18)
+    * [インスタンスの管理](#_19)
+        * [起動・停止](#_20)
+        * [コンテナ内のシェル・ターミナル](#_21)
+        * [ホストのターミナルからコマンドを実行する](#_23)
+        * [仮想マシン内のシェル・ターミナル](#_24)
+        * [ファイルやディレクトリをコンテナ〜ホスト間でコピーする](#_25)
+        * [インスタンスの削除](#_28)
+* [その他の情報とリンク](#_29)
+
+---
 
 # インストール<!-- Installation -->
 ## リリースを選択する <!-- Choose your release -->
@@ -9,8 +45,8 @@ LXD upstream maintains three release branches in parallel:
 -->
 LXD では 3 つのリリースブランチが並行してメンテナンスされています:
 
- * LTS リリース <!-- LTS release -->(LXD 3.0.x or LXD 2.0.x)
- * フィーチャーリリース <!-- Feature releases -->(LXD 3.x)
+ * LTS リリース <!-- LTS release -->(LXD 4.0.x, LXD 3.0.x or LXD 2.0.x)
+ * フィーチャーリリース <!-- Feature releases -->(LXD 4.x)
 
 <!--
 LTS releases are recommended for production environments as they will benefit from regular bugfix
@@ -24,7 +60,10 @@ To get all the latest features and monthly updates to LXD, use the feature relea
 LXD の新機能のすべてと月次の更新を取得したい場合は、フィーチャーリリースをお使いください。
 
 ## パッケージの取得 <!-- Getting the packages -->
-### Alpine Linux
+
+### Linux
+
+#### Alpine Linux
 <!--
 To install the feature branch of LXD, run:
 -->
@@ -32,18 +71,20 @@ LXD のフィーチャーブランチをインストールするには、以下�
 
     apk add lxd
 
-### ArchLinux
+#### Arch Linux
 <!--
-Instructions on how to use the AUR package for LXD can be [found here](https://wiki.archlinux.org/index.php/LXD)
+To install the feature branch of LXD, run:
 -->
-LXD の AUR パッケージの使い方については [こちら](https://wiki.archlinux.org/index.php/LXD) をご覧ください。
+フィーチャーブランチの LXD をインストールするには次のように実行します:
+
+    pacman -S lxd
 
 <!--
-Alternatively, the snap package can also be used on ArchLinux (see below).
+Alternatively, the snap package can also be used on Arch Linux ([see below](#snap-archlinux-debian-fedora-opensuse-ubuntu)).
 -->
-もしくは、snap パッケージを ArchLinux 上で使うこともできます (後述)。
+代わりに snap パッケージを Arch Linux で使うこともできます（[後述](#snap-archlinux-debian-fedora-opensuse-ubuntu))。
 
-### Fedora
+#### Fedora
 <!--
 Instructions on how to use the COPR repository for LXD can be [found here](https://copr.fedorainfracloud.org/coprs/ganto/lxc3/).
 -->
@@ -52,22 +93,22 @@ LXD の COPR リポジトリの使い方については [こちら](https://copr
 <!--
 Alternatively, the snap package can also be used on Fedora (see below).
 -->
-もしくは、snap パッケージを Fedora 上で使うこともできます (後述)。
+もしくは、snap パッケージを Fedora 上で使うこともできます ([後述](#snap-archlinux-debian-fedora-opensuse-ubuntu))。
 
-### Gentoo
+#### Gentoo
 <!--
 To install the feature branch of LXD, run:
 -->
-LXD のフィーチャーブランチをインストールするには、以下を実行します:
+LXD のフィーチャーブランチをインストールするには次のように実行します:
 
     emerge --ask lxd
 
-### Ubuntu
-#### Ubuntu (全リリース <!-- all releases -->)
+#### Ubuntu
+##### Ubuntu (全リリース <!-- all releases -->)
 <!--
 The recommended way to install LXD these days is with the snap.
 -->
-最近では、snap を使って LXD をインストールするのがオススメの方法です。
+今は、snap を使って LXD をインストールするのがオススメの方法です。
 
 <!--
 For the latest stable release, use:
@@ -75,6 +116,13 @@ For the latest stable release, use:
 最新の stable リリースの場合は次のように実行します:
 
     snap install lxd
+
+<!--
+For the LXD 4.0 stable release, use:
+-->
+LXD 4.0 stable リリースの場合は次のように実行します:
+
+    snap install lxd --channel=4.0/stable
 
 <!--
 For the LXD 3.0 stable release, use:
@@ -120,7 +168,7 @@ LXD のフィーチャーブランチをインストールするには、以下�
 
     apt install -t xenial-backports lxd lxd-client
 
-### Snap パッケージ <!-- Snap package -->(ArchLinux, Debian, Fedora, OpenSUSE, Ubuntu)
+#### Snap パッケージ <!-- Snap package -->(ArchLinux, Debian, Fedora, OpenSUSE, Ubuntu)
 <!--
 LXD upstream publishes and tests a snap package which works for a number of Linux distributions.
 -->
@@ -144,11 +192,26 @@ After that, you can install LXD with:
     snap install lxd
 
 <!--
-Alternatively, pass `--channel=3.0/stable` for the LXD 3.0 LTS release or `--channel=2.0/stable` for the LXD 2.0 LTS release.
+Alternatively, pass:   
+`--channel=4.0/stable` for the LXD 4.0 LTS release,   
+`--channel=3.0/stable` for the LXD 3.0 LTS release or   
+`--channel=2.0/stable` for the LXD 2.0 LTS release.   
 -->
-あるいは、LXD 3.0 LTS リリースをインストールするために `--channel=3.0/stable` を、LXD 2.0 LTS リリースをインストールするために `--channel=2.0/stable` を指定できます。
+あるいは次のように実行します:  
+LXD 4.0 LTS リリースの場合は `--channel=4.0/stable`   
+LXD 3.0 LTS リリースの場合は `--channel=3.0/stable`  
+LXD 2.0 LTS リリースの場合は `--channel=2.0/stable`  
 
 ### MacOS 用クライアント<!-- MacOS builds -->
+
+!!! note "注意:"
+	<!--
+	The builds for MacOS only include the client, not the server.
+	{: .p-noteadm }
+	-->
+	MacOS 用のビルドはクライアントのみです。サーバーは含みません。
+	{: .p-noteadm }
+
 <!--
 LXD upstream publishes builds of the LXD client for macOS through [Homebrew](https://brew.sh/).
 -->
@@ -162,6 +225,15 @@ LXD のフィーチャーブランチをインストールするには、以下�
     brew install lxc
 
 ### Windows 用クライアント <!-- Windows builds -->
+
+!!! note "注意:"
+	<!--
+	The builds for MacOS only include the client, not the server.
+	{: .p-noteadm }
+	-->
+	Windows 用のビルドはクライアントのみです。サーバーは含みません。
+	{: .p-noteadm }
+
 <!--
 Native builds of the LXD client for Windows can be [found here](https://ci.appveyor.com/project/lxc/lxd/branch/master/artifacts).
 -->
@@ -169,11 +241,22 @@ Windows 用の LXD クライアントのネイティブビルドは [こちら](
 
 ### ソースからのインストール <!-- Installing from source -->
 <!--
-Instructions on building and installing LXD from source [can be found here](https://github.com/lxc/lxd/).
+Instructions on building and installing LXD from source [can be found here](https://github.com/lxc/lxd/#installing-lxd-from-source).
 -->
-LXD をソースからビルドしてインストールする方法は [こちら](https://github.com/lxc/lxd/) にあります。
+LXD をソースからビルドしてインストールする方法は [こちら](https://github.com/lxc/lxd/#installing-lxd-from-source) にあります。
 
 # 初期設定 <!-- Initial configuration -->
+
+!!! note "注意:"
+	<!--
+	`instances`
+	: means both `containers` and `virtual machines`.
+	{: .p-noteadm }
+	-->
+	`インスタンス`
+	は `コンテナ` と `仮想マシン`　の両方を指します。
+	{: .p-noteadm }
+
 <!--
 Before you can create containers, you need to tell LXD a little bit about your storage and network needs.
 -->
@@ -185,6 +268,36 @@ This is all done with:
 この設定は以下のように実行して行います:
 
     lxd init
+
+<!--
+**Overview of the configuration options:**
+-->
+設定オプションの概要:
+
+`デフォルト=no`
+: デフォルトではその機能が無効化されていることを意味します <!-- means the feature is disabled by default -->
+
+<!--
+| Feature:  | Description: | Basic Configuration Options: | More Information: |
+| --- | ------------- | --- | --- |
+| Clustering | A Cluster combines several LXD-servers. They share the same distributed database and can be managed uniformly using the LXD-client (lxc) or the REST API. | default=`no`; <br> If set to `yes`, you can either connect to an existing cluster or create a new one. | LXD-documentation: <br> [[clustering]] |
+| MAAS server | "MAAS is an open-source tool that lets you build a data centre from bare-metal servers." | default=`no`; <br> If set to `yes`, you can connect to an existing MAAS-server and specify the `name`, `URL` and `API key`. | - [maas.io](https://maas.io/) <br> - [maas - install with lxd](https://maas.io/docs/install-with-lxd) |
+| Network bridge | Provides network access for the instances. | You can either use an existing bridge (or interface) or let LXD create a new bridge (recommended option). <br> You can also create additional bridges and assign them to instances later. | LXD-documentation: <br> - [[networks]] <br> - [Network interface](https://linuxcontainers.org/lxd/docs/master/instances#type-nic) |
+| Storage pools | Instances etc. are stored in storage pools. | For testing purposes you can create a loop-backed storage pool. <br> But for production use it is recommended to use an empty partition (or full disk) instead of loop-backed storages (Reasons include: loop-backed pools are slower and their size can't be reduced). <br> The recommended backends are `ZFS` and `btrfs`. <br> You can also create additional storage pools later. | LXD-documentation: <br> - [[storage]] <br> - [Comparison of methods](https://linuxcontainers.org/lxd/docs/master/storage.html#where-to-store-lxd-data) <br> - [Backend Comparison Chart](https://linuxcontainers.org/lxd/docs/master/storage#feature-comparison) |
+| Network Access | Allows access to the server over network. |  default=`no`; <br> If set to `yes`, you can connect to the server over network. <br> You can set a `password` or accept the client certificate manually. | - |
+| Automatic Image Update | You can download Images from Image servers, in this case images can be updated automatically. | default=`yes`; <br> If set to `yes`, LXD will update the downloaded images regularly. | LXD-documentation: <br> [[image-handling]] |
+| "YAML lxd init preseed" | Will display a summary of your chosen configuration options in the terminal. | default=`no` | - |
+-->
+
+| 機能 | 説明 | 基本的な設定 | 備考 |
+| --- | --- | --- | --- |
+| クラスタリング | クラスターは複数のLXDサーバーを組み合わせます。サーバーは同じ分散データーベースを共有し、LXDクライアント（lxc）やREST APIを使って一様に管理できます | デフォルト=`no`<br/>`yes`に設定すると、既存のクラスターに接続するか新しいクラスターを作るかのどちらかが選べます | LXDドキュメント:<br/> - [クラスタリング](https://lxd-ja.readthedocs.io/ja/latest/clustering/) |
+| MAAS server | 「MAASはオープンソースのツールで、ベアメタルサーバーからデータセンターを作れます」 | デフォルト=`no`<br/>`yes`に設定すると、`name`、`URL`、`API key`を指定して既存のMAASサーバーに接続します | - [maas.io](https://maas.io/) <br> - [maas - install with lxd](https://maas.io/docs/install-with-lxd) |
+| ネットワークブリッジ | インスタンスにネットワークアクセスを提供します | 既存のブリッジ（もしくはインターフェース）を使うことも、LXDに新しいブリッジを作らせる（推奨オプション）こともできます。追加でブリッジを作成して、あとでインスタンスに割り当てることもできます | LXDドキュメント:<br/>- [ネットワーク](https://lxd-ja.readthedocs.io/ja/latest/networks/)<br/> - [ネットワークインターフェース](https://lxd-ja.readthedocs.io/ja/latest/instances/#type-nic) |
+| ストレージプール | インスタンスなどがストレージプールに保存されます | テスト用途であればloopbackストレージプールを作成してもよいでしょう。<br/>しかしプロダクション環境ではloopbackストレージではなく空のパーティション（もしくはディスク全体）の使用を推奨します（理由:loopbackプールは遅くてサイズを縮小できない）<br/>推奨のバックエンドはZFSとbtrfsです。あとから追加のストレージプールを作成することもできます | LXDドキュメント:<br/>- [ストレージ](https://lxd-ja.readthedocs.io/ja/latest/storage/)<br/> - [LXDのデータをどこに保存するか](https://lxd-ja.readthedocs.io/ja/latest/storage/#lxd)<br/> - [バックエンドの機能比較](https://lxd-ja.readthedocs.io/ja/latest/storage/#_9) |
+| ネットワークアクセス | LXDサーバーにネットワーク経由でアクセスする | デフォルト=`no`<br/>`yes`に設定すると、ネットワーク経由でサーバーに接続できます。<br/>パスワードを設定するか、手動でクライアント証明書を受け付けることができます | - |
+| イメージの自動更新 | イメージサーバーからイメージがダウンロードでき、この場合イメージは自動的に更新されます | デフォルト=`yes`<br/>`yes`に設定すると、LXDはダウンロードしたイメージを定期的に更新します | LXDドキュメント:<br/> [イメージの扱い](https://lxd-ja.readthedocs.io/ja/latest/image-handling/) |
+| "YAML lxd init preseed" | 選択した設定オプションの概要をターミナルに表示します | デフォルト=`no` | - |
 
 ## アクセスコントロール <!-- Access control -->
 <!--
@@ -207,186 +320,364 @@ or use the "newgrp lxd" command in the shell you're going to use to talk to LXD.
 -->
 グループメンバーシップはログイン時にのみ追加されるので、追加後にあなたのユーザセッションを閉じて再度開くか、LXD と通信したいシェル上で "newgrp lxd" コマンドを実行する必要があります
 
-<!--
-**WARNING**: Anyone with access to the LXD socket can fully control LXD,
-which includes the ability to attach host devices and filesystems, this
-should therefore only be given to users who would be trusted with root
-access to the host. You can learn more about LXD security [here](https://lxd.readthedocs.io/en/latest/security).
--->
-**警告**: LXD ソケットにアクセスできる人であれば誰でも LXD を完全にコントロールできます。
-これには、ホストのデバイスやファイルシステムにアタッチする権限も含まれます。
-したがって、ホストへの root アクセスで信頼できるユーザにのみ与えられるべきです。
-さらに LXD のセキュリティについて学びたい場合は[ドキュメントのセキュリティのセクション（日本語版）](https://lxd-ja.readthedocs.io/ja/latest/security/) （または[英語版](/lxd/docs/master/security/)）をご覧ください。
+!!! note "警告:"
+	<!--
+	Anyone with access to the LXD socket can fully control LXD, which includes the ability to attach host devices and filesystems, this should therefore only be given to users who would be trusted with root access to the host. You can learn more about LXD security [here](/lxd/docs/master/security).
+	-->
+	LXD ソケットにアクセスできる人であれば誰でも LXD を完全にコントロールできます。これには、ホストのデバイスやファイルシステムにアタッチする権限も含まれます。したがって、ホストへの root アクセスで信頼できるユーザにのみ与えられるべきです。さらに LXD のセキュリティについて学びたい場合は[ドキュメントのセキュリティのセクション（日本語版）](https://lxd-ja.readthedocs.io/ja/latest/security/) （または[英語版](/lxd/docs/master/security/)）をご覧ください。	
+	{: .p-noteadm }
 
-# コンテナの作成と使用 <!-- Creating and using your first container -->
+# 仮想マシンについての注意 <!-- Note about Virtual machines -->
 <!--
-Creating your first container is as simple as:
+Since version 4.0 LXD also natively supports virtual machines and thanks to a built-in agent, they can be used almost like containers.
 -->
-コンテナを作成するのは簡単です:
-
-    lxc launch ubuntu:18.04 first
+LXD 4.0 から、LXD はネイティブに仮想マシンもサポートします。そしてビルトインのエージェントのおかげで、ほぼコンテナのように使えます。
 
 <!--
-That will create and start a new Ubuntu 16.04 container as can be confirmed with:
+LXD uses `qemu` to provide the VM functionality.
 -->
-これで、新しい Ubuntu 18.04 コンテナが作成され、起動します。このコンテナは以下のように確認できます:
+LXD は VM の機能を提供するために `qemu` を使います。
+
+<!--
+See [below](#launch-a-virtual-machine) for how to start a virtual machine.
+-->
+仮想マシンの起動方法は[後の説明](#_12)をご覧ください。
+
+<!--
+You can find more information about virtual machines in our forum[^1].
+-->
+仮想マシンについての詳細な情報はフォーラムでご覧いただけます[^1]。
+<!-- You can find more information in the Advanced Guide. -->
+
+!!! note "注意:"
+	<!--
+	For now virtual machines support less features than containers.     
+    See [Advanced Guide - Instance configuration](/lxd/advanced-guide#difference-between-containers-and-virtual-machines) for details.
+	-->
+	現時点では、仮想マシンで使える機能はコンテナよりは少ないです。
+	詳しくは [Advanced Guide - Instance configuration](/lxd/advanced-guide#difference-between-containers-and-virtual-machines) をご覧ください。
+    {: .p-noteadm }
+
+# LXD クライアント <!-- LXD-client -->
+<!--
+The LXD-client `lxc` is a command tool to manage your LXD servers.
+-->
+LXD クライアント `lxc` は LXD サーバーを管理するコマンドラインツールです。
+
+## 概観 <!-- Overview -->
+<!--
+The following command will give you an overview of all available commands and options:
+-->
+次のコマンドで指定できるすべてのコマンドとオプションが概観できます。
+
+	lxc
+
+## インスタンスの起動 <!-- Launch an instance -->
+<!--
+You can launch an instance with command `lxc launch`:
+-->
+`lxc launch` コマンドでインスタンスが起動できます。
+
+##### コンテナの起動 <!-- Launch a container -->
+	
+	lxc launch imageserver:imagename instancename	
+
+##### 仮想マシンの起動 <!-- Launch a virtual machine -->
+	
+	lxc launch imageserver:imagename instancename --vm
+
+<!--
+Replace:
+-->
+前述のコマンド実行例は次のように置き換えます:
+
+- `imageserver` はビルトインもしくはご自身で追加したイメージサーバーの名前です <!-- `imageserver` with the name of a built-in or added image server (e.g. `ubuntu` or `images`) and  -->
+- `imagename` はイメージ名です（例: `20.04`、`debian/11`）。詳しくは[「イメージ」](#_14)の項をご覧ください <!-- `imagename` with the name of an image (e.g. `20.04` or `debian/11`).   See [Section "Images"](#images) for details. -->
+- `instancename` は付けたいインスタンス名を指定します（例: `ubuntuone`）。指定しなければ LXD がランダムに名前を付けます　<!-- `instancename` with a name of your choice (e.g. `ubuntuone`), if left empty LXD will pick a random name. -->
+
+### Ubuntu の例 <!-- Example for Ubuntu -->
+
+	lxc launch ubuntu:20.04 ubuntuone
+
+<!--
+this will create a container based on the Ubuntu `Focal Fossa` Image (provided by LXD) with the instancename `ubuntuone`.
+-->
+これは（LXD が提供する） Ubuntu Focal Fossa イメージを使ってコンテナを作成します。インスタンス名は `ubuntuone` となります。
+
+
+## インスタンスの設定 <!-- Configuration of instances -->
+<!--
+See [Advanced Guide - Instance Configuration](/lxd/advanced-guide#configuration-of-instances).
+-->
+[Advanced Guide - Instance Configuration](/lxd/advanced-guide#configuration-of-instances) をご覧ください。
+
+
+## イメージ <!-- Images -->
+<!--
+Instances are based on Images, which contain a basic operating system (for example a linux distribution) and some other LXD-related information.
+-->
+インスタンスはイメージをベースにしています。これは基本的なオペレーティングシステム（例えば Linux ディストリビューション）と LXD に関係する情報を含んでいます。
+
+<!--
+In the following we will use the built-in remote image servers ([see below](#use-remote-image-servers)).
+-->
+次でビルトインイメージーサーバーを使った例を紹介します（[後述](#_15)）。
+
+<!--
+For more options see [Advanced Guide - Advanced options for Images](/lxd/advanced-guide#advanced-options-for-images).
+-->
+さらなるオプションについては [Advanced Guide - Advanced options for Images](/lxd/advanced-guide#advanced-options-for-images) をご覧ください。
+
+### リモートのイメージサーバーを使う <!-- Use remote image servers -->
+<!--
+The easiest way is to use a built-in remote image server.
+-->
+もっとも簡単にイメージを扱う方法は、ビルトインのリモートイメージサーバーを使うことです。
+
+<!--
+You can get a list of built-in image servers with:
+-->
+ビルトインのイメージサーバーは次のように取得できます:
+
+	lxc remote list
+
+<!--
+LXD comes with 3 default servers:
+-->
+LXD はデフォルトで 3 つのサーバーが登録されています:
+
+ 1. `ubuntu:` (stable の Ubuntu イメージ <!-- for stable Ubuntu images -->)
+ 2. `ubuntu-daily:` (Ubuntu イメージのデイリービルド <!-- for daily Ubuntu images -->)
+ 3. `images:` ([他の多数のディストリビューション](https://images.linuxcontainers.org))<!-- for a [bunch of other distros](https://images.linuxcontainers.org) -->)
+
+#### イメージサーバー上のイメージのリスト <!-- List images on server -->
+
+<!--
+To get a list of remote images on server `images`, type:
+-->
+イメージサーバー `images` 上のイメージリストを取得するには次のようにします:
+	
+	lxc image list images:
+
+**詳細** <!-- **Details:** -->  
+<!--
+_Most details in the list should be self-explanatory._
+-->
+_リストの見方は大部分は見るだけでわかります。_
+
+<!--
+- Alias with `cloud`
+: refers to images with built-in cloud-init support (see [Advanced Guide - Cloud-Init](/lxd/advanced-guide#cloud-init) and [official cloud-init documentation](https://cloudinit.readthedocs.io/en/latest/))
+-->
+- `cloud` というエイリアス
+: ビルトインで `cloud-init` をサポートするイメージを指します（詳細は [Advanced Guide - Cloud-Init](/lxd/advanced-guide#cloud-init) と [cloud-init の公式文書](https://cloudinit.readthedocs.io/en/latest/) をご覧ください）
+
+#### イメージの検索 <!-- Search for images -->
+<!--
+You can search for images, by applying specific elements (e.g. the name of a distribution).
+-->
+イメージは特定の要素（例えばディストリビューション名）を指定して検索できます。
+
+<!--
+Show all Debian images:
+-->
+すべての Debian イメージを検索するには:
+
+	lxc image list images: debian  
+
+<!--
+Show all 64-bit Debian images:
+-->
+すべての 64bit の Debian イメージを検索するには:
+
+	lxc image list images: debian amd64
+
+### 仮想マシンのイメージ <!-- Images for Virtual Machines -->
+<!--
+It is recommended to use the `cloud` variants of images (visible by the `cloud`-tag in their `ALIAS`).   
+They include cloud-init and the LXD-agent.   
+They also increase their size automatically and are tested daily.
+-->
+イメージの `cloud` バリアントを使うことをおすすめします（`ALIAS` の `cloud` タグで確認できます）。このようなイメージは LXD エージェントと cloud-init を含んでいます。また、サイズは自動的に大きくなり、毎日テストされています。
+
+## インスタンスの管理 <!-- Instance management -->
+<!--
+List all Instances:
+-->
+すべてのインスタンスをリスト表示するには次のように実行します:
 
     lxc list
 
+#### 起動・停止 <!-- Start/Stop -->
 <!--
-Your container here is called "first". You also could let LXD give it a random name by
-just calling "lxc launch ubuntu:18.04" without a name.
+Start an instance:
 -->
-ここで作成し、起動したコンテナは "first" という名前です。"lxc launch ubuntu:18.04" のように名前を指定せずにコマンドを実行し、ランダムな名前になるように LXD を実行することもできます。
+インスタンスを起動するには次のように実行します:
 
-<!--
-Now that your container is running, you can get a shell inside it with:
--->
-さて、これでコンテナが起動しています。以下のようにコンテナの内部でシェルを実行できます:
-
-    lxc exec first -- /bin/bash
+	lxc start instancename
 
 <!--
-Or just run a command directly:
+Stop an instance:
 -->
-また、以下のように直接コマンド実行もできます:
+インスタンスを停止するには次のように実行します:
 
-    lxc exec first -- apt-get update
+    lxc stop instancename
+
+#### コンテナ内のシェル・ターミナル <!-- Shell/Terminal inside Container -->
+<!--
+Get a shell inside a container:
+-->
+コンテナ内のシェルを使うには次のように実行します:
+
+    lxc exec instancename -- /bin/bash
 
 <!--
-To pull a file from the container, use:
+By default you are logged in as root:
 -->
-コンテナからファイルを取得するには以下のようにします:
+デフォルトでは root でログインされた状態になります:
 
-    lxc file pull first/etc/hosts .
+```bash
+root@containername:~#
+
+```
+
+##### ユーザーとしてログインするには <!-- To login as a user instead, run: -->
+<!--
+**Note:** In many containers you need to create a user first.
+-->
+**注意:** 多数のコンテナでは、先にユーザーを作成する必要があります。
+
+	lxc exec instancename -- su --login username
 
 <!--
-To push one, use:
+Exit the container shell, with:
 -->
-コンテナへファイルを送るには以下のようにします:
+コンテナのシェルから抜けるには次のように実行します:
 
-    lxc file push hosts first/tmp/
+```bash
+root@containername:~# exit
+
+```
+
+#### ホストのターミナルからコマンドを実行する <!-- Run Command from Host terminal -->
+<!--
+Run a single command from host's terminal:
+-->
+ホストのターミナルから単一のコマンドを実行するには次のように行います:
+
+    lxc exec containername -- apt-get update
+
+#### 仮想マシン内のシェル・ターミナル <!-- Shell/Terminal inside Virtual Machine -->
+<!--
+You can see your VM boot with:
+-->
+次のコマンドで VM のブートを見ることができます:
+
+	lxc console instancename
 
 <!--
-To stop the container, simply do:
+(detach with ctrl+a-q)
 -->
-コンテナを停止するには以下のようにします:
-
-    lxc stop first
+（コンソールから抜けるには ctrl+a-q）
 
 <!--
-And to remove it entirely:
+Once booted, VMs with the LXD-agent built-in, can be accessed with:
 -->
-完全にコンテナを削除するには:
+LXD エージェントビルトインの VM の場合は、ブート後は次のようにアクセスできます:
 
-    lxc delete first
-
-# コンテナイメージ <!-- Container images -->
-<!--
-LXD is image based. Containers must be created from an image and so the image store
-must get some images before you can do much with LXD.
--->
-LXD はイメージベースです。コンテナはイメージから作る必要があります。そして LXD で色々な処理を行う前に、イメージストアにイメージを取得していなければいけません。
+	lxc exec instancename bash
 
 <!--
-There are three ways to feed that image store:
+Exit the VM shell, with:
 -->
-イメージストアにイメージを取得する方法は 3 つあります:
+VM のシェルから抜けるには:
 
- 1. ビルトインされているイメージ用リモートサーバを使う <!-- Use one of the the built-in image remotes -->
- 2. イメージサーバとしてリモートの LXD を使う <!-- Use a remote LXD as an image server -->
- 3. イメージの tarball を手動でインポートする <!-- Manually import an image tarball -->
+	exit
 
-## ビルトインされているイメージ用リモートサーバを使う <!-- Using the built-in image remotes -->
-<!--
-LXD comes with 3 default remotes providing images:
--->
-LXD にはデフォルトでイメージを提供するリモートサーバが 3 つ登録されています:
-
- 1. ubuntu: (stable Ubuntu イメージ用 <!-- for stable Ubuntu images -->)
- 2. ubuntu-daily: (daily Ubuntu イメージ用 <!-- for daily Ubuntu images -->)
- 3. images: ([その他の多数のディストリビューション用](https://images.linuxcontainers.org))
+#### ファイルやディレクトリをコンテナ〜ホスト間でコピーする <!-- Copy files and folders between container and host -->
+##### インスタンスからホストへのコピー <!-- Copy from an instance to host -->
 
 <!--
-To start a container from them, simply do:
+Pull a file with:
 -->
-これらのビルトインのリモートサーバからコンテナを起動するには、以下のように実行します:
+ファイルを次のように pull します:
 
-    lxc launch ubuntu:16.04 my-ubuntu
-    lxc launch ubuntu-daily:18.04 my-ubuntu-dev
-    lxc launch images:centos/6/amd64 my-centos
-
-## イメージサーバとしてリモートサーバを使う <!-- Using a remote LXD as an image server -->
-<!--
-Using a remote image server is as simple as adding it as a remote and just using it:
--->
-リモートのイメージサーバを使うと、リモートサーバとして追加してそれを使うだけですので、とても簡単です:
-
-    lxc remote add my-images 1.2.3.4
-    lxc launch my-images:image-name your-container
+    lxc file pull instancename/path-in-container path-on-host
 
 <!--
-An image list can be obtained with:
+Pull a folder with:
 -->
-イメージリストは以下のように取得できます:
+ディレクトリーは次のようにコピーします:
 
-    lxc image list my-images:
-
-## 手動でイメージをインポートする <!-- Manually importing an image -->
-<!--
-If you already have a lxd-compatible image file, you can import it with:
--->
-lxd 互換のイメージファイルが手元にある場合は、以下のようにインポートできます:
-
-    lxc image import <file> --alias my-alias
+    lxc file pull -r instancename/path-in-container path-on-host
 
 <!--
-And then start a container using:
+For example:
 -->
-その後、以下のようにコンテナを起動します:
+例えば:
+    
+    lxc file pull instancename/etc/hosts .
 
-    lxc launch my-alias my-container
+##### ホストからインスタンスへのコピー <!-- Copy from host to instance -->
 
 <!--
-See the [image specification for more details](https://github.com/lxc/lxd/blob/master/doc/image-handling.md).
+Push a file with:
 -->
-詳しくは[イメージの仕様](https://github.com/lxc/lxd/blob/master/doc/image-handling.md)をご覧ください。
+ファイルを次のように push します:
 
-# 複数のホスト <!-- Multiple hosts -->
-<!--
-The "lxc" command line tool can talk to multiple LXD servers and defaults to talking to the local one.
--->
-"lxc" コマンドラインツールは複数の LXD サーバと通信できます。デフォルトではローカルの LXD と通信します。
+    lxc file push path-on-host instancename/path-in-container
 
 <!--
-Remote operations require the following two commands having been run on the remote server:
+Push a folder with:
 -->
-リモート操作には、リモートサーバ上で以下の 2 つのコマンドを実行しておく必要があります:
+ディレクトリーは次のように push します:
 
-    lxc config set core.https_address "[::]"
-    lxc config set core.trust_password some-password
+    lxc file push -r path-on-host instancename/path-in-container
+
+#### インスタンスの削除 <!-- Remove instance -->
+
+!!! note "警告:"
+	<!--
+	This will delete the instance including all snapshots.   
+	Deletion will be final in most cases and restore is unlikely!   
+    See [Tips & Tricks in Advanced Guide](/lxd/advanced-guide/#prevent-accidental-deletion-of-an-instance) on how to avoid accidental deletion.
+	-->
+	次のコマンドはスナップショットもふくめてインスタンスを削除します。
+	ほとんどのケースでは、完全に削除されてしまい、リストアすることはできません。
+	うっかり削除するのを防ぐ方法については [Tips & Tricks in Advanced Guide](/lxd/advanced-guide/#prevent-accidental-deletion-of-an-instance) をご覧ください。
+	{: .p-noteadm }
 
 <!--
-The former tells LXD to bind all addresses on port 8443. The latter sets a trust password to be used by new clients.
+Use:
 -->
-最初のコマンドは、すべてのアドレスのポート 8443 にバインドするように LXD を設定しています。次のコマンドは、新しくクライアントがこのサーバと接続するときに使うパスワードを設定しています。
+次のように実行します:
+
+    lxc delete instancename
+
+
+# その他の情報とリンク <!-- Further Information & Links -->
 
 <!--
-Now to talk to that remote LXD, you can simply add it with:
+You find more information on the following pages:
 -->
-このリモートの LXD と通信を行うために、以下のようにリモートホストを追加します:
+次のページにさらに詳しい情報が掲載されています:
 
-    lxc remote add host-a <ip address or DNS>
+- [Advanced Guide](/lxd/advanced-guide)
+
+- [LXD ドキュメント](https://lxd-ja.readthedocs.io/) （オリジナル: [LXD documentation](/lxd/docs/master/index)）
+    - [セキュリティ](https://lxd-ja.readthedocs.io/ja/latest/security/) （オリジナル: [Security](/lxd/docs/master/security)）
+    - [FAQ](https://lxd-ja.readthedocs.io/ja/latest/faq/) （オリジナル: [FAQ](/lxd/docs/master/faq)）
 
 <!--
-This will prompt you to confirm the remote server fingerprint and then ask you for the password.
+- [Forum](https://discuss.linuxcontainers.org/)
+    - [Tutorials Section](https://discuss.linuxcontainers.org/c/tutorials)
 -->
-このコマンドを実行すると、リモートサーバのフィンガープリントの確認と、パスワードを問い合わせるプロンプトが表示されるはずです。
+- [フォーラム](https://discuss.linuxcontainers.org/)
+    - [チュートリアル](https://discuss.linuxcontainers.org/c/tutorials)
+ 
+ <!-- footnotes -->
 
 <!--
-And after that, use all the same command as above but prefixing the container
-and images name with the remote host like:
+ [^1]: [Running virtual machines with lxd](https://discuss.linuxcontainers.org/t/running-virtual-machines-with-lxd-4-0/7519), including a short howto for a Microsoft Windows VM.
 -->
-そのあとで、コンテナとイメージの前にリモートホスト名をつけて、先のコマンドと同様に使用します:
-
-    lxc exec host-a:first -- apt-get update
+ [^1]: [LXD で仮想マシンを実行する](https://discuss.linuxcontainers.org/t/running-virtual-machines-with-lxd-4-0/7519), Microsoft Windows VM 向けの簡単な HowTo を含みます
