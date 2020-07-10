@@ -644,6 +644,7 @@ Push a folder with:
 	-->
 	次のコマンドはスナップショットもふくめてインスタンスを削除します。
 	ほとんどのケースでは、完全に削除されてしまい、リストアすることはできません。
+	うっかり削除するのを防ぐ方法については [Tips & Tricks in Advanced Guide](/lxd/advanced-guide/#prevent-accidental-deletion-of-an-instance) をご覧ください。
 	{: .p-noteadm }
 
 <!--
