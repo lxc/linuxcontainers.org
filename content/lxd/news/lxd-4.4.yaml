@@ -1,0 +1,488 @@
+title: LXD 4.4 has been released
+date: 2020/07/31 21:07
+origin: https://discuss.linuxcontainers.org/t/lxd-4-4-has-been-released/8574
+content: |-
+  ### Introduction
+  The LXD team is very excited to announce the release of LXD 4.4!
+
+  This is one of those very busy releases with new features for everyone. It also makes significant improvements for our clustering and multi-user deployments and lays on foundation for some more exciting features coming soon.
+
+  Enjoy!
+
+  ### New features and highlights
+  #### VGA console for virtual machines
+  Back in LXD 4.3, support for both a default virtio-gpu device as well as for the SPICE communication channel was added to the QEMU configuration.
+
+  With this release, we're now adding the communication mechanism and client logic to actually attach and interact with the virtual GPU.
+
+  You can now pass `--console=vga` to `lxc launch` or `lxc start` or `--type=vga` to `lxc console`. This relies on either `remote-viewer` or `spicy` being available on the client system. If neither are, the SPICE socket is mapped on the client and the path is provided.
+
+  This API is based on LXD's own websocket console API but is compatible with `spice-html5` and so can be used for web interface accessing LXD.
+
+  #### Clustering failure domains
+  LXD now exposes the concept of failure domains for cluster members.
+
+  With this, you can tell the LXD database which systems are likely to go offline at the same time so it can make better decisions when electing a leader or promoting cluster members to different database roles.
+
+  Example failure domains could be power circuits on physical systems or the host system in the case of LXD running in a virtual machine or a cloud availability zone and region in the case of LXD running in a cloud instance.
+
+      root@nuc01:~# lxc cluster list
+      +-------+----------------------------+----------+--------+-------------------+--------------+----------------+
+      | NAME  |            URL             | DATABASE | STATE  |      MESSAGE      | ARCHITECTURE | FAILURE DOMAIN |
+      +-------+----------------------------+----------+--------+-------------------+--------------+----------------+
+      | nuc01 | https://172.17.16.140:8443 | YES      | ONLINE | fully operational | x86_64       | pdu01          |
+      +-------+----------------------------+----------+--------+-------------------+--------------+----------------+
+      | nuc02 | https://172.17.16.139:8443 | NO       | ONLINE | fully operational | x86_64       | pdu02          |
+      +-------+----------------------------+----------+--------+-------------------+--------------+----------------+
+
+  #### `/dev/lxd` API in virtual machines
+  The [/dev/lxd API](https://linuxcontainers.org/lxd/docs/master/dev-lxd) is now also available inside of virtual machines.
+
+  This works identically to within containers with the exception that the image download forwarding feature isn't available.
+
+  #### Graceful daemon shutdown
+  Up until now, when LXD was instructed to shutdown, either because the system is being shutdown or because of a LXD update, it would immediately interrupt any operation that's in progress.
+
+  This was causing a few issues:
+
+   - Any lxc exec/console commands would be immediately disconnected
+   - Interrupted image refreshes could lead to broken or missing images
+   - Instances being migrated could find themselves left in a stopped state on the source server
+
+  The new logic now tries to:
+
+   - Cleanly cancel any cancelable operation
+   - Prevent any new operation from starting up
+   - Prevent any API interaction while shutting down
+   - Give up to 5 minutes for non-cancelable operations (like exec/console) to disconnect
+
+  There is unfortunately no good way to notify a user of `lxc exec` or `lxc console` that they will get disconnected in a few minutes as any kind of output may interfere with their work. However we feel that the 5 minutes grace period will be sufficient for a lot of cases and a big improvement over the current behavior.
+
+  #### `macvlan` and `sriov` managed network types
+  Two new managed network types now join the existing `bridged` network type.
+
+  This means that it's now possible to define managed networks using `macvlan` or `sriov`, then making those usable by restricted projects (which can only used managed networks).
+
+  When defined this way, this also allows pre-configuring the MAAS subnets, MTU and VLAN without having to repeat that configuration on a per-instance basis.
+
+  This also lays the foundation for the external layer of our upcoming virtual network work (through OVN) which will allow for project users to create their own networks, backed by an allowed managed network and without any risk of conflicts on the host system.
+
+      root@lantea:~# lxc network create my-macvlan parent=enp11s0 --type=macvlan
+      Network my-macvlan created
+      root@lantea:~# lxc network create my-sriov parent=enp7s0 vlan=1017 --type=sriov
+      Network my-sriov created
+      root@lantea:~# lxc init images:ubuntu/20.04/cloud c1
+      Creating c1
+      root@lantea:~# lxc config device add c1 eth0 nic network=my-macvlan name=eth0
+      Device eth0 added to c1
+      root@lantea:~# lxc init images:ubuntu/20.04/cloud c2
+      Creating c2
+      root@lantea:~# lxc config device add c2 eth0 nic network=my-sriov name=eth0
+      Device eth0 added to c2
+      root@lantea:~# lxc start c1 c2
+      root@lantea:~# lxc list
+      +------+---------+----------------------+-----------------------------------+-----------+-----------+
+      | NAME |  STATE  |         IPV4         |               IPV6                |   TYPE    | SNAPSHOTS |
+      +------+---------+----------------------+-----------------------------------+-----------+-----------+
+      | c1   | RUNNING | 172.17.16.224 (eth0) | 2001:470:b0f8:1016:1::dcba (eth0) | CONTAINER | 0         |
+      +------+---------+----------------------+-----------------------------------+-----------+-----------+
+      | c2   | RUNNING | 172.17.17.241 (eth0) | 2001:470:b0f8:1017:1::c36d (eth0) | CONTAINER | 0         |
+      +------+---------+----------------------+-----------------------------------+-----------+-----------+
+      root@lantea:~# 
+
+  #### Disk usage limits in projects
+  Following on the work recently done to make LXD safe to use by untrusted users thanks to project limits and restrictions, one piece was missing with projects still able to run the host systems out of disk space.
+
+  This is no longer an issue as a new `limits.disk` key is now available for projects and allows restricting the total disk usage of a project.
+
+  This applies to all its instances, images and custom storage volumes.
+
+  #### AppAmor confinement for dnsmasq
+  AppArmor support has now been extended to protect not only instances but also other services that LXD operates.
+
+  The first such external service is `dnsmasq` which is now run with its own per-network apparmor profile.
+
+  We're expecting to add similar profiles for `forkdns`, `forkproxy` and `qemu`, covering all the long running processes that LXD spawns.
+
+  #### GPU mediated devices in resources API
+  LXD now detects mediated devices for GPUs.
+
+  This is supported on some Intel and NVIDIA GPUs and allows for virtual devices to be created on the physical device with multiple profiles available to choose from. The resulting device can then be used with VFIO in virtual machines.
+
+  At this point, LXD only detects and reports the mediated device profiles but doesn't yet allow consuming them for virtual machines.
+
+      stgraber@castiana:~$ lxc query /1.0/resources | jq .gpu.cards
+      [
+        {
+          "driver": "i915",
+          "driver_version": "5.4.0-42-generic",
+          "drm": {
+            "card_device": "226:0",
+            "card_name": "card0",
+            "control_device": "226:0",
+            "control_name": "controlD64",
+            "id": 0,
+            "render_device": "226:128",
+            "render_name": "renderD128"
+          },
+          "mdev": {
+            "i915-GVTg_V5_4": {
+              "api": "vfio-pci",
+              "available": 0,
+              "description": "low_gm_size: 128MB\nhigh_gm_size: 512MB\nfence: 4\nresolution: 1920x1200\nweight: 4",
+              "devices": []
+            },
+            "i915-GVTg_V5_8": {
+              "api": "vfio-pci",
+              "available": 1,
+              "description": "low_gm_size: 64MB\nhigh_gm_size: 384MB\nfence: 4\nresolution: 1024x768\nweight: 2",
+              "devices": [
+                "7c43babb-cf2a-403c-ae5a-7c45aeb5fb2f"
+              ]
+            }
+          },
+          "numa_node": 0,
+          "pci_address": "0000:00:02.0",
+          "product": "HD Graphics 620",
+          "product_id": "5916",
+          "vendor": "Intel Corporation",
+          "vendor_id": "8086"
+        }
+      ]
+
+  #### `--console` option in `lxc launch`
+  LXD 4.3 introduced `--console` for `lxc start` and `lxc restart`, now `lxc launch` also gives you quick access to the instance console.
+
+  ### Complete changelog
+  Here is a complete list of all changes in this release:
+
+   - lxd/cluster: Leverage RolesChanges.Handover() to choose handover target
+   - lxd: Increase timeout of go unit tests when ran from Emacs
+   - lxd/cluster: Skip unncessary loading of nodes from database in Rebalance()
+   - lxd/cluster: Leverage RolesChanges.Adjust() to choose rebalance target
+   - lxd/cluster: Increase time budget of client.Assign() when assigning voter role
+   - lxd/cluster: When demoting to Spare only transition to StandBy if Voter
+   - lxd/project: Add more name checks
+   - doc/server: Cover listen + authentication
+   - lxd/db: Add failure_domains table and nodes column reference
+   - lxd/qemu: Don't do file lock on custom volumes
+   - lxd/db: Add UpdateNodeFailureDomain() and GetNodesFailureDomains()
+   - lxd/cluster: Honor failure domains when changing roles
+   - shared/version: Add clustering_failure_domains extension
+   - shared/api: Add FailureDomain field to ClusterMemberPut
+   - lxd/cluster: Populate FailureDomain field when listing cluster members
+   - lxd: Support changing failure domain in PUT /1.0/cluster/<node>
+   - client: Check clustering_failure_domains extension when updating a member
+   - doc: Add documentation about failure domains
+   - lxc: Add failure domain column in "lxc cluster list" output
+   - make i18n
+   - test: Add new clustering_failure_domains test case
+   - instance: update terminology I
+   - lxd/network: Validate ipv4/ipv6 routes
+   - lxd/proxy: Fix govet
+   - lxd/rsync: Add AtLeast
+   - lxd/rsync: Filter out security.selinux
+   - lxd-p2c: Filter out security.selinux
+   - lxc-to-lxd: Filter out security.selinux
+   - lxc/launch: Add --console
+   - instance: introduce container_syscall_filtering_allow_deny extension
+   - tests: remove trailing comma
+   - lxd/instance/drivers: Provide instance-data file
+   - lxd-agent: Support /dev/lxd
+   - lxd/instance/drivers: Allow updating running VMs
+   - tests: Fix bad ipv6.routes value
+   - lxc/instance/drivers/qemu: Support ephemeral VMs
+   - lxd/qemu: Use memory backend ram/file
+   - lxc/image: Fix dir handling on snap
+   - lxd/qemu: Fix crash on non-pinned VM
+   - lxc/image: Fix more dir handling on snap
+   - terminals: update terminology again
+   - doc/instances: Improves proxy docs
+   - lxc/main_alias: Handle leading arguments
+   - lxd/storage: Fix block volume migration
+   - lxd/rbac: Always allow internal cluster traffic
+   - units: handle multiplication integer overflow
+   - lxd/rsync: Untangle from daemon package
+   - lxd/qemu: Don't use file.locking with rbd
+   - lxd/storage/zfs: Use autotrim when available
+   - lxd: Add clustering_fix_raft_address_zero patch to fix node with "0" as address
+   - lxd/resources: Use udev model data if available
+   - Decode error
+   - doc/api-extensions: Fix escaping
+   - share/api: Add GPU mdev
+   - lxd/resources: Add GPU mdev
+   - api: Add GPU mdev
+   - lxd/qemu: Fix unbound hugepages
+   - lxd/qemu: Properly connect memory
+   - api: console_vga_type
+   - doc/rest-api: Add type field to console
+   - shared/api: Add Type field to InstanceConsolePost
+   - lxd/instance: Add protocol argument to Instance.Console()
+   - lxd/instance/drivers: Support VGA output in qemu.Console()
+   - lxd: Handle "vga" type in console API handler
+   - client: Add ConsoleInstanceDynamic() to support multiple websocket connections
+   - lxc: Add --type flag to "lxc console"
+   - i18n: Update translation templates
+   - lxc/console: Missing error handling
+   - i18n: Update translations from weblate
+   - lxc/console: Prefer remote-viewer
+   - lxc: Populate cmdConsole.flagType also when ran manually
+   - lxc/console: Short argument for type
+   - lxc: Allow using --console=TYPE
+   - lxd/images: Rename imgPostContInfo to imgPostInstanceInfo
+   - lxd/instances: Return and set image properties
+   - lxd/qemu: Add support for spice agent
+   - lxd/main_daemon: s/containers/instances/
+   - lxd: s/containersShutdown/instancesShutdown/
+   - lxd: Add context to daemon
+   - lxd/operations: Add db operation type to Operation
+   - lxd: Add waitForOperations()
+   - lxd: Shut down gracefully
+   - lxd/operations/operations: Fix hanging cancelation
+   - lxd/instance_post: Pass cancel function to websocket operation
+   - client/lxd_instances: Cancel websocket op if needed
+   - lxc/console: Disconnect on shutdown
+   - lxd/daemon: Return 503 when shutting down
+   - lxd/db: Drive-by removal of leftover fmt.Printf's
+   - doc/api-extensions: Fix over-escaping
+   - lxc/network: Adds flagType to cmdNetwork
+   - shared/instance: Move network validation functions to shared
+   - lxd/db/cluster: Adds type field to networks table
+   - lxd/db/networks: Adds internal network type constants
+   - lxd/db/networks: Updates CreateNetwork to accept a network type
+   - lxd/db/networks: Updates CreatePendingNetwork to accept a network type
+   - lxd/db/networks: Populate network type in getNetwork
+   - lxd/network/network/interface: Adds network interface
+   - lxd/network/network/load: LoadByName to use Network interface, add Validate
+   - lxd/network/errors: Adds error constants
+   - lxd/network/network/utils: Moved validation functions from main package
+   - lxd/network/driver/common: Adds common driver
+   - lxd/network/driver/bridge: Renames network to driver_bridge
+   - lxd/networks/utils: Remove unused network validation functions in main
+   - lxd/device/device/utils/network: Removes unused validation functions
+   - lxd/device/device/utils/proxy: shared.IsNetworkAddress usage
+   - lxd/device/nic: shared validation function usage
+   - lxd/device/nic/bridged: Support Network interface
+   - lxd/device/nic/ipvlan: shared validation function usage
+   - lxd/device/nic/routed: shared validation function usage
+   - lxd/main/init/interactive: Uses network name validation from network package
+   - lxd/networks: ValidNetworkName usage in networkPost
+   - lxd/networks: Updates doNetworkUpdate to use network package validation
+   - lxd/networks: Updates networksPost to support network type
+   - lxd/networks: Remove use of network.IsRunning in networkShutdown
+   - lxd/networks/config: Removed
+   - lxd/networks/utils: Updates usage of n.RefreshForkdnsServerAddresses to generic n.HandleHearbeat
+   - i18n: Update translation templates
+   - lxd: Updates network tests to pass netType
+   - lxd/network/network/utils: Unexports usesIPv4Firewall and usesIPv6Firewall
+   - lxd/network/driver/bridge: usesIPv4Firewall and usesIPv6Firewall usage
+   - lxd: Add --force flag to lxd shutdown
+   - lxd/apparmor: Use templating
+   - lxd/apparmor: Use proper version parsing
+   - shared/version: Add projects_limits_disk extension
+   - doc: Document limits.disk project configuration key
+   - lxd: Add "limits.disk" to supported project config keys
+   - lxd/project: Check that root disk sizes are within limits.disk
+   - lxd/project: Add projectInfo struct to hold together project's extra info
+   - lxd/db: Add GetCustomVolumesInProject() to fetch custom volumes in a project
+   - lxd/project: Fetch the project's custom volumes
+   - lxd/project: Consider custom volumes sizes in checkAggregateLimits
+   - lxd/project: Add AllowVolumeCreation() to check limits upon volume creation
+   - lxd: Call project.AllowVolumeCreation() before creating custom volumes
+   - lxd/project: Add AllowVolumeUpdate() to check custom volumes config updates
+   - lxd: Call project.AllowVolumeUpdate() before modifying a custom volume
+   - shared: Add QuotaWriter
+   - lxd/project: Add GetImageSpaceBudget() returning image disk space budget
+   - lxd: Possibly limit the disk space that can be used by POST /1.0/images
+   - lxd/network/driver/common: Adds config diff and db update common functions
+   - lxd/network/driver/common: Adds contextual logger
+   - lxd/network/driver/common: Removes stuttering on "common" in validation rules function
+   - lxd/network/driver/bridge: Updates to use contextual logger
+   - lxd/network/driver/bridge: Simplifies Update function to use common update functions
+   - lxc/networks: Renames notify to clusterNotification in doNetworkUpdate
+   - lxd/network/network/interface: Clarifies Update arguments
+   - lxd/network/network/interface: Renames Delete withDatabase arg to clusterNotification
+   - lxd/network/driver/common: Adds common delete function
+   - lxd/networks: Cleans up networksPost to use clusterNotification argument correctly
+   - lxd/networks: Log quoting in networksPostCluster
+   - lxd/networks: Cleans up doNetworksCreate to use clusterNotification argument
+   - lxd/network/driver/bridge: Updates Delete to use common delete function
+   - lxd/network/driver/bridge: Adds logging to Update
+   - lxd: Check available project budget when publishing an instance as image
+   - lxd/project: Fill missing fields when checking instance creation
+   - lxd/project: Skip checks when unsetting limits
+   - lxd/networks: Removes bridge specific logic in doNetworkUpdate
+   - lxd: Honor project disk budget when downloading images
+   - lxd/network/driver/bridge: Adds fan auto detection logic to Update
+   - lxd/network/driver/common: Adds rename common function
+   - lxd/network/driver/bridge: Updates Rename to use common rename function
+   - lxd/networks: networkPost logging quoting
+   - test: Add tests for the "limits.disk" project config key
+   - lxc/network/driver/bridge: isRunning comment
+   - lxd/network/driver/bridge: Unexports hasIPv4Firewall and hasIPv6Firewall
+   - lxd/networks: Detect unknown network type in networksPost, dont assume bridge
+   - lxd/networks: comment fix in networksPostCluster
+   - lxd/db/network: Provide way to identifty unknown network type in getNetwork
+   - lxd/networks: Allow for different managed network types in doNetworkGet
+   - lxd/network/network/interface: Adds fillConfig to interface
+   - lxd/network/driver/common: Adds default fillConfig function
+   - lxd/network/driver/common: Adds default HandleHeartbeat function
+   - lxd/network/network/load: Adds per-driver FillConfig wrapper
+   - lxd/network/network/utils: Removes generic FillConfig
+   - lxd/network/driver/bridge: fillConfig implementation
+   - lxd/network/driver/bridge: Exposes error message from ValidNetworkName in Validate
+   - lxd/sys: Create apparmor/seccomp paths
+   - lxd/apparmor: Split and rename instance functions
+   - lxd/resources/storage: Use ID_MODEL_ENC when possible
+   - shared: Add InSnap
+   - shared/subprocess: Add AppArmor support
+   - lxd/apparmor: Rename template
+   - lxd/apparmor: Add dnsmasq profile
+   - lxd/networks: Use AppArmor when available
+   - tests: Delete leftover storage volume
+   - lxd/operations/operations: Renames Operations to Clone
+   - lxd-agent/operations: operations.Clone() usage
+   - lxd: operations.Clone() usage
+   - Drop from .travis.yaml Go versions we don't support anymore
+   - shared/api/network: Adds network status constants
+   - lxd/networks: API constant usage in networkDelete
+   - lxd/network/network/load: Adds status
+   - lxd/network/network/interface: Adds status function
+   - lxd/network/driver/common: Adds status field and function
+   - lxd/network/driver/bridge: Don't allow starting a pending network
+   - lxd/device/nic/bridged: Usage of d.state.Cluster.GetNetworkInAnyState in rebuildDnsmasqEntry
+   - lxd/api/cluster: Usage of api.NetworkStatusPending
+   - lxd/db/networks: Usage of api package's NetworkStatus constants in getNetwork
+   - lxd/db/networks: Removes unused GetNetwork
+   - lxd/db/networks: GetNonPendingNetworks comment
+   - lxd/db/networks: Allow pending nodes to be added to errored networks in CreatePendingNetwork
+   - lxd/db/networks: CreatePendingNetwork comments and line spacing
+   - lxd/networks/utils: Skip network load error in networkUpdateForkdnsServersTask
+   - lxd/device/nic/bridged: Validates network is type bridge
+   - lxc/device/nic/bridged: Only allow using non-Pending networks
+   - lxd/networks: Various comment and error quoting consistency fixes
+   - lxd/networks: Validate network name earlier in networksPost
+   - lxc/networks: Validate config in doNetworksCreate
+   - lxd/db/networks: Ensure that network type matches existing pending network in CreatePendingNetwork
+   - lxd/db/networks: Remove errored state on successful update in UpdateNetwork
+   - lxd/network/driver/bridge: Adds targetNode arg to Update
+   - lxd/network/network/interface: Adds targetNode arg to Update
+   - lxd/network/driver/common: Tweaks to update function in cluster environment
+   - lxd/networks: networksPost error response tweaks
+   - lxd/networks: Updates networksPostCluster
+   - lxd/networks: Unifies networkPut and networkPatch
+   - lxd/device/nictype: Adds small package to resolve NIC device nictype from network
+   - lxd/device/config/devices: Removes NICType
+   - lxd/device/config/devices: Improves comment on Update
+   - lxd/device/device/load: Removes devTypes map and updates load to use NICType function
+   - lxd/device: Removes device load helpers
+   - lxd/device/device/utils/network: nictype.NICType usage
+   - lxd/device/nic/bridged: Updates usage of functions whos signatures changed due to NICType
+   - lxd/device/nic/p2p: Updates usage of functions that changed signature due to NICType
+   - lxd/device/proxy: nictype.NICType usage
+   - lxd/instance/drivers/driver/lxc: nictype.NICType usage
+   - lxd/instance/drivers/driver/qemu: nictype.NICType usage
+   - lxd/network/driver/bridge: Usage of functions that changed signature due to NICType
+   - lxd/network/driver/common: Updates IsUsed for NICType signature changes and checks for profile usage
+   - lxd/network/network/interface: Signature change of IsUsed to accomodate NICType
+   - lxd/network/network/utils: Usage of nictype.NICType and signature changes to accomodate it
+   - lxd/networks: nictype.NICType usage and comment improvements
+   - lxd/networks: Comment ending consistency
+   - test: Updates tests to delete profiles before networks
+   - doc: Updates clustering docs with network parent optional per-node key
+   - lxd/db/networks: Adds parent as optional per-node network key
+   - lxd/db/networks: Adds constant for NetworkTypeMacvlan
+   - lxd/network/network/load: Adds macvlan driver as supported network type
+   - lxd/networks: Adds macvlan support to networksPost
+   - lxd/network/driver/macvlan: macvlan driver implementation
+   - lxd/device/nic/macvlan: Adds support for network config key
+   - lxd/device/nic/macvlan: Only allow non-pending networks to be used
+   - test: Adds macvlan network test
+   - lxd: Adds NetworkTypeSriov constant and conversion handling
+   - lxd/network: Adds sriov driver
+   - lxd/networks: Remove database record on error in networksPost
+   - lxd/device/nic/sriov: Adds network key support
+   - lxd/device/nictype: Adds sriov support
+   - test: sriov NIC comment ending consistency
+   - test: sriov network test
+   - doc/networks: Re-arranges network docs to support different types
+   - doc/networks: Adds doc for macvlan and sriov networks
+   - doc/instances: Updates macvlan and sriov NIC to indicate network support
+   - doc/networks: Fixes typo
+   - doc/networks: Adds example usage of --type flag
+   - lxd/network/openvswitch/ovs: Adds OVS wrapper
+   - lxd/device/nic/bridged: ovs.PortSet usage
+   - lxd/network/driver/bridge: ovs usage
+   - lxd/network/network/utils: ovs usage
+   - lxd/networks: ovs.BridgeExists usage
+   - api: Adds network_type_macvlan extension
+   - api: Adds network_type_sriov extension
+   - tree-wide: add dummy include package for cgo
+   - doc/images: Cover the various image servers
+   - doc: Typo fix
+   - lxd/networks: Fixes bug in doNetworkUpdate that prevents removal of non-node specific keys
+   - lxd/network/driver/bridge: Consistent comment ending in setup()
+   - lxd/network/network/interface: fillConfig signature
+   - lxd/network/driver/common: Updates fillConfig signature
+   - lxd/network/driver/bridge: Updates fillConfig signature
+   - lxd/network/network/load: Updates FillConfig to use new signature
+   - lxd/network/driver/bridge: Fixes Update to regenerate default values if missing
+   - test/suites/container/devices/nic/bridged: Fixes DHCP disable by setting IP address none
+   - lxd/network/driver/bridge: Dont fail start if cannot restore third party route
+   - lxd/migrate: Fix crash in sendControl when no active connection
+   - lxd/operations: Fix typo
+   - lxc/export: Plug in cancelable wait
+   - i18n: Update translation templates
+   - lxd/devices/device/utils/network: Removes networkValidMAC
+   - shared/instance: Adds IsNetworkMAC for use in network and device packages
+   - lxd/device/nic: shared.IsNetworkMAC usage
+   - lxd/network/driver/bridge: Adds volatile.bridge.hwaddr key
+   - shared/validate: Adds validate helper package
+   - lxd: Updates use of validate helper functions now in validate package
+   - shared: Removes validate helper functions
+   - lxd/device/device/utils/infiniband: Changes infinibandValidMAC to use net.ParseMAC
+   - lxd/device/device/utils/infiniband/test: Changes test name for linter
+   - lxd/networks: Allow update/removal of node-specific key in non-clustered mode
+   - lxd/network/driver/bridge: Adds safety check for volatile MAC address usage
+   - lxd/device: fix empty error message when tc fails
+   - test: Wait for operations to be removed from the database
+   - shared/validate: Adds Optional() validate wrapper
+   - shared/validate: Makes IsInt64 non-optional
+   - lxd/network/driver/bridge: Add validate.Optional() wrapper for validate.IsInt64 usage
+   - lxd/storage/utils: Adds validate.Optional() wrapper for validate.IsInt64 usage
+   - shared/instance: Adds validate.Optional() wrapper for validate.IsInt64 usage
+   - lxd/device/device/utils/network: Removes networkValidVLAN
+   - shared/validate: Adds IsNetworkVLAN
+   - lxd/device/device/utils/network: validate.IsNetworkVLAN usage
+   - lxd/device/nic: validate.IsNetworkVLAN usage
+   - lxd/network/driver: Adds mtu and vlan support for macvlan and sriov network types
+   - lxd/device/nic: Inherit mtu and vlan settings from network for macvlan and sriov NICs
+   - doc/networks: Adds mtu and vlan options for macvlan and sriov network types
+   - seccomp: switch from individual pread() to process_vm_readv()
+   - seccomp: fix i386 builds
+   - seccomp: ensure that target process is still valid
+   - client: Move proxyMigration
+   - lxd: Port remaining calls to instance
+   - lxd/network/driver/common: Adds Create function no-op
+   - lxd/network/network/interface: Adds Create function
+   - lxd/networks: Adds call to network Create in doNetworksCreate
+   - lxd/device/device/utils/network: Adds networkDHCPValidIP
+   - lxd/device/nic/bridged: Removes networkDHCPValidIP
+   - lxd/device/device/utils/networks: Splits networkSetupHostVethDevice into multiple functions
+   - lxd/device/nic/bridged: networkVethFillFromVolatile usage and other host-veth functions
+   - lxd/device/nic/p2p: networkVethFillFromVolatile usage and other host-veth helper functions
+   - lxd/device/nic/routed: networkVethFillFromVolatile usage and other host-veth helper functions
+   - lxd/network/network/utils: Updates isInUseByDevices to support networks that don't match their physical parent
+   - i18n: Update translations from weblate
+
+  ### Try it for yourself
+  This new LXD release is already available for you to try on our [demo service](https://linuxcontainers.org/lxd/try-it/).
+
+  ### Downloads
+  The release tarballs can be found on our [download page](https://linuxcontainers.org/lxd/downloads/).
+
+  Binary builds are also available for:
+
+   - **Linux:** snap install lxd
+   - **MacOS:** brew install lxc
+   - **Windows:** choco install lxc
