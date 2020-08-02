@@ -51,7 +51,7 @@ content: |-
   <!--
   Example failure domains could be power circuits on physical systems or the host system in the case of LXD running in a virtual machine or a cloud availability zone and region in the case of LXD running in a cloud instance.
   -->
-  failure domain の例としては、物理システムの電源回路、仮想マシン上で LXD が実行されている場合のホストシステム、クラウドインスタンス上で LXD が実行されている場合のクラウドアベイラビリティゾーンやリージョンといった例があります。
+  failure domain の例としては、物理システムの電源回路、仮想マシン上で LXD が実行されている場合のホストシステム、クラウドインスタンス上で LXD が実行されている場合のクラウドアベイラビリティゾーンやリージョンがあります。
 
       root@nuc01:~# lxc cluster list
       +-------+----------------------------+----------+--------+-------------------+--------------+----------------+
@@ -101,7 +101,7 @@ content: |-
   <!--
   There is unfortunately no good way to notify a user of `lxc exec` or `lxc console` that they will get disconnected in a few minutes as any kind of output may interfere with their work. However we feel that the 5 minutes grace period will be sufficient for a lot of cases and a big improvement over the current behavior.
   -->
-  残念ながら、`lxc exec` や `lxc console` のユーザーに数分後に切断されることを通知する良い方法はありません。どんな出力でも、その操作を妨げる可能性があるからです。しかし、5 分間の猶予時間は十分であり、多くの場合で現在の動作に比べて大きな改善になると考えています。
+  残念ながら、`lxc exec` や `lxc console` のユーザーに数分後に切断されることを通知する良い方法はありません。どんな出力でも、その操作を妨げる可能性があるからです。しかし、5 分間の猶予時間は多くの場合で充分であり、現在の動作に比べて大きな改善になると考えています。
 
   #### 管理ネットワークの `macvlan` タイプと `sriov` タイプ <!-- `macvlan` and `sriov` managed network types -->
   <!--
