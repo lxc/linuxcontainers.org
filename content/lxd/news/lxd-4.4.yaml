@@ -97,7 +97,7 @@ content: |-
 
   This applies to all its instances, images and custom storage volumes.
 
-  #### AppAmor confinement for dnsmasq
+  #### AppArmor confinement for dnsmasq
   AppArmor support has now been extended to protect not only instances but also other services that LXD operates.
 
   The first such external service is `dnsmasq` which is now run with its own per-network apparmor profile.
