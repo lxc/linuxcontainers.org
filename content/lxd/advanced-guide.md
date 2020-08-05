@@ -46,7 +46,7 @@ This Guide gives you more information about the several features of LXD.
 # Configuration of instances
 A list of configuration keys can be found in the [LXD documentation for instances](/lxd/docs/master/instances#keyvalue-configuration).
 
-You can apply them during launch of instances (see [launch flags](#lxc-launch-flags)) or add them [later](#Apply-and-edit-options-later).
+You can apply them during launch of instances (see [launch flags](#lxc-launch-flags)) or add them [later](#apply-and-edit-options-later).
 
 Basically you can apply two types of configurations:
 
@@ -415,7 +415,7 @@ For details see: [LXD Documentation - Security](/lxd/docs/master/security)
 <br>
 
 **Connect to this Server:**   
-See [Add LXD servers](#add-lxd-servers) for how to add a server to your clients remote server list.
+See [Add remote servers](#add-remote-servers) for how to add a server to your clients remote server list.
 
 #### Public image server
 You can use an empty LXD Server (with no storage pools, no networks etc.) as a public image server.
