@@ -1,36 +1,36 @@
 ## 目次 <!-- Contents -->
 
-* [Introduction](#introduction)
-* [Configuration of Instances](#configuration-of-instances)
-	* [Difference between Containers and Virtual Machines](#difference-between-containers-and-virtual-machines)
-	* [lxc launch flags](#lxc-launch-flags)
-	* [Profiles](#profiles)
-		* [Create a profile](#create-a-profile)
-		* [Edit a profile](#edit-a-profile)
-		* [Write a profile](#write-a-profile)
-	* [Apply and edit options later](#apply-and-edit-options-later)
-	* [Show configuration](#show-configuration)
+* [はじめに](#_2)<!-- [Introduction](#introduction) -->
+* [インスタンスの設定](#_3)<!-- [Configuration of Instances](#configuration-of-instances) -->
+	* [コンテナと仮想マシンの違い](#_4)<!-- [Difference between Containers and Virtual Machines](#difference-between-containers-and-virtual-machines) -->
+	* [lxc launch コマンドのオプション](#lxc-launch) <!-- [lxc launch flags](#lxc-launch-flags) -->
+	* [プロファイル](#_6)<!-- [Profiles](#profiles) -->
+		* [プロファイルの作成](#_8)<!-- [Create a profile](#create-a-profile) -->
+		* [プロファイルの編集](#_9)<!-- [Edit a profile](#edit-a-profile) -->
+		* [プロファイルを記述する](#_12)<!-- [Write a profile](#write-a-profile) -->
+	* [あとで設定オプションを適用・編集する](#_13) <!-- [Apply and edit options later](#apply-and-edit-options-later) -->
+	* [設定の確認](#_18)<!-- [Show configuration](#show-configuration) -->
 	* [Cloud-init](#cloud-init)
-* [Server configuration](#server-configuration)
-	* [Projects](#projects)
-	* [Security](#security)
-	* [Remote Servers](#remote-servers)
-		* [Setup simplestream servers](#setup-simplestream-servers)
-		* [Setup your LXD server as remote server](#setup-your-lxd-server-as-remote-server)
-		* [Connect to remote servers](#add-remote-servers)
-		* [Use remote servers](#use-remote-servers)
-* [Images - Part 2](#images-part-2)
-	* [Import Images](#import-images)
-	* [Manual download](#manual-download)
-	* [Export Images](#export-images)
-		* [Create Image from Containers](#create-image-from-containers)
-	* [Build Images](#build-images)
-		* [Write or Edit a Template](#write-or-edit-a-template)
-* [Networks](#networks)
-* [Storages](#storages)
-* [Command aliases](#command-aliases)
+* [サーバー設定](#_22) <!-- [Server configuration](#server-configuration) -->
+	* [プロジェクト](#_23)<!-- [Projects](#projects) -->
+	* [セキュリティ](#_24) <!-- [Security](#security) -->
+	* [リモートサーバー](#_25) <!-- [Remote Servers](#remote-servers) -->
+		* [simplestream サーバーのセットアップ](#simplestream) <!-- [Setup simplestream servers](#setup-simplestream-servers) -->
+		* [リモートサーバーとして LXD サーバーをセットアップする](#lxd_1) <!-- [Setup your LXD server as remote server](#setup-your-lxd-server-as-remote-server) -->
+		* [リモートサーバーの追加](#_27) <!-- [Connect to remote servers](#add-remote-servers)  -->
+		* [リモートサーバーの使用](#_28) <!-- [Use remote servers](#use-remote-servers) -->
+* [イメージ - Part 2](#-part-2)<!-- [Images - Part 2](#images-part-2) -->
+	* [イメージのインポート](#_32) <!-- [Import Images](#import-images) -->
+	* [手動でのダウンロード](#_35) <!-- [Manual download](#manual-download) -->
+	* [イメージのエクスポート](#_36) <!-- [Export Images](#export-images) -->
+		* [コンテナからのイメージの作成](#_37) <!-- [Create Image from Containers](#create-image-from-containers) -->
+	* [イメージのビルド](#_38) <!-- [Build Images](#build-images) -->
+		* [テンプレートの作成・編集](#_40) <!-- [Write or Edit a Template](#write-or-edit-a-template) -->
+* [ネットワーク](#_47) <!-- [Networks](#networks) -->
+* [ストレージ](#_48) <!-- [Storages](#storages) -->
+* [コマンドエイリアス](#_49) <!-- [Command aliases](#command-aliases) -->
 * [Tips & Tricks](#tips-tricks)
-* [Further Information & Links](#further-information-links)
+* [その他の情報とリンク](#_51) <!-- [Further Information & Links](#further-information-links) -->
 
 ---
 
@@ -60,7 +60,7 @@ A list of configuration keys can be found in the [LXD documentation for instance
 <!--
 You can apply them during launch of instances (see [launch flags](#lxc-launch-flags)) or add them [later](#Apply-and-edit-options-later).
 -->
-インスタンスを起動する際にオプションを指定することも（[起動オプション](#lxc-launch-flags)をご覧ください）、[あとで追加する](#apply-and-edit-options-later)こともできます。
+インスタンスを起動する際にオプションを指定することも（[起動オプション](#lxc-launch)をご覧ください）、[あとで追加する](#_13)こともできます。
 
 <!--
 Basically you can apply two types of configurations:
@@ -114,7 +114,7 @@ You can apply flags to add configuration options to `lxc launch`.
 	{: .p-noteadm }
 -->
 !!! note "注意:"
-	詳しくは後の[プロファイル](#profiles)をご覧ください。
+	詳しくは後の[プロファイル](#_6)をご覧ください。
 	{: .p-noteadm }
 
 <!--
@@ -181,7 +181,7 @@ Profiles can be edited in multiple ways:
 <!--
 See [Write a profile](#write-a-profile) below for details.
 -->
-詳しくはあとの[プロファイルの記述](#write-a-profile)をご覧ください。
+詳しくはあとの[プロファイルを記述する](#_12)の項をご覧ください。
 
 ##### 2. ターミナルエディタでプロファイルを編集 <!-- 2. Edit a profile with a terminal editor -->
 <!--
@@ -321,13 +321,13 @@ Create a new empty profile:
 <!--
 Now you can apply this profile to an instance during [launch](#lxc-launch-flags) or later (see below).
 -->
-これで、このプロファイルをインスタンスを[起動](#lxc-launch-flags)する際か、あとで適用できます（後述）。
+これで、このプロファイルをインスタンスを[起動](#lxc-launch)する際か、あとで適用できます（後述）。
 
 ### あとで設定オプションを適用・編集する <!-- Apply and edit options later -->
 <!--
 You can apply/remove/modify a profile or [edit the instance configuration directly](#edit-instance-configuration).
 -->
-プロファイルを適用・削除・修正したり、直接[インスタンスの設定を編集](#edit-instance-configuration)できます。
+プロファイルを適用・削除・修正したり、直接[インスタンスの設定を編集](#_17)できます。
 
 #### プロファイルの適用 <!-- Apply a profile -->
 <!--
@@ -425,7 +425,7 @@ For easier editing, we write the content of the profile in a texteditor and appl
 <!--
 Every instruction for cloud-init is applied in section `config`-> `user.user-data` (or other sections for instance data, see [below](#other-config-sections-for-instance-data)):
 -->
-cloud-init に対する各命令は、`config` → `user.user-data` セクションに適用されます（もしくはインスタンスデータの他のセクション。[下記](#other-config-sections-for-instance-data)を参照）:
+cloud-init に対する各命令は、`config` → `user.user-data` セクションに適用されます（もしくはインスタンスデータの他のセクション。[下記](#_19)を参照）:
 
 
 ```
@@ -588,9 +588,9 @@ Below we will introduce some topics, including:
 - [Security](#security)
 - [Remote Servers](#remote-servers)
 -->
-- [プロジェクト](#projects)
-- [セキュリティ](#security)
-- [リモートサーバー](#remote-servers)
+- [プロジェクト](#_23)
+- [セキュリティ](#_24)
+- [リモートサーバー](#_25)
 
 ## プロジェクト <!-- Projects -->
 <!--
@@ -621,10 +621,10 @@ LXD はいろいろな種類のリモートサーバーに対応しています:
     * [Candid](#candid) (Authentication service)
     * [Candid+RBAC](#candid-rbac) (Role Based Access Control)
 -->
-* `simplestream servers`: 純粋なイメージサーバー（[後述](#setup-simplestream-servers)）
+* `simplestream servers`: 純粋なイメージサーバー（[後述](#simplestream)）
 * `LXD-Servers`: ネットワーク経由で管理できる通常の LXD サーバー（イメージサーバーとしても使えます）。複数の方法を選択できます:
-    * [デフォルト（TLS + Password）](#default-image-server)
-	* [公開（イメージ）サーバー](#public-image-server)
+    * [デフォルト（TLS + Password）](#tls-password)
+	* [公開（イメージ）サーバー](#_26)
 	* [Candid](#candid) （認証サービス）
 	* [Candid+RBAC](#candid-rbac) （ロールベースのアクセスコントロール）
 
@@ -646,7 +646,7 @@ There are multiple servers available, for example:
 <!--
 See [Add Simplestream servers](#add-simplestream-servers).
 -->
-[simplestream サーバーの追加](#add-simplestream-servers)をご覧ください。
+[simplestream サーバーの追加](#simplestream_1)をご覧ください。
 
 ### リモートサーバーとして LXD サーバーをセットアップする <!-- Setup your LXD server as remote server -->
 #### デフォルト（TLS + Password） <!-- Default (TLS + Password) -->
@@ -700,7 +700,7 @@ For details see: [LXD Documentation - Security](/lxd/docs/master/security)
 <!--
 See [Add LXD servers](#add-lxd-servers) for how to add a server to your clients remote server list.
 -->
-クライアントのリモートサーバーリストにサーバーを追加するには、[リモートサーバーの追加](#add-remote-servers) をご覧ください。
+クライアントのリモートサーバーリストにサーバーを追加するには、[リモートサーバーの追加](#_27) をご覧ください。
 
 #### パブリック・イメージサーバー<!-- Public image server -->
 <!--
@@ -820,9 +820,9 @@ and images name with the remote host like:
 2. [Manually import an image](#import-images)
 3. [Build your own image](#build-images)
 -->
-1. [リモートの（イメージ）サーバーの追加](#add-remote-servers)
-2. [イメージの手動インポート](#import-images)
-3. [独自イメージを作成](#build-images)
+1. [リモートの（イメージ）サーバーの追加](#simplestream_1)
+2. [イメージの手動インポート](#_32)
+3. [イメージのビルド](#_38)
 
 ### イメージのインポート <!-- Import Images -->
 <!--
@@ -835,9 +835,9 @@ You can import images, that you:
 - downloaded manually (see [Manual Download](#manual-download))
 - exported from images or containers (see [Export Images](#export-images) and [Create Image from Containers](#create-image-from-containers))
 -->
-- 自分でビルドしたイメージ（[イメージのビルド](#build-images)参照）
-- （手動で）ダウンロードしたイメージ（[手動でのダウンロード](#manual-download)参照）
-- イメージやコンテナからエクスポートしたイメージ（[イメージのエクスポート](#export-images)と[コンテナからのイメージの作成](#create-image-from-containers)参照）
+- 自分でビルドしたイメージ（[イメージのビルド](#_38)参照）
+- （手動で）ダウンロードしたイメージ（[手動でのダウンロード](#_35)参照）
+- イメージやコンテナからエクスポートしたイメージ（[イメージのエクスポート](#_36)と[コンテナからのイメージの作成](#_37)参照）
 
 ##### コンテナイメージのインポート <!-- Import container image -->
 
@@ -880,7 +880,7 @@ Use:
 You can also download images manually.   
 For that you need to download the components described [above](#import-images).
 -->
-手動でイメージをダウンロードできます。その場合、[イメージのインポート](#import-images)で説明したようなコンポーネントをダウンロードする必要があります。
+手動でイメージをダウンロードできます。その場合、[イメージのインポート](#_32)で説明したようなコンポーネントをダウンロードする必要があります。
 
 ##### LXD公式のイメージサーバーから <!-- From official LXD imageserver -->
 
@@ -955,7 +955,7 @@ You can start by using one of the example templates below.
 Modify those templates so they fit your needs.   
 See [Template details](#template-details) below for an overview of configuration keys.
 -->
-下記のサンプルテンプレートのひとつを使って作成を始めることができます。ニーズに合うようにテンプレートを変更してください。設定キーの詳細については [テンプレートの詳細](#template-details) をご覧ください。
+下記のサンプルテンプレートのひとつを使って作成を始めることができます。ニーズに合うようにテンプレートを変更してください。設定キーの詳細については [テンプレートの詳細](#_42) をご覧ください。
 
 ##### サンプルテンプレート <!-- Example Templates -->
 <!--
@@ -1033,7 +1033,7 @@ Replace:
 <!--
 After the image is built, see [Import Images](#import-images) for how to import your image to LXD.
 -->
-イメージをビルドした後、ビルドしたイメージを LXD にインポートするためには [イメージのインポート](#import-images) をご覧ください。
+イメージをビルドした後、ビルドしたイメージを LXD にインポートするためには [イメージのインポート](#_32) をご覧ください。
 
 <!--
 See [Building.md on distrobuilder's GitHub repo](https://github.com/lxc/distrobuilder/blob/master/doc/building.md#lxd-image) for details.
@@ -1063,7 +1063,7 @@ Replace:
 <!--
 After the image is built, see [Import Images](#import-images) for how to import your image to LXD.
 -->
-イメージをビルドした後、ビルドしたイメージを LXD にインポートするためには [イメージのインポート](#import-images) をご覧ください。
+イメージをビルドした後、ビルドしたイメージを LXD にインポートするためには [イメージのインポート](#_32) をご覧ください。
 
 #### さらなる情報 <!-- More information -->
 
