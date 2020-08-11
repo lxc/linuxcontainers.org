@@ -114,7 +114,13 @@
      "generator": "markdown",
      "meta": {"input": "lxd/getting-started-opennebula.ja.md"}},
 
-     {"path": "/lxd/documentation",
+    {"path": "/lxd/advanced-guide/",
+     "title": "LXD - 上級ガイド",
+     "menu": ["LXD", "上級ガイド"],
+     "generator": "markdown",
+     "meta": {"input": "lxd/advanced-guide.ja.md"}},
+
+    {"path": "/lxd/documentation",
      "menu": ["LXD", "ドキュメント"],
      "generator": "link",
      "meta": {"url": "https://lxd-ja.readthedocs.io/ja/latest/"}},
