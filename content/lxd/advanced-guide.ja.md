@@ -43,6 +43,7 @@
 -->
 !!! note "注意:"
 	まだ LXD をセットアップしていないのであれば、まずは「[はじめに - コマンドライン](/ja/lxd/getting-started-cli/)」を最初にご覧ください。
+	{: .p-noteadm }
 
 <!--
 This Guide gives you more information about the several features of LXD.
@@ -220,7 +221,10 @@ So you need to follow a specific syntax.
 -->
 プロファイルは yaml で記述します。次のような指定の書式にしたがう必要があります。
 
+<!--
 Steps:
+-->
+手順:
 
 1. 空のテキストファイルを作成し、`profilename.profile` という名前を付けます（`profilename`という部分は任意の名前に置き換えてください） <!-- Create an empty textfile and name it `profilename.profile` (replace `profilename` with a name of your choice). -->
 2. 好きなエディタでそのファイルを開きます <!-- Open the file with a texteditor of your choice. -->
@@ -601,7 +605,7 @@ See [LXD documentation - Projects](/lxd/docs/master/projects) for more informati
 <!--
 See [LXD documentation - Security](/lxd/docs/master/security) for details on Server security.
 -->
-サーバーセキュリティの詳しくは [LXDドキュメントのセキュリティの項](https://lxd-ja.readthedocs.io/ja/latest/security/) をご覧ください。
+サーバーセキュリティの詳細は [LXDドキュメントのセキュリティの項](https://lxd-ja.readthedocs.io/ja/latest/security/) をご覧ください。
 
 ## リモートサーバー <!-- Remote Servers -->
 <!--
@@ -621,7 +625,7 @@ LXD はいろいろな種類のリモートサーバーに対応しています:
 * `LXD-Servers`: ネットワーク経由で管理できる通常の LXD サーバー（イメージサーバーとしても使えます）。複数の方法を選択できます:
     * [デフォルト（TLS + Password）](#default-image-server)
 	* [公開（イメージ）サーバー](#public-image-server)
-	* [Candid](#canded) （認証サービス）
+	* [Candid](#candid) （認証サービス）
 	* [Candid+RBAC](#candid-rbac) （ロールベースのアクセスコントロール）
 
 ### simplestream サーバーのセットアップ <!-- Setup simplestream servers -->
@@ -633,7 +637,7 @@ There are multiple servers available, for example:
 <!--
 - the LXD image server from Avature: [Link to GitHub Repo](https://github.com/Avature/lxd-image-server)
 -->
-- the LXD image server from Avature: [GitHub リポジトリ](https://github.com/Avature/lxd-image-server)
+- Avature の LXD イメージサーバー: [GitHub リポジトリ](https://github.com/Avature/lxd-image-server)
 
 <!--
 **Connect to a simplestreams server:**   
@@ -675,7 +679,7 @@ Set up a LXD-server as a remote server, with:
 <!--
 It is recommended that `core.https_address` should be set to the single address where the server should be available (rather than any address on the host), and firewall rules should be set to only allow access to the LXD port from authorized hosts/subnets.
 -->
-`core.https_address` はサーバーで使える単一のアドレスに設定することが推奨です（ホスト上の全アドレスでなく）。そして信頼できるホスト・サブネットからだけ LXD へのアクセスを許可するファイアウオールのルールを設定するのがよいでしょう。
+`core.https_address` はサーバーで使える単一のアドレスに設定することが推奨です（ホスト上の全アドレスでなく）。そして信頼できるホスト・サブネットからだけ LXD へのアクセスを許可するファイアウォールのルールを設定するのがよいでしょう。
 
 <!--
 Furthermore, `core.trust_password` should be unset after all clients have been added. This prevents brute-force attacks trying to guess the password.
@@ -723,7 +727,7 @@ Candid is an Authentication service.
 See [Ubuntu tutorials - Candid authentication for LXD](https://ubuntu.com/tutorials/candid-authentication-lxd#1-overview) for details and howto.
 -->
 Candid は認証サービスです。
-詳しくと使い方は [Ubuntu のチュートリアル - Candid authentication for LXD](https://ubuntu.com/tutorials/candid-authentication-lxd#1-overview) をご覧ください。
+詳細と使い方は [Ubuntu のチュートリアル - Candid authentication for LXD](https://ubuntu.com/tutorials/candid-authentication-lxd#1-overview) をご覧ください。
 
 #### Candid + RBAC
 <!--
@@ -802,7 +806,7 @@ A list of images on that server can be obtained with:
 You can use the same commands but prefixing the instance
 and images name with the remote host like:
 -->
-次のようにインスタンス名、イメージ名の前にリモートホスト名を付けて、同じコマンドを使用できます:
+次のようにインスタンス名、イメージ名の前にリモートホスト名を付けて、（ローカルで実行するのと）同じコマンドを使用できます:
 
     lxc exec remoteserver-name:instancename -- apt-get update
    
@@ -818,7 +822,7 @@ and images name with the remote host like:
 -->
 1. [リモートの（イメージ）サーバーの追加](#add-remote-servers)
 2. [イメージの手動インポート](#import-images)
-3. [自分でイメージを作成](#build-images)
+3. [独自イメージを作成](#build-images)
 
 ### イメージのインポート <!-- Import Images -->
 <!--
@@ -905,7 +909,7 @@ Use:
 Flags:   
 `--vm` - Query virtual machine images
 -->
-Flags:   
+オプション:   
 `--vm` - 仮想マシンイメージを問い合わせる
 
 #### コンテナからのイメージの作成 <!-- Create Image from Containers -->
@@ -987,7 +991,7 @@ You can define multiple keys in templates:
 | --- | --- | --- |
 | `image` | ディストリビューション、アーキテクチャ、リリースなどを定義します | [image.md](https://github.com/lxc/distrobuilder/blob/master/doc/image.md) 参照 |
 | `source` | メインパッケージのソースやキーなどを定義します | [source.md](https://github.com/lxc/distrobuilder/blob/master/doc/source.md) 参照 |
-| `targets` | 特定のターゲット（例: LXDクライアント、インスタンスなど）に対する定義を定義します | [targets.md](https://github.com/lxc/distrobuilder/blob/master/doc/targets.md) 参照 |
+| `targets` | 特定のターゲット（例: LXDクライアント、インスタンスなど）に対する設定を定義します | [targets.md](https://github.com/lxc/distrobuilder/blob/master/doc/targets.md) 参照 |
 | `files` | ファイルを変更するための generators を定義します | [generators.md](https://github.com/lxc/distrobuilder/blob/master/doc/generators.md) 参照 |
 | `packages` | インストールしたり削除したりするパッケージ、追加するリポジトリを定義します | [packages.md](https://github.com/lxc/distrobuilder/blob/master/doc/packages.md) 参照 |
 | `actions` | イメージをビルドする途中の特定のステップの後に実行するスクリプトを定義します | [actions.md](https://github.com/lxc/distrobuilder/blob/master/doc/actions.md) 参照 |
@@ -1100,7 +1104,7 @@ See LXD-documentation for details:
 <!--
 You can create internal command aliases with:
 -->
-LXD 内部で使うコマンドのエイリアスを次のように作ることができます:
+LXD 内部で使うコマンドのエイリアスを次のコマンドで作ることができます:
 
 	lxc alias
 
