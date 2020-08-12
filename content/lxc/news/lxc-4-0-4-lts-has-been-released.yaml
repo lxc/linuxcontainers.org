@@ -1,0 +1,106 @@
+title: LXC 4.0.4 LTS has been released
+date: 2020/08/04 21:08
+origin: https://discuss.linuxcontainers.org/t/lxc-4-0-4-lts-has-been-released/8624
+content: |-
+  ### Introduction
+  The LXC team is pleased to announce the release of LXC 4.0.4!
+
+  This is the fourth bugfix release for LXC 4.0 which is supported until June 2025.
+
+  ### Bugfixes
+  Some of the highlights for this release are:
+
+   - Support for new Linux clone flags (clone into cgroup)
+   - Support for new Linux VFS system calls
+   - Internal symbols are now properly hidden from external consumers
+
+  The full list of commits is available below:
+
+   - get the right path in get_cgroup command
+   - lxc: support CLONE_INTO_CGROUP
+   - start: initialize cgroup_fd
+   - start: use __aligned_u64
+   - attach: set no_new_privs flag after LSM label
+   - templates/lxc-download.in: fix wrong if condition (use the result of the gpg command, not the result when executing the result of the gpg command)
+   - templates/lxc-download.in: make shellcheck happy
+   - templates/lxc-download.in: use GPG option --receive-keys instead of --recv-keys
+   - cgroups: update terminology
+   - cgroups: update terminology II
+   - seccomp: support allowlist/denylist in profiles
+   - cgroups: use empty {} to initialize struct
+   - cgroup2_devices: fix access rule parsing
+   - api-extensions: add seccomp_allow_deny_syntax extension
+   - cgroups: fix bpf device program generation
+   - cgroups: handle empty bpf log buffer
+   - tree-wide: s/ptmx/ptx/g
+   - tree-wide: s/pts/pty/g
+   - openpty: fix faulty rename
+   - openpty: improve implementation and handling of platforms without it
+   - checkconfig: Show LXC version in output.
+   - autotools: include COPYING file
+   - Improve efficiency of lxc_ifname_alnum_case_sensitive
+   - network: remove unused variable
+   - compiler: add and use __hidden visbility
+   - string_utils: make all helpers hidden
+   - af_unix: hide unnecessary symbols
+   - attach: hide unnecessary symbols
+   - caps: hide unnecessary symbols
+   - commands: hide unnecessary symbols
+   - commands_utils: hide unnecessary symbols
+   - conf: hide unnecessary symbols
+   - Makefile.am: Fix typo
+   - start: check correct flags when receiving network devices
+   - lxc-ls: bugfixes
+   - confile: hide unnecessary symbols
+   - confile_utils: hide unnecessary symbols
+   - criu: hide unnecessary symbols
+   - error: hide unnecessary symbols
+   - file_utils: hide unnecessary symbols
+   - initutils: hide unnecessary symbols
+   - log: hide unnecessary symbols
+   - lxclock: hide unnecessary symbols
+   - lxcseccomp: hide unnecessary symbols
+   - mainloop: hide unnecessary symbols
+   - monitor: hide unnecessary symbols
+   - namespace: hide unnecessary symbols
+   - network: hide unnecessary symbols
+   - parse: hide unnecessary symbols
+   - process_utils: hide unnecessary symbols
+   - rexec: hide unnecessary symbols
+   - ringbuf: hide unnecessary symbols
+   - start: hide unnecessary symbols
+   - state: hide unnecessary symbols
+   - sync: hide unnecessary symbols
+   - terminal: hide unnecessary symbols
+   - utils: hide unnecessary symbols
+   - uuid: hide unnecessary symbols
+   - cgroups: hide unnecessary symbols
+   - lsm: hide unnecessary symbols
+   - arguments: hide unnecessary symbols
+   - storage: hide unnecessary symbols
+   - tree-wide: hide further unnecessary symbols
+   - start: simplify gotos
+   - apparmor: Allow ro remount of boot_id
+   - syscalls: add fsopen()
+   - syscalls: add fspick()
+   - syscalls: add fsconfig()
+   - syscalls: add fsmount()
+   - mount_utils: add mount utils
+   - mount_utils: add mount_filesystem() helper
+   - attach: use new mount api
+   - log: don't break logging by hiding symbols
+   - Makefile: fix Makefile
+   - selinux: remove security_context_t usage as it's deprecated
+   - seccomp: remove seccomp fd from event loop after task exited
+   - seccomp: add missing header
+   - syscall: don't fail if __NR_signalfd is not defined
+   - conf: ensure that the idmap pointer itself is freed
+
+  ### Support and upgrade
+  The LXC 4.0 branch is supported until June 2025.
+  Only bugfixes and securitiy issues get included into the stable bugfix releases, so it's always safe and recommended to keep up and run the latest bugfix release.
+
+  ### Downloads
+
+   - Main release tarball: [lxc-4.0.4.tar.gz](https://linuxcontainers.org/downloads/lxc/lxc-4.0.4.tar.gz)
+   - GPG signature: [lxc-4.0.4.tar.gz.asc](https://linuxcontainers.org/downloads/lxc/lxc-4.0.4.tar.gz.asc)
