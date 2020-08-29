@@ -1,0 +1,142 @@
+title: Distrobuilder 1.1 has been released
+date: 2020/08/20 21:08
+origin: https://discuss.linuxcontainers.org/t/distrobuilder-1-1-has-been-released/8749
+content: |-
+  ### Introduction
+  The distrobuilder team is proud to announce its initial release, distrobuilder 1.1!
+
+  This release's highlight is the introduction of VM image building support following LXD's introduction of VM support.
+
+  As part of this, distrobuilder also now relies on overlayfs to store deltas while building images (rather than attempting to undo changes).
+
+  On top of those two changes, this release also fixes a variety of issues in the different distro source drivers as needed when URLs and files change.
+
+  The full list of commits is available below:
+
+   - Advertise the (classic) snap package in the README
+   - Fix link to examples dir
+   - sources/oracle: Add support for Oracle Linux 8
+   - Drop .snapcraf.yaml in favor of snapcraft-pkg-snap repo
+   - sources/oracle: Fix Oracle Linux 8
+   - managers/yum: Add repo handler
+   - managers/dnf: Add repo handler
+   - Remove references to "apt_sources"
+   - sources: Fix OpenWrt
+   - sources: Fix OpenWrt test
+   - Fix syntax for custom-manager
+   - sources: Fix type in OpenWrt build
+   - distrobuilder: Extend pongo2 template usage
+   - Add support "flags" in package sets
+   - Don't attempt to re-install packages that were installed early
+   - managers/apk: Add repo handler
+   - sources/alpine: Fix edge builds
+   - sources: Support CentOS Stream
+   - sources/centos: Fix filename regexes
+   - Fix example command in index.md
+   - Update index.md - separate LXD and LXC examples
+   - sources/void: Update location of checksums
+   - sources/alpine: Fix regex
+   - shared/definition: Add LXD target
+   - shared/definition: Add VM field to target
+   - shared/definition: Add GetTypes to filter
+   - shared: Export ChrootMount struct
+   - *: Pass custom mounts to SetupChroot()
+   - *: Support VM filtering
+   - distrobuilder: Use overlayfs
+   - generators: Pass target to Run* functions
+   - doc: Update docs
+   - generators: Add lxd-agent generator
+   - doc: Add lxd-agent generator
+   - generators: Add fstab generator
+   - generators: Fix lxd-agent function signatures
+   - *: Add VM support
+   - vm: Make VM size uint64
+   - generators/lxd-agent: Fix systemd unit files
+   - vm: Ensure loop device is unmounted before creating image
+   - *: Use errors.Wrap() when possible
+   - generators: Remove StoreFile and RestoreFiles
+   - *: Replace syscall package with unix
+   - main: Check VM dependencies
+   - *: Use errors.Wrap() when possible
+   - managers/pacman: Clean up properly
+   - managers: Add preRefresh hook
+   - managers/opkg: Use preRefresh hook
+   - vm: Handle loop partitions inside containers
+   - shared/chroot: Recursively bind /dev
+   - main: Add more VM dependencies
+   - image/lxd: Rename resulting VM image
+   - shared/chroot: Make /dev/fuse read-only
+   - shared: Close created files
+   - generator/lxd-agent: Fix systemd units path
+   - main: Fix build-lxd for VMs
+   - chroot: Unmount /dev/fuse
+   - shared: Differentiate between build-dir and others
+   - chroot: Don't bind-mount /dev
+   - chroot: Fix mode for special files in /dev
+   - shared/definition: Fix early packages
+   - main: Fix file generators
+   - generators/lxd-agent: Add trans=virtio option
+   - chroot: Remove obsolete code
+   - main,shared: Fix undefined image target
+   - chroot: Perform package refresh only when needed
+   - generators/lxd-agent: Fix openRC service file
+   - sources/opensuse: Fix openSUSE
+   - sources/opensuse: Fix verification
+   - data: Fix core16 initrd
+   - generators/lxd-agent: Fix running order
+   - lxd-agent: Restart on failure
+   - generators/lxd-agent: Fixes ordering issue with lxd-agent
+   - managers/apt: Handle repo keys
+   - shared/chroot: Create /dev/shm
+   - sources/openwrt: Fix snapshot release
+   - shared/chroot: Fix /dev/shm file mode
+   - sources/funtoo: Fix image and gpg URLs
+   - shared/util: Fix checksum matching
+   - test: Update checksum matching
+   - shared/util: Fix checksum matching
+   - test: Update checksum matching
+   - cloud-init: Update for virtual machines
+   - shared/definition: Add Mode, GID and UID to files
+   - generators: Add file access handler
+   - generators/dump: Allow changing mode, UID and GID
+   - doc/generators: Update dump generator
+   - doc/examples/schema: Add mode, gid and uid
+   - generators/utils: Fix condition
+   - shared: Handle multiple checksums
+   - shared/util_test: Update checksum test
+   - shared/net: Fix checksum check regression
+   - shared/definition: Add Pongo option to files
+   - generators/dump: Support pongo2 templates
+   - generators/cloud-init: Support pongo2 templates
+   - generators/template: Support pongo2 templates
+   - doc: Document pongo2
+   - Update for change to RunCommandSplit
+   - travis: Move to bionic
+   - shared/util: preserve xattrs in Pack/PackUpdate
+   - sources/opensuse: Fix x86 tarballs
+   - sources/centos: Fix CentOS 8 checksum file
+   - shared/util: Fix locale when importing GPG keys
+   - chroot: Resolve parent directory symlinks
+   - shared/chroot: Fix parent directory symlink again
+   - sources/oracle: Consider boot images only
+   - lxd-agent: Update units
+   - lxd-agent: Add udev rules
+   - generators/lxd-agent: Add symlink workaround for openSUSE
+   - lxd-agent: Fix symlink logic
+   - doc/examples: Update Ubuntu example
+   - managers/yum: Pass "--allowerasing" flag
+   - Revert "managers/yum: Pass "--allowerasing" flag"
+   - managers/yum: Use --allowerasing when available
+   - sources/centos: Handle list of multiple images
+   - sources: Fix apertis test
+   - travis: Update Go versions
+   - managers: Add luet pms
+   - add arch deps
+   - sources/apertis: Fix tests
+   - doc/building: Document --vm flag
+   - doc/generators: Add fstab
+
+  ### Downloads
+
+   - Main release tarball: [distrobuilder-1.1.tar.gz](https://linuxcontainers.org/downloads/distrobuilder/distrobuilder-1.1.tar.gz)
+   - GPG signature: [distrobuilder-1.1.tar.gz.asc](https://linuxcontainers.org/downloads/distrobuilder/distrobuilder-1.1.tar.gz.asc)
