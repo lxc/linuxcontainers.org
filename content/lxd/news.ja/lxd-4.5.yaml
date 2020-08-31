@@ -1,0 +1,577 @@
+title: LXD 4.5 リリースのお知らせ
+date: 2020/08/29 00:08
+origin: https://discuss.linuxcontainers.org/t/lxd-4-5-has-been-released/8824
+content: |-
+  ### はじめに <!-- Introduction -->
+  <!--
+  The LXD team is very excited to announce the release of LXD 4.5!
+  -->
+  LXD チームは LXD 4.5 のリリースをお知らせできることにとてもワクワクしています!
+
+  <!--
+  This is another pretty busy release for LXD with the main highlight no doubt being the addition of OVN to our networking options.
+  -->
+  これは LXD の非常に忙しいリリースです。主なハイライトは、ネットワークオプションに OVN が加わったことであることは間違いありません。
+
+  <!--
+  On top of that, we have some welcome improvements to our container support with both the `bpf` syscall interception and the new allocation logic for `pts` devices.
+  -->
+  さらに、`bpf` システムコールのインターセプトと `pts` デバイスの新たな割り当てロジックという、コンテナサポートで歓迎すべき改良がいくつか加わりました。
+
+  <!--
+  And lastly, good improvements to clustering and to security with the improved remote storage work and the new AppArmor profiles.
+  -->
+  最後に、リモートストレージの改良と新しい AppArmor プロファイルに対する改良による、セキュリティとクラスタリングに対する素晴らしい改良が行われました。
+
+  Enjoy!
+
+  ### 新機能とハイライト <!-- New features and highlights -->
+  #### OVN 仮想ネットワークの初期サポート <!-- Initial support for OVN virtual networks -->
+  <!--
+  LXD 4.5 includes the support for OVN virtual networks.
+  -->
+  LXD 4.5 には OVN 仮想ネットワークのサポートが含まれます。
+
+  <!--
+  Those can be defined as a regular LXD managed network, very similar to a traditional bridge, except that those can cross cluster nodes and can have overlapping/conflicting subnets.
+  -->
+  これは通常の LXD が管理するネットワークとして定義でき、これまでのブリッジと非常に似ています。しかし、クラスターノードをまたぐことができますし、サブネットが重複したり競合したりできます。
+
+  <!--
+  This is done through [OVN](https://www.ovn.org/en/) and will be the basis for networks inside of LXD projects in the next LXD release. OVN networks in LXD must have a parent managed network, currently only managed bridges are supported (SR-IOV and macvlan coming in 4.6).
+  -->
+  これは [OVN](https://www.ovn.org/en/) を使って実現されています。そして、次の LXD リリースでは LXD プロジェクト内部のネットワークの基礎となります。LXD の OVN ネットワークは、親となる管理されたネットワークが必要です。現状では管理されたブリッジのみがサポートされます（SR-IOV と macvlan は 4.6 で対応予定）。
+
+  <!--
+  For now, provided you have OVN and OpenVswitch setup on your host, you can have LXD create virtual networks and attach instances to them in much the same way you would a normal bridge.
+  -->
+  現時点では、ホスト上で OVN と Open vSwitch がセットアップされていれば、LXD で仮想ネットワークを作成できますし、通常のブリッジに対する方法と同じようにインスタンスに接続できます。
+
+  <!--
+  (Example done on Ubuntu 20.04 LTS with the 4.5 snap)
+  -->
+  （4.5 の snap を使った Ubuntu 20.04 LTS での実行例です）
+
+      root@nuc01:~# apt install ovn-host ovn-central --yes
+      [snip]
+      
+      root@nuc01:~# snap install lxd --channel=latest/candidate
+      lxd (candidate) 4.5 from Canonical✓ installed
+      root@nuc01:~# ovs-vsctl set open_vswitch . \
+      >   external_ids:ovn-remote=unix:/var/run/ovn/ovnsb_db.sock \
+      >   external_ids:ovn-encap-type=geneve \
+      >   external_ids:ovn-encap-ip=172.17.16.139
+      root@nuc01:~# lxd init --auto
+      root@nuc01:~# lxc network list
+      +--------+----------+---------+----------------+---------------------------+-------------+---------+
+      |  NAME  |   TYPE   | MANAGED |      IPV4      |           IPV6            | DESCRIPTION | USED BY |
+      +--------+----------+---------+----------------+---------------------------+-------------+---------+
+      | br0    | bridge   | NO      |                |                           |             | 0       |
+      +--------+----------+---------+----------------+---------------------------+-------------+---------+
+      | br-int | bridge   | NO      |                |                           |             | 0       |
+      +--------+----------+---------+----------------+---------------------------+-------------+---------+
+      | eno1   | physical | NO      |                |                           |             | 0       |
+      +--------+----------+---------+----------------+---------------------------+-------------+---------+
+      | lxdbr0 | bridge   | YES     | 10.19.114.1/24 | fd42:56de:74c7:40f5::1/64 |             | 1       |
+      +--------+----------+---------+----------------+---------------------------+-------------+---------+
+      root@nuc01:~# lxc network set lxdbr0 ipv4.dhcp.ranges=10.19.114.2-10.19.114.199
+      root@nuc01:~# lxc network set lxdbr0 ipv4.ovn.ranges=10.19.114.200-10.19.114.254
+      root@nuc01:~# lxc network set lxdbr0 ipv6.ovn.ranges=fd42:56de:74c7:40f5::200-fd42:56de:74c7:40f5::254
+      root@nuc01:~# lxc network create my-virtual-01 network=lxdbr0 --type=ovn
+      Network my-virtual-01 created
+      root@nuc01:~# lxc network create my-virtual-02 network=lxdbr0 --type=ovn
+      Network my-virtual-02 created
+      root@nuc01:~# lxc network list
+      +---------------+----------+---------+-----------------+---------------------------+-------------+---------+
+      |     NAME      |   TYPE   | MANAGED |      IPV4       |           IPV6            | DESCRIPTION | USED BY |
+      +---------------+----------+---------+-----------------+---------------------------+-------------+---------+
+      | br0           | bridge   | NO      |                 |                           |             | 0       |
+      +---------------+----------+---------+-----------------+---------------------------+-------------+---------+
+      | br-int        | bridge   | NO      |                 |                           |             | 0       |
+      +---------------+----------+---------+-----------------+---------------------------+-------------+---------+
+      | eno1          | physical | NO      |                 |                           |             | 0       |
+      +---------------+----------+---------+-----------------+---------------------------+-------------+---------+
+      | lxdbr0        | bridge   | YES     | 10.19.114.1/24  | fd42:56de:74c7:40f5::1/64 |             | 1       |
+      +---------------+----------+---------+-----------------+---------------------------+-------------+---------+
+      | lxdovn1       | bridge   | NO      |                 |                           |             | 0       |
+      +---------------+----------+---------+-----------------+---------------------------+-------------+---------+
+      | my-virtual-01 | ovn      | YES     | 10.178.251.1/24 | fd42:39c7:797c:7977::1/64 |             | 0       |
+      +---------------+----------+---------+-----------------+---------------------------+-------------+---------+
+      | my-virtual-02 | ovn      | YES     | 10.82.211.1/24  | fd42:5045:b316:b251::1/64 |             | 0       |
+      +---------------+----------+---------+-----------------+---------------------------+-------------+---------+
+      root@nuc01:~# lxc network create my-virtual-03 network=lxdbr0 ipv4.address=10.82.211.1/24 ipv6.address=fd42:5045:b316:b251::1/64 --type=ovn
+      Network my-virtual-03 created
+      root@nuc01:~# lxc network list
+      +---------------+----------+---------+-----------------+---------------------------+-------------+---------+
+      |     NAME      |   TYPE   | MANAGED |      IPV4       |           IPV6            | DESCRIPTION | USED BY |
+      +---------------+----------+---------+-----------------+---------------------------+-------------+---------+
+      | br0           | bridge   | NO      |                 |                           |             | 0       |
+      +---------------+----------+---------+-----------------+---------------------------+-------------+---------+
+      | br-int        | bridge   | NO      |                 |                           |             | 0       |
+      +---------------+----------+---------+-----------------+---------------------------+-------------+---------+
+      | eno1          | physical | NO      |                 |                           |             | 0       |
+      +---------------+----------+---------+-----------------+---------------------------+-------------+---------+
+      | lxdbr0        | bridge   | YES     | 10.19.114.1/24  | fd42:56de:74c7:40f5::1/64 |             | 1       |
+      +---------------+----------+---------+-----------------+---------------------------+-------------+---------+
+      | lxdovn1       | bridge   | NO      |                 |                           |             | 0       |
+      +---------------+----------+---------+-----------------+---------------------------+-------------+---------+
+      | my-virtual-01 | ovn      | YES     | 10.178.251.1/24 | fd42:39c7:797c:7977::1/64 |             | 0       |
+      +---------------+----------+---------+-----------------+---------------------------+-------------+---------+
+      | my-virtual-02 | ovn      | YES     | 10.82.211.1/24  | fd42:5045:b316:b251::1/64 |             | 0       |
+      +---------------+----------+---------+-----------------+---------------------------+-------------+---------+
+      | my-virtual-03 | ovn      | YES     | 10.82.211.1/24  | fd42:5045:b316:b251::1/64 |             | 0       |
+      +---------------+----------+---------+-----------------+---------------------------+-------------+---------+
+
+  <!--
+  With this setup, we now have 3 OVN networks, 2 of which are purposefuly sharing the exact same IPv4/IPv6 subnets so we can show the isolation.
+  -->
+  このセットアップでは、3 つの OVN ネットワークが存在します。そのうち 2 つは意図的に全く同じ IPv4/IPv6 サブネットを共有しており、分離された状態を見ることができます。
+
+      root@nuc01:~# lxc init images:ubuntu/20.04 u1
+      Creating u1
+      root@nuc01:~# lxc init images:ubuntu/20.04 u2
+      Creating u2
+      root@nuc01:~# lxc init images:ubuntu/20.04 u3
+      Creating u3
+      root@nuc01:~# lxc config device add u1 eth0 nic name=eth0 network=my-virtual-01
+      Device eth0 added to u1
+      root@nuc01:~# lxc config device add u2 eth0 nic name=eth0 network=my-virtual-02
+      Device eth0 added to u2
+      root@nuc01:~# lxc config device add u3 eth0 nic name=eth0 network=my-virtual-03
+      Device eth0 added to u3
+      root@nuc01:~# lxc start u1 u2 u3
+      root@nuc01:~# lxc list         
+      +------+---------+---------------------+-----------------------------------------------+-----------+-----------+
+      | NAME |  STATE  |        IPV4         |                     IPV6                      |   TYPE    | SNAPSHOTS |
+      +------+---------+---------------------+-----------------------------------------------+-----------+-----------+
+      | u1   | RUNNING | 10.178.251.2 (eth0) | fd42:39c7:797c:7977:216:3eff:fe3a:6498 (eth0) | CONTAINER | 0         |
+      +------+---------+---------------------+-----------------------------------------------+-----------+-----------+
+      | u2   | RUNNING | 10.82.211.2 (eth0)  | fd42:5045:b316:b251:216:3eff:fe7d:7826 (eth0) | CONTAINER | 0         |
+      +------+---------+---------------------+-----------------------------------------------+-----------+-----------+
+      | u3   | RUNNING | 10.82.211.2 (eth0)  | fd42:5045:b316:b251:216:3eff:fe9d:52af (eth0) | CONTAINER | 0         |
+      +------+---------+---------------------+-----------------------------------------------+-----------+-----------+
+
+  #### `bpf` システムコールインターセプションの初期実装 <!-- Initial `bpf` syscall interception -->
+  <!--
+  It is now possible to enable system call interception for the `bpf` syscall.
+  This is controlled through `security.syscalls.intercept.bpf` on containers.
+  -->
+  `bpf` システムコールに対するシステムコールインターセプションを有効化できるようになりました。これはコンテナの `security.syscalls.intercept.bpf` を使ってコントロールできます。
+
+  <!--
+  Once that's enabled, a particular type of `bpf` program must be enabled.
+  Currently we only support `security.syscalls.intercept.bpf.devices` which allows for bpf programs tied to device cgroups to be loaded from within the container.
+  -->
+  この機能を有効にした場合、特定のタイプの `bpf` プログラムを有効にしなければなりません。現時点では、`security.syscalls.intercept.bpf.devices` のみをサポートします。この機能は、device cgroup に紐付けられたプログラムをコンテナ内から読み込めるようにしています。
+
+  <!--
+  WARNING: The only validation done on the actual program is a simple size check to avoid obvious DoS of the host. A container with that option enabled will be able to load pretty complex bpf programs which may pull information that's outside of the container's scope. This should not be allowed on untrusted containers.
+  -->
+  警告: 実際のプログラムで行われるバリデーションは、ホストからの明確な DoS を避けるための単純なサイズチェックのみです。この機能を有効にしたコンテナでは、かなり複雑な bpf プログラムをロードできます。そしてコンテナのスコープ外の情報を取得する可能性があります。信用できないコンテナに対しては許可するべきではありません。
+
+  #### ネイティブなターミナルデバイスの割り当てのサポート <!-- Support for native terminal device allocation -->
+  <!--
+  Up until now, device allocation for operations such as `lxc exec` was done through the host system's `devpts`. This was done as a security measure to avoid touching the container's filesystem and possibly having the user mask /dev/pts in the container with something malicious. This approach however has issues as the controlling device as seen inside the container cannot be resolved (as it belongs to the outside).
+  -->
+  これまで、`lxc exec` のような操作のためのデバイス割り当てはホストシステムの `devpts` を通して行われていました。これは、コンテナのファイルシステムにアクセスしたり、ユーザーがコンテナ内の `/dev/pts` を何か悪意のあるものでマスクしたりすることを防ぐためのセキュリティの手段として行われていました。しかし、このアプローチには問題があります。コンテナ内部で見える制御デバイスは（外部に属するため）解決できないからです。
+
+  <!--
+  Kernel and LXC work now allows for safely keeping track of the `devpts` instance that we first mount on container startup and be able to allocate devices from it without ever interacting with the current mount table in the container.
+  -->
+  カーネルと LXC の作業で、コンテナ起動時に最初にマウントされる `devpts` インスタンスを安全に追跡できるようになりました。そして、コンテナ内の現在のマウントテーブルとやりとりすることなく、デバイスを割り当てできるようになりました。
+
+  <!--
+  The visible effect of all this will range from AppArmor policies getting less confused when redirecting something on stdin/stdout/stderr and a variety of other software doing is-a-tty type checks now behaving in a much more usual way.
+  -->
+  これによる目に見える効果には次のようなものがあります。stdin/stdout/stderr 上で何かをリダイレクトする時に AppArmor ポリシーが混乱しにくくなったり、他の様々なソフトウェアが is-a-tty タイプのチェックを行うようなことがより通常の方法で動作するようになったりしました。
+
+  #### VGA コンソールが Windows 上で動くようになりました <!-- VGA console now working on Windows -->
+  <!--
+  Windows users can now install `virt-viewer` through Chocolatey or the manual installer, once done, LXD will automatically detect it and use it when running `lxc console --type=VGA` on a virtual machine.
+  -->
+  Windows ユーザーは、`virt-viewer` を　Chocolatey 経由かマニュアルでインストールできるようになりました。インストールすると、仮想マシンで `lxc console --type=VGA` を実行した場合に自動的にそれを検出し、使います。
+
+  #### リモートのストレージプールの扱いの改良 <!-- Improved handling of remote storage pools -->
+  <!--
+  Until now, the way custom volumes in remote storage pools was handled was by having one record for every cluster member, leading to a lot of duplicated data, especially when factoring in snapshots.
+  -->
+  これまで、リモートのストレージプールにあるカスタムボリュームの処理方法は、クラスターメンバーごとにひとつのレコードを持つことで行われていました。これは、特にスナップショットを考慮すると、多数の重複するデータが生じていました。
+
+  <!--
+  On the subject of snapshots, because of that volume duplication, automated snapshots were happening on every single cluster member, leading to a lot more snapshots than intended and more load overall.
+  -->
+  スナップショットについては、ボリュームの重複のために、自動化されたスナップショットが各クラスターメンバーごとに発生し、意図したよりも多くのスナップショットと全体的な負荷につながっていました。
+
+  <!--
+  This is all resolved now with a new database design where a single volume entry is kept and is marked as being clustered. So it no longer is tied to any one cluster member and scheduled snapshots are now distributed across the cluster using a stable hash mechanism to determine what currently online cluster member will handle them.
+  -->
+  新たなデータベースの設計でこれはすべて解決しました。この設計では、シングルボリュームのエントリーが保持され、クラスター化されているとマークされます。したがって、特定のクラスターメンバーに結び付けられることはなくなりましたし、スケジュールされたスナップショットは、安定したハッシュメカニズムを使ってクラスター全体に分散するようになり、現在オンラインのクラスターメンバーがそれをどのように処理するかを決定します。
+
+  #### `forkdns` と `forkproxy` が AppArmor の制限のもとで実行されるようになりました <!-- `forkdns` and `forkproxy` now running under AppArmor confinement -->
+  <!--
+  Following on the `dnsmasq` confinement in LXD 4.4, LXD 4.5 now also confines `forkdns`. That's the process used when running a Fan based network on a LXD cluster. As the name implies, it handles DNS by effectively replicating the queries against all cluster members. This confinement will prevent any potential attack against it from accessing critical data.
+  -->
+  LXD 4.4 での `dnsmasq` の制限に続き、LXD 4.5 では `forkdns` も制限するようになりました。このプロセスは、LXD クラスター上で Fan ベースのネットワークが実行されているときに使います。その名前のとおり、`forkdns` はすべてのクラスターメンバーに対するクエリを効果的に複製することで DNS 処理を行います。この制限により、重要なデータへのアクセスによる攻撃の可能性を防ぐことができます。
+
+  <!--
+  Similarly, `forkproxy` which is used for every non-NAT `proxy` device also got its own AppArmor profile, this will restrict it to just the sockets it's supposed to access and the bits of kernel infrastructure needed for the proxying to happen.
+  -->
+  同様に、NAT ではない `proxy` デバイスで使われる `forkproxy` も、自身の AppArmor プロファイルを持っています。これは、アクセスする前提であるソケットと、プロキシーを行うのに必要なカーネルインフラストラクチャーの部分のみに制限をします。
+
+  #### `lxc move` でクラスターのターゲットを指定できるようになりました <!-- `lxc move` now let's you select a cluster target too -->
+  <!--
+  When moving an instance from outside of a cluster into a cluster, it is now possible to pass `--target` to specify what cluster member should be hosting the instance.
+  -->
+  クラスター外部からクラスターにインスタンスを移動する際、`--target` を与えることで、インスタンスをホストするクラスターメンバーを指定できるようになりました。
+
+  ### すべての変更点（翻訳なし） <!-- Complete changelog -->
+  <!--
+  Here is a complete list of all changes in this release:
+  -->
+  このリリースでの完全な変更点のリストは次のとおりです:
+
+   - lxc/move: Allow --target with cluster destination
+   - i18n: Update translation templates
+   - lxd/networks: Validate network config before starting networks on startup
+   - lxd/network/driver/common: Call init() in update() to consistency apply new internal state
+   - lxd/device/device/utils/network: Removes networkDHCPValidIP
+   - lxd/dnsmasq/dhcpalloc: Adds static DHCP allocation package for dnsmasq
+   - lxd/dnsmasq: Renames DHCPStaticIPs to DHCPStaticAllocation
+   - lxd/dnsmasq: Renames DHCPAllocatedIPs to DHCPAllAllocations
+   - lxd/network/network/utils: Removes GetIP
+   - lxd/network/network/utils: dhcpalloc.GetIP usage
+   - lxd/network/network/utils: dnsmasq.DHCPStaticAllocation usage
+   - lxd/network/network/interface: Changes of functions to accomodate dhcpalloc package
+   - lxd/network/driver/common: Implements default no-op function for non-dhcp enabled networks
+   - lxd/network/driver/common: dhcpalloc.DHCPRange usage
+   - lxd/network/driver/bridge: dhcpalloc package function usage
+   - lxd/network/driver/bridge: DHCPv4Subnet and DHCPv6Subnet implementations
+   - lxd/device/nic/bridged: Comment correction
+   - lxd/device/nic/bridged: n.DHCPv4Subnet and n.DHCPv6Subnet usage
+   - lxd/device/nic/bridged: dnsmasq.DHCPStaticAllocation usage
+   - lxd/device/nic/bridged: dhcpalloc.DHCPValidIP usage
+   - lxd/device/nic/bridged: Switches static DHCP allocation for IP filtering to dnsmasq/dhcpalloc
+   - lxd/main_activateifneeded: Clarify 'No DB' debug statements
+   - lxd/cluster: Fix failure domain updates
+   - tests: Fix failure domain test
+   - doc: s/container/instance/g
+   - doc/backup: Add note about the snap mntns
+   - lxd/apparmor: Don't fail on missing apparmor
+   - shared/validate: Makes IsUint32 non-optional
+   - lxd: Wraps validate.IsUint32 in validate.Optional
+   - shared/instance: Wraps validate.IsUint32 in validate.Optional
+   - shared/validate: Makes IsUint8 non-optional
+   - lxd/network/driver/bridge: Wraps validate.IsUint8 in validate.Optional
+   - shared/validate: Makes IsPriority non-optional
+   - shared/instance: Wraps validate.IsPriority in validate.Optional
+   - shared/validate: Makes IsBool non-optional
+   - lxd: Wraps validate.IsBool in validate.Optional
+   - shared/instance: Wraps validate.IsBool in validate.Optional
+   - shared/validate: Makes IsSize non-optional
+   - lxd: Wraps validate.IsSize in validate.Optional
+   - shared/instance: Wraps validate.IsSize in validate.Optional
+   - shared/validate: Makes IsNetworkAddress non-optional
+   - lxd: Wraps validate.IsNetworkAddress in validate.Optional
+   - shared/validate: Makes IsNetworkV4 non-optional
+   - lxd/network/driver/bridge: Wraps validate.IsNetworkV4 in shared.Optional
+   - shared/validate: Makes IsNetworkAddressV4 non-optional
+   - lxd/device/nic: Wraps validate.IsNetworkAddressV4 in validate.Optional
+   - lxd/device/nic/ipvlan: Wraps validate.IsNetworkAddressV4 in validate.Optional
+   - lxd/device/nic/ipvlan: Fixes incorrect IPv4 address check in IPv6 context
+   - lxd/network/driver/bridge: Wraps validate.IsNetworkAddressV4 in validate.Optional
+   - shared/validate: Makes IsNetworkAddressCIDRV4 non-optional
+   - lxd: Wraps validate.IsNetworkAddressCIDRV4 in validate.Optional
+   - shared/validate: Makes IsDeviceID non-optional
+   - lxd/device: Wraps validate.IsDeviceID in validate.Optional
+   - shared/validate: Makes IsNetworkV6 non-optional
+   - shared/validate: Makes IsNetworkAddressCIDRV6 non-optional
+   - lxd: Wraps validate.IsNetworkAddressCIDRV6 in validate.Optional
+   - shared/validate: Makes IsNetworkAddressV6 non-optional
+   - lxd: Wraps validate.IsNetworkAddressV6 in validate.Optional
+   - lxd/device/nic/ipvlan: validate.IsNetworkAddressVX tweaks
+   - lxd/device/nic/routed: Wraps validate.IsNetworkAddressV4List in validate.Optional
+   - lxd: Wraps validate.IsNetworkV4List and validate.IsNetworkV6List in validate.Optional
+   - shared/validate: Tweaks IsNetworkVLAN error message ordering
+   - shared/validate: comment spacing
+   - daemon: check whether shiftfs is useable
+   - lxd/network/network/utils: Renames ValidNetworkName to validInterfaceName
+   - lxd/network/network/utils: Adds validVirtualNetworkName
+   - lxd/network/network/interfaces: Adds ValidateName
+   - lxd/network/driver/bridge: Implements ValidateName
+   - lxd/network/driver/macvlan: Implements ValidateName
+   - lxd/network/driver/sriov: Implements ValidateName
+   - lxd/network/network/load: Adds ValidateName helper function
+   - lxd/main/init/interactive: Switches to network.ValidateName for bridge validation
+   - lxd/networks: Switches to network.ValidateName
+   - lxd/storage/utils: Simplifies error message from ValidName
+   - doc/networks: Fixes typo in bridge docs
+   - lxd/cluster/config: Fix import ordering of external package
+   - lxd/network/openvswitch: Name functions consistently using ObjectAction format
+   - lxd/network/driver/bridge: OVS function naming usage
+   - lxd/network/network/utils: OVS function naming usage
+   - lxd/device/nic/bridged: OVS function naming usage
+   - lxd/storage/locking: Moves package to lxd/locking
+   - lxd/locking: Renames variables to make them generic
+   - lxd/storage/drivers/utils: Adds OperationLockName function
+   - lxd/network/network/interface: Adds ID() function
+   - lxd/network/driver/common: Implements ID() function
+   - lxd/storage: locking.Lock usage with OperationLockName wrapper
+   - lxd/resources: Fix total memory for per NUMA node
+   - lxd: enable safe native container terminal allocation
+   - lxd/rsync: Don't pass --bwlimit when no limits set
+   - exec: fix OpenPtyInDevpts()
+   - test/suites/storage: LVM size tweaks
+   - lxd/instance/drivers/driver/lxc: Adds nil check in getLxcState
+   - client/operations: Fixes race conditions
+   - lxd/operations: Fixes race conditions
+   - client: More races fixed
+   - Makefile: Adds race target for enabling race detector
+   - Makefile: Correctly builds lxd-p2c and lxd-agent in debug and nocache targets
+   - client/operations: Race fix
+   - lxd/db: Adds mutex to fix races
+   - lxd/operations: Fixes races
+   - shared/validate: Adds IsURLSegmentSafe function
+   - lxd/network/driver/common: Adds common ValidateName function
+   - lxd/network/driver/bridge: Changes ValidateName to use common validation too
+   - lxd/network/driver: Removes ValidateName from sriov and macvlan
+   - lxd/network/network/load: Adds field name context to name validation errors
+   - lxd/network/network/utils: Removes validVirtualNetworkName
+   - lxd/networks: Returns network context on network startup failure
+   - shared/validate: Adds Required() and makes Optional() accept multiple validators
+   - lxd/network/driver/bridge: Don't allow stable volatile MAC with fan network
+   - lxd/network/driver/bridge: Don't allow hwaddr to be set in fan mode
+   - seccomp: update comment about blocking the new mount api
+   - syscall_numbers: fix pidfd_open() definition
+   - lxd_seccomp: add SECCOMP_IOCTL_NOTIF_ADDFD definitions and types
+   - checkfeature: check for seccomp notify fd injection feature
+   - syscall_numbers: add pidfd_getfd()
+   - syscall_numbers: add bpf()
+   - seccomp: report helpful errors when determining support for features
+   - seccomp: handle liblxc sending the notify fd as part of the seccomp message
+   - seccomp: enable bpf in unprivileged containers
+   - doc: add security.syscalls.intercept.bpf and security.syscalls.intercept.bpf.prog.devices
+   - api: add container_syscall_intercept_bpf_devices extension
+   - lxd-client: add security.syscalls.intercept.bpf security.syscalls.intercept.bpf.devices to completion
+   - production-setup: mention bpf-specific memlock settings
+   - seccomp: check the return value of pwrite()
+   - syscall_numbers: add close_range()
+   - exec: switch to close_range() syscall
+   - process_utils: remove faulty license
+   - lxd/apparmor/dnsmasq: Add binary for nesting
+   - lxd/storage/drivers/ceph: Fix volume deletion
+   - lxd/instance/drivers/driver/qemu: Fix race in onStop getting operation
+   - lxd/db: Fix premature failure when listing cluster volumes
+   - lxd/db/storage_volumes: Add comments regarding behaviour
+   - doc/production-setup: Fix escaping
+   - doc/production-setup: Update introduction
+   - lxd: Fix automatic storage volume snapshots
+   - cluster: Don't upgrade nodes without raft role concurrently
+   - lxd/network/network/load: Moves fillAuto logic into per-driver fillConfig function
+   - lxd/network/utils: Moves fillAuto into bridge's fillConfig function
+   - lxd/network/network/utils: Adds randomHwaddr function
+   - lxd/patches: Adds patch to remove volatile.bridge.hwaddr network key
+   - lxd/network/bridge/driver: Removes volatile.bridge.hwaddr and adds stable MAC generation
+   - shared/usbid: Don't auto-load
+   - lxd/resources: Load USB database
+   - lxd/apparmor: Move dnsmasq functions
+   - lxd/apparmor: forkdns profile
+   - lxd/sys: Add unpriv uid/group
+   - lxd/instances: Update for OS type change
+   - shared/subprocess: s/Pid/PID/
+   - shared/subprocess: Add credentials
+   - lxd/network: forkdns and creds drop for forkdns
+   - lxd/network: Run dnsmasq as unpriv group
+   - lxd/device/device/common: Adds common contextual logger
+   - doc/networks: dns.search clarification
+   - lxd/network/driver/bridge: Validates bridge.external_interfaces using validate.Optional() helper
+   - shared/validate: Adds network IP range validators
+   - lxd/network/driver/bridge: Adds DHCP IP range validation
+   - shared/network/ip: Defines IPRange struct
+   - lxd/dnsmasq/dhcpalloc: Removes DHCPRange and switches to shared.IPRange
+   - lxd/network: Replaces dhcpalloc.DHCPRange with shared.IPRange
+   - lxd/storage: Fix delete of remote pools
+   - lxd/storage/ceph: Allow for small size variation
+   - seccomp: cap instruction limit and log buffer to reasonable sizes
+   - seccomp: initialize almost everything
+   - main_checkfeature: remove logging failed shiftfs mounts
+   - seccomp: log errors to convert unix connection to file
+   - unixfd: improve SCM_RIGHTs file descriptor retrieval
+   - seccomp: simplify the seccomp message retrieval
+   - api: Adds API extension network_type_ovn
+   - doc/server: Documents global OVN networking config keys
+   - lxd/cluster/config: Adds OVN networking global config keys
+   - lxd/network/network/utils: Updates isInUseByDevices to support ovn
+   - lxd/db/networks: Adds OVN network type
+   - lxd/network/network/load: Adds ovn network type to loader
+   - lxd/networks: Adds ovn network type
+   - lxd/device/device/load: Adds OVN nic type support
+   - lxd/device/nictype: Adds ovn support
+   - lxd/network/network/utils: Adds OVN instance device port helpers
+   - lxd/network/openvswitch/ovs: Adds InterfaceAssociateOVNSwitchPort
+   - lxd/network/openvswitch/ovs: Adds ChassisID function
+   - lxd/network/openvswitch/ovs: Adds OVN bridge mapping functions
+   - lxd/network/openvswitch/ovs: Adds BridgePortList function
+   - lxd/network/openvswitch/ovs: Adds OVNBridgeMappingDelete function
+   - lxd/network/openvswitch/ovn: Adds OVN command wrapper
+   - lxd/network/network/utils: Adds parseIPRange functions
+   - lxd/network/driver/bridge: Adds OVN ranges keys
+   - lxd/network/driver/ovn: Adds OVN network driver
+   - lxd/device/nic/ovn: Adds OVN nic type
+   - doc/networks: Adds initial OVN doc
+   - doc/networks: Add OVN range keys
+   - doc/networks: Fix key ordering
+   - bash: Update completion profile
+   - lxd/apparmor: Disable cgroup2 on legacy hosts
+   - lxc/manpage: Fix behavior in snap
+   - shared/subprocess: Add StartWithFiles
+   - lxd/forkproxy: Switch to using subprocess
+   - daemon: check namespace management support through pidfds
+   - nsexec: remove unused dosetns() function
+   - nsexec: add new change_namespace() helper
+   - forksyscall: use pidfds to attach to namespaces
+   - forknet: use pidfds to attach to namespaces
+   - forkmount: use pidfds to attach to namespaces
+   - forkproxy: use pidfds to attach to namespaces
+   - forkfile: use pidfds to attach to namespaces
+   - nsexec: remove unused setnsat()
+   - lxd/db/networks: Separates network type and status conversion into separate functions
+   - lxd/db/networks: Adds ClusterTx.GetNonPendingNetworks function
+   - lxd/db/networks: Adds ClusterTx.UpdateNetwork function
+   - lxd/network/driver/ovn: Use DB transactions to safely allocate OVN external IPs on parent network
+   - lxd/network/driver/ovn: Include last IP in OVN range for allocatable IPs
+   - lxd/db/networks: Populates network nodes in ClusterTx.GetNonPendingNetworks
+   - lxd/db/networks: Populate description col with empty string in CreatePendingNetwork
+   - shared/validate: Adds IsNetworkMTU function
+   - lxd/network/driver: validates mtu using IsNetworkMTU
+   - lxd/device/nic: Validates mtu using IsNetworkMTU
+   - lxd/network/network/utils: Removes OVN specific helper functions
+   - lxd/network/network/utils/ovn: Adds OVNInstanceDeviceMTU function
+   - lxd/network/openvwitch/ovn: Adds MTU support for DHCP and IPv6 RA
+   - lxd/network/driver/ovn: Adds bridge.mtu config option and passes to DHCP/RA setup
+   - lxd/device/nic/ovn: Use parent network's bridge.mtu setting for setting device MTU
+   - lxd/network/driver/common: Moves notifier for delete into common
+   - lxd/networks: Moves cluster notification and storage clean up for networkDelete into common
+   - shared/validate: Use consistent quoting for outputting input value when there is an error
+   - lxc: Bundle sortorder
+   - lxd/network/ovn: Use snap path
+   - doc/networks: Adds link to OVN network
+   - lxd/network/network/utils: Adds pingIP function
+   - lxd/network/driver/ovn: Pings OVN external IPv6 router IP on bridge port start
+   - lxd/network/openvswitch/dns: Adds LogicalSwitchPortSetDNS and LogicalSwitchPortDeleteDNS functions
+   - lxd/network/openvswitch/ovn: Updates LogicalSwitchDelete to clear any remaining DNS records
+   - lxd/network/network/utils/ovn: Updates OVNInstanceDevicePortAdd to take instanceName for DNS records
+   - lxd/network/driver/ovn: Updates instance port functions to setup and remove DNS records
+   - lxd/device/nic/ovn: Updates usage of network.OVNInstanceDevicePortAdd to supply instance name for DNS records
+   - lxd/storage/drivers/utils: Fixes shrinkFileSystem to detect e2fsck filesystem modifications
+   - lxd/db/instances: Ensure correct pool name is returned in GetInstancePool
+   - shared/cert: Fix on Windows
+   - lxc/console: Support remote-viewer on Windows
+   - lxc/export: Use HostPathFollow
+   - lxd/cluster: Re-try listening for a minute
+   - lxd/init: Don't fail on existing address
+   - lxd/storage/zfs: Fix bad transfer logic on block
+   - lxd/storage/zfs: Always discard mountpoint on recv
+   - lxd/db/projects: go imports order
+   - lxd/db/projects: Removes unnecessary whitespace
+   - lxd/db/cluster: Adds patch for adding project_id to networks table
+   - lxd/db/networks: Adds project support to CreatePendingNetwork
+   - lxd/db/networks: Adds project support to CreateNetwork
+   - lxd/networks: Pass project.Default when creating networks
+   - lxd/instance/test: Updates tests to use project.Default for new networks
+   - lxd/db/networks/test: Updates tests to use project.Default for new networks
+   - lxd/storage/zfs: Don't filter mountpoint on block
+   - lxd/db/instances: Removes instancePoolSnapshot function
+   - lxc/network: Fix usage
+   - i18n: Update translation templates
+   - lxd/apparmor/dnsmasq: drop dup rule, /snap/lxd/*/ includes /snap/lxd/current/
+   - lxd/apparmor/forkdns: drop dup rule, /snap/lxd/*/ includes /snap/lxd/current/
+   - lxd/instance: Always put snapshots on same pool as parent
+   - doc/security: Adds note about non-IP ethernet frame filtering to stop VLAN QinQ bypass
+   - lxd/db/cluster: Update tables to allow null value for node ID
+   - shared/util: Converts DefaultPort from string to int
+   - lxd/util/net: Updates CanonicalNetworkAddress to use net.JoinHostPort rather than manual fmt.Sprintf
+   - lxd/util/net: Adds CanonicalNetworkAddressFromAddressAndPort function
+   - lxd/device/device/utils/proxy: Use net.JoinHostPort rather than manual fmt.Sprintf
+   - lxd/main/init/interactive: Error wrapping
+   - lxd/main/init/interactive: Use canonical address after port has been added for comparison
+   - lxd/main/init/auto: util.CanonicalNetworkAddressFromAddressAndPort usage
+   - lxc/remote: shared.DefaultPort usage
+   - lxd-agent/main/agent: shared.DefaultPort usage
+   - lxd-p2c/utils: shared.DefaultPort usage
+   - lxd/vsock: shared.DefaultPort usage
+   - lxd/util/http: shared.DefaultPort usage
+   - lxd/main/init: shared.DefaultPort usage
+   - lxd/db: Handle null value for nodeID
+   - lxd/daemon: Make db aware of remote storage drivers
+   - lxd/daemon: Perform automatic snapshots on random node
+   - lxd/storage: Refuse BLOCK_AND_RSYNC with running instance
+   - lxd/apparmor: Simplify profile name generation
+   - lxd/device: Export Name and Config
+   - lxd/apparmor: Shrink instance interface
+   - lxd/apparmor/forkdns: Alignment
+   - lxd/apparmor/forkdns: Support LD_LIBRARY_PATH
+   - lxd/api/cluster: Makes ServerAddress field required for clusterPutJoin
+   - lxd/network/driver/ovn: Makes ping test in startParentPortBridge async
+   - lxd/init: Updates initDataNodeApply to use revert package and to revert itself on error
+   - lxd/cluster/connect: Adds UserAgentNotifier constant
+   - lxd/cluster/connect: Adds UserAgentJoiner constant
+   - lxd/cluster/connect: Adds ClientType type and UserAgentClientType function
+   - lxd/api: Updates isClusterNotification to use cluster.UserAgentNotifier
+   - lxd/api/cluster: clusterInitMember comments
+   - lxd/api/cluster: initDataNodeApply usage
+   - lxd/main/init: initDataNodeApply usage
+   - lxd/api/cluster: Updates clusterPutJoin to use cluster.UserAgentJoiner when sending requests to local node
+   - lxd/network/network/interfaces: Replaces clusterNotification bool with cluster.ClientType
+   - lxd/network/driver/common: cluster.ClientType usage
+   - lxd/network/driver: cluster.ClientType usage
+   - lxd/network/driver/ovn: cluster.ClientType usage
+   - lxd/networks: cluster.ClientType usage
+   - lxd/apparmor/dnsmasq: Add /proc/self/fd
+   - lxd/apparmor/forkdns: Allow reading/mapping the binary
+   - lxd/apparmor: Add forkproxy
+   - lxd/device/forkproxy: Add apparmor
+   - lxd/instance/instance/interface: Moves Project() function into ConfigReader interface
+   - lxd/instance/drivers/driver/common: Adds Project function
+   - lxd/instance/drivers/driver/lxc: Updates lxc to use common fields
+   - lxd/instance/drivers/driver/lxc: Removes driver specific Project function
+   - lxd/instance/drivers/driver/qemu: Removes driver specific Project function
+   - lxd/network/network/utils: Improves UpdateDNSMasqStatic error message
+   - lxd/daemon: db.StorageRemoteDriverNames usage
+   - lxd/db: StorageRemoteDriverNames usage
+   - lxd/db/storage/pools: Renames GetRemoteDrivers to StorageRemoteDriverNames for clarity
+   - lxd/storage/drivers/load: Cache supported drivers
+   - lxd/storage/drivers/load: Remove references to "support" in AllDriverNames
+   - lxd/apparmor/forkproxy: Fix running on i386
+   - lxd/storage/drivers/interface: Adds isRemote function
+   - lxd/storage/drivers/driver/common: Adds isRemote() function that returns false
+   - lxd/storage/drivers/driver: Updates driver's Info() function to call d.isRemote()
+   - lxd/storage/drivers/ceph: Implements isRemote function for ceph and cephfs
+   - lxd/storage/drivers/load: Removes SupportedDrivers caching and updates comment
+   - lxd/storage/drivers/load: Simplifies RemoteDriverNames to use the isRemote function
+   - lxd/daemon: storageDrivers.RemoteDriverNames usage simplifcation
+   - doc/networks: Rename OVN parent to network
+   - lxd/networks/ovn: Rename parent to network
+   - scripts/bash: Add network config key
+   - i18n: Update translations from weblate
+
+  ### 試用環境 <!-- Try it for yourself -->
+  <!--
+  This new LXD release is already available for you to try on our [demo service](https://linuxcontainers.org/lxd/try-it/).
+  -->
+  この新しい LXD リリースは私たちの [デモサービス](https://linuxcontainers.org/ja/lxd/try-it/) で利用できます。
+
+  ### ダウンロード <!-- Downloads -->
+  <!--
+  The release tarballs can be found on our [download page](https://linuxcontainers.org/lxd/downloads/).
+  -->
+  このリリースの tarball は [ダウンロードページ](/lxd/downloads/) から取得できます。
+
+  <!--
+  Binary builds are also available for:
+  -->
+  ビルド済みバイナリーは次のように使えます:
+
+   - **Linux:** snap install lxd
+   - **MacOS:** brew install lxc
+   - **Windows:** choco install lxc
+
