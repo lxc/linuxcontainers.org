@@ -40,7 +40,7 @@ content: |-
   <!--
   This is done through [OVN](https://www.ovn.org/en/) and will be the basis for networks inside of LXD projects in the next LXD release. OVN networks in LXD must have a parent managed network, currently only managed bridges are supported (SR-IOV and macvlan coming in 4.6).
   -->
-  これは [OVN](https://www.ovn.org/en/) を使って実現されています。そして、次の LXD リリースでは LXD プロジェクト内部のネットワークの基礎となります。LXD の OVN ネットワークは、親となる管理されたネットワークが必要です。
+  これは [OVN](https://www.ovn.org/en/) を使って実現されています。そして、次の LXD リリースでは LXD プロジェクト内部のネットワークの基礎となります。LXD の OVN ネットワークは、親となる管理されたネットワークが必要です。現状では管理されたブリッジのみがサポートされます（SR-IOV と macvlan は 4.6 で対応予定）。
 
   <!--
   For now, provided you have OVN and OpenVswitch setup on your host, you can have LXD create virtual networks and attach instances to them in much the same way you would a normal bridge.
@@ -50,7 +50,7 @@ content: |-
   <!--
   (Example done on Ubuntu 20.04 LTS with the 4.5 snap)
   -->
-  （4.5 の snap を使った Ubuntu 20.04 での実行例です）
+  （4.5 の snap を使った Ubuntu 20.04 LTS での実行例です）
 
       root@nuc01:~# apt install ovn-host ovn-central --yes
       [snip]
@@ -189,7 +189,7 @@ content: |-
   <!--
   Windows users can now install `virt-viewer` through Chocolatey or the manual installer, once done, LXD will automatically detect it and use it when running `lxc console --type=VGA` on a virtual machine.
   -->
-  Windows ユーザーは、`virt-viewer` を　Chocolatey 経由かマニュアルでインストールできるようになりました。インストールすると、仮想マシンで `lxc console --type=VGA ` を実行した場合に自動的にそれを検出し、使います。
+  Windows ユーザーは、`virt-viewer` を　Chocolatey 経由かマニュアルでインストールできるようになりました。インストールすると、仮想マシンで `lxc console --type=VGA` を実行した場合に自動的にそれを検出し、使います。
 
   #### リモートのストレージプールの扱いの改良 <!-- Improved handling of remote storage pools -->
   <!--
