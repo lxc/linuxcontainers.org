@@ -1,0 +1,50 @@
+title: LXCFS 4.0.6 LTS リリースのお知らせ <!-- LXCFS 4.0.6 LTS has been released -->
+date: 2020/10/19 22:10
+origin: https://discuss.linuxcontainers.org/t/lxcfs-4-0-6-lts-has-been-released/9236
+content: |-
+  ### はじめに <!-- Introduction -->
+  <!--
+  The LXCFS team is pleased to announce the release of LXCFS 4.0.6!
+  -->
+  LXCFS チームが LXCFS 4.0.6 のリリースをお知らせします!
+
+  <!--
+  This is the sixth bugfix release for LXCFS 4.0 which is supported until June 2025.
+  -->
+  これは 2025 年 6 月までサポートされる LXCFS 4.0 の 6 回目のバグフィックスリリースです。
+
+  ### バグ修正 <!-- Bugfixes -->
+  <!--
+  Some of the highlights for this release are:
+  -->
+  このリリースで対応、修正された主な項目は次のとおりです:
+
+   - fuse3 サポートの追加 <!-- Add support for fuse3 -->
+   - 新しいカーネルの `diskstats` フィールドに対する更新 <!-- Update for new diskstats fields -->
+   - いくつかのビルドの問題を修正 <!-- Fix some build issues -->
+
+  <!--
+  The full list of commits is available below:
+  -->
+  コミットの全リストは次の通りです（翻訳なし）:
+
+   - fix epoll create socket error message
+   - Add support for fuse3
+   - Fix `get_min_memlimit()` on non-glibc
+   - Update options passed to fuse_main
+   - rename fuse_compat.h to avoid conflict with system header
+   - Set the file size to 4k
+   - diskstats: support new fields in 4.18+ kernels
+
+  ### サポートとアップグレード <!-- Support and upgrade -->
+  <!--
+  The LXCFS 4.0 branch is supported until June 2025.
+  Only bugfixes and securitiy issues get included into the stable bugfix releases, so it's always safe and recommended to keep up and run the latest bugfix release.
+  -->
+  LXCFS 4.0 ブランチは 2025 年 6 月までサポートされます。
+  stable のバグフィックスリリースでは、バグとセキュリティに関する問題に対する修正のみが行われますので、常に安全です。最新のバグフィックスリリースの状態を維持し、実行することをおすすめします。
+
+  ### ダウンロード <!-- Downloads -->
+
+   - リリース tarball <!-- Main release tarball -->: [lxcfs-4.0.6.tar.gz](https://linuxcontainers.org/downloads/lxcfs/lxcfs-4.0.6.tar.gz)
+   - GPG シグネチャー <!-- GPG signature -->: [lxcfs-4.0.6.tar.gz.asc](https://linuxcontainers.org/downloads/lxcfs/lxcfs-4.0.6.tar.gz.asc)
