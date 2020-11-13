@@ -1,0 +1,547 @@
+title: LXD 4.8 リリースのお知らせ
+date: 2020/11/12 22:11
+origin: https://discuss.linuxcontainers.org/t/lxd-4-8-has-been-released/9458
+content: |-
+  ### はじめに <!-- Introduction -->
+  <!--
+  The LXD team is very excited to announce the release of LXD 4.8!
+  -->
+  LXD チームは LXD 4.8 のリリースをお知らせできることにとてもワクワクしています!
+
+  <!--
+  This introduces vTPM and VirtioFS support, finishes our CGroup2 support and adds a few more useful features and improvements.
+  -->
+  このリリースでは vTPM と VirtioFS のサポートが追加されました。そして cgroup2 サポートの作業が終了し、いくつか有用な機能の追加と改良を行いました。
+
+  <!--
+  It also comes with much improved network and storage tracking and lifecycle to completely eliminate entire classes of race conditions as well as the usual pile of normal bugfixes.
+  -->
+  また、ネットワークとストレージのトラッキングとライフサイクルが大幅に改良され、競合状態のクラス全体と通常のバグ修正の山が完全に排除されました。
+
+  Enjoy!
+
+  ### 新機能とハイライト <!-- New features and highlights -->
+  #### vTPM のサポート <!-- vTPM support -->
+  <!--
+  A new `tpm` device type was added with support for both containers and virtual-machines. This uses a persistent swtpm instance and exposes the usual /dev/tpmX device inside of the instance.
+  -->
+  新しい `tpm` デバイスタイプが追加されました。コンテナと仮想マシンの両方でサポートされます。これは永続的な swtpm インスタンスを使い、通常は `/dev/tpmX` デバイスをインスタンス内で公開します。
+
+      stgraber@castiana:~$ lxc config device add tpm1 tpm tpm path=/dev/tpm0
+      Device tpm added to tpm1
+      stgraber@castiana:~$ lxc config device add tpm2 tpm tpm path=/dev/tpm0
+      Device tpm added to tpm2
+      stgraber@castiana:~$ lxc start tpm1 tpm2
+      
+      stgraber@castiana:~$ lxc list tpm
+      +------+---------+------------------------+-------------------------------------------------+-----------------+-----------+
+      | NAME |  STATE  |          IPV4          |                      IPV6                       |      TYPE       | SNAPSHOTS |
+      +------+---------+------------------------+-------------------------------------------------+-----------------+-----------+
+      | tpm1 | RUNNING | 10.166.11.45 (eth0)    | fd42:4c81:5770:1eaf:216:3eff:fe95:4a5 (eth0)    | CONTAINER       | 0         |
+      +------+---------+------------------------+-------------------------------------------------+-----------------+-----------+
+      | tpm2 | RUNNING | 10.166.11.120 (enp5s0) | fd42:4c81:5770:1eaf:216:3eff:fe71:4323 (enp5s0) | VIRTUAL-MACHINE | 0         |
+      +------+---------+------------------------+-------------------------------------------------+-----------------+-----------+
+
+      stgraber@castiana:~$ lxc exec tpm1 -- tpm2_gettestresult
+      status:   success
+      stgraber@castiana:~$ lxc exec tpm2 -- tpm2_gettestresult
+      status:   success
+
+  #### 仮想マシンに対する VirtioFS <!-- VirtioFS support for virtual machines -->
+  <!--
+  Until now LXD has been using `9p` as the transport for both the agent config drive as well as for any additional path being exposed to the virtual machine using a `disk` device.
+  -->
+  これまで、LXD はエージェントが構成するデバイスと `disk` デバイスを使って仮想マシンに対して公開される追加パスの両方のトランスポートとして `9p` を使ってきました。
+
+  <!--
+  While reliable and generally well supported, 9p isn't exactly fast.
+  `virtiofs` is the new fast option for this and LXD is now exposing any attached drive through both `9p` and `virtiofs` with the LXD agent using whichever is available inside the instance.
+  -->
+  信頼性が高く、一般的に十分サポートされていますが、9p は高速ではありません。
+  `virtiofs` がこのための高速なオプションです。LXD エージェントがインスタンス内部で使用できる方を使用し、LXD は `9p` と `virtiofs` の両方を通してアタッチしたデバイスを公開しています。
+
+      stgraber@castiana:~$ lxc init images:ubuntu/20.04/cloud vm1 --vm
+      Creating vm1
+      stgraber@castiana:~$ lxc config device add vm1 home disk source=/home/stgraber path=/mnt/virtiofs
+      Device home added to vm1
+      stgraber@castiana:~$ lxc start vm1
+      stgraber@castiana:~$ lxc exec vm1 bash
+      root@vm1:~# mkdir /mnt/9p
+      root@vm1:~# mount -t 9p lxd_home /mnt/9p/
+      root@vm1:~# dd if=/dev/zero of=/mnt/9p/test.img bs=4M count=100 conv=fdatasync
+      100+0 records in
+      100+0 records out
+      419430400 bytes (419 MB, 400 MiB) copied, 5.19642 s, 80.7 MB/s
+      root@vm1:~# dd if=/dev/zero of=/mnt/virtiofs/test.img bs=4M count=100 conv=fdatasync
+      100+0 records in
+      100+0 records out
+      419430400 bytes (419 MB, 400 MiB) copied, 0.831076 s, 505 MB/s
+      root@vm1:~# 
+
+  #### cgroup2 のフルサポート <!-- Full CGroup2 support -->
+  <!--
+  LXD has been functional on hybrid and full cgroup2 systems for quite some time but not all limits were necessarily applied when run under it. In fact most controllers would be reported as limited or unsupported on startup.
+  -->
+  LXD はかなり長い間、ハイブリッドとフル cgroup2 システム上で機能してきました。しかし、その環境で実行された場合、必ずしもすべての制限が適用されていたわけではありませんでした。実際、ほとんどのコントローラーが起動時に制限された状態、またはサポートされないとして報告されていました。
+
+  <!--
+  We have now improved this significantly by adding cgroup2 support for every one of the limits supported in LXD with the exception of:
+  -->
+  次のものをのぞいて、LXD でサポートされるすべての制限に cgroup2 サポートを追加することで、これを大幅に改善しました。
+
+   - スワップの優先度指定とスワップの無効化（swappinessコントロールが必要） <!-- swap priority and swap disabling (requires swappiness control) -->
+   - ネットワークの優先度（net\_prioコントローラーが必要） <!-- network priority (requires net_prio controller) -->
+
+  <!--
+  As those two currently do not have a cgroup2 equivalent available in the latest Linux kernel. Once an equivalent solution is implemented, we'll be sure to use it.
+  -->
+  これら2つは現在、最新の Linux カーネルで相当する機能が cgroup2 にないためです。同等のソリューションが実装された際には、必ずその機能を使います。
+
+  <!--
+  We've also added daily tests on cgroup1, cgroup1 with swapaccount and cgroup2 to confirm that all our limits behave as expected: https://jenkins.linuxcontainers.org/job/lxd-test-cgroup/
+  -->
+  デイリーのテストに cgroup1, スワップのアカウンティング付きのcgroup1、cgroup2 のテストを追加し、すべての制限が期待通り動作していることを https://jenkins.linuxcontainers.org/job/lxd-test-cgroup/ で確認しました。
+
+  #### `zfs.clone_copy` の `rebase` モード <!-- `rebase` mode for `zfs.clone_copy` -->
+  <!--
+  This new option for ZFS storage pools tells LXD to track down the image the source instance was created from and use that as the origin of the new instance.
+  -->
+  ZFS ストレージプールに追加された新しいオプションは、ソースのインスタンスが作成された元のイメージを追跡し、新しいインスタンスのオリジンとしてそれを使うように LXD に指示します。
+
+  <!--
+  This means a larger disk usage as a result of the copy since it's effectively duplicating the on-disk delta that the source instance has with its image, however it also avoids tying the new instance with its source. This then allows deleting the source instance and reclaiming its disk usage rather than LXD having to keep the deleted dataset around because of the copy.
+  -->
+  これは、ソースインスタンスがイメージとともに持っているディスク上の差分を効率的に複製するので、そのコピーの結果としてディスク使用量が増えることを意味します。しかし、新しいインスタンスがソースと結びつくことも防ぎます。これにより、LXD が削除されたコピーのために削除されたデータセットを保持する必要がなくなり、ソースインスタンスを削除し、そのディスク領域を再利用できるようになります。
+
+      stgraber@castiana:~$ lxc launch images:ubuntu/20.04/cloud u1
+      Creating u1
+      Starting u1
+      stgraber@castiana:~$ sudo zfs list -t all -o name,origin castiana/lxd/containers/u1
+      NAME                        ORIGIN
+      castiana/lxd/containers/u1  castiana/lxd/images/0d8a2b851ecb4a2dfc6313cb8bae203f15c5ca51c3c80bc65b573224e7f59f59@readonly
+      
+      stgraber@castiana:~$ lxc copy u1 u2
+      stgraber@castiana:~$ sudo zfs list -t all -o name,origin castiana/lxd/containers/u2
+      NAME                        ORIGIN
+      castiana/lxd/containers/u2  castiana/lxd/containers/u1@copy-e51ca348-32b5-4101-ac05-c656bf7c2a1e
+      
+      stgraber@castiana:~$ lxc storage set default zfs.clone_copy false
+      stgraber@castiana:~$ lxc copy u1 u3
+      stgraber@castiana:~$ sudo zfs list -t all -o name,origin castiana/lxd/containers/u3
+      NAME                        ORIGIN
+      castiana/lxd/containers/u3  -
+      
+      stgraber@castiana:~$ lxc storage set default zfs.clone_copy rebase
+      stgraber@castiana:~$ lxc copy u1 u4
+      stgraber@castiana:~$ sudo zfs list -t all -o name,origin castiana/lxd/containers/u4
+      NAME                        ORIGIN
+      castiana/lxd/containers/u4  castiana/lxd/images/0d8a2b851ecb4a2dfc6313cb8bae203f15c5ca51c3c80bc65b573224e7f59f59@readonly
+
+  この例では: <!-- In this example: -->
+
+   - u1 はイメージからコピーして作られた通常のコンテナです <!-- u1 is a normal container created as a copy from an image -->
+   - u2 はソースのスナップショットから作られた通常のコピーです <!-- u2 is a normal copy made from a snapshot of its source -->
+   - u3 はスタンドアロンコピーで、u1 のデータ全体とイメージを複製します <!-- u3 is a standalone copy, duplicating the entire data of u1 and the image -->
+   - u4 はリベースコピーで、u1 の差分とイメージを複製します <!-- u4 is a rebased copy, duplicating the delta u1 has with the image -->
+
+  #### `lxc snapshot` と `lxc storage volume snapshot` コマンドの `--reuse` オプション<!-- `--reuse` option in `lxc snapshot` and `lxc storage volume snapshot` -->
+  <!--
+  It's now possible to have `lxc snapshot` or `lxc storage volume snapshot` delete a pre-existing snapshot before creating a new snapshot with the same name.
+  -->
+  `lxc snapshot` と `lxc storage volume snapshot` コマンドで、同じ名前で新しいスナップショットを作成する前に既存のスナップショットを削除できるようになりました。
+
+      stgraber@castiana:~$ lxc snapshot u1 foo
+      stgraber@castiana:~$ lxc snapshot u1 foo
+      Error: Add snapshot info to the database: This instance_snapshot already exists
+      stgraber@castiana:~$ lxc snapshot u1 foo --reuse
+      stgraber@castiana:~$ 
+
+  #### `restarted` ライフサイクルイベント <!-- `restarted` lifecycle event -->
+  <!--
+  LXD logs `lifecycle` events as an easy way to track important state changes.
+  Up until now, an instance being restarted or getting restarted from within would log a `stopped` event followed by a `started` event.
+  -->
+  LXD は重要な状態の変更を容易に追跡できるように `lifecycle` イベントをログに記録します。
+  これまで、インスタンスが再起動されたり内部から再起動されると、ログには `stopped` イベントとそれに続く `started` イベントが記録されていました。
+
+  <!--
+  This has now been replaced by a single `restarted` event, more accurately describing what's happened.
+  -->
+  これが、何が起こったかを正確に記述する単一の `restarted` イベントに置き換えられました。
+
+      stgraber@castiana:~$ lxc monitor --type=lifecycle
+      location: none
+      metadata:
+        action: virtual-machine-restarted
+        source: /1.0/virtual-machines/u2
+      timestamp: "2020-11-12T17:47:50.559795164-05:00"
+      type: lifecycle
+
+  #### ユーザからのリクエストのロギングの改良 <!-- Improved logging of user requests -->
+  <!--
+  LXD has been recording the requestor for all API calls in its log messages and in internal context data. However this was a bit limited due to not logging what protocol was used (unix, candid, tls) or being able to log the username when a request came over the unix socket.
+  -->
+  LXD はすべての API 呼び出しの要求元をログメッセージと内部コンテキストデータに記録しています。しかし、これには少し制限がありました。どのプロトコル（unix, candid, tls）が使われたのかをログに記録しない、unix ソケット経由のリクエストの場合はユーザー名をログに記録できると言ったようなことのためです。
+
+  <!--
+  This has now been fixed and a basic query will now log something like this:
+  -->
+  この問題は修正され、基本的な要求は次のように記録を行うようになりました:
+
+   - `DBUG[11-12|18:26:10] Handling                                 method=GET url=/1.0 ip=@ protocol=unix username=stgraber`
+   - `DBUG[11-12|23:26:59] Handling                                 method=GET url=/1.0 ip=[2001:470:b0f8:1000:223:a4ff:fe01:16f]:48334 protocol=candid username=stgraber@stgraber.net`
+   - `DBUG[11-12|18:28:23] Handling                                 method=GET url=/1.0 ip=127.0.0.1:47508 protocol=tls username=390fdd27ed5dc2408edc11fe602eafceb6c025ddbad9341dfdcb1056a8dd98b1`
+
+  ### すべての変更点（翻訳なし） <!-- Complete changelog -->
+  <!--
+  Here is a complete list of all changes in this release:
+  -->
+  このリリースでの完全な変更点のリストは次のとおりです:
+
+   - lxd/device/usb: Fix check for required USB device
+   - seccomp: switch back to pread()
+   - nsexec: simplify userns attach
+   - forksyscall: preserve root and cwd fds for shifted mount emulation
+   - lxc/init.go: remove for-loop in create()
+   - lxd/device/nic/ovn: Improved error messages
+   - lxd/network/driver/ovn: Generates static EUI64 IPv6 address for instance switch ports in instanceDevicePortAdd
+   - lxd/network/openvswitch/ovn: Adds LogicalSwitchPortGetDNS to return switch port DNS info
+   - lxd/network/openvswitch/ovn: Updates LogicalSwitchPortDeleteDNS to only accept DNS UUID rather than port name
+   - lxd/network/openvswitch/ovn: Updates LogicalSwitchPortSetDNS to return the DNS UUID record ID
+   - lxc/network/driver/ovn: Adds validateExternalSubnet function
+   - lxd/network/driver/ovn: Updates Validate to ensure ipv4.address and ipv6.address are allowed external subnets
+   - lxd/network/driver/ovn: Adds support for publishing instance port IPs to uplink network
+   - revert/revert.go: remove a for-loop from Clone()
+   - doc/networks: Adds ipv4.nat and ipv6.nat to ovn network
+   - lxc/copy.go: Remove unneeded for-loop in c.Run()
+   - lxd/db/networks: Fix NULL description
+   - lxd/network/driver/ovn: Allows "none" as value for ipv4.address and ipv6.address
+   - lxd/network/driver/ovn: Re-run validation of auto generated address used in FillConfig
+   - lxd/network/driver/ovn: Modify setup() to support optional IP addresses
+   - lxd/network/driver/ovn: Updates instanceDevicePortAdd to support optional IP addresses
+   - lxd/network/driver/ovn: Only call Validate in FillConfig if state is set
+   - lxd/db/projects: Adds GetProject function
+   - lxd/network/driver/ovn: Converts instance port functions to exported
+   - lxd/network/driver/ovn: Removes ipv4.routes.external and ipv6.routes.external
+   - lxc/network/driver/ovn: Adds projectRestrictedSubnets and uplinkRoutes functions
+   - lxd/network/driver/ovn: Simplifies Validate by using separate data loader functions
+   - lxd/network/driver/ovn: Passes project into allowedUplinkNetworks
+   - lxd/network/driver/ovn: Passes project into validateUplinkNetwork
+   - lxd/network/driver/ovn: Load project in setup() to pass to n.validateUplinkNetwork()
+   - lxd/network/driver/ovn: Adds InstanceDevicePortValidateExternalRoutes function
+   - lxd/network/network/utils/ovn: Remvoes unused functions
+   - lxd/device/nic/ovn: Adds ovnNet interface and use OVN instance port functions directly from network
+   - lxd/device/nic/ovn: Removes validation of external routes against network's external routes
+   - lxd/device/nic/ovn: Validate NICs external routes using d.network.InstanceDevicePortValidateExternalRoutes
+   - doc/networks: Removes ipv4.routes.external and ipv6.routes.external from ovn network
+   - lxd/patches: Adds patch for removing ipv4.routes.external and ipv6.routes.external from ovn networks
+   - api: Adds network_ovn_external_routes_remove extension
+   - lxd/network/driver/ovn: Fix project restricted subnets check in validateExternalSubnet
+   - lxd/images: Fixes ineffectual assign warning
+   - lxd/resources/usb: Fixes ineffectual assign warning
+   - lxd/storage/drivers/driver/lvm/volumes: Fixes ineffectual assign warning
+   - lxd/instance: Use project aware inst.LogPath() function when clearing log dir in instanceCreateInternal
+   - lxd/instance/drivers/driver/lxc: Project aware rename of log path in Rename()
+   - lxd/instance/drivers/driver/qemu: Project aware rename of log path in Rename()
+   - lxd/instance/drivers/driver/lxc: Makes collectCRIULogFile project log path aware
+   - lxd/instance/logs: Makes containerLogsGet project aware
+   - lxd/main/init/interactive: Clarifies question about using an existing empty disk
+   - lxd/network/driver/bridge: Sets ipv4.nat=true when adding a new fan network with fan.underlay_subnet=auto
+   - lxd/patches: Adds patchNetworkFANEnableNAT to set ipv4.nat=true for fan networks missing the setting
+   - doc/networks: Clarifies comment defaults for bridge ipv4.nat when not specified during creation
+   - lxd/seccomp: Fix go vet
+   - lxd/instance: Add Architecture to common
+   - lxd/devices: Disable USB on s390x
+   - add new "restarted" event to reboot section of onStop in both lxc and qemu
+   - tests: Fix missing clustering cleanup
+   - lxd/storage/zfs: Properly recurse delete volumes
+   - tests: Fix cleanup in backup
+   - lxd/storage/backend/lxd: b.driver.UnmountVolume usage
+   - lxd/instance/drivers/driver/lxc: Moves log rotate and mount before devices start in startCommon
+   - lxd/storage/drivers/interface: Adds keepBlockDev arg to UnmountVolume
+   - lxf/storage/drivers/volume: v.driver.UnmountVolume usage
+   - lxd/storage/drivers/volume: Adds keepBlockDev arg to UnmountTask
+   - lxd/storage/drivers/utils: Passes true for keepBlockDev arg to UnmounTask in shrinkFileSystem
+   - lxd/storage/drivers/generic/vfs: d.UnmountVolume usage
+   - lxd/storage/drivers/drivers/mock: Adds keepBlockDev arg to UnmountVolume
+   - lxd/storage/drivers/driver/btrfs/volumes: Adds keepBlockDev arg to UnmountVolume
+   - lxd/storage/drivers/driver/dir/volumes: Adds keepBlockDev arg to UnmountVolume
+   - lxd/storage/drivers/driver/cephfs/volumes: Adds keepBlockDev arg to UnmountVolume
+   - lxd/storage/drivers/driver/lvm/volumes: UnmountVolume usage
+   - lxd/storage/drivers/driver/lvm/volumes: Adds keepBlockDev arg to UnmountVolume
+   - lxd/storage/drivers/driver/lvm/volumes: UnmountTask usage
+   - lxd/storage/drivers/driver/ceph/volumes: d.UnmountVolume usage
+   - lxd/storage/drivers/driver/ceph/volumes: Adds keepBlockDev arg to UnmountVolume
+   - lxd/storage/drivers/driver/zfs/volumes: Adds keepBlockDev arg to UnmountVolume
+   - lxd/storage/drivers/driver/zfs/volumes: d.UnmountVolume usage
+   - lxd/device/config/devices/sort: Sort disks between nics and other types of devices
+   - lxd/device/config/devices/sort: Comment improvement
+   - lxd/instance/drivers: Device lifecycle logging improvements
+   - lxd/instance/drivers: Stop devices in reverse order to how they were started
+   - lxd/instance/drivers/driver/lxc: Only use postStartHooks var where actually needed
+   - lxd/instance/drivers/driver/qemu: Adds log rotation to Start
+   - lxd/storage/zfs: Fix argument ordering
+   - lxd/device/config: Add TPMDevice to RunConfig
+   - lxd/cluster/connect: Renames project arg to projectName in ConnectIfInstanceIsRemote
+   - lxd/cluster/connect: Adds projectName arg to ConnectIfVolumeIsRemote
+   - lxd/response: Adds projectName argument to forwardedResponseIfVolumeIsRemote
+   - lxd/storage/volumes: forwardedResponseIfVolumeIsRemote projectName argument usage
+   - lxd/db/storage/volumes: Corrects mispelled argument name in GetStorageVolumeNodeAddresses
+   - lxc/move: Bypass security.protection.delete
+   - lxd/device: Add TPM device type
+   - lxd/db: Add device type "tpm"
+   - lxd/instance/drivers: Support TPM devices in VMs
+   - lxd/device: Fix typo
+   - api: Add tpm_device_type API extension
+   - doc: Add tpm device
+   - test: Add TPM device
+   - doc/instances: usb and gpu are available in VMs
+   - doc/instances: Add missing header in usb device
+   - extract restart logic to new instance interface function of lxc and qemu
+   - scripts/bash: Fix snap handling
+   - extract common restart code to driver_common.go
+   - lxd/storage: Rename RunningSnapshotFreeze to RunningCopyFreeze
+   - lxd/storage: Ensure source is frozen during copy
+   - lxd/instance/drivers: Write out updated backup.yaml after rename
+   - lxd: Switch to new candid URL
+   - lxd/storage/zfs: No need to remove dashes from UUID
+   - shared: Drop GroupId and UserId
+   - lxd: Port to os/user
+   - lxd/daemon: Log protocol
+   - lxd/daemon: Pass writer to Authenticate
+   - lxd/daemon: Record username on unix queries
+   - lxd/storage: Lock during the whole image replace
+   - lxd/db/errors: Adds ErrNoClusterMember var used to indicate no cluster member has been found for a resource
+   - lxd/db/storage/volumes: Modifies GetStorageVolumeNodeAddresses to detect volumes that are not bound to a single node
+   - lxd/db/storage/volumes: Removes StorageVolumeIsAvailable
+   - lxd/response: Updates forwardedResponseIfVolumeIsRemote to accept poolName rather than poolID
+   - lxd/storage/volumes: forwardedResponseIfVolumeIsRemote usage
+   - lxd/storage/volumes/backup: forwardedResponseIfVolumeIsRemote usage
+   - lxd/storage/volumes/snapshot: forwardedResponseIfVolumeIsRemote usage
+   - lxd: Replace use of tx.GetProject with cluster.GetProject
+   - lxd/project/project: Adds StorageVolumeProjectFromRecord function
+   - lxd/db/instances: Renames and reworks instanceListExpanded to InstanceList
+   - lxd/db/instances/export/test: Removes unused file
+   - lxd/db/instances/test: Renames TestInstanceListExpanded to TestInstanceList
+   - lxd/patches: driver.VolumeTypeNameToDBType usage
+   - lxd/profiles/utils: Comment on doProfileUpdateContainer for clarity
+   - lxd/response: cluster.ConnectIfVolumeIsRemote usage
+   - lxd/storage/drivers/driver/types: Adds VolumeMultiNode field to Info
+   - lxd/storage/drivers/driver/cephfs: Adds VolumeMultiNode=true to Info struct
+   - lxd/storage/utils: Renames VolumeTypeNameToType to VolumeTypeNameToDBType
+   - lxd/storage: VolumeTypeNameToDBType usage
+   - lxd/storage/utils: Adds VolumeDBTypeToTypeName function
+   - lxd/storage/utils: Comment consistency
+   - lxd/storage/utils: Renames and reworks VolumeUsedByRunningInstancesWithProfilesGet to VolumeUsedByInstances
+   - lxd/storage/utils: Adds VolumeUsedByExclusiveRemoteInstancesWithProfiles function
+   - lxd/cluster/connect: Reworks ConnectIfVolumeIsRemote to use storagePools.VolumeUsedByExclusiveRemoteInstancesWithProfiles
+   - lxd/device/disk: storagePools.VolumeUsedByExclusiveRemoteInstancesWithProfiles usage
+   - lxd/storage/volumes: storagePools.VolumeTypeNameToDBType usage
+   - lxd/storage/volumes: Updates storagePoolVolumeTypePost to use updated storagePools.VolumeUsedByInstances
+   - lxd/storage/backend/lxd: Updates UpdateCustomVolume to check for online resize support when resizing
+   - lxd/storage/backend/lxd: Updates RestoreCustomVolume with VolumeUsedByInstances
+   - lxd/storage/utils: Removes VolumeUsedByInstancesGet function as not properly project compliant
+   - lxd/storage/volumes/utils: Replaces storagePools.VolumeUsedByInstancesGet usage with storagePools.VolumeUsedByInstances in storagePoolVolumeUsedByGet
+   - lxd/device/disk: Replace storagePools.VolumeUsedByInstancesGet usage with storagePools.VolumeUsedByInstances in storagePoolVolumeAttachShift
+   - lxd/endpoints: Update error string in test
+   - shared/simplestreams: Record variant
+   - shared/simplestreams: Fix sorting of images
+   - lxd/project/project: Updates StorageVolumeProjectFromRecord to not return error (as never populated)
+   - lxd/project/project: Adds NetworkProjectFromRecord function
+   - lxd/storage/utils: project.StorageVolumeProjectFromRecord usage
+   - lxd/network/driver/ovn: Adds NIC external route overlap validation of other OVN external network subnets and OVN NIC external routes
+   - lxd/device/nic/ovn: Updates ovnNet interface's InstanceDevicePortValidateExternalRoutes to add instance argument
+   - lxd/device/nic/ovn: d.network.InstanceDevicePortValidateExternalRoutes usage
+   - lxd/instance/qmp: Merge Go routines
+   - shared/cancel: Close chDone on failure
+   - lxd: Only close doneCh on success
+   - i18n: Update translations from weblate
+   - lxd/network/driver/ovn: Adds ovnProjectNetworksWithUplink function
+   - lxd/network/driver/ovn: Updates ovnNetworkExternalSubnets to allow optional filtering of our own network's subnets
+   - lxd/network/driver/ovn: Updates ovnNICExternalRoutes to optionally filter our own NIC's external routes
+   - lxd/network/driver/ovn: Updates InstanceDevicePortValidateExternalRoutes to use new functions and signatures
+   - lxd/network/driver/ovn: Updates Validate to check external subnets dont overlap with other OVN networks or NICs sharing our uplink
+   - lxd/network/openvswitch/ovn: Return ErrOVNNoPortIPs in LogicalSwitchPortSetDNS when no port IPs found
+   - lxd/network/driver/ovn: Retry LogicalSwitchPortSetDNS up to 5 times to avoid missing dynamic IP allocation by OVN
+   - exec: make sure to only use TIOCGPTPEER if available
+   - lxd/instance/drivers: Change memory backend
+   - lxd/instance/drivers: Add virtio-fs config drive template
+   - lxd/instance/drivers: Handle virtio-fs config drive
+   - lxd/instance/drivers: Add system unit file for virtio-fs config drive
+   - lxd/device/disk: Support virtio-fs
+   - lxd/device/disk: Handle alternative virtfs-proxy-helper location
+   - lxd-agent: Prefer virtio-fs over 9p
+   - lxd/instances: Fix virtiofsd for config drive
+   - lxd/instance/drivers: Issue warning if virtiofsd is missing
+   - lxd/device: Issue warning if virtiofsd is missing
+   - lxd/instance/drivers: Fix lxd-agent systemd unit conditions
+   - lxd/storage: Only freeze if not frozen
+   - lxd/device/sriov: Harden calls to ip link vf
+   - api: Add storage_zfs_clone_copy_rebase extension
+   - doc/storage: Allow 'rebase' in zfs.clone_copy
+   - lxd/storage: Allow 'rebase' as value for zfs.clone_copy
+   - lxd/storage/zfs: Add support for clone_copy rebase
+   - lxd/qmp: Ensure checkbuffer is called
+   - lxd/network/driver/ovn: Adds support for using uplink bridge using bridge.driver=openvswitch
+   - lxd/virtiofs: Fix handling of config drive
+   - lxd/storage/lvm: Properly make lvm.thinpool_name node-specific
+   - lxd/instance/drivers/driver/qemu: Call MountInstanceSnapshot when mounting vm snapshots
+   - lxd/instance/drivers/driver/qemu: Ensure consistent mount state when restoring snapshot irrespective of whether instance was running
+   - lxd/instance/drivers/driver/lxc: Ensure consistent mount state when restoring snapshot irrespective of whether instance was running
+   - lxd/storage/drivers/volume: Comment clarification
+   - lxd/storage/drivers/driver/zfs/volumes: Only resurrect deleted image volume if same size in CreateVolume
+   - lxd/storage/drivers/driver/zfs/volumes: Improved logging
+   - lxd/storage/drivers/driver/zfs/volumes: Return ErrNotSupported in SetVolumeQuota when trying to resize an image block volume
+   - lxd/storage/drivers/driver/ceph/volumes: Only resurrect deleted image volume if same size in CreateVolume
+   - lxd/storage/drivers/driver/ceph/volumes: Improves logging in CreateVolume
+   - lxd/storage/drivers/driver/ceph/volumes: Don't allow image volume size in SetVolumeQuota
+   - lxd/storage/backend/lxd: Adds size to logging in SetInstanceQuota
+   - lxd/storage/backend/lxd: Update EnsureImage to resize/regenerate optimized image volumes if existing volume is different size than pool's volume.size setting
+   - lxd/storage/backend/lxd: Updates CreateInstanceFromImage to detect ErrCannotBeShrunk and create one-off non-optimized volume for instance
+   - lxd/storage/drivers/driver/ceph/utils: Updates getRBDMappedDevPath to allow control of mapping
+   - lxd/storage/drivers/driver/ceph/utils: d.rbdUnmapVolumeSnapshot on one line
+   - lxd/storage/drivers/driver/ceph/volumes: d.getRBDMappedDevPath usage
+   - lxd/storage/utils: Makes InstanceDiskBlockSize snapshot aware
+   - lxd/storage/drivers/driver/ceph/volumes: Removes extraneous comment
+   - lxd/storage/drivers/driver/ceph/volumes: Activate volume before genericVFSMigrateVolume in MigrateVolume
+   - lxd/storage/pool/interface: Adds MountInfo struct
+   - lxd/storage/pool/interface: Return MountInfo from MountInstance and MountInstanceSnapshot
+   - lxd/storage/backend/lxd: Populate MountInfo with OurMount and DiskPath in MountInstance
+   - lxd/storage/backend/lxd: Unexports getInstanceDisk
+   - lxd/storage/backend/lxd: Populates OurMount and DiskPath in MountInstanceSnapshot
+   - lxd/storage/utils: Updates InstanceDiskBlockSize to use MountInfo
+   - lxd/storage/backend/mock: Interface changes
+   - lxd/instance: Updates instanceCreateAsSnapshot to use MountInfo
+   - lxd/patches: Updates to use MountInfo
+   - lxd/instance/drivers/driver/lxc: Updates mount to return MountInfo and usage
+   - lxd/instance/drivers/driver/qemu: Updates mount to return MountInfo and usage
+   - lxd/storage/drivers/generic/vfs: Adds genericVolumeDiskFile constant for excluding generic disk block files
+   - lxd/storage/drivers/generic/vfs: Avoid using d.GetVolumeDiskPath in genericVFSMigrateVolume
+   - lxd/storage/drivers/generic/vfs: Use genericVolumeDiskFile in genericVFSGetVolumeDiskPath
+   - lxd/storage/drivers/driver/ceph/utils: Add logging to rbdMapVolume and rbdUnmapVolume
+   - lxd/storage/drivers/driver/ceph/utils: Updates getRBDMappedDevPath to support snapshots
+   - lxd/storage/drivers/driver/ceph/volumes: Updates MountVolume to return ourMount for block volumes
+   - lxd/storage/drivers/driver/ceph/volumes: Updates UnmountVolumeSnapshot to handle block volumes
+   - lxd/storage/drivers/driver/ceph/volumes: Renames RBDDevPath to devPath
+   - lxd/storage/utils: Improves logging and uses size value from vol.ConfigSizeFromSource in ImageUnpack
+   - lxd/storage/backend/lxd: Improves logging in CreateInstanceFromImage
+   - lxd/storage/backend/lxd: Improves logging and uses imgVol.ConfigSizeFromSource in EnsureImage
+   - doc/instances: Rephrase limits.memory.swap
+   - doc/instances: Typo fix
+   - lxd/storage: Use same defaults as "lxd init"
+   - lxd/instance/drivers/driver/qemu: Converts all supplied memory byte values to mebibytes for comparison
+   - lxd/rbac: Fix URL encoding
+   - lxd/cgroup: Fix V2 detection/handling
+   - lxd/cgroup: Add file read/writer
+   - lxd/cgroup: Fix controller detection
+   - lxd/cgroup: Add cpuset functions
+   - lxd/cgroup: Fix warning wording
+   - lxd/devices: Drop old workaround
+   - lxd/devices: Port to cgroup package
+   - lxd/instance: Replace CGroupGet/CGroupSet
+   - lxd/devices: Update to use cgroup abstraction
+   - lxd/cgroup: Implement proper typing
+   - lxd/cgroup: Change ParseCPU to return int64
+   - lxd/instance/lxc: Update for cgroup function changes
+   - lxd/cgroup: Improve naming
+   - lxd/instance: Update for new naming
+   - lxd/cgroup: Add V2 for GetBlkioWeight and SetBlkioWeight
+   - lxd/device: Move disk priority back to lxc
+   - lxd/cgroup: Fix get blkio weight
+   - lxd/cgroup: Add abstraction for SetBlkioLimit
+   - lxd/device: Port disk limits to abstraction
+   - lxd/db/storage/volumes: Adds workaround for old remote volume schema in GetStorageVolumeNodeAddresses
+   - lxd/db/storage/volumes: Renames GetStorageVolumeNodeAddresses to GetStorageVolumeNodes
+   - lxd/cluster/connect: Updates ConnectIfVolumeIsRemote to use tx.GetStorageVolumeNodes
+   - lxd/db/storage/volumes/test: Updates test for TestGetStorageVolumeNodes
+   - lxd/storage/utils: Updates VolumeUsedByInstances to accept an api.StorageVolume arg
+   - lxd/storage/utils: Updates VolumeUsedByExclusiveRemoteInstancesWithProfiles to use an api.StorageVolume arg
+   - lxd/storage/volumes/utils: Updates storagePoolVolumeUsedByGet to accept an api.StorageVolume arg
+   - lxd/cluster/connect: Updates ConnectIfVolumeIsRemote to use VolumeUsedByExclusiveRemoteInstancesWithProfiles with vol arg
+   - lxd/device/disk: Updates validateConfig to use storagePools.VolumeUsedByExclusiveRemoteInstancesWithProfiles with vol arg
+   - lxd/device/disk: Updates storagePoolVolumeAttachShift to use storagePools.VolumeUsedByInstances with vol arg
+   - lxd/storage/backend/lxd: Updates UpdateCustomVolume to use VolumeUsedByInstances with vol arg
+   - lxd/storage/backend/lxd: Updates RestoreCustomVolume to use VolumeUsedByInstances with vol arg
+   - lxd/storage/volumes: storagePoolVolumeUsedByGet usage
+   - lxd/storage/volumes: Updates storagePoolVolumeTypePost to use storagePools.VolumeUsedByInstances with a vol arg
+   - lxd/storage/volumes: Use db.StoragePoolVolumeTypeName constants
+   - lxd/storage/volumes: Updates storagePoolVolumeTypeGet to use storagePoolVolumeUsedByGet with a vol arg
+   - lxd/storage/volumes: Updates storagePoolVolumeTypeDelete to use storagePoolVolumeUsedByGet with a vol arg
+   - lxd/storage/volumes/snapshots: storagePoolVolumeUsedByGet usage
+   - lxd/storage/volumes/utils: Removes storagePoolVolumeAPI constants and converter functions
+   - lxd/patches: Recreates patchStoragePoolVolumeAPI constants and function for historical patches
+   - lxd/storage/volumes: Simplifies volume type in URL in storagePoolVolumes routes
+   - lxd/storage/volumes/snapshot: Simplifies volume type in URL generation
+   - lxd/storage/volumes: Updates storagePoolVolumeTypePostRename args
+   - lxd/storage/volumes: Removes unnecessary var init in storagePoolVolumeTypePostMove
+   - lxd/storage/drivers/driver/ceph/volumes: Fix rbd device leak in RenameVolume
+   - lxd/storage/drivers/generic/vfs: Use revert package in genericVFSRenameVolume
+   - lxd/storage/utils: Adds matching of instances on same node as local volume in VolumeUsedByInstances
+   - lxd/storage/volume: Removes need for loading storage volume when doing lxc storage volume attach
+   - lxd/device/disk: Reject path property for block disk devices
+   - lxd/storage/utils: Renames VolumeUsedByInstanceDevices and passes usedByDevices into callback function
+   - lxd/device/disk: storagePools.VolumeUsedByInstanceDevices usage
+   - lxd/storage/backend/lxd: VolumeUsedByInstanceDevices usage
+   - lxd/storage/utils: VolumeUsedByInstanceDevices usage
+   - lxd/storage/volumes/utils: storagePools.VolumeUsedByInstanceDevices usage
+   - lxd/storage/volumes: storagePools.VolumeUsedByInstanceDevices usage
+   - lxd/storage/volumes: Updates storagePoolVolumeTypePost to use updated storagePoolVolumeTypePostRename and storagePoolVolumeTypePostMove
+   - lxd/storage/volumes: Updates storagePoolVolumeTypePostRename to use updated storagePoolVolumeUpdateUsers
+   - lxd/storage/volumes: Updates storagePoolVolumeTypePostMove to use updated storagePoolVolumeUpdateUsers
+   - lxd/instance/drivers/driver/lxc: Removes common function LocalDevices implemented in LXC driver
+   - lxd/db/instances: Better errors in InstanceList
+   - lxd/storage/utils: Adds VolumeUsedByProfileDevices function
+   - lxd/storage/utils: Removes unused volume name matching logic in VolumeUsedByInstanceDevices
+   - lxd/storage/volumes/utils: Updates storagePoolVolumeUpdateUsers to use storagePools.VolumeUsedByProfileDevices and storagePools.VolumeUsedByInstanceDevices
+   - lxd/storage/volumes/utils: Updates storagePoolVolumeUsedByGet to use storagePools.VolumeUsedByProfileDevices
+   - lxd/storage/volumes/utils: Golint suggestions in storagePoolVolumeUsedByGet
+   - lxd/cluster/connect: Removes CLI command flag in error response in ConnectIfVolumeIsRemote
+   - lxd/db/storage/pools/test: Initialise db.StorageRemoteDriverNames in db_test package
+   - lxd/db: Removes duplicated db.StorageRemoteDriverNames init from tests
+   - lxd/locking/lock: Adds UnlockFunc type and updates Lock() signature
+   - lxd/storage/drivers/utils: Extends OperationLockName to take into account content type.
+   - lxd/storage/drivers/volume: Adds MountLock function
+   - lxd/storage/drivers/driver/lvm/utils: drivers.OperationLockName usage
+   - lxd/storage/backend/lxd: drivers.OperationLockName usage
+   - lxd/storage/drivers: Adds mount and unmount locking
+   - lxd/storage/drivers/volume: Removes locking from MountTask and UnmountTask
+   - lxd/instance/drivers/driver/lxc: Stop devices in two phases
+   - lxd/device/disk: Removes workaround for ceph disks now that disks are stopped after instance is stopped
+   - doc/rest-api: auth property is never set to guest
+   - lxd/apparmor: Workaround socket handling
+   - lxd/storage: Expand local config
+   - lxd/cgroup: Fix swap limits
+   - lxd/instance/lxc: Fix crash in cgroup function
+   - lxc/snapshot: Add reuse option
+   - lxc/storage: Add reuse option to snapshot
+   - i18n: Update translation templates
+   - lxd/instance: Removes instanceConfigureInternal
+   - lxd/instance: Replace instanceConfigureInternal usage with update backup file which was only relevant part
+   - lxd/storage/backend/lxd: Adds log to CreateInstanceFromMigration showing if migration volume size header not sent
+   - lxd/cgroup: Support SetCPUShare on V2
+   - lxd/cgroup: Implement SetCPUCfsLimit for V2
+   - lxd/instance/lxc: Port to SetCPUCfsLimit
+   - lxd/cgroup: Support CGroup V2 in ParseCPU
+   - lxd-agent: Don't allow connections when rebooting
+   - i18n: Update translations from weblate
+
+  ### 試用環境 <!-- Try it for yourself -->
+  <!--
+  This new LXD release is already available for you to try on our [demo service](https://linuxcontainers.org/lxd/try-it/).
+  -->
+  この新しい LXD リリースは私たちの [デモサービス](https://linuxcontainers.org/ja/lxd/try-it/) で利用できます。
+
+  ### ダウンロード <!-- Downloads -->
+  <!--
+  The release tarballs can be found on our [download page](https://linuxcontainers.org/lxd/downloads/).
+  -->
+  このリリースの tarball は [ダウンロードページ](https://linuxcontainers.org/lxd/downloads/) から取得できます。
+
+  <!--
+  Binary builds are also available for:
+  -->
+  ビルド済みバイナリーは次のように使えます:
+
+   - **Linux:** snap install lxd
+   - **MacOS:** brew install lxc
+   - **Windows:** choco install lxc
