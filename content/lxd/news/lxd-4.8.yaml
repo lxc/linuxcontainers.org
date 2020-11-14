@@ -101,6 +101,7 @@ content: |-
       castiana/lxd/containers/u4  castiana/lxd/images/0d8a2b851ecb4a2dfc6313cb8bae203f15c5ca51c3c80bc65b573224e7f59f59@readonly
 
   In this example:
+
    - u1 is a normal container created as a copy from an image
    - u2 is a normal copy made from a snapshot of its source
    - u3 is a standalone copy, duplicating the entire data of u1 and the image
