@@ -10,7 +10,7 @@ part is located at https://github.com/lxc/lxd-demo-server
  * python3 (>= 3.3)
  * python3-bs4
  * python3-jinja2
- * python3-markdown (<3.0.0)
+ * python3-markdown
  * python3-pygments
 
 ## Generating the website
