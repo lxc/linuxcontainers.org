@@ -76,5 +76,103 @@ An example of a valid sign-off line is:
 Use your real name and a valid e-mail address.
 Sorry, no pseudonyms or anonymous contributions are allowed.
 
-We also require each commit be individually signed-off by their author,
-even when part of a larger set.
+**Note:**
+* Sign-off each commit individually, even when it is part of a larger set.
+* If multiple authors are participating, sign-off each commit individually by their author.
+
+# Commits
+
+* Prefer smaller commits over large commits: For example one for each section
+* Add useful messages to your commits, that describe the content or changes
+
+# Style & Content
+
+## Text- & Programming-Languages used
+
+* **Markdown:** 
+  Standard Markdown language and the following extensions:
+
+   ```
+   codehilite
+   toc
+   extra
+   tables
+   footnotes
+   admonition
+   wikilinks
+   attr_list
+   fenced_code
+   ```
+
+   See also:
+
+   * [source file of generate](https://github.com/lxc/linuxcontainers.org/blob/master/generate) for currently enabled extensions.
+   * [python-markdown documentation](https://python-markdown.github.io/extensions/) for details.
+
+* **HTML:** Used only when necessary.
+
+### Special css-classes in use
+
+* For `Notes` and `Warnings`:
+
+  Add the css-class `.p-noteadm` directly below the content:
+
+  ```
+    !!! note "Note:"
+	Content
+	{: .p-noteadm }
+  ```
+
+
+## Guidelines for the content
+
+* create a Table of Content (TOC) manually (with a markdown list), the toc extension is only used for creation of hyperlinks.
+
+* write short and continuous text
+* use lists, tables & code tags 
+* use headers for each section and sub-section
+
+## Translations
+
+Copy the original file you want to translate (if a file for the translation is not already existing) and rename it.
+
+**File name:**
+
+Add the shortcut of the language to the filename.
+For example, for the `advanced-guide.md`:
+
+    advanced-guide.ja.md  # japanese version
+
+**Layout**:
+
+Keep the original layout.
+
+**Accuracy:**
+
+Translate as accurate as possible.
+
+**Quality:**
+
+You should have good language skills.
+
+**Completeness:**
+
+Your pull request does not have to be complete, every piece of translation is a good start.
+
+**Keep the original content:**
+
+Add the original text as comments inside the text, with:
+
+`<!-- original text -->`
+
+**Example:** 
+
+Take a look at the [source file of the japanese version of the advanced guide](https://raw.githubusercontent.com/lxc/linuxcontainers.org/master/content/lxd/advanced-guide.ja.md).
+
+# Test your changes
+
+Before opening a pull request, you should test the changes you made.
+
+Generate and run a local copy of the website (see [Readme.md](README.md)) and check whether it works and looks correctly in your browser.
+
+
