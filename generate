@@ -215,6 +215,65 @@ def download_sort_key(download_name):
     return [token_key(token) for token in re.split(r'[-.]', download_name)]
 
 
+def is_translated_outdated(prefix, page_raw_path):
+    prefix = prefix[1:]
+
+    main_structure = load_json("STRUCTURE.json")
+    try:
+        translated_structure = load_json("STRUCTURE.{}.json".format(prefix))
+    except FileNotFoundError:
+        return False
+
+    # find the entry in both structures through the page's raw path
+    main = list(filter(lambda entry: entry["path"] == page_raw_path,
+                       main_structure))
+    translated = list(filter(lambda entry: entry["path"] == page_raw_path,
+                             translated_structure))
+
+    # ensure filtered lists are not empty
+    if(main and translated):
+        main_entry = main[0]
+        translated_entry = translated[0]
+
+        if("meta" in main_entry and "meta" in translated_entry):
+            # compare markdown file path mtimes
+            source_path = content_path(main_entry["meta"]["input"])
+            translated_path = content_path(translated_entry["meta"]["input"])
+            DAY = 86400
+            BUFFER = 7 * DAY
+            if (os.path.getmtime(source_path) -
+                    os.path.getmtime(translated_path)) > BUFFER:
+                return True
+
+    return False
+
+
+def add_html_translation_warning(content, page_raw_path, prefix):
+    language = prefix[1:]
+    try:
+        warnings = load_json("WARNINGS.{}.json".format(language))
+    except FileNotFoundError:
+        warnings = load_json("WARNINGS.json")
+
+    translation_warning = warnings["outdated-translation"]
+
+    # text of the warning with a link to the english version
+    warning = """{translation_warning}
+              <a href=\"{page_raw_path}\">
+              [English Version] </a>
+              """.format(translation_warning=translation_warning,
+                         page_raw_path=page_raw_path)
+
+    # html for notification box
+    html = """<div class=\"p-notification--caution\">
+            <p class=\"p-notification__response\" role=\"status\">
+            <span class=\"p-notification__status\"> Note: </span>
+            {warning}
+            </p>
+            </div>""".format(warning=warning)
+    return html + content
+
+
 def gen_page(entry, override, prefix, **variables):
     item = dict(entry)
 
@@ -259,13 +318,25 @@ def gen_page(entry, override, prefix, **variables):
             content = fd.read()
     elif item['generator'] == "markdown":
         template = "markdown-page.tpl.html"
-        with open(content_path(item['meta']['input']), "r") as fd:
-            content = md2html(fd.read())
+        md_path = content_path(item['meta']['input'])
+        with open(md_path, "r") as fd:
+            md_content = fd.read()
+            content = md2html(md_content)
+            if (prefix and is_translated_outdated(prefix, page_raw_path)):
+                content = add_html_translation_warning(content, page_raw_path,
+                                                       prefix)
+
     elif item['generator'] == "downloads":
         # Support a markdown description before the download table
         if "input" in item['meta']:
-            with open(content_path(item['meta']['input']), "r") as fd:
-                content = md2html(fd.read())
+            md_path = content_path(item['meta']['input'])
+            with open(md_path, "r") as fd:
+                md_content = fd.read()
+                content = md2html(md_content)
+                if (prefix and is_translated_outdated(prefix, page_raw_path)):
+                    content = add_html_translation_warning(content,
+                                                           page_raw_path,
+                                                           prefix)
 
         downloads = []
         download_path = item['meta']['dir'].lstrip("/")
