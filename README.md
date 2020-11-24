@@ -35,6 +35,19 @@ Install the following software (naming may depends on your distribution):
 ### Clone the repo
 
     git clone https://github.com/lxc/linuxcontainers.org
+  
+**Note:** The folder `downloads` is quite big, so you can skip that folder by using [git sparse-checkout](https://www.git-scm.com/docs/git-sparse-checkout) 
+(The only exception is, when you work on the downloads page).
+
+As a replacement for the missing `downloads` folder you need to create the following empty folders, before generating the website  (otherwise the generator shows an error):
+
+```
+downloads/cgmanager/
+downloads/distrobuilder/  
+downloads/lxc/  
+downloads/lxcfs/  
+downloads/lxd/
+```
 
 ### Generating the website
 
