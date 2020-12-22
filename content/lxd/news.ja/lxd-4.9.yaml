@@ -247,7 +247,7 @@ content: |-
   <!--
   In environment where this is supported, the `ipv4.routes.anycast` and `ipv6.routes.anycast` keys may now be set to `true`, bypassing the duplicate subnet check and allowing two instances to hold the same public address, leaving it up to the upstream router to decide which gets the traffic.
   -->
-  これがサポートされている環境では、`ipv4.routes.anycast` と `ipv6.routes.anycast` を `true` に設定し、サブネットの重複チェックを回避し、ふたつのインスタンスが同じパブリックアドレスを保持できるようにし、トラフィックの取得の決定を蒸留ルーターに任せることができます。
+  これがサポートされている環境では、`ipv4.routes.anycast` と `ipv6.routes.anycast` を `true` に設定し、サブネットの重複チェックを回避し、ふたつのインスタンスが同じパブリックアドレスを保持できるようにし、トラフィックの取得の決定を上流ルーターに任せることができます。
 
   #### `limits.instances` プロジェクトオプション <!-- `limits.instances` project option -->
   <!--
