@@ -1,0 +1,261 @@
+title: LXD 4.10 has been released
+date: 2021/01/08 22:01
+origin: https://discuss.linuxcontainers.org/t/lxd-4-10-has-been-released/9894
+content: |-
+  ### Introduction
+  The LXD team is very excited to announce the release of LXD 4.10!
+
+  This is a lighter release as the LXD team was off between the 18th of December and 4th of January but a lot of bugfixes and a few new improvements have made it in anyway.
+
+  Enjoy!
+
+  ### New features and highlights
+  #### VLAN information in network state
+  Similarly to bond and bridge information, a new vlan struct was added to the network state endpoint. This exposes the lower device and the VLAN id of the interface.
+
+      root@abydos:~# lxc query /1.0/networks/bond-sw01.100/state
+      {
+      	"addresses": [],
+      	"bond": null,
+      	"bridge": null,
+      	"counters": {
+      		"bytes_received": 213651991756,
+      		"bytes_sent": 42453202,
+      		"packets_received": 97607519,
+      		"packets_sent": 431818
+      	},
+      	"hwaddr": "0a:0f:7c:6e:db:d9",
+      	"mtu": 1500,
+      	"state": "up",
+      	"type": "broadcast",
+      	"vlan": {
+      		"lower_device": "bond-sw01",
+      		"vid": 100
+      	}
+      }
+
+  #### Proxy device support for VMs (NAT only)
+  Virtual machines can now make use of the `proxy` device type.
+  This is restricted to NAT mode only (`nat=true`) and so requires the same protocol be used on both sides.
+
+  #### Bridge port isolation
+  A new `security.port_isolation` option on bridged network interfaces allows restricting communication between instances.
+
+  #### New sub-commands for image properties
+  Three new sub-commands to `lxc image` were added to help with accessing, setting and unsetting image properties.
+
+   - lxc image get-property
+   - lxc image set-property
+   - lxc image unset-property
+
+  Example:
+
+      stgraber@castiana:~$ lxc image get-property 305db7054652 os
+      Ubuntu
+      stgraber@castiana:~$ lxc image set-property 305db7054652 foo bar
+      stgraber@castiana:~$ lxc image get-property 305db7054652 foo
+      bar
+      stgraber@castiana:~$ lxc image unset-property 305db7054652 foo
+      stgraber@castiana:~$ 
+
+  #### Multi-queue networking in VMs
+  Network interfaces in virtual machines are now automatically setup to have a number of RX and TX queues matching the number virtual CPUs assigned to the virtual machine.
+
+  This should provide much improved network performance especially when dealing with high speed networking.
+
+  ### Complete changelog
+  Here is a complete list of all changes in this release:
+
+   - lxd/network/network/interface: Adds Project function
+   - lxd/network/driver/common: Adds Project function
+   - lxd/network/driver/common: Remove cluster notification and DB record removal from delete() function
+   - lxd/network/driver: Always delete when requested, ignore LocalStatus() pending
+   - lxc/networks: Remove revert removal on failure of clustered network in networksPost
+   - lxd/networks: Allow re-create of pending network when pending nodes already exist in networksPost
+   - lxd/networks: Adds revert to doNetworksCreate
+   - lxd/networks: Moves cluster notification an DB record removal into networkDelete
+   - shared/api: Fix typo
+   - shared/api: Add NetworkStateVLAN
+   - lxd/resources: Add VLAN struct
+   - api: Add network_state_vlan
+   - lxd/instance/qmp: Update for go-qmp change
+   - lxd/backup: Fix URL in lifecycle events
+   - Add DeepSource config
+   - Use result of type assertion to simplify cases
+   - Replace .Sub(time.Now()) with time.Until() handler
+   - Remove unnecessary fmt.Sprintf() on string
+   - Omit comparison with boolean constant
+   - lxd/db/networks: Adds duplicate key detection to getNetworkConfig
+   - lxd/db/networks: Adds NetworkErrored function
+   - lxd/db/networks: Changes UpdateNetwork to not set created status
+   - lxd/network/driver/ovn: Reject instance port start if cannot find DHCP options
+   - lxd/networks: Updates doNetworksCreate to accept a Network rather than load its own
+   - lxd/networks: Debug log consistency in doNetworksCreate
+   - lxd/networks: doNetworksCreate usage
+   - lxd/networks: When auto creating pending nodes, don't pass global config into DB function in networksPost
+   - lxd/networks: Adds networkPartiallyCreated helper function
+   - lxd/networks: Updates networksPostCluster to detect existing global config and skip create if already exists
+   - lxd/api/cluster: Skip non-created networks when joining
+   - lxd/device/nic: Don't allow NICs to use networks that are not created
+   - lxd/db/networks: Renames ClusterTx GetNonPendingNetworks to GetCreatedNetworks
+   - lxd/db/networks: Renames Cluster GetNonPendingNetworks to GetCreatedNetworks
+   - lxd/api/cluster: cluster.GetCreatedNetworks usage
+   - lxd/network: tx.GetCreatedNetworks usage
+   - lxd/networks: s.Cluster.GetCreatedNetworks usage
+   - lxd/patches: tx.GetCreatedNetworks usage
+   - test/suites/clustering: More network clustering tests
+   - lxd/db/networks: Tighten restrictions in CreatePendingNetwork to only allow pending nodes to be added while network is pending
+   - lxd/networks: Allow single node cluster network create using --target
+   - lxd/db/cluster/update: Adds patch updateFromV41 function
+   - lxd/storage/pools/utils: Debug log consistency in storagePoolCreateLocal
+   - lxd/db/storage/pools: Adds duplicate key detection to getStoragePoolConfig
+   - lxd/storage/pools: storagePoolsPost comments line width
+   - lxd/db/storage/pools: Adds StoragePoolErrored function
+   - lxd/db/storage/pools: Renames GetNonPendingStoragePoolNames to GetCreatedStoragePoolNames
+   - lxd/api/cluster: cluster.GetCreatedStoragePoolNames usage
+   - lxd/storage/pools/utils: Renames id arg to poolID in storagePoolCreateLocal
+   - lxd/storage: s.Cluster.GetCreatedStoragePoolNames usage
+   - lxd/storage/pools: Restructures storagePoolsPost to align with networksPost
+   - lxd/storage/pools: Updates storagePoolsPostCluster to reject global config on re-create attempts
+   - lxd/storage/pools: Adds storagePoolPartiallyCreated function
+   - test/suites/clustering: Updates storage pool status tests
+   - lxd/db/storage/pools: Improve errors in CreatePendingStoragePool
+   - test/suites/clustering: Adds additional storage pool state tests
+   - lxd/db/cluster/update: Adds patch updateFromV42 function
+   - lxd/device: Add support for bridge port isolation
+   - api: Add instance_nic_port_isolation extension
+   - lxd/instance/drivers/qmp/monitor: Handle closed event channel from qmp package in run
+   - lxd/instance/drivers/driver/qemu: Logs when instance is stopped in getMonitorEventHandler
+   - lxd/instance/operationlock: Fixes deadlock caused by call to Reset in Create
+   - lxd/instance/operationlock: Store operation in instanceOperations before calling go routine
+   - lxd/instance/operationlock: Exit go routine started in Create when the operation is done
+   - lxd/network/driver/ovn: Detect IPv6 DHCP options correctly
+   - lxd/device: allow adding proxy device to VM instances
+   - lxd/instance/drivers: run device post-start hooks in QEMU driver
+   - doc: update `proxy` doc to reflect VM support
+   - lxd/device/nic/routed: Switches to network.InterfaceExists for clarity
+   - lxd/device/nic/routed: Remove host side veth interface if exists in postStop
+   - lxd/network/driver/ovn: Adds support for physical uplink interface to be a bridge
+   - lxd/db/networks: Corrects comment on GetCreatedNetworks
+   - lxd/network/driver/physical: Clarify error when changing parent interface when in use
+   - lxd/network/driver/bridge: Don't apply updates to node when network is pending
+   - lxd/network/driver: Don't apply changes to node if network is pending
+   - lxd/storage/backend/lxd: Only apply local node changes if both pool and node status are not pending
+   - lxc/image: Add support for directly getting, setting and unsetting image properties
+   - i18n: Update translation templates
+   - lxd/db/cluster/update: Modifies updateFromV43 and updateFromV42 to use IFNULL(node_id, -1) to avoid nodes with 0 ID
+   - lxd/db/cluster: Adds updateFromV43 patch that adds unique index to storage_pools_config and networks_config table
+   - doc: features.networks is not enabled by default for projects
+   - shared/util: Adds StringHasPrefix function
+   - lxd/device/disk: Adds sourceIsLocalPath function
+   - lxd/device/disk: Use shared.StringHasPrefix when validating ceph/cephfs prefixes
+   - lxd/device/disk: Use d.sourceIsLocalPath when validating source host path exists
+   - lxd/instance/qemu: Enable multiqueue on tap NICs
+   - lxd/instance/qemu: Use a minimum of 2 network queues
+   - lxd/storage/drivers/driver/zfs/volumes: Error quoting in RestoreVolume
+   - lxd/storage/backend/lxd: Don't fail in DeleteInstanceSnapshot if volume DB record already deleted
+   - lxd/storage/backend/lxd: Fix deleting subsequent snapshots for ZFS in RestoreInstanceSnapshot
+   - lxd/instances/post: Use source.Project when loading instance to get instance type in containersPost
+   - lxd/instances/post: Rename project to targetProject to differentiate between source.Project in containersPost
+   - lxd/instances/post: Error quoting in containersPost
+   - lxd/instances/post: Add comment about default instance type for migration in containersPost
+   - lxd/instances/project: Import project package normally and rename project var to projectName
+   - lxd/instances/post: Populate req.Source.Project with project.Default if not specified in containersPost
+   - test/suites/projects: Adds tests for copying snapshot to another project
+   - doc/image-handling: Fix typo
+   - shared/proxy: Support CIDR ranges in `no_proxy`
+   - simplestreams: Drop duplicated slash
+   - lxd/instance/drivers/qmp: Fix race in Disconnect
+   - test/suites/static/analysis: Fixes ineffassign usage due to upstream changes
+   - lxd/instance: Copy snapshot expiry in instanceCreateAsCopy
+   - lxd/migration: Rebuilds protobuf using protoc v3.14 and latest google.golang.org/protobuf/cmd/protoc-gen-go
+   - lxd/migration: Adds expiry_date field to snapshots protobuf
+   - lxd/migrate/instance: Populate expiry date in snapshotToProtobuf
+   - lxd/migrate/storage/volumes: Populate zero expiry date in volumeSnapshotToProtobuf
+   - lxd/storage/migration: Populate expiry date in snapshotProtobufToInstanceArgs
+   - lxd/migration/migration/volumes: Updates TypesToHeader and MatchTypes to use a pointer to MigrationHeader
+   - lxd/migrate/instance: Avoid copying migration.MigrationHeader due to new internal state lock added by protobuf
+   - lxd/migrate/storage/volumes: Avoid copying migration.MigrationHeader due to new internal state lock added by protobuf
+   - lxd/migrate/instance: Fix snapshotToProtobuf to not use loop pointer for device name
+   - lxd/storage/migration: Conistently use accessor functions in snapshotProtobufToInstanceArgs
+   - test/suites/snapshots: Adds test for local copy of snapshot expiry date
+   - test/suites/migration: Adds test for copying snapshot expiry date during migration
+   - test/suites/migration: Adds test to ensure snapshot devices are copied during migration
+   - lxd/storage/quota/projectquota: Consistent comment endings and error quoting
+   - lxd/storage/drivers/driver/dir/utils: Updates setQuota to remove old quota if volID has changed
+   - lxd/storage/drivers/driver/dir/utils: Modifies setupInitialQuota to not use initQuota
+   - lxd/api/internal: Updates internalImportFromRecovery to reinitialise root disk quota
+   - lxd/network/openvswitch/ovn: Adds mayExist argument to LogicalRouterAdd
+   - lxd/network/openvswitch/ovn: Adds mayExist argument to LogicalRouterSNATAdd
+   - lxd/network/openvswitch/ovn: Simplifies LogicalRouterRouteAdd
+   - lxd/network/openvswitch/ovn: Adds mayExist argument to LogicalRouterPortAdd
+   - lxd/network/openvswitch/ovn: Adds LogicalRouterSNATDeleteAll function
+   - lxd/network/openvswitch/ovn: Clear unused keys in LogicalSwitchSetIPAllocation
+   - lxd/network/openvswitch/ovn: Adds support for clearing unused settings in LogicalRouterPortSetIPv6Advertisements
+   - lxd/network/openvswitch/ovn: Adds LogicalRouterPortDeleteIPv6Advertisements function
+   - lxd/network/driver/ovn: Enforce that ipv6.address if specified is at least a /64 subnet
+   - lxd/network/driver/ovn: Pass update flag to mayExist where possible
+   - lxd/network/driver/ovn: Delete SNAT rules from route before adding new ones
+   - lxd/network/driver/ovn: Improve SNAT failure errors
+   - lxd/network/driver/ovn: Pass update to mayExists when setting up default routes
+   - lxd/network/driver/ovn: Create internal router port before DHCP option setup
+   - lxd/network/driver/ovn: Modifies IPv6 RA settings and removes them entirely when IPv6 disabled
+   - lxd/network/driver/ovn: Don't return DHCPv6 subnet if IPv6 prefix smaller than /64
+   - lxd: Rename Operation types
+   - lxd/db: Rename operation type descriptions
+   - lxd/network/network/interface: Adds handleDependencyChange function
+   - lxd/network/driver/common: Adds notifyDependentNetworks function and no-op placeholder handleDependencyChange function
+   - lxd/network/driver/ovn: Adds handleDependencyChange function
+   - lxd/network/driver/physical: Calls notifyDependentNetworks when config is updated
+   - lxd/network/openvswitch/ovn: Adds LogicalRouterDNATSNATDeleteAll function
+   - lxd/network/openvswitch/ovn: Clarifies DNAT_AND_SNAT related function comments
+   - lxd/network/openvswitch/ovn: Adds LogicalSwitchPortExists function
+   - lxd/network/driver/ovn: Moves instance NIC port config parsing into InstanceDevicePortConfigParse function
+   - lxd/network/driver/ovn: Updates InstanceDevicePortAdd to accept an uplinkConfig argument
+   - lxd/network/driver/ovn: Clarifies argument names in the context of an OVN dependent network in handleDependencyChange
+   - lxd/network/driver/ovn: Updates handleDependencyChange to handle changes to uplink network's ovn.ingress_mode setting
+   - lxd/device/nic/ovn: Updates NIC to use d.network.InstanceDevicePortConfigParse and updated d.network.InstanceDevicePortAdd
+   - lxd/resources: Always initialize lists
+   - lxd/storage/utils: Improves error message in VolumeUsedByExclusiveRemoteInstancesWithProfiles
+   - lxd/db/instances: Updates InstanceList to accept filter to pass to GetInstances()
+   - lxd/db/instances: Clarifies comment and arg name on GetLocalInstancesInProject
+   - lxd/db/instances/test: cluster.InstanceList usage
+   - lxd/storage/utils: s.Cluster.InstanceList usage
+   - lxd/network/driver/ovn: n.state.Cluster.InstanceList usage
+   - lxd/patches: InstanceList usage
+   - lxd/network/network/utils/sriov: Adds SR-IOV allocation functions
+   - lxd/network/network/utils/sriov: Updates SRIOVGetHostDevicesInUse to use InstanceList()
+   - lxd/network/network/utils/sriov: Adds network usage support to SRIOVGetHostDevicesInUse
+   - lxd/network/network/utils/sriov: SRIOVGetHostDevicesInUse usage
+   - lxd/network/network/utils/sriov: Updates SRIOVFindFreeVirtualFunction args to not need Device
+   - lxd/network/network/utils/sriov: Adds SRIOVGetVFDevicePCISlot function
+   - lxd/network/network/utils: Adds InterfaceBindWait function
+   - lxd/device/pci: Adds PCI device management package
+   - lxd/device/infiniband/sriov: SRIOV network function usage
+   - lxd/device/nic/physical: Use pci package
+   - lxd/device/gpu: Use pci package
+   - lxd/device/nic/sriov: network.InterfaceBindWait
+   - lxd/device/nic/sriov: Use pci package
+   - lxd/device/nic/sriov: SRIOV network function usage
+   - lxd/device/nic/sriov: Comment clarity in setupSriovParent
+   - lxd/device/nic/sriov: Removes networkGetVFDevicePCISlot function
+   - lxd/device/device/utils/generic: Removes pci functions
+   - lxd/device/device/utils/network: Removes networkInterfaceBindWait function
+   - lxd/device/device/utils/instance: Removes instanceGetReservedDevices function
+   - lxd/network/driver/bridge: Comment improvements
+   - lxd/network/driver/ovn: Updates addChassisGroupEntry to generate chassis priority using stable random value
+   - i18n: Update translations from weblate
+   - lxd/init: Clarify https listener question
+   - doc: Fixes typo in macvlan NIC section
+
+  ### Try it for yourself
+  This new LXD release is already available for you to try on our [demo service](https://linuxcontainers.org/lxd/try-it/).
+
+  ### Downloads
+  The release tarballs can be found on our [download page](https://linuxcontainers.org/lxd/downloads/).
+
+  Binary builds are also available for:
+
+   - **Linux:** snap install lxd
+   - **MacOS:** brew install lxc
+   - **Windows:** choco install lxc
