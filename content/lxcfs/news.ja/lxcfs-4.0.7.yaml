@@ -1,0 +1,51 @@
+title: LXCFS 4.0.7 リリースのお知らせ
+date: 2021/01/08 22:01
+origin: https://discuss.linuxcontainers.org/t/lxcfs-4-0-7-has-been-released/9893
+content: |-
+  ### はじめに <!-- Introduction -->
+  <!--
+  The LXCFS team is pleased to announce the release of LXCFS 4.0.6!
+  -->
+  LXCFS チームが LXCFS 4.0.7 のリリースをお知らせします!
+
+  <!--
+  This is the seventh bugfix release for LXCFS 4.0 which is supported until June 2025.
+  -->
+  これは 2025 年 6 月までサポートされる LXCFS 4.0 の 7 回目のバグフィックスリリースです。
+
+  ### バグ修正 <!-- Bugfixes -->
+  <!--
+  Some of the highlights for this release are:
+  -->
+  このリリースで対応、修正された主な項目は次のとおりです:
+
+   - スワップの振る舞いの一貫性（READMEに記載） <!-- Consistent swap behavior (documented in README) -->
+
+  <!--
+  The full list of commits is available below:
+    -->
+   コミットの全リストは次の通りです（翻訳なし）:
+
+   - meminfo: show host swap values when no limit or equal limits are set
+   - README: clarify SWAP
+   - cgroups: Add get_memory_swappiness
+   - swap: Fix usage reporting
+   - swap: Only report usage when swappiness is 0
+   - swap: Tweak meminfo logic
+   - swap: Make /proc/swaps match /proc/meminfo
+   - swap: Remove now unused variable
+   - docs: fix simple typo, throuh -> through
+
+  ### Support and upgrade
+  <!--
+  The LXCFS 4.0 branch is supported until June 2025.
+  Only bugfixes and securitiy issues get included into the stable bugfix releases, so it's always safe and recommended to keep up and run the latest bugfix release.
+  -->
+  LXCFS 4.0 ブランチは 2025 年 6 月までサポートされます。
+  stable のバグフィックスリリースでは、バグとセキュリティに関する問題に対する修正のみが行われますので、常に安全です。最新のバグフィックスリリースの状態を維持し、実行することをおすすめします。
+
+  ### ダウンロード <!-- Downloads -->
+
+   - リリース tarball <!-- Main release tarball -->: [lxcfs-4.0.7.tar.gz](https://linuxcontainers.org/downloads/lxcfs/lxcfs-4.0.7.tar.gz)
+   - GPG シグネチャー <!-- GPG signature -->: [lxcfs-4.0.7.tar.gz.asc](https://linuxcontainers.org/downloads/lxcfs/lxcfs-4.0.7.tar.gz.asc)
+
