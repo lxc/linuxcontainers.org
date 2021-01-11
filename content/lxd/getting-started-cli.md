@@ -100,20 +100,6 @@ If you previously had the LXD deb package installed, you can migrate all your ex
 
     lxd.migrate
 
-##### Ubuntu 14.04 LTS (LXD 2.0 deb)
-To install the LTS branch of LXD, run:
-
-    apt install -t trusty-backports lxd lxd-client
-
-##### Ubuntu 16.04 LTS (LXD 3.0 deb)
-To install the LTS branch of LXD, run:
-
-    apt install lxd lxd-client
-
-To install the feature branch of LXD, run:
-
-    apt install -t xenial-backports lxd lxd-client
-
 #### Snap package (Arch Linux, Debian, Fedora, OpenSUSE and Ubuntu)
 LXD upstream publishes and tests a snap package which works for a number of Linux distributions.
 
