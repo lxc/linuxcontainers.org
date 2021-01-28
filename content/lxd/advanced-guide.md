@@ -446,9 +446,9 @@ A list of images on that server can be obtained with:
 
     lxc image list some-name:
 
-Launch a container based on an image of that server:
+Launch an instance based on an image of that server:
    
-    lxc launch some-name:image-name your-container
+    lxc launch some-name:image-name your-instance [--vm]
 
 
 #### Add remote LXD servers
@@ -477,12 +477,17 @@ A list of images on that server can be obtained with:
 
     lxc image list my-images:
 
+#### Launch an instance
+Launch an instance based on an image of that server:
+   
+    lxc launch some-name:image-name your-instance [--vm]
+
 #### Manage instances on a remote server
-You can use the same commands but prefixing the instance
-and images name with the remote host like:
+You can use the same commands but prefixing the server and instance name like:
 
     lxc exec remoteserver-name:instancename -- apt-get update
-   
+
+You can replace `apt-get update` with any command the instance supports.
 
 # Images - Part 2
 
