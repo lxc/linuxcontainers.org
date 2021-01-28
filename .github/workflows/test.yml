@@ -1,0 +1,33 @@
+name: Static analysis and build test
+on:
+  - push
+  - pull_request
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        python:
+          - 3.6
+          - 3.8
+          - 3.9
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install python
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python }}
+
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y man2html-base pycodestyle python3-bs4 python3-markdown
+
+      - name: Static analysis
+        run: pycodestyle generate
+
+      - name: Build website
+        run: ./generate
