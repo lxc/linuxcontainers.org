@@ -96,23 +96,9 @@ For the LXD 2.0 stable release, use:
 
     snap install lxd --channel=2.0/stable
 
-If you previously had the LXD deb package installed, you can migrate all your existing data over with:
+**Note:** If you previously had the LXD deb package installed, you can migrate all your existing data over with:
 
     lxd.migrate
-
-##### Ubuntu 14.04 LTS (LXD 2.0 deb)
-To install the LTS branch of LXD, run:
-
-    apt install -t trusty-backports lxd lxd-client
-
-##### Ubuntu 16.04 LTS (LXD 3.0 deb)
-To install the LTS branch of LXD, run:
-
-    apt install lxd lxd-client
-
-To install the feature branch of LXD, run:
-
-    apt install -t xenial-backports lxd lxd-client
 
 #### Snap package (Arch Linux, Debian, Fedora, OpenSUSE and Ubuntu)
 LXD upstream publishes and tests a snap package which works for a number of Linux distributions.
@@ -219,6 +205,8 @@ The LXD-client `lxc` is a command tool to manage your LXD servers.
 The following command will give you an overview of all available commands and options:
 
 	lxc
+
+Use `lxc [command] --help` for more information about a command, like flags and further options.
 
 ## Launch an instance
 You can launch an instance with command `lxc launch`:
