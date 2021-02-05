@@ -19,13 +19,6 @@ Ubuntuユーザは、LXCFS の公式 PPA があります:
 
 * [lxcfs-stable](https://launchpad.net/~ubuntu-lxc/+archive/lxcfs-stable): 最新の stable リリース <!-- Latest stable release -->
 
-<!--
-And for those who want development snapshots:
--->
-開発中のスナップショットが必要な場合はこちらです:
-
- * [lxcfs-git-master](https://launchpad.net/~ubuntu-lxc/+archive/lxcfs-git-master): "master" ブランチ <!-- "master" branch -->
-
 # 現時点の開発バージョン <!-- Current development version -->
 
 <!--
