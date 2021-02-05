@@ -43,7 +43,7 @@ LXC はいくつかのコンポーネントから構成されています。
     * lua (ツリー内、2.0.x での長期サポート) <!-- lua (in tree, long term support in 2.0.x) -->
     * [Go](https://github.com/lxc/go-lxc)
     * [ruby](https://github.com/lxc/ruby-lxc)
-    * [python2](https://github.com/lxc/python2-lxc)
+    * [python3](https://github.com/lxc/python3-lxc)
     * [Haskell](https://github.com/fizruk/lxc)
  * コンテナを操作するための標準的なツール群<!-- A set of standard tools to control the containers -->
  * コンテナ作成のためのテンプレート <!-- Distribution container templates -->

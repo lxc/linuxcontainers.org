@@ -25,16 +25,16 @@ LXC контейнеры часто рассматривается как что
 # Компоненты
 LXC в настоящее время состоит из нескольких отдельных компонентов:
 
-* The liblxc библиотека
-* Несколько языковых привязок для API:
-  * Python3 (in-tree, поддержка в 1.0.x)
-  * Lua (in-tree, поддержка в 1.0.x)
-  * [Go] (https://github.com/lxc/go-lxc)
-  * [Ruby] (https://github.com/lxc/ruby-lxc)
-  * [Python2] (https://github.com/lxc/python2-lxc)
-  * [Haskell] (https://github.com/fizruk/lxc)
-* Набор стандартных инструментов для управления контейнерами
-* Шаблоны контейнеров распространения
+ * The liblxc библиотека
+ * Несколько языковых привязок для API:
+    * Python3 (in-tree, поддержка в 1.0.x)
+    * Lua (in-tree, поддержка в 1.0.x)
+    * [Go](https://github.com/lxc/go-lxc)
+    * [Ruby](https://github.com/lxc/ruby-lxc)
+    * [Python3](https://github.com/lxc/python3-lxc)
+    * [Haskell](https://github.com/fizruk/lxc)
+ * Набор стандартных инструментов для управления контейнерами
+ * Шаблоны контейнеров распространения
 
 # Лицензирование
 LXC это свободное программное обеспечение,
