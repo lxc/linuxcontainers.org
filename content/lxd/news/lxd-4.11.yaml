@@ -1,0 +1,324 @@
+title: LXD 4.11 has been released
+date: 2021/02/05 02:02
+origin: https://discuss.linuxcontainers.org/t/lxd-4-11-has-been-released/10135
+content: |-
+  ### Introduction
+  The LXD team is very excited to announce the release of LXD 4.11!
+
+  This is quite a featureful release, adding a number of new API features, networking configuration and new devices for use with virtual machines.
+
+  Enjoy!
+
+  ### New features and highlights
+  #### Bulk instance state change API
+  A new API was added as `PUT /1.0/instances` which allows updating the state of all instances in the targeted project.
+
+  At its simplest, pushing:
+
+      {"state": {
+          {"action": "restart"}
+      }
+
+  Will cause LXD to restart all instances in the project in parallel.
+
+  This is now automatically used with `lxc start/stop/restart/pause` when the `--all` flag is passed rather than having the command line utility itself perform the bulk operations.
+
+  #### GVRP support for dynamic vlan configuration
+  A new `gvrp` property has been added to physical, macvlan, ipvlan and routed networking. When enabled, it will instruct Linux to advertise the VLAN configuration on the parent port, allowing for a suitably configured switch to update its VLAN table and port membership accordingly.
+
+  #### Server-side instance storage pool migration
+  A new `pool` field was added to the migration API at `POST /1.0/instances/NAME`.
+  This allows for completely server-side migration of an instance between storage pools.
+
+  In the past, a temporary copy+delete operation from the client was needed to achieve the same result.
+
+  This is now also integrated with `lxc move NAME --storage TARGET` which will automatically use the new API on recent LXD servers.
+
+  #### Volume usage API
+  A new API at `GET /1.0/storage-pools/POOL/volumes/TYPE/VOLUME/state` was added to get the current disk usage information for the volume.
+
+  LXD has had that information for a long time but until now, it was only accessible when a volume was attached to an instance by accessing that instance's state information.
+
+  A new `lxc storage volume info` command was added to query that API.
+  Additionally, `lxc storage volume list` was extended to support customizable columns and a new optional column was added for the volume size (as that can be an expensive API call on some storage drivers).
+
+  The result looks like this:
+
+      stgraber@castiana:~$ lxc storage volume list default -ctncuU
+      +-----------------+------------------------------------------------------------------+--------------+---------+----------+
+      |      TYPE       |                               NAME                               | CONTENT-TYPE | USED BY |  USAGE   |
+      +-----------------+------------------------------------------------------------------+--------------+---------+----------+
+      | container       | lxd-build                                                        | filesystem   | 1       | 2.67GB   |
+      +-----------------+------------------------------------------------------------------+--------------+---------+----------+
+      | container       | lxd-build-focal                                                  | filesystem   | 1       | 1.32GB   |
+      +-----------------+------------------------------------------------------------------+--------------+---------+----------+
+      | container       | metrics                                                          | filesystem   | 1       | 709.67MB |
+      +-----------------+------------------------------------------------------------------+--------------+---------+----------+
+      | container       | snapcraft-lxd                                                    | filesystem   | 1       | 6.61GB   |
+      +-----------------+------------------------------------------------------------------+--------------+---------+----------+
+      | container       | snapcraft-lxd-bgp                                                | filesystem   | 1       | 1.49GB   |
+      +-----------------+------------------------------------------------------------------+--------------+---------+----------+
+      | container       | steam                                                            | filesystem   | 1       | 11.13GB  |
+      +-----------------+------------------------------------------------------------------+--------------+---------+----------+
+      | custom          | backups                                                          | filesystem   | 1       | 98.30kB  |
+      +-----------------+------------------------------------------------------------------+--------------+---------+----------+
+      | custom          | images                                                           | filesystem   | 1       | 5.83GB   |
+      +-----------------+------------------------------------------------------------------+--------------+---------+----------+
+      | image           | b31b2d483586fd143e4081b292179330235d081e923db39f7f864db2e1f4045d | block        | 1       |          |
+      +-----------------+------------------------------------------------------------------+--------------+---------+----------+
+      | image           | bb0c2a5d24b424943154f0a16d909a84a394378c567f950159b2d58f06960cbe | block        | 1       |          |
+      +-----------------+------------------------------------------------------------------+--------------+---------+----------+
+      | virtual-machine | cgroup2                                                          | block        | 1       | 2.96GB   |
+      +-----------------+------------------------------------------------------------------+--------------+---------+----------+
+      | virtual-machine | ubuntu-desktop                                                   | block        | 1       | 2.40GB   |
+      +-----------------+------------------------------------------------------------------+--------------+---------+----------+
+      | virtual-machine | win10                                                            | block        | 1       | 9.14GB   |
+      +-----------------+------------------------------------------------------------------+--------------+---------+----------+
+
+  #### SR-IOV GPU support (VM only)
+  A new `gputype` of `sriov` is now supported.
+
+  This only works with a few rare GPUs that support SR-IOV, but should you be lucky enough to have one of those with the proper host drivers, you can now do:
+
+      lxc config device add NAME my-gpu gpu gputype=sriov pci=ADDR
+
+  Using the address of the parent GPU and LXD will automatically find an unused VF and pass it to the VM as a GPU.
+
+  #### PCI device type (VM only)
+  A new `pci` device type is now present in LXD and allows for any PCI device to be passed into the virtual machine.
+
+  It's still preferred to use the SR-IOV mode of `nic` and `gpu` devices when dealing with those devices, but this feature now makes it possible to pass PCI storage devices, FPGAs or any other PCI device that you want.
+
+  #### ISO images now exposed as cdrom (VM only)
+  To work around some issues with installing Windows inside LXD virtual machines, we've added logic to detect ISO images and automatically attach those as cdrom to the virtual machines.
+
+  This avoids some confusion as to what the install source and target are and makes installing Windows inside LXD virtual machines extremely easy when combined with distrobuilder's recent support for Windows ISO image repacking.
+
+  #### Extended `lxc manpage` command
+  The `lxc manpage` command now supports a `--format` argument which then supports exporting the help pages as:
+
+   - man (default and previous behavior)
+   - md (markdown)
+   - rest (REStructured Text)
+   - yaml
+
+  We intend to start using the markdown output to make those help pages available on our website.
+
+  ### Complete changelog
+  Here is a complete list of all changes in this release:
+
+   - client: Fix output of GetClusterMemberNames
+   - openvswitch/ovs.go: Simplify return in Installed method
+   - rbac/server.go: Sleep for seconds instead of nanoseconds
+   - lxd/instance/drivers/driver/qemu: Updates SaveConfigFile to return nil
+   - lxd/api/internal: Updates internalImportFromRecovery to call inst.SaveConfigFile
+   - test/suites/backup: Adds test to check exec works after recovery of running container
+   - cluster/raft/file_snapshot.go: defer after checking error
+   - lxd/storage/drivers/driver/cephfs/volumes: Updates RenameVolume newName arg to newVolName to bring inline with other drivers
+   - lxd/storage/drivers/driver/ceph/volumes: Fix UnmountVolume to actually deactivate VM block volumes
+   - lxd/storage/drivers/driver/ceph/volumes: Fix RenameVolume to also rename FS volume for VM volumes
+   - test/suites/container/devices/nic/bridged: Adds port isolation feature test
+   - lxc/network: Adds support for attaching instance to a managed network using `network` property
+   - test/suites/container/devices/proxy: Ensure ipv6 nat tests use a network with stateful DHCPv6 enabled
+   - test/suites/network: Updates static IPv6 allocation test to actually test stateful DHCPv6
+   - test/suites/container/devices/nic/bridged: Improve validation of DHCPv6 allocation
+   - lxc/query: Prevent using --project
+   - i18n: Update translation templates
+   - lxd/utils: Compare all addresses from lookup in IsAddressCovered, lxc#8340
+   - lxd/resources: Support DMI for CPU information
+   - lxd/device/nic/routed: Ensure IP neighbour proxy entries are removed on stop
+   - lxd/device/nic/routed: Adds duplicate address detection
+   - lxd/device/disk: Validate size field properly
+   - lxd/device/nic/bridged: Only attempt to release DHCP leases if bridge interface exists
+   - lxd/device/nic/bridged: Improve error context prefix in networkClearLease
+   - lxd/device/nic/bridged: Use %q for error quoting in networkClearLease
+   - lxd/device/nic/bridged: Improve error context prefix in State
+   - lxd/instance: Fix progress on ceph instance move
+   - lxd/storage/backend/lxd: Use volume config in UpdateInstanceBackupFile so that volume.block.filesystem setting is used
+   - lxd/storage/drivers/utils: Adds filesystem being used to TryMount error
+   - lxd: Smarter handling of volatile keys in projects
+   - lxd/project: Strip volatile on copy/migrate
+   - tests: Update project restrictions test
+   - lxd/instance/drivers/driver/lxc: Copy parent volume config to snapshot volume config in lxcCreate
+   - lxd/instance/drivers/driver/qemu: Copy parent volume config to snapshot volume config in qemuCreate
+   - lxd/instance/drivers/driver/lxc: Umount instance after CRIU state path check in Restore
+   - lxd/instance/drivers/driver/lxc: Avoid duplicated call to UpdateBackupFile in Restore
+   - lxd/instance/drivers/driver/lxc: Log instance restarting after snapshot restore
+   - lxd/instance/drivers/driver/lxc: Always run UpdateBackupFile in Update
+   - lxd/instance/drivers/driver/qemu: Removes unnecessary call to UnmountInstance in Restore
+   - lxd/instance/drivers/driver/qemu: Remove unnecessary call to UpdateBackupFile
+   - lxd/instance/drivers/driver/qemu: Log instance restarting after snapshot restore
+   - doc/rest-api: Fix typo
+   - doc/rest-api: Fix missing escaping
+   - lxd/instance: Tweak error and resource links
+   - api: Adds support for bulk instance state change.
+   - shared/api: Adds support for bulk instance state change.
+   - doc: Adds doc for bulk instance state change endpoint.
+   - lxd: Adds support for bulk instance state change.
+   - client: Adds support for bulk instance state change.
+   - lxc: Adds support for bulk instance state change.
+   - lxd: Process bulk action in parallel
+   - test/suites/snapshots: Adds snapshot block.filesystem config check for LVM & Ceph
+   - lxd/instances: Reduce code duplication
+   - shared/api: Change mass update API
+   - lxc/action: Update to new InstancesPut
+   - lxd/instances: Update to new bulk API
+   - doc/rest-api: Update for new bulk API
+   - client: Re-order functions
+   - lxd: Rename container functions
+   - lxd/instance_state: Simplify
+   - lxd/instance: Refactor state handling
+   - lxd/instances_state: Simplify logic
+   - lxd/instance/drivers: Move ephemeral restart logic
+   - lxd/vm: Expose ISO images as SCSI cdroms
+   - lxd/storage: Cleanup CreateInstanceFromCopy
+   - lxd/storage/utils: Updates VolumeDBCreate to accept volume and content type typed arguments
+   - lxd/storage/backend/lxd: Error quoting and wrapping
+   - lxd/storage/backend/lxd: Expand argument type in updateVolumeDescriptionOnly
+   - lxd/storage/backend/lxd: VolumeDBCreate updated usage
+   - api: Adds network_gvrp extension
+   - doc: Adds gvrp option for selected networks and instance NICs
+   - lxd/network/network/utils: Adds GVRP support to VLANInterfaceCreate
+   - lxd/network: Adds GVRP support to macvlan and physical networks
+   - lxd/device/device/utils/network: Adds GVRP support to networkCreateVlanDeviceIfNeeded
+   - lxd/device/nic: Adds GVRP support to ipvlan, macvlan, physical and routed NICs
+   - lxd/network: Add check for overlapping ovn.ranges and dhcp.ranges
+   - lxd/db/instances: Improve error message from CreateInstanceConfig
+   - lxd/instance/drivers/driver/common: Adds insertConfigkey function
+   - lxd/instance/drivers/driver/lxc: Updates FillNetworkDevice to use d.insertConfigkey
+   - lxd/instance/drivers/driver/qemu: Updates FillNetworkDevice to use d.insertConfigkey
+   - lxc/instance/drivers/driver/common: Removes empty value check from insertConfigkey
+   - lxd/instance/drivers: Detect failed volatile key generation
+   - lxd/instance/drivers/driver/lxc: Fix volatile config key scoping issue in FillNetworkDevice
+   - lxd/network/driver/bridge: Only validate non-overlapping DHCPv6 ranges with OVN ranges when stateful DHPCv6 being used
+   - lxd/instance/drivers/driver/common: Prevent existing row check from wiping out desired key value in insertConfigkey
+   - lxd/instance/drivers: More checks and error contexts in FillNetworkDevice
+   - lxd/instance/drivers/driver/qemu: Error alignment with container driver in Rename
+   - lxd/storage/utils: Improves error in VolumeDBCreate
+   - lxd/db/storage/volumes: Populates ProjectName field in GetLocalStoragePoolVolumeSnapshotsWithType
+   - lxd/instance/drivers/driver/lxc: Error context in Rename
+   - lxd/instances/post: Unwraps long error and using double quotes placeholder
+   - lxd/instance/instance/interface: Adds TemplateTrigger type and constants for template trigger types
+   - lxd/instance: Adds instanceCreateAsCopyOpts argument for instanceCreateAsCopy options
+   - lxd/instances/post: instanceCreateAsCopy updated usage
+   - lxd/instance/instance/interface: Updates DeferTemplateApply to accept TemplateTrigger type argument
+   - lxd/instance/drivers/driver/common: Updates DeferTemplateApply to accept a TemplateTrigger type argument
+   - lxd/storage/backend: inst.DeferTemplateApply usage
+   - lxd/instances/post: inst.DeferTemplateApply usage
+   - lxd/instance/drivers/driver/lxc: Updates templateApplyNow to accept a TemplateTrigger argument
+   - lxd/instance/drivers/driver/lxc: d.templateApplyNow usage
+   - lxd/instance/drivers/driver/qemu: Updates templateApplyNow to accept a TriggerTemplate type argument
+   - lxd/instance/drivers/driver/qemu: d.templateApplyNow usage
+   - lxd/instance/instance/interface: Adds applyTemplateTrigger argument to Rename
+   - lxd/instance/drivers/driver/lxc: Adds applyTemplateTrigger argument to Rename
+   - lxd/instance/drivers/driver/qemu: Adds applyTemplateTrigger argument to Rename
+   - lxd/instance/post: inst.Rename usage
+   - lxd/instance/snapshot: sc.Rename usage
+   - lxd/storage/backend/lxd: Removes call to deferred template apply in RenameInstance
+   - lxd/instance/test: c.Rename usage
+   - shared/api: Add Pool field to InstancePost
+   - api: instance_pool_move extension
+   - lxc/move: Support server-side pool migration
+   - client: Add extension check for pool migration
+   - lxd/instance: Implement pool migration API with instancePostPoolMigration
+   - test: Add tests for volatile.apply_template config during create, copy and move
+   - test: Adds check for volatile.apply_template state after rename
+   - i18n: Update translation templates
+   - test: Add test for moving instance between pools without renaming
+   - lxd/images: Skip keys with empty values
+   - lxd/instances_put: Limit to local server
+   - lxd/device: Fix instance type validations
+   - shared/instance: Adds ErrNoRootDisk error var and returns it from GetRootDiskDevice
+   - lxd/instance: Enforces that target instance should have valid root disk config after DB create in instanceCreateAsCopy
+   - lxd/instance: Don't assume root disk is called "root" when copying snapshots from a source instance
+   - lxd/db/query/retry: Adds detection of checkpoint in progress to IsRetriableError
+   - lxd/instances_put: Properly handle clusters
+   - lxd/instance/drivers/driver_qemu: attempt to kill qemu proc on stop
+   - lxd/instance/driver_qemu: Add check for qemu cmdline args to pid()
+   - forkproxy: prevent zombies
+   - lxd: Change some references of container to instance in comments
+   - lxd/instance/post: Change error message to instance from container in instancePost
+   - lxd/main/forkdns: Returns empty AAAA record response when equivalent A record exists
+   - lxd/main/forkdns: Fixes typo in comment
+   - test: Adds test for empty AAAA response when equivalent A record exist in clustering forkdns
+   - lxd/device/pci: Consider DeviceUnbind successful on missing driver
+   - shared/validate: Validate PCI addresses
+   - lxd/device/gpu: Validate PCI addresses
+   - lxd/device: Add function to validate PCI path
+   - lxd/device: Add support for GPU SR-IOV
+   - api: gpu_sriov extension
+   - doc: Add SR-IOV GPU
+   - lxd/device/gpu_mdev: Valdiate PCI address and path
+   - lxd/device/gpu_physical: Validate PCI address and path
+   - lxd/instance/qemu: Cleanup VGA ROM check
+   - lxd/network/driver/bridge: Update DHCPv4Subnet to return fan bridge address subnet when in fan mode
+   - lxd/device/nic/bridge: Updates validateConfig to use parent networks DHCP subnet functions when validating address
+   - shared/termios: Fix static builds
+   - shared/idmap: Fix shared/ build on non-cgo
+   - shared/instancewriter/: Fix shared/ build on non-cgo
+   - shared/eagain: Restrict to Linux
+   - shared/subprocess: Restrict to unix
+   - lxd/db/generate: Move DB generator
+   - github: Replace Travis and Appveyor with Actions
+   - lxc/manpage: Add markdown, reST and YAML output
+   - i18n: Update translation templates
+   - lxd/device/gpu: Skip nvidia directories
+   - api: pci_device_type extension
+   - doc/instance: Add pci device type
+   - lxd/device: Free up the pci name
+   - lxd/device: Support for both pci= and address= in checker
+   - lxd/device/config: Add PCIDevice
+   - lxd/device/pci: Add NormaliseAddress
+   - lxd/device: Have validatePCIDevice take an address
+   - lxd/device: Add PCI device type
+   - lxd/instance/qemu: Rename qemuNetDevPhysical to qemuPCIPhysical
+   - lxd/instance/qemu: Add PCI device support
+   - cgroup: fix cgroup2 device driver settings
+   - doc/instances: Tweaks to make device type linking work
+   - doc/storage: Add mention of zfs.remove_snapshots
+   - simplestreams: Review and sanitize urls join
+   - lxd/storage/volume: Snapshot PUT is supposed to be blocking
+   - lxd/storage: Fix snapshot edit routes
+   - lxc/storage_volume: Use correct API for snapshots
+   - lxd/storage: Cleanup volume API endpoints
+   - lxd/instance/metadata: Fix API to line up with files
+   - client: Drop UpdateInstanceTemplateFile
+   - client: Drop UpdateInstanceTemplateFile
+   - client: Fix legacy UpdateContainerTemplateFile
+   - client: Rename SetInstanceMetadata to UpdateInstanceMetadata
+   - lxc/config: Switch to UpdateInstanceMetadata
+   - lxc/config: Always use CreateInstanceTemplateFile
+   - lxd/instance/metadata: Modernize instanceMetadataPut
+   - lxd/instance/metadata: Implement PATCH
+   - lxd/instance/snapshots: Implement PATCH
+   - lxd/storage: Tweak volume snapshot etag
+   - lxd/storage/volume/snapshot: Implement PATCH
+   - api: storage_volume_state extension
+   - shared/api: Add StorageVolumeState
+   - client: Add GetStoragePoolVolumeState
+   - lxd/storage: Add storagePoolVolumeTypeStateGet
+   - doc/rest-api: Add storage volume state API
+   - lxc/storage_volume: Add support for column argument
+   - lxc/storage_volume: Add usage column
+   - lxc/storage_volume: Add info subcommand
+   - i18n: Update translation templates
+   - lxd/instance/qemu: Don't use the RAM backend
+   - lxd/db/images: Include remote storage pools in GetPoolsWithImage
+   - lxd/db: Export function IsRemoteStorage
+   - lxd/resources: More flexible PCI handling
+   - lxd/resources: Make usb address handling match PCI
+   - lxd/resources: Use %q when possible
+   - lxd/images: Remove images backed by remote storage
+   - i18n: Update translations from weblate
+
+  ### Try it for yourself
+  This new LXD release is already available for you to try on our [demo service](https://linuxcontainers.org/lxd/try-it/).
+
+  ### Downloads
+  The release tarballs can be found on our [download page](https://linuxcontainers.org/lxd/downloads/).
+
+  Binary builds are also available for:
+
+   - **Linux:** snap install lxd
+   - **MacOS:** brew install lxc
+   - **Windows:** choco install lxc
