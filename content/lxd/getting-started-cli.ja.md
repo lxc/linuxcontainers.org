@@ -139,34 +139,11 @@ LXD 2.0 stable リリースの場合は次のように実行します:
     snap install lxd --channel=2.0/stable
 
 <!--
-If you previously had the LXD deb package installed, you can migrate all your existing data over with:
+**Note:** If you previously had the LXD deb package installed, you can migrate all your existing data over with:
 -->
-以前、LXD の deb パッケージをインストールしていた場合は、次のような方法で既存データをすべて移行できます:
+**注意:** 以前、LXD の deb パッケージをインストールしていた場合は、次のような方法で既存データをすべて移行できます:
 
     lxd.migrate
-
-#### Ubuntu 14.04 LTS (LXD 2.0 deb)
-<!--
-To install the LTS branch of LXD, run:
--->
-LXD の LTS ブランチをインストールするには、以下を実行します:
-
-    apt install -t trusty-backports lxd lxd-client
-
-#### Ubuntu 16.04 LTS (LXD 3.0 deb)
-<!--
-To install the LTS branch of LXD, run:
--->
-LXD の LTS ブランチをインストールするには、以下を実行します:
-
-    apt install lxd lxd-client
-
-<!--
-To install the feature branch of LXD, run:
--->
-LXD のフィーチャーブランチをインストールするには、以下を実行します:
-
-    apt install -t xenial-backports lxd lxd-client
 
 #### Snap パッケージ <!-- Snap package -->(ArchLinux, Debian, Fedora, OpenSUSE, Ubuntu)
 <!--
@@ -371,6 +348,11 @@ The following command will give you an overview of all available commands and op
 次のコマンドで指定できるすべてのコマンドとオプションが概観できます。
 
 	lxc
+
+<!--
+Use `lxc [command] --help` for more information about a command, like flags and further options.
+-->
+フラグやオプションなどについてのコマンドについてのより詳しい情報がほしい場合は `lxc [command] --help` を使用してください。
 
 ## インスタンスの起動 <!-- Launch an instance -->
 <!--

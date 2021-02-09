@@ -753,11 +753,11 @@ A list of images on that server can be obtained with:
     lxc image list some-name:
 
 <!--
-Launch a container based on an image of that server:
+Launch a instance based on an image of that server:
 -->
-そのサーバーのイメージを使ってコンテナを起動するには次のように実行します:
+そのサーバーのイメージを使ってインスタンスを起動するには次のように実行します:
    
-    lxc launch some-name:image-name your-container
+    lxc launch some-name:image-name your-instance [--vm]
 
 
 #### リモートの LXD サーバーの追加 <!-- Add remote LXD servers -->
@@ -800,16 +800,27 @@ A list of images on that server can be obtained with:
 リモートサーバーのイメージリストは次のように取得できます:
 
     lxc image list my-images:
+	
+#### インスタンスの起動 <!-- Launch an instance -->
+<!--
+Launch an instance based on an image of that server:
+-->
+そのサーバーのイメージを使ってインスタンスを起動するには:
+   
+    lxc launch some-name:image-name your-instance [--vm]
 
 #### リモートサーバーのインスタンスの管理 <!-- Manage instances on a remote server -->
 <!--
-You can use the same commands but prefixing the instance
-and images name with the remote host like:
+You can use the same commands but prefixing the server and instance name like:
 -->
-次のようにインスタンス名、イメージ名の前にリモートホスト名を付けて、（ローカルで実行するのと）同じコマンドを使用できます:
+次のようにサーバー名、イメージ名の前にリモートホスト名を付けて、（ローカルで実行するのと）同じコマンドを使用できます:
 
     lxc exec remoteserver-name:instancename -- apt-get update
-   
+
+<!--
+You can replace `apt-get update` with any command the instance supports.
+-->
+そのインスタンスで使える任意のコマンドが `apt-get update` の代わりに使えます。
 
 # イメージ - Part 2 <!-- Images - Part 2 -->
 

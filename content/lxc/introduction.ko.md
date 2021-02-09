@@ -24,7 +24,7 @@ LXC는 현재 아래의 몇몇 요소들로 구성되어 있습니다.
     * lua (lxc 내, 1.0.x와 2.0.x에서 장기 지원)
     * [Go](https://github.com/lxc/go-lxc)
     * [ruby](https://github.com/lxc/ruby-lxc)
-    * [python2](https://github.com/lxc/python2-lxc)
+    * [python3](https://github.com/lxc/python3-lxc)
     * [Haskell](https://github.com/fizruk/lxc)
  * 컨테이너 제어를 위한 표준 도구 세트
  * 배포판용 컨테이너 템플릿
