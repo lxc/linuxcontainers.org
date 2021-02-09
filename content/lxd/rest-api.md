@@ -28,5 +28,8 @@ are neither supported nor endorsed by the LXD project.
 * Node.js:
   * [ts-lxd](http://github.com/trufflesuite/ts-lxd)
   * [node-lxd](http://github.com/alandoherty/node-lxd)
-* Java: [jlxd](http://github.com/digitalspider/jlxd)
+* Java: 
+  * [jlxd](http://github.com/digitalspider/jlxd)
+  * [relxd](https://github.com/relxd/lxd-sdk)
 * Haskell: [lxd-client](https://hackage.haskell.org/package/lxd-client)
+* OpenApi Specification file: [OpenApi-spec-file](https://github.com/relxd/lxd-sdk/blob/master/openapi/lxd.yaml)
