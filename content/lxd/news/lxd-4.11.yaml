@@ -15,8 +15,10 @@ content: |-
 
   At its simplest, pushing:
 
-      {"state": {
-          {"action": "restart"}
+      {
+          "state": {
+              "action": "restart"
+          }
       }
 
   Will cause LXD to restart all instances in the project in parallel.
