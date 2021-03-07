@@ -22,6 +22,7 @@ content: |-
   ACLs can also refer each other as a traffic source or destination, allowing for labeling of instances and using those labels in rules rather than having to track everything by address.
 
   An example would be a network with 3 ACLs:
+
    - default (applied to the network), allows egress to common external services
    - web (applied to web servers), allows ingress on tcp port 80/443
    - database (applied to database servers) allows ingress on tcp port 5432 from servers in `web`
@@ -59,6 +60,7 @@ content: |-
    - backups.compression_algorithm
    - images.remote_cache_expiry
    - images.auto_update_cache
+   - images.auto_update_interval
 
   When those are set in the project configuration, they override their respective value from the global configuration.
 
