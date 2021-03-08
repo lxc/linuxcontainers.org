@@ -49,7 +49,7 @@ content: |-
 
    - default（ネットワークに対して適用）、一般的な外部サービス向けの外向きの通信を許可します <!-- default (applied to the network), allows egress to common external services -->
    - web（Web サーバーに対して適用）、TCP 80/443 番ポートに対する内向きの通信を許可します <!-- web (applied to web servers), allows ingress on tcp port 80/443 -->
-   - database（データベースサーバーに対して適用）、 `web` 内のサーバーからの内向きの通信を許可します <!-- database (applied to database servers) allows ingress on tcp port 5432 from servers in `web` -->
+   - database（データベースサーバーに対して適用）、 `web` 内のサーバーから TCP 5432 番ポートに対する内向きの通信を許可します <!-- database (applied to database servers) allows ingress on tcp port 5432 from servers in `web` -->
 
   <!--
   This can all be done through `lxc network acl` and then assigned to networks or instances through `security.acls` .
