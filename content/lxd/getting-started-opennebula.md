@@ -1,6 +1,6 @@
 # Installing and configuring LXD on OpenNebula
 
-[<img src="/static/img/one-logo.png" alt="OpenNebula GUI"/ style="display:block;float:none;margin-left:auto;margin-right:auto;padding-top:1em;padding-bottom:1em;">](https://opennebula.org)
+[<img src="/static/img/one-logo.png" alt="OpenNebula GUI"/ style="display:block;float:none;margin-left:auto;margin-right:auto;padding-top:1em;padding-bottom:1em;">](https://opennebula.io)
 
 This guide provides a walkthrough of the basics of the OpenNebula cloud management platform on LXD. First, we will use the simple MiniONE tool to build a single-node cloud environment inside a single physical or virtual machine for users looking to try out OpenNebula. Then, we will show a typical working session with the Sunstone GUI and the CLI. Finally, we will provide the links to build a distributed production environment.
 
@@ -29,19 +29,19 @@ Once MiniONE is running, you will get an overview with instructions on how to co
       password: o6ARsMAdGe
 
 The first thing we are going to do now is to log in as oneadmin to take a look at the Admin View in Sunstone, which has more options than the other Sunstone views for regular users. Take a look at all the already bootstrapped resources in the cloud:
-[<img src="/static/img/one-1.png" alt="OpenNebula GUI"/ style="display:block;float:none;margin-left:auto;margin-right:auto;padding-top:1em;padding-bottom:1em;">](https://opennebula.org)
+[<img src="/static/img/one-1.png" alt="OpenNebula GUI"/ style="display:block;float:none;margin-left:auto;margin-right:auto;padding-top:1em;padding-bottom:1em;">](https://opennebula.io)
 
 With the Admin View you can do anything you want with your OpenNebula cloud, but obviously you don’t want all those options available for the final users! Switch to the Cloud View to see how a regular user of your cloud will see the OpenNebula GUI.
-[<img src="/static/img/one-2.png" alt="OpenNebula GUI"/ style="display:block;float:none;margin-left:auto;margin-right:auto;padding-top:1em;padding-bottom:1em;">](https://opennebula.org)
+[<img src="/static/img/one-2.png" alt="OpenNebula GUI"/ style="display:block;float:none;margin-left:auto;margin-right:auto;padding-top:1em;padding-bottom:1em;">](https://opennebula.io)
 
 The Cloud View interface is much simpler and designed for end users that only need access to a set of basic operations. They can, for instance, create a new Virtual Machine by clicking the + button. If you want to try, just select the VM Template and click Create. After clicking on that option you will be taken to the dashboard, where you can now see your instantiated VMs.
-[<img src="/static/img/one-3.png" alt="OpenNebula GUI"/ style="display:block;float:none;margin-left:auto;margin-right:auto;padding-top:1em;padding-bottom:1em;">](https://opennebula.org)
+[<img src="/static/img/one-3.png" alt="OpenNebula GUI"/ style="display:block;float:none;margin-left:auto;margin-right:auto;padding-top:1em;padding-bottom:1em;">](https://opennebula.io)
 
 You can click on your VM and manage it: access it through VNC, save its state, reboot it, etc:
-[<img src="/static/img/one-4.png" alt="OpenNebula GUI"/ style="display:block;float:none;margin-left:auto;margin-right:auto;padding-top:1em;padding-bottom:1em;">](https://opennebula.org)
+[<img src="/static/img/one-4.png" alt="OpenNebula GUI"/ style="display:block;float:none;margin-left:auto;margin-right:auto;padding-top:1em;padding-bottom:1em;">](https://opennebula.io)
 
 Clicking on the console icon will direct you to the root user shell via VNC:
-[<img src="/static/img/one-5.png" alt="OpenNebula GUI"/ style="display:block;float:none;margin-left:auto;margin-right:auto;padding-top:1em;padding-bottom:1em;">](https://opennebula.org)
+[<img src="/static/img/one-5.png" alt="OpenNebula GUI"/ style="display:block;float:none;margin-left:auto;margin-right:auto;padding-top:1em;padding-bottom:1em;">](https://opennebula.io)
 
 With the oneadmin role you can customize what your OpenNebula cloud users can do and see.
 
@@ -72,31 +72,31 @@ You can see the template configuration in further detail
 ### Access to MarketPlace
 
 OpenNebula comes with predefined marketplaces where you can get a lot of preconfigured images with their VM Template metadata (Apps). It comes with a native integration with [images.linux containers.org](https://us.images.linuxcontainers.org/), one of the public LXD image servers.
-[<img src="/static/img/one-6.png" alt="OpenNebula GUI"/ style="display:block;float:none;margin-left:auto;margin-right:auto;padding-top:1em;padding-bottom:1em;">](https://opennebula.org)
+[<img src="/static/img/one-6.png" alt="OpenNebula GUI"/ style="display:block;float:none;margin-left:auto;margin-right:auto;padding-top:1em;padding-bottom:1em;">](https://opennebula.io)
 
 There are various Linux distributions in the official OpenNebula Public Marketplace: Alpine, CentOS, Debian, etc. and also some service images with preconfigured applications, like WordPress or GitLab.
 
 NOTE: Images from the official OpenNebula Marketplace are KVM-ready images, however, the LXD driver, unlike Vanilla LXD, features support for partition table images.
 
-[<img src="/static/img/one-7.png" alt="OpenNebula GUI"/ style="display:block;float:none;margin-left:auto;margin-right:auto;padding-top:1em;padding-bottom:1em;">](https://opennebula.org)
+[<img src="/static/img/one-7.png" alt="OpenNebula GUI"/ style="display:block;float:none;margin-left:auto;margin-right:auto;padding-top:1em;padding-bottom:1em;">](https://opennebula.io)
 
 Containers from the public LXD image server are available as well. We can try some quite fresh Ubuntu.
-[<img src="/static/img/one-8.png" alt="OpenNebula GUI"/ style="display:block;float:none;margin-left:auto;margin-right:auto;padding-top:1em;padding-bottom:1em;">](https://opennebula.org)
+[<img src="/static/img/one-8.png" alt="OpenNebula GUI"/ style="display:block;float:none;margin-left:auto;margin-right:auto;padding-top:1em;padding-bottom:1em;">](https://opennebula.io)
 
 And download it to the datastore.
-[<img src="/static/img/one-9.png" alt="OpenNebula GUI"/ style="display:block;float:none;margin-left:auto;margin-right:auto;padding-top:1em;padding-bottom:1em;">](https://opennebula.org)
+[<img src="/static/img/one-9.png" alt="OpenNebula GUI"/ style="display:block;float:none;margin-left:auto;margin-right:auto;padding-top:1em;padding-bottom:1em;">](https://opennebula.io)
 
 Now when you go to the Template -> VMs section you can instantiate it.
 
 ## Building a Production  Installation
 
-If you want to deploy a production OpenNebula environment please refer to our [documentation](http://docs.opennebula.org/5.12). Deploying an OpenNebula cloud with a front-end and several LXD virtualization nodes requires the following steps:
+If you want to deploy a production OpenNebula environment please refer to our [documentation](http://docs.opennebula.io/5.12). Deploying an OpenNebula cloud with a front-end and several LXD virtualization nodes requires the following steps:
 
-* [Install the OpenNebula frontend](http://docs.opennebula.org/st5.12able/deployment/opennebula_installation/frontend_installation.html)
-* [Install the lxd-node package on the Virtualization Nodes](http://docs.opennebula.org/5.12/deployment/node_installation/lxd_node_installation.html)
-* [Connect frontend and nodes](http://docs.opennebula.org/5.12/deployment/node_installation/lxd_node_installation.html#step-7-adding-a-host-to-opennebula)
-* [Check everything is OK](http://docs.opennebula.org/5.12/deployment/node_installation/verify.html#verify-installation)
+* [Install the OpenNebula frontend](http://docs.opennebula.io/5.12/deployment/opennebula_installation/frontend_installation.html)
+* [Install the lxd-node package on the Virtualization Nodes](http://docs.opennebula.io/5.12/deployment/node_installation/lxd_node_installation.html)
+* [Connect frontend and nodes](http://docs.opennebula.io/5.12/deployment/node_installation/lxd_node_installation.html#step-7-adding-a-host-to-opennebula)
+* [Check everything is OK](http://docs.opennebula.io/5.12/deployment/node_installation/verify.html#verify-installation)
 
 You can now deploy VMs using apps from the marketplaces
 
-[<img src="/static/img/one-logo.png" alt="OpenNebula GUI"/ style="display:block;float:none;margin-left:auto;margin-right:auto;padding-top:1em;padding-bottom:1em;">](https://opennebula.org)
+[<img src="/static/img/one-logo.png" alt="OpenNebula GUI"/ style="display:block;float:none;margin-left:auto;margin-right:auto;padding-top:1em;padding-bottom:1em;">](https://opennebula.io)
