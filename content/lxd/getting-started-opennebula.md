@@ -94,7 +94,7 @@ If you want to deploy a production OpenNebula environment please refer to our [d
 
 * [Install the OpenNebula frontend](http://docs.opennebula.io/5.12/deployment/opennebula_installation/frontend_installation.html)
 * [Install the lxd-node package on the Virtualization Nodes](http://docs.opennebula.io/5.12/deployment/node_installation/lxd_node_installation.html)
-* [Connect frontend and nodes](http://docs.opennebula.io/5.12/deployment/node_installation/lxd_node_installation.html#step-7-adding-a-host-to-opennebula)
+* [Connect frontend and nodes](http://docs.opennebula.io/5.12/deployment/node_installation/lxd_node_installation.html#step-6-adding-a-host-to-opennebula)
 * [Check everything is OK](http://docs.opennebula.io/5.12/deployment/node_installation/verify.html#verify-installation)
 
 You can now deploy VMs using apps from the marketplaces
