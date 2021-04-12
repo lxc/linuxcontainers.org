@@ -1,0 +1,590 @@
+title: LXD 4.13 リリースのお知らせ <!-- LXD 4.13 has been released -->
+date: 2021/04/10 04:04
+origin: https://discuss.linuxcontainers.org/t/lxd-4-13-has-been-released/10737
+content: |-
+  ### はじめに <!-- Introduction -->
+  <!--
+  The LXD team is very excited to announce the release of LXD 4.13!
+  -->
+  LXD チームは LXD 4.13 のリリースをお知らせできることにとてもワクワクしています!
+
+  <!--
+  This comes with a lot of exciting new features, including project resource usage, NVIDIA MIG support, snapshot schedule aliases, default cluster architecture and a variety of improvements to the CLI tool.
+  -->
+  このリリースでは、プロジェクトのリソース使用量の確認、NVIDIA MIG サポート、スナップショットのスケジュールのエイリアス、デフォルトのクラスターアーキテクチャーの指定、多数の CLI ツールの改良を含む、多数のエキサイティングな新機能が含まれています。
+
+  Enjoy!
+
+  ### 新機能とハイライト <!-- New features and highlights -->
+  #### `lxc list` でのインスタンスのフィルタリング <!-- Support for instance filters in `lxc list` -->
+  <!--
+  New filtering options are now available in `lxc list` as key=value filters.
+  -->
+  `lxc list` で key=value 形式のフィルタとして指定できるオプションが追加されました。
+
+   - type= (コンテナ or 仮想マシン) <!-- (container or virtual-machine) -->
+   - status= (running, frozen, stopped or broken)
+   - architecture= (有効なアーキテクチャー名) <!-- (a valid architecture name) -->
+   - location= (クラスターのサーバー名) <!-- (a cluster server name) -->
+   - ipv4= (アドレスまたはCIDR) <!-- (specific address or CIDR) -->
+   - ipv6= (アドレスまたはCIDR) <!-- (specific address or CIDR) -->
+
+  <!--
+  Example with IPv6 CIDR filtering:
+  -->
+  IPv6 の CIDR でフィルタリングを行っている例です:
+
+      stgraber@penguin:~$ lxc list ipv6=2001:470:b368::/48
+      +----------+---------+-----------------------+----------------------------------------------+-----------------+-----------+----------+
+      |   NAME   |  STATE  |         IPV4          |                     IPV6                     |      TYPE       | SNAPSHOTS | LOCATION |
+      +----------+---------+-----------------------+----------------------------------------------+-----------------+-----------+----------+
+      | buildd01 | RUNNING | 10.232.117.1 (lxdbr0) | 2602:fd23:8:1005:216:3eff:fe19:fd6e (enp5s0) | VIRTUAL-MACHINE | 7         | abydos   |
+      |          |         |                       | 2001:470:b368:4242::1 (lxdbr0)               |                 |           |          |
+      +----------+---------+-----------------------+----------------------------------------------+-----------------+-----------+----------+
+      | buildd02 | RUNNING | 10.181.173.1 (lxdbr0) | 2602:fd23:8:1005:216:3eff:fec8:841b (enp5s0) | VIRTUAL-MACHINE | 8         | langara  |
+      |          |         |                       | 2001:470:b368:4242::1 (lxdbr0)               |                 |           |          |
+      +----------+---------+-----------------------+----------------------------------------------+-----------------+-----------+----------+
+      | buildd03 | RUNNING | 10.232.46.1 (lxdbr0)  | 2602:fd23:8:1005:216:3eff:fe67:f919 (enp5s0) | VIRTUAL-MACHINE | 7         | orilla   |
+      |          |         |                       | 2001:470:b368:4242::1 (lxdbr0)               |                 |           |          |
+      +----------+---------+-----------------------+----------------------------------------------+-----------------+-----------+----------+
+
+  #### コンテナでの NVIDIA MIG サポート <!-- NVIDIA MIG support for containers -->
+  <!--
+  A new GPU type was introduced to support NVIDIA Multi-Instance GPUs.
+  On systems supporting the feature, it's now possible to pass pre-created MIG compute instances into LXD containers.
+  -->
+  新しい GPU タイプとして NVIDIA Multi-Instance GPU のサポートを導入しました。
+  この機能をサポートするシステム上で、あらかじめ作成した MIG コンピュートインスタンスを LXD コンテナに与えられるようになりました。
+
+  <!--
+  This is done using a new `mig` gputype for the gpu device type.
+  -->
+  これは gpu デバイスタイプで `mig` gputype を指定することで使えます。
+
+      lxc config device add c1 gpu0 gpu gputype=mig mig.gi=5 mig.ci=1 pci=09:00.0
+
+  <!--
+  This will use the compute instance 1 of the GPU instance 5 from the GPU at address 09:00.0.
+  You can find all the relevant values from `nvidia-smi` after having created your MIG instances.
+  -->
+  この例では、アドレス 09:00.0 の GPU の　GPU インスタンス 5 のコンピュートインスタンス 1 が使われます。
+  関連する値はすべて、MIG インスタンスを作成したあと、`nvidia-smi` から見つけられます。
+
+  #### システムワイドなリモート設定 <!-- System wide remote configuration -->
+  <!--
+  The `lxc` command line tool now considers `/etc/lxd/` as a source of configuration.
+  A `config.yaml` placed there will be merged with the user's own configuration.
+  -->
+  `lxc` コマンドラインツールが `/etc/lxd/` を設定のソースとして見るようになりました。
+  ここに置かれた `config.yaml` はユーザー自身の設定とマージされます。
+
+  <!--
+  This allows for system-wide configuration of LXD remotes. Server certificates can similarly be placed in `/etc/lxd/servercerts/`.
+  -->
+  これにより、LXD のリモートに関する設定をシステムワイドに行なえます。サーバー証明書も同様に `/etc/lxd/servercerts/` に置けます。
+
+  <!--
+  NOTE: This won't work for snap users yet, we will soon be setting things up there so the global configuration can be placed inside `/var/snap/lxd/common/`.
+  -->
+  注意: この設定は snap をお使いのユーザーではまだ有効にはなりません。すぐに snap 向けの設定を行い、グローバル設定を `/var/snap/lxd/common` 内に置けるようにする予定です。
+
+  #### プロジェクトのリソース使用量の確認 <!-- Project resource usage -->
+  <!--
+  For projects with resource limits in place, it's now possible to get a simple overview of the limits and current usage. Note that the usage will only be accurate if a limit is set.
+  -->
+  リソース制限が設定されているプロジェクトでは、制限と現在のリソース消費の概要が確認できるようになりました。消費の状況は制限が設定されている場合のみ正確に表示されます。
+
+      stgraber@penguin:~$ lxc project info nsec
+      +------------------+-----------+---------+
+      |     RESOURCE     |   LIMIT   |  USAGE  |
+      +------------------+-----------+---------+
+      | CONTAINERS       | UNLIMITED | 3       |
+      +------------------+-----------+---------+
+      | CPU              | 4         | 3       |
+      +------------------+-----------+---------+
+      | DISK             | 53.69GB   | 33.29GB |
+      +------------------+-----------+---------+
+      | INSTANCES        | UNLIMITED | 3       |
+      +------------------+-----------+---------+
+      | MEMORY           | 4.29GB    | 3.22GB  |
+      +------------------+-----------+---------+
+      | NETWORKS         | 10        | 1       |
+      +------------------+-----------+---------+
+      | PROCESSES        | 100000    | 30000   |
+      +------------------+-----------+---------+
+      | VIRTUAL-MACHINES | UNLIMITED | 0       |
+      +------------------+-----------+---------+
+
+  #### スナップショットのスケジュール設定のエイリアス <!-- Snapshot schedule aliases -->
+  <!--
+  LXD supports automatically scheduling snapshots for both instances and for custom storage volumes. This is done using the `snapshots.schedule` configuration option which takes a cron pattern.
+  -->
+  LXDは、インスタンスとカスタムストレージボリュームの両方について、スナップショットの自動スケジューリングをサポートしています。これは`snapshots.schedule`という設定オプションを使って設定します。
+
+  <!--
+  Now on top of those cron patterns, the following aliases are also supported:
+  -->
+  cron 形式での設定に加えて、次のエイリアスでも設定できるようになりました:
+
+   - `@hourly`
+   - `@daily`
+   - `@midnight`
+   - `@weekly`
+   - `@monthly`
+   - `@annually`
+   - `@yearly`
+
+  <!--
+  And for instances only, there's an additional `@startup` which can be used to snapshot on every instance startup or restart.
+  -->
+  また、インスタンスの場合に限り、追加の `@startup` という設定が存在し、インスタンスが起動、再起動するごとにスナップショットを実行できます。
+
+  <!--
+  The other advantage of those aliases over a matching cron pattern is that those will be randomly distributed over time. So a `@daily` will not trigger at the same time for all instances or all storage volumes but it will trigger at the same time for that one instance or storage volume.
+  -->
+  cronパターンと比較した場合のエイリアスのもう一つの利点は、それらが時間的にランダムに分散されることです。つまり、`@daily` はすべてのインスタンスやストレージボリュームで同時にトリガーされることはありませんが、特定のインスタンスやストレージボリュームについては同時にトリガーされます。
+
+  #### マルチアーキテクチャーで設定されている場合の `images.default_architecture` <!-- `images.default_architecture` for multi-architecture setups -->
+  <!--
+  For those running multi-architecture clusters, launching an instance without a specific target and using an image which is available on multiple architecture would result in LXD finding the least busy of all servers regardless of architecture and creating the instance there.
+  -->
+  マルチアーキテクチャーのクラスターを運用している場合、特定のターゲットを指定せず、複数アーキテクチャーで使用できるイメージを使用してインスタンスを起動すると、LXD はアーキテクチャに関わらず、すべてのサーバーのうちもっともビジーでないサーバーを見つけて、そこでインスタンスを作成します。
+
+  <!--
+  That's rarely the desired behavior as most multi-architecture cluster have a primary architecture (often x86_64) and then a bit of capacity on less common architecture (aarch64, ppc64le, s390x, ...). So LXD treating them all as equal and just spreading the instances among them may be quite confusing.
+  -->
+  ほとんどのマルチアーキテクチャークラスターはメインのアーキテクチャー（x86\_64 であることが多い）と、メインのアーキテクチャーより容量の少ないあまり一般的ではないアーキテクチャー（aarch64, ppc64le, s390x, ...）を持っていることが多いので、これはあまり望ましい動作ではありません。ですので、LXD がこれらを等しく扱い、インスタンスを全体に分散させるだけではかなり混乱してしまいます。
+
+  <!--
+  The new configuration option, `images.default_architecture` can be set to an architecture name which will be used for any cases where the image isn't specific to a single architecture.
+  -->
+  新たな設定オプションである `images.default_architecture` には、イメージが単一アーキテクチャー固有ではない場合に使用するアーキテクチャー名を設定できます。
+
+  <!--
+  For example on a multi-architecture cluster:
+  -->
+  例えば、マルチアーキテクチャークラスターでは次のようになります:
+
+      lxc config set images.default_architecture x86_64
+      lxc launch images:ubuntu/20.04 c1
+
+  <!--
+  Will now always deploy as `x86_64` and one will have to use:
+  -->
+  この例では `x86_64` アーキテクチャーのインスタンスがデプロイされます。そして、次のように使うと:
+
+      lxc launch images:ubuntu/20.04/arm64 c1
+
+  <!--
+  To specifically request the aarch64 image which will then pick a cluster server capable of running aarch64 images.
+  -->
+  明示的に aarch64 イメージを指定すると、aarch64 イメージを実行できるクラスターサーバーが選択されます。
+
+  #### `lxc project list`, `lxc profile list`, `lxc storage list` の新しい DESCRIPTION カラム <!-- New description column in `lxc project list`, `lxc profile list` and `lxc storage list` -->
+  <!--
+  With this change just about every top level list command now shows the `description` attribute. This is now consistently available on:
+  -->
+  この変更で、ほぼすべてのトップレベルのリストコマンドで `description` 属性を表示するようになりました。次のようなコマンドで同じように利用できます:
+
+   - lxc profile list
+   - lxc image list
+   - lxc project list
+   - lxc storage list
+   - lxc network list
+
+  <!--
+  It's just not shown by default on `lxc list` due to lack of horizontal space there but it's one of the configurable columns so can be enabled there too.
+  -->
+  これは、`lxc list` ではデフォルトでは表示されません。これは横方向のスペースがないためですが、設定できるカラムの1つですので有効にもできます。
+
+  #### ネットワーク ACL のデフォルトアクションの処理を見直しました <!-- Reworked handling of default action in network ACLs -->
+  <!--
+  The recently introduced network ACLs came with `default.action` and `default.logged` config options at the ACL level. This was a bad design as many ACLs can be applied to one instance making those config keys confusing.
+  -->
+  最近導入されたネットワーク ACL は、ACL レベルで  `default.action` と `default.logged` というオプションが設定できました。これは、1つのインスタンスに多くの ACL が適用できるため、これらの設定キーを混乱させる悪い設計でした。
+
+  <!--
+  As a result, we made the decision to completely drop those two configuration keys from the ACL configuration and instead introduce a bunch more as direct configuration options on instance network devices and networks.
+  -->
+  結果的に、この 2 つの設定キーを ACL 設定から完全に削除し、代わりにインスタンスのネットワークデバイスやネットワークを直接設定できる設定を導入しました。
+
+  <!--
+  New configuration keys:
+  -->
+  新しい設定キーは次のとおりです:
+
+   -  `security.acls.default.egress.action`
+   -  `security.acls.default.eress.logged`
+   -  `security.acls.default.ingress.action`
+   -  `security.acls.default.ingress.logged`
+
+  <!--
+  This also separate ingress and egress making it easy to log any blocked egress traffic while keeping blocked ingress traffic silently ignored.
+  -->
+  また、これは内向き（ingress）と外向き（egress）の通信を分離することにより、ブロックする内向きの通信を静かに無視したまま、ブロックされた外向きのトラフィックをログに記録することが容易になります。
+
+  #### `lxc stop` コマンドの `--console` オプション <!-- `-\-console` with `lxc stop` -->
+  <!--
+  `lxc stop` now joins `lxc start` and `lxc restart` in supporting a `--console` option.
+  -->
+  `lxc start`、`lxc restart`に加えて、`lxc stop`で`--console`オプションが使えるようになりました。
+
+  <!--
+  With it, you can attach to the instance's console just as it gets signaled to shutdown.
+  This is useful to observe the shutdown sequence and spot any error.
+  -->
+  これを使って、インスタンスがシャットダウンのシグナルを受け取った瞬間、インスタンスのコンソールに接続できます。
+  これは、シャットダウンシーケンスを観察したり、シャットダウン時のエラーを見つける際に便利です。
+
+  #### 自動生成の REST-API ドキュメントの追加 <!-- More auto-generated REST-API documentation -->
+  <!--
+  Everything except for `/1.0/instances` and `/1.0/storage-pools` is now covered in our Swagger API files. This should cover all the different parameters and ways to interact with those LXD APIs.
+  -->
+  `/1.0/instances`と `/1.0/storage-pools`を除くすべてが、Swagger API ファイルでカバーされるようになりました。これで LXD API とやりとりするすべてのパラメーターと方法をカバーしているはずです。
+
+  <!--
+  A temporary rendering of this can be found here: https://dl.stgraber.org/swag-lxd/
+  -->
+  仮に出力したものがこちらにあります: https://dl.stgraber.org/swag-lxd/
+
+  ### すべての変更点（翻訳なし）<!-- Complete changelog -->
+  <!--
+  Here is a complete list of all changes in this release:
+  -->
+  このリリースでの完全な変更点のリストは次のとおりです:
+
+   - lxd/migration: Refresh protobuf
+   - lxd/storage/ceph: Fix ceph.rbd.features
+   - lxd/cluster/gateway: Expose node is not clustered error
+   - lxd/cluster/gateway/test: TestGateway_Single ErrNodeIsNotClustered usage
+   - lxd/patches: Adds db_nodes_autoinc patch
+   - lxd/storage/drivers/driver/ceph/utils: util.SplitNTrimSpace usage
+   - lxd/network/openvswitch/ovs: Adds TCP flag constants
+   - lxd/network/acl/acl/ovn: Switches to openvswitch TCP flag constants in OVNApplyNetworkBaselineRules
+   - shared/util: Removes GetStableRandomInt64FromList and GetStableRandomGenerator from shared pkg
+   - lxd/util/random: Adds GetStableRandomGenerator and GetStableRandomInt64FromList functions
+   - lxd/images: util.GetStableRandomInt64FromList usage
+   - lxd/network/driver/bridge: util.GetStableRandomGenerator usage
+   - lxd/network/driver/ovn: util.GetStableRandomGenerator usage
+   - lxd/storage/volumes/snapshot: util.GetStableRandomInt64FromList usage
+   - test: Run test_clustering_image_refresh
+   - shared/api/netork/acl: Adds missing example doc fields
+   - lxc/network/acl: Update field examples
+   - i18n: Update translation template
+   - lxd/network/acl/acl/load: Fix UsedBy with project profiles
+   - test/suites: Fix sed command
+   - shared/api: Mark most ACL rule fields omitempty
+   - Fix typo in doc/projects.md, replace images with backups
+   - Fix a typo in rest-api.md for renaming a network ACL
+   - client/lxd: Don't treat % chars from LXD server response as placeholders in lxdParseResponse
+   - doc/network/acls: Changes reserved subject names
+   - lxd/network/acl/acl/ovn: Handles deprecated aliases for subjects
+   - shared/api/network/acl: Updates example with non-depcared reserved subject
+   - lxd/network/acl/driver/common: Deprecates #internal and #external subjects and replaces them with @internal and @external
+   - Doc: fix typo on network type
+   - doc/rest-api: Refresh swagger YAML
+   - doc/rest-api: Refresh swagger YAML
+   - lxd: Unmount image and backup volume on shutdown
+   - lxd: Fix static analysis
+   - shared: Remove WriteTempFile
+   - shared/osarch: Remove dependency on shared package
+   - shared/osarch: Add SupportedArchitectures
+   - shared/validate: Add IsArchitecture
+   - lxd/project: Add images.default_architecture
+   - lxd/cluster: Add images.default_architecture
+   - lxd/db: Support images.default_architecture
+   - lxd: Support images.default_architecture
+   - doc: Add images.default_architecture
+   - api: images_default_architecture
+   - lxd/network/driver/ovn: Adds n.ensureNetworkPortGroup and use it in setup() and Start()
+   - lxd/network/driver/ovn: Clarifies comment
+   - lxd/storage/drivers/generic/vfs: Error quoting in genericVFSVolumeSnapshots
+   - lxd/storage/drivers/driver/btrfs/volumes: Ensure subvolumes in snapshots are copied during CreateVolumeFromCopy
+   - lxd/images: Optimize image distribution
+   - lxd: Properly unmount old image volume
+   - lxd/network/acl/acl/ovn: Ensure to parenthesised || when used with && in rule match
+   - lxd/instance/qemu: Add 5s QMP timeout
+   - lxd/storage/drivers/volume: Optimized creation of slice in Snapshots()
+   - lxd/storage/drivers/volume: Adds SnapshotsMatch function
+   - lxd/storage/drivers/interface: Updates BackupVolume to take a slice of snapshot names
+   - lxd/db/instances: Clarifies expected return order of snapshots in GetInstanceSnapshotsWithName
+   - lxd/storage/backend/lxd: Updates BackupInstance to provide list of snapshot names to b.driver.BackupVolume
+   - lxd/storage/backend/lxd: Updates BackupCustomVolume to provide list of snapshot names to b.driver.BackupVolume
+   - lxd/storage/drivers/generic/vfs: Updates genericVFSBackupVolume to accept a list of snapshot names
+   - lxd/storage/drivers/driver/btrfs/volumes: Updates BackupVolume to accept a list of snapshot names
+   - lxd/storage/drivers/driver/ceph/volumes: Updates BackupVolume to accept a list of snapshot names
+   - lxd/storage/drivers/driver/cephfs/volumes: Updates BackupVolume to accept a list of snapshot names
+   - lxd/storage/drivers/driver/dir/volumes: Updates BackupVolume to accept a list of snapshot names
+   - lxd/storage/drivers/driver/lvm/volumes: Updates BackupVolume to accept a list of snapshot names
+   - lxd/storage/drivers/driver/mock: Updates BackupVolume to accept a list of snapshot names
+   - lxd/storage/drivers/driver/zfs/volumes: Updates BackupVolume to accept a list of snapshot names
+   - lxd/storage/drivers: Clarifies ordering of VolumeSnapshots and volume.Snapshots() in comment
+   - lxd/storage/volumes/backup: Use requested project name for operation
+   - lxd/storage/volumes/snapshot: Use requested project name for operation
+   - lxd/storage/volumes: Use requested project name for operation
+   - lxd/operations: Renames project to projectName
+   - lxd: Renames project to projectName
+   - clustering: Force config when bootstrapping
+   - lxd/network/openvswitch/ovn: Work around ovn-nbctl NAT bugs in LogicalRouterDNATSNATAdd
+   - lxd/network/openvswitch/ovn: Use same technique as LogicalRouterDNATSNATAdd when mayExist is true
+   - lxd/network/openvswitch/ovn: Merge LogicalSwitchPortAdd and LogicalSwitchPortSet
+   - lxd/network/driver/ovn: client.LogicalSwitchPortAdd usage
+   - lxd/network/openvswitch/ovn: Reduce ovn-nbctl calls in LogicalSwitchPortDeleteDNS
+   - lxd/network/openvswitch/ovn: Reduce calls to ovn-nbctl in LogicalSwitchPortLinkRouter
+   - lxd/network/openvswitch/ovn: Reduce calls to ovn-nbctl in LogicalSwitchPortLinkProviderNetwork
+   - lxd/network/openvswitch/ovn: Updates LogicalRouterDNATSNATDelete to support removing multiple entries in single call
+   - lxd/network/driver/ovn: Updates InstanceDevicePortDelete to always attempt to remove its IPs from DNAT entries
+   - lxd/network/openvswitch/ovn: Updates LogicalRouterRouteDelete to support removing multiple routes
+   - lxd/network/driver/ovn: LogicalRouterRouteDelete usage to reduce ovn-nbctl calls
+   - lxc/network_acl: Fix example
+   - i18n: Update translation templates
+   - lxc/project: Show description
+   - lxc/profile: Add description column
+   - lxc/storage: Add description column
+   - doc: improve wording of network ACLs
+   - doc/instances: Adds ipv4.routes and ipv6.routes for OVN NICs
+   - test/main: Fix clustering test typo
+   - test/clustering: Cleanup properly
+   - test/clustering: s/localhost/public/
+   - test/clustering: Replace sleep with wait
+   - test/clustring: Unset LXD_NETNS
+   - lxd/device/disk: Fallback to using mount device path for major/minor number extraction for BTRFS
+   - lxd/instance/drivers/driver/lxc: Ensure container is stopped if post start hooks fail
+   - lxd/instance/drivers/driver/qemu: Adds comment clarifying order of post start hook failure actions
+   - lxd/network/openvswitch/ovn: Adds LogicalSwitchPorts function
+   - lxd/network/driver/ovn: Use client.LogicalSwitchPorts in handleDependencyChange and Update
+   - tests: Don't block on /dev/random
+   - lxd/network/acl/acl/ovn: Removes unused state arg from ovnApplyToPortGroup
+   - lxd/network/driver/ovn: Improved comment in InstanceDevicePortAdd
+   - lxd/db/images: Fix incorrect cached attribute handling
+   - lxd/images: Improve error logging in autoUpdateImages
+   - doc: Added a Table of Content in /doc/index.md
+   - doc: Added "Feature Requests" to Bug Reports section in /doc/index.md
+   - lxd/patches: Fix typo in patchNetworkClearBridgeVolatileHwaddr
+   - lxd/patches: Adds patchNetworkACLRemoveDefaults to remove ACL default.action and default.logged keys
+   - doc/network-acls: Removes references to default.action and default.logged
+   - shared/api/network/acl: Removes reference to default.action in config
+   - lxd/network/acl/acl/ovn: Removes default.action and default.logged behavior
+   - lxd/network/acl/driver/common: Removes references to default.action and default.logged in config validation
+   - doc/rest-api: Refresh swagger YAML
+   - lxd/network/driver/ovn: Renames instance device structs to OVNInstanceNICSetupOpts and OVNInstanceNICStopOpts
+   - lxd/network/driver/ovn: Renames InstanceDevicePortConfigParse to instanceDevicePortRoutesParse
+   - lxd/network/driver/ovn: Renames InstanceDevicePortAdd to InstanceDevicePortSetup
+   - lxd/network/driver/ovn: Updates InstanceDevicePortDelete to accept OVNInstanceNICStopOpts
+   - lxd/network/driver/ovn: Updates handleDependencyChange to use n.InstanceDevicePortSetup
+   - lxd/device/nic/ovn: Updates ovnNet interface
+   - lxd/device/nic/ovn: d.network.InstanceDevicePortSetup and d.network.InstanceDevicePortDelete usage in Start()
+   - lxd/device/nic/ovn: d.network.InstanceDevicePortSetup usage in Update()
+   - lxd/device/nic/ovn: d.network.InstanceDevicePortDelete usage in Stop()
+   - lxd/network/acl/driver/common: Export ValidActions for network and NIC validation
+   - lxd/device/nic: Add support for validating security.acls.default.{in,e}gress.{action,logged} config keys
+   - lxd/device/nic/ovn: Validates security.acls.default.{in,e}gress.{action,logged} config keys
+   - doc/networks: Adds security.acls.default.{in,e}gress.{action,logged} keys to ovn network
+   - doc/instances: Adds security.acls.default.{in,e}gress.{action,logged} keys to OVN NIC
+   - api: Adds network_ovn_acl_defaults extension
+   - lxd/network/openvswitch/ovn: space trimming cleanup
+   - lxd/network/openvswitch/ovn: Renames setACLRules to aclRuleAddAppendArgs
+   - lxd/network/openvswitch/ovn: Updates LogicalSwitchSetACLRules to use o.aclRuleAddAppendArgs
+   - lxd/network/openvswitch/ovn: Updates PortGroupSetACLRules to use o.aclRuleAddAppendArgs
+   - lxd/network/openvswitch/ovn: Adds logicalSwitchPortACLRules function
+   - lxd/network/openvswitch/ovn: Updates LogicalSwitchPortDeleteDNS to use o.logicalSwitchPortDeleteDNSAppendArgs
+   - lxd/network/openvswitch/ovn: Adds logicalSwitchPortDeleteAppendArgs function
+   - lxd/network/openvswitch/ovn: Updates LogicalSwitchPortDelete to use o.logicalSwitchPortDeleteAppendArgs
+   - lxd/network/openvswitch/ovn: Adds LogicalSwitchPortCleanup function
+   - lxd/network/openvswitch/ovn: Adds aclRuleDeleteAppendArgs, PortGroupPortSetACLRules and PortGroupPortClearACLRules functions
+   - lxd/network/acl/acl/ovn: Renames ovnACLPriorityPortGroupDefaultReject to ovnACLPriorityPortGroupDefaultAction
+   - lxd/network/acl/acl/ovn: Adds OVNApplyInstanceNICDefaultRules function
+   - lxd/network/acl/acl/ovn: ovnApplyToPortGroup change default action to drop
+   - lxd/network/driver/ovn: Error improvement
+   - lxd/network/driver/ovn: Updates InstanceDevicePortSetup to setup NIC port default ACL rules
+   - lxd/network/driver/ovn: Updates InstanceDevicePortDelete to use LogicalSwitchPortCleanup
+   - lxd/network/driver/ovn: Adds security.acls.default.{in,e}gress.{action,logged} config key validation
+   - lxd/network/driver/ovn: Adds default rule config change detection to Update
+   - lxd/migrate: Set TrackProgress to `true` to track in-cluster progress information
+   - lxd: Support for in-cluster progress information
+   - lxc/move: Support for in-cluster progress information
+   - lxd/device/nic/bridged: Check br_netfilter for security.ipv6_filtering loaded before clearing existing rules
+   - lxd/device/nic/ovn: Typo in comment
+   - lxd/network/openvswitch/ovn: Removes LogicalSwitchDHCPOptionsGetID
+   - lxd/network/driver/ovn: Use client.LogicalSwitchDHCPOptionsGet in InstanceDevicePortSetup
+   - lxd/network/openvswitch/ovn: Simplify LogicalSwitchDHCPOptionsDelete and make more efficient
+   - lxd/network/openvswitch/ovn: Use more efficient o.LogicalSwitchDHCPOptionsDelete in LogicalSwitchDelete
+   - lxd/network/openvswitch/ovn: Makes logicalSwitchDNSRecordsDelete more efficient
+   - lxd/images: Skip update if image cannot be found
+   - lxc/move: Support for quietFlag for in-cluster instance move
+   - lxd/db/cluster: Extend list of entities
+   - lxd/db/cluster: Fix entity URI for images
+   - lxd/network/network/utils: Updates GetNeighbourIPs to return slice of NeighbourIP struct (with State)
+   - lxd/device/nic/bridge: Updates State IP neighbour scanning to return valid state neighbours first
+   - lxd/instance/drivers/driver/lxc: Adds statusCode function and update State to use it
+   - lxd/instance/drivers/driver/lxc: Adds isRunningStatusCode function and updates IsRunning to use it
+   - lxd/instance/drivers/driver/lxc: Adds renderState function and updates RenderState to use it
+   - lxd/instance/drivers/driver/lxc: Updates RenderFull to use d.renderState
+   - lxd/instance/drivers/driver/lxc: Updates IsFrozen to use d.statusCode()
+   - lxd/instance/drivers/driver/lxc: Updates Render to use d.statusCode
+   - lxd/instance/drivers/driver/lxc: Updates RenderState to use statusCode
+   - lxd/instance/drivers/driver/qemu: Updates RenderState to use d.isRunningStatusCode
+   - lxd/instance/drivers/driver/qemu: Updates IsRunning to use d.isRunningStatusCode
+   - lxd/instance/drivers/driver/qemu: Updates IsFrozen to use d.statusCode
+   - lxd/instance/drivers/driver/qemu: Reduce calls to statusCode in Render
+   - lxd/instance/drivers/driver/qemu: Updates RenderFull to use d.renderState
+   - lxd/instance/drivers/driver/qemu: Adds renderState and updates RenderState to use it
+   - lxd/instances: Removes check for invalid state BROKEN in instancesShutdown
+   - lxc/action: Allow --console with stop action.
+   - i18n: Update translation templates
+   - shared/api: Label Operation structs
+   - lxd/operations: Add to swagger
+   - doc/rest-api: Refresh swagger YAML
+   - Makefile: Set GO111MODULE=off
+   - lxd/operations: Cover public endpoints
+   - shared/api: Fix cluster labeling
+   - lxd: Add project arguments to swagger
+   - lxd/swagger: Add background operations
+   - shared/api: Label Image structs
+   - lxd/images: Add to swagger
+   - doc/rest-api: Refresh swagger YAML
+   - lxd/instance/qemu: Disable net vectors on ccw
+   - lxc/list: Handle dots in device keys
+   - lxd/device/nic/bridged: Comment typo
+   - lxd/network/driver/bridge: Error quoting
+   - lxc/network/acl: Allow output of lxc network acl show to be used as input to lxc network acl edit
+   - lxd/device: Ensure type field in NetworkInterface is specified first for liblxc
+   - lxc/list: Add more instance filters
+   - i18n: Update translation templates
+   - Revert "doc: Added a Table of Content in /doc/index.md"
+   - lxd/device/gpu_mdev: Simplify start logic
+   - lxd/device/gpu_mdev: Support mdev on top of SR-IOV
+   - lxc/list: Remove name filter
+   - lxc/list: Rename state to inst
+   - lxc/list: Cleanup comments
+   - lxc/list: Pass state to filters
+   - lxc/list: ipv4/ipv6 filters apply to state
+   - lxc/list: Optimize filtering
+   - lxc/list_test: Rename state to inst
+   - lxc/list_test: Fix function signature
+   - lxc/list_test: Fix name filter
+   - lxc/list_test: Add state testing
+   - i18n: Update translation templates
+   - lxc/config: Add system-wide remotes
+   - lxc/remote: Add system-wide remotes
+   - lxc/info: Sort the mdev profiles
+   - lxc-to-lxd: Fix test (type always goes first)
+   - lxd/storage/drivers/driver/ceph/volumes: Don't ignore unmount/unmap failures in DeleteVolume
+   - doc: Remotes documentation
+   - i18n: Update translation templates
+   - test/suites/clustering: Retry removing node from database in test_clustering_remove_raft_node
+   - lxd/gpu/physical: Fix compute-only passthrough
+   - doc/instances: Mark mdev field as required
+   - lxd/db/profiles: Cleanup arg names and errors in GetProfiles
+   - lxd/api/internal: Adds internalImportRootDevicePopulate function
+   - lxd/api/internal/test: Add tests for internalImportRootDevicePopulate
+   - lxd/api/internal: Updates internalImport to use internalImportRootDevicePopulate
+   - lxd/storage/errors: Removes ErrNotImplemented
+   - lxd/storage/load: Return drivers.ErrNotSupported in GetPoolByInstance when storage pool doesn't support instance type
+   - lxd/storage/backend/lxd: drivers.ErrNotImplemented usage
+   - lxd/storage/backend/mock: drivers.ErrNotImplemented usage
+   - lxd/instance/drivers/driver/lxc: Check pool supports instance type in lxcCreate
+   - lxd/instance/drivers/driver/qemu: Check pool supports instance type in qemuCreate
+   - lxd/instance/drivers/driver/lxc: Use errors.Cause
+   - lxd/instance/drivers/driver/qemu: Use errors.Cause
+   - lxd/instance/drivers: Clearer pool load failure message
+   - lxd/backup: Clearer pool load failure message
+   - lxd/instance: Add revert package usage
+   - lxd/instance: Clearer error messages
+   - lxd/migrate/instance: storageDrivers.ErrNotImplemented usage
+   - test/suites/backup: Add tests for checking lxd import profile root disk support
+   - lxd/storage/backend/lxd: Check custom volume type is supported by storage pool
+   - cluster: Larger Timeout to find leader
+   - lxd/firewall/firewall/interface: Add NetworkSetup and remove feature specific network setup functions
+   - lxd/firewall/drivers/driver/consts: Add network firewall Opts
+   - lxd/firewall/drivers/drivers/nftables: Implement NetworkSetup and unexport per-feature setup functions
+   - lxd/firewall/drivers/drivers/xtables: Implement NetworkSetup and unexport per-feature setup functions
+   - lxd/network/driver/bridge: Switch to n.state.Firewall.NetworkSetup usage
+   - doc/instance: Fix escaping
+   - lxd/device/gpu: Add NVIDIA MIG support
+   - doc/instances: Add GPU MIG
+   - api: gpu_mig extension
+   - doc/projects: Sort config keys
+   - lxd/project: Add skipUnset
+   - lxd/project: Refactor instance counting
+   - api: project_usage
+   - shared/api: Add ProjectState
+   - lxd/project: Add getAggregateLimits
+   - lxd/project: Add GetCurrentAllocations
+   - lxd/projects: Add state endpoint
+   - client: Add GetProjectState
+   - lxc/project: Add info sub-command
+   - i18n: Update translation templates
+   - doc/rest-api: Add project state
+   - doc/rest-api: Refresh swagger YAML
+   - tests: Test for lxc project info
+   - client: Fixes GetContainerLogfiles and GetInstanceLogfiles
+   - doc/metadata: Adds remotes section
+   - lxd/firewall/drivers/drivers/xtables: errors.Wrapf usage
+   - lxd/firewall/drivers/drivers/xtables: Removes unused args from generateFilterIptablesRules
+   - lxd/firewall/drivers/drivers/xtables: Adds iptablesChainCreate and iptablesChainExists functions
+   - lxd/firewall/drivers/drivers/xtables: Moves NIC level security filtering rules into own chain
+   - shared/validate: Allow uppercase letters in PCI addresses
+   - shared/validate: Update unit tests for PCI addresses
+   - lxd/instance/drivers: Restrict virtiofs to Intel architectures
+   - lxd/device/disk: Restrict virtiofs to x86_64
+   - lxd/cluster: Don't copy all images on startup
+   - tests: Disable test_clustering_image_replication
+   - lxd/task: Add Hourly convenience function
+   - lxd/images: Use Hourly() in autoUpdateImagesTask
+   - lxd/firewall/firewall/interface: Adds delete and ipVersions slice args to NetworkClear
+   - lxd/network/driver/bridge: n.state.Firewall.NetworkClear usage in setup
+   - lxd/network/driver/bridge: firewall setup debug logging
+   - lxd/network/driver/bridge: n.state.Firewall.NetworkClear usage in Stop
+   - lxd/firewall/drivers/drivers/nftables: NetworkClear updated with new arguments
+   - lxd/firewall/drivers/drivers/xtables: Updates networkSetupNICFilteringChain to use network-specific chain
+   - lxd/firewall/drivers/drivers/xtables: Updates generateFilterIptablesRules to use network-specific chain
+   - lxd/firewall/drivers/drivers/xtables: No need to use LookPath in iptablesChainCreate
+   - lxd/firewall/drivers/drivers/xtables: Adds iptablesChainDelete function
+   - lxd/firewall/drivers/drivers/xtables: NetworkClear updated to add new arguments
+   - doc: Add aliases to snapshots.schedule
+   - api: snapshots_schedule_aliases
+   - lxd/util: Rework random functions
+   - lxd/instance: Move NextSnapshotName
+   - lxd/snapshot: Add snapshot aliases
+   - lxd: Use snapshot aliases
+   - lxd/operations: Fix possible NPE
+   - lxd/instance: Add startup snapshot
+   - shared/validate: Add IsCron validator
+   - tests: Add snapshot scheduling
+   - i18n: Update translations from weblate
+   - lxd/storage/drivers/driver/zfs/volumes: Only mount instance filesystem volumes in postHook for CreateVolumeFromBackup
+   - lxd/operations: Don't wait for tokens
+   - lxd/images: Run autoSyncImagesTask hourly
+   - lxd/db/images: Add GetImages
+   - lxd/images: Retrieve all images on sync
+   - lxd/images: Use CopyImage() in autoSyncImages
+   - lxd/daemon: Fix comment about autoSyncImages
+   - lxd: Sync images on cluster node removal
+   - lxd: Sync images when cluster.images_minimal_replica changes
+   - tests: Re-enable image replication tests
+   - lxd: Sync images on cluster node join
+   - lxd/images: Pick a random source node for replication
+   - lxd/operations: Export OperationClass type
+   - client: Fix copy of VM snapshots
+
+  ### 試用環境 <!-- Try it for yourself -->
+  <!--
+  This new LXD release is already available for you to try on our [demo service](https://linuxcontainers.org/lxd/try-it/).
+  -->
+  この新しい LXD リリースは私たちの [デモサービス](https://linuxcontainers.org/ja/lxd/try-it/) で利用できます。
+
+  ### ダウンロード <!-- Downloads -->
+  <!--
+  The release tarballs can be found on our [download page](https://linuxcontainers.org/lxd/downloads/).
+  -->
+  このリリースの tarball は [ダウンロードページ](https://linuxcontainers.org/lxd/downloads/) から取得できます。
+
+  <!--
+  Binary builds are also available for:
+  -->
+  ビルド済みバイナリーは次のように使えます:
+
+   - **Linux:** snap install lxd
+   - **MacOS:** brew install lxc
+   - **Windows:** choco install lxc
