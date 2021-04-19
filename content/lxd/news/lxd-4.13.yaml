@@ -133,11 +133,11 @@ content: |-
   New configuration keys:
 
    -  `security.acls.default.egress.action`
-   -  `security.acls.default.eress.logged`
+   -  `security.acls.default.egress.logged`
    -  `security.acls.default.ingress.action`
    -  `security.acls.default.ingress.logged`
 
-  This also separate ingress and egress making it easy to log any blocked egress traffic while keeping blocked ingress traffic silently ignored.
+  This also separates ingress and egress making it easy to log any blocked egress traffic while keeping blocked ingress traffic silently ignored.
 
   #### `--console` with `lxc stop`
   `lxc stop` now joins `lxc start` and `lxc restart` in supporting a `--console` option.
