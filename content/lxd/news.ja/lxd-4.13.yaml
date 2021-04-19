@@ -178,7 +178,7 @@ content: |-
   <!--
   To specifically request the aarch64 image which will then pick a cluster server capable of running aarch64 images.
   -->
-  明示的に aarch64 イメージを指定すると、aarch64 イメージを実行できるクラスターサーバーが選択されます。
+  明示的に aarch64 イメージを指定すると、aarch64 イメージを実行できるクラスターサーバーが選択されます（訳注: 例は arm64 になってますが、aarch64 の Ubuntu での arch が arm64 です）。
 
   #### `lxc project list`, `lxc profile list`, `lxc storage list` の新しい DESCRIPTION カラム <!-- New description column in `lxc project list`, `lxc profile list` and `lxc storage list` -->
   <!--
@@ -214,7 +214,7 @@ content: |-
   新しい設定キーは次のとおりです:
 
    -  `security.acls.default.egress.action`
-   -  `security.acls.default.eress.logged`
+   -  `security.acls.default.egress.logged`
    -  `security.acls.default.ingress.action`
    -  `security.acls.default.ingress.logged`
 
