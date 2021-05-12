@@ -135,7 +135,7 @@ content: |-
   <!--
   Backups and snapshots can be resource expensive, both in CPU time and disk usage, so you may not want every project user to be allowed to use them.
   -->
-  バックアップとスナップショットは、CPU 時間とディスク容量の両方でリソースを消費するので、全プロジェクトユーザーに使用許可を与えたくなり場合もあるでしょう。
+  バックアップとスナップショットは、CPU 時間とディスク容量の両方でリソースを消費するので、全プロジェクトユーザーに使用許可を与えたくない場合もあるでしょう。
 
   <!--
   The `restricted.snapshots` and `restricted.backups` config keys can be used to control this. Those apply to both instance and custom volume snapshots/backups and also affect scheduled snapshots.
