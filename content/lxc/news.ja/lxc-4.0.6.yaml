@@ -1,0 +1,260 @@
+title: LXC 4.0.6 LTS リリースのお知らせ <!-- LXC 4.0.6 LTS has been released -->
+date: 2021/01/12 20:01
+origin: https://discuss.linuxcontainers.org/t/lxc-4-0-6-lts-has-been-released/9926
+content: |-
+  ### はじめに <!-- Introduction -->
+  <!--
+  The LXC team is pleased to announce the release of LXC 4.0.6!
+  -->
+  LXC チームが LXC 4.0.6 のリリースをお知らせします!
+
+  <!--
+  This is the sixth bugfix release for LXC 4.0 which is supported until June 2025.
+  -->
+  このリリースは 2025 年 6 月までサポートされる LXC 4.0 に対する 6 回目のバグフィックスリリースです。
+
+  ### バグ修正 <!-- Bugfixes -->
+  <!--
+  As usual this bugfix releases focus on stability and hardening. Some of the highlights for this release are:
+  -->
+  このバグフィックスリリースは、いつも通り安定性とハードニングに焦点を当てています。このリリースのハイライトのいくつかは次の通りです:
+
+  - seccomp の互換性があるアーキテクチャーに関する処理の改良 <!-- Improve handling for compatibility architectures for seccomp -->
+  - seccomp notifier 実装のハードニング <!-- Harden seccomp notifier implementation -->
+  - [https://bugzilla.kernel.org/show_bug.cgi?id=209971](https://bugzilla.kernel.org/show_bug.cgi?id=209971) で報告されているカーネルのリグレッションを扱うための `/proc/<pid>/mountinfo` のパース処理の見直し <!-- Rework parsing of `/proc/<pid>/mountinfo` to handle kernel regression https://bugzilla.kernel.org/show_bug.cgi?id=209971 -->
+  - ネットワークデバイスの復帰処理の改良 <!-- Improve network device restoration -->
+  - 設定ファイルの大幅なハードニングとクリーンアップ <!-- Significantly cleanup and harden config file parsing -->
+  - 新しいケーパビリティである `CAP_PERFORM`、`CAP_BPF`、`CAP_CHECKPOINT_RESTORE` のサポート <!-- Support new capabilities `CAP_PERFORM`, `CAP_BPF`, and `CAP_CHECKPOINT_RESTORE` -->
+  - `CAP_NET_ADMIN` なしで起動したコンテナのハードニング <!-- Harden containers started without `CAP_NET_ADMIN` -->
+
+  <!--
+  The full list of commits is available below:
+  -->
+  コミットの全リストは次の通りです（翻訳なし）:
+
+   - Update Japanese pam_cgfs(8) to reflect lack of support for pure cgroupv2
+   - seccomp: Fix handling of pseudo syscalls and improve logging for rule processing.
+   - seccomp: Avoid duplicate processing of rules for host native arch.
+   - lxccontainer: fix lxc_config_item_is_supported
+   - tests: Fix compilation with appamor enabled.
+   - commands: don't deref after NULL check
+   - utils: don't deref after NULL check
+   - conf: check snprint return value
+   - utils: check snprintf return value
+   - seccomp: make seccomp notifier fd non-blocking
+   - seccomp: log aborted system calls
+   - attach: silence stdio permission adjust warnings
+   - cgfsng: adjust log level to warn instead of error
+   - parse: rework config parsing routine
+   - conf: switch to fd_to_fd() when copying mountinfo
+   - file_utils: fix config file parsing
+   - commands_utils: fix lxc-wait
+   - network: fix LXC_NET_NONE cleanup
+   - macro: move MAX_GRBUF_SIZE
+   - macro: bump MAX_GRBUF_SIZE to 2 mb
+   - tree-wide: use call_cleaner(netns_freeifaddrs)
+   - confile: clean up network configuration parsing
+   - confile: clean up hooks
+   - added standard resolver option to the lxc-download.in shell script
+   - Restore interfaces to the correct namespace on error
+   - confile: cleanup set_config_personality()
+   - confile: cleanup set_config_pty_max()
+   - confile: cleanup set_config_start()
+   - confile: cleanup set_config_monitor()
+   - confile: cleanup set_config_monitor_signal_pdeath()
+   - confile: cleanup set_config_group()
+   - confile: cleanup set_config_environment()
+   - confile: cleanup set_config_tty_max()
+   - confile: cleanup set_config_apparmor_allow_incomplete()
+   - confile: cleanup set_config_apparmor_allow_nesting()
+   - confile: cleanup set_config_apparmor_raw()
+   - confile: cleanup set_config_log_file()
+   - confile: cleanup set_config_log_level()
+   - confile: cleanup set_config_log_level()
+   - confile: cleanup set_config_signal_halt()
+   - confile: cleanup set_config_signal_reboot()
+   - confile: cleanup set_config_signal_stop()
+   - confile: cleanup __set_config_cgroup_controller()
+   - confile: cleanup set_config_cgroup_relative()
+   - confile: cleanup set_config_prlimit()
+   - confile: cleanup set_config_sysctl()
+   - confile: cleanup set_config_proc()
+   - confile: cleanup set_config_idmaps()
+   - confile: cleanup set_config_mount_fstab()
+   - confile: cleanup set_config_mount_auto()
+   - confile: cleanup set_config_mount()
+   - confile: cleanup set_config_cap_keep()
+   - confile: cleanup set_config_cap_drop()
+   - confile: cleanup set_config_console_rotate()
+   - confile: cleanup set_config_console_buffer_size()
+   - confile: cleanup set_config_console_size()
+   - confile: cleanup append_unexp_config_line()
+   - confile: cleanup do_includedir()
+   - confile: cleanup set_config_rootfs_path()
+   - confile: cleanup set_config_rootfs_options()
+   - confile: cleanup set_config_uts_name()
+   - confile: cleanup set_config_namespace_clone()
+   - confile: cleanup set_config_namespace_keep()
+   - confile: cleanup parse_line()
+   - confile: cleanup parse_new_conf_line()
+   - confile: cleanup lxc_config_define_add()
+   - confile: cleanup lxc_config_parse_arch()
+   - confile: cleanup lxc_fill_elevated_privileges()
+   - confile: cleanup write_config()
+   - confile: cleanup clone_update_unexp_ovl_paths()
+   - confile: cleanup clone_update_unexp_hooks()
+   - confile: cleanup set_config_ephemeral()
+   - confile: cleanup set_config_log_syslog()
+   - confile: set_config_no_new_privs()
+   - confile: cleanup __get_config_cgroup_controller()
+   - confile: cleanup get_config_idmaps()
+   - confile: cleanup get_config_hooks()
+   - confile: cleanup get_config_seccomp_allow_nesting()
+   - confile: cleanup get_config_seccomp_notify_cookie()
+   - confile: cleanup get_config_seccomp_notify_proxy()
+   - confile: get_config_prlimit()
+   - confile: cleanup get_config_sysctl()
+   - confile: cleanup get_config_proc()
+   - confile: cleanup clr_config_tty_dir()
+   - confile: cleanup clr_config_apparmor_profile()
+   - confile: cleanup clr_config_selinux_context()
+   - confile: cleanup clr_config_selinux_context_keyring()
+   - confile: cleanup clr_config_cgroup_dir()
+   - confile: cleanup clr_config_log_file()
+   - confile: cleanup clr_config_mount_fstab()
+   - confile: cleanup clr_config_rootfs_path()
+   - confile: cleanup clr_config_rootfs_mount()
+   - confile: cleanup clr_config_rootfs_options()
+   - confile: cleanup clr_config_uts_name()
+   - confile: cleanup clr_config_console_path()
+   - confile: cleanup clr_config_console_logfile()
+   - confile: cleanup clr_config_seccomp_allow_nesting()
+   - confile: cleanup clr_config_seccomp_notify_cookie()
+   - confile: cleanup clr_config_seccomp_notify_proxy()
+   - confile: cleanup clr_config_seccomp_notify_proxy()
+   - confile: cleanup clr_config_log_syslog()
+   - confile: cleanup clr_config_execute_cmd()
+   - confile: cleanup clr_config_init_cmd()
+   - confile: cleanup clr_config_init_cwd()
+   - confile: cleanup get_config_includefiles()
+   - confile: cleanup get_network_config_ops()
+   - confile: cleanup clr_config_net_nic()
+   - confile: cleanup clr_config_net_type()
+   - confile: cleanup clr_config_net_name()
+   - confile: cleanup clr_config_net_flags()
+   - confile: cleanup clr_config_net_link()
+   - confile: clr_config_net_l2proxy()
+   - confile: cleanup clr_config_net_macvlan_mode()
+   - confile: cleanup clr_config_net_ipvlan_mode()
+   - confile: cleanup clr_config_net_ipvlan_isolation()
+   - confile: cleanup clr_config_net_veth_mode()
+   - confile: cleanup clr_config_net_veth_pair()
+   - confile: cleanup clr_config_net_script_up()
+   - confile: cleanup clr_config_net_script_down()
+   - confile: cleanup clr_config_net_hwaddr()
+   - confile: cleanup clr_config_net_mtu()
+   - confile: cleanup clr_config_net_vlan_id()
+   - confile: cleanup clr_config_net_ipv4_gateway()
+   - confile: cleanup clr_config_net_ipv4_address()
+   - confile: cleanup clr_config_net_veth_ipv4_route()
+   - confile: cleanup clr_config_net_ipv6_gateway()
+   - confile: cleanup clr_config_net_ipv6_address()
+   - confile: cleanup clr_config_net_veth_ipv6_route()
+   - confile: cleanup get_config_net_nic()
+   - confile: cleanup get_config_net_type()
+   - confile: cleanup get_config_net_flags()
+   - confile: cleanup get_config_net_link()
+   - confile: cleanup get_config_net_l2proxy()
+   - confile: cleanup get_config_net_name()
+   - confile: cleanup get_config_net_macvlan_mode()
+   - confile: cleanup get_config_net_ipvlan_mode()
+   - confile: cleanup get_config_net_ipvlan_isolation()
+   - confile: cleanup get_config_net_veth_mode()
+   - confile: cleanup get_config_net_veth_pair()
+   - confile: cleanup get_config_net_script_up()
+   - confile: cleanup get_config_net_script_down()
+   - confile: cleanup get_config_net_hwaddr()
+   - confile: cleanup get_config_net_mtu()
+   - confile: cleanup get_config_net_vlan_id()
+   - confile: cleanup get_config_net_ipv4_gateway()
+   - confile: cleanup get_config_net_ipv4_address()
+   - confile: cleanup get_config_net_veth_ipv4_route()
+   - confile: cleanup get_config_net_ipv6_gateway()
+   - confile: cleanup get_config_net_ipv6_address()
+   - confile: cleanup get_config_net_veth_ipv6_route()
+   - confile: lxc_list_subkeys()
+   - confile: cleanup lxc_list_net()
+   - confile_utils: cleanup parse_idmaps()
+   - confile_utils: cleanup lxc_network_add()
+   - confile_utils: cleanup lxc_get_netdev_by_idx()
+   - confile_utils: cleanup lxc_remove_nic_by_idx()
+   - confile_utils: cleanup lxc_free_networks()
+   - confile_utils: cleanup lxc_veth_mode
+   - confile_utils: cleanup lxc_veth_mode_to_flag()
+   - confile_utils: cleanup lxc_veth_flag_to_mode()
+   - confile_utils: cleanup lxc_macvlan_mode
+   - confile_utils: cleanup lxc_macvlan_mode_to_flag()
+   - confile_utils: cleanup lxc_macvlan_flag_to_mode()
+   - confile_utils: cleanup lxc_ipvlan_mode
+   - confile_utils: cleanup lxc_ipvlan_mode_to_flag()
+   - confile_utils: cleanup lxc_ipvlan_flag_to_mode()
+   - confile_utils: cleanup lxc_ipvlan_isolation
+   - confile_utils: cleanup lxc_ipvlan_isolation_to_flag()
+   - confile_utils: cleanup lxc_ipvlan_flag_to_isolation()
+   - confile_utils: cleanup set_config_string_item()
+   - confile_utils: cleanup set_config_string_item_max()
+   - confile_utils: cleanup set_config_bool_item()
+   - confile_utils: cleanup network_ifname()
+   - confile_utils: cleanup new_hwaddr()
+   - lxc: add cleanup helpers
+   - confile_utils: cleanup lxc_container_name_to_pid()
+   - confile_utils: cleanup lxc_inherit_namespace()
+   - confile_utils: cleanup sig_num()
+   - confile_utils: cleanup rt_sig_num()
+   - confile_utils: cleanup sig_parse()
+   - cmd/lxc_init: ignore return value
+   - lxclock: logically dead code
+   - lxclock: cleanup lxc_newlock()
+   - lxclock: cleanup lxclock_name()
+   - lxclock: cleanup lxclock()
+   - lxclock: cleanup lxcunlock()
+   - lxclock: cleanup lxc_putlock()
+   - lxclock: cleanup dump_stacktrace()
+   - lxclock: cleanup lxclock_name()
+   - utils: cleanup get_rundir()
+   - storage/lvm: cleanup do_lvm_create()
+   - network: use empty initializer
+   - storage/btrfs: add missing return
+   - cgroups/cgfsng: remove logically dead code
+   - utils: fix unchecked return value
+   - conf: fix unchecked return value
+   - confile: cleanup set_config_net_l2proxy()
+   - confile_utils: cleanup strprint()
+   - criu: cleanup load_tty_major_minor()
+   - unmounted proc/sys/net if dropping CAP_NET_ADMIN Signed-off-by: Henry Zhang <henryzhang99@gmail.com>
+   - conf: fix block-device based rootfs mounting
+   - confile: cleanup set_config_hooks()
+   - confile: don't accidently alter lxc.cgroup.dir
+   - utils: allow cross-device resolution
+   - cgroup2: move bpf device cgroup program to struct cgroup_ops
+   - macro: use ascending order for capabilities
+   - conf: define missing capabilities
+   - conf: add new capabilities CAP_{BLOCK_SUSPEND,PERFMON,BPF,CAP_CHECKPOINT_RESTORE}
+   - macro: define all capabilities
+   - conf: add lxc_wants_cap() helper
+   - conf: fix CAP_NET_ADMIN-based mount handling
+   - Changed Version from 2.*.* to 4.*.*
+   - make lxc-net hermetic w.r.t. existing dnsmasq config
+
+  ### サポートとアップグレード <!-- Support and upgrade -->
+  <!--
+  The LXC 4.0 branch is supported until June 2025.
+  Only bugfixes and securitiy issues get included into the stable bugfix releases, so it's always safe and recommended to keep up and run the latest bugfix release.
+  -->
+  LXC 4.0 ブランチは 2025 年 6 月までサポートされます。
+  stable のバグフィックスリリースでは、バグとセキュリティに関する問題に対する修正のみが行われますので、常に安全です。最新のバグフィックスリリースの状態を維持し、実行することをおすすめします。
+
+  ### ダウンロード <!-- Downloads -->
+
+   - リリース tarball <!-- Main release tarball -->: [lxc-4.0.6.tar.gz](https://linuxcontainers.org/downloads/lxc/lxc-4.0.6.tar.gz)
+   - GPG シグネチャー <!-- GPG signature -->: [lxc-4.0.6.tar.gz.asc](https://linuxcontainers.org/downloads/lxc/lxc-4.0.6.tar.gz.asc)
