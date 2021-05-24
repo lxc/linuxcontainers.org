@@ -87,7 +87,7 @@
     {"path": "/lxc/irc/",
      "menu": ["LXC", "IRC"],
      "generator": "link",
-     "meta": {"url": "https://webchat.freenode.net/?channels=#lxcontainers"}},
+     "meta": {"url": "ircs://irc.libera.chat:6697/#lxc"}},
 
     {"path": "/lxc/github/",
      "menu": ["LXC", "GitHub"],
@@ -206,7 +206,7 @@
     {"path": "/lxd/irc/",
      "menu": ["LXD", "IRC"],
      "generator": "link",
-     "meta": {"url": "https://webchat.freenode.net/?channels=#lxcontainers"}},
+     "meta": {"url": "ircs://irc.libera.chat:6697/#lxc"}},
 
     {"path": "/lxd/github/",
      "menu": ["LXD", "GitHub"],
@@ -278,7 +278,7 @@
     {"path": "/lxcfs/irc/",
      "menu": ["LXCFS", "IRC"],
      "generator": "link",
-     "meta": {"url": "https://webchat.freenode.net/?channels=#lxcontainers"}},
+     "meta": {"url": "ircs://irc.libera.chat:6697/#lxc"}},
 
     {"path": "/lxcfs/github/",
      "menu": ["LXCFS", "GitHub"],
@@ -338,7 +338,7 @@
     {"path": "/distrobuilder/irc/",
      "menu": ["distrobuilder", "IRC"],
      "generator": "link",
-     "meta": {"url": "https://webchat.freenode.net/?channels=#lxcontainers"}},
+     "meta": {"url": "ircs://irc.libera.chat:6697/#lxc"}},
 
     {"path": "/distrobuilder/github/",
      "menu": ["distrobuilder", "GitHub"],
@@ -416,7 +416,7 @@
     {"path": "/cgmanager/irc/",
      "menu": ["CGManager", "IRC"],
      "generator": "link",
-     "meta": {"url": "https://webchat.freenode.net/?channels=#lxcontainers"}},
+     "meta": {"url": "ircs://irc.libera.chat:6697/#lxc"}},
 
     {"path": "/cgmanager/github/",
      "menu": ["CGManager", "GitHub"],

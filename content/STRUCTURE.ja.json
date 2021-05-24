@@ -234,7 +234,7 @@
     {"path": "/lxcfs/irc/",
      "menu": ["LXCFS", "IRC"],
      "generator": "link",
-     "meta": {"url": "https://webchat.freenode.net/?channels=#lxcontainers"}},
+     "meta": {"url": "ircs://irc.libera.chat:6697/#lxc"}},
 
     {"path": "/lxcfs/github/",
      "menu": ["LXCFS", "GitHub"],
@@ -294,7 +294,7 @@
     {"path": "/distrobuilder/irc/",
      "menu": ["distrobuilder", "IRC"],
      "generator": "link",
-     "meta": {"url": "https://webchat.freenode.net/?channels=#lxcontainers"}},
+     "meta": {"url": "ircs://irc.libera.chat:6697/#lxc"}},
 
     {"path": "/distrobuilder/github/",
      "menu": ["distrobuilder", "GitHub"],
