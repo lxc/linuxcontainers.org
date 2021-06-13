@@ -12,7 +12,7 @@ This guide provides a walkthrough of the basics of the OpenNebula cloud manageme
 <!--
 [MiniONE](https://github.com/OpenNebula/minione) is an evaluation tool that sets up a physical host or a virtual machine as a single-node OpenNebula cloud to quickly deploy a simple but fully functional testing environment.
 -->
-MiniOne は、物理ホストもしくは仮想マシンを、シングルノードの OpenNebula クラウドとしてセットアップし、シンプルですが完全に実用的なテスト環境を素早くデプロイするための評価ツールです。
+[MiniONE](https://github.com/OpenNebula/minione) は、物理ホストもしくは仮想マシンを、シングルノードの OpenNebula クラウドとしてセットアップし、シンプルですが完全に実用的なテスト環境を素早くデプロイするための評価ツールです。
 
 <!--
 MiniONE for LXD requires a dedicated virtual machine or physical host with a fresh default installation of Ubuntu 18.04+, with at least 2 GiB RAM and 20 GiB free space on disk, and privileged user access (root). For example, MiniONE can be used to easily build an OpenNebula cloud based on LXD on an Amazon Virtual Machine. The minimum recommended size is t2.medium. Just allocate at least 25GB disk space and remember to allow access to the 9869 TCP port, where the WebUI will be running.
@@ -47,7 +47,7 @@ MiniONE を実行すると、Web インターフェースへの接続方法の�
 <!--
 The first thing we are going to do now is to log in as oneadmin to take a look at the Admin View in Sunstone, which has more options than the other Sunstone views for regular users. Take a look at all the already bootstrapped resources in the cloud:
 -->
-最初に oneadmin としてログインし、Sunstone の管理ビューを見てみましょう。すでにクラウド上で起動しているリソースをすべてみてみましょう
+最初に oneadmin としてログインし、Sunstone の管理ビューを見てみましょう。すでにクラウド上で起動しているリソースをすべてみてみましょう。このビューは、他の一般ユーザーの Sunstone ビューよりはたくさんのオプションがあります。クラウド内ですでにブートストラップされているリソースを見てみましょう。
 [<img src="/static/img/one-1.png" alt="OpenNebula GUI"/ style="display:block;float:none;margin-left:auto;margin-right:auto;padding-top:1em;padding-bottom:1em;">](https://opennebula.io)
 
 <!--
