@@ -1,0 +1,57 @@
+title: LXC/LXD/LXCFS 2.0 - End of Life のお知らせ
+date: 2021/06/14 21:06
+origin: https://discuss.linuxcontainers.org/t/lxc-lxd-lxcfs-2-0-end-of-life-announcement/11333
+content: |-
+  # はじめに <!-- Introduction -->
+  <!--
+  The 2.0 LTS branch has reached its end of life.
+  -->
+  2.0 LTS ブランチがサポート終了（End of Life）をむかえました。
+
+  <!--
+  This affects the following projects:
+  -->
+  これは次のプロジェクトに影響します:
+
+   - LXC 2.0（2016 年 4 月 6 日リリース）<!-- (released 6th of April 2016) -->
+   - LXCFS 2.0（2016 年 3 月 31 日リリース）<!-- (released 31st of March 2016) -->
+   - LXD 2.0（2016 年 4 月 11 日リリース）<!-- (released 11th of April 2016) -->
+
+  <!--
+  After over 5 years of bugfixes and security maintenance, those releases have now reached the end of their supported lifetime.
+  -->
+  5年以上にわたるバグフィックスとセキュリティメンテナンスを経て、これらのリリースはサポート期間が終了しました。
+
+  <!--
+  Concretely, this means that we will not be issuing any new releases, that our stable branches will be closed and associated CI disabled.
+  -->
+  具体的には、これは新規リリースは今後行わず、対象の stable ブランチをクローズし、関連する CI を無効化します。
+
+  <!--
+  All remaining users should upgrade to a supported release as soon as possible.
+  -->
+  まだ対象のプロダクトをご利用のユーザーは、できるだけ早くサポートされているリリースへアップデートしてください。
+
+  # 長期サポートリリース <!-- Long term support releases -->
+  <!--
+  Upstream commits to 5 years support for its LTS branches.
+  Such branches exist for LXC, LXCFS and LXD and see bugfixes and security fixes backported to them.
+  -->
+  開発元は LTS ブランチの 5 年間のサポートをコミットしています。
+  LTS ブランチは LXC、LXCFS、LXD に存在し、バグフィックスやセキュリティフィックスがバックポートされます。
+
+  <!--
+  No new features get added to those branches and only the latest LTS branch sees most bugfixes backported, once a new LTS branch is released, the previous one will only get security and critical bugfixes.
+  -->
+  LTS ブランチには新しい機能は追加されません。そして、最新の LTS ブランチにのみ、大部分のバグフィックスがバックポートされます。新しい LTS ブランチがリリースされると、その前の LTS ブランチにはセキュリティと重要なバグフィックスのみが適用されます。
+
+  # サポート中のリリース <!-- Currently supported releases -->
+  <!--
+  There are currently two remaining LTS releases, `3.0` with support lasting until June 2023 and `4.0` with support until June 2021.
+  -->
+  現在サポート中の LTS リリースは 2 つあります。2023 年 6 月までサポートされる `3.0` リリースと、2025 年 6 月までサポートされる `4.0` です。
+
+  <!--
+  Additionally, some projects (currently LXD) may have more frequent feature releases. Those do not get long term support and are usually only supported until the next one comes out.
+  -->
+  さらに、いくつかのプロジェクト（現在は LXD）では、もっと頻繁な機能（feature）リリースが行われます。このようなリリースは、長期的なサポートはなく、通常は次の機能リリースがリリースされるまでしかサポートされません。
