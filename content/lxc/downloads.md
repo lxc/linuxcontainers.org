@@ -22,7 +22,7 @@ And for those who want development snapshots:
 
 # Current development version
 
-LXC has four active git branches:
+LXC has three active git branches:
 
  * **master**: Current development branch
  * **stable-3.0**: Stable update branch for LXC 3.0.x
