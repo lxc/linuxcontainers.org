@@ -42,7 +42,7 @@
 ## Choose your release
 LXD upstream maintains three release branches in parallel:
 
- * LTS release (LXD 4.0.x, LXD 3.0.x or LXD 2.0.x)
+ * LTS release (LXD 4.0.x or LXD 3.0.x)
  * Feature releases (LXD 4.x)
 
 LTS releases are recommended for production environments as they will benefit from regular bugfix
@@ -92,10 +92,6 @@ For the LXD 3.0 stable release, use:
 
     snap install lxd --channel=3.0/stable
 
-For the LXD 2.0 stable release, use:
-
-    snap install lxd --channel=2.0/stable
-
 **Note:** If you previously had the LXD deb package installed, you can migrate all your existing data over with:
 
     lxd.migrate
@@ -112,9 +108,8 @@ After that, you can install LXD with:
     snap install lxd
 
 Alternatively, pass:   
-`--channel=4.0/stable` for the LXD 4.0 LTS release,   
-`--channel=3.0/stable` for the LXD 3.0 LTS release or   
-`--channel=2.0/stable` for the LXD 2.0 LTS release.   
+`--channel=4.0/stable` for the LXD 4.0 LTS release or   
+`--channel=3.0/stable` for the LXD 3.0 LTS release.   
 
 ### MacOS builds
 

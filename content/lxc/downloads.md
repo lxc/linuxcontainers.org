@@ -4,7 +4,7 @@ LXC is included in most Linux distributions.
 In most cases installing it is as simple as selecting it in your package manager.
 
 Distributions also often provide backports of newer versions of LXC for their stable releases.
-You may want to look for that, especially if your distribution doesn't include LXC 4.0, 3.0 or 2.0.
+You may want to look for that, especially if your distribution doesn't include LXC 4.0 or 3.0.
 
 For production environment, try to stick to LXC 4.0.x or 3.0.x as these are the long term,
 stable releases which we will support until June 2025 (4.0.x) and June 2023 (3.0.x) respectively.
@@ -17,7 +17,6 @@ For Ubuntu users, we have official PPAs for LXC:
 And for those who want development snapshots:
 
  * [lxc-git-master](https://launchpad.net/~ubuntu-lxc/+archive/lxc-git-master): "master" branch
- * [lxc-git-stable-2.0](https://launchpad.net/~ubuntu-lxc/+archive/lxc-git-stable-2.0): "stable-2.0" branch
  * [lxc-git-stable-3.0](https://launchpad.net/~ubuntu-lxc/+archive/lxc-git-stable-3.0): "stable-3.0" branch
  * [lxc-git-stable-4.0](https://launchpad.net/~ubuntu-lxc/+archive/lxc-git-stable-4.0): "stable-4.0" branch
 
@@ -26,7 +25,6 @@ And for those who want development snapshots:
 LXC has four active git branches:
 
  * **master**: Current development branch
- * **stable-2.0**: Stable update branch for LXC 2.0.x
  * **stable-3.0**: Stable update branch for LXC 3.0.x
  * **stable-4.0**: Stable update branch for LXC 4.0.x
 
