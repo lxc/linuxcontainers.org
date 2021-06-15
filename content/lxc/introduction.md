@@ -27,7 +27,6 @@ LXC is currently made of a few separate components:
     * [lua](https://github.com/lxc/lua-lxc)
     * [Go](https://github.com/lxc/go-lxc)
     * [ruby](https://github.com/lxc/ruby-lxc)
-    * [python3](https://github.com/lxc/python3-lxc)
     * [Haskell](https://github.com/fizruk/lxc)
  * A set of standard tools to control the containers
  * Distribution container templates
@@ -53,6 +52,7 @@ Commercial support for LXC on Ubuntu LTS releases can be obtained from [Canonica
 
 ## Extended support
 LXC 4.0 and 3.0 are long term support releases:
+
  - LXC 4.0 will be supported until June 1st 2025
  - LXC 3.0 will be supported until June 1st 2023
 

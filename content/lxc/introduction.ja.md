@@ -39,11 +39,10 @@ LXC はいくつかのコンポーネントから構成されています。
 
  * liblxc ライブラリ <!-- The liblxc library -->
  * API に対するいくつかの言語のバインディング <!-- Several language bindings for the API: -->
-    * python3 (ツリー内、2.0.x での長期サポート) <!-- python3 (in-tree, long term support in 2.0.x) -->
-    * lua (ツリー内、2.0.x での長期サポート) <!-- lua (in tree, long term support in 2.0.x) -->
+    * [python3](https://github.com/lxc/python3-lxc)
+    * [lua](https://github.com/lxc/lua-lxc)
     * [Go](https://github.com/lxc/go-lxc)
     * [ruby](https://github.com/lxc/ruby-lxc)
-    * [python3](https://github.com/lxc/python3-lxc)
     * [Haskell](https://github.com/fizruk/lxc)
  * コンテナを操作するための標準的なツール群<!-- A set of standard tools to control the containers -->
  * コンテナ作成のためのテンプレート <!-- Distribution container templates -->
@@ -90,12 +89,13 @@ Ubuntu LTS リリースに含まれる LXC に対する商用サポートは [Ca
 ## 延長サポート <!-- Extended support -->
 
 <!--
-LXC 2.0 and 3.0 are long term support releases:
- - LXC 2.0 will be supported until June 1st 2021
+LXC 4.0 and 3.0 are long term support releases:
+ - LXC 4.0 will be supported until June 1st 2025
  - LXC 3.0 will be supported until June 1st 2023
 -->
-LXC 2.0、3.0 は長期サポート版のリリースです。
- - LXC 2.0 は 2021 年 6 月 1 日までサポートされます
+LXC 4.0、3.0 は長期サポート版のリリースです。
+
+ - LXC 4.0 は 2025 年 6 月 1 日までサポートされます
  - LXC 3.0 は 2023 年 6 月 1 日までサポートされます
 
 <!--

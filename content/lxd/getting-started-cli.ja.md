@@ -45,8 +45,8 @@ LXD upstream maintains three release branches in parallel:
 -->
 LXD では 3 つのリリースブランチが並行してメンテナンスされています:
 
- * LTS リリース <!-- LTS release -->(LXD 4.0.x, LXD 3.0.x or LXD 2.0.x)
- * フィーチャーリリース <!-- Feature releases -->(LXD 4.x)
+ * LTS リリース（LXD 4.0.x もしくは LXD 3.0.x） <!-- LTS release (LXD 4.0.x or LXD 3.0.x) -->
+ * フィーチャーリリース（LXD 4.x）<!-- Feature releases (LXD 4.x) -->
 
 <!--
 LTS releases are recommended for production environments as they will benefit from regular bugfix
@@ -132,13 +132,6 @@ LXD 3.0 stable リリースの場合は次のように実行します:
     snap install lxd --channel=3.0/stable
 
 <!--
-For the LXD 2.0 stable release, use:
--->
-LXD 2.0 stable リリースの場合は次のように実行します:
-
-    snap install lxd --channel=2.0/stable
-
-<!--
 **Note:** If you previously had the LXD deb package installed, you can migrate all your existing data over with:
 -->
 **注意:** 以前、LXD の deb パッケージをインストールしていた場合は、次のような方法で既存データをすべて移行できます:
@@ -170,14 +163,12 @@ After that, you can install LXD with:
 
 <!--
 Alternatively, pass:   
-`--channel=4.0/stable` for the LXD 4.0 LTS release,   
-`--channel=3.0/stable` for the LXD 3.0 LTS release or   
-`--channel=2.0/stable` for the LXD 2.0 LTS release.   
+`--channel=4.0/stable` for the LXD 4.0 LTS release or  
+`--channel=3.0/stable` for the LXD 3.0 LTS release  
 -->
 あるいは次のように実行します:  
 LXD 4.0 LTS リリースの場合は `--channel=4.0/stable`   
 LXD 3.0 LTS リリースの場合は `--channel=3.0/stable`  
-LXD 2.0 LTS リリースの場合は `--channel=2.0/stable`  
 
 ### MacOS 用クライアント<!-- MacOS builds -->
 
