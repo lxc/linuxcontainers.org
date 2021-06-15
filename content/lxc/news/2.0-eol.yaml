@@ -24,6 +24,6 @@ content: |-
   No new features get added to those branches and only the latest LTS branch sees most bugfixes backported, once a new LTS branch is released, the previous one will only get security and critical bugfixes.
 
   # Currently supported releases
-  There are currently two remaining LTS releases, `3.0` with support lasting until June 2023 and `4.0` with support until June 2021.
+  There are currently two remaining LTS releases, `3.0` with support lasting until June 2023 and `4.0` with support until June 2025.
 
   Additionally, some projects (currently LXD) may have more frequent feature releases. Those do not get long term support and are usually only supported until the next one comes out.
