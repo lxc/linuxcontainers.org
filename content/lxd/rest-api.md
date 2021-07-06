@@ -4,8 +4,8 @@
 
 LXD currently only implements a single version of the API, called "1.0".
 
-Details on that API can be found at:
-[https://github.com/lxc/lxd/blob/master/doc/rest-api.md](https://github.com/lxc/lxd/blob/master/doc/rest-api.md)
+An interactive version of the API documentation can be [found here](https://linuxcontainers.org/lxd/api/master/).
+And some more general information about the API can be [found here](https://linuxcontainers.org/lxd/docs/master/rest-api).
 
 ## API backward compatibility
 
