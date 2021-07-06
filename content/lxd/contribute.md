@@ -11,7 +11,7 @@ and not on stable releases, unless the bug only affects a stable release.
 
 Contributions to LXD must be submitted as GitHub pull-requests and we require them to be signed-off.
 
-More details on contribution guidelines may be found [here](https://github.com/lxc/lxd/blob/master/contributing.md)
+More details on contribution guidelines may be found [here](https://linuxcontainers.org/lxd/docs/master/contributing)
 
 # Stable release backports
 
