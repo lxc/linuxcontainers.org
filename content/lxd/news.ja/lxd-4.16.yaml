@@ -1,0 +1,638 @@
+title: LXD 4.16 リリースのお知らせ
+date: 2021/07/09 23:07
+origin: https://discuss.linuxcontainers.org/t/lxd-4-16-has-been-released/11547
+content: |-
+  ### はじめに <!-- Introduction -->
+  <!--
+  The LXD team is very excited to announce the release of LXD 4.16!
+  -->
+  LXD チームは LXD 4.16 のリリースをお知らせできることにとてもワクワクしています!
+
+  <!--
+  This isn't a feature packed release but it contains quite a few nice improvements to existing features and a few new things of its own. It also includes quite a bit of behind the scenes refactoring, bugfixing and general improvements.
+  -->
+  このリリースは新機能満載というわけではありません。しかし、既存のいくつかの機能にかなりの改良が加えられており、いくつか新機能が盛り込まれています。さらに、リファクタリング、バグ修正、全体的な改良など、直接見えない部分の変更もかなり加えられています。
+
+  Enjoy!
+
+  ### 新機能とハイライト <!-- New features and highlights -->
+  #### クラスター証明書の更新 <!-- Cluster certificate update -->
+  <!--
+  A new API and matching CLI call was added to update the certificate of an entire cluster. This effectively updates `cluster.crt` and `cluster.key` on all cluster members and has LXD reloads the certificate too.
+  -->
+  クラスター全体の証明書を更新するための、新しい API とそれに対応する CLI の呼び出しを追加しました。これは、すべてのクラスターメンバーが持っている cluster.crt と cluster.key を効率的に更新します。そして、LXD も証明書を再読み込みします。
+
+  <!--
+  This should be of particular interest to anyone planning on running a LXD cluster using a valid certificate from the likes of Let's Encrypt where the short certificate validity effectively requires automation of the replacement process.
+  -->
+  この機能は、Let's Encrypt のような有効な証明書を使って LXD クラスターを実行しようとしている人にとっては興味深い機能でしょう。このような場合、証明書の有効期間が短いため、置換手順の自動化が必要になるためです。
+
+  <!--
+  Passing the new certificate and key to `lxc cluster update-certificate` will immediately update the entire cluster.
+  -->
+  新しい証明書と秘密鍵を `lxc cluster update-certificate` コマンドに指定することで、すぐにクラスター全体の証明書と鍵が更新されます。
+
+  #### プロジェクト間のカスタムボリュームのコピー・移動 <!-- Copy/move of custom volumes between projects -->
+  <!--
+  Over the few releases since project support was first introduced, LXD grew the ability to transfer instances between projects but custom storage volumes didn't get the same ability, leading to some annoying situations.
+  -->
+  プロジェクト機能が最初に導入されて後の数回のリリースで、LXD はプロジェクト間でインスタンスを転送する機能が拡張してきました。しかし、カスタムボリュームには同等の機能がありませんでしたので、やっかいな状況が引き起こされたりしました。
+
+  <!--
+  This has now been rectified and custom storage volumes can now be copied or moved between projects. The CLI was updated to match that for instance and similarly accepts a `--target-project` option.
+  -->
+  この状況が改善され、カスタムストレージボリュームをプロジェクト間でコピーしたり移動したりできるようになりました。CLI はこれに合わせて更新され、同様に `--target-project` オプションを受け付けます。
+
+  #### `lxc monitor --pretty` のすべてのイベントタイプでの動作 <!-- `lxc monitor --pretty` now works with all event types -->
+  <!--
+  Following the addition of the `lifecycle` event type in LXD 4.15, `lxc monitor --pretty` now also supports the `operation` even type when run in pretty output mode.
+  -->
+  LXD 4.15 でライフサイクルイベントが追加されたのに続き、`lxc monitor --pretty` が pretty 出力モードで実行されているときも`operation`イベントタイプをサポートするようになりました。
+
+  <!--
+  This now covers all of LXD's event types and so makes it much easier to monitor a LXD server using the concise output of `lxc monitor --pretty`.
+  -->
+  これで LXD のイベントタイプすべてをカバーしましたので、`lxc monitor --pretty` の簡潔な出力を使って LXD サーバーのモニターが簡単になりました。
+
+  #### クラスター加入用トークンの簡単な revoke <!-- Easier revocation of cluster join tokens -->
+  <!--
+  `lxc cluster add` and `lxc cluster list-tokens` were introduced as part of LXD 4.14's new token based cluster join. But missing was an easy way to revoke a join token.
+  -->
+  `lxc cluster` と `lxc cluster list-tokens` を、LXD 4.14 の新しいトークンベースのクラスターへの加入機能の一部として追加しました。しかし、この加入用のトークンを revoke する簡単な方法がありませんでした。
+
+  <!--
+  It was possible to do it through `lxc operation cancel` but this felt like a bit of a workaround. As a result, there now is a separate `lxc cluster revoke-token` that can be used for that.
+  -->
+  これは `lxc operation cancel` を使って実行できましたが、ちょっとした回避策のように感じられました。その結果、この用途に使える専用の `lxc cluster revoke-token` が使えるようになりました。
+
+  #### 管理対象外ブリッジ上での IP フィルタリング <!-- IP filtering on unmanaged bridges -->
+  <!--
+  Those using bridges which aren't LXD managed can now make use of the IPv4 and IPv6 filtering features. To do this, an `ipv4.address` or `ipv6.address` entry must be present on the NIC device as LXD won't be able to know the address on its own.
+  -->
+  LXD が管理していないブリッジを使っている場合でも、IPv4 と IPv6 のフィルタリング機能が使えるようになりました。この機能を使うためには、LXD がアドレスを認識できないので、`ipv4.address` もしくは `ipv6.address` エントリーが NIC デバイス上に存在していなければなりません。
+
+  <!--
+  Once that's set, the usual `security.ipv4_filtering` and `security.ipv6_filtering` will then work as expected.
+  -->
+  これを設定すると、通常の `security.ipv4_filtering` と `security.ipv6_filtering` が期待通りに動作するようになります。
+
+  #### 新しい警告 <!-- New warnings -->
+  <!--
+  This release adds quite a few more warnings. As a reminder, those can be seen in `lxc warning list` and can be acknowledged or deleted as needed.
+  -->
+  このリリースで、かなりの数の警告が追加されています。これらの警告は `lxc warning list` で見ることができ、必要に応じて確認応答（acknowledge）と削除ができます。
+
+  <!--
+  The new warnings are:
+  -->
+  新しい警告は次の通りです。
+
+   - MAASへの接続の失敗 <!-- MAAS connection failures -->
+   - ネットワークの起動の失敗 <!-- Network startup failures -->
+   - クラスターメンバーのオフライン <!-- Offline cluster member -->
+   - インスタンスの自動起動の失敗 <!-- Instance auto-start failures -->
+   - `raw.dnsmasq` の使用によるネットワーク上の AppArmor の無効化 <!-- AppArmor being disabled on a network due to the use of raw.dnsmasq -->
+   - dnsmasq がサポートするより長い IPv6 プレフィックスの使用 <!-- Use of an IPv6 prefix larger than supported by dnsmasq -->
+   - NAT を使ったプロキシーデバイスを使っている場合の `br_netfilter` 設定の欠如 <!-- Missing br_netfilter configuration when using a proxy device with NAT -->
+
+  #### 新しい lifecycle イベント <!-- New lifecycle events -->
+  <!--
+  The `lifecycle` events (accessible through `lxc monitor`) were first limited to a few basic actions on instances. Those then evolved to cover almost all changes to instances and then to also cover networks.
+  -->
+  `lifecycle` イベント（`lxc monitor` からアクセス可能）は、最初はインスタンスの基本的なアクションのいくつかに限られていました。その後、インスタンスのほぼすべての変更をカバーするようになり、それからネットワークもカバーするようになりました。
+
+  <!--
+  With LXD 4.16, there now is full coverage for every LXD object. This should make those events suitable for audit reporting without needing to analyse detailed log files.
+  -->
+  LXD 4.16 では、LXD オブジェクトのすべてをカバーするようになりました。これにより、これらのイベントを、ログファイルを詳細に解析する必要なく、audit レポートに適した形にすることができるようになります。
+
+  <!--
+  The full list of events can be [found here](https://linuxcontainers.org/lxd/docs/master/events).
+  -->
+  イベントのすべてのリストは [こちら](https://linuxcontainers.org/lxd/docs/master/events) で見ることができます。
+
+
+  ### すべての変更点（翻訳なし） <!-- Complete changelog -->
+  <!--
+  Here is a complete list of all changes in this release:
+  -->
+  このリリースでの完全な変更点のリストは次の通りです:
+
+   - lxd/resources: Set RPM to 1 instead of 0 when rotational
+   - include: add open_tree() and mount_setattr()
+   - doc/projects: Remove white list term
+   - Remove hang term
+   - Remove white term
+   - lxd/cluster/gateway: Remove black term
+   - Remove dummy term
+   - lxd/main/checkfeature: Remove dummy term
+   - shared/idmap/shift/linux: Rename set_dummy_fs_ns_caps to spoof_fs_ns_caps
+   - Remove sanity term
+   - Replace Sanity Checks with Quick Checks
+   - lxd/db: Update schema to apply removal of sanity term
+   - lxd: use idmapped mounts
+   - lxd: ensure absolute paths when hotplugging mounts
+   - forkmount: update terminology
+   - disk: allow the use of idmapped mounts
+   - seccomp: handle idmapped mounts
+   - lxd: split storage handling in startCommon() into separate helper
+   - lxd: remove remaining DiskIdmap call in startCommon()
+   - lxc/cluster: add command revoke-token to delete a cluster join token
+   - test/suites/clustering: add tests for revoke-token
+   - i18n: update translation templates
+   - lxd/db: Add UnableToConnectToMAAS warning
+   - lxd: Add unable to connect to MAAS warning
+   - Makefile: Add "build" target
+   - lxd/instance/drivers/driver/common: Adds Internal MAAS handling functions
+   - lxd/instance/drivers/driver/lxc: Switch to common MAAS handling functions
+   - lxd/instance/drivers/driver/qemu: Switch to common MAAS handling functions
+   - lxd/db: Add WarningAppArmorDisabledDueToRawDnsmasq
+   - lxd/warnings: Add resolve and delete functions
+   - lxd/network: Add disabled AppArmor warning
+   - lxd/network: Delete warnings when bridge is deleted
+   - Revert "lxd/main_init_interactive: replace empty validator for choosing cluster config with nil"
+   - lxd/instance/drivers/load: Add revert arg to create
+   - lxd/instance/drivers/driver/common: Don't revert by calling inst.Delete() until after storage volume created in snapshotCommon
+   - lxd/instance/drivers/driver/lxc: Add revert arg to lxcCreate and don't call d.Delete() in revert steps
+   - lxd/instance/drivers/driver/qemu: Add revert arg to qemuCreate and don't call d.Delete() in revert steps
+   - lxd/instance/instance/utils: Updates Create signature with revert arg
+   - lxd/instance/instance/utils: Updates CreateInternal with a revert arg
+   - lxd: instance.CreateInternal usage in tests
+   - lxd/instance: Update instanceCreateAsEmpty to only revert with inst.Delete() after storage volume created
+   - lxd/instance: Updates instanceCreateFromImage to only revert with inst.Delete() after storage volume created
+   - lxd/instance: Updates instanceCreateAsCopy to only revert with inst.Delete() after storage volume created
+   - lxd/api/internal: instance.CreateInternal revert usage in internalImport
+   - lxd/instances/post: instance.CreateInternal usage in createFromMigration
+   - lxd/migrate/instance: Adds revert arg to Do function to allow usage of instance.CreateInternal
+   - lxd/migrate/instance: Add instance delete to revert after storage volume migration succeeded in Do
+   - lxd/instances/post: Updates createFromMigration to pass revert to instance.CreateInternal
+   - lxd/migrate/instance: Go var naming style suggestions
+   - lxd: check for new idmapped mounts extension in LXC
+   - lxd/storage/backend/lxd: Remove post hook resize from CreateInstanceFromBackup
+   - lxd/storage/drivers/driver/common: Adds createVolumeFromBackupInstancePostHookResize function
+   - lxd/storage/drivers/driver/btrfs/volumes: Updates CreateVolumeFromBackup to use createVolumeFromBackupInstancePostHookResize in generic post hook
+   - lxd/storage/drivers/driver/ceph/volumes: Updates CreateVolumeFromBackup to use createVolumeFromBackupInstancePostHookResize in generic post hook
+   - lxd/storage/drivers/driver/dir/volumes: Updates CreateVolumeFromBackup to use createVolumeFromBackupInstancePostHookResize in generic post hook
+   - lxd/storage/drivers/driver/lvm/volumes: Updates CreateVolumeFromBackup to use createVolumeFromBackupInstancePostHookResize in generic post hook
+   - lxd/storage/drivers/driver/zfs/volumes: Updates CreateVolumeFromBackup to use createVolumeFromBackupInstancePostHookResize in generic post hook
+   - lxd/storage/drivers/driver/generic/vfs: Adds VMConfigDriveMountDir constant
+   - lxd/storage/drivers/generic/vfs: Exclude config.mount directory in genericVFSBackupVolume
+   - lxd/instance/drivers/driver/qemu: storageDrivers.VMConfigDriveMountDir usage
+   - lxd/storage/drivers/utils: Adds force arg to shrinkFileSystem
+   - lxd/storage/drivers: SetVolumeQuota comment consistency
+   - lxd/storage/drivers/driver/ceph/volumes: shrinkFileSystem force arg usage
+   - lxd/storage/drivers/driver/lvm/volumes: shrinkFileSystem force arg usage
+   - lxd/storage/drivers/driver/common: runFiller comment improvement
+   - lxd/storage/drivers/driver/common: Enable unsafe resize for container volumes in createVolumeFromBackupInstancePostHookResize
+   - lxd/db: Add WarningLargerIPv6PrefixThanSupported
+   - lxd/network: Create warning if IPv6 prefix is too large
+   - lxd/network/network/utils: Fix error reporting bug in parseIPRange
+   - lxd/network/network/utils/test: Fix tests in Example_parseIPRange to work with Go tip
+   - Revert "lxd/storage/backend/lxd: Remove post hook resize from CreateInstanceFromBackup"
+   - Revert "lxd/storage/drivers/driver/btrfs/volumes: Updates CreateVolumeFromBackup to use createVolumeFromBackupInstancePostHookResize in generic post hook"
+   - Revert "lxd/storage/drivers/driver/ceph/volumes: Updates CreateVolumeFromBackup to use createVolumeFromBackupInstancePostHookResize in generic post hook"
+   - Revert "lxd/storage/drivers/driver/lvm/volumes: Updates CreateVolumeFromBackup to use createVolumeFromBackupInstancePostHookResize in generic post hook"
+   - Revert "lxd/storage/drivers/driver/zfs/volumes: Updates CreateVolumeFromBackup to use createVolumeFromBackupInstancePostHookResize in generic post hook"
+   - lxd/storage/drivers/driver/dir/volumes: Remove call to createVolumeFromBackupInstancePostHookResize
+   - lxd/storage/drivers/volume: Add VolumePostHook type
+   - lxd/storage/drivers: Update CreateVolumeFromBackup and associated function to use VolumePostHook type
+   - lxd/revert/revert: Add Hook function type
+   - lxd/storage/backend: Update CreateInstanceFromBackup signature to use revert.Hook
+   - lxd/storage/drivers: Updates CreateVolumeFromBackup and associated function to use revert.Hook type
+   - lxd/storage/drivers/volume: Remove allowUnsafeResize var
+   - lxd/storage/drivers/volume: Add allowUnsafeResize arg to SetQuota and pass to SetVolumeQuota
+   - lxd/storage/drivers/interface: Add allowUnsafeResize arg to SetVolumeQuota
+   - lxd/storage/backend/lxd: Add allowUnsafeResize arg to function returned from imageFiller
+   - lxd/storage/backend/lxd: b.driver.SetVolumeQuota usage
+   - lxd/storage/utils: Adds allowUnsafeResize arg to ImageUnpack and pass to vol.SetQuota()
+   - lxd/storage/drivers/utils: Adds allowUnsafeResize arg to ensureVolumeBlockFile
+   - lxd/storage/drivers/generic/vfs: d.SetVolumeQuota allowUnsafeResize arg usage
+   - lxd/storage/drivers/driver/btrfs/volumes: ensureVolumeBlockFile allowUnsafeResize arg usage and comment
+   - lxd/storage/drivers/driver/btrfs/volumes: Adds allowUnsafeResize arg to SetVolumeQuota
+   - lxd/storage/drivers/driver/ceph/volumes: Adds allowUnsafeResize arg to SetVolumeQuota
+   - lxd/storage/drivers/driver/cephfs/volumes: Adds allowUnsafeResize arg to SetVolumeQuota
+   - lxd/storage/drivers/driver/dir/volumes: Adds allowUnsafeResize arg to SetVolumeQuota
+   - lxd/storage/drivers/driver/lvm/volumes: Adds allowUnsafeResize arg to SetVolumeQuota
+   - lxd/storage/drivers/driver/zfs/volumes: Adds allowUnsafeResize arg to SetVolumeQuota
+   - lxd/storage/drivers/driver/mock/volumes: Adds allowUnsafeResize arg to SetVolumeQuota
+   - lxd/storage/drivers/driver/btrfs/volumes: d.SetVolumeQuota usage
+   - lxd/storage/drivers/driver/ceph/volumes: d.SetVolumeQuota usage
+   - lxd/storage/drivers/driver/dir/volumes: d.SetVolumeQuota usage
+   - lxd/storage/drivers/driver/lvm/volumes: d.SetVolumeQuota usage
+   - lxd/storage/drivers/driver/btrfs/mock: d.SetVolumeQuota usage
+   - lxd/storage/drivers/driver/zfs/volumes: d.SetVolumeQuota usage
+   - lxd/storage/drivers/driver/cephfs/volumes: d.SetVolumeQuota usage
+   - lxd/storage/drivers/driver/types: Adds allowUnsafeResize arg to VolumeFiller's Fill function definition
+   - lxd/storage/drivers/driver/lvm/utils: d.SetVolumeQuota usage
+   - lxd/storage/drivers/driver/dir/volumes: ensureVolumeBlockFile usage and comment
+   - lxd/storage/drivers/common: Updates runFiller to pass allowUnsafeResize arg to filler's Fill function as needed
+   - lxd/storage/drivers/driver/common: Updates createVolumeFromBackupInstancePostHookResize to pass allowUnsafeResize to driver.SetVolumeQuota
+   - lxd/storage/drivers/driver/common: Remove createVolumeFromBackupInstancePostHookResize
+   - lxd/storage/drivers/generic/vfs: Error check Unmount in post hook from genericVFSBackupUnpack
+   - lxd/storage/backend/lxd: Enable allowUnsafeResize for container imports in CreateInstanceFromBackup
+   - lxd/init: Update for token based join
+   - client: Simplify User-Agent logic
+   - lxd/instances: Fix requestor in bulk state changes
+   - lxd/daemon: Add forwarded requestor to context
+   - lxd/operations: Support forwarded requestor
+   - lxd/cluster: Pass original requestor around
+   - lxd: Pass request around
+   - lxd/storage/drivers/driver/zfs/volumes: Fix bug with VM optimized import not returning filesystem volume post hook
+   - lxd/daemon: updateCertificateCacheFromLocal usage
+   - lxd/certificates: Removes unused cert arg from updateCertificateCacheFromLocal
+   - lxd/request: Introduce new package
+   - lxd: Use the new request package
+   - lxd/db: Add WarningProxyBridgeNetfilterNotEnabled
+   - lxd/warnings: Add more delete functions
+   - lxd/device: Warn if netfilter is disabled
+   - lxd/db: Add WarningNetworkStartupFailure
+   - lxd/network: Warn on network startup failure
+   - lxd: Delete warnings if network is deleted
+   - lxd/device/nic/bridged: Allow using IP filtering with an unmanaged parent bridge
+   - lxd/firewall/firewall/interface: Adds parentManaged arg to InstanceSetupBridgeFilter
+   - lxd/firewall/drivers/drivers/nftables: InstanceSetupBridgeFilter signature
+   - lxd/firewall/drivers/driver/xtables: Adds parentManaged arg to InstanceSetupBridgeFilter
+   - lxd/firewall/drivers/drivers/xtables: Adds parentManaged arg to generateFilterIptablesRules
+   - lxd/device/nic/bridged: Updates d.state.Firewall.InstanceSetupBridgeFilter usage to provide managed parent indicator
+   - test: Include the managed bridge in the nic counters for bridged NIC filtering
+   - test: Add test for unmanaged bridge IP filtering
+   - lxd: update instructions for compilation from a release tarball
+   - lxd/init: show the new default value for password authentication
+   - i18n: Update translation templates
+   - doc/networks: Use n.n.n.n rather than a real IP 1.2.3.4 for example IP in systemd-resolve command
+   - doc/networks: Adds guide on how to get systemd to configure systemd-resolved on lxdbr0 start up
+   - api: clustering_update_cert
+   - shared/api: Add ClusterCertificatePut
+   - lxd/api: Add clusterCertificatePut
+   - doc/rest-api: Refresh Swagger YAML
+   - client: Add UpdateClusterCertificate
+   - lxd/cluster: Add NetworkUpdateCert
+   - lxc/cluster: Add update-certificate
+   - i18n: Update translation templates
+   - tests: Add cluster certificate update
+   - doc/clustering: Add section on update-certificate
+   - lxd/api/project: Error improvements in projectsPost
+   - lxd/api/project: Comment ending consistency in projectsPost
+   - lxd/api/project: Prevent project names that contain underscores in projectValidateName
+   - lxd/api/project: Comment ending consistency in projectPost
+   - lxd/api/project: Error improvements in projectPost
+   - lxd/api/project: Validate new project name not current when renaming in projectPost
+   - test: Add tests for banned underscore in project names during create and rename
+   - main/init: Define poolType type and constants
+   - main/init: Updates availableStorageDrivers to use poolType type and associated constants
+   - lxd/main/init/auto: Updates RunAuto to use poolType and associated constants
+   - main/init/interactive: Updates askStoragePool to use poolType and associated constants
+   - lxd/main/init: Remove hard coded remote storage driver types in availableStorageDrivers
+   - lxd/main/init/interactive: Fix possible confusing missing storage backends error in askStoragePool
+   - lxd/main/init/interactive: Don't default to ceph if not available in askStoragePool
+   - lxd/main/init/interactive: Use validate.Optional in askClustering
+   - shared/validate/validate/test: Adds tests for Required and Optional
+   - shared/validate/validate: Remove optional check in IsOneOf
+   - lxd/api/project: validate.IsOneOf optional usage
+   - lxd/storage: validate.IsOneOf optional usage
+   - lxd/storage/pools/config: validate.IsOneOf optional usage
+   - shared/instance: validate.IsOneOf optional usage
+   - lxd/network: validate.IsOneOf optional usage
+   - lxd/network/driver/bridge: More consistent use of validate.Optional for fan.underlay_subnet
+   - lxd/cluster/config: Wraps images.default_architecture with validate.Optional due to IsOneOf change in IsArchitecture
+   - lxd/db: Add WarningOfflineClusterMember
+   - lxd/cluster: Add warning around heartbeat
+   - lxd/device/nic: Return -1 for Mtu in State() for bridged and ovn NICs if host interface not available
+   - shared/util: Fill Stderr in RunCommandWithFds
+   - shared/archive: Handle newer unsquashfs errors
+   - doc: fix cluster.https_address' description
+   - lxd/patches: Fix duplicate warnings
+   - forkexec: handle broken close_range() backport in openSUSE Leap 15.3
+   - lxc/warning: Introduce defaultWarningColumns
+   - lxc/warning: Hide location if not clustered
+   - lxd/apparmor/instance: Move instance profile generation into new function instanceProfileGenerate
+   - lxd/apparmor/instance: Rename InstanceParse to InstanceValidate
+   - lxd/instance/drivers/driver/lxc: apparmor.InstanceValidate usage
+   - lxd/instance/drivers/driver/qemu: Validate raw.apparmor if changed
+   - doc/virtual-machines: Removes statement about VMs being considered experimental
+   - lxd/network/driver/bridge: Surface dnsmasq specific start up errors via a warning log entry
+   - lxd/db/cluster: Rename "pending" to "state" in nodes table
+   - lxd/db: Use node's new State
+   - client: Only retry target addresses if initial connection fails
+   - shared/api: Add Project to StorageVolumeSource
+   - client: Support for copy/move custom storage volume between projects
+   - lxd/storage: Support for copy/move custom storage volume between projects
+   - lxd: Support for copy/move custom storage volume between projects
+   - lxc/storage_volume: Support for copy/move custom storage volume between projects
+   - api: storage_api_project
+   - i18n: Update translation templates
+   - shared/api: Support for lxc monitor --pretty operation events
+   - lxc: Support for lxc monitor --pretty operation events
+   - lxd/instance/instance/interface: Adds Error field to Info struct
+   - lxd/instance/drivers/driver/lxc: Info.Error initialisation
+   - lxd/instance/drivers/driver/qemu: Populates Info.Error
+   - lxd/instance/drivers/driver/qemu: Adds detection of /dev/kvm in Info()
+   - lxd/instance/drivers/driver/qemu: Add check for vhost_vsock in Info()
+   - lxd/state/state: Removes NewState function
+   - lxd/daemon: state.State usage
+   - lxd/main/init: state.State usage
+   - lxd/state/test: State usage
+   - lxd/state/state: Move Context field first
+   - lxd/state/state: Adds InstanceTypes field to State
+   - lxd/instance/drivers/load: Adds supportedInstanceTypes cache and lock and adds SupportedInstanceTypes
+   - lxd/instance/instance/interface: Adds Type field to Info
+   - lxd/instance/drivers/driver/lxc: Populates Type in Info
+   - lxd/instance/drivers/driver/qemu: Populates Type in Info
+   - lxd/instance/drivers/load: Comment improvement
+   - lxd/daemon: Usage of instanceDrivers.SupportedInstanceTypes() in State() and init()
+   - lxd/api/1.0: instanceDrivers.SupportedInstanceTypes usage in api10Get
+   - lxd/instance: Removes instanceDriversCacheVal and supporting functions
+   - lxd/instance/instance/utils: Checks requested instance type is supported in CreateInternal
+   - lxd/db/cluster: s/pending/state/
+   - lxd/patches: s/pending/state/
+   - lxd/include: include sys/wait.h in macro.h
+   - lxd/lifecycle: add lifecycle package
+   - lxd/lifecycle/instance/snapshot: add instance_snapshot
+   - lxd/lifecycle/instance/backup: add instance_backup
+   - test: add lifecycle package to static analysis
+   - lxd/events/events: change SendLifecycle to accept apt.EventLifecycle
+   - lxd/instance/instance/interface: add Operation
+   - lxd/instance/drivers/driver/common: add Operation
+   - lxd/instance/drivers/driver/common: fix IsStateful comment typo
+   - lxd/instance/drivers/driver/common: remove lifecycle function
+   - lxd/instance/drivers/driver/lxc: use InstanceAction for lifecycle events
+   - lxd/instance/drivers/driver/qemu: use InstanceAction for lifecycle events
+   - lxd/backup/backup/utils: remove Lifecycle
+   - lxd/backup/backup/instance: expose instance interface
+   - lxd/backup: use InstanceAction for lifecycle events
+   - lxd/backup/backup/instance: use InstanceAction for lifecycle events
+   - lxd/lifecycle/network: add network
+   - lxd/network/driver/common: use NetworkAction for lifecycle events
+   - lxd/lifecycle/instance: add InstanceExec
+   - lxd/instance/drivers/driver/lxc: handle Exec lifecycle events
+   - lxd/instance/drivers/driver/qemu: handle Exec lifecycle events
+   - lxd/lifecycle/instance: add InstanceConsole
+   - lxd/instance/drivers/driver/lxc: handle Console lifecycle events
+   - lxd/instance/drivers/driver/qemu: handle Console lifecycle events
+   - lxd/lifecycle/profile: add profile lifecycle events
+   - lxd/profiles: handle ProfileCreated lifecycle event
+   - lxd/profiles: handle ProfileUpdated lifecycle event
+   - lxd/profiles: handle ProfileRenamed lifecycle event
+   - lxd/device/proxy: Don't write out pid file until process has started OK
+   - lxd/instance/drivers/driver/lxc: Adds onStopOperationSetup function
+   - lxd/instance/drivers/driver/lxc: Call d.onStopOperationSetup from onStopNS
+   - lxd/instance/drivers/driver/lxc: Call d.onStopOperationSetup from onStop
+   - lxd/instance/drivers/driver/lxc: Move IsRunning to before creating start operation lock
+   - lxd/instance/drivers/driver/common: Move onStopOperationSetup from lxc driver and make generic
+   - lxd/instance/drivers/driver/lxc: Make Start, Stop and Shutdown locking and logging consistent with qemu driver
+   - lxd/instance/drivers/driver/qemu: Switch to d.onStopOperationSetup in onStop
+   - lxd/instance/drivers/driver/qemu: Increase onStop wait timeout to 5 minutes
+   - lxd/instance/drivers/driver/qemu: Comment consistency with lxc driver in Start
+   - lxd/profiles: handle ProfileDeleted lifecycle event
+   - lxd/lifecycle/instance/backup: add InstanceBackupRetrieved
+   - lxd/instance/backup: handle InstanceBackupRetrieved lifecycle event
+   - lxc/alias: workaround for subcommand errors
+   - lxc/config: workaround for subcommand errors
+   - lxc/config/metadata: workaround for subcommand errors
+   - lxc/config/trust: workaround for subcommand errors
+   - lxc/config/device: workaround for subcommand errors
+   - lxc/config/template: workaround for subcommand errors
+   - lxc/cluster: workaround for subcommand errors
+   - lxc/image: workaround for subcommand errors
+   - lxc/image/alias: workaround for subcommand errors
+   - lxc/network: workaround for subcommand errors
+   - lxc/network/acl: workaround for subcommand errors
+   - lxc/operation: workaround for subcommand errors
+   - lxc/project: workaround for subcommand errors
+   - lxc/warning: workaround for subcommand errors
+   - lxc/file: workaround for subcommand errors
+   - lxc/remote: workaround for subcommand errors
+   - lxc/profile: workaround for subcommand errors
+   - lxc/storage: workaround for subcommand errors
+   - lxc/storage/volume: workaround for subcommand errors
+   - lxd/main/cluster: workaround for subcommand errors
+   - lxd/main/forkuevent: workaround for subcommand errors
+   - lxd/main/forkmount: workaround for subcommand errors
+   - lxd/main/forkfile: workaround for subcommand errors
+   - lxd/main/forknet: workaround for subcommand errors
+   - lxd/db/generate/root: workaround for subcommand errors
+   - lxd/db/generate/db: workaround for subcommand errors
+   - lxd/firewall/drivers/drivers/xtables: Don't use ebtables --concurrent flag
+   - lxd/lifecycle/project: add project lifecycle events
+   - lxd/api/project: handle ProjectCreated lifecycle event
+   - lxd/api/project: handle ProjectUpdated lifecycle event
+   - lxd/api/project: handle ProjectRenamed lifecycle event
+   - lxd/api/project: handle ProjectDeleted lifecycle event
+   - lifecycle/instance: add InstanceFileRetrieved
+   - lifecycle/instance: add InstanceFilePushed
+   - lxd/instance: Fix error message
+   - lxd/instance/drivers/driver/common: Improve error logging in restartCommon
+   - lxd/instance/operationlock: Close chanDone after deleting operation from map in Done
+   - lxd/instance/drivers/driver/qemu: Don't fully regenerate config driver on start in generateConfigShare
+   - lxd/instance/drivers/driver/qemu: Remove config drive template files dir and regenerate
+   - doc/index.md: Update CGO_LDFLAGS_ALLOW
+   - lifecycle/instance: add InstanceFileDeleted
+   - lxd/instance/drivers/driver/qemu: handle InstanceFileRetrieved lifecycle event
+   - lxd/instance/drivers/driver/qemu: handle InstanceFilePushed lifecycle event
+   - lxd/instance/drivers/driver/qemu: handle InstanceFileDeleted lifecycle event
+   - lxd/instance/drivers/driver/lxc: handle InstanceFileRetrieved lifecycle event
+   - lxd/instance/drivers/driver/lxc: handle InstanceFilePushed lifecycle event
+   - lxd/instance/drivers/driver/lxc: handle InstanceFileDeleted lifecycle event
+   - Makefile: Set CGO_LDFLAGS_ALLOW
+   - lxd/endpoints: Deal with nil listener
+   - lxd/instance: Fix snapshot etag
+   - lxd/api/project: use nil for lifecycle event context
+   - lxd/api/project: use consistent renamed lifecycle event context field names
+   - lxd/api/project: remove redundant new_name from lifecycle context
+   - lxd/profiles: use nil for lifecycle event context
+   - lxd/profiles: use consistent renamed lifecycle event context field names
+   - lxd/profiles: remove redundant new_name from lifecycle context
+   - lxd/request/request: add CreateRequestor
+   - lxd/operations/operations: use CreateRequestor to create lifecycle requestor
+   - lxd/lifecycle/network: accept api.EventLifecycleRequestor as parameter
+   - lxd/lifecycle/project: accept api.EventLifecycleRequestor as parameter
+   - lxd/lifecycle/profile: accept api.EventLifecycleRequestor as parameter
+   - lxd/api/project: create requestor for lifecycle event
+   - lxd/profiles: create requestor for lifecycle event
+   - lxd/network/driver/common: remove create function and references
+   - lxd/network/driver/bridge: remove create references
+   - lxd/network/driver/ovn: remove create references
+   - lxd/network/driver/physical: remove create references
+   - lxd/network/driver/common: remove lifecycle event handling
+   - lxd/networks: use clusterRequest alias for lxd/cluster/request package
+   - lxd/networks: add network lifecycle event handling with requestor
+   - Revert "client: Only retry target addresses if initial connection fails"
+   - lxd/lifecycle/profile: fix incorrect comments
+   - lxd/lifecycle/project: fix incorrect comments
+   - lxd/storage: Handled nil config map
+   - Makefile: Tweak quoting
+   - lxd/instances: Retry on autostart failure
+   - lxd/warnings: Add instance autostart failure
+   - lxd/instances: Create persistent warning
+   - lxd/instances: Rework instancesRestart
+   - lxd/lifecycle/storage/pool: add storage_pool
+   - lxd/storage/pools: use clusterRequest alias for lxd/cluster/request package
+   - lxd/storage/pools: handle StoragePoolCreated lifecycle event
+   - lxd/storage/pools: handle StoragePoolUpdated lifecycle event
+   - lxd/storage/pools: handle StoragePoolDeleted lifecycle event
+   - lxd/lifecycle/image: add image
+   - lxd/lifecycle/image/alias: add image_alias
+   - lxd/images: handle ImageCreated lifecycle event
+   - lxd/daemon/images: handle ImageCreated lifecycle event
+   - lxd/images: handle ImageDeleted lifecycle event
+   - lxd/images: handle ImageUpdated lifecycle event
+   - lxd/images: handle ImageAliasCreated lifecycle event
+   - lxd/images: handle ImageAliasDeleted lifecycle event
+   - lxd/images: handle ImageAliasUpdated lifecycle event
+   - lxd/images: handle ImageAliasRenamed lifecycle event
+   - lxd/images: handle ImageRetrieved lifecycle event
+   - lxd/images: handle ImageRefreshed lifecycle event
+   - lxd/images: handle ImageSecretCreated lifecycle event
+   - lxd/images: add swagger comment for imageAliasDelete
+   - doc/rest-api: Refresh Swagger YAML
+   - lxd/instance: Fix instance volume DB entry on copy
+   - lxd/main_init_interactive: only ask for server host name when no joining token was provided
+   - lxd/lifecycle/cluster: add cluster
+   - lxd/lifecycle/cluster/member: add cluster member
+   - lxd/api/cluster: use clusterRequest alias for lxd/cluster/request package
+   - lxd/api/cluster: handle ClusterEnabled lifecycle event
+   - lxd/api/cluster: handle ClusterDisabled lifecycle event
+   - lxd/api/cluster: handle ClusterTokenCreated lifecycle event
+   - lxd/api/cluster: handle ClusterCertificateUpdated lifecycle event
+   - lxd/api/cluster: handle ClusterMemberAdded lifecycle event
+   - lxd/api/cluster: handle ClusterMemberUpdated lifecycle event
+   - lxd/api/cluster: handle ClusterMemberRenamed lifecycle event
+   - lxd/api/cluster: handle ClusterMemberRemoved lifecycle event
+   - lxd/instances: Fixes potential crash in instancesRestart and improves logging
+   - client/util: Updates remoteOperationError to accept slice of remoteOperationResult
+   - client: remoteOperationError usage
+   - shared/network: RFC3493Dialer spacing
+   - shared: Moves lxd/cluster/isClientConnectionError to shared.IsConnectionError
+   - client/lxd/instance: Only try remote operation on different URL on connection error
+   - lxd/instance/drivers/driver/common: Adds isStartableStatusCode function
+   - lxd/instance/drivers/driver/lxc: Switch to d.isStartableStatusCode in Start()
+   - lxd/instance/drivers/driver/qemu: Switch to isStartableStatusCode in Start()
+   - lxd/instance/drivers/driver/qemu: If QMP socket not responding and QEMU process still exists then return Error status code
+   - lxd/ip: Support for 'bridge' and 'ip link show' commands
+   - lxd/ip: Support for 'tc' command
+   - lxd/device: Use ip package instead of 'tc' command
+   - lxd/device: Use ip package instead of 'bridge' command
+   - lxd/device: Use ip package instead of 'ip link' command
+   - lxd/instance/drivers/driver/common: Adds instanceInitiated return boolean to onStopOperationSetup
+   - lxd/instance/drivers/driver/lxc: Fix lifecycle shutdown event in onStop
+   - lxd/instance/drivers/driver/qemu: Fix lifecycle shutdown event in onStop
+   - lxd/instance/drivers/driver/lxc: Detect error status in Shutdown and return appropriate error
+   - lxd/instance/drivers/driver/qemu: Detect error status in Shutdown and return appropriate error
+   - lxd/instance/drivers/driver/qemu: Detect error status in Stop and forcefully kill qemu process if exists
+   - lxd/instance/drivers/driver/qemu: Handle internal-error status from QEMU
+   - lxd/instance/drivers/driver/qemu: Remove hung term from statusCode
+   - lxd/instance/drivers/driver/lxc: Remove hung term from getLxcState
+   - lxd/device/nic/bridged: Apply managed network validation checks when parent is set to a managed network
+   - lxd/daemon: Warn if warnings cannot be created/resolved
+   - test/suites/clustering: Fix tests to expect that creating container connected to pending network is forbidden
+   - tests: Update bridged NIC filtering tests to account for validation being improved
+   - lxd/device/nic/bridged: Allow use of static IPs with managed network that has DHCP disabled if IP filtering is in use
+   - lxd/device/nic/bridged: Ensure static IPs are specified when using IP filtering on unmanaged parent bridge
+   - lxd/db/warnings: Improve context in warning unknown entity errors
+   - lxd/instance/drivers/driver/qemu: Adds pidWait function
+   - lxd/instance/drivers/driver/qemu: Improve killQemuProcess to clarify its behaviour
+   - lxd/db/warnings: Don't fail on failure to generate entity URL in ToAPI
+   - lxd/db/instances: Adds InstanceFilterAllInstances function
+   - lxd/db/entity: Use InstanceFilterAllInstances in GetURIFromEntity
+   - lxd/db/instances/test: Updates tests with db.InstanceFilterAllInstances
+   - lxd/db/warnings: Improve error in UpsertWarning
+   - lxd/db/warnings: Add DeleteWarningsByEntity function
+   - lxd/device/nic/bridged: Improve error for specifying static IP when DHCP disabled
+   - lxd/device/nic/bridged: Add checks to validateConfig for existing NICs with same IPs specified
+   - lxd/instance/drivers/driver/common: Adds warningsDelete function
+   - lxd/instance/drivers: Delete instance related persistent warnings on instance delete
+   - lxd/operations/operations: add SetRequestor
+   - lxd/lifecycle/storage/volume: add storage_volume
+   - lxd/storage/drivers/volume: add Pool
+   - lxd/storage/volumes: use empty operation with SetRequestor instead of nil
+   - lxd/networks: Add DNS record for gateway
+   - lxd/storage/backend/lxd: handle StorageVolumeCreated lifecycle event
+   - lxd/storage/backend/lxd: handle StorageVolumeUpdated lifecycle event
+   - lxd/storage/backend/lxd: handle StorageVolumeDeleted lifecycle event
+   - lxd/storage/backend/lxd: handle StorageVolumeRenamed lifecycle event
+   - lxd/storage/backend/lxd: handle StorageVolumeRestored lifecycle event
+   - lxd/lifecycle/storage/volume/snapshot: add storage_volume_snapshot
+   - lxd/storage/volumes/snapshot: use empty operation with SetRequestor instead of nil
+   - lxd/storage/backend/lxd: handle StorageVolumeSnapshotCreated lifecycle event
+   - lxd/storage/backend/lxd: handle StorageVolumeSnapshotRenamed lifecycle event
+   - lxd/storage/backend/lxd: handle StorageVolumeSnapshotDeleted lifecycle event
+   - lxd/storage/backend/lxd: handle StorageVolumeSnapshotUpdated lifecycle event
+   - lxd/lifecycle/storage/volume/backup: add storage_volume_backup
+   - lxd/storage/volumes/backup: handle StorageVolumeBackupCreated lifecycle event
+   - lxd/storage/volumes/backup: handle StorageVolumeBackupRenamed lifecycle event
+   - lxd/storage/volumes/backup: handle StorageVolumeBackupDeleted lifecycle event
+   - lxd/storage/volumes/backup: handle StorageVolumeBackupRetrieved lifecycle event
+   - lxd/device/nic/bridged: Improve performance of duplicate IP check in validateConfig
+   - test: Adds tests for duplicate static DHCP assignment
+   - lxd/device/nic/bridged: Check for duplicate MAC address in validateConfig
+   - test: Add tests for duplicate MAC address assignment for bridged NICs
+   - test: fix copy and paste error in duplicate static DHCP assignment
+   - lxd/main/cluster: fix the link in the "recover-from-quorum-loss" prompt
+   - lxd/network/network/utils/sriov: Add mutex to SRIOVFindFreeVirtualFunction to prevent concurrent start races
+   - doc: sort sysctl parameters
+   - doc: /proc/sched_debug normal mode is 444 so make it 400
+   - api: Adds server_instance_driver_operational extension
+   - doc/production-setup: ulimits tuning doesn't apply to snap users
+   - api: Adds server_supported_storage_drivers extension
+   - shared/api/server: Adds ServerStorageDriverInfo and adds StorageSupportedDrivers field to ServerEnvironment
+   - doc/rest-api: Refresh swagger YAML
+   - lxd/storage: Populates supported storage drivers cache var
+   - lxd/api/1.0: Updates readStoragePoolDriversCache usage and populates env.StorageSupportedDrivers
+   - lxd/main/init: Use server Environment for supported storage drivers
+   - lxd/lifecycle/network/acl: add network_acl
+   - lxd/network/acls: use clusterRequest alias for lxd/cluster/request package
+   - lxd/lifecycle/certificate: add certificate
+   - lxd/certificates: use clusterRequest alias for lxd/cluster/request package
+   - lxd/certificates: handle CertificateCreated lifecycle event
+   - lxd/certificates: handle CertificateUpdated lifecycle event
+   - lxd/certificates: handle CertificateDeleted lifecycle event
+   - lxd/lifecycle/config: add config
+   - lxd/api/1.0: handle ConfigUpdated lifecycle event
+   - lxd/lifecycle/warning: add warning
+   - lxd/warnings: handle WarningAcknowledged and WarningReset lifecycle event
+   - lxd/warnings: handle WarningDeleted lifecycle event
+   - lxd/lifecycle/instance/log: add instance_log
+   - lxd/instance/logs: handle InstanceLogRetrieved lifecycle event
+   - lxd/instance/logs: handle InstanceLogDeleted lifecycle event
+   - lxd/lifecycle/instance/metadata: add instance_metadata
+   - lxd/lifecycle/instance/metadata/template: add instance_metadata_template
+   - lxd/instance/metadata: handle InstanceMetadataRetrieved lifecycle event
+   - lxd/instance/metadata: handle InstanceMetadataUpdated lifecycle event
+   - lxd/instance/metadata: handle InstanceMetadataTemplateRetrieved lifecycle event
+   - lxd/instance/metadata: handle InstanceMetadataTemplateCreated lifecycle event
+   - lxd/instance/metadata: handle InstanceMetadataTemplateDeleted lifecycle event
+   - lxd/network/acls: handle NetworkACLCreated lifecycle event
+   - lxd/network/acls: handle NetworkACLDeleted lifecycle event
+   - lxd/network/acls: handle NetworkACLUpdated lifecycle event
+   - lxd/network/acls: handle NetworkACLRenamed lifecycle event
+   - lxd/lifecycle/operation: add operation
+   - lxd/operations: handle OperationCancelled lifecycle event
+   - lxd/lifecycle/instance: add InstanceConsoleRetrieved and InstanceConsoleReset lifecycle events
+   - lxd/instance/drivers/driver/lxc: handle InstanceConsoleReset and InstanceConsoleRetrieved lifecycle events
+   - i18n: Update translations from weblate
+   - docs/api-extensions: Fix typo
+   - lxd/api/cluster: use 'members' as name for ClusterTokenCreated lifecycle event
+   - lxd/lifecycle/certificate: include object in source for created lifecycle events
+   - lxd/lifecycle/network/acl: include object in source for created lifecycle events
+   - doc: add events.md
+
+   ### 試用環境 <!-- Try it for yourself -->
+  <!--
+  This new LXD release is already available for you to try on our [demo service](https://linuxcontainers.org/lxd/try-it/).
+  -->
+  この新しい LXD リリースは私たちの [デモサービス](https://linuxcontainers.org/ja/lxd/try-it/) で利用できます。
+
+  ### ダウンロード <!-- Downloads -->
+  <!--
+  The release tarballs can be found on our [download page](https://linuxcontainers.org/lxd/downloads/).
+  -->
+  このリリースの tarball は [ダウンロードページ](https://linuxcontainers.org/lxd/downloads/) から取得できます。
+
+  <!--
+  Binary builds are also available for:
+  -->
+  ビルド済みバイナリーは次のように使えます:
+
+   - **Linux:** snap install lxd
+   - **MacOS:** brew install lxc
+   - **Windows:** choco install lxc
