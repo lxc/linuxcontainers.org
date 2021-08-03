@@ -78,9 +78,9 @@ To install the feature branch of LXD, run:
 
 #### Ubuntu
 ##### Ubuntu (all releases)
-The recommended way to install LXD these days is with the snap.
+The recommended way to install LXD is with the snap.
 
-For the latest stable release, use:
+For the latest stable feature release, use:
 
     snap install lxd
 
