@@ -82,19 +82,19 @@ The recommended way to install LXD is with the snap.
 
 For the latest stable feature release, use:
 
-    snap install lxd
+    sudo snap install lxd
 
 For the LXD 4.0 stable release, use:
 
-    snap install lxd --channel=4.0/stable
+    sudo snap install lxd --channel=4.0/stable
 
 For the LXD 3.0 stable release, use:
 
-    snap install lxd --channel=3.0/stable
+    sudo snap install lxd --channel=3.0/stable
 
 **Note:** If you previously had the LXD deb package installed, you can migrate all your existing data over with:
 
-    lxd.migrate
+    sudo lxd.migrate
 
 #### Snap package (Arch Linux, Debian, Fedora, OpenSUSE and Ubuntu)
 LXD upstream publishes and tests a snap package which works for a number of Linux distributions.
@@ -105,7 +105,7 @@ For those distributions, you should first install snapd using [those instruction
 
 After that, you can install LXD with:
 
-    snap install lxd
+    sudo snap install lxd
 
 Alternatively, pass:   
 `--channel=4.0/stable` for the LXD 4.0 LTS release or   
@@ -143,13 +143,13 @@ Instructions on building and installing LXD from source [can be found here](http
 
 Before you can create an instance, you need to configure LXD.
 
-Run the following command as root to specify the configuration options:
+Run the following command to specify the configuration options:
 
-    lxd init
+    sudo lxd init
 
 If you want to use the default options, add the `--auto` flag:
 
-    lxd init --auto
+    sudo lxd init --auto
 
 
 **Overview of the configuration options:**
