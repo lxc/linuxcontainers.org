@@ -42,8 +42,8 @@
 ## Choose your release
 LXD upstream maintains three release branches in parallel:
 
- * LTS release (LXD 4.0.x or LXD 3.0.x)
- * Feature releases (LXD 4.x)
+ * Long term support (LTS) releases: LXD 4.0.x or LXD 3.0.x
+ * Feature releases: LXD 4.x
 
 LTS releases are recommended for production environments as they will benefit from regular bugfix
 and security updates but will not see new features added or any kind of behavioral change.
@@ -78,38 +78,42 @@ To install the feature branch of LXD, run:
 
 #### Ubuntu
 ##### Ubuntu (all releases)
-The recommended way to install LXD is with the snap.
+The recommended way to install LXD is the [snap package](https://snapcraft.io/lxd).
 
-For the latest stable feature release, use:
+For the latest feature release, use:
 
     sudo snap install lxd
 
-For the LXD 4.0 stable release, use:
+For the LXD 4.0 LTS release, use:
 
     sudo snap install lxd --channel=4.0/stable
 
-For the LXD 3.0 stable release, use:
+For the LXD 3.0 LTS release, use:
 
     sudo snap install lxd --channel=3.0/stable
+
+For more information about LXD snap packages (regarding more versions, update management etc.), see [Managing the LXD snap](https://discuss.linuxcontainers.org/t/managing-the-lxd-snap/8178).
 
 **Note:** If you previously had the LXD deb package installed, you can migrate all your existing data over with:
 
     sudo lxd.migrate
 
 #### Snap package (Arch Linux, Debian, Fedora, OpenSUSE and Ubuntu)
-LXD upstream publishes and tests a snap package which works for a number of Linux distributions.
+LXD upstream publishes and tests [snap packages](https://snapcraft.io/lxd) which work for a number of Linux distributions.
 
 The list of Linux distributions we currently test our snap for can be [found here](https://jenkins.linuxcontainers.org/job/lxd-test-snap-latest-stable/).
 
-For those distributions, you should first install snapd using [those instructions](https://snapcraft.io/docs/core/install).
+For those distributions, you should first install `snapd` using [those instructions](https://snapcraft.io/docs/core/install).
 
-After that, you can install LXD with:
+After that, you can install the latest feature release of LXD with:
 
     sudo snap install lxd
 
-Alternatively, pass:   
+Alternatively, you can pass:   
 `--channel=4.0/stable` for the LXD 4.0 LTS release or   
 `--channel=3.0/stable` for the LXD 3.0 LTS release.   
+
+For more information about LXD snap packages (regarding more versions, update management etc.), see [Managing the LXD snap](https://discuss.linuxcontainers.org/t/managing-the-lxd-snap/8178).
 
 ### MacOS builds
 
