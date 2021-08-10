@@ -25,12 +25,12 @@ content: |-
   <!--
   For a long time, LXD's [disaster recovery story](https://linuxcontainers.org/lxd/docs/master/backup#disaster-recovery) was based on our `lxd import` command. This would go look for a specified instance at the expected path on the fileystem, read the `backup.yaml` file that's part of instance storage and based on that information would recreate the instance's database entry.
   -->
-  長い間、LXD のディザスターリカバリーストーリーは `lxd import` コマンドに基づいていました。これは、指定したインスタンスをファイルシステム上の期待されるパスで探し、インスタンスストレージに含まれる `backup.yaml` を読み、その情報に基づいてインスタンスのデータベースのエントリーを再作成します。
+  長い間、LXD の[ディザスターリカバリーストーリー](https://lxd-ja.readthedocs.io/ja/latest/backup/#disaster-recovery)は `lxd import` コマンドに基づいていました。これは、指定したインスタンスをファイルシステム上の期待されるパスで探し、インスタンスストレージに含まれる `backup.yaml` を読み、その情報に基づいてインスタンスのデータベースのエントリーを再作成します。
 
   <!--
   While this definitely worked and was successfuly used by quite a few people who for one reason or another lost their LXD database, it was limited to instances only and was requiring quite a bit of manual intervention to get the instance filesystem in place so it could be read and imported by LXD.
   -->
-  この機能は確かに動作しており、何らかの理由で LXD データベースを失った場合にうまく使われてきていました。しかし、この機能はインスタンスに限定されており、LXD で読み込んだりインポートできるように、インスタンスのファイルシステムを適切な場所に配置するために、少し手作業が必要でした。
+  この機能は確かに動作しており、何らかの理由で LXD データベースを失った場合にうまく使われてきていました。しかし、この機能はインスタンスに限定されており、LXD で読み込んだりインポートできるように、インスタンスのファイルシステムを適切な場所に配置するために、かなりの手作業が必要でした。
 
   <!--
   This has now all been replaced by a new `lxd recover` command. This is an interactive command somewhat similar to `lxd init`. It allows importing both instances and custom storage volumes and supports both pre-existing storage pools and missing storage pools.
@@ -40,7 +40,7 @@ content: |-
   <!--
   The `lxd recover` experience starts with a summary of the existing storage pools, then any missing storage pool can be added. This is then followed by a scan of all storage pools for missing instances or custom storage volumes. As part of the scan, any missing dependencies (profiles, projects, networks, ...) are also reported. Once the user has had a chance to add any of those missing dependencies, they can proceed with the import.
   -->
-  `lxd recover` では、まずは既存のストレージプールの概要を表示します。それから、失われたストレージプールを追加できます。次にすべてのストレージプールをスキャンして、不足しているインスタンスやカスタムストレージボリュームを探します。スキャンの一部として、不足している依存関係（プロファイル、プロジェクト、ねっとわーくなど）も報告します。ユーザーはこれらの不足している依存関係を追加する機会を得た後、インポートを進められます。
+  `lxd recover` では、まずは既存のストレージプールの概要を表示します。それから、失われたストレージプールを追加できます。次にすべてのストレージプールをスキャンして、不足しているインスタンスやカスタムストレージボリュームを探します。スキャンの一部として、不足している依存関係（プロファイル、プロジェクト、ネットワークなど）も報告します。ユーザーはこれらの不足している依存関係を追加する機会を得た後、インポートを進められます。
 
   <!--
   Associated specification for this feature: https://discuss.linuxcontainers.org/t/lxd-new-disaster-recovery-tool/11296
