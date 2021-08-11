@@ -147,14 +147,19 @@ Instructions on building and installing LXD from source [can be found here](http
 
 Before you can create an instance, you need to configure LXD.
 
-Run the following command to specify the configuration options:
+Run the following command to start the interactive configuration process:
 
     sudo lxd init
 
-If you want to use the default options, add the `--auto` flag:
+**Quick minimal setup**
+
+To create a non-optimized minimal setup with default options, you can skip the configuration steps by adding the `--auto` flag:
 
     sudo lxd init --auto
 
+**Note:** Compared to the interactive configuration, the minimal setup will be slower and provide less functionality. Especially the `dir storage backend` (which is used by default) is slower and doesn't provide fast snapshots, fast copy/launch, quotas and optimized backups.
+
+If you want to use an optimized setup, we recommend to go through the interactive configuration process instead.
 
 **Overview of the configuration options:**
 
