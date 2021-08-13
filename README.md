@@ -36,7 +36,7 @@ Install the following software (naming may depends on your distribution):
 
     git clone https://github.com/lxc/linuxcontainers.org
   
-**Note:** The folder `downloads` is quite big, so you can skip that folder by using [git sparse-checkout](https://www.git-scm.com/docs/git-sparse-checkout) 
+**Note:** The folder `downloads` is quite big, so you can skip that folder by using [git sparse-checkout & partial clones](https://github.blog/2020-01-17-bring-your-monorepo-down-to-size-with-sparse-checkout/#sparse-checkout-and-partial-clones) 
 (The only exception is, when you work on the downloads page).
 
 As a replacement for the missing `downloads` folder you need to create the following empty folders, before generating the website  (otherwise the generator shows an error):
