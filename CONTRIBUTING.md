@@ -1,4 +1,4 @@
-# Pull requests:
+# Pull requests
 
 Changes to this project should be proposed as pull requests on GitHub
 at: https://github.com/lxc/linuxcontainers.org
@@ -7,7 +7,7 @@ Proposed changes will then go through code review there and once acked,
 be merged in the main branch.
 
 
-# License and copyright:
+# License and copyright
 
 The linuxcontainers.org website is licensed under the following license:
 
@@ -24,7 +24,7 @@ The author of a change remains the copyright holder of their code
 (no copyright assignment).
 
 
-# Developer Certificate of Origin:
+# Developer Certificate of Origin
 
 To improve tracking of contributions to this project we use the DCO 1.1
 and use a "sign-off" procedure for all changes going into the branch.
@@ -32,6 +32,7 @@ and use a "sign-off" procedure for all changes going into the branch.
 The sign-off is a simple line at the end of the explanation for the
 commit which certifies that you wrote it or otherwise have the right
 to pass it on as an open-source contribution.
+
 
 > Developer Certificate of Origin
 > Version 1.1
@@ -80,12 +81,20 @@ Sorry, no pseudonyms or anonymous contributions are allowed.
 * Sign-off each commit individually, even when it is part of a larger set.
 * If multiple authors are participating, sign-off each commit individually by their author.
 
+You can for example use [git commit -s](https://www.git-scm.com/docs/git-commit#Documentation/git-commit.txt--s) to sign-off each commit.
+
 # Commits
 
 * Prefer smaller commits over large commits: For example one for each section
 * Add useful messages to your commits, that describe the content or changes
 
 # Style & Content
+
+## Language
+
+The standard language for this project is American English (AE).
+
+Translations for other languages are possible and appreciated. See [Translations](CONTRIBUTING.md#translations) below for details.
 
 ## Text- & Programming-Languages used
 
@@ -173,6 +182,6 @@ Take a look at the [source file of the japanese version of the advanced guide](h
 
 Before opening a pull request, you should test the changes you made.
 
-Generate and run a local copy of the website (see [Readme.md](README.md)) and check whether it works and looks correctly in your browser.
+Generate and run a local copy of the website (see [Readme.md](README.md)) and check whether it works and looks correct in your browser.
 
 
