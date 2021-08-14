@@ -1,0 +1,122 @@
+title: LXC 4.0.10 リリースのお知らせ
+date: 2021/07/17 03:07
+origin: https://discuss.linuxcontainers.org/t/lxc-4-0-10-has-been-released/11618
+content: |-
+  ### はじめに <!-- Introduction -->
+  <!--
+  The LXC team is pleased to announce the release of LXC 4.0.10!
+  -->
+  LXC チームは LXC 4.0.10 のリリースをお知らせします!
+
+  <!--
+  This is the tenth bugfix release for LXC 4.0 which is supported until June 2025.
+  -->
+  このリリースは 2025 年 6 月までサポートされる LXC 4.0 に対する 10 回目のバグフィックスリリースです。
+
+  ### バグ修正 <!-- Bugfixes -->
+  <!--
+  As usual this bugfix releases focus on stability and hardening. Some of the highlights for this release are:
+  -->
+  このバグフィックスリリースは、いつも通り安定性とハードニングに焦点を当てています。このリリースのハイライトのいくつかは次の通りです:
+
+   - 一般的ではないアーキテクチャーの問題を修正 <!-- Fix issues with less common architectures -->
+   - 追加の idmap マウントのサポート <!-- Support for additional idmap mounts -->
+   - lxc-net での nft サポート <!-- nft support in lxc-net -->
+   - sys:mixed のマウントエントリーの整理 <!-- Cleaner mount entries for sys:mixed -->
+   - GPG サーバーを keyserver.ubuntu.com に変更 <!-- Switched GPG server to keyserver.ubuntu.com -->
+
+  <!--
+  The full list of commits is available below:
+  -->
+  コミットの全リストは次の通りです（翻訳なし）:
+
+   - conf: handle kernels with CAP_SETFCAP
+   - doc: document new idmap= option for lxc.rootfs.options
+   - Skip rootfs pinning for ZFS roots.
+   - Reflow ZFS check to follow the style of the overlayfs return.
+   - confile: re-add aarch64 architecture
+   - tests: add tests for supported architectures
+   - tests: fix lxc-test-arch-parse for make dist
+   - confile: convert AppArmor and SELinux confile parsing from errors to warnings
+   - Merge pull request #3835 from brauner/2021-05-10.fixes.apparmor.stable-4.0
+   - oss-fuzz: add basic cgroup_init()/cgroup_exit() fuzzing
+   - cgroups: clean up cgroup_ops on initialization error
+   - conf: allow xdev when setting up /dev
+   - conf: don't unmount procfs and sysfs
+   - conf: tweak rootfs handling
+   - start: move idmapped mount setup later
+   - tree-wide: s/parse_mntopts/parse_mntopts_legacy/
+   - conf: rename struct mount_opt flag member s/flag/legacy_flag/
+   - Skip rootfs pinning for read-only file system.
+   - conf: support idmapped lxc.mount.entry entries
+   - conf: add sequence when setting up idmapped mounts
+   - confile: free mount data
+   - conf: fix mount option parsing
+   - cgroups: rework check whether legacy hierarchy is writable
+   - conf: move file descriptor synchronization with child into single function
+   - conf: move file descriptor synchronization with parent into single function
+   - conf: use explicit signage in bit field
+   - start: use barrier instead of wake/wait pair
+   - start: reorder START_SYNC_POST_CONFIGURE
+   - start: simplify startup synchronization
+   - README: Update IRC
+   - network: please broken compilers
+   - Update lxc-net to support nftables
+   - lxc: add lpthread to lxc.pc
+   - lsm/apparmor: actually report an error when we fail to wire AppArmor profile
+   - tools/lxc_autostart: fix failed count
+   - api_extensions: introduce idmapped_mounts_v2 api extension
+   - confile: backport lxc.init.groups config key
+   - string utils: Make sure don't return uninitialized memory.
+   - Add support for LISTEN_FDS environment variable.
+   - common.conf: replace problematic terminology
+   - seccomp: replace problematic terminology
+   - tree-wide: remove problematic terminology
+   - tree-wide: replace problematic terminology
+   - tree-wide: replace problematic terminology
+   - tree-wide: replace problematic terminology
+   - cgroups: use stable ordering for co-mounted v1 controllers
+   - When an item is added to an array, then the array is realloc()ed (to size+1), and the item is copied (strdup()) to the array. Thus, when an item is removed from an array, memory allocated for that item should be freed, successive items should be left-shifted and the array realloc()ed again (size-1).
+   - Resize array in remove_from_array() and fix a crash
+   - lxc-download: Switch GPG server
+   - cgroups: verify that hierarchies are non-empty
+   - When an item is added to an array, then the array is realloc()ed (to size+1), and the item is copied (strdup()) to the array. Thus, when an item is removed from an array, memory allocated for that item should be freed, successive items should be left-shifted and the array realloc()ed again (size-1).
+   - execute: don't exec init, call it
+   - initutils: use vfork() in lxc_container_init()
+   - network: log network devices while sending
+   - execute: ensure parent is notified about child exec and close all unneeded fds
+   - initutils: close dirfd in error path
+   - conf: improve read-only /sys with read-write /sys/devices/virtual/net
+   - tests: add tests for read-only /sys with read-write /sys/devices/virtual/net
+   - cgroups: handle funky cgroup layouts
+   - terminal: ensure newlines are turned into newlines+carriage return for terminal output
+   - cmd/lxc-checkconfig: list cgroup namespaces and rename confusing ns_cgroup entry
+   - doc: Add eBPF-based device controller semantics to Japanese man page
+   - doc: Append description of net type field
+   - doc: Add new idmap= option to Japanese lxc.container.conf(5)
+   - doc: Fix typo in English lxc.container.conf(5)
+   - conf: userns.conf: include userns.conf.d
+   - confile: allow including nonexisting directories
+   - lxc_unshare: make mount table private
+   - lxc_unshare: fix network device handling
+   - file_utils: surface ENOENT when falling back to openat()
+   - doc/common_options: add trace and alert loglevels
+   - initutils: include pthread.h
+   - start: fix logging message
+   - sync: fix log message
+   - terminal: log TIOCGPTPEER failure less alarmingly
+   - af_unix: report error when no fd is to be sent
+   - terminal: fix error handling
+
+  ### サポートとアップグレード <!-- Support and upgrade -->
+  <!--
+  The LXC 4.0 branch is supported until June 2025.
+  Only bugfixes and securitiy issues get included into the stable bugfix releases, so it's always safe and recommended to keep up and run the latest bugfix release.
+  -->
+  LXC 4.0 ブランチは 2025 年 6 月までサポートされます。
+  stable のバグフィックスリリースでは、バグとセキュリティに関する問題に対する修正のみが行われますので、常に安全です。最新のバグフィックスリリースの状態を維持し、実行することをおすすめします。
+
+  ### ダウンロード <!-- Downloads -->
+
+   - リリース tarball <!-- Main release tarball -->: [lxc-4.0.10.tar.gz](https://linuxcontainers.org/downloads/lxc/lxc-4.0.10.tar.gz)
+   - GPG シグネチャー <!-- GPG signature -->: [lxc-4.0.10.tar.gz.asc](https://linuxcontainers.org/downloads/lxc/lxc-4.0.10.tar.gz.asc)
