@@ -24,10 +24,10 @@ content: |-
   -->
   主な変更点は次の通りです:
 
-   - トークンベースのクラスター加入 <!-- Token based cluster join (`lxc cluster add`)
+   - トークンベースのクラスター加入 <!-- Token based cluster join -->(`lxc cluster add`)
    - クラスターメンバーの説明（description）フィールド <!-- Cluster member description field -->
-   - シャッツダウンタイムアウトの設定が可能に <!-- Configurable shutdown timeout -->(`core.shutdown_timeout`)
-   - 信頼できる内向き（inbound）プロキシーのリクエスト情報 <!-- Trusted inbound proxy requestor information -->(`core.https_trusted_proxy`)
+   - シャットダウンタイムアウトの設定が可能に <!-- Configurable shutdown timeout -->(`core.shutdown_timeout`)
+   - 信頼できる内向き（inbound）プロキシーのリクエスト元情報 <!-- Trusted inbound proxy requestor information -->(`core.https_trusted_proxy`)
    - クラスター証明書の更新 <!-- Cluster certificate update -->(`lxc cluster update-certificate`)
    - プロジェクト間のカスタムストレージボリュームのコピー・移動 <!-- Cross-project custom storage volume copy/move -->
    - サポートするストレージドライバーの詳細情報 <!-- Detailed information on supported storage drivers -->(`lxc info`)
