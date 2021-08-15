@@ -83,6 +83,12 @@ More details can be found on our [getting started](/lxd/getting-started-cli/) pa
 [<img src="/static/img/chocolatey.svg" alt="Chocolatey logo" style="max-height:120px;max-width:200px;padding:0 2em;"/>](https://chocolatey.org/)
 [<img src="/static/img/homebrew.png" alt="Homebrew logo" style="max-height:120px;max-width:200px;padding:0 2em;"/>](https://brew.sh/)
 
+# Third-party integrations
+
+LXD can also be used with other platforms and tools, like Ansible, Juju, Terraform and more.
+
+See the [Third-party integrations](/lxd/third-party-integrations/) page for details.
+
 # Support
 LXD has two kind of releases:
 
