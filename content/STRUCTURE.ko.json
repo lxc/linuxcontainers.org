@@ -122,12 +122,6 @@
      "generator": "markdown",
      "meta": {"input": "lxd/getting-started-cli.md"}},
 
-    {"path": "/lxd/getting-started-openstack/",
-     "title": "LXD - 시작하기 - 오픈스택",
-     "menu": ["LXD", "시작하기 - 오픈스택"],
-     "generator": "markdown",
-     "meta": {"input": "lxd/getting-started-openstack.md"}},
-
     {"path": "/lxd/rest-api/",
      "title": "LXD - REST API",
      "menu": ["LXD", "REST API"],

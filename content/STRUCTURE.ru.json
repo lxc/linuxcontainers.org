@@ -122,12 +122,6 @@
      "generator": "markdown",
      "meta": {"input": "lxd/getting-started-cli.ru.md"}},
 
-    {"path": "/lxd/getting-started-openstack/",
-     "title": "LXD - Начинаем - OpenStack",
-     "menu": ["LXD", "Начинаем - OpenStack"],
-     "generator": "markdown",
-     "meta": {"input": "lxd/getting-started-openstack.ru.md"}},
-
     {"path": "/lxd/rest-api/",
      "title": "LXD - REST API",
      "menu": ["LXD", "REST API"],
