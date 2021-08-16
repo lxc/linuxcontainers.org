@@ -78,24 +78,6 @@ You can check more about the integration in the [OpenNebula doc](http://docs.ope
 -->
 [OpenNebula のドキュメント](http://docs.opennebula.org/stable/deployment/open_cloud_host_setup/lxd_driver.html) でこの統合についてもっと調べることができます。
 
-# OpenStack との統合 <!-- Integration with OpenStack -->
-<!--
-The "nova-lxd" project provides an OpenStack Nova plugin that seemlessly integrates
-system containers into a regular OpenStack deployment.
--->
-"nova-lxd" プロジェクトが提供する OpenStack Nova プラグインは、システムコンテナを通常の OpenStack のデプロイメントにシームレスに統合します。
-
-<!--
-With this, users will either get a virtual machine or a container, simply depending on what image or
-instance type they select. It's completely transparent and works with the regular OpenStack APIs.
--->
-これにより、ユーザは選択したイメージまたはインスタンスタイプに応じて、仮想マシンまたはコンテナが得られます。完全に透過的で、通常の OpenStack API で動作します。
-
-<!--
-To learn more about LXD and OpenStack, take a look at our [getting started with OpenStack](/lxd/getting-started-openstack/) page.
--->
-LXD と OpenStack について更に知りたい場合は、[「はじめに - OpenStack」](/ja/lxd/getting-started-openstack/) をご覧ください。
-
 # 可用性 <!-- Availability -->
 <!--
 LXD works on any recent Linux distribution. LXD upstream directly maintains the Ubuntu packages

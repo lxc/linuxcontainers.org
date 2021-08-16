@@ -68,10 +68,6 @@
      "title": "LXD - Débuter - ligne de commande",
      "menu": ["LXD", "Débuter - ligne de commande"]},
 
-    {"path": "/lxd/getting-started-openstack/",
-     "title": "LXD - Débuter - OpenStack",
-     "menu": ["LXD", "Débuter - OpenStack"]},
-
     {"path": "/lxd/rest-api/",
      "title": "LXD - Interface REST",
      "menu": ["LXD", "Interface REST"]},

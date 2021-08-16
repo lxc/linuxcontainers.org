@@ -49,15 +49,6 @@ Key features:
 
 To learn more about LXD and OpenNebula, take a look at our [getting started guide](/lxd/getting-started-opennebula/).
 
-# Integration with OpenStack
-The "nova-lxd" project provides an OpenStack Nova plugin that seamlessly integrates
-system containers into a regular OpenStack deployment.
-
-With this, users will either get a virtual machine or a container, simply depending on what image or
-instance type they select. It's completely transparent and works with the regular OpenStack APIs.
-
-To learn more about LXD and OpenStack, take a look at our [getting started with OpenStack](/lxd/getting-started-openstack/) page.
-
 # Availability
 LXD works on any recent Linux distribution. LXD upstream directly maintains the Ubuntu packages
 and also publishes a snap package which can be used with most of the popular Linux distributions.
