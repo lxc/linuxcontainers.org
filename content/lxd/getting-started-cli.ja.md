@@ -45,8 +45,8 @@ LXD upstream maintains three release branches in parallel:
 -->
 LXD では 3 つのリリースブランチが並行してメンテナンスされています:
 
- * LTS リリース（LXD 4.0.x もしくは LXD 3.0.x） <!-- LTS release (LXD 4.0.x or LXD 3.0.x) -->
- * フィーチャーリリース（LXD 4.x）<!-- Feature releases (LXD 4.x) -->
+ * 長期サポート（LTS）リリース: <!-- Long term support (LTS) releases: -->LXD 4.0.x or LXD 3.0.x
+ * フィーチャーリリース: <!-- Feature releases: -->LXD 4.x
 
 <!--
 LTS releases are recommended for production environments as they will benefit from regular bugfix
@@ -106,43 +106,48 @@ LXD のフィーチャーブランチをインストールするには次のよ�
 #### Ubuntu
 ##### Ubuntu (全リリース <!-- all releases -->)
 <!--
-The recommended way to install LXD these days is with the snap.
+The recommended way to install LXD is the [snap package](https://snapcraft.io/lxd).
 -->
-今は、snap を使って LXD をインストールするのがオススメの方法です。
+LXD をインストールするオススメの方法は [snap パッケージ]((https://snapcraft.io/lxd)です。
 
 <!--
-For the latest stable release, use:
+For the latest stable feature release, use:
 -->
-最新の stable リリースの場合は次のように実行します:
+最新の stable フィーチャーリリースの場合は次のように実行します:
 
-    snap install lxd
+    sudo snap install lxd
 
 <!--
-For the LXD 4.0 stable release, use:
+For the LXD 4.0 LTS release, use:
 -->
-LXD 4.0 stable リリースの場合は次のように実行します:
+LXD 4.0 LTS リリースの場合は次のように実行します:
 
-    snap install lxd --channel=4.0/stable
+    sudo snap install lxd --channel=4.0/stable
 
 <!--
-For the LXD 3.0 stable release, use:
+For the LXD 3.0 LTS release, use:
 -->
-LXD 3.0 stable リリースの場合は次のように実行します:
+LXD 3.0 LTS リリースの場合は次のように実行します:
 
-    snap install lxd --channel=3.0/stable
+    sudo snap install lxd --channel=3.0/stable
+
+<!--
+For more information about LXD snap packages (regarding more versions, update management etc.), see [Managing the LXD snap](https://discuss.linuxcontainers.org/t/managing-the-lxd-snap/8178).
+-->
+LXD の snap パッケージに関する詳細な情報（その他のバージョン、アップデート管理など）については、フォーラムの [Managing the LXD snap](https://discuss.linuxcontainers.org/t/managing-the-lxd-snap/8178) をご覧ください。
 
 <!--
 **Note:** If you previously had the LXD deb package installed, you can migrate all your existing data over with:
 -->
 **注意:** 以前、LXD の deb パッケージをインストールしていた場合は、次のような方法で既存データをすべて移行できます:
 
-    lxd.migrate
+    sudo lxd.migrate
 
 #### Snap パッケージ <!-- Snap package -->(ArchLinux, Debian, Fedora, OpenSUSE, Ubuntu)
 <!--
 LXD upstream publishes and tests a snap package which works for a number of Linux distributions.
 -->
-LXD 開発元では、多数の Linux ディストリビューションで動作する snap パッケージを作成し、テストしています。
+LXD 開発元では、多数の Linux ディストリビューションで動作する [snap パッケージ](https://snapcraft.io/lxd)を作成し、テストしています。
 
 <!--
 The list of Linux distributions we currently test our snap for can be [found here](https://jenkins.linuxcontainers.org/job/lxd-test-snap-latest-stable/).
@@ -152,23 +157,28 @@ The list of Linux distributions we currently test our snap for can be [found her
 <!--
 For those distributions, you should first install snapd using [those instructions](https://snapcraft.io/docs/core/install).
 -->
-これらのディストリビューションでは、[こちらの手順](https://snapcraft.io/docs/core/install) に従い、snapd をインストールする必要があります。
+これらのディストリビューションでは、[こちらの手順](https://snapcraft.io/docs/core/install) に従い、`snapd` をインストールする必要があります。
 
 <!--
-After that, you can install LXD with:
+After that, you can install the latest feature release of LXD with:
 -->
-その後、LXD を以下のようにインストールできます:
+その後、LXD の最新のフィーチャーリリースを次のようにインストールできます:
 
-    snap install lxd
+    sudo snap install lxd
 
 <!--
-Alternatively, pass:   
+Alternatively, you can pass:   
 `--channel=4.0/stable` for the LXD 4.0 LTS release or  
 `--channel=3.0/stable` for the LXD 3.0 LTS release  
 -->
 あるいは次のように実行します:  
 LXD 4.0 LTS リリースの場合は `--channel=4.0/stable`   
 LXD 3.0 LTS リリースの場合は `--channel=3.0/stable`  
+
+<!--
+For more information about LXD snap packages (regarding more versions, update management etc.), see [Managing the LXD snap](https://discuss.linuxcontainers.org/t/managing-the-lxd-snap/8178).
+-->
+LXD の snap パッケージに関する詳細な情報（その他のバージョン、アップデート管理など）については、フォーラムの [Managing the LXD snap](https://discuss.linuxcontainers.org/t/managing-the-lxd-snap/8178) をご覧ください。
 
 ### MacOS 用クライアント<!-- MacOS builds -->
 
@@ -226,16 +236,38 @@ LXD をソースからビルドしてインストールする方法は [こち�
 	{: .p-noteadm }
 
 <!--
-Before you can create containers, you need to tell LXD a little bit about your storage and network needs.
+Before you can create an instance, you need to configure LXD.
 -->
-コンテナを作成する前に、ストレージやネットワーク環境について少しだけ設定する必要があります。
+インスタンスを作成する前に、LXD を設定する必要があります。
 
 <!--
-This is all done with:
+Run the following command to start the interactive configuration process:
 -->
-この設定は以下のように実行して行います:
+次のようにコマンドを実行して、対話型の設定を開始します:
 
-    lxd init
+    sudo lxd init
+
+<!--
+**Quick minimal setup**
+-->
+**クイック最小セットアップ**
+
+<!--
+To create a non-optimized minimal setup with default options, you can skip the configuration steps by adding the `--auto` flag:
+-->
+デフォルトオプションを使った、最適化されていない最小セットアップを行うには、`--auto` オプションを指定して対話的な設定プロセスをスキップできます:
+
+    sudo lxd init --auto
+
+<!--
+**Note:** Compared to the interactive configuration, the minimal setup will be slower and provide less functionality. Especially the `dir storage backend` (which is used by default) is slower and doesn't provide fast snapshots, fast copy/launch, quotas and optimized backups.
+-->
+**注意:** 対話型で行うセットアップに比べると、最小セットアップは動作が遅く、機能も少なくなります。特に（デフォルトで使う） `dir storage backend` は遅く、高速なスナップショット、高速なコピー・起動、クォータ、最適化されたバックアップが使えません。
+
+<!--
+If you want to use an optimized setup, we recommend to go through the interactive configuration process instead.
+-->
+最適化された設定で使いたい場合、最小セットアップの代わりに対話型の設定プロセスを実行することをおすすめします。
 
 <!--
 **Overview of the configuration options:**
