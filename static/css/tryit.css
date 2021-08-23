@@ -1,0 +1,22 @@
+div#tryit_console_row {
+    position: fixed;
+    bottom: 0;
+    z-index: 10;
+    min-width: 100%;
+    padding: 0;
+    background: #fff;
+}
+
+div#tryit-instructions {
+    padding-bottom: 380px;
+}
+
+div#tryit_console_panel {
+    max-width: 1122px; /* 1170px from local.css - 2x24px padding */
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.p-notification__response {
+    width:100%;
+}

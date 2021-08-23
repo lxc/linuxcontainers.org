@@ -3,7 +3,10 @@
 <script src="/static/js/term.js" type="text/javascript"></script>
 <script src="/static/js/bootstrap-rating.min.js" type="text/javascript"></script>
 <script src="/static/js/tryit.js" type="text/javascript"></script>
-<div class="p-strip is-shallow">
+
+<link href="/static/css/tryit.css" rel="stylesheet"/>
+
+<div class="p-strip is-shallow" id="tryit-instructions">
   <div class="row">
     <div class="col-12">
       <noscript>
@@ -67,16 +70,6 @@
               <td><span class="minutes"></span> minutes, <span class="seconds"></span> seconds</td>
             </tr>
           </table>
-        </div>
-      </div>
-
-      <div class="p-notification" id="tryit_console_panel" style="display:none">
-        <div class="p-notification__response">
-          <h2 class="p-heading--four">Terminal</h2>
-          <div style="padding-right: 1rem; overflow: auto; background-color: #000;">
-            <div id="tryit_console" style="background-color:black;"></div>
-          </div>
-          <button class="p-button" id="tryit_console_reconnect" type="button" style="display:none">Reconnect</button>
         </div>
       </div>
 
@@ -378,3 +371,21 @@ lxc image delete clean-ubuntu</pre>
     </div>
   </div>
 </div>
+
+<div class="row" id="tryit_console_row" style="display:none">
+  <div class="col-12">
+    <hr/>
+    <div class="p-notification" id="tryit_console_panel">
+      <div class="p-notification__response">
+        <h2 class="p-heading--four">Terminal</h2>
+        <div style="padding-right: 1rem; overflow: auto; background-color: #000;">
+          <div id="tryit_console" style="background-color:black;"></div>
+        </div>
+        <button class="p-button" id="tryit_console_reconnect" type="button" style="display:none">Reconnect</button>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
+
