@@ -249,6 +249,14 @@ $(document).ready(function() {
     }
 
     $('#tryit_accept').click(function() {
+        if (!$('#accepted-terms').prop("checked")) {
+            $('#terms-not-accepted').css("display", "inherit");
+            return
+        }
+        else {
+            $('#terms-not-accepted').css("display", "none");
+        };
+
         $('#tryit_terms_panel').css("display", "none");
         $('#tryit_accept').css("display", "none");
         $('#tryit_progress').css("display", "inherit");

@@ -38,10 +38,16 @@
       <div class="p-notification--information" id="tryit_start_panel" style="display:none">
         <div class="p-notification__response">
           <h2 class="p-heading--four">Start</h2>
-          <button class="p-button" id="tryit_accept" type="button">
-            <i aria-hidden="true" class="p-icon--success"></i>
-            I have read and accept the terms of service above
-          </button>
+          <div>
+            <input type="checkbox" value="" id="accepted-terms" />
+            <label for="accepted-terms">
+             I have read and I accept the terms of service above
+            </label>
+            <div id="terms-not-accepted" style="display:none;padding-bottom:1em;">
+             Please confirm that you have read and that you accept the terms of service.
+            </div>
+            <button type="submit" id="tryit_accept" class="btn btn-primary">Start</button>
+          </div>
           <div id="tryit_progress" style="display:none;width:100%;text-align:center;">
             <p class="p-heading--four">Starting the container <i class="p-icon--spinner u-animation--spin"></i></p>
           </div>
