@@ -133,7 +133,18 @@ To install the feature branch of LXD, run:
 	The builds for Windows only include the client, not the server.
 	{: .p-noteadm }
 
-Native builds of the LXD client for Windows can be [found here](https://ci.appveyor.com/project/lxc/lxd/branch/master/artifacts).
+The LXD client on Windows is provided as a [Chocolatey](https://community.chocolatey.org/packages/lxc) package. To install it:
+
+1. Install Chocolatey by following the [installation instructions](https://docs.chocolatey.org/en-us/choco/setup#installing-chocolatey).
+2. Install the LXD client:
+
+        choco install lxc
+
+You can also find native builds of the LXD client for Windows on [GitHub](https://github.com/lxc/lxd/actions). To download a specific build:
+
+1. Make sure that you are logged into your GitHub account.
+2. Filter for the branch or tag that you are interested in (for example, the latest release tag or `master`).
+3. Select the latest build and download the Windows artifact.
 
 ### Installing from source
 Instructions on building and installing LXD from source [can be found here](https://github.com/lxc/lxd/#installing-lxd-from-source).
