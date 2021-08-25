@@ -257,6 +257,7 @@ $(document).ready(function() {
             $('#terms-not-accepted').css("display", "none");
         };
 
+        $('#tryit_accept_terms').css("display", "none");
         $('#tryit_terms_panel').css("display", "none");
         $('#tryit_accept').css("display", "none");
         $('#tryit_progress').css("display", "inherit");
