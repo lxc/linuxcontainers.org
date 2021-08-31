@@ -23,10 +23,38 @@
 
 <div class="p-strip--light">
   <div class="row">
-    <div class="col-8">
+    <div class="col-12">
       <h2>진행 중인 프로젝트들</h2>
     </div>
   </div>
+
+   <div class="row">
+     <div class="p-card col-12">
+       <h3>LXD</h3>
+       <div class="row">
+         <div class="col-8">
+           <p>LXD는 새로운 LXC 사용 환경입니다.
+             컨테이너 관리를 위해 단 하나의 명령어 도구를 사용하며,
+             이를 통해 완전히 새롭고 직관적인 사용자 경험을 제공합니다.
+             컨테이너는 네트워크 위에서 REST API를 통해 투명한 방법으로 관리될 수
+             있습니다. 오픈스택과 함께 통합되어, 매우 큰 규모의 배포시스템에서도
+             동작 가능합니다.</p>
+           
+           <p>LXD는 2014년 11월 초에 발표되었습니다. 그리고 현재까지도 활발하게 개발이 이루어지고 있습니다.</p>
+         </div>
+         
+         <div class="col-4">    
+           <p>
+             <a class="p-button--positive" href="/ko/lxd/try-it/" role="button">체험해 보기 </a>
+           </p><p>
+             <a class="p-button" href="/ko/lxd/introduction/" role="button">더 알아보기 </a>
+           </p>
+         </div>
+         
+       </div>
+     </div>
+   </div>
+  
   <div class="row u-equal-height">
     <div class="p-card col-4">
       <h3>LXC</h3>
@@ -36,23 +64,6 @@
         기능 들을 다루고 있습니다.</p>
         <p>production ready를 위해, LXC 1.0는 향후 5년동안 보안업데이트와 버그 수정이 이루어집니다 (2019년 4월까지).</p>
         <p><a class="p-button" href="/ko/lxc/introduction/" role="button">더 알아보기 </a></p>
-    </div>
-
-    <div class="p-card col-4">
-      <h3>LXD</h3>
-      <p>LXD는 새로운 LXC 사용 환경입니다.
-        컨테이너 관리를 위해 단 하나의 명령어 도구를 사용하며,
-        이를 통해 완전히 새롭고 직관적인 사용자 경험을 제공합니다.
-        컨테이너는 네트워크 위에서 REST API를 통해 투명한 방법으로 관리될 수
-        있습니다. 오픈스택과 함께 통합되어, 매우 큰 규모의 배포시스템에서도
-        동작 가능합니다.</p>
-
-      <p>LXD는 2014년 11월 초에 발표되었습니다. 그리고 현재까지도 활발하게 개발이 이루어지고 있습니다.</p>
-
-      <p>
-        <a class="p-button" href="/ko/lxd/introduction/" role="button">더 알아보기 </a>
-        <a class="p-button" href="/ko/lxd/try-it/" role="button">체험해 보기 </a>
-      </p>
     </div>
 
     <div class="p-card col-4">
@@ -72,10 +83,15 @@
   </div>
 </div>
 
-<div class="p-strip">
+<div class="p-strip--light">
   <div class="row">
     <div class="col-8">
-      <h2>종료된 프로젝트들</span></h2>
+      <h2>종료된 프로젝트들</h2>
+    </div>
+  </div>
+
+  <div class="row u-equal-height">
+    <div class="p-card col-8">
       <h3>CGManager</h3>
       <p>CGManager는 우리의 컨트롤 그룹 관리자 데몬입니다.
         중첩된(nested) 비특권 컨테이너에게도 DBus API를 통해, 각자의

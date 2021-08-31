@@ -1,7 +1,7 @@
 <div class="p-strip">
   <div class="row">
     <div class="col-8 suffix-1">
-      <h1>Infrastructure for container projects.</h1>
+      <h1>Infrastructure for Linux systems</h1>
       <p>
       <!--
         linuxcontainers.org is the umbrella project behind LXC,
@@ -35,10 +35,42 @@
 
 <div class="p-strip--light">
   <div class="row">
-    <div class="col-8">
+    <div class="col-12">
       <h2>活動中のプロジェクト <!-- Active projects --></h2>
     </div>
   </div>
+
+  <div class="row">
+    <div class="p-card col-12">
+      <h3>LXD</h3>
+      <div class="row">
+        <div class="col-8">
+          <p>
+            <!--
+                LXD is the new LXC experience. It offers a
+                completely fresh and intuitive user experience
+                with a single command line tool to manage your
+                containers. Containers can be managed over the
+                network in a transparent way through a REST API.
+                It also works with large scale deployments by
+                integrating with OpenStack.
+              -->
+            LXD は LXC の新しい体験です。コンテナを管理するための一つのコマンドラインツールで、完全に新鮮で直感的なユーザ体験を提供します。コンテナを REST API を通した透過的な方法でネットワーク経由で管理できます。LXD は OpenStack や OpenNebula との統合により大規模のデプロイも扱います。
+          </p>
+        </div>
+
+        <div class="col-4">    
+          <p>
+            <a class="p-button--positive" href="/ja/lxd/try-it/" role="button">試してみる</a>
+          </p><p>
+            <a class="p-button" href="/ja/lxd/introduction/" role="button">詳しく見る</a>
+          </p>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+  
   <div class="row u-equal-height">
     <div class="p-card col-4">
       <h3>LXC</h3>
@@ -60,27 +92,6 @@
         LXC は production ready であり、LTS リリースが 5 年間のセキュリティアップデートとバグ修正を提供します。
       </p>
       <p><a class="p-button" href="/ja/lxc/introduction/" role="button">詳しく見る</a></p>
-    </div>
-
-    <div class="p-card col-4">
-      <h3>LXD</h3>
-      <p>
-        <!--
-          LXD is the new LXC experience. It offers a
-          completely fresh and intuitive user experience
-          with a single command line tool to manage your
-          containers. Containers can be managed over the
-          network in a transparent way through a REST API.
-          It also works with large scale deployments by
-          integrating with OpenStack.
-        -->
-        LXD は LXC の新しい体験です。コンテナを管理するための一つのコマンドラインツールで、完全に新鮮で直感的なユーザ体験を提供します。コンテナを REST API を通した透過的な方法でネットワーク経由で管理できます。LXD は OpenStack や OpenNebula との統合により大規模のデプロイも扱います。
-      </p>
-
-      <p>
-        <a class="p-button--positive" href="/ja/lxd/try-it/" role="button">試してみる</a>
-        <a class="p-button" href="/ja/lxd/introduction/" role="button">詳しく見る</a>
-      </p>
     </div>
 
     <div class="p-card col-4">
@@ -117,9 +128,8 @@
 
       <p><a class="p-button" href="/ja/lxcfs/introduction/" role="button">詳しく見る</a></p>
     </div>
-  </div>
-  <div class="row u-equal-height">
-    <div class="p-card col-8">
+    
+    <div class="p-card col-4">
       <h3>distrobuilder</h3>
       <p>LXC/LXD 用のイメージ作成ツールです: <!-- Image building tool for LXC/LXD: -->
         <ul>
@@ -150,6 +160,11 @@
   <div class="row">
     <div class="col-8">
       <h2>廃止予定のプロジェクト <!-- Deprecated projects --></h2>
+    </div>
+  </div>
+
+  <div class="row u-equal-height">
+    <div class="p-card col-8">
       <h3>CGManager</h3>
       <p>
         <!--

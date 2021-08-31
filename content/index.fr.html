@@ -26,10 +26,38 @@
 
 <div class="p-strip--light">
   <div class="row">
-    <div class="col-8">
+    <div class="col-12">
       <h2>Projets. Les choses intéressantes.</h2>
     </div>
   </div>
+
+  <div class="row">
+    <div class="p-card col-12">
+      <h3>LXD</h3>
+      <div class="row">
+        <div class="col-8">
+          <p>LXD est la nouvelle expérience LXC avec une seule commande
+            intuitive pour contrôler tous vos conteneurs. Les conteneurs
+            sont gérés par le réseau de façon complètement transparente
+            grâce à une interface REST. Il marche aussi à grande échelle,
+            s'intégrant avec OpenStack.</p>
+          
+          <p>LXD a été annoncé en début Novembre 2014 et est en
+            développement actif.</p>
+        </div>
+
+        <div class="col-4">    
+          <p>
+            <a class="p-button--positive" href="/lxd/try-it/" role="button">Try it online</a>
+          </p><p>
+           <a class="p-button" href="/fr/lxd/introduction/" role="button">Plus d'information</a>
+          </p>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+  
   <div class="row u-equal-height">
     <div class="p-card col-4">
       <h3>LXC</h3>
@@ -44,17 +72,20 @@
     </div>
 
     <div class="p-card col-4">
-      <h3>LXD</h3>
-      <p>LXD est la nouvelle expérience LXC avec une seule commande
-        intuitive pour contrôler tous vos conteneurs. Les conteneurs
-        sont gérés par le réseau de façon complètement transparente
-        grâce à une interface REST. Il marche aussi à grande échelle,
-        s'intégrant avec OpenStack.</p>
+      <h3>LXCFS</h3>
+      <p>Système de fichier (FUSE) offrant deux fonctionnalités principales:
+        <ul>
+          <li>Remplacement pour cpuinfo, meminfo, stat et uptime.</li>
+          <li>Une vue compatible avec cgroupfs permettant les écritures non-privilégiées.</li>
+        </ul>
+      </p>
+      
+      <p>Son but est de contourner les limites des systèmes de
+        fichiers procfs, sysfs et cgroupfs par la mise à disposition
+        de fichiers correspondant à ce que l'utilisateur s'attend à
+        voir dans un conteneur complet (système).</p>
 
-      <p>LXD a été annoncé en début Novembre 2014 et est en
-        développement actif.</p>
-
-      <p><a class="p-button" href="/fr/lxd/introduction/" role="button">Plus d'information</a></p>
+      <p><a class="p-button" href="/fr/lxcfs/introduction/" role="button">Plus d'information </a></p>
     </div>
 
     <div class="p-card col-4">
@@ -72,23 +103,3 @@
     </div>
   </div>
 </div>
-
-<div class="p-strip">
-  <div class="row">
-    <div class="col-8">
-      <h3>LXCFS</h3>
-      <p>Système de fichier (FUSE) offrant deux fonctionnalités principales:
-        <ul>
-          <li>Remplacement pour cpuinfo, meminfo, stat et uptime.</li>
-          <li>Une vue compatible avec cgroupfs permettant les écritures non-privilégiées.</li>
-        </ul>
-      </p>
-
-      <p>Son but est de contourner les limites des systèmes de
-        fichiers procfs, sysfs et cgroupfs par la mise à disposition
-        de fichiers correspondant à ce que l'utilisateur s'attend à
-        voir dans un conteneur complet (système).</p>
-
-      <p><a class="p-button" href="/fr/lxcfs/introduction/" role="button">Plus d'information </a></p>
-    </div>
-  </div>
