@@ -1,8 +1,8 @@
 
 
 # What's LXD?
-LXD is a next generation system container manager.
-It offers a user experience similar to virtual machines but using Linux containers instead.
+LXD is a next generation system container and virtual machine manager.
+It offers a unified user experience around full Linux systems running inside containers or virtual machines.
 
 It's image based with pre-made images available for a [wide number of Linux distributions](https://images.linuxcontainers.org)
 and is built around a very powerful, yet pretty simple, REST API.
