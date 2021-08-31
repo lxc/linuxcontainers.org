@@ -249,15 +249,16 @@ $(document).ready(function() {
         });
     }
 
-    $('#tryit_accept').click(function() {
-        if (!$('#accepted-terms').prop("checked")) {
-            $('#terms-not-accepted').css("display", "inherit");
-            return
+    $('#tryit_terms_checkbox').change(function() {
+        if ($('#tryit_terms_checkbox').prop("checked")) {
+            $('#tryit_accept').removeAttr("disabled");
         }
         else {
-            $('#terms-not-accepted').css("display", "none");
+            $('#tryit_accept').attr("disabled", "");
         };
+    });
 
+    $('#tryit_accept').click(function() {
         $('#tryit_accept_terms').css("display", "none");
         $('#tryit_terms_panel').css("display", "none");
         $('#tryit_accept').css("display", "none");

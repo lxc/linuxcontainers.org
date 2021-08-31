@@ -42,14 +42,11 @@
         <div class="p-notification__response">
           <h2 class="p-heading--four">Start</h2>
           <div id="tryit_accept_terms">
-            <input type="checkbox" value="" id="accepted-terms" />
-            <label for="accepted-terms">
+            <input type="checkbox" value="" id="tryit_terms_checkbox" />
+            <label for="tryit_terms_checkbox">
              I have read and I accept the terms of service above
             </label>
-            <div id="terms-not-accepted" style="display:none;padding-bottom:1em;">
-             Please confirm that you have read and that you accept the terms of service.
-            </div>
-            <button type="submit" id="tryit_accept" class="btn btn-primary">Start</button>
+            <button type="submit" id="tryit_accept" class="btn btn-primary" disabled="">Start</button>
           </div>
           <div id="tryit_progress" style="display:none;width:100%;text-align:center;">
             <p class="p-heading--four">Starting the container <i class="p-icon--spinner u-animation--spin"></i></p>
