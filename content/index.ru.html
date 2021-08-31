@@ -32,12 +32,49 @@
 
 <div class="p-strip--light">
   <div class="row">
-    <div class="col-8">
+    <div class="col-12">
       <h2>
         Проекты. Интересные факты.
       </h2>
     </div>
   </div>
+
+  <div class="row">
+    <div class="p-card col-12">
+      <h3>LXD</h3>
+      <div class="row">
+        <div class="col-8">
+           <p>
+             LXD это новый опыт LXC.
+             Предлагающий полностью свежую и интуитивно
+             понятную работу с помощью всего одного
+             инструмента: командной строки для управления своими контейнерами.
+             Контейнерами можно управлять прозрачным образом по сети
+             через API REST.
+             Технология так же работает с развертыванием масштабных сред
+             путем интеграции с OpenStack.
+           </p>
+
+           <p>
+             О LXD было объявлено в начале ноября 2014 года
+             и по сей день он находится в очень активном развитии.
+           </p>
+        </div>
+
+        <div class="col-4">    
+          <p>
+            <a class="p-button--positive" href="/lxd/try-it/" role="button">Try it online</a>
+          </p><p>
+            <a class="p-button" href="/lxd/introduction/" role="button">
+              Подробнее
+            </a>
+          </p>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+  
   <div class="row u-equal-height">
     <div class="p-card col-4">
       <h3>LXC</h3>
@@ -60,30 +97,29 @@
     </div>
 
     <div class="p-card col-4">
-      <h3>LXD</h3>
+      <h3>LXCFS</h3>
       <p>
-        LXD это новый опыт LXC.
-        Предлагающий полностью свежую и интуитивно
-        понятную работу с помощью всего одного
-        инструмента: командной строки для управления своими контейнерами.
-        Контейнерами можно управлять прозрачным образом по сети
-        через API REST.
-        Технология так же работает с развертыванием масштабных сред
-        путем интеграции с OpenStack.
+        Пользовательское пространство (FUSE) файловая система предлагает двe основныe вещи:
+        <ul>
+          <li>Слой файлов для CPUInfo, MemInfo, stat и uptime.</li>
+          <li>Cgroupfs совместимое дерево предоставлящее возможность непривилегированной записи.</li>
+        </ul>
       </p>
-
+      
       <p>
-        О LXD было объявлено в начале ноября 2014 года
-        и по сей день он находится в очень активном развитии.
+        Предназначена для обхода недостатков PROCFS,
+        sysfs и cgroupfs при экспорте файлов,
+        соответствующие тeм,
+        которые пользователь системы контейнера ожидает.
       </p>
-
+      
       <p>
-        <a class="p-button" href="/lxd/introduction/" role="button">
+        <a class="p-button" href="/lxcfs/introduction/" role="button">
           Подробнее
         </a>
       </p>
     </div>
-
+   
     <div class="p-card col-4">
       <h3>CGManager</h3>
       <p>
@@ -102,34 +138,6 @@
 
       <p>
         <a class="p-button" href="/cgmanager/introduction/" role="button">
-          Подробнее
-        </a>
-      </p>
-    </div>
-  </div>
-</div>
-
-<div class="p-strip">
-  <div class="row">
-    <div class="col-8">
-      <h3>LXCFS</h3>
-      <p>
-        Пользовательское пространство (FUSE) файловая система предлагает двe основныe вещи:
-        <ul>
-          <li>Слой файлов для CPUInfo, MemInfo, stat и uptime.</li>
-          <li>Cgroupfs совместимое дерево предоставлящее возможность непривилегированной записи.</li>
-        </ul>
-      </p>
-
-      <p>
-        Предназначена для обхода недостатков PROCFS,
-        sysfs и cgroupfs при экспорте файлов,
-        соответствующие тeм,
-        которые пользователь системы контейнера ожидает.
-      </p>
-
-      <p>
-        <a class="p-button" href="/lxcfs/introduction/" role="button">
           Подробнее
         </a>
       </p>

@@ -20,10 +20,36 @@
 
   <div class="p-strip--light">
     <div class="row">
-      <div class="col-8">
+      <div class="col-12">
         <h2>Projetos Ativo</h2>
       </div>
     </div>
+
+    <div class="row">
+      <div class="p-card col-12">
+        <h3>LXD</h3>
+        <div class="row">
+          <div class="col-8">
+            <p>LXD é a nova experiência LXC. Oferece uma experiência
+              de usuário completamente nova e intuitiva com uma única
+              ferramenta de linha de comando para gerenciar seus contêineres.
+              Os recipientes podem ser gerenciados pela rede de forma
+              transparente através de uma API REST. Também funciona com
+              implantações em grande escala integrando-se ao OpenStack.</p>
+          </div>
+          
+          <div class="col-4">    
+            <p>
+              <a class="p-button--positive" href="/lxd/try-it/" role="button">Experimente</a>
+            </p><p>
+              <a class="p-button" href="/lxd/introduction/" role="button">Saber mais</a>
+            </p>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+    
     <div class="row u-equal-height">
       <div class="p-card col-4">
         <h3>LXC</h3>
@@ -35,21 +61,6 @@
           obtendo 5 anos de atualizações de segurança
           e correções de erros (até abril de 2019).</p>
         <p><a class="p-button" href="/lxc/introduction/" role="button">Saber mais</a></p>
-      </div>
-
-      <div class="p-card col-4">
-        <h3>LXD</h3>
-        <p>LXD é a nova experiência LXC. Oferece uma experiência
-          de usuário completamente nova e intuitiva com uma única
-          ferramenta de linha de comando para gerenciar seus contêineres.
-          Os recipientes podem ser gerenciados pela rede de forma
-          transparente através de uma API REST. Também funciona com
-          implantações em grande escala integrando-se ao OpenStack.</p>
-
-        <p>
-          <a class="p-button--positive" href="/lxd/try-it/" role="button">Experimente</a>
-          <a class="p-button" href="/lxd/introduction/" role="button">Saber mais</a>
-        </p>
       </div>
 
       <div class="p-card col-4">
@@ -70,10 +81,15 @@
     </div>
   </div>
 
-  <div class="p-strip">
-    <div class="row">
-      <div class="col-8">
-        <h2>Deprecated projects</h2>
+<div class="p-strip--light">
+  <div class="row">
+    <div class="col-8">
+      <h2>Deprecated projects</h2>
+    </div>
+  </div>
+
+  <div class="row u-equal-height">
+    <div class="p-card col-8">
         <h3>CGManager</h3>
         <p>CGManager is our cgroup manager daemon. It's
           designed to allow nested unprivileged containers
@@ -91,6 +107,6 @@
           and is more widely compatible with existing userspace.</p>
 
         <p><a class="p-button" href="/cgmanager/introduction/" role="button">Saber mais&nbsp;&rsaquo;</a></p>
-      </div>
     </div>
   </div>
+</div>

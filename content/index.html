@@ -2,17 +2,18 @@
 <div class="p-strip">
   <div class="row">
     <div class="col-8 suffix-1">
-      <h1>Infrastructure for container projects.</h1>
-      <p>linuxcontainers.org is the umbrella project behind LXC,
-        LXD and LXCFS.</p>
+      <h1>Infrastructure for Linux systems</h1>
+      <p>linuxcontainers.org is the umbrella project behind LXD,
+        LXC, LXCFS and distrobuilder.</p>
 
       <p>The goal is to offer a distro and vendor neutral environment
         for the development of Linux container technologies.</p>
 
-      <p>Our main focus is system containers. That is, containers which
-        offer an environment as close as possible as the one you'd get from a
-        VM but without the overhead that comes with running a separate
-        kernel and simulating all the hardware.</p>
+      <p>Our focus is providing containers and virtual machines that run
+        full Linux systems. While VMs supply a complete environment,
+        system containers offer an environment as close as possible to
+        the one you'd get from a VM, but without the overhead that comes
+        with running a separate kernel and simulating all the hardware.</p>
     </div>
     <div class="col-4">
       <img src="/static/img/containers.png" alt="" />
@@ -22,59 +23,77 @@
 
 <div class="p-strip--light">
   <div class="row">
-    <div class="col-8">
+    <div class="col-12">
       <h2>Active projects</h2>
     </div>
   </div>
+
+  <div class="row">
+    <div class="p-card col-12">
+      <h3>LXD</h3>
+      <div class="row">
+        <div class="col-8">
+          <p>LXD is a next generation system container and virtual machine
+            manager. It offers a unified user experience around full Linux
+            systems running inside containers or virtual machines.</p>
+          
+          <p>LXD is image based and provides images for a wide number of
+            Linux distributions. It provides flexibility and scalability
+            for various use cases, with support for different storage
+            backends and network types and the option to install on
+            hardware ranging from an individual laptop or cloud instance
+            to a full server rack.</p>
+          
+          <p>When using LXD, you can manage your instances (containers and VMs)
+            with a single command line tool, or over the network in a transparent way
+            through a REST API.</p>
+        </div>
+
+        <div class="col-4">    
+          <p>
+            <a class="p-button--positive" href="/lxd/try-it/" role="button">Try it online</a>
+          </p><p>
+            <a class="p-button" href="/lxd/introduction/" role="button">Learn more</a>
+          </p>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+      
   <div class="row u-equal-height">
     <div class="p-card col-4">
       <h3>LXC</h3>
-      <p>LXC is the well known set of tools, templates,
-        library and language bindings. It's pretty low
-        level, very flexible and covers just about every
-        containment feature supported by the upstream
-        kernel.</p>
+      <p>LXC is a well-known Linux container runtime that consists of
+        tools, templates, and library and language bindings. It's pretty
+        low level, very flexible and covers just about every containment
+        feature supported by the upstream kernel.</p>
       <p>LXC is production ready with LTS releases coming with 5 years
-         of security and bugfix updates.</p>
+        of security and bugfix updates.</p>
+      <p>LXC should not be confused with the <code class="light">lxc</code>
+        CLI client tool provided by LXD.</p>
       <p><a class="p-button" href="/lxc/introduction/" role="button">Learn more</a></p>
     </div>
 
     <div class="p-card col-4">
-      <h3>LXD</h3>
-      <p>LXD is the new LXC experience. It offers a
-        completely fresh and intuitive user experience
-        with a single command line tool to manage your
-        containers. Containers can be managed over the
-        network in a transparent way through a REST API.
-        It also works with large scale deployments by
-        integrating with cloud platforms like OpenNebula.</p>
-
-      <p>
-        <a class="p-button--positive" href="/lxd/try-it/" role="button">Try it</a>
-        <a class="p-button" href="/lxd/introduction/" role="button">Learn more</a>
-      </p>
-    </div>
-
-    <div class="p-card col-4">
       <h3>LXCFS</h3>
-      <p>Userspace (FUSE) filesystem offering two main things:
+      <p>LXCFS is a userspace (FUSE) filesystem which offers:
         <ul>
           <li>Overlay files for cpuinfo, meminfo, stat and uptime.</li>
           <li>A cgroupfs compatible tree allowing unprivileged writes.</li>
         </ul>
       </p>
 
-      <p>It's designed to workaround the shortcomings of procfs, sysfs
-        and cgroupfs by exporting files which match what a system
+      <p>It's designed to work around the shortcomings of procfs, sysfs
+        and cgroupfs by exporting files that match what a system
         container user would expect.</p>
 
       <p><a class="p-button" href="/lxcfs/introduction/" role="button">Learn more</a></p>
     </div>
-  </div>
-  <div class="row u-equal-height">
-    <div class="p-card col-8">
+ 
+    <div class="p-card col-4">
       <h3>distrobuilder</h3>
-      <p>Image building tool for LXC/LXD:
+      <p>distrobuilder is an image building tool for LXC/LXD which offers:
         <ul>
           <li>Complex image definition as a simple YAML document.</li>
           <li>Multiple output formats (chroot, LXD, LXC).</li>
@@ -84,7 +103,7 @@
 
       <p>distrobuilder was created as a replacement for the old shell scripts
         that were shipped as part of LXC to generate images.
-        Its modern design uses pre-built official images whenever available,
+        Its modern design utilises pre-built official images whenever available,
         uses a declarative image definition (YAML) and supports a variety of
         modifications on the base image.</p>
 
@@ -115,7 +134,7 @@
 
       <p>It has now been deprecated in favor of the CGroup namespace
         in recent Linux kernels. On older kernels, LXCFS still offers
-        a cgroupfs emulation that can be used instead of cgmanager
+        a cgroupfs emulation that can be used instead of CGManager
         and is more widely compatible with existing userspace.</p>
 
       <p><a class="p-button" href="/cgmanager/introduction/" role="button">Learn more&nbsp;&rsaquo;</a></p>

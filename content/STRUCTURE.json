@@ -6,106 +6,6 @@
      "meta": {"input": "index.html"}},
 
 
-
-    {"path": "/lxc/",
-     "generator": "alias",
-     "meta": {"target": "/lxc/introduction/"}},
-
-    {"path": "/lxc/introduction/",
-     "title": "LXC - Introduction",
-     "menu": ["LXC", "Introduction"],
-     "generator": "markdown",
-     "meta": {"input": "lxc/introduction.md"}},
-
-    {"path": "/lxc/news/",
-     "title": "LXC - News",
-     "menu": ["LXC", "News"],
-     "generator": "news",
-     "meta": {"dir": "/content/lxc/news/",
-              "input": "lxc/news.md"}},
-
-    {"path": "/lxc/getting-started/",
-     "title": "LXC - Getting started",
-     "menu": ["LXC", "Getting started"],
-     "generator": "markdown",
-     "meta": {"input": "lxc/getting-started.md"}},
-
-    {"path": "/lxc/documentation/",
-     "title": "LXC - Documentation",
-     "menu": ["LXC", "Documentation"],
-     "generator": "markdown",
-     "meta": {"input": "lxc/documentation.md"}},
-
-    {"path": "/lxc/apidoc/",
-     "generator": "directory",
-     "meta": {"input": "lxc/apidoc"}},
-
-    {"path": "/lxc/manpages/",
-     "title": "LXC - Manpages",
-     "menu": ["LXC", "Manpages"],
-     "generator": "manpages",
-     "meta": {"dir": "/manpages/lxc"}},
-
-    {"path": "/lxc/contribute/",
-     "title": "LXC - Contribute",
-     "menu": ["LXC", "Contribute"],
-     "generator": "markdown",
-     "meta": {"input": "lxc/contribute.md"}},
-
-    {"path": "/lxc/security/",
-     "title": "LXC - Security",
-     "menu": ["LXC", "Security"],
-     "generator": "markdown",
-     "meta": {"input": "lxc/security.md"}},
-
-    {"path": "/lxc/downloads/",
-     "title": "LXC - Downloads",
-     "menu": ["LXC", "Downloads"],
-     "generator": "downloads",
-     "meta": {"dir": "/downloads/lxc",
-              "input": "lxc/downloads.md"}},
-
-    {"path": "/lxc/external-resources/",
-     "menu": ["LXC", "External resources"]},
-
-    {"path": "/lxc/articles/",
-     "title": "LXC - Articles",
-     "menu": ["LXC", "Articles"],
-     "generator": "markdown",
-     "meta": {"input": "lxc/articles.md"}},
-
-    {"path": "/lxc/forum/",
-     "menu": ["LXC", "Forum"],
-     "generator": "link",
-     "meta": {"url": "https://discuss.linuxcontainers.org"}},
-
-    {"path": "/lxc/mailing-lists/",
-     "menu": ["LXC", "Mailing lists"],
-     "generator": "link",
-     "meta": {"url": "https://lists.linuxcontainers.org"}},
-
-    {"path": "/lxc/irc/",
-     "menu": ["LXC", "IRC"],
-     "generator": "link",
-     "meta": {"url": "https://kiwiirc.com/client/irc.libera.chat/#lxc"}},
-
-    {"path": "/lxc/github/",
-     "menu": ["LXC", "GitHub"],
-     "generator": "link",
-     "meta": {"url": "https://github.com/lxc/lxc"}},
-
-    {"path": "/lxc/jenkins-ci/",
-     "menu": ["LXC", "Jenkins CI"],
-     "generator": "link",
-     "meta": {"url": "https://jenkins.linuxcontainers.org/view/LXC/"}},
-
-    {"path": "/lxc/travis-ci/",
-     "menu": ["LXC", "Travis CI"],
-     "generator": "link",
-     "meta": {"url": "https://travis-ci.org/lxc/lxc"}},
-
-
-
     {"path": "/lxd/",
      "generator": "alias",
      "meta": {"target": "/lxd/introduction/"}},
@@ -211,6 +111,107 @@
      "menu": ["LXD", "Travis CI"],
      "generator": "link",
      "meta": {"url": "https://travis-ci.org/lxc/lxd"}},
+
+
+
+    {"path": "/lxc/",
+     "generator": "alias",
+     "meta": {"target": "/lxc/introduction/"}},
+
+    {"path": "/lxc/introduction/",
+     "title": "LXC - Introduction",
+     "menu": ["LXC", "Introduction"],
+     "generator": "markdown",
+     "meta": {"input": "lxc/introduction.md"}},
+
+    {"path": "/lxc/news/",
+     "title": "LXC - News",
+     "menu": ["LXC", "News"],
+     "generator": "news",
+     "meta": {"dir": "/content/lxc/news/",
+              "input": "lxc/news.md"}},
+
+    {"path": "/lxc/getting-started/",
+     "title": "LXC - Getting started",
+     "menu": ["LXC", "Getting started"],
+     "generator": "markdown",
+     "meta": {"input": "lxc/getting-started.md"}},
+
+    {"path": "/lxc/documentation/",
+     "title": "LXC - Documentation",
+     "menu": ["LXC", "Documentation"],
+     "generator": "markdown",
+     "meta": {"input": "lxc/documentation.md"}},
+
+    {"path": "/lxc/apidoc/",
+     "generator": "directory",
+     "meta": {"input": "lxc/apidoc"}},
+
+    {"path": "/lxc/manpages/",
+     "title": "LXC - Manpages",
+     "menu": ["LXC", "Manpages"],
+     "generator": "manpages",
+     "meta": {"dir": "/manpages/lxc"}},
+
+    {"path": "/lxc/contribute/",
+     "title": "LXC - Contribute",
+     "menu": ["LXC", "Contribute"],
+     "generator": "markdown",
+     "meta": {"input": "lxc/contribute.md"}},
+
+    {"path": "/lxc/security/",
+     "title": "LXC - Security",
+     "menu": ["LXC", "Security"],
+     "generator": "markdown",
+     "meta": {"input": "lxc/security.md"}},
+
+    {"path": "/lxc/downloads/",
+     "title": "LXC - Downloads",
+     "menu": ["LXC", "Downloads"],
+     "generator": "downloads",
+     "meta": {"dir": "/downloads/lxc",
+              "input": "lxc/downloads.md"}},
+
+    {"path": "/lxc/external-resources/",
+     "menu": ["LXC", "External resources"]},
+
+    {"path": "/lxc/articles/",
+     "title": "LXC - Articles",
+     "menu": ["LXC", "Articles"],
+     "generator": "markdown",
+     "meta": {"input": "lxc/articles.md"}},
+
+    {"path": "/lxc/forum/",
+     "menu": ["LXC", "Forum"],
+     "generator": "link",
+     "meta": {"url": "https://discuss.linuxcontainers.org"}},
+
+    {"path": "/lxc/mailing-lists/",
+     "menu": ["LXC", "Mailing lists"],
+     "generator": "link",
+     "meta": {"url": "https://lists.linuxcontainers.org"}},
+
+    {"path": "/lxc/irc/",
+     "menu": ["LXC", "IRC"],
+     "generator": "link",
+     "meta": {"url": "https://kiwiirc.com/client/irc.libera.chat/#lxc"}},
+
+    {"path": "/lxc/github/",
+     "menu": ["LXC", "GitHub"],
+     "generator": "link",
+     "meta": {"url": "https://github.com/lxc/lxc"}},
+
+    {"path": "/lxc/jenkins-ci/",
+     "menu": ["LXC", "Jenkins CI"],
+     "generator": "link",
+     "meta": {"url": "https://jenkins.linuxcontainers.org/view/LXC/"}},
+
+    {"path": "/lxc/travis-ci/",
+     "menu": ["LXC", "Travis CI"],
+     "generator": "link",
+     "meta": {"url": "https://travis-ci.org/lxc/lxc"}},
+
+
 
 
 
