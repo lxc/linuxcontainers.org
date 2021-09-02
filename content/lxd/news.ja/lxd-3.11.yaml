@@ -82,7 +82,7 @@ content: |-
   `lxc remote add` を使って新しいリモートを追加する場合に、そのリモートが Candid 認証をサポートする場合は、TLS 認証の代わりに Candid 認証を使います。
 
   <!--
-  The authentication type can always be overriden with `--auth-type`.
+  The authentication type can always be overridden with `--auth-type`.
   -->
   認証タイプは常に `--auth-type` を指定して上書きできます。
 
@@ -115,7 +115,7 @@ content: |-
    * client: Fix goroutine leak in ExecContainer
    * client: Revert "client: fix goroutine leak in ExecContainer"
    * doc: Add first stab at FAQ
-   * doc: Fix typoes in faq.md
+   * doc: Fix typos in faq.md
    * doc: Update rest-api.md formatting
    * i18n: Update translations from weblate
    * i18n: Update translation templates

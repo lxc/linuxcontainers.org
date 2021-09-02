@@ -222,7 +222,7 @@ content: |-
    - unmounted proc/sys/net if dropping CAP_NET_ADMIN Signed-off-by: Henry Zhang <henryzhang99@gmail.com>
    - conf: fix block-device based rootfs mounting
    - confile: cleanup set_config_hooks()
-   - confile: don't accidently alter lxc.cgroup.dir
+   - confile: don't accidentally alter lxc.cgroup.dir
    - utils: allow cross-device resolution
    - cgroup2: move bpf device cgroup program to struct cgroup_ops
    - macro: use ascending order for capabilities

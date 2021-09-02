@@ -59,7 +59,7 @@ content: |-
    * lxc/list: Fix regression in json output
    * lxc/list: Move common data extraction to a helper function
    * lxc/profile: Properly implement "profile unset"
-   * lxc/publish: Wait for the conainer to be running
+   * lxc/publish: Wait for the container to be running
    * lxc/remote: Show the fingerprint as string not hex
    * lxc/utils: Implement progress tracking for operations
    * lxd: Drop use of logger.Log when not needed
@@ -80,7 +80,7 @@ content: |-
    * lxd/containers: Find current max snapshot value
    * lxd/containers: Fix bad root device detection code
    * lxd/containers: Fix base image tracking
-   * lxd/containers: Fix concurent read/write to s.conns in exec
+   * lxd/containers: Fix concurrent read/write to s.conns in exec
    * lxd/containers: Fix error handling on FileRemove
    * lxd/containers: Fix handling of devices with minor>255
    * lxd/containers: Fix override of Devices during copy

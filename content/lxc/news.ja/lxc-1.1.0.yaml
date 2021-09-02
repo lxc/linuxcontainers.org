@@ -49,7 +49,7 @@ content: |-
    * lxc-autostart: 新たに -A/--ignore-auto オプションを追加しました (すべてのコンテナを起動できます) <!-- New -A/--ignore-auto flag (starts all containers) -->
    * lxc-ls: 新たな出力項目 "interface" を追加しました <!-- New "interface" field -->
    * centos/fedora: root\_password\_expired 環境変数を追加しました (デフォルト yes) <!-- Added a root\_password\_expired environment variable (defaults to yes) -->
-   * oracle: (メディアからを含めて) 任意の yum リポジトリからインストールできるようになりました <!-- Allow installing from arbitrary yum repositories (including medias) -->
+   * oracle: (メディアからを含めて) 任意の yum リポジトリからインストールできるようになりました <!-- Allow installing from arbitrary yum repositories (including media) -->
    * oracle: Oracle Linux 7 のサポートを追加しました <!-- Add Oracle Linux 7 support -->
    * lxc-ls: --fancy オプションなしで group によるコンテナのフィルタリングができるようになりました <!-- Allow filtering containers by group even without \-\-fancy -->
    * core: qemu-img 経由での qcow2 のサポートを追加しました <!-- Add support for qcow2 images (through qemu-img) -->
@@ -85,8 +85,8 @@ content: |-
    * core: pivot_\root は lxc.pivotdir を使わずに行われるようになりました。この結果、このオプションは非推奨となり、将来は削除される予定です <!-- pivot\_root is now done without the use of lxc.pivotdir, as a result this option is now considered deprecated and will be removed in upcoming releases. -->
    * Core: デフォルトでデーモンモードで起動するようになったので、close-all-fds もデフォルトになりました <!-- with the switch to daemonized containers by default, close-all-fds is also now the default. -->
    * core: lxc.autodev は作りかえられました。/dev/lxc は使いません。代わりにコンテナの /dev 上で直接 tmpfs をマウントします。非特権コンテナ上でも動くようになりました <!-- lxc.autodev was reworked, it no longer uses /dev/lxc, instead mounting a tmpfs directly on the container's /dev, it also now works with unprivileged containers -->
-   * core: lxc.autodev がデフォルトで有効になりました (lxc.autodev=1)<!-- lxc.autodev is now on by default (can be overriden with lxc.autodev=0) -->
-   * core: lxc.kmsg はデフォルトで無効になりました (lxc.kmsg=0) <!-- lxc.kmsg is now disabled by default (can be overriden with lxc.kmsg=1) -->
+   * core: lxc.autodev がデフォルトで有効になりました (lxc.autodev=1)<!-- lxc.autodev is now on by default (can be overridden with lxc.autodev=0) -->
+   * core: lxc.kmsg はデフォルトで無効になりました (lxc.kmsg=0) <!-- lxc.kmsg is now disabled by default (can be overridden with lxc.kmsg=1) -->
    * core: clear\_config\_item はリスト (lxc\_list) のみに影響するようになりました。他では set\_config\_item を使用してください <!-- clear\_config\_item now exclusively Affects lists (lxc\_list) entries. set\_config\_item should be used for anything else. -->
    * templates: 全てのテンプレートで lxc.mount.auto = cgroup:mixed proc:mixed sys:mixed を使うようになりました (安全なデフォルト設定です) <!-- All templates now use lxc.mount.auto = cgroup:mixed proc:mixed sys:mixed (safe default configuration) -->
   

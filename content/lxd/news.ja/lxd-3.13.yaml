@@ -31,7 +31,7 @@ content: |-
   <!--
   Enterprise users will like the addition of Role Based Access Control through the external Canonical RBAC service, making it possible to control permissions to individual projects on your LXD servers and assign roles to your users and groups.
   -->
-  エンタープライズユーザーは、外部の Canonical RBAC サービスを用いたロールベースアクセス制御（Role Based Acess Control）が追加されたのを気に入るでしょう。LXD サーバーでプロジェクトごとのパーミッションを制御し、ユーザーとグループに役割（ロール）を割り当てることができます。
+  エンタープライズユーザーは、外部の Canonical RBAC サービスを用いたロールベースアクセス制御（Role Based Access Control）が追加されたのを気に入るでしょう。LXD サーバーでプロジェクトごとのパーミッションを制御し、ユーザーとグループに役割（ロール）を割り当てることができます。
 
   <!--
   And we've even managed to get quotas working for the `dir` storage backend at last, thanks to the addition of filesystem project quotas in recent kernels.
@@ -327,7 +327,7 @@ content: |-
    - lxc/utils: Updates progress to stop outputting if msg is longer than window
    - lxd/api: Rename alias* commands to imageAlias*
    - lxd/api: Rename apiProject* to project*
-   - lxd/api: Rename certificateFingerprint* to certficate*
+   - lxd/api: Rename certificateFingerprint* to certificate*
    - lxd/api: Rename operation functions for consistency
    - lxd/api: Rename serverResources to api10Resources
    - lxd/api: Rename snapshotHandler to containerSnapshotHandler

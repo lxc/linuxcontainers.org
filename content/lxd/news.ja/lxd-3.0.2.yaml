@@ -91,7 +91,7 @@ content: |-
    - nsexec: prevent fd leak
    - Fix the storage_pool_id filter from the WHERE clause of StoragePoolsConfig
    - Fix lints
-   - Extract cmdInit.ApplyConfig into a separete initApplyConfig function
+   - Extract cmdInit.ApplyConfig into a separate initApplyConfig function
    - Split initApplyConfig into initDataNodeApply and initDataClusterApply
    - Fix broken alternate TLS server cert in integration tests
    - lxd/containers: Don't update MAAS for snapshots
@@ -126,7 +126,7 @@ content: |-
    - images: move structs
    - client: Export OperationWait
    - lxd/cluster: Only restart local containers
-   - images: consistenly name command structs
+   - images: consistently name command structs
    - cluster: move structs
    - api 1.0: move struct
    - api internal: move structs

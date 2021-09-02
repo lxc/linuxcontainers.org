@@ -171,7 +171,7 @@ content: |-
    - tests: Reword deadcode
    - shared/log15: Remove dead code
    - lxd/storage/drivers/driver/btrfs: Unset pool size setting during creation if not relevant
-   - lxd/storage/drivers/driver/btrfs: Consisent error quoting in Create
+   - lxd/storage/drivers/driver/btrfs: Consistent error quoting in Create
    - lxd/storage/pools/config: Consistent error quoting in storagePoolValidateConfig
    - driver_lxc: pass flags to shiftfs mount
    - lxd/network/driver/bridge: Ensure that DHCP firewall rules are added in fan mode

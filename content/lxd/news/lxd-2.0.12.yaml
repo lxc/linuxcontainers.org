@@ -142,7 +142,7 @@ content: |-
    - client: add "ConsoleDisconnect" argument
    - shared/idmap: Fix handling of hardlinks
    - lxd/containers: Skip sockets in tarballs
-   - lxd/dameon: Add LXD_EXEC_PATH to override execPath
+   - lxd/daemon: Add LXD_EXEC_PATH to override execPath
    - Fix a number of unchecked variables
    - lxd/containers: Only init the config if needed
    - lxc/file: Log downloads/uploads

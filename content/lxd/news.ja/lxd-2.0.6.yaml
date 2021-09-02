@@ -31,7 +31,7 @@ content: |-
    * extra/lxc-to-lxd: コンテナが存在しない場合のエラー表示を行うようにしました <!-- Better output with no container -->
    * extra/lxc-to-lxd: 変換元のパスが存在するかどうかチェックするようになりました <!-- Check that source path exists --> (disk) (Issue #2572)
    * extra/lxc-to-lxd: 一貫性のあるログ出力をおこなうようにしました <!-- Consistent logging -->
-   * extra/lxc-to-lxd: 実行中のコンテナに対する dry-run で失敗しないようになりました <!-- Don't fail dry-run with runnning containers -->
+   * extra/lxc-to-lxd: 実行中のコンテナに対する dry-run で失敗しないようになりました <!-- Don't fail dry-run with running containers -->
    * extra/lxc-to-lxd: pylxd への依存をなくしました <!-- Drop dependency on pylxd -->
    * extra/lxc-to-lxd: lxdpath の扱いを修正しました <!-- Fix lxdpath handling -->
    * extra/lxc-to-lxd: 出力を整えました <!-- Formatting -->
@@ -132,7 +132,7 @@ content: |-
    * lxd/containers: 実際に最後に使われた更新エラーを表示するようになりました <!-- Actually surface the last used update error -->
    * lxd/containers: コンテナに /snap のみが存在する場合でも、/snap/bin を PATH に含めるようになりました <!-- Add /snap/bin to PATH even if only /snap exists -->
    * lxd/containers: file の操作時に userns にアタッチするようになりました <!-- Attach to userns on file operations -->
-   * lxd/containers: 並列の stop/shutdown を改良しました <!-- Better handle concurent stop/shutdown -->
+   * lxd/containers: 並列の stop/shutdown を改良しました <!-- Better handle concurrent stop/shutdown -->
    * lxd/containers: コンテナの消去を失敗した際のエラー表示をわかりやすくしました <!-- Clarify container delete failure error -->
    * lxd/containers: --debug モードを指定した場合は liblxc のログレベルを正しく debug に設定するようになりました <!-- Correctly set liblxc loglevel to debug when in \-\-debug mode -->
    * lxd/containers: 一時的なコンテナを二重に消去しなくなりました <!-- Don't double delete ephemeral containers -->
@@ -152,7 +152,7 @@ content: |-
    * scripts/lxc-to-lxd: コンテナが存在しない場合のエラー表示を行うようにしました <!-- Better output with no container -->
    * scripts/lxc-to-lxd: 変換元のパスが存在するかどうかチェックするようになりました <!-- Check that source path exists -->(disk) (Issue #2572)
    * scripts/lxc-to-lxd: 一貫性のあるログ出力をおこなうようにしました <!-- Consistent logging -->
-   * scripts/lxc-to-lxd: 実行中のコンテナに対する dry-run で失敗しないようになりました <!-- Don't fail dry-run with runnning containers -->
+   * scripts/lxc-to-lxd: 実行中のコンテナに対する dry-run で失敗しないようになりました <!-- Don't fail dry-run with running containers -->
    * scripts/lxc-to-lxd: pylxd への依存をなくしました <!-- Drop dependency on pylxd -->
    * scripts/lxc-to-lxd: lxdpath の扱いを修正しました <!-- Fix lxdpath handling -->
    * scripts/lxc-to-lxd: 出力を整えました <!-- Formatting -->

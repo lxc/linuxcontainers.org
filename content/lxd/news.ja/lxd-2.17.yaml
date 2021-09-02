@@ -52,7 +52,7 @@ content: |-
    * lxd/daemon: Daemon.isRecursionRequest を lxd/util サブパッケージに移動させました <!-- Move Daemon.isRecursionRequest to the lxd/util sub-package -->
    * lxd/daemon: Daemon.lxcpath を OS.LxcPath に移動させました <!-- Move Daemon.lxcpath to OS.LxcPath -->
    * lxd/daemon: Daemon.MockMode を OS.MockMode に移動させました <!-- Move Daemon.MockMode to OS.MockMode -->
-   * lxd/daemon: Deamon.CheckTrustState と Deamon.isTrustedClient を lxd/util に移動させました <!-- Move Deamon.CheckTrustState and Deamon.isTrustedClient to lxd/util -->
+   * lxd/daemon: Daemon.CheckTrustState と Daemon.isTrustedClient を lxd/util に移動させました <!-- Move Daemon.CheckTrustState and Daemon.isTrustedClient to lxd/util -->
    * lxd/daemon: filesystemDetect 関数を lxd/util サブパッケージに移動させました <!-- Move filesystemDetect function into lxd/util subpackage -->
    * lxd/daemon: すべてのモデルエンティティの Daemon を State に置き換えました <!-- Replace Daemon with State in all model entities -->
    * lxd/daemon: select を使用し、goroutine を少し節約するようにしました <!-- Use select and save a few goroutines -->

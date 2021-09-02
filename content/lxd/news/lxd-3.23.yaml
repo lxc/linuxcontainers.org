@@ -15,7 +15,7 @@ content: |-
   #### Custom storage volumes in projects
   A new project feature (`features.storage-volumes`) is now available to all new projects and ties custom storage volumes to the project.
 
-  This allows projects to have their own separate set of custom storage volumes without risk of conflicts. When combined with Canonical RBAC, this also now properly isolates storage between diferent projects.
+  This allows projects to have their own separate set of custom storage volumes without risk of conflicts. When combined with Canonical RBAC, this also now properly isolates storage between different projects.
 
       stgraber@castiana:~$ lxc storage volume list default | grep custom
       +--------+----------+-------------+---------+
@@ -71,7 +71,7 @@ content: |-
 
   This is designed so that marking a project as restricted using `restricted=true` should default to it being safe for untrusted users. Restrictions can then be relaxed to allow potentially more dangerous or less confined configuration and devices.
 
-  Combined with Canonical RBAC, this can be used to run a shared LXD server or cluster with mostly untrusted users having the ability to spawn containers and virtual-machines wihout effectively having to trust them with full privileges on the hosts.
+  Combined with Canonical RBAC, this can be used to run a shared LXD server or cluster with mostly untrusted users having the ability to spawn containers and virtual-machines without effectively having to trust them with full privileges on the hosts.
 
   #### Improved backup/export logic
   The backup/export logic as used by `lxc export` has been updated to reduce the amount of disk space needed during an export. The container files are now directly written to the compressed tarball, without any intermediate copy being made on disk.
@@ -361,7 +361,7 @@ content: |-
    - lxd/backup: Updates instance backup to use tar writer rather than tar cmd
    - lxd/backup: InstanceBackupRemove usage
    - lxd/storage/drivers/utils: Minor tweak to copyDevice error message
-   - lxd/stroage/drivers/generic: Tweak error message of genericCreateVolumeFromMigration
+   - lxd/storage/drivers/generic: Tweak error message of genericCreateVolumeFromMigration
    - lxd/storage/drivers/generic/vfs: Switches genericVFSBackupVolume to tar writer
    - lxd/images: Fixes unhandled error
    - lxd/storage/backend/lxd: Adds tarWriter to BackupInstance function
@@ -372,7 +372,7 @@ content: |-
    - lxd/storage/drivers/driver/lvm/volumes: Adds tarWriter arg to BackupVolume
    - lxd/storage/drivers/drivers/mock: Adds tarWriter arg to BackupVolume
    - lxd/storage/drivers/interface: Adds tarWriter arg to BackupVolume
-   - lxd/storage/pool/interace: Adds tarWriter arg to BackupInstance
+   - lxd/storage/pool/interface: Adds tarWriter arg to BackupInstance
    - lxd/storage/drivers/driver/btrfs/volumes: Adds tarWriter arg to BackupVolume
    - lxd/storage/drivers/driver/zfs/volumes: Adds tarWriter arg to BackupVolume
    - lxd/internal: Log some memory stats

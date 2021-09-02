@@ -101,7 +101,7 @@ content: |-
   ログファイルに警告を入れるだけでなく、API を通して警告を提供できるようになりました。現時点では、cgroup の警告だけが提供されますが、将来のリリースで少しずつ使用されていくようになるでしょう。
 
   <!--
-  Warnings are tracked cluster-wide, can self-resolve when corrected (ifi LXD can detect it to be solved) and they can also be silenced by acknowleding them.
+  Warnings are tracked cluster-wide, can self-resolve when corrected (ifi LXD can detect it to be solved) and they can also be silenced by acknowledging them.
   -->
   警告はクラスターワイドで追跡され、（LXD が解決したことを検出できる場合は）解決されると自己解決できます。そして、警告を確認してそれを黙らせることもできます。
 
@@ -476,7 +476,7 @@ content: |-
    - lxd/task: Start context usage
    - lxd/daemon: Updates Start functions usage by passing daemon context
    - lxd/images: Improve logging in imageSyncBetweenNodes
-   - test: Add lxc cluster list before comparison in test_clustering_handover for visability into cluster state
+   - test: Add lxc cluster list before comparison in test_clustering_handover for visibility into cluster state
    - test: Separate stop and publish commands in test_clustering_image_replication
 
   ### 試用環境 <!-- Try it for yourself -->

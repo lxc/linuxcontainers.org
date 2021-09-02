@@ -222,7 +222,7 @@ content: |-
    - lxd/images: Fix parsing of public property
    - lxd/nvidia: Default to compute,utility
    - lxd-p2c: Fix static build
-   - lxd/storage/btrfs: Don't fail deleting pools on misisng disk
+   - lxd/storage/btrfs: Don't fail deleting pools on missing disk
    - lxd/storage/ceph: Don't un-necessarily mount snapshots
    - lxd/storage: Change ContainerStorageReady() to take a container struct
    - lxd/storage: Change ContainerUmount to accept a container struct

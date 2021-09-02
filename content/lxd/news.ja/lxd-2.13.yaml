@@ -43,7 +43,7 @@ content: |-
    * lxd/containers: メモリの hard limit が設定される際にも soft limit を (hard limit の 90% に) 設定するようにしました <!-- Added soft memory limit even when hard is selected -->
    * lxd/containers: (訳注: veth ペアの) ホスト側のインターフェース名を変わらないように指定できるようになりました <!-- Allow for stable host interface names -->(Issue #3143)
    * lxd/containers: minor 番号が 255 より大きなデバイスの扱いを修正しました <!-- Fix handling of devices with minor>255 -->
-   * lxd/containers: securtiy.syscalls.blacklist の typo を修正しました <!-- Fix typo in securtiy.syscalls.blacklist -->
+   * lxd/containers: security.syscalls.blacklist の typo を修正しました <!-- Fix typo in security.syscalls.blacklist -->
    * lxd/containers: unix デバイスの削除の問題を修正しました (不正な cgroup.deny 指定)<!-- Fix unix device removal (bad cgroup.deny entry) -->(Issue #3107)
    * lxd/containers: 作成時のストレージのエラーメッセージを改良しました <!-- Improve storage error messages on creation -->(issue #3110)
    * lxd/containers: 適切に idmap のキャッシュを無効化するようにしました <!-- Properly invalidate the idmap cache -->

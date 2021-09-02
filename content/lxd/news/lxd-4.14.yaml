@@ -61,7 +61,7 @@ content: |-
   #### Server warnings
   Instead of just burying warnings in our log file, we're also now starting to expose them through our API. Currently only cgroup warnings are exposed but we expect this to slowly grow in use over the next few releases.
 
-  Warnings are tracked cluster-wide, can self-resolve when corrected (if LXD can detect it to be solved) and they can also be silenced by acknowleding them.
+  Warnings are tracked cluster-wide, can self-resolve when corrected (if LXD can detect it to be solved) and they can also be silenced by acknowledging them.
 
       stgraber@castiana:~$ lxc warning list
       +--------------------------------------+---------------------------------------+--------+----------+-------+---------+----------+-----------------------------+
@@ -408,7 +408,7 @@ content: |-
    - lxd/task: Start context usage
    - lxd/daemon: Updates Start functions usage by passing daemon context
    - lxd/images: Improve logging in imageSyncBetweenNodes
-   - test: Add lxc cluster list before comparison in test_clustering_handover for visability into cluster state
+   - test: Add lxc cluster list before comparison in test_clustering_handover for visibility into cluster state
    - test: Separate stop and publish commands in test_clustering_image_replication
 
   ### Try it for yourself

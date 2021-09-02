@@ -25,7 +25,7 @@ content: |-
    * lxd/containers: ブリッジに接続される veth のホスト側で IPv6 を無効化しました <!-- Disable IPv6 on host side veth when bridged -->(issue 2845)
    * lxd/containers: 存在しないパスの解決をブロックしなくなりました <!-- Don't block resolution on non-existing paths -->
    * lxd/containers: イメージのフィンガープリントを 2 度チェックしないようにしました <!-- Don't check the image fingerprint twice -->
-   * lxd/containers: exec で s.conn (訳注: WebSocket接続) への並列の読み書きを修正しました <!-- Fix concurent read/write to s.conns in exec -->(Issue 2862)
+   * lxd/containers: exec で s.conn (訳注: WebSocket接続) への並列の読み書きを修正しました <!-- Fix concurrent read/write to s.conns in exec -->(Issue 2862)
    * lxd/containers: FileRemove でのエラーハンドリングを修正しました <!-- Fix error handling on FileRemove -->
    * lxd/containers: USER, HOME, LANG のデフォルト値を設定しました <!-- Set default values for USER, HOME and LANG -->(Issue 2830)
    * lxd/daemon: devlxd を tmpfs でマウントするようにしました <!-- Mount a tmpfs under devlxd -->(Issue 2877)

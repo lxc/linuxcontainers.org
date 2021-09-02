@@ -38,7 +38,7 @@ content: |-
    * doc: Fix markdown escaping
    * doc: Update README.md Docker instructions
    * doc/network: Add section on macvlan vs bridge (Issue #3273)
-   * doc/storage: Correct grammer
+   * doc/storage: Correct grammar
    * doc/storage: Document zfs quota vs refquota (Issue #2959)
    * doc/storage: Fix ordering
    * extra/lxc-to-lxd: Don't crash on missing mount file (Issue #3237)

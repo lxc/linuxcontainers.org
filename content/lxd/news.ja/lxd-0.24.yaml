@@ -6,7 +6,7 @@ content: |-
    * macvlan ネットワークインターフェースをサポートしました <!-- Support for macvlan network interfaces -->
    * 物理ネットワークインターフェースをサポートしました <!-- Support for physical network interfaces -->
    * s390x 上でのビルドをサポートしました <!-- Support for building on s390x -->
-   * copy/move 時に、スナップショットも元のコンテナと同時に転送されるようになりました <!-- Snapshots are now transfered along with their parent container on copy/move -->
+   * copy/move 時に、スナップショットも元のコンテナと同時に転送されるようになりました <!-- Snapshots are now transferred along with their parent container on copy/move -->
    * limits.cpu のための CPU スケジューラを実装しました <!-- A CPU scheduler for limits.cpu has been implemented -->
    * "lxc config unset/set" がリモートサーバに対して動作するようになりました <!-- now works against a remote server -->
 

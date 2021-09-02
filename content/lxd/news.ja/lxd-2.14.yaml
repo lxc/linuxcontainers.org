@@ -37,7 +37,7 @@ content: |-
    * doc: markdown のエスケープを修正しました <!-- Fix markdown escaping -->
    * doc: README.md の Docker に関する説明を更新しました <!-- Update README.md Docker instructions -->
    * doc/network: macvlan とブリッジに関するセクションを追加しました <!-- Add section on macvlan vs bridge -->(Issue #3273)
-   * doc/storage: 文法を修正しました <!-- Correct grammer -->
+   * doc/storage: 文法を修正しました <!-- Correct grammar -->
    * doc/storage: ZFS の quota と refquota に関する記述を追加しました <!-- Document zfs quota vs refquota -->(Issue #2959)
    * doc/storage: 表内の行の順序の調整を行いました <!-- Fix ordering -->
    * extra/lxc-to-lxd: mount ファイルがない場合もクラッシュしなくなりました <!-- Don't crash on missing mount file -->(Issue #3237)

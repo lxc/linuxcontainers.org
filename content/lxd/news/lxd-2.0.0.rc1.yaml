@@ -14,7 +14,7 @@ content: |-
    * lxc exec now defaults to non-interactive mode when stdout isn't a tty
    * All the tables rendered by the client now look alike
    * Simplestreams is now natively supported by both the client and the server, eliminating the need for lxd-images
-   * Background image syncronization is now supported by the server and done by-default for all cached images
+   * Background image synchronization is now supported by the server and done by-default for all cached images
    * The last time an image was used and whether it's stored in the cached is now exported over the API and visible in "lxc image info"
    * Profiles now have a description field
    * It is now possible to do a stateful container stop where the container is checkpointed to disk rather than killed, then resumed on next start.

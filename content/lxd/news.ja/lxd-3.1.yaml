@@ -84,7 +84,7 @@ content: |-
    - lxd: version サブコマンドを追加しました <!-- Add version subcommand -->
    - lxd: 起動時のログ出力を増やしました <!-- Increase logging during startup -->
    - lxd: `Daemon.Init()` でのエラー時にログを出力するようにしました (訳注: 実際はInitだけでなくStopのときも) <!-- Log the error that made Daemon.Init() fail -->
-   - lxd: lxd デーモンと waitready 間のやりとりをノンブロッキングにしました <!-- Make the interaction betwean lxd daemon and waitready non-blocking -->
+   - lxd: lxd デーモンと waitready 間のやりとりをノンブロッキングにしました <!-- Make the interaction between lxd daemon and waitready non-blocking -->
    - lxd: エラーパラメータの受取を Unavailable にしました <!-- Make Unavailable accept an error parameter -->
    - lxd/cluster: 新たに `cluster.Promote` 関数を追加しました <!-- Add new cluster.Promote function -->
    - lxd/cluster: 新たに `cluster.Rebalance` 関数を追加しました <!-- Add new cluster.Rebalance function -->

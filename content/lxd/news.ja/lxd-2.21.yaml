@@ -54,7 +54,7 @@ content: |-
    * lxd/containers: tarball 内のソケットをスキップするようにしました <!-- Skip sockets in tarballs -->
    * lxd/daemon: https のアドレスが設定されていない場合の問題を修正しました <!-- Fix unsetting https address -->
    * lxd/daemon: ストレージの情報を適切にキャッシュするようにしました <!-- Properly cache the storage information -->(Issue #4025)
-   * lxd/dameon: execPath を上書きするための LXD_EXEC_PATH を追加しました <!-- Add LXD_EXEC_PATH to override execPath -->
+   * lxd/daemon: execPath を上書きするための LXD_EXEC_PATH を追加しました <!-- Add LXD_EXEC_PATH to override execPath -->
    * lxd/devlxd: イベントの準備でクリーンアップするようにしました <!-- Cleanup in preparation for events -->
    * lxd/devlxd: 内部の構造体を適切にロックするようにしました <!-- Properly lock the internal struct -->
    * lxd/migration: CRIU の機能をチェックするためのハンドラを追加しました <!-- Add handler for CRIU feature checking -->

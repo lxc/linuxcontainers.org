@@ -28,7 +28,7 @@ content: |-
    * extra/lxc-to-lxd: Better output with no container
    * extra/lxc-to-lxd: Check that source path exists (disk) (Issue #2572)
    * extra/lxc-to-lxd: Consistent logging
-   * extra/lxc-to-lxd: Don't fail dry-run with runnning containers
+   * extra/lxc-to-lxd: Don't fail dry-run with running containers
    * extra/lxc-to-lxd: Drop dependency on pylxd
    * extra/lxc-to-lxd: Fix lxdpath handling
    * extra/lxc-to-lxd: Formatting

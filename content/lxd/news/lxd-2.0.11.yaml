@@ -80,7 +80,7 @@ content: |-
    * extra/lxc-to-lxd: Ignore sysfs/proc mounts
    * extra/lxc-to-lxd: Properly handle lxc.seccomp
    * i18n: Update Japanese translation (for stable-2.0)
-   * lxc: Add plumbing for operation cancelation
+   * lxc: Add plumbing for operation cancellation
    * lxc: Cross-platform HOME handling
    * lxc: Fix help to provide sample that actually works
    * lxc: Fix import crash when adding properties
@@ -169,7 +169,7 @@ content: |-
    * lxd/daemon: Move Daemon.isRecursionRequest to the lxd/util sub-package
    * lxd/daemon: Move Daemon.lxcpath to OS.LxcPath
    * lxd/daemon: Move Daemon.MockMode to OS.MockMode
-   * lxd/daemon: Move Deamon.CheckTrustState and Deamon.isTrustedClient to lxd/util
+   * lxd/daemon: Move Daemon.CheckTrustState and Daemon.isTrustedClient to lxd/util
    * lxd/daemon: Move filesystemDetect function into lxd/util subpackage.
    * lxd/daemon: Move lxd/util.go into its own lxd/util/ sub-package
    * lxd/daemon: Replace Daemon with State in all model entities

@@ -11,7 +11,7 @@ content: |-
    * DBus 関連のスレッディングの問題を修正しました <!-- Fix threading issues related to DBus. -->
    * memory cgroup がない場合も動作ができるようになりました <!-- Handle missing memory cgroup. -->
    * libdbus と使う場合に起こる問題のため、全体的にスレッディングを止めました <!-- Turn off threading globally because of problems with libdbus. -->
-   * より systemd に適応するために lxcfs マウントを調整しました <!-- Tweak lxcfs mounts to better accomodate systemd. -->
+   * より systemd に適応するために lxcfs マウントを調整しました <!-- Tweak lxcfs mounts to better accommodate systemd. -->
   
   ### ダウンロード <!-- Downloads -->
   <!--

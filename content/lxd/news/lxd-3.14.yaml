@@ -33,7 +33,7 @@ content: |-
    - doc: Remove trailing whitespace
    - doc: Re-structures container nic docs into each nic type
    - doc: s/HTTPs/HTTPS/g
-   - doc: Upate volatile keys used for physical mtu and mac restoration
+   - doc: Update volatile keys used for physical mtu and mac restoration
    - i18n: Update translations from weblate
    - lxc: Transition to `golang.org/x/sys`
    - lxc/move: Start container when appropriate

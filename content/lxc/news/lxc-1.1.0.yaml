@@ -32,7 +32,7 @@ content: |-
    * lxc-autostart: New -A/--ignore-auto flag (starts all containers)
    * lxc-ls: New "interface" field
    * centos/fedora: Added a root\_password\_expired environment variable (defaults to yes)
-   * oracle: Allow installing from arbitrary yum repositories (including medias)
+   * oracle: Allow installing from arbitrary yum repositories (including media)
    * oracle: Add Oracle Linux 7 support
    * lxc-ls: Allow filtering containers by group even without --fancy
    * core: Add support for qcow2 images (through qemu-img)
@@ -68,8 +68,8 @@ content: |-
    * core: pivot\_root is now done without the use of lxc.pivotdir, as a result this option is now considered deprecated and will be removed in upcoming releases.
    * core: with the switch to daemonized containers by default, close-all-fds is also now the default.
    * core: lxc.autodev was reworked, it no longer uses /dev/lxc, instead mounting a tmpfs directly on the container's /dev, it also now works with unprivileged containers
-   * core: lxc.autodev is now on by default (can be overriden with lxc.autodev=0)
-   * core: lxc.kmsg is now disabled by default (can be overriden with lxc.kmsg=1)
+   * core: lxc.autodev is now on by default (can be overridden with lxc.autodev=0)
+   * core: lxc.kmsg is now disabled by default (can be overridden with lxc.kmsg=1)
    * core: clear\_config\_item now exclusively affects lists (lxc\_list) entries. set\_config\_item should be used for anything else.
    * templates: All templates now use lxc.mount.auto = cgroup:mixed proc:mixed sys:mixed (safe default configuration)
   

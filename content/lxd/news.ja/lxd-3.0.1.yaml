@@ -104,7 +104,7 @@ content: |-
    * migration: btrfs のライブマイグレーションの問題を修正しました <!-- Fix btrfs live migration -->
    * lxd/containers: unix ドメインソケット経由のホットプラグロジックの問題を修正しました <!-- Fix broken unix hotplug logic -->
    * lxc/list: API を呼ぶ回数を減らしました <!-- Reduce number of API calls -->
-   * lxd デーモンと waitready 間のやりとりをノンブロッキングにしました <!-- Make the interaction betwean lxd daemon and waitready non-blocking -->
+   * lxd デーモンと waitready 間のやりとりをノンブロッキングにしました <!-- Make the interaction between lxd daemon and waitready non-blocking -->
    * 起動時のログ出力を増やしました <!-- Increase logging during startup -->
    * waitready のログエイリアスを削除しました <!-- Remove log alias for waitready -->
    * db.OpenCluster のログエイリアスを削除しました <!-- Remove log alias for db.OpenCluster -->

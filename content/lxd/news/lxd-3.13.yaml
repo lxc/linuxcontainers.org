@@ -242,7 +242,7 @@ content: |-
    - lxc/utils: Updates progress to stop outputting if msg is longer than window
    - lxd/api: Rename alias* commands to imageAlias*
    - lxd/api: Rename apiProject* to project*
-   - lxd/api: Rename certificateFingerprint* to certficate*
+   - lxd/api: Rename certificateFingerprint* to certificate*
    - lxd/api: Rename operation functions for consistency
    - lxd/api: Rename serverResources to api10Resources
    - lxd/api: Rename snapshotHandler to containerSnapshotHandler

@@ -6,7 +6,7 @@ content: |-
   -->
   このリリースの主な変更点は以下の通りです。
 
-   * イメージ内のテンプレートファイルをサポートしました <!-- File templating suport in images -->
+   * イメージ内のテンプレートファイルをサポートしました <!-- File templating support in images -->
    * systemd の socket activation をサポートしました <!-- Socket activation with Systemd -->
    * スタートアップ時のコンテナのクリーンシャットダウンと再起動をサポートしました <!-- Support for clean shutdown and container restart on startup -->
    * "lxc image show" コマンドの実装をしました <!-- Implement "lxc image show" -->

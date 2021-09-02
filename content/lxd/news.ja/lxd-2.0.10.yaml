@@ -62,7 +62,7 @@ content: |-
    * lxc/list: json 出力のリグレッションを修正しました <!-- Fix regression in json output -->
    * lxc/list: データの展開を行う共通の処理をヘルパー関数に移動しました <!-- Move common data extraction to a helper function -->
    * lxc/profile: "profile unset" を適切に実装しました <!-- Properly implement "profile unset" -->
-   * lxc/publish: コンテナが実行状態になるのを待つようになりました <!-- Wait for the conainer to be running -->
+   * lxc/publish: コンテナが実行状態になるのを待つようになりました <!-- Wait for the container to be running -->
    * lxc/remote: フィンガープリントを hex でなく文字列として表示するようにしました <!-- Show the fingerprint as string not hex -->
    * lxc/utils: 操作の進捗トラッキングの処理を実装しました <!-- Implement progress tracking for operations -->
    * lxd: 不要な場合の logger.Log の使用を止めました <!-- Drop use of logger.Log when not needed -->
@@ -83,7 +83,7 @@ content: |-
    * lxd/containers: 使用中のスナップショットの最大値をきちんと返すようになりました <!-- Find current max snapshot value -->
    * lxd/containers: 不適切な root デバイスの検出コードを修正しました <!-- Fix bad root device detection code -->
    * lxd/containers: ベースイメージのトラッキングの不具合を修正しました <!-- Fix base image tracking -->
-   * lxd/containers: exec で s.conn (訳注: WebSocket接続) への並列の読み書きを修正しました <!-- Fix concurent read/write to s.conns in exec -->
+   * lxd/containers: exec で s.conn (訳注: WebSocket接続) への並列の読み書きを修正しました <!-- Fix concurrent read/write to s.conns in exec -->
    * lxd/containers: FileRemove でのエラーハンドリングを修正しました <!-- Fix error handling on FileRemove -->
    * lxd/containers: minor 番号が 255 より大きなデバイスの扱いを修正しました <!-- Fix handling of devices with minor>255 -->
    * lxd/containers: コピー中のデバイスの上書きに関する問題を修正しました <!-- Fix override of Devices during copy -->

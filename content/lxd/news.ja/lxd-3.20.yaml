@@ -301,7 +301,7 @@ content: |-
    * lxd/profiles/utils: Updates use of containerLXCInstantiate
    * lxd/container/lxc: Push containerLXC load functions into instance/drivers package
    * lxd/container/lxc: containerLXCInstantiate usage
-   * lxd/container/lxc: Makes containerLXCInstantiate compatiable with generic instance load functions
+   * lxd/container/lxc: Makes containerLXCInstantiate compatible with generic instance load functions
    * lxd/containers: instance.Load usage
    * lxd/containers/post: instance.Load usage
    * lxd/instance/drivers/vm/qemu: Unexport and rename load functions
@@ -378,7 +378,7 @@ content: |-
    * shared/simplestreams: Fix architecture filtering
    * lxd/patches: Reset ZFS mountpoint/canmount
    * shared/simplestreams: Fix inconsistent sorting
-   * lxd/instances: Don't rquire type on copy
+   * lxd/instances: Don't require type on copy
    * lxc/config: Tweak argument processing
    * lxd/vm: Prevent attaching directory as disk
    * lxd/storage/zfs: Ignore bookmarks
@@ -443,7 +443,7 @@ content: |-
    * lxd/main: Adds cmdGlobal.rawArgs function
    * lxd: Adds forklimits command
    * lxd/instance/drivers/driver/qemu: Switches to launching qemu via forklimits
-   * devices: substract libudev header
+   * devices: subtract libudev header
    * lxd/db: adds unix-hotplug device type to database
    * lxd/instance/drivers/driver/qemu: Adds qemu binary path lookup
    * lxd/main/forklimits: Switches forklimits to use syscall.Exec

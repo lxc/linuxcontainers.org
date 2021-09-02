@@ -110,7 +110,7 @@ content: |-
 
   #### `lxc monitor --pretty` がライフサイクルイベントをサポートしました <!-- `lxc monitor \-\-pretty` now supported with lifecycle events -->
   <!--
-  A compact version of `lxc monitor \-\-type=lifecycle` is now avaialable by using the `\-\-pretty` flag, similar to what was already supported for `\-\-type=logging`.
+  A compact version of `lxc monitor \-\-type=lifecycle` is now available by using the `\-\-pretty` flag, similar to what was already supported for `\-\-type=logging`.
   -->
   すでに `--type=logging` でサポートされていたのと同様に、`lxc monitor --type=lifecycle` のコンパクトバージョンが `--pretty` フラグで利用できるようになりました。
 
@@ -119,13 +119,13 @@ content: |-
 
   #### `lxc publish` への新しい `--expire` フラグの追加 <!-- New `--expire` flag for `lxc publish` -->
   <!--
-  A new `\-\-expire` flag taking a timestamp is now avaialble in `lxc publish`.
+  A new `\-\-expire` flag taking a timestamp is now available in `lxc publish`.
   This is then used to override any expiry already present in the instance's image metadata.
   -->
   `lxc publish` で、新たにタイムスタンプを使った `--expire` フラグが使えるようになりました。
   このフラグは、インスタンスのイメージメタデータに既に存在する有効期限を上書きするために使います。　
 
-  #### Requestor がライフサイクルイベントをを記録するようになりました <!-- Requestor now recorded in lifecyle events -->
+  #### Requestor がライフサイクルイベントをを記録するようになりました <!-- Requestor now recorded in lifecycle events -->
   <!--
   Lifecycle events now have a new `requestor` section which provides the protocol and user information of whoever triggered the action.
   -->

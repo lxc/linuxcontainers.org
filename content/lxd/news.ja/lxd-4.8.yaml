@@ -286,7 +286,7 @@ content: |-
    - lxd/cluster/connect: Adds projectName arg to ConnectIfVolumeIsRemote
    - lxd/response: Adds projectName argument to forwardedResponseIfVolumeIsRemote
    - lxd/storage/volumes: forwardedResponseIfVolumeIsRemote projectName argument usage
-   - lxd/db/storage/volumes: Corrects mispelled argument name in GetStorageVolumeNodeAddresses
+   - lxd/db/storage/volumes: Corrects misspelled argument name in GetStorageVolumeNodeAddresses
    - lxc/move: Bypass security.protection.delete
    - lxd/device: Add TPM device type
    - lxd/db: Add device type "tpm"

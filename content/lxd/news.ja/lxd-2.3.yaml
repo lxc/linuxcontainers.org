@@ -49,7 +49,7 @@ content: |-
    * apparmor: 非特権の場合は制限を緩くしました <!-- Be less restrictive when unprivileged -->
    * apparmor: コンテナごとに AppArmor 名前空間を作るようにしました <!-- create an apparmor namespace for each container -->
    * doc: PATCH の追加に伴い rest-api を修正しました <!-- Fix rest-api for PATCH addition -->
-   * doc: environment.md の表のスタイルを修正しました <!-- Fix the table sytle of environment.md -->
+   * doc: environment.md の表のスタイルを修正しました <!-- Fix the table style of environment.md -->
    * extras: bash completion で start、stop、exec コマンドに対してコンテナ状態のチェックを行うようになりました <!-- Containers state checking for start, stop and exec commands in bash completion -->
    * extras: LXC から LXD へのコンテナ変換の修正を行いました <!-- Fixed container convert from LXC to LXD -->
    * extras: bash completion を現在のオプションに更新しました <!-- Update bash completion for current options -->

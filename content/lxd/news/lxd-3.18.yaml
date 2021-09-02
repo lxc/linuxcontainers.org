@@ -214,7 +214,7 @@ content: |-
   This feature will soon be used as the basis for two new roles:
 
   ##### eventhub
-  Cluster members with this role will be receiving events from other cluster members and syncronise events with other event hubs. This will replace the current event handling approach of having every cluster member notify every other cluster member, reducing bandwidth and CPU usage when sending events.
+  Cluster members with this role will be receiving events from other cluster members and synchronise events with other event hubs. This will replace the current event handling approach of having every cluster member notify every other cluster member, reducing bandwidth and CPU usage when sending events.
 
   ##### database_standby
   Cluster members with this role will be receiving the live database stream, similar to normal database members. The difference is that those will not be voting members in the raft consensus, meaning that such members can be added without increasing the time needed for a database transaction to be committed.
@@ -271,7 +271,7 @@ content: |-
    - lxd: Update use of device.Instance interface
    - lxd: Update use of ForwardedResponseIfContainerIsRemote to supply instanceType
    - lxd: Update use of string instance.Type to int type
-   - lxd/api: Contructs endpoint alias routes
+   - lxd/api: Constructs endpoint alias routes
    - lxd/api: Rename container endpoint vars to instance prefix
    - lxd/apparmor: Move apparmor into its own package
    - lxd/backup: Change container field to instance type
@@ -284,7 +284,7 @@ content: |-
    - lxd/containers: Fix comment
    - lxd/containers: Migrate container_lxc to use operationlock package
    - lxd/containers: Respect raw.lxc on stop/shutdown
-   - lxd/containers: Tigthen directory ownership
+   - lxd/containers: Tighten directory ownership
    - lxd/containers: Update containerLoadNodeProjectAll to support Type filtering
    - lxd/containers: Validate POST instance type field and stores in DB
    - lxd/daemon: Add Name and Aliases support to APIEndpoint

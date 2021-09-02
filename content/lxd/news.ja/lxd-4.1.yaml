@@ -259,7 +259,7 @@ content: |-
    - lxd/main_activateifneeded: s/container/instance/
    - lxd/instance/drivers: Removes storagePools.RenderSnapshotUsage from RenderFull()
    - lxd/storage/drivers/driver/zfs/volumes: Create temporary snapshot in BackupVolume()
-   - lxd/storage/backend/lxd: Checks for existance of volume before deleting
+   - lxd/storage/backend/lxd: Checks for existence of volume before deleting
    - lxd/instance: Switches to revert package for instanceCreateAsSnapshot
    - lxd/storage/backend/lxd: Comment tweak
    - lxd/storage/drivers/driver/ceph/volumes: Tweaks HasVolume detection
@@ -410,7 +410,7 @@ content: |-
    - i18n: Update translations from weblate
    - Update networks.md
    - Merge pull request #7210 from ckd/patch-1
-   - lxd/storage/ceph: Suppport alternate conf syntax
+   - lxd/storage/ceph: Support alternate conf syntax
    - Merge pull request #7211 from stgraber/master
    - lxd/init: Try to bind LXD network address when running interactively
    - lxd/instance/drivers/driver/qemu/templates: Use static PCIe address prefix for 9p devices
@@ -560,7 +560,7 @@ content: |-
    - lxd/storage/drivers/driver/ceph/utils: Updates usage of d.parseParent in deleteVolume
    - lxd/storage/drivers/driver/ceph/utils: Updates RBD naming logic in getRBDVolumeName
    - lxd/storage/drivers/driver/ceph/volumes: Ensures CreateVolumeFromCopy correctly sizes new volume
-   - lxd/storage/drivers/driver/ceph/volumes: If volume doesnt exist in DeleteVolume do nothing
+   - lxd/storage/drivers/driver/ceph/volumes: If volume doesn't exist in DeleteVolume do nothing
    - lxd/storage/drivers/driver/ceph/utils: Dont wrap lines
    - lxd/db: Rename CertificatesGet to GetCertificates
    - lxd/db: Rename CertificateGet to GetCertificate
@@ -799,7 +799,7 @@ content: |-
    - Support two-phase creation of a storage pool on single-node cluster
    - Merge pull request #7325 from freeekanayaka/storage-creation-on-single-node
    - lxd/storage/drivers/driver/btrfs/utils: Adds setSubvolumeReadonlyProperty function
-   - lxd/storag/drivers/driver/btrfs/volumes: Removes readonly argument from snapshotSubvolume
+   - lxd/storage/drivers/driver/btrfs/volumes: Removes readonly argument from snapshotSubvolume
    - lxd/storage/drivers/driver/btrfs: d.setSubvolumeReadonlyProperty and d.snapshotSubvolume usage
    - lxd/db: Rename StoragePoolVolumeGetType to GetStoragePoolVolume
    - lxd/db: Rename StoragePoolVolumeSnapshotCreate to CreateStorageVolumeSnapshot
@@ -810,7 +810,7 @@ content: |-
    - lxd/storage/drivers/driver/btrfs/utils: Adds getSubvolumesMetaData function
    - lxd/storage/drivers/driver/btrfs/volumes: Maintain subvolume readonly state in snapshot
    - lxd/storage/driversr/driver/btrfs/utils: Allow ro subvolumes to be deleted in deleteSubvolume
-   - lxd/storag/drivers/driver/btrfs/volumes: Updates MigrateVolume to send subvolumes
+   - lxd/storage/drivers/driver/btrfs/volumes: Updates MigrateVolume to send subvolumes
    - lxd/storage/drivers/driver/btrfs/volumes: Fail backup when cleanup fails in BackupVolume
    - lxd/storage/drivers/driver/btrfs/volumes: Better naming of variables in unpackVolume
    - lxd/migration/migrate/proto: Adds BTRFS Features to offer header

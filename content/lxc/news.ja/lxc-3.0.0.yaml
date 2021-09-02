@@ -490,7 +490,7 @@ content: |-
   
   ##### `reboot2()`
   <!--
-  This adds `reboot2()` as a new API extension. This function properly wait until a reboot succeeded. It takes a timeout argument. When set to `> 0` `reboot2()` will block until the timeout is reached, if timeout is set to zero `reboot2()` will not block, if set to `-1` `reboot2()` will block indefinitly.
+  This adds `reboot2()` as a new API extension. This function properly wait until a reboot succeeded. It takes a timeout argument. When set to `> 0` `reboot2()` will block until the timeout is reached, if timeout is set to zero `reboot2()` will not block, if set to `-1` `reboot2()` will block indefinitely.
   -->
   新しい API 拡張として `reboot2()` が追加されました。この関数は再起動が成功するまで待ちます。この関数は引数としてタイムアウト値を取ります。タイムアウト値が `> 0` の場合、`reboot2()` はタイムアウトに達するまで再起動を待ちます。もしタイムアウトが `0` に設定された場合、`reboot2()` は再起動を待ちません。もし `-1` に設定された場合、`reboot2()` は無期限に再起動を待ちます。
   

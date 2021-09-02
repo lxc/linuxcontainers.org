@@ -66,16 +66,16 @@ content: |-
   All servers that participate in the database now have the database flag set to YES in `lxc cluster list`, then running `lxc cluster show` will indicate either `database` or `database-standby` in the roles list.
 
   #### `lxc monitor --pretty` now supported with lifecycle events
-  A compact version of `lxc monitor --type=lifecycle` is now avaialable by using the `--pretty` flag, similar to what was already supported for `--type=logging`.
+  A compact version of `lxc monitor --type=lifecycle` is now available by using the `--pretty` flag, similar to what was already supported for `--type=logging`.
 
       stgraber@castiana:~$ lxc monitor --type=lifecycle --pretty
       INFO[06-04|13:34:46] Action: instance-restarted, Source: /1.0/instances/redoc 
 
   #### New `--expire` flag for `lxc publish`
-  A new `--expire` flag taking a timestamp is now avaialble in `lxc publish`.
+  A new `--expire` flag taking a timestamp is now available in `lxc publish`.
   This is then used to override any expiry already present in the instance's image metadata.
 
-  #### Requestor now recorded in lifecyle events
+  #### Requestor now recorded in lifecycle events
   Lifecycle events now have a new `requestor` section which provides the protocol and user information of whoever triggered the action.
 
       location: none

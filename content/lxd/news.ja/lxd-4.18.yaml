@@ -230,7 +230,7 @@ content: |-
   `lxc storage volume copy` コマンドで、`lxc copy` と同様に `--refresh` オプションが使えるようになりました。
 
   <!--
-  This allows transfering any missing snapshot as well as transfering the current volume state and can be used to keep an up to date backup of a volume on a different pool or different server.
+  This allows transferring any missing snapshot as well as transferring the current volume state and can be used to keep an up to date backup of a volume on a different pool or different server.
   -->
   これにより、足りないスナップショットを転送したり、現在のボリュームの状態を転送したりできます。そして、ボリュームの最新のバックアップを別のプールや別のサーバーに保持するために使えます。
 
@@ -441,7 +441,7 @@ content: |-
    - lxd/device/device/utils/proxy: Updates ProxyParseAddr to support new ProxyAddress format
    - lxd/device/proxy: Updated to support firewallDrivers.AddressForward and ProxyAddress changes
    - lxd/main/forkproxy: Updates to support changed ProxyAddress
-   - lxd/main/forkproxy/test: Updates tests to refect new ProxyAddress structure
+   - lxd/main/forkproxy/test: Updates tests to reflect new ProxyAddress structure
    - Makefile: Use go env GOPATH command to get GOPATH rather than env var GOPATH
    - Makefile: Build lxd-generate directly to $(GOPATH)/bin/lxd-generate
    - lxd/db/generate/lex/parse: Remove github.com/pkg/errors dependency
@@ -503,7 +503,7 @@ content: |-
    - doc: Don't assume that Go's bin path is ~/go/bin
    - doc/requirements: Adds minimum memory requirements to build
    - lxd/network/network/utils: Adds nicUsesNetwork function
-   - lxd/network/driver/ovn: Parse mulitple CIDR routes in ovnNICExternalRoutes
+   - lxd/network/driver/ovn: Parse multiple CIDR routes in ovnNICExternalRoutes
    - lxd/network/driver/common: Moves externalSubnetUsage to common
    - lxd/network/driver/ovn: Removes externalSubnetUsage
    - lxd/network/driver/ovn: externalSubnetUsage updated usage
@@ -532,7 +532,7 @@ content: |-
    - lxd/network/forwards: cluster.GetNetworkForwardListenAddresses
    - lxd/network/driver/ovn: n.state.Cluster.GetNetworkForwards usage
    - lxd/network/driver/ovn: n.state.Cluster.GetNetworkForwardListenAddresses usage
-   - lxd/firewall/drivers/drivers/nftables: Rework InstanceSetupProxyNAT to accomodate network forward support
+   - lxd/firewall/drivers/drivers/nftables: Rework InstanceSetupProxyNAT to accommodate network forward support
    - lxd/firewall/drivers/drivers/xtables: Fix proxy NAT listen port in InstanceSetupProxyNAT
    - api: Add network_counters_errors extension
    - lxd/network/network/utils: Adds BridgeNetfilterEnabled function

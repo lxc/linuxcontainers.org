@@ -65,7 +65,7 @@ content: |-
   The default AppArmor profile now denies access to `/proc/acpi/` improving safety.
 
   #### config: Add `lxc.autodev.tmpfs.size` configuration key
-  LXC supports creating a useable minimal `/dev` directory for the container by setting `lxc.autodev = 1` in the container's config file. To do this LXC sets up a `tmpfs` mount on `/dev`. This `tmpfs` mount could not be restricted in prior releases. Now it is possible to set a limit on the size of the `tmpfs` mount by setting `lxc.autodev.tmpfs.size` to the number of bytes that the `tmpfs` should be restricted to use.
+  LXC supports creating a usable minimal `/dev` directory for the container by setting `lxc.autodev = 1` in the container's config file. To do this LXC sets up a `tmpfs` mount on `/dev`. This `tmpfs` mount could not be restricted in prior releases. Now it is possible to set a limit on the size of the `tmpfs` mount by setting `lxc.autodev.tmpfs.size` to the number of bytes that the `tmpfs` should be restricted to use.
 
   #### config: Add `lxc.selinux.context.keyring` key
   This allows to specify the `selinux` context to be used for the keyring the container uses.
@@ -136,7 +136,7 @@ content: |-
   - log: use global variable to catch statements in loggers
   - cgroups: don't call statements from loggers
   - conf: flatten logic in mount_entry()
-  - conf: don't accidently double-mount
+  - conf: don't accidentally double-mount
   - network: fix moving network devices with custom name
   - network: introduce and use is_empty_string()
   - Makefile: fix typo
@@ -251,7 +251,7 @@ content: |-
   - tests: log api reboot test failures
   - network: fix typ and formatting in comment
   - network: improve veth device creation
-  - start: handle kernel header and kernel incompatability
+  - start: handle kernel header and kernel incompatibility
   - tests: timeout after 60 seconds
   - mainloop: add missing \n
   - Suppress useless udhcpc directory
@@ -320,7 +320,7 @@ content: |-
   - "busy" field set to 1 instead of 0
   - Init "busy" field to -1 as 0 is valid fd
   - config: Fix parsing of mount options
-  - cgroups/devices: correctly verify bpf device useability in cgfsng_devices_activate()
+  - cgroups/devices: correctly verify bpf device usability in cgfsng_devices_activate()
   - cgroups: improve container cgroup attaching
   - lxc: switch to SPDX
   - commands: use logging return helpers
@@ -367,7 +367,7 @@ content: |-
   - start: pidfds obviously start - like any fd - at 0
   - Fix lxc-update-config in network.address
   - allow users to configure the option --enable-feature or --with-package, if an option is given run shell commands action-if-given
-  - Set minimun autoconf version to 2.69 and change obsolete function AC_HELP_STRING for AS_HELP_STRING
+  - Set minimum autoconf version to 2.69 and change obsolete function AC_HELP_STRING for AS_HELP_STRING
   - doc: Add the lxc.net.[i].veth.mode option in Japanese lxc.container.conf(5)
   - doc: Add Japanese pam_cgfs(8) man page
   - doc: add man page for pam_cgfs
@@ -380,7 +380,7 @@ content: |-
   - [aa-profile] Deny access to /proc/acpi/**
   - lxc-attach: make sure exit status of command is returned
   - cgfsng: mount pure unified cgroup layout correctly
-  - lxc-create: check absoule path for param '--dir'
+  - lxc-create: check absolute path for param '--dir'
   - cgroups: support cgroup2 freezer
   - attach: don't close stdout of getent
   - utils: Fix wrong integer of a function parameter.

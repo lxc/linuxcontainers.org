@@ -69,7 +69,7 @@ content: |-
 
   #### 仮想マシンのメモリの圧縮（と再増加） <!-- Virtual machine memory shrinking (and re-grow) -->
   <!--
-  It's now posible to control the balloon device inside the virtual machines, making it possible to shrink the memory and then grow it back up to the previous limit (adding more memory requires a reboot).
+  It's now possible to control the balloon device inside the virtual machines, making it possible to shrink the memory and then grow it back up to the previous limit (adding more memory requires a reboot).
   -->
   仮想マシン内のバルーンデバイスを制御できるようになりました。メモリ容量を縮小させ、その後で再度前の制限にまで戻すことができるようになりました（さらなるメモリの追加にはリブートが必要です）。
 
@@ -186,7 +186,7 @@ content: |-
    - lxd/patches: Adds patchMoveBackupsInstances to move backups into backups/instances dir
    - lxd/sys/fs: Adds backups/custom and backups/instances to initDirs()
    - lxd/network/driver/ovn: Improve error message when parent 'network' option not specified
-   - lxd/network/network/interface: Adds Type interface and moves non-DB depedent functions into it
+   - lxd/network/network/interface: Adds Type interface and moves non-DB dependent functions into it
    - lxd/network/network/load: Adds LoadByType function and removes ValidateNameAndProject function
    - lxd/main/init/interactive: netType.ValidateName usage
    - lxd/networks: Switch to network type validation in networksPost
@@ -480,7 +480,7 @@ content: |-
    - lxd/device: Add bus and dev number to USBEvent
    - lxd/apparmor: Allow USB specific paths
    - lxd/device/config: Add USBDevice to RunConfig
-   - lxd/events: Handle default permissiosn in projects
+   - lxd/events: Handle default permissions in projects
    - lxd/dnsmasq: Adds 100ms sleep to successful Kill() to allow sockets to be released by OS
    - lxd/instance/drivers/driver/qemu: Restores ability to resize VM disks
    - lxd/device/disk: Adds comment about VM instances depending on CanHotPlug fields for stopped disk resize
