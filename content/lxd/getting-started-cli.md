@@ -164,7 +164,13 @@ Run the following command to start the interactive configuration process:
 
 **Quick minimal setup**
 
-To create a non-optimized minimal setup with default options, you can skip the configuration steps by adding the `--auto` flag:
+To create a non-optimized minimal setup with default options, you can skip the configuration steps by adding the following flags:
+
+For LXD 4.18 and newer, use:
+
+    sudo lxd init --minimal
+
+For LXD versions prior to 4.18, use:
 
     sudo lxd init --auto
 
