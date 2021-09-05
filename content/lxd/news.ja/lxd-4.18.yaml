@@ -1,0 +1,592 @@
+title: LXD 4.18 リリースのお知らせ
+date: 2021/09/03 17:09
+origin: https://discuss.linuxcontainers.org/t/lxd-4-18-has-been-released/12068
+content: |-
+  ### はじめに <!-- Introduction -->
+  <!--
+  The LXD team is very excited to announce the release of LXD 4.18!
+  -->
+  LXD チームは LXD 4.18 のリリースをお知らせできることにとてもワクワクしています!
+
+  <!--
+  This is quite the busy release with quite a few major new features and a variety of other enhancements and fixes.
+  -->
+  今回のリリースは忙しいリリースで、多くの主要な新機能の追加や、さまざまな機能強化、修正が行われています。
+
+  Enjoy!
+
+  ### 新機能とハイライト <!-- New features and highlights -->
+  #### Go モジュールへの移行 <!-- Transition to Go modules -->
+  <!--
+  LXD has now finally moved to using Go modules. This change should be entirely invisible to our users but will affect those importing our Go client package or packaging a LXD release.
+  -->
+  LXD は完全に Go モジュールの使用へと移行しました。この変更はユーザーにはまったく見えないはずです。しかし、Go クライアントパッケージをインポートしたり、LXD のリリースをパッケージングする場合には影響があります。
+
+  <!--
+  This should work as expected with our `Makefile` having been updated to handle the change. The release tarball is doing away with the `dist` directory and it's now replaced by the standard `vendor` directory which is natively supported by Go.
+  -->
+  この変更のために `Makefile` が更新され、期待通りに動作するはずです。リリース tarball で `dist` ディレクトリが廃止され、Go がネイティブにサポートする標準的な `vendor` ディレクトリに置き換えられました。
+
+  #### ネットワーク転送（フローティングIP） <!-- Network forwards (floating IPs) -->
+  <!--
+  Bridge and OVN managed networks now support network forwards.
+  -->
+  ブリッジと OVN の管理ネットワークでネットワーク転送がサポートされました。
+
+  <!--
+  This allows allocating some addresses from the network's own subnet or from an external subnet allowed in your project (if the project is restricted) and then have it forward to any address within the network.
+  -->
+  この機能により、ネットワーク自身のサブネットや、（プロジェクトで制限されている場合）プロジェクト内で許可されている外部サブネットからいくつかアドレスを割り当て、ネットワーク内部の任意のアドレスに転送できます。
+
+  <!--
+  Additionally, a network forward can be used to have one address forward to multiple internal addresses based on the protocol and port.
+  -->
+  さらに、ネットワーク転送を使うと、プロトコルとポートをベースに、ひとつのアドレスを複数の内部アドレスに転送できます。
+
+      stgraber@dakara:~$ lxc list u1
+      +------+---------+-----------------------+--------------------------------------------+-----------+-----------+
+      | NAME |  STATE  |         IPV4          |                    IPV6                    |   TYPE    | SNAPSHOTS |
+      +------+---------+-----------------------+--------------------------------------------+-----------+-----------+
+      | u1   | RUNNING | 172.17.250.244 (eth0) | 2602:fc62:b:250:71c2:a0d8:4a72:e17a (eth0) | CONTAINER | 0         |
+      +------+---------+-----------------------+--------------------------------------------+-----------+-----------+
+      stgraber@dakara:~$ ping 192.168.1.1
+      PING 192.168.1.1 (192.168.1.1) 56(84) bytes of data.
+      From 170.39.196.149 icmp_seq=1 Destination Net Unreachable
+      --- 192.168.1.1 ping statistics ---
+      1 packets transmitted, 0 received, +1 errors, 100% packet loss, time 0ms
+      
+      stgraber@dakara:~$ lxc network forward create lxdbr0 192.168.1.1 target_address=172.17.250.244
+      Network forward 192.168.1.1 created
+      stgraber@dakara:~$ ping 192.168.1.1
+      PING 192.168.1.1 (192.168.1.1) 56(84) bytes of data.
+      64 bytes from 192.168.1.1: icmp_seq=1 ttl=64 time=0.110 ms
+      64 bytes from 192.168.1.1: icmp_seq=2 ttl=64 time=0.049 ms
+      --- 192.168.1.1 ping statistics ---
+      2 packets transmitted, 2 received, 0% packet loss, time 1027ms
+      rtt min/avg/max/mdev = 0.049/0.079/0.110/0.030 ms
+      
+      stgraber@dakara:~$ nc -v 192.168.1.1 3389
+      nc: connect to 192.168.1.1 port 3389 (tcp) failed: Connection refused
+      stgraber@dakara:~$ lxc list win11
+      +-------+---------+-----------------------+--------------------------------------------+-----------------+-----------+
+      | NAME  |  STATE  |         IPV4          |                    IPV6                    |      TYPE       | SNAPSHOTS |
+      +-------+---------+-----------------------+--------------------------------------------+-----------------+-----------+
+      | win11 | RUNNING | 172.17.250.173 (eth0) | 2602:fc62:b:250:a7ad:46a9:82b6:50db (eth0) | VIRTUAL-MACHINE | 1         |
+      +-------+---------+-----------------------+--------------------------------------------+-----------------+-----------+
+      stgraber@dakara:~$ lxc network forward port add lxdbr0 192.168.1.1 tcp 3389 172.17.250.173
+      stgraber@dakara:~$ nc -v 192.168.1.1 3389
+      Connection to 192.168.1.1 3389 port [tcp/ms-wbt-server] succeeded!
+      stgraber@dakara:~$ lxc network forward show lxdbr0 192.168.1.1
+      description: ""
+      config:
+        target_address: 172.17.250.244
+      ports:
+      - description: ""
+        protocol: tcp
+        listen_port: "3389"
+        target_port: ""
+        target_address: 172.17.250.173
+      listen_address: 192.168.1.1
+      location: none
+
+  <!--
+  In this example, an external address (192.168.1.1) is added as a forward address to a local bridge network (lxdbr0), it's configured to point to `u1` for all traffic, then reconfigured to have port `3389` sent to the `win11` instance instead.
+  -->
+  この例では、外部アドレス（192.168.1.1）を転送アドレスとしてローカルブリッジネットワーク（lxdbr0）に追加し、すべてのトラフィックを `u1` に流れるように設定しています。その後、`3389` 番ポートは `win11` に送るように再設定しています。
+
+  仕様 <!-- Specification -->: https://discuss.linuxcontainers.org/t/lxd-floating-ip-addresses/11801
+  ドキュメント <!-- Documentation -->: https://linuxcontainers.org/lxd/docs/master/network-forwards
+
+  #### ネイティブ BGP サポート <!-- Native BGP support -->
+  <!--
+  LXD supports many network configurations. Some of those can be used to get public addresses directly to instances.
+  -->
+  LXD はたくさんのネットワーク設定をサポートしています。それらのいくつかは、インスタンスが直接パブリックアドレスを取得するために使えます。
+
+  <!--
+  In such scenarios, you may need to get those individual addresses or subnets routed to the correct LXD server so that the server may then forward the traffic to the instance.
+  -->
+  このようなシナリオでは、個々のアドレスやサブネットを正しい LXD サーバーにルーティングし、サーバーはインスタンスへトラフィックを転送する必要があるでしょう。
+
+  <!--
+  This can be done manually by putting static routing entries in the router but that can get quite annoying and error prone when dealing with many entries.
+  -->
+  これは、ルーターにスタティックなルーティングエントリーを設定して手動で行えます。しかし、多数のエントリーを扱う場合、これは非常にわずらわしく、エラーが発生しやすくなります。
+
+  <!--
+  Enter dynamic routing and BGP. With BGP support, LXD can directly be connected to the relevant upstream routers and will then start announcing all external addresses and subnets it uses.
+  -->
+  ここでダイナミックルーティングと BGP の登場です。BGP をサポートすることで、LXD は関連する上流のルーターに直接接続でき、その後使用するすべての外部アドレスとサブネットのアナウンスを開始します。
+
+  <!--
+  This is configured through a series of new configuration options.
+  At the server config level, these are:
+  -->
+  これは一連の新しい設定オプションを使って設定します。
+  サーバーの設定レベルでは、これらは次の設定です。
+
+   - core.bgp_address
+   - core.bgp_asn
+   - core.bgp_routerid
+
+  <!--
+  Then at the network level (bridge or OVN uplink network):
+  -->
+  ネットワークレベルでは、次の設定です（ブリッジもしくは OVN アップリンクネットワーク）。
+
+   - bgp.peers.NAME.address
+   - bgp.peers.NAME.asn
+   - bgp.peers.NAME.password (optional)
+   - bgp.ipv4.nexthop (optional, bridge only)
+   - bgp.ipv6.nexthop (optional, bridge only)
+
+  <!--
+  And with that, LXD will establish peering sessions and start advertising all external (non-NAT) IPv4 and IPv6 addresses and subnets!
+  -->
+  これにより、LXD はピアリングセッションを確立し、すべての外部（非NAT）IPv4 と IPv6 アドレスとサブネットを広告しはじめます!
+
+      fw-wan01# show bgp summary·
+      IPv4 Unicast Summary:
+      BGP router identifier 45.45.148.250, local AS number 399760 vrf-id 0
+      BGP table version 200
+      RIB entries 39, using 7488 bytes of memory
+      Peers 4, using 85 KiB of memory
+      Peer groups 4, using 256 bytes of memory
+
+      Neighbor                             V         AS   MsgRcvd   MsgSent   TblVer  InQ OutQ  Up/Down State/PfxRcd   PfxSnt
+      45.45.148.251                        4     399760     19844     19843        0    0    0 4d22h57m            1        4
+      45.45.148.252                        4     399760     19850     19849        0    0    0 5d19h19m            1        4
+      45.45.148.254                        4      64600     19838     19838        0    0    0 01w6d18h            2        0
+      2602:fc62:b:1000:5436:5b25:64e4:d81a 4     399760     39020     38840        0    0    0 00:15:09            3        0
+
+      Total number of neighbors 4
+
+      IPv6 Unicast Summary:
+      BGP router identifier 45.45.148.250, local AS number 399760 vrf-id 0
+      BGP table version 197
+      RIB entries 47, using 9024 bytes of memory
+      Peers 4, using 85 KiB of memory
+      Peer groups 4, using 256 bytes of memory
+
+      Neighbor                             V         AS   MsgRcvd   MsgSent   TblVer  InQ OutQ  Up/Down State/PfxRcd   PfxSnt
+      2602:fc62:b:101::251                 4     399760     19844     19843        0    0    0 4d22h56m            1        3
+      2602:fc62:b:101::252                 4     399760     19850     19849        0    0    0 5d19h19m            1        3
+      2602:fc62:b:101::254                 4      64600     19838     19839        0    0    0 01w6d18h            1        3
+      2602:fc62:b:1000:5436:5b25:64e4:d81a 4     399760     39020     38840        0    0    0 00:15:09            3        0
+
+      Total number of neighbors 4
+
+  <!--
+  This shows the view from one of my BGP routers where `2602:fc62:b:1000:5436:5b25:64e4:d81a` is a LXD server. As can be seen, it's announcing 3 IPv4 and 3 IPv6 prefixes over BGP.
+  -->
+  これは `2602:fc62:b:1000:5436:5b25:64e4:d81a` が LXD サーバーである場合の、私の BGP ルーターのひとつからのビューです。見てわかるように、3 つの IPv4 と IPv6 プレフィックスを BGP でアナウンスしています。
+
+  仕様 <!-- Specification -->: https://discuss.linuxcontainers.org/t/lxd-bgp-address-route-advertisement/11567
+  ドキュメント <!-- Documentation -->: https://linuxcontainers.org/lxd/docs/master/networks#bgp-integration
+
+  #### OVN での NAT アドレスのカスタマイズ <!-- NAT address customization with OVN -->
+  <!--
+  Support for both `ipv4.nat.address` and `ipv6.nat.address` has now been added for `ovn` type networks.
+  -->
+  `ovn` タイプのネットワークで、`IPv4.nat.address` と `ipv6.nat.address` の両方がサポートされるようになりました。
+
+  <!--
+  This works as one would expect with OVN then using the configured address as the source for egress IPv4 and IPv6 traffic when NAT is enabled.
+  -->
+  これは、NAT が有効な場合、OVN で設定されたアドレスを、外向きの IPv4 と IPv6 のトラフィックのソースとして使用する場合に期待通りに動作します。
+
+  #### クラスターのディザスターリカバリーのための `lxd cluster edit` コマンド <!-- `lxd cluster edit` for cluster disaster recovery -->
+  <!--
+  LXD clusters need a quorum to function with highly available clusters operating with 3 database servers and a quorum of 2. This allows for the loss of one server while keeping our entire API and database operational.
+  -->
+  LXD クラスターを、高可用クラスターで操作するには、3 データーベースサーバー、2 クォーラムから構成されるクォーラムが必要です。これにより、サーバーがひとつ失われても、API とデータベース全体が維持できます。
+
+  <!--
+  Now if two machines were to be irrevocably damaged and unable to join back, LXD would refuse to start as no quorum could be reached. This case can be handled by our existing `lxd cluster recovery-from-quorum-loss` by effectively rewriting the database configuration to eliminate the other servers.
+  -->
+  もし、2 台のマシンがリカバリー不能なダメージを受けて復帰できなかった場合、LXD はクォーラムに到達できないために起動を拒否します。この場合、既存の `lxd cluster recovery-from-quorum-loss` コマンドにより、他のサーバーを除去するためにデータベースの設定を書き換えることで対処できます。
+
+  <!--
+  However there can be far more complex cases such as clusters with 8 servers, in which case 3 would be database servers, 2 would be stand-by database servers and the other 3 would be simple clients.
+  -->
+  しかし、8 台からなるクラスターで、3 台がデータベースサーバー、2 台がスタンバイのデータベースサーバー、他の 3 台がシンプルなクライアントであるような、はるかに複雑なケースも考えられます。
+
+  <!--
+  Should two database servers disappear at the exact same time, LXD will refuse to function. But in this environment, you don't want it to just remove all other servers, keep one and try to recover from that.
+  -->
+  同時に 2 台のデータベースサーバーが消滅した場合、LXD は機能しません。しかしこのような環境では、すべての他のサーバーを削除し、ひとつを残して、そこから回復させるようなことは望めません。
+
+  <!--
+  This kind of scenario is where the new `lxd cluster edit` and `lxd cluster show` come in handy. They allow viewing and editing the internal cluster configuration on each server. This can then be used to re-shuffle the roles manually or update network addresses. Then once the change has been done on every server in the cluster, LXD can be started back up.
+  -->
+  このようなシナリオでは、新しく追加された `lxd cluster edit` と `lxd cluster show` が役立ちます。これらのコマンドで、各サーバー上の内部的なクラスター設定を見て編集できます。これらを使って、手動でロールを再度シャッフルしたり、ネットワークアドレスを更新したりできます。クラスター内の全サーバーで変更が済むと、LXD を再び起動できます。
+
+  ドキュメント <!-- Documentation -->: https://linuxcontainers.org/lxd/docs/master/clustering#recover-cluster-members-with-changed-addresses
+
+  #### カスタムボリュームでの Refresh のサポート <!-- Refresh support for custom volume copies -->
+  <!--
+  `lxc storage volume copy` now supports a `--refresh` argument similar to `lxc copy`.
+  -->
+  `lxc storage volume copy` コマンドで、`lxc copy` と同様に `--refresh` オプションが使えるようになりました。
+
+  <!--
+  This allows transfering any missing snapshot as well as transfering the current volume state and can be used to keep an up to date backup of a volume on a different pool or different server.
+  -->
+  これにより、足りないスナップショットを転送したり、現在のボリュームの状態を転送したりできます。そして、ボリュームの最新のバックアップを別のプールや別のサーバーに保持するために使えます。
+
+  #### プロジェクトでのデバイス制限の追加 <!-- Additional device restrictions for projects -->
+  <!--
+  Project restrictions got updated to include a couple of missing device types.
+  -->
+  プロジェクトに対する制限が更新され、これまで使えなかったデバイスタイプが 2 つ追加されました。
+
+  <!--
+  The two new config options are:
+  -->
+  新しい設定オプションは次の通りです:
+
+   - `restricted.devices.pci`
+   - `restricted.devices.proxy`
+
+  <!--
+  And both default to `block` as they should be considered unsafe for untrusted users.
+  -->
+  両方とも、信頼できないユーザーにとっては安全ではないと考えられますので、デフォルト値は `block` です。
+
+  ドキュメント <!-- Documentation -->: https://linuxcontainers.org/lxd/docs/master/projects
+
+  #### `lxd init` の `--minimal` オプション <!-- `\-\-minimal` option for `lxd init` -->
+  <!--
+  A new option `\-\-minimal` is now supported by `lxd init`.
+  -->
+  `lxd init` に新たに `--minimal` オプションが追加されました。
+
+  <!--
+  This is effectively the same as `lxd init --auto` but with a more accurate name and in a command which doesn't allowed for any additional configuration parameters.
+  -->
+  これは、実際は `lxd init --auto` と同じですが、より正確な名前で追加の設定パラメーターを許可しないコマンドになっています。
+
+  <!--
+  The result is a functional LXD server using a `dir` storage pool called `default` and a `bridge` type network called `lxdbr0`.
+  -->
+  これを使うと、`default` という名前の `dir` ストレージプールと、`lxdbr0` という名前の `bridge` タイプのネットワークを使って動作する LXD サーバーになります。
+
+  #### インスタンスの状態へいくつかネットワークカウンターを追加 <!-- Additional network counters in instance state -->
+  <!--
+  In preparation for our work on a metrics (prometheus) endpoint, the network counters on the instances have been expanded a bit to include both dropped packets and errors.
+  -->
+  メトリクス（prometheus）エンドポイントの作業に備えて、インスタンス上のネットワークカウンターを少し拡張し、ドロップしたパケットとエラーの両方を含めるようにしました。
+
+      stgraber@dakara:~$ lxc query /1.0/instances/u1/state | jq .network.eth0.counters
+      {
+        "bytes_received": 100946,
+        "bytes_sent": 3404,
+        "errors_received": 0,
+        "errors_sent": 0,
+        "packets_dropped_inbound": 0,
+        "packets_dropped_outbound": 0,
+        "packets_received": 467,
+        "packets_sent": 32
+      }
+
+
+  ### すべての変更点（翻訳なし） <!-- Complete changelog -->
+  <!--
+  Here is a complete list of all changes in this release:
+  -->
+  このリリースでの完全な変更点のリストは次の通りです:
+
+   - global: Disable the completion command
+   - lxd/instance/lxc: Rework raw.lxc handling
+   - lxd/storage/zfs: Fix bad key name
+   - lxd/storage/zfs: Fix ListVolumes to use correct pool name
+   - lxd/instance: Don't allow state changes when evacuated
+   - lxd/daemon: Don't auto-start instances when evacuated
+   - lxd/instance: Rework IsMigratable
+   - lxd/device: Add CanMigrate
+   - lxd/instance: Move IsMigratable logic to devices
+   - lxd/instance/common: Fix error message
+   - lxd/cluster: Fix volatile race in restore
+   - tests: Fix expected clustering evacuation result
+   - i18n: Update translations from weblate
+   - lxd/cluster/evacuation: Improve comments
+   - lxd/cluster/evacuation: Use correct project in migration
+   - lxd/cluster/evacuation: Don't start running instances
+   - lxd/cluster/evacuation: Improve status messages
+   - lxd/cluster/evacuation: Fix shutdown during restore
+   - lxd/cluster/evacuation: Start with restoring local instances
+   - doc/instances: Clarifies expectation of uniqueness for volatile.uuid
+   - lxd/instance/instance/utils: Allow cross-project same instance matching on volatile.uuid in IsSameLocgicalInstance
+   - lxd: Fix typo in spelling of IsSameLogicalInstance
+   - lxd/device/nic/routed: Specify zero broadcast address
+   - test: Add test for routed NIC to ensure broadcast address isn't set by liblxc
+   - lxd/network/driver/ovn: Error quoting in Validate
+   - lxd/network/driver/ovn: Adds externalSubnetUsage type
+   - lxd/network/driver/ovn: Improve comments in Validate
+   - lxd/network/driver/ovn: Update ovnNetworkExternalSubnets to return externalSubnetUsage
+   - lxd/network/driver/ovn: Updates ovnNICExternalRoutes to return externalSubnetUsage
+   - lxd/network/driver/ovn: Adds getExternalSubnetInUse function
+   - lxd/network/driver/ovn: n.getExternalSubnetInUse usage in Validate
+   - lxd/network/driver/ovn: n.getExternalSubnetInUse usage in InstanceDevicePortValidateExternalRoutes
+   - api: Adds network_ovn_nat_address extension
+   - lxd/network/driver/ovn: Adds network external NAT address detection to ovnNetworkExternalSubnets
+   - lxd/network/driver/ovn: Adds ipv4.nat.address and ipv6.nat.address support to OVN networks
+   - lxd/network/driver/ovn: Skip our own network's external NAT address during NIC validation of external routes
+   - doc/networks: Adds ipv{n}.nat.address to ovn network
+   - lxd/project/permissions: Removes defaultRestrictionsValues and merges into allRestrictions
+   - lxd/project/permissions: Add restricted.devices.{pci,proxy} defaulting to block
+   - doc/projects: Adds restricted.devices.{pci,proxy} docs
+   - lxd/api/project: Add restricted.devices.{pci,proxy} validation
+   - scripts/bash/lxd-client: Adds restricted.devices.{pci,proxy} to bash completion
+   - lad/project/permissions: Implement restricted.devices.{pci,proxy} restrictions
+   - lxd/device/device/utils/proxy: Improve error messages from ProxyParseAddr
+   - lxd/device/proxy: Use validation helpers for clarity
+   - lxd/device/proxy: Consistent error endings
+   - lxd/device/proxy: Don't allow NAT mode when used inside projects with networks feature
+   - lxd: Switch to new fsnotify
+   - lxd/device/gpu_mdev: Switch to common UUID package
+   - lxd/network/errors: ErrUnknownDriver comment ending
+   - lxd/network/errors: Adds ErrNotImplemented error
+   - lxd/device/device/utils/network: Removes networkParsePortRange
+   - lxd/network/network/utils: Adds ParsePortRange function
+   - lxd/device/device/utils/proxy: network.ParsePortRange usage
+   - global: Use shorter uuid generation syntax
+   - lxd/init: Introduce --minimal
+   - lxc: join tokens are removed by member name, not token
+   - i18n: Update translation template
+   - lxd/init: Allow preseeding cluster_token
+   - lxd/main: Replace cluster node with cluster member
+   - shared/validate: Fix IPv6 wildcard handling in IsListenAddress
+   - lxd/device/gpu_mdev: Fix mdevUUID logic
+   - lxd/response: Rework SmartError to handle wrapped errors from stdlib errors and github.com/pkg/errors
+   - lxd/storage/pools: Use SmartError in storagePoolsPost
+   - lxd/storage/pools/utils: Wrap errors in storagePoolDBCreate
+   - lxd/db/transaction: Adds QueryScan helper function
+   - lxd/db/network/acls: Convert to use tx.QueryScan and tx.tx.QueryRow
+   - test: Update tests with new error text
+   - lxd/storage/backend/lxd: Allow removal of quota from VM filesystem volume if main quota is removed
+   - lxd/storage/drivers/driver/btrfs/volumes: Add log for VM block file quota accounting in SetVolumeQuota
+   - lxd/storage/drivers/driver/dir/volumes: Add log for VM block file quota accounting in SetVolumeQuota
+   - lxd/storage/drivers/driver/btrfs/volumes: Consistently apply referenced limit only and remove exclusive limits in SetVolumeQuota
+   - lxd/network/bridge: Comments
+   - shared/validate: Add IsInRange
+   - lxd/endpoints: Correct bad comment
+   - lxd/endpoints: Rename serveHTTP to serve
+   - doc/rest-api: Refresh swagger YAML
+   - lxd/network/network/utils: Check end port is higher than start port in ParsePortRange
+   - lxd/network/network/utils: Adds SubnetContainsIP function
+   - lxc/network/acl: Fix typos in RunRemove
+   - lxd/cluster/recover: add Recover
+   - lxd/cluster/recover: add updateLocalAddress
+   - shared/api/error: Adds StatusError type
+   - lxd/response/smart: Updates SmartError to detect and use api.StatusError type errors
+   - lxd/network/driver/ovn: Update validateExternalSubnet to use api.StatusErrorf()
+   - client/lxd: Updates lxdParseResponse to "interface smuggle" an api.StatusError type when getting an error response from API
+   - lxd/storage/backend/lxd: Restore pool directory structure on mount if needed
+   - test: Update container recovery tests to check for pool directory structure rebuild
+   - lxd/db/db: add DqliteLatestSegment
+   - lxd/main/cluster: add ClusterConfig and ToRaftNode
+   - lxd/cluster: Drop translated string
+   - lxd/main/cluster: add 'lxd cluster edit' command
+   - lxd/main/cluster: add validateNewConfig
+   - test/suites/clustering: add test_clustering_edit_configuration
+   - lxd/main/cluster: add 'lxd cluster show' command
+   - lxd/rbac: Drop old API
+   - lxd/api_1.0: Improve structure
+   - lxd/daemon: Improve structure
+   - lxd/network/physical: Align with bridged
+   - gomod: Initial port
+   - tests: Silence grep notices
+   - doc/index: Clarify CRIU example
+   - doc/index: Update for gomod
+   - Makefile: Tweak PHONY targets
+   - Makefile: Tweak static-analysis
+   - Makefile: Switch to gomod
+   - tests: Update for gomod
+   - github: Update for gomod
+   - gomod: Update dependencies
+   - lxd/db/network/acls: Removes unnecessary function
+   - lxd/db/network/acls: Removes networkACLConfig from Cluster type for consistency with networkACLConfigAdd
+   - lxd/network/driver/common: Updates validate to use shared.IsUserConfig
+   - Makefile: Cleanup if statements
+   - Makefile: Add support for LXD_OFFLINE
+   - client/util: Adds urlsToResourceNames function
+   - client: Switch *Names functions to use urlsToResourceNames
+   - doc/instances: Capitalize NIC
+   - lxd/device/nic_bridged: Load network during validation
+   - gomod: Update for gobgp
+   - api: network_bgp
+   - doc: Add new configuration keys for BGP
+   - lxd/device/nic_bridged: Support ipv4.routes.external and ipv6.routes.external
+   - scripts: Add BGP config keys
+   - lxd/node: Add core.bgp_address and core.bgp_routerid
+   - lxd/cluster: Add core.bgp_asn
+   - lxd/bgp: Add BGP server
+   - lxd/daemon: Integrate BGP server
+   - lxd/network: Add BGP config keys
+   - lxd/network: Add BGP helpers
+   - lxd/network/physical: Add BGP support
+   - lxd/network/bridge: Add BGP support
+   - lxd/network/ovn: Add BGP support
+   - lxd/device: Shared BGP functions
+   - lxd/device/nic_bridged: Add BGP support
+   - lxd/device/nic_ovn: Add BGP support
+   - doc/networks: Add section on BGP
+   - lxd/firewall/drivers/driver/consts: Adds AddressForward type
+   - lxd/firewall/firewall/interface: Updates InstanceSetupProxyNAT to accept AddressForward
+   - lxd/firewall/drivers/driver/xtables: Updates to support AddressForward
+   - lxd/firewall/drivers/drivers/nftables: Updates to support AddressForward
+   - lxd/firewall/drivers/drivers/nftables: Separate DNAT rules from SNAT rules in InstanceSetupProxyNAT
+   - lxd/device/config/device/proxyaddress: Separate address and ports in ProxyAddress
+   - lxd/device/device/utils/proxy: Updates ProxyParseAddr to support new ProxyAddress format
+   - lxd/device/proxy: Updated to support firewallDrivers.AddressForward and ProxyAddress changes
+   - lxd/main/forkproxy: Updates to support changed ProxyAddress
+   - lxd/main/forkproxy/test: Updates tests to refect new ProxyAddress structure
+   - Makefile: Use go env GOPATH command to get GOPATH rather than env var GOPATH
+   - Makefile: Build lxd-generate directly to $(GOPATH)/bin/lxd-generate
+   - lxd/db/generate/lex/parse: Remove github.com/pkg/errors dependency
+   - lxd/db/generate/lex/parse: Updates Parse to take an absolute path to package directory
+   - lxd/db/generate/lxd/parse/test: Updates TestParse
+   - lxd/db/generate/db/parse: Updates Packages and defaultPackages to work relative to the LXD source tree
+   - lxd: implement volume import/export for CephFS
+   - lxd/main: Add setfattr to dependencies
+   - lxc/info: Use local timezone
+   - test/suites/clustering: use 'lxd cluster show' for tests
+   - lxd/cluster/membership: make waitLeadership public
+   - shared/api/error: Removes pointer receivers from StatusError functions
+   - shared/api/error: Adds StatusErrorMatch helper function
+   - lxd/response/smart: api.StatusErrorMatch usage in SmartError
+   - Makefile: Set GO111MODULE=on for update-api
+   - client/util: Update urlsToResourceNames to reduce allocations
+   - lxd/network/network/utils: Adds ParseIPToNet and ParseIPCIDRToNet functions
+   - api: Adds network_forward extension
+   - shared/api/network/forward: Adds shared structs for network address forwards
+   - lxd/lifecycle/network/forward: Adds network forwards lifecycle helper
+   - lxd/db/cluster/update: Adds updateFromV49 to create networks_forwards and networks_forwards_config table
+   - lxd/db/network/forwards: Adds network forward management functions
+   - lxd/db/network/forwards: Adds GetProjectNetworkForwardListenAddressesByUplink function
+   - lxd/network/network/interface: Adds network forward management definitions
+   - lxd/network/driver/common: Adds AddressForwards to Info
+   - lxd/network/driver/common: Adds common network forward functions
+   - lxd/network/openvswitch/ovn: Adds LoadBalancerApply function
+   - lxd/network/openvswitch/ovn: Adds LoadBalancerDelete function
+   - lxd/network/driver/ovn: Updates getExternalSubnetInUse to detect network forward listen addresses
+   - lxd/network/driver/ovn: Adds network forward support
+   - lxd/network/driver/ovn: Delete network forwards when network is deleted
+   - lxd/network/driver/ovn: Check that any existing forward target addresses are within the network's subnet(s) in Validate
+   - lxd/network/driver/ovn: Update Info to get common defaults and override as needed
+   - lxd/network/forwards: Adds network forwards APIs
+   - client/lxd/network/forward: Adds network forwards functions
+   - lxc/network/forward: Adds network forward CLI commands
+   - i18n: Update translation template
+   - doc/rest-api: Refresh swagger YAML
+   - doc: Adds network forward docs
+   - lxd/api/cluster: handover leadership when removing leader
+   - test/suites/clustering: add test_clustering_remove_leader
+   - lxd/util/sys: add ReplaceDaemon
+   - lxd/api/cluster: replace daemon when disabling clustering
+   - api: custom_volume_refresh
+   - shared/api: Add Refresh to StorageVolumeSource
+   - doc/rest-api: Refresh swagger YAML
+   - client: Add Refresh flag to StoragePoolVolumeCopyArgs
+   - lxd/storage: Improve errors
+   - lxd/storage/utils: Add SyncSnapshotsVolumeGet
+   - lxd/storage: Fix Refresh with CreateCustomVolumeFromMigration
+   - lxd/storage: Add RefreshCustomVolume method for lxdBackend
+   - lxd/migrate: Add refresh for custom volumes
+   - lxd/storage: Add Refresh support for custom volumes
+   - lxc/storage/volume: Add refresh flag to copy
+   - i18n: Update translation templates
+   - tests: Add test cases for copy operation refresh flag
+   - doc/index: Update min packages required to operate LXD
+   - doc/index: Add recommendation about min memory size needed
+   - doc: Don't assume that Go's bin path is ~/go/bin
+   - doc/requirements: Adds minimum memory requirements to build
+   - lxd/network/network/utils: Adds nicUsesNetwork function
+   - lxd/network/driver/ovn: Parse mulitple CIDR routes in ovnNICExternalRoutes
+   - lxd/network/driver/common: Moves externalSubnetUsage to common
+   - lxd/network/driver/ovn: Removes externalSubnetUsage
+   - lxd/network/driver/ovn: externalSubnetUsage updated usage
+   - lxd/network/driver/ovn: Updates ovnNetworkExternalSubnets to use nicUsesNetwork function
+   - lxd/db/network/forwards: Corrects description of GetProjectNetworkForwardListenAddressesByUplink
+   - lxd/db/network/forwards: Consistent formatting in GetProjectNetworkForwardListenAddressesByUplink
+   - lxd/util/net: add IsWildcardAddress
+   - lxd/api/cluster: block core.https_address wildcard in cluster bootstrap
+   - doc/clustering: add 'lxd cluster edit' documentation
+   - lxd/endpoints/network: don't give up if no network listeners exist
+   - lxd/endpoints/cluster: check for unset networkAddress before returning
+   - lxd/endpoints/endpoints: fallback from network to cluster address
+   - lxd/node/config: assign default port to listener addresses if none given
+   - test/suites/clustering: expand tests to check listener addresses
+   - lxc/main/aliases: Fix panic when empty argument passed to lxc command
+   - test: Improve container devices proxy xtables tests
+   - test: Fix tabbing in container devices proxy test
+   - shared/api: Add Errors{Received,Sent} to network counters
+   - shared/netutils: Fill Errors counters
+   - doc: Update Rest API
+   - test: Improve error checks for proxy device
+   - lxd/db/network/forwards: Improve comments
+   - lxd/db/network/forwards: Adds memberSpecific arg to GetNetworkForwardListenAddresses
+   - lxd/db/network/forwards: Adds memberSpecific arg to GetNetworkForwards
+   - lxd/network/forwards: cluster.GetNetworkForwards usage
+   - lxd/network/forwards: cluster.GetNetworkForwardListenAddresses
+   - lxd/network/driver/ovn: n.state.Cluster.GetNetworkForwards usage
+   - lxd/network/driver/ovn: n.state.Cluster.GetNetworkForwardListenAddresses usage
+   - lxd/firewall/drivers/drivers/nftables: Rework InstanceSetupProxyNAT to accomodate network forward support
+   - lxd/firewall/drivers/drivers/xtables: Fix proxy NAT listen port in InstanceSetupProxyNAT
+   - api: Add network_counters_errors extension
+   - lxd/network/network/utils: Adds BridgeNetfilterEnabled function
+   - lxd/device/proxy: network.BridgeNetfilterEnabled usage
+   - lxd/device/nic/bridged: network.BridgeNetfilterEnabled usage
+   - lxd/device/proxy: Improve connect IP error messages
+   - shared/api: Add PacketsDropped{Inbound,Outbound} to network counter
+   - shared/netutils: Fill Dropped counters
+   - doc: Update Rest API
+   - api: Extend network_counters_errors API extension
+   - lxd/device/proxy: Improve post-start error messages to include device name
+   - lxd/device/proxy: Use structured logging for br_netfilter warning in setupNAT
+   - Remove mkdocs.yml
+   - .github/workflows: Update go versions
+   - lxd/network/network/utils: Exports NICUsesNetwork
+   - lxd/network/driver/ovn: NICUsesNetwork usage
+   - lxd/device/nic/bridged: network.NICUsesNetwork usage in validate
+   - lxd/firewall/firewall/interface: Add NetworkApplyForwards definition
+   - lxd/firewall/drivers/drivers/nftables: Adds NetworkApplyForwards implementation
+   - lxd/firewall/drivers/drivers/nftables: Updates NetworkClear to remove address forward chains
+   - lxd/firewall/drivers/drivers/xtables: Updates iptablesClear to support removing rules by matching multiple comments
+   - lxd/firewall/drivers/drivers/xtables: Adds networkForwardIPTablesComment and updates NetworkClear to remove rules with that comment
+   - lxd/firewall/drivers/drivers/xtables: Adds iptablesCommentPrefix
+   - lxd/firewall/drivers/drivers/xtables: Adds NetworkApplyForwards implementation
+   - lxd/db/network/forwards: Adds GetProjectNetworkForwardListenAddressesOnMember function
+   - lxd/network/driver/bridge: Adds network forward support
+   - lxd/device/nic/bridged: Consistent comment ending
+   - lxd/device/nic/bridged: Enable hairpin mode on NIC ports when network has forwards
+   - doc: Add bridge network forwards docs
+   - test: Adds network forward tests for bridge nftables and xtables
+   - lxc/copy: Don't allow --refresh and --no-profiles
+   - i18n: Update translation templates
+   - lxc/cluster: Comment improvement
+   - lxd/api/cluster: Adds mutex to clusterNodesPost to prevent concurrent requests creating duplicates
+   - gomod: Update dependencies
+   - i18n: Update translations from weblate
+
+  ### 試用環境 <!-- Try it for yourself -->
+  <!--
+  This new LXD release is already available for you to try on our [demo service](https://linuxcontainers.org/lxd/try-it/).
+  -->
+  この新しい LXD リリースは私たちの [デモサービス](https://linuxcontainers.org/ja/lxd/try-it/) で利用できます。
+
+  ### ダウンロード <!-- Downloads -->
+  <!--
+  The release tarballs can be found on our [download page](https://linuxcontainers.org/lxd/downloads/).
+  -->
+  このリリースの tarball は [ダウンロードページ](https://linuxcontainers.org/lxd/downloads/) から取得できます。
+
+  <!--
+  Binary builds are also available for:
+  -->
+  ビルド済みバイナリーは次のように使えます:
+
+   - **Linux:** snap install lxd
+   - **MacOS:** brew install lxc
+   - **Windows:** choco install lxc
