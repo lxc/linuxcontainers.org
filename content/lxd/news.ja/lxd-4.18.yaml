@@ -251,7 +251,7 @@ content: |-
   <!--
   And both default to `block` as they should be considered unsafe for untrusted users.
   -->
-  両方とも、信頼できないユーザーにとっては安全ではないと考えられますんので、デフォルト値は `block` です。
+  両方とも、信頼できないユーザーにとっては安全ではないと考えられますので、デフォルト値は `block` です。
 
   ドキュメント <!-- Documentation -->: https://linuxcontainers.org/lxd/docs/master/projects
 
