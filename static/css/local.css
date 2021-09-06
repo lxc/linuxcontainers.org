@@ -317,9 +317,10 @@ pre {
 }
 
 code {
-  background-color: #a19d9d;
+  background-color: #f7f7f7;
+  padding: 3px;
 }
 
-code.light {
-  background-color: #f7f7f7;
+h1 code, h2 code, h3 code, h4 code {
+  background-color: inherit;
 }
