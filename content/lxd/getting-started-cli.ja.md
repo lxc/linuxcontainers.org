@@ -182,13 +182,11 @@ LXD の snap パッケージに関する詳細な情報（その他のバージ�
 
 ### MacOS 用クライアント<!-- MacOS builds -->
 
-!!! note "注意:"
+!!! note "注意"
 	<!--
 	The builds for MacOS only include the client, not the server.
-	{: .p-noteadm }
 	-->
 	MacOS 用のビルドはクライアントのみです。サーバーは含みません。
-	{: .p-noteadm }
 
 <!--
 LXD upstream publishes builds of the LXD client for macOS through [Homebrew](https://brew.sh/).
@@ -204,13 +202,11 @@ LXD のフィーチャーブランチをインストールするには、以下�
 
 ### Windows 用クライアント <!-- Windows builds -->
 
-!!! note "注意:"
+!!! note "注意"
 	<!--
 	The builds for MacOS only include the client, not the server.
-	{: .p-noteadm }
 	-->
 	Windows 用のビルドはクライアントのみです。サーバーは含みません。
-	{: .p-noteadm }
 
 <!--
 Native builds of the LXD client for Windows can be [found here](https://ci.appveyor.com/project/lxc/lxd/branch/master/artifacts).
@@ -225,15 +221,13 @@ LXD をソースからビルドしてインストールする方法は [こち�
 
 # 初期設定 <!-- Initial configuration -->
 
-!!! note "注意:"
+!!! note "注意"
 	<!--
 	`instances`
 	: means both `containers` and `virtual machines`.
-	{: .p-noteadm }
 	-->
 	`インスタンス`
 	は `コンテナ` と `仮想マシン`　の両方を指します。
-	{: .p-noteadm }
 
 <!--
 Before you can create an instance, you need to configure LXD.
@@ -320,12 +314,11 @@ or use the "newgrp lxd" command in the shell you're going to use to talk to LXD.
 -->
 グループメンバーシップはログイン時にのみ追加されるので、追加後にあなたのユーザセッションを閉じて再度開くか、LXD と通信したいシェル上で "newgrp lxd" コマンドを実行する必要があります
 
-!!! note "警告:"
+!!! warning "警告"
 	<!--
 	Anyone with access to the LXD socket can fully control LXD, which includes the ability to attach host devices and filesystems, this should therefore only be given to users who would be trusted with root access to the host. You can learn more about LXD security [here](/lxd/docs/master/security).
 	-->
 	LXD ソケットにアクセスできる人であれば誰でも LXD を完全にコントロールできます。これには、ホストのデバイスやファイルシステムにアタッチする権限も含まれます。したがって、ホストへの root アクセスで信頼できるユーザにのみ与えられるべきです。さらに LXD のセキュリティについて学びたい場合は[ドキュメントのセキュリティのセクション（日本語版）](https://lxd-ja.readthedocs.io/ja/latest/security/) （または[英語版](/lxd/docs/master/security/)）をご覧ください。	
-	{: .p-noteadm }
 
 # 仮想マシンについての注意 <!-- Note about Virtual machines -->
 <!--
@@ -349,7 +342,7 @@ You can find more information about virtual machines in our forum[^1].
 仮想マシンについての詳細な情報はフォーラムでご覧いただけます[^1]。
 <!-- You can find more information in the Advanced Guide. -->
 
-!!! note "注意:"
+!!! note "注意"
 	<!--
 	For now virtual machines support less features than containers.     
     See [Advanced Guide - Instance configuration](/lxd/advanced-guide#difference-between-containers-and-virtual-machines) for details.
@@ -641,7 +634,7 @@ Push a folder with:
 
 #### インスタンスの削除 <!-- Remove instance -->
 
-!!! note "警告:"
+!!! warning "警告"
 	<!--
 	This will delete the instance including all snapshots.   
 	Deletion will be final in most cases and restore is unlikely!   
@@ -650,7 +643,6 @@ Push a folder with:
 	次のコマンドはスナップショットもふくめてインスタンスを削除します。
 	ほとんどのケースでは、完全に削除されてしまい、リストアすることはできません。
 	うっかり削除するのを防ぐ方法については [Tips & Tricks in Advanced Guide](/lxd/advanced-guide/#prevent-accidental-deletion-of-an-instance) をご覧ください。
-	{: .p-noteadm }
 
 <!--
 Use:
