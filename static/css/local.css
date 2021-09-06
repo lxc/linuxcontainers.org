@@ -193,6 +193,10 @@ pre {
   padding: 0.2rem;
 }
 
+.p-navigation__logo img {
+  width: 45px;
+}
+
 .p-navigation__link {
   position: relative;
 }
