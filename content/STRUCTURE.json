@@ -107,11 +107,6 @@
      "generator": "link",
      "meta": {"url": "https://github.com/lxc/lxd"}},
 
-    {"path": "/lxd/travis-ci/",
-     "menu": ["LXD", "Travis CI"],
-     "generator": "link",
-     "meta": {"url": "https://travis-ci.org/lxc/lxd"}},
-
 
 
     {"path": "/lxc/",
@@ -205,11 +200,6 @@
      "menu": ["LXC", "Jenkins CI"],
      "generator": "link",
      "meta": {"url": "https://jenkins.linuxcontainers.org/view/LXC/"}},
-
-    {"path": "/lxc/travis-ci/",
-     "menu": ["LXC", "Travis CI"],
-     "generator": "link",
-     "meta": {"url": "https://travis-ci.org/lxc/lxc"}},
 
 
 
@@ -340,11 +330,6 @@
      "generator": "link",
      "meta": {"url": "https://github.com/lxc/distrobuilder"}},
 
-    {"path": "/distrobuilder/travis-ci/",
-     "menu": ["distrobuilder", "Travis CI"],
-     "generator": "link",
-     "meta": {"url": "https://travis-ci.org/lxc/distrobuilder"}},
-
 
 
     {"path": "/cgmanager/",
@@ -418,8 +403,4 @@
      "generator": "link",
      "meta": {"url": "https://github.com/lxc/cgmanager"}},
 
-    {"path": "/cgmanager/travis-ci/",
-     "menu": ["CGManager", "Travis CI"],
-     "generator": "link",
-     "meta": {"url": "https://travis-ci.org/lxc/cgmanager"}}
 ]
