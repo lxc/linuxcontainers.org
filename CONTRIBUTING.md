@@ -120,19 +120,27 @@ Translations for other languages are possible and appreciated. See [Translations
 
 * **HTML:** Used only when necessary.
 
-### Special css-classes in use
+### Admonitions
 
-* For `Notes` and `Warnings`:
-
-  Add the css-class `.p-noteadm` directly below the content:
+* You can add `Notes` or `Warnings`:
 
   ```
-    !!! note "Note:"
-	Content
-	{: .p-noteadm }
+    !!! note 
+        Content
+  ```
+  
+  ```
+    !!! warning
+        Content
   ```
 
+* To override the default title, add your custom title:
 
+  ```
+    !!! note "注意"
+        Content
+  ```
+    
 ## Guidelines for the content
 
 * create a Table of Content (TOC) manually (with a markdown list), the toc extension is only used for creation of hyperlinks.
