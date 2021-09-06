@@ -37,13 +37,11 @@
 # はじめに <!-- Introduction -->
 
 <!--
-!!! note "Note:"
+!!! note
 	If you haven't set up LXD yet, take a look at the [Getting-Started Guide](/lxd/getting-started-cli/) first.
-	{: .p-noteadm }
 -->
-!!! note "注意:"
+!!! note "注意"
 	まだ LXD をセットアップしていないのであれば、まずは「[はじめに - コマンドライン](/ja/lxd/getting-started-cli/)」を最初にご覧ください。
-	{: .p-noteadm }
 
 <!--
 This Guide gives you more information about the several features of LXD.
@@ -109,13 +107,11 @@ You can apply flags to add configuration options to `lxc launch`.
 ```
 
 <!--
-!!! note "Note:"
+!!! note
 	See [Profiles](#profiles) below for details.
-	{: .p-noteadm }
 -->
-!!! note "注意:"
+!!! note "注意"
 	詳しくは後の[プロファイル](#_6)をご覧ください。
-	{: .p-noteadm }
 
 <!--
 Usage:
@@ -515,13 +511,11 @@ Now cloud-init will start working.
 これで cloud-init が動作し始めます。
 
 <!--
-!!! note "Note:"
+!!! note
 	Cloud-init may take a while until it is finished, depending on your instructions.
-	{: .p-noteadm }
 -->
-!!! note "注意:"
+!!! note "注意"
 	cloud-init は、指定した内容によっては終了までに時間がかかるかもしれません。
-	{: .p-noteadm }
 
 #### cloud-init の状態 <!-- Cloud-init status -->
 <!--
@@ -1009,15 +1003,13 @@ You can define multiple keys in templates:
 | `mappings` | 特定のディストリビューションで使われているアーキテクチャ文字列と LXD で使われるアーキテクチャ文字列の差異をマッピングします (例: x86_64: amd64) | [mappings.md](https://github.com/lxc/distrobuilder/blob/master/doc/mappings.md) 参照 |
 
 <!--
-!!! note "Note for VMs:"
+!!! note "Note for VMs"
 	You should either build an image with cloud-init support (provides automatic size growth) or set a higher size in the template, because the standard size is relatively small (~4 GB).   
 	Alternatively you can also grow it manually.
-	{: .p-noteadm }
 -->
-!!! note "VMでの注意:"
+!!! note "VMでの注意"
 	標準サイズが比較的小さい（〜4GB）ので、cloud-init サポートでイメージをビルドするか（自動的にサイズが大きくなります）、テンプレートにより大きなサイズを設定するかのどちらかを行う必要があります。
 	または手動で拡張することもできます。
-	{: .p-noteadm }
 
 #### イメージのビルド <!-- Build an Image -->
 

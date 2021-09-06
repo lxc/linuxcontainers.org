@@ -36,9 +36,8 @@
 
 #Introduction
 
-!!! note "Note:"
+!!! note
 	If you haven't set up LXD yet, take a look at the [Getting-Started Guide](/lxd/getting-started-cli/) first.
-	{: .p-noteadm }
 
 This Guide gives you more information about the several features of LXD.
 
@@ -83,9 +82,8 @@ You can apply flags to add configuration options to `lxc launch`.
 -c key=value   # apply a config key/value 
 ```
 
-!!! note "Note:"
+!!! note
 	See [Profiles](#profiles) below for details.
-	{: .p-noteadm }
 
 
 Usage:
@@ -327,9 +325,8 @@ Apply the profile during `lxc launch` with flag `-p`:
 
 Now cloud-init will start working.
 
-!!! note "Note:"
+!!! note
 	Cloud-init may take a while until it is finished, depending on your instructions.
-	{: .p-noteadm }
 
 #### Cloud-init status
 You can get the status of cloud-init with:
@@ -594,10 +591,9 @@ You can define multiple keys in templates:
 | `mappings` | maps different terms for architectures for specific distributions (e.g. x86_64: amd64) | see [mappings.md](https://github.com/lxc/distrobuilder/blob/master/doc/mappings.md) |
 
 
-!!! note "Note for VMs:"
+!!! note "Note for VMs"
 	You should either build an image with cloud-init support (provides automatic size growth) or set a higher size in the template, because the standard size is relatively small (~4 GB).   
 	Alternatively you can also grow it manually.
-	{: .p-noteadm }
 
 #### Build an Image
 

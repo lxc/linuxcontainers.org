@@ -117,9 +117,8 @@ For more information about LXD snap packages (regarding more versions, update ma
 
 ### MacOS builds
 
-!!! note "Note:"
+!!! note
 	The builds for MacOS only include the client, not the server.
-	{: .p-noteadm }
 
 LXD upstream publishes builds of the LXD client for macOS through [Homebrew](https://brew.sh/).
 
@@ -129,9 +128,8 @@ To install the feature branch of LXD, run:
 
 ### Windows builds
 
-!!! note "Note:"
+!!! note
 	The builds for Windows only include the client, not the server.
-	{: .p-noteadm }
 
 The LXD client on Windows is provided as a [Chocolatey](https://community.chocolatey.org/packages/lxc) package. To install it:
 
@@ -151,10 +149,9 @@ Instructions on building and installing LXD from source [can be found here](http
 
 # Initial configuration
 
-!!! note "Note:"
+!!! note
 	`instances`
 	: means both `containers` and `virtual machines`.
-	{: .p-noteadm }
 
 Before you can create an instance, you need to configure LXD.
 
@@ -197,9 +194,8 @@ You can then add trusted users to it. Anyone added to this group will have full 
 Because group membership is normally only applied at login, you may need to either re-open your user session
 or use the "newgrp lxd" command in the shell you're going to use to talk to LXD.
 
-!!! note "Warning:"
+!!! warning
 	Anyone with access to the LXD socket can fully control LXD, which includes the ability to attach host devices and filesystems, this should therefore only be given to users who would be trusted with root access to the host. You can learn more about LXD security [here](/lxd/docs/master/security).
-	{: .p-noteadm }
 
 # Note about Virtual machines
 Since version 4.0 LXD also natively supports virtual machines and thanks to a built-in agent, they can be used almost like containers.
@@ -211,7 +207,7 @@ See [below](#launch-a-virtual-machine) for how to start a virtual machine.
 You can find more information about virtual machines in our forum[^1].
 <!-- You can find more information in the Advanced Guide. -->
 
-!!! note "Note:"
+!!! note
 	For now virtual machines support less features than containers.     
     See [Advanced Guide - Instance configuration](/lxd/advanced-guide#difference-between-containers-and-virtual-machines) for details.
     {: .p-noteadm }
@@ -388,11 +384,10 @@ Push a folder with:
 
 #### Remove instance
 
-!!! note "Warning:"
+!!! warning
 	This will delete the instance including all snapshots.   
 	Deletion will be final in most cases and restore is unlikely!   
     See [Tips & Tricks in Advanced Guide](/lxd/advanced-guide/#prevent-accidental-deletion-of-an-instance) on how to avoid accidental deletion.
-	{: .p-noteadm }
 
 Use:
 
