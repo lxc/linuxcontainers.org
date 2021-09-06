@@ -107,6 +107,16 @@
      "generator": "link",
      "meta": {"url": "https://github.com/lxc/lxd"}},
 
+    {"path": "/lxd/github-actions/",
+     "menu": ["LXD", "GitHub Actions"],
+     "generator": "link",
+     "meta": {"url": "https://github.com/lxc/lxd/actions"}},
+
+    {"path": "/lxd/jenkins-ci/",
+     "menu": ["LXD", "Jenkins CI"],
+     "generator": "link",
+     "meta": {"url": "https://jenkins.linuxcontainers.org/view/LXD/"}},
+
 
 
     {"path": "/lxc/",
@@ -196,6 +206,11 @@
      "generator": "link",
      "meta": {"url": "https://github.com/lxc/lxc"}},
 
+    {"path": "/lxc/github-actions/",
+     "menu": ["LXC", "GitHub Actions"],
+     "generator": "link",
+     "meta": {"url": "https://github.com/lxc/lxc/actions"}},
+
     {"path": "/lxc/jenkins-ci/",
      "menu": ["LXC", "Jenkins CI"],
      "generator": "link",
@@ -270,6 +285,11 @@
      "generator": "link",
      "meta": {"url": "https://github.com/lxc/lxcfs"}},
 
+    {"path": "/lxcfs/github-actions/",
+     "menu": ["LXCFS", "GitHub Actions"],
+     "generator": "link",
+     "meta": {"url": "https://github.com/lxc/lxcfs/actions"}},
+
 
 
     {"path": "/distrobuilder/",
@@ -329,6 +349,11 @@
      "menu": ["distrobuilder", "GitHub"],
      "generator": "link",
      "meta": {"url": "https://github.com/lxc/distrobuilder"}},
+
+    {"path": "/distrobuilder/github-actions/",
+     "menu": ["distrobuilder", "GitHub Actions"],
+     "generator": "link",
+     "meta": {"url": "https://github.com/lxc/distrobuilder/actions"}},
 
 
 
@@ -401,6 +426,5 @@
     {"path": "/cgmanager/github/",
      "menu": ["CGManager", "GitHub"],
      "generator": "link",
-     "meta": {"url": "https://github.com/lxc/cgmanager"}},
-
+     "meta": {"url": "https://github.com/lxc/cgmanager"}}
 ]
