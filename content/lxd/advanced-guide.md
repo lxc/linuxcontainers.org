@@ -1,36 +1,4 @@
-## Contents
-
-* [Introduction](#introduction)
-* [Configuration of Instances](#configuration-of-instances)
-	* [Difference between Containers and Virtual Machines](#difference-between-containers-and-virtual-machines)
-	* [lxc launch flags](#lxc-launch-flags)
-	* [Profiles](#profiles)
-		* [Create a profile](#create-a-profile)
-		* [Edit a profile](#edit-a-profile)
-		* [Write a profile](#write-a-profile)
-	* [Apply and edit options later](#apply-and-edit-options-later)
-	* [Show configuration](#show-configuration)
-	* [Cloud-init](#cloud-init)
-* [Server configuration](#server-configuration)
-	* [Projects](#projects)
-	* [Security](#security)
-	* [Remote Servers](#remote-servers)
-		* [Setup simplestream servers](#setup-simplestream-servers)
-		* [Setup your LXD server as remote server](#setup-your-lxd-server-as-remote-server)
-		* [Connect to remote servers](#add-remote-servers)
-		* [Use remote servers](#use-remote-servers)
-* [Images - Part 2](#images-part-2)
-	* [Import Images](#import-images)
-	* [Manual download](#manual-download)
-	* [Export Images](#export-images)
-		* [Create Image from Containers](#create-image-from-containers)
-	* [Build Images](#build-images)
-		* [Write or Edit a Template](#write-or-edit-a-template)
-* [Networks](#networks)
-* [Storages](#storages)
-* [Command aliases](#command-aliases)
-* [Tips & Tricks](#tips-tricks)
-* [Further Information & Links](#further-information-links)
+[TOC]
 
 ---
 
