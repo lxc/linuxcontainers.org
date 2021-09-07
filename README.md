@@ -29,7 +29,7 @@ Install the following software (naming may depends on your distribution):
  * python3 (>= 3.3)
  * python3-bs4
  * python3-jinja2
- * python3-markdown
+ * python3-markdown (>= 3.3.4)
  * python3-pygments
 
 ### Clone the repo
