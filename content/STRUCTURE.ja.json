@@ -6,83 +6,6 @@
 
 
 
-    {"path": "/lxc/introduction/",
-     "title": "LXC - イントロダクション",
-     "menu": ["LXC", "イントロダクション"],
-     "generator": "markdown",
-     "meta": {"input": "lxc/introduction.ja.md"}},
-
-    {"path": "/lxc/news/",
-     "title": "LXC - ニュース",
-     "menu": ["LXC", "ニュース"],
-     "generator": "news",
-     "meta": {"dir": "/content/lxc/news.ja/",
-              "input": "lxc/news.md"}},
-
-    {"path": "/lxc/getting-started/",
-     "title": "LXC - はじめに",
-     "menu": ["LXC", "はじめに"],
-     "generator": "markdown",
-     "meta": {"input": "lxc/getting-started.ja.md"}},
-
-    {"path": "/lxc/documentation/",
-     "title": "LXC - ドキュメント",
-     "menu": ["LXC", "ドキュメント"],
-     "generator": "markdown",
-     "meta": {"input": "lxc/documentation.ja.md"}},
-
-    {"path": "/lxc/manpages/",
-     "title": "LXC - Man ページ",
-     "menu": ["LXC", "Man ページ"],
-     "meta": {"dir": "/manpages/lxc/ja"}},
-
-    {"path": "/lxc/contribute/",
-     "title": "LXC - コントリビュート",
-     "menu": ["LXC", "コントリビュート"],
-     "generator": "markdown",
-     "meta": {"input": "lxc/contribute.ja.md"}},
-
-    {"path": "/lxc/security/",
-     "title": "LXC - セキュリティ",
-     "menu": ["LXC", "セキュリティ"],
-     "generator": "markdown",
-     "meta": {"input": "lxc/security.ja.md"}},
-
-    {"path": "/lxc/downloads/",
-     "title": "LXC - ダウンロード",
-     "menu": ["LXC", "ダウンロード"],
-     "meta": {"dir": "/downloads/lxc",
-              "input": "lxc/downloads.ja.md"}},
-
-    {"path": "/lxc/external-resources/",
-     "menu": ["LXC", "外部リソース"]},
-
-    {"path": "/lxc/articles/",
-     "title": "LXC - 記事",
-     "menu": ["LXC", "記事"],
-     "generator": "markdown",
-     "meta": {"input": "lxc/articles.ja.md"}},
-
-    {"path": "/lxc/forum/",
-     "menu": ["LXC", "フォーラム"]},
-
-    {"path": "/lxc/mailing-lists/",
-     "menu": ["LXC", "メーリングリスト"]},
-
-    {"path": "/lxc/irc/",
-     "menu": ["LXC", "IRC"]},
-
-    {"path": "/lxc/github/",
-     "menu": ["LXC", "GitHub"]},
-
-    {"path": "/lxc/jenkins-ci/",
-     "menu": ["LXC", "Jenkins CI"]},
-
-    {"path": "/lxc/travis-ci/",
-     "menu": ["LXC", "Travis CI"]},
-
-
-
     {"path": "/lxd/introduction/",
      "title": "LXD - イントロダクション",
      "menu": ["LXD", "イントロダクション"],
@@ -160,19 +83,123 @@
      "meta": {"input": "lxd/articles.md"}},
 
     {"path": "/lxd/forum/",
-     "menu": ["LXD", "フォーラム"]},
+     "menu": ["LXD", "フォーラム"],
+     "generator": "link",
+     "meta": {"url": "https://discuss.linuxcontainers.org"}},
 
     {"path": "/lxd/mailing-lists/",
-     "menu": ["LXD", "メーリングリスト"]},
+     "menu": ["LXD", "メーリングリスト"],
+     "generator": "link",
+     "meta": {"url": "https://lists.linuxcontainers.org"}},
 
     {"path": "/lxd/irc/",
-     "menu": ["LXD", "IRC"]},
+     "menu": ["LXD", "IRC"],
+     "generator": "link",
+     "meta": {"url": "https://kiwiirc.com/client/irc.libera.chat/#lxc"}},
 
     {"path": "/lxd/github/",
-     "menu": ["LXD", "GitHub"]},
+     "menu": ["LXD", "GitHub"],
+     "generator": "link",
+     "meta": {"url": "https://github.com/lxc/lxd"}},
 
-    {"path": "/lxd/travis-ci/",
-     "menu": ["LXD", "Travis CI"]},
+    {"path": "/lxd/github-actions/",
+     "menu": ["LXD", "GitHub Actions"],
+     "generator": "link",
+     "meta": {"url": "https://github.com/lxc/lxd/actions"}},
+
+    {"path": "/lxd/jenkins-ci/",
+     "menu": ["LXD", "Jenkins CI"],
+     "generator": "link",
+     "meta": {"url": "https://jenkins.linuxcontainers.org/view/LXD/"}},
+
+
+
+    {"path": "/lxc/introduction/",
+     "title": "LXC - イントロダクション",
+     "menu": ["LXC", "イントロダクション"],
+     "generator": "markdown",
+     "meta": {"input": "lxc/introduction.ja.md"}},
+
+    {"path": "/lxc/news/",
+     "title": "LXC - ニュース",
+     "menu": ["LXC", "ニュース"],
+     "generator": "news",
+     "meta": {"dir": "/content/lxc/news.ja/",
+              "input": "lxc/news.md"}},
+
+    {"path": "/lxc/getting-started/",
+     "title": "LXC - はじめに",
+     "menu": ["LXC", "はじめに"],
+     "generator": "markdown",
+     "meta": {"input": "lxc/getting-started.ja.md"}},
+
+    {"path": "/lxc/documentation/",
+     "title": "LXC - ドキュメント",
+     "menu": ["LXC", "ドキュメント"],
+     "generator": "markdown",
+     "meta": {"input": "lxc/documentation.ja.md"}},
+
+    {"path": "/lxc/manpages/",
+     "title": "LXC - Man ページ",
+     "menu": ["LXC", "Man ページ"],
+     "meta": {"dir": "/manpages/lxc/ja"}},
+
+    {"path": "/lxc/contribute/",
+     "title": "LXC - コントリビュート",
+     "menu": ["LXC", "コントリビュート"],
+     "generator": "markdown",
+     "meta": {"input": "lxc/contribute.ja.md"}},
+
+    {"path": "/lxc/security/",
+     "title": "LXC - セキュリティ",
+     "menu": ["LXC", "セキュリティ"],
+     "generator": "markdown",
+     "meta": {"input": "lxc/security.ja.md"}},
+
+    {"path": "/lxc/downloads/",
+     "title": "LXC - ダウンロード",
+     "menu": ["LXC", "ダウンロード"],
+     "meta": {"dir": "/downloads/lxc",
+              "input": "lxc/downloads.ja.md"}},
+
+    {"path": "/lxc/external-resources/",
+     "menu": ["LXC", "外部リソース"]},
+
+    {"path": "/lxc/articles/",
+     "title": "LXC - 記事",
+     "menu": ["LXC", "記事"],
+     "generator": "markdown",
+     "meta": {"input": "lxc/articles.ja.md"}},
+
+    {"path": "/lxc/forum/",
+     "menu": ["LXC", "フォーラム"],
+     "generator": "link",
+     "meta": {"url": "https://discuss.linuxcontainers.org"}},
+
+    {"path": "/lxc/mailing-lists/",
+     "menu": ["LXC", "メーリングリスト"],
+     "generator": "link",
+     "meta": {"url": "https://lists.linuxcontainers.org"}},
+
+    {"path": "/lxc/irc/",
+     "menu": ["LXC", "IRC"],
+     "generator": "link",
+     "meta": {"url": "https://kiwiirc.com/client/irc.libera.chat/#lxc"}},
+
+    {"path": "/lxc/github/",
+     "menu": ["LXC", "GitHub"],
+     "generator": "link",
+     "meta": {"url": "https://github.com/lxc/lxc"}},
+
+    {"path": "/lxc/github-actions/",
+     "menu": ["LXC", "GitHub Actions"],
+     "generator": "link",
+     "meta": {"url": "https://github.com/lxc/lxc/actions"}},
+
+    {"path": "/lxc/jenkins-ci/",
+     "menu": ["LXC", "Jenkins CI"],
+     "generator": "link",
+     "meta": {"url": "https://jenkins.linuxcontainers.org/view/LXC/"}},
 
 
 
@@ -218,7 +245,9 @@
      "menu": ["LXCFS", "外部リソース"]},
 
     {"path": "/lxcfs/forum/",
-     "menu": ["LXCFS", "フォーラム"]},
+     "menu": ["LXCFS", "フォーラム"],
+     "generator": "link",
+     "meta": {"url": "https://discuss.linuxcontainers.org"}},
 
     {"path": "/lxcfs/mailing-lists/",
      "menu": ["LXCFS", "メーリングリスト"],
@@ -234,6 +263,11 @@
      "menu": ["LXCFS", "GitHub"],
      "generator": "link",
      "meta": {"url": "https://github.com/lxc/lxcfs"}},
+
+    {"path": "/lxcfs/github-actions/",
+     "menu": ["LXCFS", "GitHub Actions"],
+     "generator": "link",
+     "meta": {"url": "https://github.com/lxc/lxcfs/actions"}},
 
 
 
@@ -295,10 +329,10 @@
      "generator": "link",
      "meta": {"url": "https://github.com/lxc/distrobuilder"}},
 
-    {"path": "/distrobuilder/travis-ci/",
-     "menu": ["distrobuilder", "Travis CI"],
+     {"path": "/distrobuilder/github-actions/",
+     "menu": ["distrobuilder", "GitHub Actions"],
      "generator": "link",
-     "meta": {"url": "https://travis-ci.org/lxc/distrobuilder"}},
+     "meta": {"url": "https://github.com/lxc/distrobuilder/actions"}},
 
 
 
@@ -360,8 +394,5 @@
      "menu": ["CGManager", "IRC"]},
 
     {"path": "/cgmanager/github/",
-     "menu": ["CGManager", "GitHub"]},
-
-    {"path": "/cgmanager/travis-ci/",
-     "menu": ["CGManager", "Travis CI"]}
+     "menu": ["CGManager", "GitHub"]}
 ]
