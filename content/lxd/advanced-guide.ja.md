@@ -1,36 +1,4 @@
-## 目次 <!-- Contents -->
-
-* [はじめに](#_2)<!-- [Introduction](#introduction) -->
-* [インスタンスの設定](#_3)<!-- [Configuration of Instances](#configuration-of-instances) -->
-	* [コンテナと仮想マシンの違い](#_4)<!-- [Difference between Containers and Virtual Machines](#difference-between-containers-and-virtual-machines) -->
-	* [lxc launch コマンドのオプション](#lxc-launch) <!-- [lxc launch flags](#lxc-launch-flags) -->
-	* [プロファイル](#_6)<!-- [Profiles](#profiles) -->
-		* [プロファイルの作成](#_8)<!-- [Create a profile](#create-a-profile) -->
-		* [プロファイルの編集](#_9)<!-- [Edit a profile](#edit-a-profile) -->
-		* [プロファイルを記述する](#_12)<!-- [Write a profile](#write-a-profile) -->
-	* [あとで設定オプションを適用・編集する](#_13) <!-- [Apply and edit options later](#apply-and-edit-options-later) -->
-	* [設定の確認](#_18)<!-- [Show configuration](#show-configuration) -->
-	* [Cloud-init](#cloud-init)
-* [サーバー設定](#_22) <!-- [Server configuration](#server-configuration) -->
-	* [プロジェクト](#_23)<!-- [Projects](#projects) -->
-	* [セキュリティ](#_24) <!-- [Security](#security) -->
-	* [リモートサーバー](#_25) <!-- [Remote Servers](#remote-servers) -->
-		* [simplestream サーバーのセットアップ](#simplestream) <!-- [Setup simplestream servers](#setup-simplestream-servers) -->
-		* [リモートサーバーとして LXD サーバーをセットアップする](#lxd_1) <!-- [Setup your LXD server as remote server](#setup-your-lxd-server-as-remote-server) -->
-		* [リモートサーバーの追加](#_27) <!-- [Connect to remote servers](#add-remote-servers)  -->
-		* [リモートサーバーの使用](#_28) <!-- [Use remote servers](#use-remote-servers) -->
-* [イメージ - Part 2](#-part-2)<!-- [Images - Part 2](#images-part-2) -->
-	* [イメージのインポート](#_32) <!-- [Import Images](#import-images) -->
-	* [手動でのダウンロード](#_35) <!-- [Manual download](#manual-download) -->
-	* [イメージのエクスポート](#_36) <!-- [Export Images](#export-images) -->
-		* [コンテナからのイメージの作成](#_37) <!-- [Create Image from Containers](#create-image-from-containers) -->
-	* [イメージのビルド](#_38) <!-- [Build Images](#build-images) -->
-		* [テンプレートの作成・編集](#_40) <!-- [Write or Edit a Template](#write-or-edit-a-template) -->
-* [ネットワーク](#_47) <!-- [Networks](#networks) -->
-* [ストレージ](#_48) <!-- [Storages](#storages) -->
-* [コマンドエイリアス](#_49) <!-- [Command aliases](#command-aliases) -->
-* [Tips & Tricks](#tips-tricks)
-* [その他の情報とリンク](#_51) <!-- [Further Information & Links](#further-information-links) -->
+[TOC]
 
 ---
 

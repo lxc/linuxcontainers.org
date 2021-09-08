@@ -1,40 +1,4 @@
-## Contents 
-
-* [Installation](#installation)
-    * [Choose your release](#choose-your-release)
-    * [Getting the packages](#getting-the-packages)
-        * [Linux](#linux)
-            * [Alpine Linux](#alpine-linux)
-            * [Arch Linux](#arch-linux)
-            * [Fedora](#fedora)
-            * [Gentoo](#gentoo)
-            * [Ubuntu](#ubuntu)
-            * [Snap package (Arch Linux, Debian, Fedora, OpenSUSE and Ubuntu)](#snap-package-arch-linux-debian-fedora-opensuse-and-ubuntu)
-        * [MacOS builds](#macos-builds)
-        * [Windows builds](#windows-builds)
-        * [Installing from source](#installing-from-source)
-* [Initial configuration](#initial-configuration)
-    * [Access control](#access-control)
-* [Note about Virtual machines](#note-about-virtual-machines)
-* [LXD-Client](#lxd-client)
-    * [Overview](#overview)
-    * [Launch an instance](#launch-an-instance)
-        * [Launch a container](#launch-a-container)
-            * [Ubuntu Container](#example-for-ubuntu) <!-- wrong place, intended -->
-        * [Launch a virtual machine](#launch-a-virtual-machine)
-    * [Images](#images)
-        * [Remote image servers](#use-remote-image-servers)
-            * [List images on server](#list-images-on-server)
-            * [Search for images](#search-for-images)
-        * [Images for Virtual Machines](#images-for-virtual-machines)
-    * [Instance management](#instance-management)
-        * [Start/Stop](#startstop)
-        * [Shell inside Container](#shellterminal-inside-container)
-        * [Run Command from Host terminal](#run-command-from-host-terminal)
-        * [Shell inside Virtual Machine](#shellterminal-inside-virtual-machine)
-        * [Copy between container and host](#copy-files-and-folders-between-container-and-host)
-        * [Remove instance](#remove-instance)
-* [Further Information & Links](#further-information-links)
+[TOC]
 
 ---
 
@@ -109,9 +73,9 @@ After that, you can install the latest feature release of LXD with:
 
     sudo snap install lxd
 
-Alternatively, you can pass:   
-`--channel=4.0/stable` for the LXD 4.0 LTS release or   
-`--channel=3.0/stable` for the LXD 3.0 LTS release.   
+Alternatively, you can pass:
+`--channel=4.0/stable` for the LXD 4.0 LTS release or
+`--channel=3.0/stable` for the LXD 3.0 LTS release.
 
 For more information about LXD snap packages (regarding more versions, update management etc.), see [Managing the LXD snap](https://discuss.linuxcontainers.org/t/managing-the-lxd-snap/8178).
 
@@ -176,7 +140,7 @@ If you want to use an optimized setup, we recommend to go through the interactiv
 
 | Feature:  | Description: | Basic Configuration Options: | More Information: |
 | --- | ------------- | --- | --- |
-| Clustering | A Cluster combines several LXD-servers. They share the same distributed database and can be managed uniformly using the LXD-client (lxc) or the REST API. | default=`no`; <br> If set to `yes`, you can either connect to an existing cluster or create a new one. | LXD-documentation: <br> [[clustering]] |
+| Clustering | A Cluster combines several LXD-servers. They share the same distributed database and can be managed uniformly using the LXD client (lxc) or the REST API. | default=`no`; <br> If set to `yes`, you can either connect to an existing cluster or create a new one. | LXD-documentation: <br> [[clustering]] |
 | MAAS server | "MAAS is an open-source tool that lets you build a data centre from bare-metal servers." | default=`no`; <br> If set to `yes`, you can connect to an existing MAAS-server and specify the `name`, `URL` and `API key`. | - [maas.io](https://maas.io/) <br> - [maas - install with lxd](https://maas.io/docs/install-with-lxd) |
 | Network bridge | Provides network access for the instances. | You can either use an existing bridge (or interface) or let LXD create a new bridge (recommended option). <br> You can also create additional bridges and assign them to instances later. | LXD-documentation: <br> - [[networks]] <br> - [Network interface](https://linuxcontainers.org/lxd/docs/master/instances#type-nic) |
 | Storage pools | Instances etc. are stored in storage pools. | For testing purposes you can create a loop-backed storage pool. <br> But for production use it is recommended to use an empty partition (or full disk) instead of loop-backed storages (Reasons include: loop-backed pools are slower and their size can't be reduced). <br> The recommended backends are `ZFS` and `btrfs`. <br> You can also create additional storage pools later. | LXD-documentation: <br> - [[storage]] <br> - [Comparison of methods](https://linuxcontainers.org/lxd/docs/master/storage.html#where-to-store-lxd-data) <br> - [Backend Comparison Chart](https://linuxcontainers.org/lxd/docs/master/storage#feature-comparison) |
@@ -197,12 +161,12 @@ or use the "newgrp lxd" command in the shell you're going to use to talk to LXD.
 !!! warning
 	Anyone with access to the LXD socket can fully control LXD, which includes the ability to attach host devices and filesystems, this should therefore only be given to users who would be trusted with root access to the host. You can learn more about LXD security [here](/lxd/docs/master/security).
 
-# Note about Virtual machines
+# Note about virtual machines
 Since version 4.0 LXD also natively supports virtual machines and thanks to a built-in agent, they can be used almost like containers.
 
 LXD uses `qemu` to provide the VM functionality.
 
-See [below](#launch-a-virtual-machine) for how to start a virtual machine.
+See [below](#launch-an-instance) for how to start a virtual machine.
 
 You can find more information about virtual machines in our forum[^1].
 <!-- You can find more information in the Advanced Guide. -->
@@ -213,8 +177,8 @@ You can find more information about virtual machines in our forum[^1].
     {: .p-noteadm }
 
 
-# LXD-Client 
-The LXD-client `lxc` is a command tool to manage your LXD servers.
+# LXD client 
+The LXD client `lxc` is a command tool to manage your LXD servers.
 
 ## Overview
 The following command will give you an overview of all available commands and options:
@@ -224,28 +188,25 @@ The following command will give you an overview of all available commands and op
 Use `lxc [command] --help` for more information about a command, like flags and further options.
 
 ## Launch an instance
-You can launch an instance with command `lxc launch`:
+You can launch an instance with the `lxc launch` command.
 
-##### Launch a container
+To launch a container:
 	
 	lxc launch imageserver:imagename instancename	
 
-##### Launch a virtual machine
+To launch a virtual machine:
 	
 	lxc launch imageserver:imagename instancename --vm
 
-Replace:
+In the commands above, replace:
 
-- `imageserver` with the name of a built-in or added image server (e.g. `ubuntu` or `images`) and 
+- `imageserver` with the name of a built-in or added image server (e.g. `ubuntu` or `images`).
 - `imagename` with the name of an image (e.g. `20.04` or `debian/11`).   See [Section "Images"](#images) for details.
-- `instancename` with a name of your choice (e.g. `ubuntuone`), if left empty LXD will pick a random name.
+- `instancename` with a name of your choice (e.g. `ubuntuone`). If left empty, LXD will pick a random name.
 
-### Example for Ubuntu
+For example, to create a container based on the Ubuntu `Focal Fossa` image (provided by LXD) with the instancename `ubuntuone`, enter the following command:
 
 	lxc launch ubuntu:20.04 ubuntuone
-
-this will create a container based on the Ubuntu `Focal Fossa` Image (provided by LXD) with the instancename `ubuntuone`.
-
 
 ## Configuration of instances
 See [Advanced Guide - Instance Configuration](/lxd/advanced-guide#configuration-of-instances).
@@ -277,7 +238,7 @@ To get a list of remote images on server `images`, type:
 	
 	lxc image list images:
 
-**Details:**   
+**Details:**
 _Most details in the list should be self-explanatory._
 
 - Alias with `cloud`
@@ -288,23 +249,23 @@ You can search for images, by applying specific elements (e.g. the name of a dis
 
 Show all Debian images:
 
-	lxc image list images: debian  
+	lxc image list images: debian
 
 Show all 64-bit Debian images:
 
 	lxc image list images: debian amd64
 
-### Images for Virtual Machines
-It is recommended to use the `cloud` variants of images (visible by the `cloud`-tag in their `ALIAS`).   
-They include cloud-init and the LXD-agent.   
+### Images for virtual machines
+It is recommended to use the `cloud` variants of images (visible by the `cloud`-tag in their `ALIAS`).
+They include cloud-init and the LXD-agent.
 They also increase their size automatically and are tested daily.
 
 ## Instance management
-List all Instances:
+List all instances:
 
     lxc list
 
-#### Start/Stop  
+### Start/stop
 Start an instance:
 
 	lxc start instancename
@@ -313,7 +274,7 @@ Stop an instance:
 
     lxc stop instancename
 
-#### Shell/Terminal inside Container   
+### Shell/terminal inside container
 Get a shell inside a container:
 
     lxc exec instancename -- /bin/bash
@@ -325,7 +286,7 @@ root@containername:~#
 
 ```
 
-##### To login as a user instead, run:   
+#### Log in as a user instead
 **Note:** In many containers you need to create a user first.
 
 	lxc exec instancename -- su --login username
@@ -337,12 +298,12 @@ root@containername:~# exit
 
 ```
 
-#### Run Command from Host terminal   
+### Run command from host terminal
 Run a single command from host's terminal:
 
     lxc exec containername -- apt-get update
 
-#### Shell/Terminal inside Virtual Machine
+### Shell/terminal inside virtual machine
 You can see your VM boot with:
 
 	lxc console instancename
@@ -357,8 +318,8 @@ Exit the VM shell, with:
 
 	exit
 
-#### Copy files and folders between container and host
-##### Copy from an instance to host
+### Copy files and folders between container and host
+#### Copy from an instance to host
 
 Pull a file with:
 
@@ -372,7 +333,7 @@ For example:
     
     lxc file pull instancename/etc/hosts .
 
-##### Copy from host to instance
+#### Copy from host to instance
 
 Push a file with:
 
@@ -382,11 +343,11 @@ Push a folder with:
 
     lxc file push -r path-on-host instancename/path-in-container
 
-#### Remove instance
+### Remove instance
 
 !!! warning
-	This will delete the instance including all snapshots.   
-	Deletion will be final in most cases and restore is unlikely!   
+	This will delete the instance including all snapshots.
+	Deletion will be final in most cases and restore is unlikely!
     See [Tips & Tricks in Advanced Guide](/lxd/advanced-guide/#prevent-accidental-deletion-of-an-instance) on how to avoid accidental deletion.
 
 Use:
@@ -394,7 +355,7 @@ Use:
     lxc delete instancename
 
 
-# Further Information & Links
+# Further information & links
 
 You find more information on the following pages:
 

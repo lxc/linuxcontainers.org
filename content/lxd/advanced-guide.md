@@ -1,40 +1,8 @@
-## Contents
-
-* [Introduction](#introduction)
-* [Configuration of Instances](#configuration-of-instances)
-	* [Difference between Containers and Virtual Machines](#difference-between-containers-and-virtual-machines)
-	* [lxc launch flags](#lxc-launch-flags)
-	* [Profiles](#profiles)
-		* [Create a profile](#create-a-profile)
-		* [Edit a profile](#edit-a-profile)
-		* [Write a profile](#write-a-profile)
-	* [Apply and edit options later](#apply-and-edit-options-later)
-	* [Show configuration](#show-configuration)
-	* [Cloud-init](#cloud-init)
-* [Server configuration](#server-configuration)
-	* [Projects](#projects)
-	* [Security](#security)
-	* [Remote Servers](#remote-servers)
-		* [Setup simplestream servers](#setup-simplestream-servers)
-		* [Setup your LXD server as remote server](#setup-your-lxd-server-as-remote-server)
-		* [Connect to remote servers](#add-remote-servers)
-		* [Use remote servers](#use-remote-servers)
-* [Images - Part 2](#images-part-2)
-	* [Import Images](#import-images)
-	* [Manual download](#manual-download)
-	* [Export Images](#export-images)
-		* [Create Image from Containers](#create-image-from-containers)
-	* [Build Images](#build-images)
-		* [Write or Edit a Template](#write-or-edit-a-template)
-* [Networks](#networks)
-* [Storages](#storages)
-* [Command aliases](#command-aliases)
-* [Tips & Tricks](#tips-tricks)
-* [Further Information & Links](#further-information-links)
+[TOC]
 
 ---
 
-#Introduction
+# Introduction
 
 !!! note
 	If you haven't set up LXD yet, take a look at the [Getting-Started Guide](/lxd/getting-started-cli/) first.
@@ -66,7 +34,7 @@ Basically you can apply two types of configurations:
     - and more
 
 
-### Difference between Containers and Virtual Machines
+### Difference between containers and virtual machines
 For now virtual machines support less features than containers.   
 You can see what configuration options are available for virtual machines in the [LXD documentation for instances](/lxd/docs/master/instances#keyvalue-configuration).   
 All categories and keys that contain the terms `virtual-machine` or `VM` are supported.
@@ -101,7 +69,7 @@ To apply multiple profiles or config keys, use one flag for each, like:
 ### Profiles
 Profiles are like configuration files for instances (but they are saved in a database).
 
-#### No profile/Default profile
+#### No profile/default profile
 If you don't apply specific profiles to an instance, only the `default` profile is applied automatically.
 
 You can view the content of the `default` profile with:
@@ -254,9 +222,9 @@ Features include:
 * add users
 * and more
 
-Requirements:   
+Requirements:
 
-* Images with cloud-init support:   
+* Images with cloud-init support:
 For example, official LXD images that contain the term `cloud` in `ALIAS` have implemented cloud-init support.
 
 ## Apply instructions for cloud-init
@@ -349,7 +317,7 @@ You can also use the following flag, which will only respond when cloud-init is 
 	cloud-init status --wait
 
 
-### More information:
+### More information
 See:
  [Cloud-init documentation](https://cloudinit.readthedocs.io/en/latest/)
  
@@ -361,7 +329,7 @@ Below we will introduce some topics, including:
 
 - [Projects](#projects)
 - [Security](#security)
-- [Remote Servers](#remote-servers)
+- [Remote servers](#remote-servers)
 
 ## Projects
 You can split your server into projects.   
@@ -371,28 +339,28 @@ See [LXD documentation - Projects](/lxd/docs/master/projects) for more informati
 ## Security
 See [LXD documentation - Security](/lxd/docs/master/security) for details on Server security.
 
-## Remote Servers
+## Remote servers
 LXD supports different kinds of remote servers:
 
-* `simplestream servers`: pure image servers (see [below](#setup-simplestream-servers))
+* `simplestream servers`: pure image servers (see [below](#set-up-simplestream-servers))
 * `LXD-Servers`: regular LXD-Servers that you can manage over a network (can also be used as image servers). You can choose between multiple methods:
-    * [Default (TLS + Password)](#default-tls-password)
+    * [Default (TLS + password)](#default-tls-password)
     * [Public (image) server](#public-image-server)
     * [Candid](#candid) (Authentication service)
     * [Candid+RBAC](#candid-rbac) (Role Based Access Control)
 
-### Setup simplestream servers
+### Set up simplestream servers
 There are multiple servers available, for example:   
 
 - the LXD image server from Avature: [Link to GitHub Repo](https://github.com/Avature/lxd-image-server)
 
-**Connect to a simplestreams server:**   
-See [Add Simplestream servers](#add-simplestream-servers).
+**Connect to a simplestream server:**   
+See [Add simplestream servers](#add-simplestream-servers).
 
-### Setup your LXD server as remote server
+### Set up your LXD server as remote server
 
-#### Default (TLS + Password)
-This will setup a server with authentication based on TLS-certificates.   
+#### Default (TLS + password)
+This will set up a server with authentication based on TLS-certificates.   
 For easier adding of clients, you can set a password which will authenticate the clients the first time they connect.
 
 Set up a LXD-server as a remote server, with:
@@ -411,7 +379,7 @@ For details see: [LXD Documentation - Security](/lxd/docs/master/security)
 
 <br>
 
-**Connect to this Server:**   
+**Connect to this server:**
 See [Add remote servers](#add-remote-servers) for how to add a server to your clients remote server list.
 
 #### Public image server
@@ -425,7 +393,7 @@ This will make the LXD-Server available over network on port 8443.
 You also need to set the images you want to share, to `public`.
 
 #### Candid
-Candid is an Authentication service.   
+Candid is an Authentication service.
 See [Ubuntu tutorials - Candid authentication for LXD](https://ubuntu.com/tutorials/candid-authentication-lxd#1-overview) for details and howto.
 
 #### Candid + RBAC
@@ -434,7 +402,7 @@ See [LXD documentation - Security RBAC](https://linuxcontainers.org/lxd/docs/mas
 
 ### Add remote servers
 
-#### Add Simplestream servers
+#### Add simplestream servers
 Use:
 
 	lxc remote add some-name https://example.com/some/path --protocol=simplestreams
@@ -450,7 +418,7 @@ Launch an instance based on an image of that server:
 
 #### Add remote LXD servers
 
-##### Default (TLS + Password)
+##### Default (TLS + password)
 You can add more servers to the remote server list with:
 
 	lxc remote add some-name <IP|FQDN|URL> [flags]   
@@ -486,22 +454,22 @@ You can use the same commands but prefixing the server and instance name like:
 
 You can replace `apt-get update` with any command the instance supports.
 
-# Images - Part 2
+# Images - part 2
 
-## Advanced options for Images
+## Advanced options for images
 
 1. [Add additional remote (image) servers](#add-remote-servers)
 2. [Manually import an image](#import-images)
 3. [Build your own image](#build-images)
 
-### Import Images
+## Import images
 You can import images, that you:
 
 - built yourself (see [Build Images](#build-images)), 
 - downloaded manually (see [Manual Download](#manual-download))
 - exported from images or containers (see [Export Images](#export-images) and [Create Image from Containers](#create-image-from-containers))
 
-##### Import container image
+#### Import container image
 
 Components:
 
@@ -513,7 +481,7 @@ Use:
 	lxc image import lxd.tar.xz rootfs.squashfs --alias custom-imagename
 
 
-##### Import virtual-machine image
+#### Import virtual-machine image
 
 Components:
 
@@ -525,11 +493,11 @@ Use:
 	lxc image import lxd.tar.xz disk.qcow2 --alias custom-imagename
 
 
-#### Manual download
+### Manual download
 You can also download images manually.   
 For that you need to download the components described [above](#import-images).
 
-##### From official LXD imageserver
+#### From official LXD image server
 
 **Note:** It is easier to use the usual method with `lxc launch`.     
 Use manual download only if you have a specific reason, like modification of the files before use for example.
@@ -538,7 +506,7 @@ Use manual download only if you have a specific reason, like modification of the
 [https://images.linuxcontainers.org/images/](https://images.linuxcontainers.org/images/)
 
 
-### Export Images
+## Export images
 Use:
 
 	lxc image export imagename [target folder] [flags]
@@ -546,37 +514,37 @@ Use:
 Flags:   
 `--vm` - Query virtual machine images
 
-#### Create Image from Containers
+### Create image from containers
 See command: 
 
 	lxc publish
 
-### Build Images
+## Build images
 For building your own images, you can use [`distrobuilder`](https://github.com/lxc/distrobuilder) (a tool developed by us).
 
-#### Install distrobuilder
+### Install distrobuilder
 You can install distrobuilder via snap or compile it manually:
 
-##### Install via Snap
+#### Install via Snap
 See [https://snapcraft.io/distrobuilder](https://snapcraft.io/distrobuilder).
 
-##### Compile
+#### Compile
 See [Instructions on distrobuilder GitHub repo](https://github.com/lxc/distrobuilder/#installing-from-source).
 
-#### Write or Edit a Template
+### Write or edit a template
 You need an image template (e.g. `ubuntu.yaml`) to give instructions to distrobuilder.
 
 You can start by using one of the example templates below.
 Modify those templates so they fit your needs.   
 See [Template details](#template-details) below for an overview of configuration keys.
 
-##### Example Templates
+#### Example templates
 Standard template (includes all available options): [https://github.com/lxc/distrobuilder/blob/master/doc/examples/scheme.yaml](https://github.com/lxc/distrobuilder/blob/master/doc/examples/scheme.yaml)
 
 Official LXD templates for various distributions:
 [https://github.com/lxc/lxc-ci/tree/master/images](https://github.com/lxc/lxc-ci/tree/master/images)
 
-##### Template details
+#### Template details
 You can define multiple keys in templates:
 
 
@@ -595,9 +563,9 @@ You can define multiple keys in templates:
 	You should either build an image with cloud-init support (provides automatic size growth) or set a higher size in the template, because the standard size is relatively small (~4 GB).   
 	Alternatively you can also grow it manually.
 
-#### Build an Image
+### Build an image
 
-##### Container Image   
+#### Container image
 Build a container image with:
 
 	distrobuilder build-lxd filename [target folder]
@@ -607,11 +575,11 @@ Replace:
 * `filename` - with a template file (e.g. `ubuntu.yaml`).
 * (optional)`[target folder]` - with the path to a folder of your choice; if not set, distrobuilder will use the current folder
 
-After the image is built, see [Import Images](#import-images) for how to import your image to LXD.
+After the image is built, see [Import images](#import-images) for how to import your image to LXD.
 
 See [Building.md on distrobuilder's GitHub repo](https://github.com/lxc/distrobuilder/blob/master/doc/building.md#lxd-image) for details.
 
-##### Virtual Machines Image
+#### Virtual machine image
 Build a virtual machine image with:
 
 	distrobuilder build-lxd filename --vm [target folder]
@@ -622,9 +590,9 @@ Replace:
 * (optional)`[target folder]` - with the path to a folder of your choice; if not set, distrobuilder will use the current folder
 
 
-After the image is built, see [Import Images](#import-images) for how to import your image to LXD.
+After the image is built, see [Import images](#import-images) for how to import your image to LXD.
 
-#### More information  
+### More information
 [Distrobuilder GitHub repo](https://github.com/lxc/distrobuilder)
 
 [Distrobuilder documentation](https://github.com/lxc/distrobuilder/tree/master/doc)
@@ -639,7 +607,7 @@ See LXD-documentation for details:
 
 
 # Storages
-See LXD-documentation for details:   
+See LXD-documentation for details:
 [Storage documentation](/lxd/docs/master/storage)
 
 
@@ -663,9 +631,9 @@ For example:
 This will link the command `lxc delete` to `lxc delete -i`.    
 So if you run `lxc delete` the LXD-client will run `lxc delete -i` instead.
 
-# Tips & Tricks
+# Tips & tricks
 
-#### Prevent accidental deletion of an instance
+## Prevent accidental deletion of an instance
 `Method 1`: Set an alias to be always prompted for approval when using `lxc delete`:
 
 	lxc alias add delete "delete -i"
@@ -674,7 +642,7 @@ So if you run `lxc delete` the LXD-client will run `lxc delete -i` instead.
 This way the instance can't be deleted, until you change this config key.
 
 
-# Further Information & Links
+# Further information & links
 You find more information on the following pages:
 
 - [LXD documentation](/lxd/docs/master/index)
