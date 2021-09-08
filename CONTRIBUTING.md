@@ -98,7 +98,7 @@ Translations for other languages are possible and appreciated. See [Translations
 
 ## Text- & Programming-Languages used
 
-* **Markdown:** 
+* **Markdown:**
   Standard Markdown language and the following extensions:
 
    ```
@@ -125,10 +125,10 @@ Translations for other languages are possible and appreciated. See [Translations
 * You can add `Notes` or `Warnings`:
 
   ```
-    !!! note 
+    !!! note
         Content
   ```
-  
+
   ```
     !!! warning
         Content
@@ -140,14 +140,13 @@ Translations for other languages are possible and appreciated. See [Translations
     !!! note "注意"
         Content
   ```
-    
+
 ## Guidelines for the content
 
-* create a Table of Content (TOC) manually (with a markdown list), the toc extension is only used for creation of hyperlinks.
-
-* write short and continuous text
-* use lists, tables & code tags 
-* use headers for each section and sub-section
+* For long pages, add a table of contents by putting a [TOC] tag at the top of the page.
+* Write short and continuous text.
+* Use lists, tables and code tags.
+* Use headers for each section and sub-section.
 
 ## Translations
 
@@ -182,7 +181,7 @@ Add the original text as comments inside the text, with:
 
 `<!-- original text -->`
 
-**Example:** 
+**Example:**
 
 Take a look at the [source file of the japanese version of the advanced guide](https://raw.githubusercontent.com/lxc/linuxcontainers.org/master/content/lxd/advanced-guide.ja.md).
 
@@ -191,5 +190,3 @@ Take a look at the [source file of the japanese version of the advanced guide](h
 Before opening a pull request, you should test the changes you made.
 
 Generate and run a local copy of the website (see [Readme.md](README.md)) and check whether it works and looks correct in your browser.
-
-
