@@ -195,7 +195,7 @@ content: |-
 
   #### データベース関数のクリーンアップ <!-- Cleaned up database functions -->
   <!--
-  Still on the database front, a lot more of the database logic has been moved over to our code generator, limiting the risk of mistakes when writing that code. A number of functions have been deprecated as a result and some codepaths optimized to run within a single transation.
+  Still on the database front, a lot more of the database logic has been moved over to our code generator, limiting the risk of mistakes when writing that code. A number of functions have been deprecated as a result and some codepaths optimized to run within a single transaction.
   -->
   データベースの面では、データベースロジックのより多くがコードジェネレーターに移動され、コードを書く際にミスをするリスクを制限しています。その結果、多数の関数が非推奨となり、コードパスの一部が単一のトランザクション内で実行されるように最適化されました。
 
@@ -291,7 +291,7 @@ content: |-
    - When demoting a voter to spare, transition to stand-by first
    - test/clustering: Make sure that a killed voter can't dsirupt current leader
    - lxd/cluster: Use a dedicated channel to stop the dqlite proxy
-   - lxd: Call Deamon.Kill() also when receiving signals (so db transactions won't be retried)
+   - lxd: Call Daemon.Kill() also when receiving signals (so db transactions won't be retried)
    - lxd/db: Add Cluster.Kill() method to prevent retrying upon shutdown
    - lxd/firewall/drivers/driver/nftables/templates: Fixes proxy nat rule dynamic family
    - shared/util_linux.go: cast Rdev uint64 for mips

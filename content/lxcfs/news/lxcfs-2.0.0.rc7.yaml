@@ -5,5 +5,5 @@ content: |-
   
    * This is the seventh release candidate for 2.0.0
    * This includes some important fixes to the upstart jobs and mount hooks
-   * Makes the reload handler async-safe, and a few more posix compliancy fixes.
+   * Makes the reload handler async-safe, and a few more posix compliance fixes.
   

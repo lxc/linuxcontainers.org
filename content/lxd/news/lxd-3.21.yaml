@@ -41,7 +41,7 @@ content: |-
 
   Increasing the number of voting members will slow down the database performance as more members will need to agree on a change. Increasing the number of standby members will not affect database performance but will increase network load as more members will need to get the database binary stream.
 
-  Only the largest of clusters where loosing 2 or 3 members almost immediately is a possibility should consider increasing those default values.
+  Only the largest of clusters where losing 2 or 3 members almost immediately is a possibility should consider increasing those default values.
 
   #### VM: CPU pinning and topology
   The `limits.cpu` key can now be set to specific CPU IDs just as is supported for containers. An example would be `limits.cpu: 0,2` or `limits.cpu: 0-3`.

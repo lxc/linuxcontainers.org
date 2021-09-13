@@ -37,7 +37,7 @@ content: |-
    * apparmor: Be less restrictive when unprivileged
    * apparmor: create an apparmor namespace for each container
    * doc: Fix rest-api for PATCH addition
-   * doc: Fix the table sytle of environment.md
+   * doc: Fix the table style of environment.md
    * extras: Containers state checking for start, stop and exec commands in bash completion
    * extras: Fixed container convert from LXC to LXD
    * extras: Update bash completion for current options

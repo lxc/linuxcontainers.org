@@ -67,7 +67,7 @@ content: |-
   #### Projects can now restrict cluster targeting
   Another project configuration key added in 4.12 is `restricted.cluster.target`.
 
-  When it's set, non-admin users in restricted projects are no longer allowed to use cluster member targetting (`--target`). Administrators are still allowed to do it so they can perform manual cluster re-balance or node evacuation operations.
+  When it's set, non-admin users in restricted projects are no longer allowed to use cluster member targeting (`--target`). Administrators are still allowed to do it so they can perform manual cluster re-balance or node evacuation operations.
 
   #### Configuration option for Ceph features
   A new configuration option for Ceph storage pools was added.
@@ -327,7 +327,7 @@ content: |-
    - shared/log15: Remove dead code
    - lxd/network/acl: Remove unused code
    - lxd/storage/drivers/driver/btrfs: Unset pool size setting during creation if not relevant
-   - lxd/storage/drivers/driver/btrfs: Consisent error quoting in Create
+   - lxd/storage/drivers/driver/btrfs: Consistent error quoting in Create
    - lxd/storage/pools/config: Consistent error quoting in storagePoolValidateConfig
    - driver_lxc: pass flags to shiftfs mount
    - lxd/network/driver/bridge: Ensure that DHCP firewall rules are added in fan mode

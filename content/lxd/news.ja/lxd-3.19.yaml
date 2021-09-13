@@ -549,7 +549,7 @@ content: |-
 
   #### cgroup2 リソース制限の初期サポート <!-- Initial CGroup2 resource restrictions -->
   <!--
-  A new CGroup abstraction layer was added to LXD as well as an initial mapping for v2 resource controlers. This combined with recent improvements to liblxc should allow for most resource constraints to function in a CGroup V2 environment.
+  A new CGroup abstraction layer was added to LXD as well as an initial mapping for v2 resource controllers. This combined with recent improvements to liblxc should allow for most resource constraints to function in a CGroup V2 environment.
   -->
   新しい cgroup 抽象レイヤーが LXD に追加され、v2 リソースコントローラーの初期マッピングも追加されました。これに最近の liblxc の改良を組み合わせて、ほとんどのリソース制限が cgroup v2 環境で機能するようになりました。
 
@@ -703,7 +703,7 @@ content: |-
    * api: Add compression_squashfs extension
    * lxd/cluster: Validate squashfs-tools-ng executables
    * lxd: Modify compressFile() to support SquashFS
-   * lxd/networks: Nicer error on misisng IPv6
+   * lxd/networks: Nicer error on missing IPv6
    * global: Drop -Wcast-align (breaks armhf)
    * lxd: Support SquashFS compressed backup imports
    * lxd: Add SquashFS compressed image publish/export support
@@ -1023,7 +1023,7 @@ content: |-
    * lxd-agent: Port to cobra
    * lxd-agent: Re-order imports
    * lxd/vsock: Switch to single implementation
-   * api: Add extention for passing in raw mount options
+   * api: Add extension for passing in raw mount options
    * doc/container: added raw_mount_options to disk options
    * lxd/device add support for raw_mount_options for disk device mounts
    * tests: Add test for raw.mount.options for disk device mounts
@@ -1223,7 +1223,7 @@ content: |-
    * lxd/container: Removes container type
    * lxd: Removes use of container type
    * lxd: Renames containerCreateAsSnapshot to instanceCreateAsSnapshot
-   * lxd/container/snaphot: Returns instances property in response
+   * lxd/container/snapshot: Returns instances property in response
    * lxd/container/snapshot: Removes duplicated instance type check
    * lxd/storage: Changes CreateInstanceSnapshot signature to accept source instance
    * lxd: Hooks instanceCreateAsSnapshot up to new storage pkg
@@ -1539,7 +1539,7 @@ content: |-
    * lxd/storage/drivers/volume: Exposes BlockBacking property from storage driver via IsBlockBacked()
    * lxd/storage: Updates commonVolRulesFunc usage
    * lxd: Fix order of cgroup initialization
-   * lxd/storage/backend/lxd: Adds protection against updating volume properties that cant be changed
+   * lxd/storage/backend/lxd: Adds protection against updating volume properties that can't be changed
    * lxd/storage/drivers/volume: Exposes volume type and content type of Volume
    * lxd/storage/utils: Improves common volume validation
    * lxd/db/storage/pools: Adds StoragePoolNodeVolumeGetTypeIDByProject

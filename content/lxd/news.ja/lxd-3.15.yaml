@@ -114,7 +114,7 @@ content: |-
   ### 新機能 <!-- New features -->
   #### SR-IOV 上のハードウェア VLAN, MAC フィルタリング <!-- Hardware VLAN and MAC filtering on SR-IOV -->
   <!--
-  The `security.mac_filtering` and `vlan` properties are now avaiable to SR-IOV devices. This directly controls the matching SR-IOV options on the virtual function and so will completely prevent any MAC spoofing from the container or in the case of VLANs will perform hardware filtering at the VF level.
+  The `security.mac_filtering` and `vlan` properties are now available to SR-IOV devices. This directly controls the matching SR-IOV options on the virtual function and so will completely prevent any MAC spoofing from the container or in the case of VLANs will perform hardware filtering at the VF level.
   -->
   `security.mac_filtering` と `vlan` プロパティが SR-IOV デバイス上で指定できるようになりました。これは、SR-IOV の Virtual Function（VF） 上の対応するオプションを直接コントロールするため、コンテナからの MAC スプーフィングを完全に防ぎます。VLAN の場合は、VF レベルでハードウェアフィルタリングを実行します。
 

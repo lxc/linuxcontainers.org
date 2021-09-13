@@ -24,7 +24,7 @@ content: |-
    * lxd/containers: Actually surface the last used update error
    * lxd/containers: Add /snap/bin to PATH even if only /snap exists
    * lxd/containers: Attach to userns on file operations
-   * lxd/containers: Better handle concurent stop/shutdown
+   * lxd/containers: Better handle concurrent stop/shutdown
    * lxd/containers: Clarify container delete failure error
    * lxd/containers: Correctly set liblxc loglevel to debug when in --debug mode
    * lxd/containers: Don't double delete ephemeral containers
@@ -44,7 +44,7 @@ content: |-
    * scripts/lxc-to-lxd: Better output with no container
    * scripts/lxc-to-lxd: Check that source path exists (disk) (Issue #2572)
    * scripts/lxc-to-lxd: Consistent logging
-   * scripts/lxc-to-lxd: Don't fail dry-run with runnning containers
+   * scripts/lxc-to-lxd: Don't fail dry-run with running containers
    * scripts/lxc-to-lxd: Drop dependency on pylxd
    * scripts/lxc-to-lxd: Fix lxdpath handling
    * scripts/lxc-to-lxd: Formatting

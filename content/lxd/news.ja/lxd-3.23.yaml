@@ -28,7 +28,7 @@ content: |-
   `features.storage-volumes` という新しいプロジェクトの機能が、すべての新しいプロジェクトで使えるようになりました。プロジェクトにカスタムボリュームを関連付けることができます。
 
   <!--
-  This allows projects to have their own separate set of custom storage volumes without risk of conflicts. When combined with Canonical RBAC, this also now properly isolates storage between diferent projects.
+  This allows projects to have their own separate set of custom storage volumes without risk of conflicts. When combined with Canonical RBAC, this also now properly isolates storage between different projects.
   -->
   この機能により、コンフリクトのリスクなしで専用のカスタムストレージボリュームのセットが作成できます。Canonical RBAC と組み合わせて、異なるプロジェクト間でストレージを適切に分離できるようになりました。
 
@@ -115,7 +115,7 @@ content: |-
   この機能は、`restricted=true` を使って制約をプロジェクトに適用すると、信頼できないユーザーに対して安全となるようにデフォルト設定されるようにデザインされています。その後制約を、潜在的により危険だったり、より制限の少ない設定やデバイスを許可するように緩めることができます。
 
   <!--
-  Combined with Canonical RBAC, this can be used to run a shared LXD server or cluster with mostly untrusted users having the ability to spawn containers and virtual-machines wihout effectively having to trust them with full privileges on the hosts.
+  Combined with Canonical RBAC, this can be used to run a shared LXD server or cluster with mostly untrusted users having the ability to spawn containers and virtual-machines without effectively having to trust them with full privileges on the hosts.
   -->
   Canonical RBAC とこの機能を組み合わせて、あまり信用できないユーザーに対してホスト上の完全な特権を与える必要なしに、共有 LXD サーバーやクラスターを実行できます。
 
@@ -425,7 +425,7 @@ content: |-
    - lxd/backup: Updates instance backup to use tar writer rather than tar cmd
    - lxd/backup: InstanceBackupRemove usage
    - lxd/storage/drivers/utils: Minor tweak to copyDevice error message
-   - lxd/stroage/drivers/generic: Tweak error message of genericCreateVolumeFromMigration
+   - lxd/storage/drivers/generic: Tweak error message of genericCreateVolumeFromMigration
    - lxd/storage/drivers/generic/vfs: Switches genericVFSBackupVolume to tar writer
    - lxd/images: Fixes unhandled error
    - lxd/storage/backend/lxd: Adds tarWriter to BackupInstance function
@@ -436,7 +436,7 @@ content: |-
    - lxd/storage/drivers/driver/lvm/volumes: Adds tarWriter arg to BackupVolume
    - lxd/storage/drivers/drivers/mock: Adds tarWriter arg to BackupVolume
    - lxd/storage/drivers/interface: Adds tarWriter arg to BackupVolume
-   - lxd/storage/pool/interace: Adds tarWriter arg to BackupInstance
+   - lxd/storage/pool/interface: Adds tarWriter arg to BackupInstance
    - lxd/storage/drivers/driver/btrfs/volumes: Adds tarWriter arg to BackupVolume
    - lxd/storage/drivers/driver/zfs/volumes: Adds tarWriter arg to BackupVolume
    - lxd/internal: Log some memory stats

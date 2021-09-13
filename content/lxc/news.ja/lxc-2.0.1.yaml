@@ -24,7 +24,7 @@ content: |-
    * cgfsng: systemd サブシステムがマウントされている必要はなくなりました <!-- don't require that systemd subsystem be mounted -->
    * core: lxc\_list\_nicconfigs で足りなかったキー `type` を追加しました <!-- Added missing `type` to keys in lxc\_list\_nicconfigs -->
    * core: 設定ファイルの値をクォートできるようになりました <!-- Allow configuration file values to be quoted -->
-   * core: log: 重複する定義を削除し、バッファサイズを増加させました <!-- remove duplicate definitons and bump buffer size -->
+   * core: log: 重複する定義を削除し、バッファサイズを増加させました <!-- remove duplicate definitions and bump buffer size -->
    * core: sync: 予期しないメッセージサイズの場合に正しく失敗するようになりました <!-- properly fail on unexpected message sizes -->
    * core: userns のマッピングを設定した後に netns を unshare するようにしました (/proc/net の所有権の問題の修正) <!-- Unshare netns after setting the userns mappings (fixes ownership of /proc/net) -->
    * core: コード解析で報告された様々なバグを修正しました <!-- various fixes as reported by static analysis -->
@@ -35,7 +35,7 @@ content: |-
    * doc: MAINTAINERS ファイルを更新しました <!-- update MAINTAINERS -->
    * doc: マニュアルページ翻訳の更新 <!-- update to translated manpages -->
    * init: sysvinit スクリプトに足りなかった lsb ヘッダを追加しました <!-- add missing lsb headers to sysvinit scripts -->
-   * init: ディストリビューションの仕様に依存する sysvinit スクリプトを生成しなくなりました <!-- don't make sysv init scripts dependant on distribution specifics -->
+   * init: ディストリビューションの仕様に依存する sysvinit スクリプトを生成しなくなりました <!-- don't make sysv init scripts dependent on distribution specifics -->
    * init: lxc.service.in から廃止された syslog.target を削除しました <!-- drop obsolete syslog.target from lxc.service.in -->
    * lxc-attach: マニュアルにログオプションの説明を追加しました <!-- add logging option to manpage -->
    * lxc-checkconfig: 標準出力がターミナルでない場合にも見やすい出力となるようにしました <!-- better render when stdout isn't a terminal -->

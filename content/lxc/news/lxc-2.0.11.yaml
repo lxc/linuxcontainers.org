@@ -178,7 +178,7 @@ content: |-
    - confile: remove dead assignment
    - criu: silence static analysis
    - attach: do not fail on non-existing namespaces
-   - test: reenable Coverity integration
+   - test: re-enable Coverity integration
    - lxc_execute: properly figure out number of needed arguments
    - arguments: move to tools/ subdirectory
    - start: set loglevel correctly
@@ -293,7 +293,7 @@ content: |-
    - start: non-functional changes
    - console: set SFD_CLOEXEC on signal fd
    - lxc-alpine: allow retaining sys_ptrace per container
-   - utils: do not rely on unitialized variable
+   - utils: do not rely on uninitialized variable
    - test: log error on failure
    - utils: check suffix length
    - lxccontainer: restore blocking wait()

@@ -23,12 +23,12 @@ content: |-
   ### 新機能とハイライト <!-- New features and highlights -->
   #### `lxd import` の新コマンド `lxd recover` への置き換え <!-- `lxd import` replaced by new `lxd recover` -->
   <!--
-  For a long time, LXD's [disaster recovery story](https://linuxcontainers.org/lxd/docs/master/backup#disaster-recovery) was based on our `lxd import` command. This would go look for a specified instance at the expected path on the fileystem, read the `backup.yaml` file that's part of instance storage and based on that information would recreate the instance's database entry.
+  For a long time, LXD's [disaster recovery story](https://linuxcontainers.org/lxd/docs/master/backup#disaster-recovery) was based on our `lxd import` command. This would go look for a specified instance at the expected path on the filesystem, read the `backup.yaml` file that's part of instance storage and based on that information would recreate the instance's database entry.
   -->
   長い間、LXD の[ディザスターリカバリーストーリー](https://lxd-ja.readthedocs.io/ja/latest/backup/#disaster-recovery)は `lxd import` コマンドに基づいていました。これは、指定したインスタンスをファイルシステム上の期待されるパスで探し、インスタンスストレージに含まれる `backup.yaml` を読み、その情報に基づいてインスタンスのデータベースのエントリーを再作成します。
 
   <!--
-  While this definitely worked and was successfuly used by quite a few people who for one reason or another lost their LXD database, it was limited to instances only and was requiring quite a bit of manual intervention to get the instance filesystem in place so it could be read and imported by LXD.
+  While this definitely worked and was successfully used by quite a few people who for one reason or another lost their LXD database, it was limited to instances only and was requiring quite a bit of manual intervention to get the instance filesystem in place so it could be read and imported by LXD.
   -->
   この機能は確かに動作しており、何らかの理由で LXD データベースを失った場合にうまく使われてきていました。しかし、この機能はインスタンスに限定されており、LXD で読み込んだりインポートできるように、インスタンスのファイルシステムを適切な場所に配置するために、かなりの手作業が必要でした。
 
@@ -243,7 +243,7 @@ content: |-
    - lxd/db/generate/db/parse: use kind parameter for Filter generation
    - lxd/db/generate/db/method: pass query kind to Filter
    - lxd/db/generate/db/stmt: use delete-by statements with Filter instead of only by id
-   - lxd/db/generate/db/method: use and handle Filter as paramter for Delete method
+   - lxd/db/generate/db/method: use and handle Filter as parameter for Delete method
    - lxd/db/generate/db/method: make Delete into DeleteOne and DeleteMany
    - lxd/db/certificates: add new entries for code generation
    - lxd/db/certificates: add delete-by fields to CertificateFilter
@@ -615,8 +615,8 @@ content: |-
    - lxd/db/images: use ImageFilter for optional args
    - lxd/storage/pools: use ImageFilter for GetImages args
    - lxd/util: Add ceph config parser
-   - lxd/storage/cephfs: Use new ceph parsing funtions
-   - lxd/device/disk: Use new ceph parsing funtions
+   - lxd/storage/cephfs: Use new ceph parsing functions
+   - lxd/device/disk: Use new ceph parsing functions
    - lxd/util: Make ceph.conf parser more tolerant
 
    ### 試用環境 <!-- Try it for yourself -->

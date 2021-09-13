@@ -22,7 +22,7 @@ content: |-
   新しいカーネルでは、seccomp がインターセプトしたシステムコールを専用のファイルディスクリプタに転送できます。これらのメッセージは読むことができ、システムコールの引数が検査され、検査の結果がセキュアであるとわかれば、十分な特権を持ったユーザースペースのプロセスが通常はカーネルがコンテナのために行うアクションを実行できます。
 
   <!--
-  LXC introduces a new protocol to send and receive messages to another process. User can specify a unix socket address via `lxc.seccomp.notify.proxy` in the format `unix:<path>` to which LXC will forwared the intercepted syscalls and will wait for an appropriate response.
+  LXC introduces a new protocol to send and receive messages to another process. User can specify a unix socket address via `lxc.seccomp.notify.proxy` in the format `unix:<path>` to which LXC will forward the intercepted syscalls and will wait for an appropriate response.
   -->
   LXC では、他のプロセスに対してメッセージを送ったり受け取ったりするプロトコルを新たに導入しました。ユーザーは `unix:<path>` のフォーマットで `lxc.seccomp.notify.proxy` に設定することで Unix ソケットアドレスを指定できます。これを使って、LXC はインターセプトされたシステムコールを転送し、適切な応答を待ちます。
 
@@ -267,7 +267,7 @@ content: |-
   - network: stash created_name in instantiate_macvlan()
   - network: simplify instantiate_macvlan()
   - network: s/loDev/loop_device/g
-  - cgroups: hande cpuset initialization race
+  - cgroups: handle cpuset initialization race
   - network: remove faulty restriction
   - fix memory leak in do_storage_create
   - cgroups: move variable into tighter scope
@@ -318,7 +318,7 @@ content: |-
   - criu: Remove unnecessary return after _exit()
   - criu: Use -v4 instead of -vvvvvv
   - Option --busybox-path instead of --bbpath
-  - New --bbpath option and unecessary --rootfs checks
+  - New --bbpath option and unnecessary --rootfs checks
   - coding style: update
   - start: use CLONE_PIDFD
   - api: Adds the network_phys_macvlan_mtu extension
@@ -351,7 +351,7 @@ content: |-
   - raw_syscalls: lxc_raw_clone()
   - hooks/nvidia: handle spaces in NVIDIA_REQUIRE variables
   - storage: update zfs
-  - storage: prevent unitialized variable warning
+  - storage: prevent uninitialized variable warning
   - cgroups: fix potential nullderef
   - attach: use tighter scope for fd variable
   - fix: #2927 api doc generation fails under out of source build.
@@ -428,7 +428,7 @@ content: |-
   - start: handle missing CLONE_NEWCGROUP
   - Fixing compile error when compiling for android
   - Merge pull request #2774 from hn/master
-  - fix: unprivileged veth devices (e.g. vethFWABHX) never contain 'Z' character in the randomly generated device name part because for modulo one does not need to substract 1 from strlen().
+  - fix: unprivileged veth devices (e.g. vethFWABHX) never contain 'Z' character in the randomly generated device name part because for modulo one does not need to subtract 1 from strlen().
   - cgfsng: do not free container_full_path on error
   - confile: add lxc.seccomp.allow_nesting
   - lxccontainer: fix container copy

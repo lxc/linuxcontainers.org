@@ -47,7 +47,7 @@ content: |-
    * lxd/storage: ストレージドライバのキャッシュ処理を storage.go に移動させました <!-- Move storage drivers cache to storage.go -->
    * lxd/storage: 使っていない関数の引数を削除しました <!-- Remove unused function argument -->
    * lxd/storage: 正しいエラーメッセージを返すようにしました <!-- Return correct error messages -->
-   * lxd/storage: StoragePoolInit() の処理を簡素化しました <!-- Simplifiy StoragePoolInit() -->
+   * lxd/storage: StoragePoolInit() の処理を簡素化しました <!-- Simplify StoragePoolInit() -->
    * lxd/storage/btrfs: 非特権の場合、quota が有効にできないことをログに出力するようにしました <!-- Quotas can't be enabled when unprivileged -->
    * lxd/storage/lvm: ボリュームグループと論理ボリュームを有効化するようにしました <!-- Activate volume groups and logical volumes -->
    * lxd/storage/lvm: ボリュームサイズを設定しないようにしました <!-- Don't set volume size -->

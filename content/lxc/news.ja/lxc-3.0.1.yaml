@@ -22,7 +22,7 @@ content: |-
   
   #### バグフィックス <!-- Bugfixes -->(LXC)
   
-   * tools: 初期化されていない変数を修正しました <!-- fix unitialized variable -->
+   * tools: 初期化されていない変数を修正しました <!-- fix uninitialized variable -->
    * storage: lvm fs の uuid 生成の問題を修正しました<!-- fix lvm fs uuid generation -->
    * lxc-oci: Cmd と Entrypoint のパースの問題を修正しました <!-- fix Cmd/Entrypoint parsing -->
    * lxc-oci: umoci コマンドの出力を減らしました <!-- make umoci less verbose -->

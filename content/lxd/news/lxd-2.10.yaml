@@ -46,7 +46,7 @@ content: |-
    * lxd/storage: Move storage drivers cache to storage.go
    * lxd/storage: Remove unused function argument
    * lxd/storage: Return correct error messages
-   * lxd/storage: Simplifiy StoragePoolInit()
+   * lxd/storage: Simplify StoragePoolInit()
    * lxd/storage/btrfs: Quotas can't be enabled when unprivileged
    * lxd/storage/lvm: Activate volume groups and logical volumes
    * lxd/storage/lvm: Don't set volume size

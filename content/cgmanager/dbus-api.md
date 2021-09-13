@@ -15,7 +15,7 @@ Creates a new cgroup path in the provided controller, returns 1
 if the path already existed, 0 if it was created.
 
 ### Chown (string controller, string cgroup, int uid, int gid) -> None
-Chown the provided controller/cgroup path to the provied uid and gid,
+Chown the provided controller/cgroup path to the provided uid and gid,
 this will chown the directory as well as the cgroup.procs and tasks files.
 
 ### Chmod (string controller, string cgroup, string file, int mode) -> None

@@ -21,7 +21,7 @@ content: |-
       * GET /1.0/operations/UUID/wait?timeout=X が実際にタイムアウトするようになりました <!-- GET /1.0/operations/UUID/wait?timeout=X now actually times out -->
       * POST /1.0/profiles/NAME を実装しました <!-- POST /1.0/profiles/NAME has been implemented -->
       * タイムスタンプがすべて RFC3339 文字列となり、一貫して名付けられるようになりました  (created\_at, updated\_at, expires\_at, uploaded\_at) <!-- All timestamps are now RFC3339 strings and consistently named (created\_at, updated\_at, expires\_at, uploaded\_at) -->
-      * 同期操作の応答では、空の "operation" フィールドを含まなくなりました <!-- Syncronous replies no longer contain an empty "operation" field -->
+      * 同期操作の応答では、空の "operation" フィールドを含まなくなりました <!-- Synchronous replies no longer contain an empty "operation" field -->
    * サーバ間の通信に追加のセキュリティが適用されるようになりました: <!-- Extra security now applies for cross-server communication: -->
       * 問い合わせと同時に証明書が渡された場合をのぞいて、以下の操作ではシステムの CA によって有効であるとされたリモートの証明書が必要になりました: <!-- Unless a certificate is passed along with the query, the following operations now require the remote certificate to be valid according to system CA: -->
            * マイグレーションによるコンテナ作成 (copy, move, ライブマイグレーション) <!-- Container creation from migration (copy, move & live migration) -->

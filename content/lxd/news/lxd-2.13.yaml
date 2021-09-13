@@ -43,7 +43,7 @@ content: |-
    * lxd/containers: Added soft memory limit even when hard is selected
    * lxd/containers: Allow for stable host interface names (Issue #3143)
    * lxd/containers: Fix handling of devices with minor>255
-   * lxd/containers: Fix typo in securtiy.syscalls.blacklist
+   * lxd/containers: Fix typo in security.syscalls.blacklist
    * lxd/containers: Fix unix device removal (bad cgroup.deny entry) (Issue #3107)
    * lxd/containers: Improve storage error messages on creation (Issue #3110)
    * lxd/containers: Properly invalidate the idmap cache

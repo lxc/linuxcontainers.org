@@ -19,7 +19,7 @@ content: |-
    * lvm-setup: Update to work on older Ubuntu releases
    * Fix extraction of bz2 compressed images
    * Fix a number of fd leaks
-   * Fix shmount handling to avoid creating an extra mount everytime LXD starts
+   * Fix shmount handling to avoid creating an extra mount every time LXD starts
    * lxd-images: Fallback to the daily stream if an image can't be found in the releases stream
    * Fix a uid/gid mapping issue on container copy
    * Fix a LXD hang on invalid LXC configuration key

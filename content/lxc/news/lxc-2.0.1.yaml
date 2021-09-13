@@ -17,7 +17,7 @@ content: |-
    * cgfsng: don't require that systemd subsystem be mounted
    * core: Added missing `type` to keys in lxc\_list\_nicconfigs
    * core: Allow configuration file values to be quoted
-   * core: log: remove duplicate definitons and bump buffer size
+   * core: log: remove duplicate definitions and bump buffer size
    * core: sync: properly fail on unexpected message sizes
    * core: Unshare netns after setting the userns mappings (fixes ownership of /proc/net)
    * core: various fixes as reported by static analysis
@@ -28,7 +28,7 @@ content: |-
    * doc: update MAINTAINERS
    * doc: update to translated manpages
    * init: add missing lsb headers to sysvinit scripts
-   * init: don't make sysv init scripts dependant on distribution specifics
+   * init: don't make sysv init scripts dependent on distribution specifics
    * init: drop obsolete syslog.target from lxc.service.in
    * lxc-attach: add logging option to manpage
    * lxc-checkconfig: better render when stdout isn't a terminal

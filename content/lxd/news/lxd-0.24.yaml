@@ -6,7 +6,7 @@ content: |-
    * Support for macvlan network interfaces
    * Support for physical network interfaces
    * Support for building on s390x
-   * Snapshots are now transfered along with their parent container on copy/move
+   * Snapshots are now transferred along with their parent container on copy/move
    * A CPU scheduler for limits.cpu has been implemented
    * "lxc config unset/set" now works against a remote server
 

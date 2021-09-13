@@ -120,7 +120,7 @@ content: |-
 
   #### raise ambient capabilities when running hooks
   In very restricted containers (e.g. unprivileged containers that only run with a single mapping for a non-root user) it was not possible to perform operations that require privilege during startup.
-  By raising ambient capabilities when a hook is run it is possible to preserve priviliges accross `exec`.
+  By raising ambient capabilities when a hook is run it is possible to preserve privileges across `exec`.
 
   #### allow to mount `/sys` `rw` in unprivileged containers
   With new kernel work done by the LXD team it is now possible to send uevents inside user namespaces. This means it is time to let `udev` run inside containers. A pre-condition for this is that `/sys` is mounted `rw`. If it is not `udev` will refuse to start.
@@ -140,7 +140,7 @@ content: |-
       -Werror=implicit-function-declaration
 
   #### thread-safety improvements
-  The codebase has been further hardended to be useable in multi-threaded environments
+  The codebase has been further hardended to be usable in multi-threaded environments
 
   #### seccomp: support architecture stacking
   This allows to support e.g. the following use-case and more:

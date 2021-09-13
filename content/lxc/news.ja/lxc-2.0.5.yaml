@@ -39,7 +39,7 @@ content: |-
    * c/r: pidfile の代わりに /proc/self/tid/children を使うようにしました <!-- use /proc/self/tid/children instead of pidfile -->
    * c/r: 一部の arch の pid\_t を修正しました <!-- Fix pid\_t on some arches -->
    * templates: debian でホストの arch 検出に mips を追加しました <!-- Add mips hostarch detection to debian -->
-   * cleanup: ヘルプ文字列の TAB をスペースに置き換えました <!-- replace tabs wth spaces in usage strings -->
+   * cleanup: ヘルプ文字列の TAB をスペースに置き換えました <!-- replace tabs with spaces in usage strings -->
    * 余分な 'ret' を削除しました <!-- remove extra 'ret' -->
    * c/r: pid のパースを試みたあとステータスを書き込むようにしました <!-- write status only after trying to parse the pid -->
    * doc/api/Doxyfile で FULL\_PATH\_NAMES=NO に設定するようしました <!-- set FULL\_PATH\_NAMES=NO in doc/api/Doxyfile -->
@@ -55,7 +55,7 @@ content: |-
    * rsync でスパースファイルをより効率的に扱うようになりました <!-- make rsync deal with sparse files efficiently -->
    * lxc-create -t debian が ppc64el の時に失敗するのを修正しました <!-- Lxc-create -t debian fails on ppc64el arch -->
    * c/r: コメントの typo を修正しました <!-- fix typo in comment -->
-   * cgroup: 階層に関係する新しい関数を追加しました <!-- add new functions for interacting with hierachies -->
+   * cgroup: 階層に関係する新しい関数を追加しました <!-- add new functions for interacting with hierarchies -->
    * utils: lxc\_deslashify を追加しました <!-- add lxc\_deslashify -->
    * c/r: チェックポイントの際に --cgroups-roots　を与えるようになりました <!-- pass --cgroup-roots on checkpoint -->
    * cgroup: cgfsng\_escape の変な hack を除去しました <!-- get rid of weird hack in cgfsng\_escape -->
@@ -64,8 +64,8 @@ content: |-
    * tools: lxc-ls -1 で末尾にスペースを追加しなくなりました <!-- do not add trailing spaces on lxc-ls -1 -->
    * conf: netdev->link から mtu を取得するようになりました <!-- retrieve mtu from netdev->link -->
    * conf: veth から mtu を取得するようになりました <!-- try to retrieve mtu from veth -->
-   * c/r: リストア時にコントロール中の tty からデタッチするようになりました <!-- detatch from controlling tty on restore -->
-   * tty からのアクセスがなく呼ばれる attach の場合、NULL ポインタの値を参照しようとしていた問題を修正しました <!-- Fix null derefence if attach is called without access to any tty -->
+   * c/r: リストア時にコントロール中の tty からデタッチするようになりました <!-- detach from controlling tty on restore -->
+   * tty からのアクセスがなく呼ばれる attach の場合、NULL ポインタの値を参照しようとしていた問題を修正しました <!-- Fix null dereference if attach is called without access to any tty -->
    * utils: lxc\_string\_split() を修正しました (訳注: 初期化されていない領域を返さないように修正)<!-- fix lxc\_string\_split() -->
    * tools: lxc\_deslashify() が特別な場合を扱うようになりました <!-- lxc\_deslashify() handle special cases -->
    * tests: lxc\_deslashify() のユニットテストを追加しました <!-- add unit tests for lxc\_deslashify() -->

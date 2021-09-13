@@ -3,7 +3,7 @@ date: 2015/05/12 00:00
 content: |-
   The main changes for this release are:
 
-   * Fixed memory and file descriptior leaks (and add extra tests for those)
+   * Fixed memory and file descriptor leaks (and add extra tests for those)
    * Fallback to chmod when setfacl fails (filesystem without ACLs support)
    * Fixed container logging and make it available through lxc info (--show-log)
    * Setup the right uid/gid map for privileged containers

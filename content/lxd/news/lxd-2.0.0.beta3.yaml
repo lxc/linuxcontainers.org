@@ -20,7 +20,7 @@ content: |-
       * GET /1.0/operations/UUID/wait?timeout=X now actually times out
       * POST /1.0/profiles/NAME has been implemented
       * All timestamps are now RFC3339 strings and consistently named (created\_at, updated\_at, expires\_at, uploaded\_at)
-      * Syncronous replies no longer contain an empty "operation" field
+      * Synchronous replies no longer contain an empty "operation" field
    * Extra security now applies for cross-server communication:
       * Unless a certificate is passed along with the query, the following operations now require the remote certificate to be valid according to system CA:
            * Container creation from migration (copy, move & live migration)

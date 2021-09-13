@@ -150,7 +150,7 @@ content: |-
    - lxd/device: network.RandomDevName usage
    - lxd/network: Adds Description function
    - doc/api: Removes underscore escaping when used inside backticks
-   - lxd/instance/drivers: Fixes crash when removing device that cant be loaded
+   - lxd/instance/drivers: Fixes crash when removing device that can't be loaded
    - lxc/storage_volume: Fix usage string
    - po: Update translations
    - lxd/drivers/qemu: Use gic-version=max on aarch64
@@ -242,7 +242,7 @@ content: |-
    - lxd: backup.WorkingDirPrefix usage
    - lxd/backup: Rename comment ending
    - lxd/backup: DoBackupDelete comment ending
-   - lxd/network/network/interface: Adds Type interface and moves non-DB depedent functions into it
+   - lxd/network/network/interface: Adds Type interface and moves non-DB dependent functions into it
    - lxd/network/network/load: Adds LoadByType function and removes ValidateNameAndProject function
    - lxd/main/init/interactive: netType.ValidateName usage
    - lxd/networks: Switch to network type validation in networksPost
@@ -425,7 +425,7 @@ content: |-
    - lxd/include: Relocate ifndef for NEWCGROUP
    - doc: Remove stray \_ escapes in security.md
    - lxc-to-lxd: Handle snap better
-   - lxd/events: Handle default permissiosn in projects
+   - lxd/events: Handle default permissions in projects
    - lxd/dnsmasq: Adds 100ms sleep to successful Kill() to allow sockets to be released by OS
    - lxd/instance/drivers/driver/qemu: Restores ability to resize VM disks
    - lxd/device/disk: Adds comment about VM instances depending on CanHotPlug fields for stopped disk resize
@@ -517,7 +517,7 @@ content: |-
    - lxd/cluster/connect: Renames project arg to projectName in ConnectIfInstanceIsRemote
    - lxd/cluster/connect: Adds projectName arg to ConnectIfVolumeIsRemote
    - lxd/response: Adds projectName argument to forwardedResponseIfVolumeIsRemote
-   - lxd/db/storage/volumes: Corrects mispelled argument name in GetStorageVolumeNodeAddresses
+   - lxd/db/storage/volumes: Corrects misspelled argument name in GetStorageVolumeNodeAddresses
    - lxc/move: Bypass security.protection.delete
    - lxd/device: Fix typo
    - doc/instances: usb and gpu are available in VMs

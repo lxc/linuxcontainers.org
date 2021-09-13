@@ -208,7 +208,7 @@ content: |-
   #### フック実行時に ambient ケーパビリティを上げる <!-- raise ambient capabilities when running hooks -->
   <!--
   In very restricted containers (e.g. unprivileged containers that only run with a single mapping for a non-root user) it was not possible to perform operations that require privilege during startup.
-  By raising ambient capabilities when a hook is run it is possible to preserve priviliges accross `exec`.
+  By raising ambient capabilities when a hook is run it is possible to preserve privileges across `exec`.
   -->
   非常に制限されたコンテナ（例えば、単一の root 以外のユーザーにのみマッピングされて実行している非特権コンテナ）では、起動時に特権が必要な操作を実行できませんでした。
   フックの実行時に ambient ケーパビリティを上げることで、`exec` を超えて特権を維持できます。
@@ -241,7 +241,7 @@ content: |-
   
   #### スレッドセーフに関する改良 <!-- thread-safety improvements -->
   <!--
-  The codebase has been further hardended to be useable in multi-threaded environments
+  The codebase has been further hardended to be usable in multi-threaded environments
   -->
   コードベースはマルチスレッド環境で使えるように、より強化されました。
   

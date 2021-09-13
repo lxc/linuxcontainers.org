@@ -4604,7 +4604,7 @@ Terminal.prototype.copyRectangle = function(params) {
 //   as "one-shot" events.  Any parameters that are omitted default
 //   to the current locator position.  If all parameters are omit-
 //   ted, any locator motion will be reported.  DECELR always can-
-//   cels any prevous rectangle definition.
+//   cels any previous rectangle definition.
 Terminal.prototype.enableFilterRectangle = function(params) {
   ;
 };

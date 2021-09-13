@@ -19,8 +19,8 @@ content: |-
    * file pull/push の仕様と文書を更新しました <!-- Update specs and documentation on file pull/push -->
    * 壊れた LXC をより良く扱うようにしました (訳注：設定の読みこみに失敗するような壊れたコンテナに対して "BROKEN" というステータスを返して対応できるようにした)<!-- Better deal with broken LXC -->
    * zfs に対するマウントポイントを設定するのを防ぐために README を更新しました <!-- Update README to avoid setting a mountpoint for zfs -->
-   * イメージのコピーに成功した際にメッセージを表示するようにしました <!-- Print message on sucessfull copy of image -->
-   * TYPO を修正しました (sucessfully → successfully) <!-- Fix small typo s/sucessfully/successfully -->
+   * イメージのコピーに成功した際にメッセージを表示するようにしました <!-- Print message on successful copy of image -->
+   * TYPO を修正しました (sucessfully → successfully) <!-- Fix small typo s/successfully/successfully -->
    * forkstart のデバッグを改良しました <!-- Improve forkstart debugging -->
    * (訳注：move で) マイグレーションでない場合は常に Rename() を呼ぶようにしました <!-- Always call Rename() when not migrating -->
    * イメージのアップロードでテンポラリファイルを使うようにしました <!-- Use a tempfile for image uploads -->

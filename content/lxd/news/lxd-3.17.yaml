@@ -173,7 +173,7 @@ content: |-
    - lxc/config: Detect non-Linux systems
    - lxc/copy: Really always strip volatile.last_state.power
    - lxc/file: Fix error handling
-   - lxc/file: Intercept user cancelation
+   - lxc/file: Intercept user cancellation
    - lxc/init: Fix usage with no args
    - lxc/remote: Add basic auth example
    - lxc-to-lxd: Remove dependency of lxd/device/config package

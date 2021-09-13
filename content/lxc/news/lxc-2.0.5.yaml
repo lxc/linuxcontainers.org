@@ -33,7 +33,7 @@ content: |-
    * c/r: use /proc/self/tid/children instead of pidfile
    * c/r: Fix pid\_t on some arches
    * templates: Add mips hostarch detection to debian
-   * cleanup: replace tabs wth spaces in usage strings
+   * cleanup: replace tabs with spaces in usage strings
    * remove extra 'ret'
    * c/r: write status only after trying to parse the pid
    * set FULL\_PATH\_NAMES=NO in doc/api/Doxyfile
@@ -49,7 +49,7 @@ content: |-
    * make rsync deal with sparse files efficiently
    * lxc-create -t debian fails on ppc64el arch
    * c/r: fix typo in comment
-   * cgroup: add new functions for interacting with hierachies
+   * cgroup: add new functions for interacting with hierarchies
    * utils: add lxc\_deslashify
    * c/r: pass --cgroup-roots on checkpoint
    * cgroup: get rid of weird hack in cgfsng\_escape
@@ -58,8 +58,8 @@ content: |-
    * tools: do not add trailing spaces on lxc-ls -1
    * conf: retrieve mtu from netdev->link
    * conf: try to retrieve mtu from veth
-   * c/r: detatch from controlling tty on restore
-   * Fix null derefence if attach is called without access to any tty
+   * c/r: detach from controlling tty on restore
+   * Fix null dereference if attach is called without access to any tty
    * utils: fix lxc\_string\_split()
    * tools: lxc\_deslashify() handle special cases
    * tests: add unit tests for lxc\_deslashify()

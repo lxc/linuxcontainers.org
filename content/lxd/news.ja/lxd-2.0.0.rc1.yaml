@@ -17,7 +17,7 @@ content: |-
    * 標準出力が tty でない場合、lxc exec はデフォルトで non-interactive モードになります <!-- lxc exec now defaults to non-interactive mode when stdout isn't a tty -->
    * クライアントが表示するテーブルはすべて同じような見た目になります <!-- All the tables rendered by the client now look alike -->
    * Simplestream がクライアントとサーバの両方でネイティブにサポートされるようになりました。lxd-images での必要性が除外されたためです <!-- Simplestreams is now natively supported by both the client and the server, eliminating the need for lxd-images -->
-   * バックグラウンドでのイメージの同期がサーバでサポートされ、すべてのキャッシュされたイメージがデフォルトで同期されるようになりました <!-- Background image syncronization is now supported by the server and done by-default for all cached images -->
+   * バックグラウンドでのイメージの同期がサーバでサポートされ、すべてのキャッシュされたイメージがデフォルトで同期されるようになりました <!-- Background image synchronization is now supported by the server and done by-default for all cached images -->
    * イメージが使われた最後の時間と、それがキャッシュにストアされているかどうかが API 経由で取得できるようになり、"lxc image info" で見られるようになりました <!-- The last time an image was used and whether it's stored in the cached is now exported over the API and visible in "lxc image info" -->
    * プロファイルが説明フィールドを持つようになりました <!-- Profiles now have a description field -->
    * コンテナを kill するのでなく、ディスクにチェックポイントするステートフルなコンテナの停止が可能になりました。次の起動時にレジュームします <!-- It is now possible to do a stateful container stop where the container is checkpointed to disk rather than killed, then resumed on next start. -->

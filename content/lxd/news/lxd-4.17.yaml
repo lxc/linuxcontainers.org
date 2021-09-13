@@ -13,9 +13,9 @@ content: |-
 
   ### New features and highlights
   #### `lxd import` replaced by new `lxd recover`
-  For a long time, LXD's [disaster recovery story](https://linuxcontainers.org/lxd/docs/master/backup#disaster-recovery) was based on our `lxd import` command. This would go look for a specified instance at the expected path on the fileystem, read the `backup.yaml` file that's part of instance storage and based on that information would recreate the instance's database entry.
+  For a long time, LXD's [disaster recovery story](https://linuxcontainers.org/lxd/docs/master/backup#disaster-recovery) was based on our `lxd import` command. This would go look for a specified instance at the expected path on the filesystem, read the `backup.yaml` file that's part of instance storage and based on that information would recreate the instance's database entry.
 
-  While this definitely worked and was successfuly used by quite a few people who for one reason or another lost their LXD database, it was limited to instances only and was requiring quite a bit of manual intervention to get the instance filesystem in place so it could be read and imported by LXD.
+  While this definitely worked and was successfully used by quite a few people who for one reason or another lost their LXD database, it was limited to instances only and was requiring quite a bit of manual intervention to get the instance filesystem in place so it could be read and imported by LXD.
 
   This has now all been replaced by a new `lxd recover` command. This is an interactive command somewhat similar to `lxd init`. It allows importing both instances and custom storage volumes and supports both pre-existing storage pools and missing storage pools.
 
@@ -180,7 +180,7 @@ content: |-
    - lxd/db/generate/db/parse: use kind parameter for Filter generation
    - lxd/db/generate/db/method: pass query kind to Filter
    - lxd/db/generate/db/stmt: use delete-by statements with Filter instead of only by id
-   - lxd/db/generate/db/method: use and handle Filter as paramter for Delete method
+   - lxd/db/generate/db/method: use and handle Filter as parameter for Delete method
    - lxd/db/generate/db/method: make Delete into DeleteOne and DeleteMany
    - lxd/db/certificates: add new entries for code generation
    - lxd/db/certificates: add delete-by fields to CertificateFilter
@@ -552,8 +552,8 @@ content: |-
    - lxd/db/images: use ImageFilter for optional args
    - lxd/storage/pools: use ImageFilter for GetImages args
    - lxd/util: Add ceph config parser
-   - lxd/storage/cephfs: Use new ceph parsing funtions
-   - lxd/device/disk: Use new ceph parsing funtions
+   - lxd/storage/cephfs: Use new ceph parsing functions
+   - lxd/device/disk: Use new ceph parsing functions
    - lxd/util: Make ceph.conf parser more tolerant
 
   ### Try it for yourself

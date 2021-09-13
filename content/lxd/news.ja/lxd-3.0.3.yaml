@@ -222,8 +222,8 @@ content: |-
    - network: Fix counters on non-ethernet interfaces
    - doc: Add configuration for readthedocs
    - storage: Fix error strings
-   - lxd/storage/btrfs: Don't fail deleting pools on misisng disk
-   - Split code in 2 seperate files
+   - lxd/storage/btrfs: Don't fail deleting pools on missing disk
+   - Split code in 2 separate files
    - network: provide #ifdefs for RTM_* requests
    - Document LVM support for storage quotas
    - candid: Cleanup code a bit
@@ -295,13 +295,13 @@ content: |-
    - lxd/storage: Fix importing preseed dump
    - lxd/migration: Use current idmap instead of next
    - lxd/db: Send raft/dqlite logging to debug
-   - lxd/daemon: Clarify early loggging
+   - lxd/daemon: Clarify early logging
    - checkfeature: Don't log error on missing feature
    - lxd/daemon: Improve logging of inherited fds
    - shared/logging: Improve logfile output
    - lxd/daemon: Don't mention MAAS unless configured
    - exec: Expose command, env and mode in metadata
-   - client: Fix cancelation of image download
+   - client: Fix cancellation of image download
    - Detect and shrink large boltdb files
    - lxd/daemon: Fix build
    - loop: retry on EBUSY

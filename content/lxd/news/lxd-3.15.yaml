@@ -53,7 +53,7 @@ content: |-
 
   ### New features
   #### Hardware VLAN and MAC filtering on SR-IOV
-  The `security.mac_filtering` and `vlan` properties are now avaiable to SR-IOV devices. This directly controls the matching SR-IOV options on the virtual function and so will completely prevent any MAC spoofing from the container or in the case of VLANs will perform hardware filtering at the VF level.
+  The `security.mac_filtering` and `vlan` properties are now available to SR-IOV devices. This directly controls the matching SR-IOV options on the virtual function and so will completely prevent any MAC spoofing from the container or in the case of VLANs will perform hardware filtering at the VF level.
 
       root@athos:~# lxc init ubuntu:18.04 c1
       Creating c1

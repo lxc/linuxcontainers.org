@@ -39,7 +39,7 @@ content: |-
   ##### Candid preferred over TLS for new remotes
   When using `lxc remote add` to add a new remote, if that remote supports Candid for authentication, this will be used instead of TLS authentication.
 
-  The authentication type can always be overriden with `--auth-type`.
+  The authentication type can always be overridden with `--auth-type`.
 
   ##### Remote list now shows Candid domain
   The remote list will now indicate what Candid domain is used, when one was specified during `lxc remote add`:
@@ -67,7 +67,7 @@ content: |-
    * client: Fix goroutine leak in ExecContainer
    * client: Revert "client: fix goroutine leak in ExecContainer"
    * doc: Add first stab at FAQ
-   * doc: Fix typoes in faq.md
+   * doc: Fix typos in faq.md
    * doc: Update rest-api.md formatting
    * i18n: Update translations from weblate
    * i18n: Update translation templates

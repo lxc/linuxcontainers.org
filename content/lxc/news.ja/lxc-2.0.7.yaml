@@ -35,7 +35,7 @@ content: |-
    * log: lxc\_unix\_epoch\_to\_utc() を使うようにしました <!-- Use lxc\_unix\_epoch\_to\_utc() -->
    * log: スレッドで getpid() != gettid() の際に日時の代わりに "N/A" という文字列を出力するようにしました <!-- Use N/A if getpid() != gettid() when threaded -->
    * log: スレッドセーフな localtime\_r() を使うようにしました <!-- Use thread-safe localtime\_r() -->
-   * lvm: ファイルディスクリプタのリークに関する警告を出力しないようにしました <!-- Supress warnings about leaked files -->
+   * lvm: ファイルディスクリプタのリークに関する警告を出力しないようにしました <!-- Suppress warnings about leaked files -->
    * lxccontainer: init の pid へのシグナルの送出に失敗したことをログに出力するようになりました <!-- Log failure to send sig to init pid -->
    * monitor: さらにロギングを行うようにしました <!-- Add more logging -->
    * monitor: exit 時に mainloop がオープンしていたらクローズするようにしました (訳注: エラー時にきちんと後始末するようになった)<!-- Close mainloop on exit if we opened it -->

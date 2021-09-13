@@ -81,7 +81,7 @@ content: |-
   ### コンテナが割り当てることができる pty の数を制限する <!-- Limiting the number of ptys a container can allocate -->
   <!--
   Setting `lxc.pty.max` will cause LXC to mount the container's devpts with the requested limit
-  on the number of useable ptys. For example, setting `lxc.pty.max = 10` will only allow
+  on the number of usable ptys. For example, setting `lxc.pty.max = 10` will only allow
   the container to allocate `10` ptys. The default setting is `1024`.
   -->
   `lxc.pty.max` を設定すると、LXC は、使える pty の数に指定した制限を設定した上で、コンテナの devpts をマウントします。例えば、`lxc.pty.max = 10` と設定すると、コンテナは `10` 個の pty だけしか割り当てられません。デフォルト値は `1024` です。
@@ -326,7 +326,7 @@ content: |-
   <!--
   The script will create a backup of the legacy configuration file first.
   The name of the backup config file will by `<original-config-file-name>.backup`.
-  The backup is made in case the upgrade does not yield a useable LXC 2.1 config file.
+  The backup is made in case the upgrade does not yield a usable LXC 2.1 config file.
   After creating the backup the script will replace all legacy configuration keys with their new counterparts.
   -->
   このスクリプトは、最初に現在の設定ファイルのバックアップを取得します。
@@ -337,7 +337,7 @@ content: |-
   ## 廃止予定の警告 <!-- Deprecation warnings -->
   <!--
   LXC 2.1 intends to be fully backward compatible with respect to pre-2.1 configuration files.
-  This specifically means that the presence of any deprecated keys should not prevent the container from being useable.
+  This specifically means that the presence of any deprecated keys should not prevent the container from being usable.
   However, LXC 2.1 will warn about the presence of any deprecated configuration keys.
   On container startup LXC 2.1 will warn *once* with the message:
   -->

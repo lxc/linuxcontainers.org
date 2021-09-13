@@ -83,7 +83,7 @@ content: |-
    * extra/lxc-to-lxd: sysfs/proc のマウントを無視しました <!-- Ignore sysfs/proc mounts -->
    * extra/lxc-to-lxd: lxc.seccomp を適切に扱うようにしました <!-- Properly handle lxc.seccomp -->
    * i18n: クライアントのメッセージの日本語翻訳を更新しました <!-- Update Japanese translation (for stable-2.0) -->
-   * lxc: 操作をキャンセルするための機能を追加しました <!-- Add plumbing for operation cancelation -->
+   * lxc: 操作をキャンセルするための機能を追加しました <!-- Add plumbing for operation cancellation -->
    * lxc: クロスプラットフォームで HOME を扱えるようにしました <!-- Cross-platform HOME handling -->
    * lxc: 実際に動作するサンプルを示すように help を修正しました <!-- Fix help to provide sample that actually works -->
    * lxc: プロパティを追加したとき、インポートがクラッシュする不具合を修正しました <!-- Fix import crash when adding properties -->
@@ -172,7 +172,7 @@ content: |-
    * lxd/daemon: Daemon.isRecursionRequest を lxd/util サブパッケージに移動させました <!-- Move Daemon.isRecursionRequest to the lxd/util sub-package -->
    * lxd/daemon: Daemon.lxcpath を OS.LxcPath に移動させました <!-- Move Daemon.lxcpath to OS.LxcPath -->
    * lxd/daemon: Daemon.MockMode を OS.MockMode に移動させました <!-- Move Daemon.MockMode to OS.MockMode -->
-   * lxd/daemon: Deamon.CheckTrustState と Deamon.isTrustedClient を lxd/util に移動させました <!-- Move Deamon.CheckTrustState and Deamon.isTrustedClient to lxd/util -->
+   * lxd/daemon: Daemon.CheckTrustState と Daemon.isTrustedClient を lxd/util に移動させました <!-- Move Daemon.CheckTrustState and Daemon.isTrustedClient to lxd/util -->
    * lxd/daemon: filesystemDetect 関数を lxd/util サブパッケージに移動させました <!-- Move filesystemDetect function into lxd/util subpackage. -->
    * lxd/daemon: lxd/util.go を自身 lxd/util のサブパッケージに移動しました <!-- Move lxd/util.go into its own lxd/util/ sub-package -->
    * lxd/daemon: すべてのモデルエンティティの Daemon を State に置き換えました <!-- Replace Daemon with State in all model entities -->

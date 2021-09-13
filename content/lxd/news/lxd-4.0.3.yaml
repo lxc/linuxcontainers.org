@@ -37,7 +37,7 @@ content: |-
    - client: Support custom block volumes
    - lxd/util: Detect hugetlbfs mount point
    - lxd/cluster: Always check for dqlite protocol version mismatches
-   - lxd/cluster: Don't run unncessary HEAD probe upon dqlite connections
+   - lxd/cluster: Don't run unnecessary HEAD probe upon dqlite connections
    - forksyscall: use nsids for shiftfs syscall intercepts
    - lxd/db: Drop ClusterRoleDatabase records from the database
    - lxd/cluster: Fetch database role information directly from raft
@@ -45,7 +45,7 @@ content: |-
    - lxd/cluster: Only look up raft_nodes for resolving the address of node 1
    - lxd/cluster: Leverage RolesChanges.Handover() to choose handover target
    - lxd: Increase timeout of go unit tests when ran from Emacs
-   - lxd/cluster: Skip unncessary loading of nodes from database in Rebalance()
+   - lxd/cluster: Skip unnecessary loading of nodes from database in Rebalance()
    - lxd/cluster: Leverage RolesChanges.Adjust() to choose rebalance target
    - lxd/cluster: Increase time budget of client.Assign() when assigning voter role
    - lxd/cluster: When demoting to Spare only transition to StandBy if Voter
@@ -117,7 +117,7 @@ content: |-
    - lxd/operations: Add db operation type to Operation
    - lxd: Add waitForOperations()
    - lxd: Shut down gracefully
-   - lxd/operations/operations: Fix hanging cancelation
+   - lxd/operations/operations: Fix hanging cancellation
    - lxd/instance_post: Pass cancel function to websocket operation
    - client/lxd_instances: Cancel websocket op if needed
    - lxd/daemon: Return 503 when shutting down
@@ -249,15 +249,15 @@ content: |-
    - lxd/device/device/load: Removes devTypes map and updates load to use NICType function
    - lxd/device: Removes device load helpers
    - lxd/device/device/utils/network: nictype.NICType usage
-   - lxd/device/nic/bridged: Updates usage of functions whos signatures changed due to NICType
+   - lxd/device/nic/bridged: Updates usage of functions whose signatures changed due to NICType
    - lxd/device/nic/p2p: Updates usage of functions that changed signature due to NICType
    - lxd/device/proxy: nictype.NICType usage
    - lxd/instance/drivers/driver/lxc: nictype.NICType usage
    - lxd/instance/drivers/driver/qemu: nictype.NICType usage
    - lxd/network/driver/bridge: Usage of functions that changed signature due to NICType
    - lxd/network/driver/common: Updates IsUsed for NICType signature changes and checks for profile usage
-   - lxd/network/network/interface: Signature change of IsUsed to accomodate NICType
-   - lxd/network/network/utils: Usage of nictype.NICType and signature changes to accomodate it
+   - lxd/network/network/interface: Signature change of IsUsed to accommodate NICType
+   - lxd/network/network/utils: Usage of nictype.NICType and signature changes to accommodate it
    - lxd/networks: nictype.NICType usage and comment improvements
    - lxd/networks: Comment ending consistency
    - test: Updates tests to delete profiles before networks
@@ -333,7 +333,7 @@ content: |-
    - lxd/network/network/utils: Removes GetIP
    - lxd/network/network/utils: dhcpalloc.GetIP usage
    - lxd/network/network/utils: dnsmasq.DHCPStaticAllocation usage
-   - lxd/network/network/interface: Changes of functions to accomodate dhcpalloc package
+   - lxd/network/network/interface: Changes of functions to accommodate dhcpalloc package
    - lxd/network/driver/common: Implements default no-op function for non-dhcp enabled networks
    - lxd/network/driver/common: dhcpalloc.DHCPRange usage
    - lxd/network/driver/bridge: dhcpalloc package function usage
@@ -380,7 +380,7 @@ content: |-
    - lxd: Wraps validate.IsNetworkV4List and validate.IsNetworkV6List in validate.Optional
    - shared/validate: Tweaks IsNetworkVLAN error message ordering
    - shared/validate: comment spacing
-   - daemon: check whether shiftfs is useable
+   - daemon: check whether shiftfs is usable
    - lxd/network/network/utils: Renames ValidNetworkName to validInterfaceName
    - lxd/network/network/utils: Adds validVirtualNetworkName
    - lxd/network/network/interfaces: Adds ValidateName

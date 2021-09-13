@@ -78,7 +78,7 @@ content: |-
   投票 (voting) メンバーの数を増やすとデータベースのパフォーマンスが低下するでしょう。これは、変更に同意するメンバーの数が増えるからです。スタンバイメンバーの数を増やしてもデータベースのパフォーマンスに影響は与えませんが、データベースバイナリストリームを取得する必要のあるメンバーが増えるので、ネットワーク負荷が増加するでしょう。
 
   <!--
-  Only the largest of clusters where loosing 2 or 3 members almost immediately is a possibility should consider increasing those default values.
+  Only the largest of clusters where losing 2 or 3 members almost immediately is a possibility should consider increasing those default values.
   -->
   ほとんど間髪を入れずに 2, 3 のメンバーを失う可能性があるクラスターでのみ、これらのデフォルト値を増やすことを検討すべきです。
 

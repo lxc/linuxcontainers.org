@@ -25,7 +25,7 @@ content: |-
    * lxd/containers: Disable IPv6 on host side veth when bridged (issue 2845)
    * lxd/containers: Don't block resolution on non-existing paths
    * lxd/containers: Don't check the image fingerprint twice
-   * lxd/containers: Fix concurent read/write to s.conns in exec (Issue 2862)
+   * lxd/containers: Fix concurrent read/write to s.conns in exec (Issue 2862)
    * lxd/containers: Fix error handling on FileRemove
    * lxd/containers: Set default values for USER, HOME and LANG (Issue 2830)
    * lxd/daemon: Mount a tmpfs under devlxd (Issue 2877)

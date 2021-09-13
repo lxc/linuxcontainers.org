@@ -18,7 +18,7 @@ content: |-
    - Addition of USB address for network devices in the resources API
    - Addition of PCI and USB address for disk devices in the resources API
    - Addition of VLAN details to the network state API
-   - Support for memory and CPU usage colums in `lxc list`
+   - Support for memory and CPU usage columns in `lxc list`
    - Support for `--reuse` in `lxc snapshot`
    - Support for `--reuse` in `lxc storage volume snapshot`
 
@@ -344,7 +344,7 @@ content: |-
    - lxd/db/profiles: Updates GetInstancesWithProfile to return all instance types, not just containers
    - shared/instance: Improves comments
    - lxd/profiles: Use project.ProfileProject instead of tx.ProjectHasProfiles
-   - test/suites/projects: Fix bug in test that assumed project wasnt checked for existance
+   - test/suites/projects: Fix bug in test that assumed project wasn't checked for existence
    - lxd/profiles/utils: Updates doProfileUpdate and doProfileUpdateCluster to return project and instance name in error
    - lxd/device/device/interface: Moves updatable fields from CanHotPlug() into UpdatableFields()
    - lxd/device/errors: Adds ErrCannotUpdate error
@@ -416,7 +416,7 @@ content: |-
    - lxd/instance/qemu: Replace vm with d
    - lxd/instance/lxc: Rename d to dev
    - lxd/instance/lxc: Replace c with d
-   - lxd/isntance: Move most properties to common
+   - lxd/instance: Move most properties to common
    - lxd/instance: Move common functions to drive_common
    - shared/instance: golint fixes
    - shared/instance: Adds ConfigVolatilePrefix constant
@@ -545,7 +545,7 @@ content: |-
    - Revert "lxd/db/networks: Removes unused NetworkErrored function"
    - lxd/db/storage/pools: Updates storage pool state comments to indicate node usage
    - lxd/db/storage/pools: Replace use of networkCreated with storagePoolCreated in getStoragePool
-   - lxd/storage/pools/utils: Consistent commnent endings
+   - lxd/storage/pools/utils: Consistent comment endings
    - lxd/storage/pools/utils: Fix comment in storagePoolCreateLocal
    - lxd/storage/pools: Add logging for storage pool state updates in storagePoolsPostCluster
    - lxd/db/storage/pools: Updates comment on StoragePoolCreated
@@ -559,7 +559,7 @@ content: |-
    - lxd/db/storage/pools: Updates storage pool load functions to return nodes
    - lxd/db/storage/pools: Updates storagePoolNodes to return map of StoragePoolNode
    - lxd/db/storage/pools: c.GetStoragePoolInAnyState usage
-   - shared/api/storage/pool: Adds storage pool status contants
+   - shared/api/storage/pool: Adds storage pool status constants
    - lxd/db/storage/pools: Adds StoragePoolStateToAPIStatus and updates getStoragePool to use it
    - lxd/patches: d.cluster.GetStoragePoolInAnyState usage
    - lxd/api/cluster: d.cluster.GetStoragePoolInAnyState usage

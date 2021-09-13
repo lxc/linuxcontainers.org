@@ -31,7 +31,7 @@ if the path already existed, 0 if it was created.
 
 ### Chown (string controller, string cgroup, int uid, int gid) -> None
 <!--
-Chown the provided controller/cgroup path to the provied uid and gid,
+Chown the provided controller/cgroup path to the provided uid and gid,
 this will chown the directory as well as the cgroup.procs and tasks files.
 -->
 指定した uid と gid で、指定したパス controller/cgroup を chown します。ディレクトリ、cgroup.procs、tasks ファイルを chown します。
@@ -68,7 +68,7 @@ The value is always returned as a string.
 <!--
 Sets the value of the given key to that provided.
 -->
-指定した contoller/cgroup 内の指定した key に値を設定します。
+指定した controller/cgroup 内の指定した key に値を設定します。
 
 ### Remove (string controller, string cgroup, int recursive) -> int existed
 <!--

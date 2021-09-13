@@ -55,7 +55,7 @@ content: |-
    * support use of 'all' containers when cgmanager supports it
    * log: fix quiet mode
    * Fix build error(ISO C90 specs violation) in lxc.c
-   * lxc\_map\_ids: don't do bogus chekc for newgidmap
+   * lxc\_map\_ids: don't do bogus check for newgidmap
    * lxc\_map\_ids: add a comment
    * clean autodev dir on container exit
    * As discussed on ML, do not clean autodev dir on reboot
@@ -92,7 +92,7 @@ content: |-
    * tests: Copy the download cache when available [v2]
    * Fix the unprivileged tests cgroup management
   
-  Documentaiton:
+  Documentation:
   
    * doc: Mention that veth.pair is ignored for unpriv
    * doc: Add mention that veth.pair is ignored for unpriv in Japanese man

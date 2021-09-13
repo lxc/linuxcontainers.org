@@ -12,7 +12,7 @@ It's used to build all our official images available on [our image server](https
 [私たちのイメージサーバ](https://images.linuxcontainers.org) にある公式イメージすべての作成に使っています。
 
 <!--
-The image defintion is a YAML document which describes the source of the
+The image definition is a YAML document which describes the source of the
 image, its package manager, what packages to install/remove for specific
 image variants, os releases and architectures, as well as additional
 files to generate and arbitrary actions to execute as part of the image
