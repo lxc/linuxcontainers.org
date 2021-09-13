@@ -4,6 +4,11 @@ CGManager is a central privileged daemon that manages all your cgroups for you
 through a simple D-Bus API. It's designed to work with nested LXC containers
 as well as accepting unprivileged requests including resolving user namespaces UIDs/GIDs.
 
+!!! note
+    CGManager was used by default with LXC in Ubuntu since April 2014 and then by other distributions as they started needing working unprivileged containers.
+
+    It has now been deprecated in favor of the CGroup namespace in recent Linux kernels. On older kernels, LXCFS still offers a cgroupfs emulation that can be used instead of CGManager and is more widely compatible with existing userspace.
+
 # Components
 ## cgmanager
 This daemon runs on the host, mounts cgroupfs into a separate mount

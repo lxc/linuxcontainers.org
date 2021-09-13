@@ -36,31 +36,31 @@
           <p>LXD is a next generation system container and virtual machine
             manager. It offers a unified user experience around full Linux
             systems running inside containers or virtual machines.</p>
-          
+
           <p>LXD is image based and provides images for a wide number of
             Linux distributions. It provides flexibility and scalability
             for various use cases, with support for different storage
             backends and network types and the option to install on
             hardware ranging from an individual laptop or cloud instance
             to a full server rack.</p>
-          
+
           <p>When using LXD, you can manage your instances (containers and VMs)
             with a single command line tool, or over the network in a transparent way
             through a REST API.</p>
         </div>
 
-        <div class="col-4">    
+        <div class="col-4">
           <p>
             <a class="p-button--positive" href="/lxd/try-it/" role="button">Try it online</a>
           </p><p>
             <a class="p-button" href="/lxd/introduction/" role="button">Learn more</a>
           </p>
         </div>
-        
+
       </div>
     </div>
   </div>
-      
+
   <div class="row u-equal-height">
     <div class="p-card col-4">
       <h3>LXC</h3>
@@ -68,8 +68,6 @@
         tools, templates, and library and language bindings. It's pretty
         low level, very flexible and covers just about every containment
         feature supported by the upstream kernel.</p>
-      <p>LXC is production ready with LTS releases coming with 5 years
-        of security and bugfix updates.</p>
       <p>LXC should not be confused with the <code>lxc</code>
         CLI client tool provided by LXD.</p>
       <p><a class="p-button" href="/lxc/introduction/" role="button">Learn more</a></p>
@@ -90,7 +88,7 @@
 
       <p><a class="p-button" href="/lxcfs/introduction/" role="button">Learn more</a></p>
     </div>
- 
+
     <div class="p-card col-4">
       <h3>distrobuilder</h3>
       <p>distrobuilder is an image building tool for LXC/LXD which offers:
@@ -101,9 +99,7 @@
         </ul>
       </p>
 
-      <p>distrobuilder was created as a replacement for the old shell scripts
-        that were shipped as part of LXC to generate images.
-        Its modern design utilises pre-built official images whenever available,
+      <p>distrobuilder's modern design utilises pre-built official images whenever available,
         uses a declarative image definition (YAML) and supports a variety of
         modifications on the base image.</p>
 
@@ -122,20 +118,10 @@
   <div class="row u-equal-height">
     <div class="p-card col-8">
       <h3>CGManager</h3>
-      <p>CGManager is our cgroup manager daemon. It's
+      <p>CGManager is a cgroup manager daemon
         designed to allow nested unprivileged containers
-        to still be able to create and manage their
+        to be able to create and manage their
         cgroups through a DBus API.</p>
-
-      <p>CGManager was used by default with LXC in
-        Ubuntu since April 2014 and then by other
-        distributions as they started needing working
-        unprivileged containers.</p>
-
-      <p>It has now been deprecated in favor of the CGroup namespace
-        in recent Linux kernels. On older kernels, LXCFS still offers
-        a cgroupfs emulation that can be used instead of CGManager
-        and is more widely compatible with existing userspace.</p>
 
       <p><a class="p-button" href="/cgmanager/introduction/" role="button">Learn more&nbsp;&rsaquo;</a></p>
     </div>
