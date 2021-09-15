@@ -349,6 +349,10 @@ h1 code, h2 code, h3 code, h4 code {
   background-color: inherit;
 }
 
+#startpage-heading {
+  font-size: 2.6rem;
+}
+
 iframe {
   margin-left: 0;
 }
