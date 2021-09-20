@@ -1,5 +1,11 @@
+<audio id="player">
+  <source src="/static/audio/lxd.mp3" type="audio/mpeg">
+  <source src="/static/audio/lxd.ogg" type="audio/ogg">
+  <source src="/static/audio/lxd.wav" type="audio/wav">
+</audio>
+
 # What is LXD?
-LXD is a next generation system container and virtual machine manager.
+LXD (<a href="#" title="Listen" onclick="document.getElementById('player').play();return false;">[lɛks'di:]&#128264;</a>) is a next generation system container and virtual machine manager.
 It offers a unified user experience around full Linux systems running inside containers or virtual machines.
 
 LXD is image based and provides images for a [wide number of Linux distributions](https://images.linuxcontainers.org). It provides flexibility and scalability for various use cases, with support for different storage backends and network types and the option to install on hardware ranging from an individual laptop or cloud instance to a full server rack.
@@ -14,7 +20,12 @@ To get a better idea of what LXD is and what it does, you can [try it online](/l
 
 Then if you want to run it locally, take a look at our [getting started guide](/lxd/getting-started-cli/). The following clip gives a quick and easy introduction for standard use cases:
 
-[![Installation and getting started](https://asciinema.org/a/226224.svg "Installation and getting started")](https://asciinema.org/a/226224)
+<div class="u-hide--small">
+ <script id="asciicast-226224" src="https://asciinema.org/a/226224.js" async></script>
+</div>
+<div class="u-hide--medium u-hide--large">
+ <a href="https://asciinema.org/a/226224" target="_blank"><img src="https://asciinema.org/a/226224.svg" alt="Installation and getting started"></a>
+</div>
 
 You can find a series of howtos and tutorials on YouTube:
 
