@@ -1,10 +1,5 @@
 {
     "languages": [
                     ["", "English", "Language"],
-                    ["fr", "Français", "Langue"],
-                    ["it", "Italiano", "Lingua"],
-                    ["pt_br", "Português Brasileiro", "Idioma"],
-                    ["ja", "日本語", "言語"],
-                    ["ko", "한국어", "언어"],
-                    ["ru", "Русский", "Язык"]]
+                    ["ja", "日本語", "言語"]]
 }
