@@ -35,6 +35,7 @@ import re
 import shutil
 import subprocess
 import yaml
+from extensions.include_toc import IncludeToCExtension
 
 # Variables
 CONTENT_PATH = "content"
@@ -162,7 +163,8 @@ def md2html(content):
     # Using toc extension to generate HTML anchors for paragraphs
     anchors = markdown.extensions.toc.TocExtension(
         permalink=True,
-        toc_depth='1-3')
+        toc_depth='1-3',
+        title="Contents")
 
     # adds tables
     tables = markdown.extensions.tables.TableExtension(
@@ -189,11 +191,14 @@ def md2html(content):
     fenced_code = markdown.extensions.fenced_code.FencedCodeExtension(
      )
 
+    include_toc = IncludeToCExtension()
+
     return markdown.markdown(content, extensions=[codehilite, anchors,
                                                   tables, footnotes,
                                                   admonition, wikilinks,
                                                   attr_list, fenced_code,
-                                                  'def_list'])
+                                                  'def_list', 'md_in_html',
+                                                  include_toc])
 
 
 def download_sort_key(download_name):

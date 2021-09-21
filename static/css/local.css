@@ -356,3 +356,25 @@ h1 code, h2 code, h3 code, h4 code {
 iframe {
   margin-left: 0;
 }
+
+.toc ul {
+  list-style-type: none;
+  margin-left: 0;
+  list-style-position: inside;
+}
+
+.toc ul li {
+  margin-top: .7em;
+}
+
+.toc ul a {
+  color: #111111;
+}
+
+.toctitle {
+  font-weight: 400;
+}
+
+.toc-link {
+  text-align: right;
+}
