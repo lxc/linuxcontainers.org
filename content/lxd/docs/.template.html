@@ -87,8 +87,10 @@
         display: block;
       }
 
-      .p-content table td {
-        white-space: nowrap;
+      @media only screen and (min-width:901px) and (max-width:1199px), (max-width:699px) {
+          .p-content table td {
+              white-space: nowrap;
+          }
       }
 
       .p-content h1, h2, h3, h4, h5, h6 {
