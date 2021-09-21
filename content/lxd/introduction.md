@@ -1,8 +1,4 @@
-<audio id="player">
-  <source src="/static/audio/lxd.mp3" type="audio/mpeg">
-  <source src="/static/audio/lxd.ogg" type="audio/ogg">
-  <source src="/static/audio/lxd.wav" type="audio/wav">
-</audio>
+[TOC]
 
 # What is LXD?
 LXD (<a href="#" title="Listen" onclick="document.getElementById('player').play();return false;">[lɛks'di:]&#128264;</a>) is a next generation system container and virtual machine manager.
@@ -134,3 +130,9 @@ However, we require commits be signed-off (following the DCO - Developer Certifi
 See the [Contribution guidelines](https://github.com/lxc/lxd/blob/master/doc/contributing.md) for more information.
 
 [<img src="/static/img/GitHub_Logo.png" alt="GitHub logo" style="display:block;float:none;margin-left:auto;margin-right:auto;padding:1em 0;max-height:120px"/>](https://github.com/lxc/lxd)
+
+<audio id="player">
+  <source src="/static/audio/lxd.mp3" type="audio/mpeg">
+  <source src="/static/audio/lxd.ogg" type="audio/ogg">
+  <source src="/static/audio/lxd.wav" type="audio/wav">
+</audio>

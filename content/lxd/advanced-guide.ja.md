@@ -1,7 +1,5 @@
 [TOC]
 
----
-
 # はじめに <!-- Introduction -->
 
 <!--
@@ -52,8 +50,8 @@ Basically you can apply two types of configurations:
 
 ### コンテナと仮想マシンの違い <!-- Difference between Containers and Virtual Machines -->
 <!--
-For now virtual machines support less features than containers.   
-You can see what configuration options are available for virtual machines in the [LXD documentation for instances](/lxd/docs/master/instances#keyvalue-configuration).   
+For now virtual machines support less features than containers.
+You can see what configuration options are available for virtual machines in the [LXD documentation for instances](/lxd/docs/master/instances#keyvalue-configuration).
 All categories and keys that contain the terms `virtual-machine` or `VM` are supported.
 -->
 現時点では、仮想マシンに対するサポートは、コンテナがサポートする機能よりも少ないです。
@@ -89,9 +87,9 @@ Usage:
 	lxc launch imageserver:imagename instancename -p profile1 -c key1=value
 
 <!--
-**Note:**   
+**Note:**
 -->
-**注意**  
+**注意**
 
 <!--
 To apply multiple profiles or config keys, use one flag for each, like:
@@ -99,7 +97,7 @@ To apply multiple profiles or config keys, use one flag for each, like:
 複数のプロファイルや設定キーを適用するには、次のようにそれぞれにひとつの設定を与えます:
 
 	lxc launch imageserver:imagename instancename -p profile1 -p profile2
-	
+
 	lxc launch imageserver:imagename instancename -c key1=value -c key2=value
 
 
@@ -166,7 +164,7 @@ This will set the standard terminal editor to `nano`:
 -->
 次のように標準のターミナルエディタとして`nano`を設定します:
 
-	echo 'export EDITOR=nano' >> ~/.profile 
+	echo 'export EDITOR=nano' >> ~/.profile
 
 
 ##### プロファイル中の設定キーに値を設定する <!-- 3. Set specific keys in a profile -->
@@ -238,12 +236,12 @@ config:
   snapshots.expiry: 1M
   security.protection.delete: true
   security.idmap.isolated: true
-  
+
 ```
 
 ##### `description:`
 <!--
-Adds a description for the profile. <!\-\- or the instance? \-\->   
+Adds a description for the profile. <!\-\- or the instance? \-\->
 Can be empty.
 -->
 プロファイルの説明を追加できます。空でも構いません。
@@ -272,7 +270,7 @@ Stays empty, will indicate to which instances this profile is applied.
 Create a new empty profile:
 -->
 空のプロファイルを作成します:
- 
+
 	lxc profile create myprofile
 
 <!--
@@ -359,15 +357,15 @@ Features include:
 * その他 <!-- and more -->
 
 <!--
-Requirements:   
+Requirements:
 -->
 動作環境:
 
 <!--
-* Images with cloud-init support:   
+* Images with cloud-init support:
 For example, official LXD images that contain the term `cloud` in `ALIAS` have implemented cloud-init support.
 -->
-* cloud-init をサポートするイメージ:  
+* cloud-init をサポートするイメージ:
 例えば、`ALIAS` に `cloud` という文字列を含む LXD の公式イメージは `cloud-init` をサポートしています。
 
 ## cloud-init で行う処理を適用する <!-- cloud-init Apply instructions for cloud-init -->
@@ -439,7 +437,7 @@ For more instructions see [examples in  the cloud-init documentation](https://cl
 - `user.vendor-data` - [cloud-init docs - vendordata](https://cloudinit.readthedocs.io/en/latest/topics/vendordata.html) を参照
 - `user.network-config` - [cloud-init docs - network configuration](https://cloudinit.readthedocs.io/en/latest/topics/network-config.html) を参照
 
-**Tips:**   
+**Tips:**
 <!--
 You can check whether the syntax is correct with: [cloud-init FAQ - debug user-data](https://cloudinit.readthedocs.io/en/latest/topics/faq.html#how-can-i-debug-my-user-data)
 -->
@@ -455,7 +453,7 @@ After you saved the textfile, we can apply it with the following steps.
 Create a new profile in LXD:
 -->
 LXD で新しいプロファイルを作成します:
- 
+
 	lxc profile create cloud-profile1
 
 <!--
@@ -470,7 +468,7 @@ Apply the textfile to the new profile:
 Apply the profile during `lxc launch` with flag `-p`:
 -->
 `lxc launch` コマンドに `-p` オプションを指定して、起動時にプロファイルを適用します:
- 
+
 	lxc launch imageserver:image instancename -p cloud-profile1
 
 <!--
@@ -494,7 +492,7 @@ You can get the status of cloud-init with:
 	cloud-init status
 
 <!--
-Reports:   
+Reports:
 -->
 上記のコマンドを実行した場合の結果:
 <!--
@@ -532,8 +530,8 @@ See:
 -->
 次をご覧ください:
  [Cloud-init documentation](https://cloudinit.readthedocs.io/en/latest/)
- 
- 
+
+
 # サーバー設定 <!-- Server configuration -->
 <!--
 See [LXD documentation - Server settings](/lxd/docs/master/server) for all Server configuration options.
@@ -556,11 +554,11 @@ Below we will introduce some topics, including:
 
 ## プロジェクト <!-- Projects -->
 <!--
-You can split your server into projects.   
-Each project can have it's own instances, profiles etc.   
+You can split your server into projects.
+Each project can have it's own instances, profiles etc.
 See [LXD documentation - Projects](/lxd/docs/master/projects) for more information and configuration.
 -->
-サーバーをプロジェクトに分割できます。プロジェクトでは、独自のインスタンスやプロファイルを持つことができます。   
+サーバーをプロジェクトに分割できます。プロジェクトでは、独自のインスタンスやプロファイルを持つことができます。
 詳しい情報や設定は [LXDドキュメントのプロジェクトの項](https://lxd-ja.readthedocs.io/ja/latest/projects/) をご覧ください。
 
 ## セキュリティ <!-- Security -->
@@ -592,9 +590,9 @@ LXD はいろいろな種類のリモートサーバーに対応しています:
 
 ### simplestream サーバーのセットアップ <!-- Setup simplestream servers -->
 <!--
-There are multiple servers available, for example:   
+There are multiple servers available, for example:
 -->
-いろいろなサーバーが存在します。例えば:   
+いろいろなサーバーが存在します。例えば:
 
 <!--
 - the LXD image server from Avature: [Link to GitHub Repo](https://github.com/Avature/lxd-image-server)
@@ -602,9 +600,9 @@ There are multiple servers available, for example:
 - Avature の LXD イメージサーバー: [GitHub リポジトリ](https://github.com/Avature/lxd-image-server)
 
 <!--
-**Connect to a simplestreams server:**   
+**Connect to a simplestreams server:**
 -->
-**simplestream サーバーへの接続:**   
+**simplestream サーバーへの接続:**
 <!--
 See [Add Simplestream servers](#add-simplestream-servers).
 -->
@@ -613,7 +611,7 @@ See [Add Simplestream servers](#add-simplestream-servers).
 ### リモートサーバーとして LXD サーバーをセットアップする <!-- Setup your LXD server as remote server -->
 #### デフォルト（TLS + Password） <!-- Default (TLS + Password) -->
 <!--
-This will setup a server with authentication based on TLS-certificates.   
+This will setup a server with authentication based on TLS-certificates.
 For easier adding of clients, you can set a password which will authenticate the clients the first time they connect.
 -->
 ここでは TLS 証明書ベースの認証でサーバーをセットアップします。クライアントの追加を簡単にするために、初回接続時にクライアントを認証するためのパスワードを設定できます。
@@ -656,9 +654,9 @@ For details see: [LXD Documentation - Security](/lxd/docs/master/security)
 <br>
 
 <!--
-**Connect to this Server:**   
+**Connect to this Server:**
 -->
-**サーバーへの接続:**   
+**サーバーへの接続:**
 <!--
 See [Add LXD servers](#add-lxd-servers) for how to add a server to your clients remote server list.
 -->
@@ -675,17 +673,17 @@ Install LXD and run:
 -->
 LXD をインストールし、次のように実行します:
 
-	lxc config set core.https_address :8443 
+	lxc config set core.https_address :8443
 
 <!--
-This will make the LXD-Server available over network on port 8443.   
+This will make the LXD-Server available over network on port 8443.
 You also need to set the images you want to share, to `public`.
 -->
 これで LXD サーバーが、8443 番ポートでネットワーク経由で利用できるようになります。さらに、共有したいイメージを `public` に設定する必要があります。
 
 #### Candid
 <!--
-Candid is an Authentication service.   
+Candid is an Authentication service.
 See [Ubuntu tutorials - Candid authentication for LXD](https://ubuntu.com/tutorials/candid-authentication-lxd#1-overview) for details and howto.
 -->
 Candid は認証サービスです。
@@ -718,7 +716,7 @@ A list of images on that server can be obtained with:
 Launch a instance based on an image of that server:
 -->
 そのサーバーのイメージを使ってインスタンスを起動するには次のように実行します:
-   
+
     lxc launch some-name:image-name your-instance [--vm]
 
 
@@ -730,14 +728,14 @@ You can add more servers to the remote server list with:
 -->
 次のようにリモートサーバーのリストにサーバーを追加できます:
 
-	lxc remote add some-name <IP|FQDN|URL> [flags]   
+	lxc remote add some-name <IP|FQDN|URL> [flags]
 
 <!--
 Example with IP:
 -->
 IP アドレスを使う場合の例は次のとおりです:
 
-    lxc remote add remoteserver2 1.2.3.4 
+    lxc remote add remoteserver2 1.2.3.4
 
 <!--
 This will prompt you to confirm the remote server fingerprint and then ask you for the password.
@@ -762,13 +760,13 @@ A list of images on that server can be obtained with:
 リモートサーバーのイメージリストは次のように取得できます:
 
     lxc image list my-images:
-	
+
 #### インスタンスの起動 <!-- Launch an instance -->
 <!--
 Launch an instance based on an image of that server:
 -->
 そのサーバーのイメージを使ってインスタンスを起動するには:
-   
+
     lxc launch some-name:image-name your-instance [--vm]
 
 #### リモートサーバーのインスタンスの管理 <!-- Manage instances on a remote server -->
@@ -804,7 +802,7 @@ You can import images, that you:
 次のようなイメージをインポートできます:
 
 <!--
-- built yourself (see [Build Images](#build-images)), 
+- built yourself (see [Build Images](#build-images)),
 - downloaded manually (see [Manual Download](#manual-download))
 - exported from images or containers (see [Export Images](#export-images) and [Create Image from Containers](#create-image-from-containers))
 -->
@@ -850,7 +848,7 @@ Use:
 
 #### 手動でのダウンロード <!-- Manual download -->
 <!--
-You can also download images manually.   
+You can also download images manually.
 For that you need to download the components described [above](#import-images).
 -->
 手動でイメージをダウンロードできます。その場合、[イメージのインポート](#_32)で説明したようなコンポーネントをダウンロードする必要があります。
@@ -858,16 +856,16 @@ For that you need to download the components described [above](#import-images).
 ##### LXD公式のイメージサーバーから <!-- From official LXD imageserver -->
 
 <!--
-**Note:** It is easier to use the usual method with `lxc launch`.     
+**Note:** It is easier to use the usual method with `lxc launch`.
 Use manual download only if you have a specific reason, like modification of the files before use for example.
 -->
 **注意:** 通常使用する `lxc launch` を使ったほうが簡単です。例えば、使用前にファイルを修正するなどの、何か特別な理由があるときのみ手動でのダウンロードを使用してください。
 
 <!--
-**Link to official Imageserver:**      
+**Link to official Imageserver:**
 [https://images.linuxcontainers.org/images/](https://images.linuxcontainers.org/images/)
 -->
-**公式のイメージサーバーへのリンク**   
+**公式のイメージサーバーへのリンク**
 [https://images.linuxcontainers.org/images/](https://images.linuxcontainers.org/images/)
 
 ### イメージのエクスポート <!-- Export Images -->
@@ -879,10 +877,10 @@ Use:
 	lxc image export imagename [target folder] [flags]
 
 <!--
-Flags:   
+Flags:
 `--vm` - Query virtual machine images
 -->
-オプション:   
+オプション:
 `--vm` - 仮想マシンイメージを問い合わせる
 
 #### コンテナからのイメージの作成 <!-- Create Image from Containers -->
@@ -925,7 +923,7 @@ distrobuilder に手順を示すためのイメージテンプレート（例: `
 
 <!--
 You can start by using one of the example templates below.
-Modify those templates so they fit your needs.   
+Modify those templates so they fit your needs.
 See [Template details](#template-details) below for an overview of configuration keys.
 -->
 下記のサンプルテンプレートのひとつを使って作成を始めることができます。ニーズに合うようにテンプレートを変更してください。設定キーの詳細については [テンプレートの詳細](#_42) をご覧ください。
@@ -972,7 +970,7 @@ You can define multiple keys in templates:
 
 <!--
 !!! note "Note for VMs"
-	You should either build an image with cloud-init support (provides automatic size growth) or set a higher size in the template, because the standard size is relatively small (~4 GB).   
+	You should either build an image with cloud-init support (provides automatic size growth) or set a higher size in the template, because the standard size is relatively small (~4 GB).
 	Alternatively you can also grow it manually.
 -->
 !!! note "VMでの注意"
@@ -1064,7 +1062,7 @@ See LXD-documentation for details:
 
 # ストレージ <!-- Storages -->
 <!--
-See LXD-documentation for details:   
+See LXD-documentation for details:
 [Storage documentation](/lxd/docs/master/storage)
 -->
 詳しくは LXD ドキュメントをご覧ください:
@@ -1101,7 +1099,7 @@ For example:
 	lxc alias add delete "delete -i"
 
 <!--
-This will link the command `lxc delete` to `lxc delete -i`.    
+This will link the command `lxc delete` to `lxc delete -i`.
 So if you run `lxc delete` the LXD-client will run `lxc delete -i` instead.
 -->
 これはコマンド `lxc delete` を `lxc delete -i` にリンクします。LXD クライアントで `lxc delete` と実行すると、代わりに `lxc delete -i` が実行されます。
@@ -1117,7 +1115,7 @@ So if you run `lxc delete` the LXD-client will run `lxc delete -i` instead.
 	lxc alias add delete "delete -i"
 
 <!--
-`Method 2`: Or apply this configuration key to the instance: `security.protection.delete=true`   
+`Method 2`: Or apply this configuration key to the instance: `security.protection.delete=true`
 This way the instance can't be deleted, until you change this config key.
 -->
 `方法2`: インスタンスにつぎの設定を行います: `security.protection.delete=true`。この設定キーを削除しない限りは、インスタンスを削除できません。
