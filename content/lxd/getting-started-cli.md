@@ -1,7 +1,5 @@
 [TOC]
 
----
-
 # Installation
 ## Choose your release
 LXD upstream maintains three release branches in parallel:
@@ -172,12 +170,12 @@ You can find more information about virtual machines in our forum[^1].
 <!-- You can find more information in the Advanced Guide. -->
 
 !!! note
-	For now virtual machines support less features than containers.     
+	For now virtual machines support less features than containers.
     See [Advanced Guide - Instance configuration](/lxd/advanced-guide#difference-between-containers-and-virtual-machines) for details.
     {: .p-noteadm }
 
 
-# LXD client 
+# LXD client
 The LXD client `lxc` is a command tool to manage your LXD servers.
 
 ## Overview
@@ -191,11 +189,11 @@ Use `lxc [command] --help` for more information about a command, like flags and 
 You can launch an instance with the `lxc launch` command.
 
 To launch a container:
-	
-	lxc launch imageserver:imagename instancename	
+
+	lxc launch imageserver:imagename instancename
 
 To launch a virtual machine:
-	
+
 	lxc launch imageserver:imagename instancename --vm
 
 In the commands above, replace:
@@ -235,7 +233,7 @@ LXD comes with 3 default servers:
 #### List images on server
 
 To get a list of remote images on server `images`, type:
-	
+
 	lxc image list images:
 
 **Details:**
@@ -329,8 +327,8 @@ Pull a folder with:
 
     lxc file pull -r instancename/path-in-container path-on-host
 
-For example:  
-    
+For example:
+
     lxc file pull instancename/etc/hosts .
 
 #### Copy from host to instance
@@ -368,8 +366,8 @@ You find more information on the following pages:
 - [Forum](https://discuss.linuxcontainers.org/)
     - [Tutorials Section](https://discuss.linuxcontainers.org/c/tutorials)
 
-
- 
  <!-- footnotes -->
- 
+
  [^1]: [Running virtual machines with lxd](https://discuss.linuxcontainers.org/t/running-virtual-machines-with-lxd-4-0/7519), including a short howto for a Microsoft Windows VM.
+
+///Footnotes Go Here///

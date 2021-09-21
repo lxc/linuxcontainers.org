@@ -1,7 +1,5 @@
 [TOC]
 
----
-
 # インストール<!-- Installation -->
 ## リリースを選択する <!-- Choose your release -->
 <!--
@@ -131,13 +129,13 @@ After that, you can install the latest feature release of LXD with:
     sudo snap install lxd
 
 <!--
-Alternatively, you can pass:   
-`--channel=4.0/stable` for the LXD 4.0 LTS release or  
-`--channel=3.0/stable` for the LXD 3.0 LTS release  
+Alternatively, you can pass:
+`--channel=4.0/stable` for the LXD 4.0 LTS release or
+`--channel=3.0/stable` for the LXD 3.0 LTS release
 -->
-あるいは次のように実行します:  
-LXD 4.0 LTS リリースの場合は `--channel=4.0/stable`   
-LXD 3.0 LTS リリースの場合は `--channel=3.0/stable`  
+あるいは次のように実行します:
+LXD 4.0 LTS リリースの場合は `--channel=4.0/stable`
+LXD 3.0 LTS リリースの場合は `--channel=3.0/stable`
 
 <!--
 For more information about LXD snap packages (regarding more versions, update management etc.), see [Managing the LXD snap](https://discuss.linuxcontainers.org/t/managing-the-lxd-snap/8178).
@@ -282,7 +280,7 @@ or use the "newgrp lxd" command in the shell you're going to use to talk to LXD.
 	<!--
 	Anyone with access to the LXD socket can fully control LXD, which includes the ability to attach host devices and filesystems, this should therefore only be given to users who would be trusted with root access to the host. You can learn more about LXD security [here](/lxd/docs/master/security).
 	-->
-	LXD ソケットにアクセスできる人であれば誰でも LXD を完全にコントロールできます。これには、ホストのデバイスやファイルシステムにアタッチする権限も含まれます。したがって、ホストへの root アクセスで信頼できるユーザにのみ与えられるべきです。さらに LXD のセキュリティについて学びたい場合は[ドキュメントのセキュリティのセクション（日本語版）](https://lxd-ja.readthedocs.io/ja/latest/security/) （または[英語版](/lxd/docs/master/security/)）をご覧ください。	
+	LXD ソケットにアクセスできる人であれば誰でも LXD を完全にコントロールできます。これには、ホストのデバイスやファイルシステムにアタッチする権限も含まれます。したがって、ホストへの root アクセスで信頼できるユーザにのみ与えられるべきです。さらに LXD のセキュリティについて学びたい場合は[ドキュメントのセキュリティのセクション（日本語版）](https://lxd-ja.readthedocs.io/ja/latest/security/) （または[英語版](/lxd/docs/master/security/)）をご覧ください。
 
 # 仮想マシンについての注意 <!-- Note about Virtual machines -->
 <!--
@@ -308,7 +306,7 @@ You can find more information about virtual machines in our forum[^1].
 
 !!! note "注意"
 	<!--
-	For now virtual machines support less features than containers.     
+	For now virtual machines support less features than containers.
     See [Advanced Guide - Instance configuration](/lxd/advanced-guide#difference-between-containers-and-virtual-machines) for details.
 	-->
 	現時点では、仮想マシンで使える機能はコンテナよりは少ないです。
@@ -341,11 +339,11 @@ You can launch an instance with command `lxc launch`:
 `lxc launch` コマンドでインスタンスが起動できます。
 
 ##### コンテナの起動 <!-- Launch a container -->
-	
-	lxc launch imageserver:imagename instancename	
+
+	lxc launch imageserver:imagename instancename
 
 ##### 仮想マシンの起動 <!-- Launch a virtual machine -->
-	
+
 	lxc launch imageserver:imagename instancename --vm
 
 <!--
@@ -418,10 +416,10 @@ LXD はデフォルトで 3 つのサーバーが登録されています:
 To get a list of remote images on server `images`, type:
 -->
 イメージサーバー `images` 上のイメージリストを取得するには次のようにします:
-	
+
 	lxc image list images:
 
-**詳細** <!-- **Details:** -->  
+**詳細** <!-- **Details:** -->
 <!--
 _Most details in the list should be self-explanatory._
 -->
@@ -445,7 +443,7 @@ Show all Debian images:
 -->
 すべての Debian イメージを検索するには:
 
-	lxc image list images: debian  
+	lxc image list images: debian
 
 <!--
 Show all 64-bit Debian images:
@@ -456,8 +454,8 @@ Show all 64-bit Debian images:
 
 ### 仮想マシンのイメージ <!-- Images for Virtual Machines -->
 <!--
-It is recommended to use the `cloud` variants of images (visible by the `cloud`-tag in their `ALIAS`).   
-They include cloud-init and the LXD-agent.   
+It is recommended to use the `cloud` variants of images (visible by the `cloud`-tag in their `ALIAS`).
+They include cloud-init and the LXD-agent.
 They also increase their size automatically and are tested daily.
 -->
 イメージの `cloud` バリアントを使うことをおすすめします（`ALIAS` の `cloud` タグで確認できます）。このようなイメージは LXD エージェントと cloud-init を含んでいます。また、サイズは自動的に大きくなり、毎日テストされています。
@@ -577,7 +575,7 @@ Pull a folder with:
 For example:
 -->
 例えば:
-    
+
     lxc file pull instancename/etc/hosts .
 
 ##### ホストからインスタンスへのコピー <!-- Copy from host to instance -->
@@ -600,8 +598,8 @@ Push a folder with:
 
 !!! warning "警告"
 	<!--
-	This will delete the instance including all snapshots.   
-	Deletion will be final in most cases and restore is unlikely!   
+	This will delete the instance including all snapshots.
+	Deletion will be final in most cases and restore is unlikely!
     See [Tips & Tricks in Advanced Guide](/lxd/advanced-guide/#prevent-accidental-deletion-of-an-instance) on how to avoid accidental deletion.
 	-->
 	次のコマンドはスナップショットもふくめてインスタンスを削除します。
@@ -635,10 +633,12 @@ You find more information on the following pages:
 -->
 - [フォーラム](https://discuss.linuxcontainers.org/)
     - [チュートリアル](https://discuss.linuxcontainers.org/c/tutorials)
- 
+
  <!-- footnotes -->
 
 <!--
  [^1]: [Running virtual machines with lxd](https://discuss.linuxcontainers.org/t/running-virtual-machines-with-lxd-4-0/7519), including a short howto for a Microsoft Windows VM.
 -->
  [^1]: [LXD で仮想マシンを実行する](https://discuss.linuxcontainers.org/t/running-virtual-machines-with-lxd-4-0/7519), Microsoft Windows VM 向けの簡単な HowTo を含みます
+
+///Footnotes Go Here///

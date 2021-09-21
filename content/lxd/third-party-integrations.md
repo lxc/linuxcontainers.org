@@ -1,3 +1,5 @@
+[TOC]
+
 # Third-party integrations
 
 Beside [using LXD natively](/lxd/getting-started-cli/), you can also use LXD within external tools.

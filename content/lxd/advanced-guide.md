@@ -1,7 +1,5 @@
 [TOC]
 
----
-
 # Introduction
 
 !!! note
@@ -24,7 +22,7 @@ Basically you can apply two types of configurations:
     - kernel modules
     - snapshots
     - user keys (for cloud-init instructions)
-    - and more 
+    - and more
 - [Devices](/lxd/docs/master/instances#device-types), including:
     - network
     - storage
@@ -35,8 +33,8 @@ Basically you can apply two types of configurations:
 
 
 ### Difference between containers and virtual machines
-For now virtual machines support less features than containers.   
-You can see what configuration options are available for virtual machines in the [LXD documentation for instances](/lxd/docs/master/instances#keyvalue-configuration).   
+For now virtual machines support less features than containers.
+You can see what configuration options are available for virtual machines in the [LXD documentation for instances](/lxd/docs/master/instances#keyvalue-configuration).
 All categories and keys that contain the terms `virtual-machine` or `VM` are supported.
 
 ### lxc launch flags
@@ -47,7 +45,7 @@ You can apply flags to add configuration options to `lxc launch`.
 ```
 -p profilename   # apply a profile
 
--c key=value   # apply a config key/value 
+-c key=value   # apply a config key/value
 ```
 
 !!! note
@@ -58,11 +56,11 @@ Usage:
 
 	lxc launch imageserver:imagename instancename -p profile1 -c key1=value
 
-**Note:**   
+**Note:**
 To apply multiple profiles or config keys, use one flag for each, like:
 
 	lxc launch imageserver:imagename instancename -p profile1 -p profile2
-	
+
 	lxc launch imageserver:imagename instancename -c key1=value -c key2=value
 
 
@@ -94,12 +92,12 @@ Use:
 
 	lxc profile edit profilename
 
-###### Choose a specific editor  
+###### Choose a specific editor
 You can set the editor in `/home/user/.profile`.
 
 This will set the standard terminal editor to `nano`:
 
-	echo 'export EDITOR=nano' >> ~/.profile 
+	echo 'export EDITOR=nano' >> ~/.profile
 
 
 ##### 3. Set specific keys in a profile
@@ -150,11 +148,11 @@ config:
   snapshots.expiry: 1M
   security.protection.delete: true
   security.idmap.isolated: true
-  
+
 ```
 
 ##### `description:`
-Adds a description for the profile. <!-- or the instance? -->   
+Adds a description for the profile. <!-- or the instance? -->
 Can be empty.
 
 ##### `devices:`
@@ -169,7 +167,7 @@ Stays empty, will indicate to which instances this profile is applied.
 
 #### Add the profile to LXD
 Create a new empty profile:
- 
+
 	lxc profile create myprofile
 
 "Copy" the textfile to the new profile:
@@ -191,7 +189,7 @@ Use:
 
 	lxc profile remove instancename profilename
 
-#### Edit a profile 
+#### Edit a profile
 Use:
 
 	lxc profile edit profilename
@@ -272,14 +270,14 @@ For more instructions see [examples in  the cloud-init documentation](https://cl
 - `user.vendor-data` - see [cloud-init docs - vendordata](https://cloudinit.readthedocs.io/en/latest/topics/vendordata.html)
 - `user.network-config` - see [cloud-init docs - network configuration](https://cloudinit.readthedocs.io/en/latest/topics/network-config.html)
 
-**Tip:**   
+**Tip:**
 You can check whether the syntax is correct with: [cloud-init FAQ - debug user-data](https://cloudinit.readthedocs.io/en/latest/topics/faq.html#how-can-i-debug-my-user-data)
 
 ### Apply the profile
 After you saved the textfile, we can apply it with the following steps.
 
 Create a new profile in LXD:
- 
+
 	lxc profile create cloud-profile1
 
 Apply the textfile to the new profile:
@@ -288,7 +286,7 @@ Apply the textfile to the new profile:
 
 #### Launch the instance with cloud-init
 Apply the profile during `lxc launch` with flag `-p`:
- 
+
 	lxc launch imageserver:image instancename -p cloud-profile1
 
 Now cloud-init will start working.
@@ -301,7 +299,7 @@ You can get the status of cloud-init with:
 
 	cloud-init status
 
-Reports:   
+Reports:
 `status: running`
 : means cloud-init is still working
 
@@ -320,8 +318,8 @@ You can also use the following flag, which will only respond when cloud-init is 
 ### More information
 See:
  [Cloud-init documentation](https://cloudinit.readthedocs.io/en/latest/)
- 
- 
+
+
 # Server configuration
 See [LXD documentation - Server settings](/lxd/docs/master/server) for all Server configuration options.
 
@@ -332,8 +330,8 @@ Below we will introduce some topics, including:
 - [Remote servers](#remote-servers)
 
 ## Projects
-You can split your server into projects.   
-Each project can have it's own instances, profiles etc.   
+You can split your server into projects.
+Each project can have it's own instances, profiles etc.
 See [LXD documentation - Projects](/lxd/docs/master/projects) for more information and configuration.
 
 ## Security
@@ -350,17 +348,17 @@ LXD supports different kinds of remote servers:
     * [Candid+RBAC](#candid-rbac) (Role Based Access Control)
 
 ### Set up simplestream servers
-There are multiple servers available, for example:   
+There are multiple servers available, for example:
 
 - the LXD image server from Avature: [Link to GitHub Repo](https://github.com/Avature/lxd-image-server)
 
-**Connect to a simplestream server:**   
+**Connect to a simplestream server:**
 See [Add simplestream servers](#add-simplestream-servers).
 
 ### Set up your LXD server as remote server
 
 #### Default (TLS + password)
-This will set up a server with authentication based on TLS-certificates.   
+This will set up a server with authentication based on TLS-certificates.
 For easier adding of clients, you can set a password which will authenticate the clients the first time they connect.
 
 Set up a LXD-server as a remote server, with:
@@ -387,9 +385,9 @@ You can use an empty LXD Server (with no storage pools, no networks etc.) as a p
 
 Install LXD and run:
 
-	lxc config set core.https_address :8443 
+	lxc config set core.https_address :8443
 
-This will make the LXD-Server available over network on port 8443.   
+This will make the LXD-Server available over network on port 8443.
 You also need to set the images you want to share, to `public`.
 
 #### Candid
@@ -412,7 +410,7 @@ A list of images on that server can be obtained with:
     lxc image list some-name:
 
 Launch an instance based on an image of that server:
-   
+
     lxc launch some-name:image-name your-instance [--vm]
 
 
@@ -421,11 +419,11 @@ Launch an instance based on an image of that server:
 ##### Default (TLS + password)
 You can add more servers to the remote server list with:
 
-	lxc remote add some-name <IP|FQDN|URL> [flags]   
+	lxc remote add some-name <IP|FQDN|URL> [flags]
 
 Example with IP:
 
-    lxc remote add remoteserver2 1.2.3.4 
+    lxc remote add remoteserver2 1.2.3.4
 
 This will prompt you to confirm the remote server fingerprint and then ask you for the password.
 
@@ -444,7 +442,7 @@ A list of images on that server can be obtained with:
 
 #### Launch an instance
 Launch an instance based on an image of that server:
-   
+
     lxc launch some-name:image-name your-instance [--vm]
 
 #### Manage instances on a remote server
@@ -465,7 +463,7 @@ You can replace `apt-get update` with any command the instance supports.
 ## Import images
 You can import images, that you:
 
-- built yourself (see [Build Images](#build-images)), 
+- built yourself (see [Build Images](#build-images)),
 - downloaded manually (see [Manual Download](#manual-download))
 - exported from images or containers (see [Export Images](#export-images) and [Create Image from Containers](#create-image-from-containers))
 
@@ -494,15 +492,15 @@ Use:
 
 
 ### Manual download
-You can also download images manually.   
+You can also download images manually.
 For that you need to download the components described [above](#import-images).
 
 #### From official LXD image server
 
-**Note:** It is easier to use the usual method with `lxc launch`.     
+**Note:** It is easier to use the usual method with `lxc launch`.
 Use manual download only if you have a specific reason, like modification of the files before use for example.
 
-**Link to official Imageserver:**      
+**Link to official Imageserver:**
 [https://images.linuxcontainers.org/images/](https://images.linuxcontainers.org/images/)
 
 
@@ -511,11 +509,11 @@ Use:
 
 	lxc image export imagename [target folder] [flags]
 
-Flags:   
+Flags:
 `--vm` - Query virtual machine images
 
 ### Create image from containers
-See command: 
+See command:
 
 	lxc publish
 
@@ -535,7 +533,7 @@ See [Instructions on distrobuilder GitHub repo](https://github.com/lxc/distrobui
 You need an image template (e.g. `ubuntu.yaml`) to give instructions to distrobuilder.
 
 You can start by using one of the example templates below.
-Modify those templates so they fit your needs.   
+Modify those templates so they fit your needs.
 See [Template details](#template-details) below for an overview of configuration keys.
 
 #### Example templates
@@ -560,7 +558,7 @@ You can define multiple keys in templates:
 
 
 !!! note "Note for VMs"
-	You should either build an image with cloud-init support (provides automatic size growth) or set a higher size in the template, because the standard size is relatively small (~4 GB).   
+	You should either build an image with cloud-init support (provides automatic size growth) or set a higher size in the template, because the standard size is relatively small (~4 GB).
 	Alternatively you can also grow it manually.
 
 ### Build an image
@@ -628,7 +626,7 @@ For example:
 
 	lxc alias add delete "delete -i"
 
-This will link the command `lxc delete` to `lxc delete -i`.    
+This will link the command `lxc delete` to `lxc delete -i`.
 So if you run `lxc delete` the LXD-client will run `lxc delete -i` instead.
 
 # Tips & tricks
@@ -638,7 +636,7 @@ So if you run `lxc delete` the LXD-client will run `lxc delete -i` instead.
 
 	lxc alias add delete "delete -i"
 
-`Method 2`: Or apply this configuration key to the instance: `security.protection.delete=true`   
+`Method 2`: Or apply this configuration key to the instance: `security.protection.delete=true`
 This way the instance can't be deleted, until you change this config key.
 
 
