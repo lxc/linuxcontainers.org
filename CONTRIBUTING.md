@@ -111,6 +111,7 @@ Translations for other languages are possible and appreciated. See [Translations
    wikilinks
    attr_list
    fenced_code
+   mdx-linkify
    ```
 
    See also:

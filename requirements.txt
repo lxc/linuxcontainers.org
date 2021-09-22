@@ -3,3 +3,4 @@ jinja2
 markdown>=3.3.4
 pygments
 pyyaml
+mdx-linkify

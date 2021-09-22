@@ -31,21 +31,22 @@ Install the following software (naming may depends on your distribution):
  * python3-jinja2
  * python3-markdown (>= 3.3.4)
  * python3-pygments
+ * mdx-linkify
 
 ### Clone the repo
 
     git clone https://github.com/lxc/linuxcontainers.org
-  
-**Note:** The folder `downloads` is quite big, so you can skip that folder by using [git sparse-checkout & partial clones](https://github.blog/2020-01-17-bring-your-monorepo-down-to-size-with-sparse-checkout/#sparse-checkout-and-partial-clones) 
+
+**Note:** The folder `downloads` is quite big, so you can skip that folder by using [git sparse-checkout & partial clones](https://github.blog/2020-01-17-bring-your-monorepo-down-to-size-with-sparse-checkout/#sparse-checkout-and-partial-clones)
 (The only exception is, when you work on the downloads page).
 
 As a replacement for the missing `downloads` folder you need to create the following empty folders, before generating the website  (otherwise the generator shows an error):
 
 ```
 downloads/cgmanager/
-downloads/distrobuilder/  
-downloads/lxc/  
-downloads/lxcfs/  
+downloads/distrobuilder/
+downloads/lxc/
+downloads/lxcfs/
 downloads/lxd/
 ```
 
@@ -53,7 +54,7 @@ downloads/lxd/
 
     ./generate
 
-### Launching the website 
+### Launching the website
 
 After generating the website(above), run these commands(Ubuntu-specific):
 
@@ -64,7 +65,7 @@ Now you can access the website in your browser by using your local IP address an
 
     127.0.0.1:8777
 
-#### (Alternative) Launching within a container 
+#### (Alternative) Launching within a container
 
 **Inside the container:**
 
@@ -84,10 +85,3 @@ You can now navigate to the site (in a browser of your choice) with the containe
 ## Bug reports & Content requests
 
 Bug reports, requests and ideas regarding the website can be filed at https://github.com/lxc/linuxcontainers.org/issues/new
-
-
-
-
-
-
-
