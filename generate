@@ -29,6 +29,7 @@ import markdown.extensions.wikilinks
 import markdown.extensions.attr_list
 import markdown.extensions.def_list
 import markdown.extensions.fenced_code
+from mdx_linkify.mdx_linkify import LinkifyExtension
 import pygments.formatters
 import os
 import re
@@ -151,6 +152,14 @@ def gen_menu(structure, override, prefix):
     return menu
 
 
+def linkify_only_http(attrs, new=False):
+
+    if not attrs["_text"].startswith("http"):
+        return None
+
+    return attrs
+
+
 def md2html(content):
     """
         Given path to Markdown file, return rendered HTML content.
@@ -193,12 +202,15 @@ def md2html(content):
 
     include_toc = IncludeToCExtension()
 
+    mdx_linkify = LinkifyExtension(linker_options={
+        "callbacks": [linkify_only_http], "skip_tags": ['a']})
+
     return markdown.markdown(content, extensions=[codehilite, anchors,
                                                   tables, footnotes,
                                                   admonition, wikilinks,
                                                   attr_list, fenced_code,
                                                   'def_list', 'md_in_html',
-                                                  include_toc])
+                                                  include_toc, mdx_linkify])
 
 
 def download_sort_key(download_name):
