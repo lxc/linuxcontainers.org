@@ -171,9 +171,23 @@ LXD のフィーチャーブランチをインストールするには、以下�
 	Windows 用のビルドはクライアントのみです。サーバーは含みません。
 
 <!--
-Native builds of the LXD client for Windows can be [found here](https://ci.appveyor.com/project/lxc/lxd/branch/master/artifacts).
+The LXD client on Windows is provided as a [Chocolatey](https://community.chocolatey.org/packages/lxc) package. To install it:
 -->
-Windows 用の LXD クライアントのネイティブビルドは [こちら](https://ci.appveyor.com/project/lxc/lxd/branch/master/artifacts) にあります。
+Windows 版 LXD クライアントは [Chocolatey](https://community.chocolatey.org/packages/lxc) パッケージとして提供されています。次のようにインストールします:
+
+1. [installation instructions](https://docs.chocolatey.org/en-us/choco/setup#installing-chocolatey) の手順に従い Chocolatey をインストールする <!-- Install Chocolatey by following the [installation instructions](https://docs.chocolatey.org/en-us/choco/setup#installing-chocolatey). -->
+2. LXD クライアントを次のようにインストールする: <!-- Install the LXD client: -->
+
+        choco install lxc
+
+<!--
+You can also find native builds of the LXD client for Windows on [GitHub](https://github.com/lxc/lxd/actions). To download a specific build:
+-->
+[GitHub](https://github.com/lxc/lxd/actions) にも Windows 版 LXD クライアントのネイティブビルドがあります。特定のビルドは次のようにダウンロードします。
+
+1. GitHub のアカウントにログイン済みであることを確認してください <!-- Make sure that you are logged into your GitHub account. -->
+2. 興味のあるブランチやタグでフィルターしてください（例えば、最新のリリースタグや `master` など）<!-- Filter for the branch or tag that you are interested in (for example, the latest release tag or `master`). -->
+3. 最新のビルドを選択し、Windows アーティファクトをダウンロードしてください <!-- Select the latest build and download the Windows artifact. -->
 
 ### ソースからのインストール <!-- Installing from source -->
 <!--
