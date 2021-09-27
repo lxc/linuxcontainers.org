@@ -210,7 +210,8 @@ def md2html(content):
                                                   admonition, wikilinks,
                                                   attr_list, fenced_code,
                                                   'def_list', 'md_in_html',
-                                                  include_toc, mdx_linkify])
+                                                  include_toc, mdx_linkify,
+                                                  'pymdownx.tabbed'])
 
 
 def download_sort_key(download_name):
