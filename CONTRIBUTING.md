@@ -112,6 +112,7 @@ Translations for other languages are possible and appreciated. See [Translations
    attr_list
    fenced_code
    mdx-linkify
+   pymdown-extensions
    ```
 
    See also:

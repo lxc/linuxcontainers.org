@@ -32,6 +32,7 @@ Install the following software (naming may depends on your distribution):
  * python3-markdown (>= 3.3.4)
  * python3-pygments
  * mdx-linkify
+ * pymdown-extensions
 
 ### Clone the repo
 

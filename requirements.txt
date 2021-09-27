@@ -4,3 +4,4 @@ markdown>=3.3.4
 pygments
 pyyaml
 mdx-linkify
+pymdown-extensions
