@@ -1,5 +1,6 @@
 # Distribution packages
 LXD is shipped by a number of Linux distributions.
+
 Installation instructions can be found in our [getting started](/lxd/getting-started-cli/) guide.
 
 # Current development version

@@ -200,7 +200,8 @@ def md2html(content):
                                                   'def_list', 'md_in_html',
                                                   include_toc,
                                                   'pymdownx.magiclink',
-                                                  'pymdownx.tabbed'])
+                                                  'pymdownx.tabbed',
+                                                  'nl2br'])
 
 
 def download_sort_key(download_name):

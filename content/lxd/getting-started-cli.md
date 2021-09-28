@@ -8,8 +8,7 @@ LXD upstream maintains three release branches in parallel:
  * Long term support (LTS) releases: LXD 4.0.x or LXD 3.0.x
  * Feature releases: LXD 4.x
 
-LTS releases are recommended for production environments as they will benefit from regular bugfix
-and security updates but will not see new features added or any kind of behavioral change.
+LTS releases are recommended for production environments as they will benefit from regular bugfix and security updates but will not see new features added or any kind of behavioral change.
 
 To get all the latest features and monthly updates to LXD, use the feature release branch instead.
 
@@ -26,7 +25,7 @@ LXD upstream publishes and tests [snap packages](https://snapcraft.io/lxd) that 
 
 Complete the following steps to install the snap:
 
-1. Check the [provided distributions](https://jenkins.linuxcontainers.org/job/lxd-test-snap-latest-stable/) to see if a snap is available for your Linux distribution.<br/>
+1. Check the [provided distributions](https://jenkins.linuxcontainers.org/job/lxd-test-snap-latest-stable/) to see if a snap is available for your Linux distribution.
    If it is not, use one of the [other installation options](#other-installation-options).
 
 2. Install `snapd`. See the [installation instructions](https://snapcraft.io/docs/core/install) on snapcraft.io.
@@ -108,8 +107,7 @@ Instructions on building and installing LXD from source [can be found here](http
 # Initial configuration
 
 !!! note
-	`instances`
-	: means both `containers` and `virtual machines`.
+	`instances` means both `containers` and `virtual machines`.
 
 Before you can create an instance, you need to configure LXD.
 
@@ -123,14 +121,14 @@ To create a non-optimized minimal setup with default options, you can skip the c
 
     sudo lxd init --auto
 
-**Note:** Compared to the interactive configuration, the minimal setup will be slower and provide less functionality. Especially the `dir storage backend` (which is used by default) is slower and doesn't provide fast snapshots, fast copy/launch, quotas and optimized backups.
+!!! note
+    Compared to the interactive configuration, the minimal setup will be slower and provide less functionality. Especially the `dir storage backend` (which is used by default) is slower and doesn't provide fast snapshots, fast copy/launch, quotas and optimized backups.
 
-If you want to use an optimized setup, we recommend to go through the interactive configuration process instead.
+    If you want to use an optimized setup, we recommend to go through the interactive configuration process instead.
 
 **Overview of the configuration options:**
 
-`default=no`
-: means the feature is disabled by default
+`default=no` means the feature is disabled by default.
 
 | Feature:  | Description: | Basic Configuration Options: | More Information: |
 | --- | ------------- | --- | --- |
@@ -143,14 +141,11 @@ If you want to use an optimized setup, we recommend to go through the interactiv
 | "YAML lxd init preseed" | Will display a summary of your chosen configuration options in the terminal. | default=`no` | - |
 
 ## Access control
-Access control for LXD is based on group membership.
-The root user as well as members of the "lxd" group can interact with the local daemon.
+Access control for LXD is based on group membership. The root user as well as members of the "lxd" group can interact with the local daemon.
 
-If the "lxd" group is missing on your system, create it, then restart the LXD daemon.
-You can then add trusted users to it. Anyone added to this group will have full control over LXD.
+If the "lxd" group is missing on your system, create it, then restart the LXD daemon. You can then add trusted users to it. Anyone added to this group will have full control over LXD.
 
-Because group membership is normally only applied at login, you may need to either re-open your user session
-or use the "newgrp lxd" command in the shell you're going to use to talk to LXD.
+Because group membership is normally only applied at login, you may need to either re-open your user session or use the "newgrp lxd" command in the shell you're going to use to talk to LXD.
 
 !!! warning
 	Anyone with access to the LXD socket can fully control LXD, which includes the ability to attach host devices and filesystems, this should therefore only be given to users who would be trusted with root access to the host. You can learn more about LXD security [here](/lxd/docs/master/security).
@@ -166,10 +161,7 @@ You can find more information about virtual machines in our forum[^1].
 <!-- You can find more information in the Advanced Guide. -->
 
 !!! note
-	For now virtual machines support less features than containers.
-    See [Advanced Guide - Instance configuration](/lxd/advanced-guide#difference-between-containers-and-virtual-machines) for details.
-    {: .p-noteadm }
-
+	For now virtual machines support less features than containers. See [Advanced Guide - Instance configuration](/lxd/advanced-guide#difference-between-containers-and-virtual-machines) for details.
 
 # LXD client
 The LXD client `lxc` is a command tool to manage your LXD servers.
@@ -233,10 +225,10 @@ To get a list of remote images on server `images`, type:
 	lxc image list images:
 
 **Details:**
+
 _Most details in the list should be self-explanatory._
 
-- Alias with `cloud`
-: refers to images with built-in cloud-init support (see [Advanced Guide - Cloud-Init](/lxd/advanced-guide#cloud-init) and [official cloud-init documentation](https://cloudinit.readthedocs.io/en/latest/))
+- Alias with `cloud`: refers to images with built-in cloud-init support (see [Advanced Guide - Cloud-Init](/lxd/advanced-guide#cloud-init) and [official cloud-init documentation](https://cloudinit.readthedocs.io/en/latest/))
 
 #### Search for images
 You can search for images, by applying specific elements (e.g. the name of a distribution).
@@ -250,9 +242,7 @@ Show all 64-bit Debian images:
 	lxc image list images: debian amd64
 
 ### Images for virtual machines
-It is recommended to use the `cloud` variants of images (visible by the `cloud`-tag in their `ALIAS`).
-They include cloud-init and the LXD-agent.
-They also increase their size automatically and are tested daily.
+It is recommended to use the `cloud` variants of images (visible by the `cloud`-tag in their `ALIAS`). They include cloud-init and the LXD-agent. They also increase their size automatically and are tested daily.
 
 ## Instance management
 List all instances:
@@ -281,9 +271,10 @@ root@containername:~#
 ```
 
 #### Log in as a user instead
-**Note:** In many containers you need to create a user first.
+!!! note
+    In many containers you need to create a user first.
 
-	lxc exec instancename -- su --login username
+	    lxc exec instancename -- su --login username
 
 Exit the container shell, with:
 
@@ -340,8 +331,8 @@ Push a folder with:
 ### Remove instance
 
 !!! warning
-	This will delete the instance including all snapshots.
-	Deletion will be final in most cases and restore is unlikely!
+	This will delete the instance including all snapshots. Deletion will be final in most cases and restore is unlikely!
+
     See [Tips & Tricks in Advanced Guide](/lxd/advanced-guide/#prevent-accidental-deletion-of-an-instance) on how to avoid accidental deletion.
 
 Use:

@@ -36,8 +36,7 @@ To manage LXD in Ansible, you need a LXD Server (see [Set up LXD](#set-up-lxd)).
 
 [Juju](https://juju.is/) is an open-source software for application management and automation.
 
-Juju can be used to deploy a variety of workloads across many different clouds and virtualization providers.
-It supports both deploying workloads against a LXD server or cluster and using LXD on the machines it's deploying to separate otherwise colocated services.
+Juju can be used to deploy a variety of workloads across many different clouds and virtualization providers. It supports both deploying workloads against a LXD server or cluster and using LXD on the machines it's deploying to separate otherwise colocated services.
 
 Take a look at the Step-by-Step Guide for LXD in the [Juju Documentation](https://juju.is/docs/olm/lxd).
 

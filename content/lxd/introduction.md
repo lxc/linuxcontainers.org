@@ -1,15 +1,13 @@
 [TOC]
 
 # What is LXD?
-LXD (<a href="#" title="Listen" onclick="document.getElementById('player').play();return false;">[lɛks'di:]&#128264;</a>) is a next generation system container and virtual machine manager.
-It offers a unified user experience around full Linux systems running inside containers or virtual machines.
+LXD (<a href="#" title="Listen" onclick="document.getElementById('player').play();return false;">[lɛks'di:]&#128264;</a>) is a next generation system container and virtual machine manager. It offers a unified user experience around full Linux systems running inside containers or virtual machines.
 
 LXD is image based and provides images for a [wide number of Linux distributions](https://images.linuxcontainers.org). It provides flexibility and scalability for various use cases, with support for different storage backends and network types and the option to install on hardware ranging from an individual laptop or cloud instance to a full server rack.
 
 When using LXD, you can manage your instances (containers and VMs) with a simple command line tool, directly through the REST API or by using third-party tools and integrations. LXD implements a single REST API for both local and remote access.
 
-The LXD project was founded and is currently led by [Canonical Ltd](https://www.canonical.com)
-with contributions from a range of other companies and individual contributors.
+The LXD project was founded and is currently led by [Canonical Ltd](https://www.canonical.com) with contributions from a range of other companies and individual contributors.
 
 ## Get started
 To get a better idea of what LXD is and what it does, you can [try it online](/lxd/try-it/)!
@@ -79,16 +77,13 @@ Configurability
 
 
 # Availability
-LXD works on any recent Linux distribution. LXD upstream directly maintains the Ubuntu packages
-and also publishes a snap package which can be used with most of the popular Linux distributions.
+LXD works on any recent Linux distribution. LXD upstream directly maintains the Ubuntu packages and also publishes a snap package which can be used with most of the popular Linux distributions.
 
 In addition, the LXD client is available for Windows and macOS. You can use the client to connect to a LXD server running on a Linux machine.
 
 More details can be found on our [getting started](/lxd/getting-started-cli/) page.
 
-[<img src="/static/img/snapstore.svg" alt="Snapstore logo" style="max-height:120px;max-width:200px;padding:0 2em;"/>](https://snapcraft.io/store)
-[<img src="/static/img/chocolatey.svg" alt="Chocolatey logo" style="max-height:120px;max-width:200px;padding:0 2em;"/>](https://chocolatey.org/)
-[<img src="/static/img/homebrew.png" alt="Homebrew logo" style="max-height:120px;max-width:200px;padding:0 2em;"/>](https://brew.sh/)
+[<img src="/static/img/snapstore.svg" alt="Snapstore logo" style="max-height:120px;max-width:200px;padding:0 2em;"/>](https://snapcraft.io/store) [<img src="/static/img/chocolatey.svg" alt="Chocolatey logo" style="max-height:120px;max-width:200px;padding:0 2em;"/>](https://chocolatey.org/) [<img src="/static/img/homebrew.png" alt="Homebrew logo" style="max-height:120px;max-width:200px;padding:0 2em;"/>](https://brew.sh/)
 
 # Third-party integrations
 
@@ -104,35 +99,24 @@ LXD has two kind of releases:
 
 The current LTS release is LXD 4.0, which is supported until June 2025 and gets frequent bugfix and security updates but does not receive any feature additions.
 
-Feature releases are pushed out every month or so and contain new features as well as bugfixes.
-The normal support length for those releases is of about a month, or until the next release comes out.
-Some Linux distributions might offer longer support for particular feature releases that they decided to ship.
+Feature releases are pushed out every month or so and contain new features as well as bugfixes. The normal support length for those releases is of about a month, or until the next release comes out. Some Linux distributions might offer longer support for particular feature releases that they decided to ship.
 
 Commercial support for LXD on Ubuntu LTS releases can be obtained from [Canonical Ltd](http://www.canonical.com).
 
 [<img src="/static/img/canonical.png" alt="Canonical logo" style="display:block;float:none;margin-left:auto;margin-right:auto;padding:1em 0;max-height:120px"/>](http://www.canonical.com)
 
 # Relationship with LXC
-LXD isn't a rewrite of LXC, in fact it's building on top of LXC to provide a new,
-better user experience. Under the hood, LXD uses LXC through liblxc and its Go binding
-to create and manage the containers.
+LXD isn't a rewrite of LXC, in fact it's building on top of LXC to provide a new, better user experience. Under the hood, LXD uses LXC through liblxc and its Go binding to create and manage the containers.
 
-It's basically an alternative to LXC's tools and distribution template system
-with the added features that come from being controllable over the network.
+It's basically an alternative to LXC's tools and distribution template system with the added features that come from being controllable over the network.
 
 # Language, licensing and contributions
 LXD is written in Go. It is free software and developed under the [Apache 2 license](https://www.apache.org/licenses/LICENSE-2.0).
 
 The LXD source code is available on [GitHub](https://github.com/lxc/lxd).
 
-There are no CLA or similar legal agreements required to contribute to LXD.
-However, we require commits be signed-off (following the DCO - Developer Certificate of Ownership).
-See the [Contribution guidelines](https://github.com/lxc/lxd/blob/master/doc/contributing.md) for more information.
+There are no CLA or similar legal agreements required to contribute to LXD. However, we require commits be signed-off (following the DCO - Developer Certificate of Ownership). See the [Contribution guidelines](https://github.com/lxc/lxd/blob/master/doc/contributing.md) for more information.
 
 [<img src="/static/img/GitHub_Logo.png" alt="GitHub logo" style="display:block;float:none;margin-left:auto;margin-right:auto;padding:1em 0;max-height:120px"/>](https://github.com/lxc/lxd)
 
-<audio id="player">
-  <source src="/static/audio/lxd.mp3" type="audio/mpeg">
-  <source src="/static/audio/lxd.ogg" type="audio/ogg">
-  <source src="/static/audio/lxd.wav" type="audio/wav">
-</audio>
+<audio id="player">  <source src="/static/audio/lxd.mp3" type="audio/mpeg">  <source src="/static/audio/lxd.ogg" type="audio/ogg">  <source src="/static/audio/lxd.wav" type="audio/wav"></audio>
