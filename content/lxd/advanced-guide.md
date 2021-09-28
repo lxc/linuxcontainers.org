@@ -34,8 +34,8 @@ Basically you can apply two types of configurations:
 
 ### Difference between containers and virtual machines
 For now virtual machines support less features than containers.
-You can see what configuration options are available for virtual machines in the [LXD documentation for instances](/lxd/docs/master/instances#keyvalue-configuration).
-All categories and keys that contain the terms `virtual-machine` or `VM` are supported.
+
+You can see what configuration options are available for virtual machines in the [LXD documentation for instances](/lxd/docs/master/instances#keyvalue-configuration). All categories and keys that contain the terms `virtual-machine` or `VM` are supported.
 
 ### lxc launch flags
 You can apply flags to add configuration options to `lxc launch`.
@@ -56,12 +56,12 @@ Usage:
 
 	lxc launch imageserver:imagename instancename -p profile1 -c key1=value
 
-**Note:**
-To apply multiple profiles or config keys, use one flag for each, like:
+!!! note
+    To apply multiple profiles or config keys, use one flag for each, like:
 
-	lxc launch imageserver:imagename instancename -p profile1 -p profile2
+	    lxc launch imageserver:imagename instancename -p profile1 -p profile2
 
-	lxc launch imageserver:imagename instancename -c key1=value -c key2=value
+	    lxc launch imageserver:imagename instancename -c key1=value -c key2=value
 
 
 ### Profiles
@@ -107,8 +107,7 @@ Use:
 
 
 #### Write a profile
-Profiles are written in yaml (markup language).
-So you need to follow a specific syntax.
+Profiles are written in yaml (markup language). So you need to follow a specific syntax.
 
 Steps:
 
@@ -222,8 +221,7 @@ Features include:
 
 Requirements:
 
-* Images with cloud-init support:
-For example, official LXD images that contain the term `cloud` in `ALIAS` have implemented cloud-init support.
+* Images with cloud-init support: For example, official LXD images that contain the term `cloud` in `ALIAS` have implemented cloud-init support.
 
 ## Apply instructions for cloud-init
 You can apply instructions for cloud-init inside a LXD profile.
@@ -258,20 +256,18 @@ config:
 ```
 
 This will upgrade all installed packages and install package1 and package2.
-<br>
-<br>
 
-##### More instructions for cloud-init
+#### More instructions for cloud-init
 For more instructions see [examples in  the cloud-init documentation](https://cloudinit.readthedocs.io/en/latest/topics/examples.html).
 
-##### Other config-sections for instance data
+#### Other config-sections for instance data
 
 - `user.meta-data` - see [cloud-init docs - instance metadata](https://cloudinit.readthedocs.io/en/latest/topics/instancedata.html)
 - `user.vendor-data` - see [cloud-init docs - vendordata](https://cloudinit.readthedocs.io/en/latest/topics/vendordata.html)
 - `user.network-config` - see [cloud-init docs - network configuration](https://cloudinit.readthedocs.io/en/latest/topics/network-config.html)
 
-**Tip:**
-You can check whether the syntax is correct with: [cloud-init FAQ - debug user-data](https://cloudinit.readthedocs.io/en/latest/topics/faq.html#how-can-i-debug-my-user-data)
+!!! Tip
+    You can check whether the syntax is correct with: [cloud-init FAQ - debug user-data](https://cloudinit.readthedocs.io/en/latest/topics/faq.html#how-can-i-debug-my-user-data)
 
 ### Apply the profile
 After you saved the textfile, we can apply it with the following steps.
@@ -300,13 +296,12 @@ You can get the status of cloud-init with:
 	cloud-init status
 
 Reports:
-`status: running`
-: means cloud-init is still working
+
+`status: running`: means cloud-init is still working
 
 or
 
-`status: done`
-: means cloud-init has finished work
+`status: done`: means cloud-init has finished work
 
 <br>
 
@@ -316,8 +311,7 @@ You can also use the following flag, which will only respond when cloud-init is 
 
 
 ### More information
-See:
- [Cloud-init documentation](https://cloudinit.readthedocs.io/en/latest/)
+See the [Cloud-init documentation](https://cloudinit.readthedocs.io/en/latest/).
 
 
 # Server configuration
@@ -330,8 +324,8 @@ Below we will introduce some topics, including:
 - [Remote servers](#remote-servers)
 
 ## Projects
-You can split your server into projects.
-Each project can have it's own instances, profiles etc.
+You can split your server into projects. Each project can have its own instances, profiles etc.
+
 See [LXD documentation - Projects](/lxd/docs/master/projects) for more information and configuration.
 
 ## Security
@@ -353,13 +347,13 @@ There are multiple servers available, for example:
 - the LXD image server from Avature: [Link to GitHub Repo](https://github.com/Avature/lxd-image-server)
 
 **Connect to a simplestream server:**
+
 See [Add simplestream servers](#add-simplestream-servers).
 
 ### Set up your LXD server as remote server
 
 #### Default (TLS + password)
-This will set up a server with authentication based on TLS-certificates.
-For easier adding of clients, you can set a password which will authenticate the clients the first time they connect.
+This will set up a server with authentication based on TLS-certificates. For easier adding of clients, you can set a password which will authenticate the clients the first time they connect.
 
 Set up a LXD-server as a remote server, with:
 
@@ -368,16 +362,14 @@ Set up a LXD-server as a remote server, with:
 
 `core.https_address "[::]"` tells LXD to bind all addresses on port 8443.       `core.trust_password` sets a trust password to be used by new clients.
 
-**Note:**
-It is recommended that `core.https_address` should be set to the single address where the server should be available (rather than any address on the host), and firewall rules should be set to only allow access to the LXD port from authorized hosts/subnets.
-
-Furthermore, `core.trust_password` should be unset after all clients have been added. This prevents brute-force attacks trying to guess the password.
+!!! note
+    It is recommended that `core.https_address` should be set to the single address where the server should be available (rather than any address on the host), and firewall rules should be set to only allow access to the LXD port from authorized hosts/subnets.
+    Furthermore, `core.trust_password` should be unset after all clients have been added. This prevents brute-force attacks trying to guess the password.
 
 For details see: [LXD Documentation - Security](/lxd/docs/master/security)
 
-<br>
-
 **Connect to this server:**
+
 See [Add remote servers](#add-remote-servers) for how to add a server to your clients remote server list.
 
 #### Public image server
@@ -387,12 +379,10 @@ Install LXD and run:
 
 	lxc config set core.https_address :8443
 
-This will make the LXD-Server available over network on port 8443.
-You also need to set the images you want to share, to `public`.
+This will make the LXD-Server available over network on port 8443. You also need to set the images you want to share, to `public`.
 
 #### Candid
-Candid is an Authentication service.
-See [Ubuntu tutorials - Candid authentication for LXD](https://ubuntu.com/tutorials/candid-authentication-lxd#1-overview) for details and howto.
+Candid is an Authentication service. See [Ubuntu tutorials - Candid authentication for LXD](https://ubuntu.com/tutorials/candid-authentication-lxd#1-overview) for details and howto.
 
 #### Candid + RBAC
 See [LXD documentation - Security RBAC](https://linuxcontainers.org/lxd/docs/master/security#role-based-access-control-rbac) for details.
@@ -492,15 +482,15 @@ Use:
 
 
 ### Manual download
-You can also download images manually.
-For that you need to download the components described [above](#import-images).
+You can also download images manually. For that you need to download the components described [above](#import-images).
 
 #### From official LXD image server
 
-**Note:** It is easier to use the usual method with `lxc launch`.
-Use manual download only if you have a specific reason, like modification of the files before use for example.
+!!! note
+    It is easier to use the usual method with `lxc launch`. Use manual download only if you have a specific reason, like modification of the files before use for example.
 
-**Link to official Imageserver:**
+**Link to official image server:**
+
 [https://images.linuxcontainers.org/images/](https://images.linuxcontainers.org/images/)
 
 
@@ -510,6 +500,7 @@ Use:
 	lxc image export imagename [target folder] [flags]
 
 Flags:
+
 `--vm` - Query virtual machine images
 
 ### Create image from containers
@@ -532,15 +523,14 @@ See [Instructions on distrobuilder GitHub repo](https://github.com/lxc/distrobui
 ### Write or edit a template
 You need an image template (e.g. `ubuntu.yaml`) to give instructions to distrobuilder.
 
-You can start by using one of the example templates below.
-Modify those templates so they fit your needs.
+You can start by using one of the example templates below. Modify those templates so they fit your needs.
+
 See [Template details](#template-details) below for an overview of configuration keys.
 
 #### Example templates
 Standard template (includes all available options): [https://github.com/lxc/distrobuilder/blob/master/doc/examples/scheme.yaml](https://github.com/lxc/distrobuilder/blob/master/doc/examples/scheme.yaml)
 
-Official LXD templates for various distributions:
-[https://github.com/lxc/lxc-ci/tree/master/images](https://github.com/lxc/lxc-ci/tree/master/images)
+Official LXD templates for various distributions: [https://github.com/lxc/lxc-ci/tree/master/images](https://github.com/lxc/lxc-ci/tree/master/images)
 
 #### Template details
 You can define multiple keys in templates:
@@ -558,8 +548,7 @@ You can define multiple keys in templates:
 
 
 !!! note "Note for VMs"
-	You should either build an image with cloud-init support (provides automatic size growth) or set a higher size in the template, because the standard size is relatively small (~4 GB).
-	Alternatively you can also grow it manually.
+	You should either build an image with cloud-init support (provides automatic size growth) or set a higher size in the template, because the standard size is relatively small (~4 GB). Alternatively you can also grow it manually.
 
 ### Build an image
 
@@ -606,6 +595,7 @@ See LXD-documentation for details:
 
 # Storages
 See LXD-documentation for details:
+
 [Storage documentation](/lxd/docs/master/storage)
 
 
@@ -626,8 +616,7 @@ For example:
 
 	lxc alias add delete "delete -i"
 
-This will link the command `lxc delete` to `lxc delete -i`.
-So if you run `lxc delete` the LXD-client will run `lxc delete -i` instead.
+This will link the command `lxc delete` to `lxc delete -i`. So if you run `lxc delete` the LXD-client will run `lxc delete -i` instead.
 
 # Tips & tricks
 
@@ -637,6 +626,7 @@ So if you run `lxc delete` the LXD-client will run `lxc delete -i` instead.
 	lxc alias add delete "delete -i"
 
 `Method 2`: Or apply this configuration key to the instance: `security.protection.delete=true`
+
 This way the instance can't be deleted, until you change this config key.
 
 
