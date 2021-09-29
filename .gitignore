@@ -5,3 +5,4 @@ content/lxc/apidoc/*
 content/lxd/docs/*
 .vscode
 .idea
+.venv
