@@ -17,7 +17,8 @@
      "menu": ["LXD", "ニュース"],
      "generator": "news",
      "meta": {"dir": "/content/lxd/news.ja/",
-              "input": "lxd/news.md"}},
+              "input": "lxd/news.md",
+              "toc_depth": "2-2"}},
 
     {"path": "/lxd/getting-started-cli/",
      "title": "LXD - はじめに - コマンドライン",
@@ -125,7 +126,8 @@
      "menu": ["LXC", "ニュース"],
      "generator": "news",
      "meta": {"dir": "/content/lxc/news.ja/",
-              "input": "lxc/news.md"}},
+              "input": "lxc/news.md",
+              "toc_depth": "2-2"}},
 
     {"path": "/lxc/getting-started/",
      "title": "LXC - はじめに",
@@ -214,7 +216,8 @@
      "menu": ["LXCFS", "ニュース"],
      "generator": "news",
      "meta": {"dir": "/content/lxcfs/news.ja/",
-              "input": "lxcfs/news.md"}},
+              "input": "lxcfs/news.md",
+              "toc_depth": "2-2"}},
 
     {"path": "/lxcfs/getting-started/",
      "title": "LXCFS - はじめに",
@@ -286,7 +289,8 @@
      "menu": ["distrobuilder", "ニュース"],
      "generator": "news",
      "meta": {"dir": "/content/distrobuilder/news/",
-              "input": "distrobuilder/news.md"}},
+              "input": "distrobuilder/news.md",
+              "toc_depth": "2-2"}},
 
     {"path": "/distrobuilder/documentation",
      "menu": ["distrobuilder", "ドキュメント"],
@@ -346,7 +350,8 @@
      "title": "CGManager - ニュース",
      "menu": ["CGManager", "ニュース"],
      "generator": "markdown",
-     "meta": {"input": "cgmanager/news.ja.md"}},
+     "meta": {"input": "cgmanager/news.ja.md",
+              "toc_depth": "2-2"}},
 
     {"path": "/cgmanager/getting-started/",
      "title": "CGManager - はじめに",

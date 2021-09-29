@@ -21,7 +21,8 @@
      "menu": ["LXD", "News"],
      "generator": "news",
      "meta": {"dir": "/content/lxd/news/",
-              "input": "lxd/news.md"}},
+              "input": "lxd/news.md",
+              "toc_depth": "2-2"}},
 
     {"path": "/lxd/getting-started-cli/",
      "title": "LXD - Getting started - command line",
@@ -34,7 +35,7 @@
      "menu": ["LXD", "Getting started - Third-party integrations"],
      "generator": "markdown",
      "meta": {"input": "lxd/third-party-integrations.md"}},
-     
+
     {"path": "/lxd/advanced-guide/",
      "title": "LXD - Advanced guide",
      "menu": ["LXD", "Advanced guide"],
@@ -134,7 +135,8 @@
      "menu": ["LXC", "News"],
      "generator": "news",
      "meta": {"dir": "/content/lxc/news/",
-              "input": "lxc/news.md"}},
+              "input": "lxc/news.md",
+              "toc_depth": "2-2"}},
 
     {"path": "/lxc/getting-started/",
      "title": "LXC - Getting started",
@@ -235,7 +237,8 @@
      "menu": ["LXCFS", "News"],
      "generator": "news",
      "meta": {"dir": "/content/lxcfs/news/",
-              "input": "lxcfs/news.md"}},
+              "input": "lxcfs/news.md",
+              "toc_depth": "2-2"}},
 
     {"path": "/lxcfs/getting-started/",
      "title": "LXCFS - Getting started",
@@ -307,7 +310,8 @@
      "menu": ["distrobuilder", "News"],
      "generator": "news",
      "meta": {"dir": "/content/distrobuilder/news/",
-              "input": "distrobuilder/news.md"}},
+              "input": "distrobuilder/news.md",
+              "toc_depth": "2-2"}},
 
     {"path": "/distrobuilder/documentation",
      "menu": ["distrobuilder", "Documentation"],
@@ -371,7 +375,8 @@
      "title": "CGManager - News",
      "menu": ["CGManager", "News"],
      "generator": "markdown",
-     "meta": {"input": "cgmanager/news.md"}},
+     "meta": {"input": "cgmanager/news.md",
+              "toc_depth": "2-2"}},
 
     {"path": "/cgmanager/getting-started/",
      "title": "CGManager - Getting started",
