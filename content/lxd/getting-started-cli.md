@@ -274,12 +274,14 @@ root@containername:~#
 !!! note
     In many containers you need to create a user first.
 
-	    lxc exec instancename -- su --login username
+```
+lxc exec instancename -- su --login username
+```
 
 Exit the container shell, with:
 
 ```bash
-root@containername:~# exit
+username@containername:~# exit
 
 ```
 
