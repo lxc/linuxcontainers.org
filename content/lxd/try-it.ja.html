@@ -42,10 +42,13 @@
       <div class="p-notification--information" id="tryit_start_panel" style="display:none">
         <div class="p-notification__response">
           <h2 class="p-heading--four">試用開始 <!-- Start --></h2>
-          <button class="p-button" id="tryit_accept" type="button">
-            <i aria-hidden="true" class="p-icon--success"></i>
-            私はサービス利用規約を読み、同意しました<!-- I have read and accept the terms of service above -->
-          </button>
+          <div id="tryit_accept_terms">
+            <input type="checkbox" value="" id="tryit_terms_checkbox" />
+            <label for="tryit_terms_checkbox">
+             私はサービス利用規約を読み、同意しました <!-- I have read and I accept the terms of service above -->
+            </label>
+            <button type="submit" id="tryit_accept" class="btn btn-primary" disabled="">Start</button>
+          </div>
           <div id="tryit_progress" style="display:none;width:100%;text-align:center;">
             <p class="p-heading--four">コンテナの起動中... <!-- Starting the container... --> <i class="p-icon--spinner u-animation--spin"></i></p>
           </div>
