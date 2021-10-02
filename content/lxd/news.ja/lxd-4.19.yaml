@@ -1,0 +1,367 @@
+title: LXD 4.19 リリースのお知らせ
+date: 2021/10/01 18:10
+origin: https://discuss.linuxcontainers.org/t/lxd-4-19-has-been-released/12276
+content: |-
+  ### はじめに <!-- Introduction -->
+  <!--
+  The LXD team is very excited to announce the release of LXD 4.19!
+  -->
+  LXD チームは LXD 4.19 のリリースをお知らせできることにとてもワクワクしています!
+
+  <!--
+  This is a release that's very busy on the bugfixing front with a lot of improvements around clustering, including improved shutdown logic, easier disaster recovery, improved logging and better handling of a variety of network setups.
+  -->
+  このリリースはバグ修正で非常に忙しいリリースで、それとともにシャットダウンロジックの改良、ディザスターリカバリーの容易化、改良されたロギング、さまざまなネットワーク設定処理の改善など、クラスタリングに関するたくさんの改良が行われています。
+
+  <!--
+  There are also a number of fixes and minor improvements to the recently added network forwards feature, now properly integrating with BGP and a new `lxc network forward get` command.
+  -->
+  最近追加したネットワーク転送機能でもいくつかの修正と細かい改善を行い、BGP と新たな `lxc network forward get` コマンドと適切に統合されています。
+
+  <!--
+  The headline feature for this release is the addition of instance metrics, effectively a new endpoint (`/1.0/metrics`) which exposes a text OpenMetrics endpoint suitable for scraping with tool like Prometheus.
+  -->
+  このリリースの目玉機能は、インスタンスメトリクスの追加です。新しいエンドポイント（`/1.0/metrics`）が追加され、Prometheus のようなツールでスクレイプするのに適した、テキストの OpenMetrics エンドポイントが公開されるようになりました。
+
+  Enjoy!
+
+  ### 新機能とハイライト <!-- New features and highlights -->
+  #### インスタンスメトリクス <!-- Instance metrics -->
+  <!--
+  A frequent request over the years has been for a better way to track instance resource usage. This becomes particularly critical on busy systems with many projects or even multiple clustered servers.
+  -->
+  インスタンスのリソース消費状況をトラッキングするための良い方法が、何年にもわたって頻繁にリクエストされてきました。これは、多数のプロジェクトや複数のクラスター化されたサーバーがある負荷の高いシステムで特に重要になります。
+
+  <!--
+  To handle this, LXD 4.19 introduces a new `/1.0/metrics` API endpoint which provides a text OpenMetric endpoint suitable for use with Prometheus and similar tools.
+  -->
+  これを扱うために、LXD 4.19 では新たに `/1.0/metrics` API エンドポイントを導入しました。これは Prometheus や同様のツールで使うのに適した、テキストの OpenMetric エンドポイントを提供します。
+
+  <!--
+  As it stands it provides a variety of metrics related to:
+  -->
+  現状、次のようなものに関連するさまざまなメトリクスを提供します:
+
+   - CPU
+   - メモリー <!-- Memory -->
+   - ディスク <!-- Disk -->
+   - ネットワーク <!-- Network -->
+   - プロセス <!-- Processes -->
+
+  <!--
+  In general, we've tried to keep the metric names aligned with those of `node-exporter` which should then make adapting existing dashboards and tooling pretty easy.
+  -->
+  全体的に、メトリクス名は `node-exporter` のものと合わせるようにしています。これにより、既存のダッシュボードやツールの導入がとてもに簡単になります。
+
+  <!--
+  The endpoint is always available to authenticated users but can also be configured to listen to an additional address with `core.metrics_address` as well as adding additional trusted certificates which will be restricted only to the metrics interface (`lxc config trust add --type metrics`).
+  -->
+  このエンドポイントは認証済みユーザーが常に利用できるようになっています。一方で、`core.metrics_address` でリッスンする追加のアドレスを設定したり、メトリクスインターフェースのみに制限される追加の信頼済み証明書を追加したりすることもできます（`lxc config trust add --type metrics`）。
+
+  出力例 <!-- Example output at -->: https://gist.github.com/stgraber/ab7f204fb4bf53dbe134f6460bf41470
+
+  仕様 <!-- Specification -->: https://discuss.linuxcontainers.org/t/lxd-metric-exporter-for-instances/11735
+  ドキュメント <!-- Documentation -->: https://linuxcontainers.org/lxd/docs/master/metrics
+
+  #### `lxc cluster list` の再実装 <!-- Reworked output for `lxc cluster list` -->
+  <!--
+  The `lxc cluster list` output was changed from just showing a boolean YES/NO in a database column to instead showing a text list of roles.
+  -->
+  `lxc cluster list` の出力で、データベースのカラムに真偽値の YES/NO だけの表示から、ロールのテキストリストを表示するように変更されました。
+
+  <!--
+  Currently the roles are `database` or `database-standby` but more will be added in the future. This makes it easier to understand exactly what each clustered server is doing.
+  -->
+  現時点では、ロールは `database` か `database-standby` のどちらかですが、将来的にはさらに追加される予定です。これにより、クラスター化されたサーバーが何をしているのかが正確に理解しやすくなります。
+
+      stgraber@dakara:~$ lxc cluster list s-dcmtl-cluster:
+      +---------+-------------------------------------+----------+--------------+----------------+----------------------+--------+-------------------+
+      |  NAME   |                 URL                 |  ROLES   | ARCHITECTURE | FAILURE DOMAIN |     DESCRIPTION      | STATE  |      MESSAGE      |
+      +---------+-------------------------------------+----------+--------------+----------------+----------------------+--------+-------------------+
+      | abydos  | https://[2602:fd23:8:200::100]:8443 | database | x86_64       | default        | HIVE - top server    | ONLINE | Fully operational |
+      +---------+-------------------------------------+----------+--------------+----------------+----------------------+--------+-------------------+
+      | langara | https://[2602:fd23:8:200::101]:8443 | database | x86_64       | default        | HIVE - middle server | ONLINE | Fully operational |
+      +---------+-------------------------------------+----------+--------------+----------------+----------------------+--------+-------------------+
+      | orilla  | https://[2602:fd23:8:200::102]:8443 | database | x86_64       | default        | HIVE - bottom server | ONLINE | Fully operational |
+      +---------+-------------------------------------+----------+--------------+----------------+----------------------+--------+-------------------+
+
+  #### ブロックカスタムストレージボリュームのエクスポート <!-- Export of block custom storage volumes -->
+  <!--
+  It's now possible to export block custom storage volumes using `lxc storage volume export` just as it is for filesystem volumes.
+  -->
+  ファイルシステムの場合と同様に、`lxc storage volume export` を使って、ブロックカスタムストレージボリュームをエクスポートできるようになりました。
+
+  <!--
+  Note however that block custom storage volumes tend to end up being significantly larger than the filesystem ones and so can take quite a bit of resources to export and import.
+  -->
+  しかし、ブロックカスタムストレージボリュームはファイルシステムのボリュームよりもかなり大きくなる傾向があります。ですので、エクスポートとインポートにはかなりのリソースが必要になることに注意してください。
+
+  ### すべての変更点（翻訳なし） <!-- Complete changelog -->
+  Here is a complete list of all changes in this release:
+
+   - lxd/util/net: Update CanonicalNetworkAddress to return canconical IP
+   - lxd/util/net: Update IsAddressCovered to use net.IP when comparing IP equality
+   - lxd/endpoints/cluster: Improve error message in ClusterUpdateAddress
+   - lxd/endpoints/network: Improve error message in NetworkUpdateAddress
+   - lxd/util/net: Improve comment in CanonicalNetworkAddress
+   - lxd/main/init/interactive: Use util.CanonicalNetworkAddress in askClustering
+   - lxd/main/init: Use util.CanonicalNetworkAddress when constructing address from join token
+   - lxd/main/init: Ensure config.Cluster.ServerAddress and config.Cluster.ClusterAddress are in canonical form
+   - doc: Adds network forwards to left hand nav
+   - doc/server: Fix incorrect default for routerid
+   - lxd/endpoints/endpoints: require set network listener before checking coverage
+   - test/suites/clustering: add enable clustering test on lxd reload
+   - lxd/resources/network: send not-found error instead of internal error
+   - shared/util: rename DefaultPort to HTTPSDefaultPort
+   - lxd/util/net: specify default port to CanonicalNetworkAddress
+   - lxd/util/net: specify default port to CanonicalNetworkAddressFromAddressAndPort
+   - shared/util: add HTTPDefaultPort
+   - lxd/endpoints/pprof: use HTTP port instead of HTTPS for debug address
+   - lxd/node/config: Canonicalize core.debug_address
+   - lxd/daemon: Move ahead startTime
+   - lxd/warnings: Add ResolveWarningsOlderThan
+   - lxd/daemon: Resolve warnings earlier than startTime
+   - lxc: Fix aliases containing @ARGS@
+   - lxd/db/raft: rename RemoteRaftNode to RemoveRaftNode
+   - lxd/db/node/update: Add updateFromV41
+   - lxd/db/node/schema: update schema
+   - lxd/db/raft: add Name field to RaftNode
+   - lxd/storage/driver/zfs: Fix ListVolumes with custom zpool
+   - lxd/node/raft: use empty Name if not yet clustered
+   - lxd/cluster: handle Name field for RaftNode
+   - lxd/cluster/gateway: populate RaftNode Name from global database
+   - lxd/api/cluster: add Name field to internalRaftNode struct
+   - lxd/main/cluster: add name to 'lxd cluster show/edit'
+   - lxd/test: add Name field to RaftNode tests
+   - lxd/cluster/recover: append to patch.global.sql if exists
+   - lxd/main/cluster: make segmentID a comment instead of struct field
+   - doc/clustering: update 'lxd cluster edit' docs
+   - lxd: Fix swagger definitions to avoid conflicts
+   - doc/rest-api: Refresh swagger YAML
+   - doc/instances: Clarify default CPU/RAM for VMs
+   - lxd/networks: Handle stateful DHCPv6 leases
+   - lxd/networks: Add EUI64 records to leases
+   - lxd/device/nic: ensure instance device IP is different from parent network
+   - lxd/network/driver/common: Adds bgpNextHopAddress function
+   - lxd/network/driver/common: Reduce duplication of logic in bgpSetupPrefixes and uses bgpNextHopAddress
+   - lxd/network/driver/common: Removes unnecessary function n.bgpClearPrefixes
+   - lxd/network/driver/common: Improve errors in bgpSetup
+   - lxd/network/driver/common: Clear address forward BGP prefixes in bgpClear
+   - lxd/network/driver/bridge: Setup BGP prefix export in forwardsSetup
+   - lxd/daemon/storage: unmount all storage pools on shutdown
+   - lxd/project: Change restrictions check function in CheckClusterTargetRestriction
+   - lxd/network/network/interface: Adds clientType arg to Forward management functions
+   - lxd/network/driver: Add clientType to Forward management functions
+   - lxd/network/driver/common: Remove empty newline
+   - lxd/network/forwards: Pass clientType into Forward management functions
+   - lxd/network/driver/ovn: Update Forward management functions to only apply changes for ClientTypeNormal requests
+   - lxd/network/forwards: Removes duplicate record check from networkForwardsPost
+   - lxd/network/driver: Moves duplicate forward record check into drivers
+   - lxd/network/driver/ovn: Adds cluster member notification to Forward management functions
+   - lxd/network/driver/ovn: Refresh BGP prefixes on Forward management
+   - lxd/network/driver/common: Include exporting forward addresses in bgpSetup
+   - lxd/network/driver/bridge: Remove BGP forward address refresh from forwardSetup
+   - lxd/network/driver/bridge: Rename forwardsSetup to forwardSetupFirewall
+   - test: Adds BGP prefix export checks to forward tests
+   - lxd/cluster/heartbeat: Adds Name field to APIHeartbeatMember
+   - lxd/cluster/heartbeat: Preallocate raftNodeMap in Update
+   - lxd/cluster/heartbeat: Populate Name in Update
+   - lxd/cluster/gateway: Update currentRaftNodes to use a single query to get cluster member info
+   - lxd/cluster/gateway: Preallocate raftNodes slice for efficiency
+   - lxd/cluster/gateway: Do not query leader cluster DB to enrich raft member name in HandlerFuncs
+   - lxd/cluster/recover: Preallocate nodes in Reconfigure
+   - lxd/util: Respect modprobe configuration
+   - shared/instance: don't allow 'limits.memory' to be 0
+   - lxd/cgroup: Add GetMemoryStats
+   - lxd/cgroup: Add GetIOStats
+   - lxd/cgroup: Add GetCPUAcctUsageAll
+   - lxd/cgroup: Add GetTotalProcesses
+   - lxd/response: Add SyncResponsePlain
+   - lxd/storage/filesystem: Add FSTypeToName
+   - lxd/network/openvswitch/ovn: Work around a bug in lr-nat-del in ovn-nbctl in LogicalRouterDNATSNATAdd
+   - shared/api/network/forward: Fix api extension references
+   - lxd/network/forwards: Use consistent terminology in network address forward swagger comments
+   - doc/rest-api: Refresh swagger YAML
+   - test: Remove restart tests that don't use --force
+   - lxd/daemon/storage: Skip unmounting LVM pools in daemonStorageUnmount
+   - lxc: Cleanup LXD client imports
+   - lxd: Cleanup LXD client imports
+   - lxc-to-lxd: Cleanup LXD client imports
+   - lxc/cluster: Show roles instead of database column
+   - tests: Support for showing roles by
+   - i18n: Update translation templates
+   - doc: update link to rest-api.yaml
+   - Typo
+   - lxd/device/tpm: Require `path` only for containers
+   - lxd/instance: Fix response for patch
+   - swagger: Fix return code for operations
+   - doc/rest-api: Refresh swagger YAML
+   - lxd/endpoints/network: Specify protocol version for 0.0.0.0 address
+   - doc: Document recently added architectures
+   - seccomp: Add riscv64 syscall mappings
+   - shared/api: Add CertificateTypeMetrics
+   - lxd/db: Add CertificateTypeMetrics
+   - lxd: Check metrics certificates
+   - lxc/config_trust: Allow adding metrics certificates
+   - lxd/metrics: Add API types
+   - lxd/metrics: Add types
+   - lxd/metrics: Add helper functions
+   - lxd: Add metrics related fields to daemon
+   - lxd: Add /1.0/metrics endpoint
+   - lxd/instance/drivers: Add Metrics function
+   - lxd-agent: Add metrics endpoint
+   - api: Add metrics API extension
+   - i18n: Update translation templates
+   - doc/rest-api: Refresh swagger YAML
+   - doc: Add metrics.md
+   - doc: Mention core.metrics_address
+   - test/suites: Add lxd/metrics to static analysis
+   - shared/util: Add HTTPSMetricsDefaultPort
+   - lxd/node: Add core.metrics_address config key
+   - lxd/endpoints: Add metrics endpoint
+   - lxd: Handle metrics server
+   - test: Add metrics test
+   - lxd/daemon/storage: Renames daemonStorageUnmount to daemonStorageVolumesUnmount
+   - lxd/daemon: Rename numRunningContainers numRunningInstances
+   - Fix documented HTTP return code in console POST
+   - doc/rest-api: Refresh swagger YAML
+   - lxd/main/daemon: Rework cmdDaemon shutdown process
+   - lxd/storage/drivers/driver/lvm: Fix Unmount to be more reliable
+   - lxd/storage/drivers/driver/lvm: Fix Mount to be more reliable
+   - lxd/main/daemon: Removes LVM shutdown unmount workaround
+   - doc/rest-api: Add missing entry for 112 (error)
+   - lxd/instance/drivers: Move raw.lxc config load to separate function
+   - lxd/instance/drivers: Fix raw.lxc handling for shutdown/stop
+   - lxd/storage/filesystem: Removes duplicated constants from unix package
+   - lxd/storage/filesystem/fs: Removes duplicated constants from unix package
+   - lxd/storage/filesystem/fs: Update FSTypeToName to work on 32bit platforms
+   - lxd/instance/drivers/driver/lxc: filesystem.FSTypeToName usage
+   - lxd-agent/metrics: filesystem.FSTypeToName usage
+   - lxd/storage/drivers/driver/lvm: Skip unmount
+   - lxd/cgroup: Implement CPU usage for cgroup v2
+   - shared/json: Removes DebugJson from shared
+   - lxd/cgroup: Fix logging in cgroup init
+   - lxd/util/http: Adds DebugJSON function
+   - lxd/util/http: Adds debugLogger arg to WriteJSON
+   - lxd/main: Set response debug mode based on --debug flag
+   - lxd/response/response: Reworks syncResponse to use util.WriteJSON
+   - lxd/response/response: Adds util.DebugJSON support to errorResponse
+   - lxd/operations/response: Adds util.WriteJSON support to operationResponse
+   - lxd/operations/response: Adds util.WriteJSON support to forwardedOperationResponse
+   - lxd/endpoints/endpoints/test: util.WriteJSON usage
+   - lxd/cluster/notify/test: util.WriteJSON usage
+   - lxd/devlxd: Adds util.WriteJSON support to hoistReq
+   - lxd-agent/devlxd: Add util.WriteJSON support to hoistReq
+   - lxd-agent/server: util.DebugJSON usage
+   - lxd/daemon: Clearer logging of API requests in createCmd
+   - lxd/daemon: util.DebugJSON usage in createCmd
+   - lxd/cluster/gateway: util.WriteJSON usage
+   - lxd/response/response: Use api.ResponseRaw in error response
+   - client/interfaces: Corrects typo in GetNetworkForward
+   - lxd/db/network/forwards: Fix error handling in GetNetworkForward
+   - lxd/instances: containerStopList -> instanceStopList
+   - lxd/instances: Handle VMs in instancesOnDisk
+   - lxd/instances: s/containers/instances/
+   - lxd/instances: Rename old container variables
+   - lxd/instances: Check DB before calling VolatileSet
+   - lxc/network/forward: Add lxc network forward get command
+   - i18n: Update translation templates
+   - lxd/util: Handle ':8443' syntax in ListenAddresses
+   - lxd/util/http: Improve comment on ListenAddresses
+   - lxd/util/http: Improve argument name in configListenAddress
+   - lxd/util/http: Use net.JoinHostPort in ListenAddresses rather than wrapping IPv6 addresses in []
+   - lxd/util/http: Improve ListenAddresses by breaking the parsing into phases
+   - lxd/util/http/test: Adds ExampleListenAddresses function
+   - lxd: Remove public facing errors that mention cluster "node"
+   - shared/api/url: Adds URL builder type and functions
+   - lxd/network/network/utils: Updates UsedBy to use api.URLBuild
+   - doc/metrics: typo fix
+   - lxc/file: use flagMkdir to create dirs on lxc pull
+   - lxc/file: add DirMode constant for 'lxc file'
+   - lxd/api/cluster: only change member role from leader
+   - test/suites/clustering: wait for node shutdown to propagate to members
+   - lxd/storage/drivers: Support generic custom block volume backup/restore
+   - lxd/storage/drivers/zfs: Drop restriction on custom block volume backup/restore
+   - lxd/storage/drivers/btrfs: Drop restriction on custom block volume backup/restore
+   - lxd/main/shutdown: Updates cmdShutdown to handle /internal/shutdown being synchronous
+   - lxd/api/internal: Updates shutdown request to wait for d.shutdownDoneCtx
+   - lxd/main/daemon: Call d.shutdownDoneCancel when daemon function ends
+   - lxd/daemon: Adds shutdownDoneCtx context to indicate shutdown has finished
+   - lxd: d.shutdownCtx usage
+   - lxd/main/daemon: d.shutdownCancel usage in daemon function
+   - lxc/config_trust: Delete only works on fingerprints
+   - i18n: Update translation templates
+   - test: Log PID of process being killed
+   - test: Require node removal to succeed in test_clustering_remove_leader
+   - lxd/storage/drivers: Checks that mount refCount is zero in all drivers
+   - lxd/storage/drivers/driver/cephfs/volumes: Adds mount ref counting
+   - lxd/device/disk: Use errors.Is() when checking for storageDrivers.ErrInUse in Update
+   - lxd/device/disk: Ignore storageDrivers.ErrInUse error from pool.UnmountCustomVolume in postStop
+   - lxd/storage/drivers: Log volName in UnmountVolume
+   - lxd/instance/drivers: Add instance type to metrics
+   - lxd: add core scheduling support
+   - lxd/response/response: Adds manualResponse type
+   - lxd/api/cluster: Removes arbitrary 3s wait in clusterPutDisable which was causing test issues
+   - test: Wait for daemons to exit in test_clustering_remove_leader
+   - lxd/api/cluster: Add logging to clusterPutDisable
+   - test: Detect if clustering network needs removing
+   - lxd/qemu: Disable large decrementor on ppc64le
+   - lxd/daemon: Reworks shutdown sequence
+   - lxd/daemon: Reworks Stop
+   - lxd/api/cluster: d.shutdownCtx.Err usage
+   - lxd/api/internal: d.shutdownCtx.Err usage
+   - lxd: daemon.Stop usage
+   - lxd/operations: Updates waitForOperations to accept context
+   - lxd/main/shutdown: Require valid response from /internal/shutdown in cmdShutdown
+   - lxd: db.OpenCluster usage
+   - lxd/cluster/membership: Update notifyNodesUpdate to wait until all heartbeats have been sent
+   - lxd/db/db: Replace clusterMu and closing with closingCtx in OpenCluster
+   - lxd/api/cluster: Improves logging
+   - lxd/api/internal: Rework internalShutdown to return valid response as LXD is shutdown
+   - lxd/daemon: db.OpenCluster usage in init
+   - lxd/daemon: Improved logging and error handling in init
+   - lxd/main/daemon: Reworks cmdDaemon to use d.shutdownDoneCh and call d.Stop()
+   - test: Increase timeouts on ping tests
+   - lxd/daemon: Adds daemon started log
+   - lxd/daemon: Whitespace in NodeRefreshTask
+   - lxd/api/cluster: Improve logging in handoverMemberRole
+   - lxd/api/cluster: Adds cluster logging
+   - test: Addition test logging
+   - lxd/cluster/membership: Improve logging in Rebalance
+   - lxd/daemon: Stop clustering tasks during Stop
+   - lxd/api/cluster: Improve logging in clusterNodeDelete
+   - test: Try and kill LXD daemon that fails to start
+   - lxd/dameon: Removes unnecessary go routines in NodeRefreshTask
+   - lxd/db/db: Use db.PingContext in OpenCluster
+   - lxd/db/db: Rework logging and error handling in OpenCluster
+   - lxc/file: Fix file push help message
+   - lxd/storage/drivers: Handle symlinks when walking file tree
+   - test/suites/backup: Add cephfs
+   - test/suites/backup: Check file content for storage volume backups
+   - i18n: Update translation templates
+   - lxd/cgroup: Fix GetIOStats on cgroup2
+   - lxd/endpoints/network/test: Test tcp4 interface and request via IPv6
+   - lxd/endpoints/network/test: Test tcp4 connection with configured 0.0.0.0 network address
+   - i18n: Update translations from weblate
+   - gomod: Update dependencies
+
+  ### 試用環境 <!-- Try it for yourself -->
+  <!--
+  This new LXD release is already available for you to try on our [demo service](https://linuxcontainers.org/lxd/try-it/).
+  -->
+  この新しい LXD リリースは私たちの [デモサービス](https://linuxcontainers.org/ja/lxd/try-it/) で利用できます。
+
+  ### ダウンロード <!-- Downloads -->
+  <!--
+  The release tarballs can be found on our [download page](https://linuxcontainers.org/lxd/downloads/).
+  -->
+  このリリースの tarball は [ダウンロードページ](https://linuxcontainers.org/lxd/downloads/) から取得できます。
+
+  <!--
+  Binary builds are also available for:
+  -->
+  ビルド済みバイナリーは次のように使えます:
+
+   - **Linux:** snap install lxd
+   - **MacOS:** brew install lxc
+   - **Windows:** choco install lxc
