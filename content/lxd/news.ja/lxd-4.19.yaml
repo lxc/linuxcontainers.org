@@ -94,7 +94,7 @@ content: |-
   <!--
   Note however that block custom storage volumes tend to end up being significantly larger than the filesystem ones and so can take quite a bit of resources to export and import.
   -->
-  しかし、ブロックカスタムストレージボリュームはファイルシステムのボリュームよりもかなり大きくなる傾向があります。ですので、
+  しかし、ブロックカスタムストレージボリュームはファイルシステムのボリュームよりもかなり大きくなる傾向があります。ですので、エクスポートとインポートにはかなりのリソースが必要なることに注意してください。
 
   ### すべての変更点（翻訳なし） <!-- Complete changelog -->
   Here is a complete list of all changes in this release:
