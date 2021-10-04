@@ -36,6 +36,7 @@ import shutil
 import subprocess
 import yaml
 from extensions.include_toc import IncludeToCExtension
+from extensions.format_details import FormatDetailsExtension
 
 # Variables
 CONTENT_PATH = "content"
@@ -193,14 +194,17 @@ def md2html(content, meta):
 
     include_toc = IncludeToCExtension()
 
+    format_details = FormatDetailsExtension()
+
     return markdown.markdown(content, extensions=[codehilite, anchors,
                                                   tables, footnotes,
                                                   admonition, wikilinks,
                                                   attr_list, fenced_code,
                                                   'def_list', 'md_in_html',
-                                                  include_toc,
+                                                  include_toc, format_details,
                                                   'pymdownx.magiclink',
                                                   'pymdownx.tabbed',
+                                                  'pymdownx.details',
                                                   'nl2br'])
 
 

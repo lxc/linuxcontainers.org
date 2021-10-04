@@ -433,3 +433,8 @@ iframe {
 .tabbed-set input:nth-child(n+1):checked + label + .tabbed-content {
     display: block;
 }
+
+/* add space below a details block */
+summary {
+  margin-bottom: 2rem;
+}
