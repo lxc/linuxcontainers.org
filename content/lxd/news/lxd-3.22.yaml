@@ -271,7 +271,7 @@ content: |-
    - lxd/patches: Updates patches to use new storage driver mount/unmount
    - lxd/patches: Replaces s.StoragePoolCreate with new storage framework
    - lxd/storage: Removes storagePoolInit
-   - scripts: Fix syntax error
+   - scripts: Fix syntax errror
    - lxd/main/init: Removes legacy storage drivers from availableStorageDrivers
    - lxd/patches: Updates patchStorageApiPermissions to use new storage drivers
    - lxd/storage: Removes storageCoreInit function
@@ -294,7 +294,7 @@ content: |-
    - lxd/project: Don't allow percentage values for limits.memory
    - lxd/project: Skip limit checks if the project has no limits configured
    - lxd/project: Check that the project's "limits.cpu" config is honored
-   - api: Use project.Config as etag field, without specifying individual keys.
+   - api: Use project.Config as etag field, without specifiying individual keys.
    - api: Properly detect which project config keys were specified in a PATCH request
    - api: Add helper logic to detect if a project config key has changed
    - api: Add new "limits.*" project configuration keys

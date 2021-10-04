@@ -361,7 +361,7 @@ content: |-
    - lxd/backup: Updates instance backup to use tar writer rather than tar cmd
    - lxd/backup: InstanceBackupRemove usage
    - lxd/storage/drivers/utils: Minor tweak to copyDevice error message
-   - lxd/storage/drivers/generic: Tweak error message of genericCreateVolumeFromMigration
+   - lxd/stroage/drivers/generic: Tweak error message of genericCreateVolumeFromMigration
    - lxd/storage/drivers/generic/vfs: Switches genericVFSBackupVolume to tar writer
    - lxd/images: Fixes unhandled error
    - lxd/storage/backend/lxd: Adds tarWriter to BackupInstance function
@@ -372,7 +372,7 @@ content: |-
    - lxd/storage/drivers/driver/lvm/volumes: Adds tarWriter arg to BackupVolume
    - lxd/storage/drivers/drivers/mock: Adds tarWriter arg to BackupVolume
    - lxd/storage/drivers/interface: Adds tarWriter arg to BackupVolume
-   - lxd/storage/pool/interface: Adds tarWriter arg to BackupInstance
+   - lxd/storage/pool/interace: Adds tarWriter arg to BackupInstance
    - lxd/storage/drivers/driver/btrfs/volumes: Adds tarWriter arg to BackupVolume
    - lxd/storage/drivers/driver/zfs/volumes: Adds tarWriter arg to BackupVolume
    - lxd/internal: Log some memory stats

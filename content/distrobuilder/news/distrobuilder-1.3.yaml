@@ -135,7 +135,7 @@ content: |-
    - sources/centos: Fix error message
    - sources/centos: Unmount raw file
    - sources/openwrt: Fix directory name
-   - vm: Check existence of loop device before detaching it
+   - vm: Check existance of loop device before detaching it
    - vm: Fix error message
    - sources/busybox: Fix mkdir call
    - sources/busybox: Fix build

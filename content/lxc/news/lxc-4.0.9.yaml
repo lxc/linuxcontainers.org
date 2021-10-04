@@ -63,7 +63,7 @@ content: |-
    - cgroups: bpf fixes
    - croups: improve __do_bpf_program_free
    - cgroups: coding style fixes
-   - cgroups: don't initialize NULL log
+   - cgroups: don't initiliaze NULL log
    - cgroups: ensure all memory is zeroed
    - cgroups: use zalloc
    - cgroups: tweak cgroup initialization
@@ -77,7 +77,7 @@ content: |-
    - cgroups: use PTR_TO_U64()
    - cgroups: align methods
    - utils: use SYSTRACE() when logging stdio permission fixup failures
-   - attach: log failures to dup2() with SYSDEBUG()
+   - attach: log failues to dup2() with SYSDEBUG()
    - attach: fix logging for stdfd replacement
    - attach: fix error checking for dup2()
    - cgroups: initialize variable
@@ -129,7 +129,7 @@ content: |-
    - attach: hardening through use of pidfds
    - lsm/apparmor: cleanup apparmor_process_label_set()
    - file_utils: add fdopenat()
-   - attach: unify /proc/<init-pid>/status parsing
+   - attach: unifiy /proc/<init-pid>/status parsing
    - attach: initialize init_pid field to -ESRCH
    - attach: move uid and gid handling to get_attach_context()
    - attach: simplify opening of /proc/self
@@ -607,7 +607,7 @@ content: |-
    - network: carry some structs to ease backports
    - confile: initialize network struct
    - af_unix: vet all parameters
-   - cgroup: do not fail if there are no writable hierarchies
+   - cgroup: do not fail if there are no writable heirarchies
    - attach_options: explicitly number enums
    - attach_options: fix whitespace error in LXC_ATTACH_NO_NEW_PRIVS
    - attach_options: add explicit defines for all enums
@@ -765,7 +765,7 @@ content: |-
    - mount_utils: add two detached mount helpers
    - start: documented idmapped mounts
    - conf: verify that the rootfs can support idmapped mounts
-   - attach: visually separate pids from fds during initialization
+   - attach: visually separate pids from fds during initalization
    - attach: use correct lxc_namespace_t type
    - apparmor:  handle on-exec
    - conf: tweak parse_lxc_mntopts()

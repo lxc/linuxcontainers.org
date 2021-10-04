@@ -85,7 +85,7 @@ content: |-
 
    - backup: Allow backups to not expire
    - client: Always use the "do()" wrapper
-   - client: Fix cancellation of image download
+   - client: Fix cancelation of image download
    - client: Fix error handling in operations
    - client: Fix URLs with missing project/target
    - doc: Add the appropriate titles to some documents
@@ -116,7 +116,7 @@ content: |-
    - lxd/containers: Prefix the container name with the project name when invoking forkconsole
    - lxd/containers: Prevent duplicate profiles
    - lxd/containers: Use liblxc mount injection api
-   - lxd/daemon: Clarify early logging
+   - lxd/daemon: Clarify early loggging
    - lxd/daemon: Don't expire lxd.log by accident
    - lxd/daemon: Don't mention MAAS unless configured
    - lxd/daemon: Improve logging of inherited fds

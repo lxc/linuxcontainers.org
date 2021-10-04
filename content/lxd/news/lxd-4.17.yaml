@@ -180,7 +180,7 @@ content: |-
    - lxd/db/generate/db/parse: use kind parameter for Filter generation
    - lxd/db/generate/db/method: pass query kind to Filter
    - lxd/db/generate/db/stmt: use delete-by statements with Filter instead of only by id
-   - lxd/db/generate/db/method: use and handle Filter as parameter for Delete method
+   - lxd/db/generate/db/method: use and handle Filter as paramter for Delete method
    - lxd/db/generate/db/method: make Delete into DeleteOne and DeleteMany
    - lxd/db/certificates: add new entries for code generation
    - lxd/db/certificates: add delete-by fields to CertificateFilter
@@ -552,8 +552,8 @@ content: |-
    - lxd/db/images: use ImageFilter for optional args
    - lxd/storage/pools: use ImageFilter for GetImages args
    - lxd/util: Add ceph config parser
-   - lxd/storage/cephfs: Use new ceph parsing functions
-   - lxd/device/disk: Use new ceph parsing functions
+   - lxd/storage/cephfs: Use new ceph parsing funtions
+   - lxd/device/disk: Use new ceph parsing funtions
    - lxd/util: Make ceph.conf parser more tolerant
 
   ### Try it for yourself

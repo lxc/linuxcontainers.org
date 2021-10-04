@@ -194,7 +194,7 @@ content: |-
    - lxc/exec: Don't use Exit
    - lxc/remote: Use candid if supported
    - Add first stab at FAQ
-   - doc: Fix typos in faq.md
+   - doc: Fix typoes in faq.md
    - lxd/response: Simplify SmartError
    - lxc/info: Add targeting to 'lxc info'
    - lxc/storage: Add targeting to 'lxc storage info'
@@ -341,7 +341,7 @@ content: |-
    - lxd: Have Authenticate return the protocol
    - lxd: Don't allow remote access to internal API
    - lxd/migration: Fix feature negotiation
-   - lxd/api: Rename certificateFingerprint* to certificate*
+   - lxd/api: Rename certificateFingerprint* to certficate*
    - lxd/certificate: Port to APIEndpoint
    - lxd/resource: Port to APIEndpoint
    - lxd/operation: Port to APIEndpoint
@@ -410,7 +410,7 @@ content: |-
    - container/lxc: Fix copy/paste error in error removeNetworkDevice
    - container/lxc: Adds detachInterfaceRename() function
    - container/lxc: Restores physical parent mtu and mac on device removal
-   - doc: Updates volatile keys used for physical mtu and mac restoration
+   - doc: Upates volatile keys used for physical mtu and mac restoration
    - test: Tests for physical mtu and mac application and restoration
    - lxd/storage/btrfs: Fix qgroup handling
    - lxd/storage/btrfs: Fix argument ordering

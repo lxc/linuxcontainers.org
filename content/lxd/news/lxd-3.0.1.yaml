@@ -106,7 +106,7 @@ content: |-
    * migration: fix btrfs live migration
    * lxd/containers: Fix broken unix hotplug logic
    * lxc/list: Reduce number of API calls
-   * Make the interaction between lxd daemon and waitready non-blocking
+   * Make the interaction betwean lxd daemon and waitready non-blocking
    * Increase logging during startup
    * Remove log alias for waitready
    * Remove log alias for db.OpenCluster

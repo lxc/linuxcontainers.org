@@ -61,7 +61,7 @@ content: |-
    - lxd/storage/drivers/driver/btrfs/volumes: Consistent quoting of error message variables
    - lxd/instance/drivers: Removes storagePools.RenderSnapshotUsage from RenderFull()
    - lxd/storage/drivers/driver/zfs/volumes: Create temporary snapshot in BackupVolume()
-   - lxd/storage/backend/lxd: Checks for existence of volume before deleting
+   - lxd/storage/backend/lxd: Checks for existance of volume before deleting
    - lxd/instance: Switches to revert package for instanceCreateAsSnapshot
    - lxd/storage/backend/lxd: Comment tweak
    - lxd/storage/drivers/driver/ceph/volumes: Tweaks HasVolume detection
@@ -156,7 +156,7 @@ content: |-
    - doc/networks: Fix typo
    - i18n: Update translations from weblate
    - Update networks.md
-   - lxd/storage/ceph: Support alternate conf syntax
+   - lxd/storage/ceph: Suppport alternate conf syntax
    - lxd/init: Try to bind LXD network address when running interactively
    - lxd/instance/drivers/driver/qemu/templates: Use static PCIe address prefix for 9p devices
    - lxd/instance/drivers/drivers/qemu: Adds support for 9p disk device PCIe indexes

@@ -95,7 +95,7 @@ content: |-
    - lxd/storage/drivers/driver/ceph/utils: Updates usage of d.parseParent in deleteVolume
    - lxd/storage/drivers/driver/ceph/utils: Updates RBD naming logic in getRBDVolumeName
    - lxd/storage/drivers/driver/ceph/volumes: Ensures CreateVolumeFromCopy correctly sizes new volume
-   - lxd/storage/drivers/driver/ceph/volumes: If volume doesn't exist in DeleteVolume do nothing
+   - lxd/storage/drivers/driver/ceph/volumes: If volume doesnt exist in DeleteVolume do nothing
    - lxd/storage/drivers/driver/ceph/utils: Dont wrap lines
    - lxd/db: Rename CertificatesGet to GetCertificates
    - lxd/db: Rename CertificateGet to GetCertificate
@@ -313,7 +313,7 @@ content: |-
    - ethtool: add ethtoolGset() helper
    - Support two-phase creation of a storage pool on single-node cluster
    - lxd/storage/drivers/driver/btrfs/utils: Adds setSubvolumeReadonlyProperty function
-   - lxd/storage/drivers/driver/btrfs/volumes: Removes readonly argument from snapshotSubvolume
+   - lxd/storag/drivers/driver/btrfs/volumes: Removes readonly argument from snapshotSubvolume
    - lxd/storage/drivers/driver/btrfs: d.setSubvolumeReadonlyProperty and d.snapshotSubvolume usage
    - lxd/db: Rename StoragePoolVolumeGetType to GetStoragePoolVolume
    - lxd/db: Rename StoragePoolVolumeSnapshotCreate to CreateStorageVolumeSnapshot
@@ -324,7 +324,7 @@ content: |-
    - lxd/storage/drivers/driver/btrfs/utils: Adds getSubvolumesMetaData function
    - lxd/storage/drivers/driver/btrfs/volumes: Maintain subvolume readonly state in snapshot
    - lxd/storage/driversr/driver/btrfs/utils: Allow ro subvolumes to be deleted in deleteSubvolume
-   - lxd/storage/drivers/driver/btrfs/volumes: Updates MigrateVolume to send subvolumes
+   - lxd/storag/drivers/driver/btrfs/volumes: Updates MigrateVolume to send subvolumes
    - lxd/storage/drivers/driver/btrfs/volumes: Fail backup when cleanup fails in BackupVolume
    - lxd/storage/drivers/driver/btrfs/volumes: Better naming of variables in unpackVolume
    - lxd/migration/migrate/proto: Adds BTRFS Features to offer header
@@ -434,7 +434,7 @@ content: |-
    - When demoting a voter to spare, transition to stand-by first
    - test/clustering: Make sure that a killed voter can't dsirupt current leader
    - lxd/cluster: Use a dedicated channel to stop the dqlite proxy
-   - lxd: Call Daemon.Kill() also when receiving signals (so db transactions won't be retried)
+   - lxd: Call Deamon.Kill() also when receiving signals (so db transactions won't be retried)
    - lxd/db: Add Cluster.Kill() method to prevent retrying upon shutdown
    - lxd/firewall/drivers/driver/nftables/templates: Fixes proxy nat rule dynamic family
    - shared/util_linux.go: cast Rdev uint64 for mips

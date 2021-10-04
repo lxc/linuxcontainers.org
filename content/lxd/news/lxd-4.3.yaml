@@ -231,7 +231,7 @@ content: |-
    - doc/storage: Document block storage volumes
    - lxd/util: Detect hugetlbfs mount point
    - lxd/cluster: Always check for dqlite protocol version mismatches
-   - lxd/cluster: Don't run unnecessary HEAD probe upon dqlite connections
+   - lxd/cluster: Don't run unncessary HEAD probe upon dqlite connections
    - forksyscall: use nsids for shiftfs syscall intercepts
    - lxd/db: Drop ClusterRoleDatabase records from the database
    - lxd/cluster: Fetch database role information directly from raft

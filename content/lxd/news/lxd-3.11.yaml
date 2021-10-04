@@ -67,7 +67,7 @@ content: |-
    * client: Fix goroutine leak in ExecContainer
    * client: Revert "client: fix goroutine leak in ExecContainer"
    * doc: Add first stab at FAQ
-   * doc: Fix typos in faq.md
+   * doc: Fix typoes in faq.md
    * doc: Update rest-api.md formatting
    * i18n: Update translations from weblate
    * i18n: Update translation templates

@@ -169,7 +169,7 @@ content: |-
    - lxd/network/network/utils: Removes GetIP
    - lxd/network/network/utils: dhcpalloc.GetIP usage
    - lxd/network/network/utils: dnsmasq.DHCPStaticAllocation usage
-   - lxd/network/network/interface: Changes of functions to accommodate dhcpalloc package
+   - lxd/network/network/interface: Changes of functions to accomodate dhcpalloc package
    - lxd/network/driver/common: Implements default no-op function for non-dhcp enabled networks
    - lxd/network/driver/common: dhcpalloc.DHCPRange usage
    - lxd/network/driver/bridge: dhcpalloc package function usage
@@ -221,7 +221,7 @@ content: |-
    - lxd: Wraps validate.IsNetworkV4List and validate.IsNetworkV6List in validate.Optional
    - shared/validate: Tweaks IsNetworkVLAN error message ordering
    - shared/validate: comment spacing
-   - daemon: check whether shiftfs is usable
+   - daemon: check whether shiftfs is useable
    - lxd/network/network/utils: Renames ValidNetworkName to validInterfaceName
    - lxd/network/network/utils: Adds validVirtualNetworkName
    - lxd/network/network/interfaces: Adds ValidateName

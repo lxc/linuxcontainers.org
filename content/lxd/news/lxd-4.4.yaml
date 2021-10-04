@@ -158,7 +158,7 @@ content: |-
 
    - lxd/cluster: Leverage RolesChanges.Handover() to choose handover target
    - lxd: Increase timeout of go unit tests when ran from Emacs
-   - lxd/cluster: Skip unnecessary loading of nodes from database in Rebalance()
+   - lxd/cluster: Skip unncessary loading of nodes from database in Rebalance()
    - lxd/cluster: Leverage RolesChanges.Adjust() to choose rebalance target
    - lxd/cluster: Increase time budget of client.Assign() when assigning voter role
    - lxd/cluster: When demoting to Spare only transition to StandBy if Voter
@@ -238,7 +238,7 @@ content: |-
    - lxd/operations: Add db operation type to Operation
    - lxd: Add waitForOperations()
    - lxd: Shut down gracefully
-   - lxd/operations/operations: Fix hanging cancellation
+   - lxd/operations/operations: Fix hanging cancelation
    - lxd/instance_post: Pass cancel function to websocket operation
    - client/lxd_instances: Cancel websocket op if needed
    - lxc/console: Disconnect on shutdown
@@ -377,15 +377,15 @@ content: |-
    - lxd/device/device/load: Removes devTypes map and updates load to use NICType function
    - lxd/device: Removes device load helpers
    - lxd/device/device/utils/network: nictype.NICType usage
-   - lxd/device/nic/bridged: Updates usage of functions whose signatures changed due to NICType
+   - lxd/device/nic/bridged: Updates usage of functions whos signatures changed due to NICType
    - lxd/device/nic/p2p: Updates usage of functions that changed signature due to NICType
    - lxd/device/proxy: nictype.NICType usage
    - lxd/instance/drivers/driver/lxc: nictype.NICType usage
    - lxd/instance/drivers/driver/qemu: nictype.NICType usage
    - lxd/network/driver/bridge: Usage of functions that changed signature due to NICType
    - lxd/network/driver/common: Updates IsUsed for NICType signature changes and checks for profile usage
-   - lxd/network/network/interface: Signature change of IsUsed to accommodate NICType
-   - lxd/network/network/utils: Usage of nictype.NICType and signature changes to accommodate it
+   - lxd/network/network/interface: Signature change of IsUsed to accomodate NICType
+   - lxd/network/network/utils: Usage of nictype.NICType and signature changes to accomodate it
    - lxd/networks: nictype.NICType usage and comment improvements
    - lxd/networks: Comment ending consistency
    - test: Updates tests to delete profiles before networks

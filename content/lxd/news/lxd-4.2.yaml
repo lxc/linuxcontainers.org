@@ -214,7 +214,7 @@ content: |-
    - When demoting a voter to spare, transition to stand-by first
    - test/clustering: Make sure that a killed voter can't dsirupt current leader
    - lxd/cluster: Use a dedicated channel to stop the dqlite proxy
-   - lxd: Call Daemon.Kill() also when receiving signals (so db transactions won't be retried)
+   - lxd: Call Deamon.Kill() also when receiving signals (so db transactions won't be retried)
    - lxd/db: Add Cluster.Kill() method to prevent retrying upon shutdown
    - lxd/firewall/drivers/driver/nftables/templates: Fixes proxy nat rule dynamic family
    - shared/util_linux.go: cast Rdev uint64 for mips

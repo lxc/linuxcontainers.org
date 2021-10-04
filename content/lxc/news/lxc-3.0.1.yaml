@@ -16,7 +16,7 @@ content: |-
 
   ## Bugfixes (LXC)
 
-   * tools: fix uninitialized variable
+   * tools: fix unitialized variable
    * storage: fix lvm fs uuid generation
    * lxc-oci: fix Cmd/Entrypoint parsing
    * lxc-oci: make umoci less verbose

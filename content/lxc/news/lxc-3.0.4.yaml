@@ -133,7 +133,7 @@ content: |-
    - conf: use SYSERROR on lxc_write_to_file errors
    - Revert "Set c to NULL after freeing it"
    - lxccontainer: fix container copy
-   - fix: unprivileged veth devices (e.g. vethFWABHX) never contain 'Z' character in the randomly generated device name part because for modulo one does not need to subtract 1 from strlen().
+   - fix: unprivileged veth devices (e.g. vethFWABHX) never contain 'Z' character in the randomly generated device name part because for modulo one does not need to substract 1 from strlen().
    - Fixing compile error when compiling for android
    - start: handle missing CLONE_NEWCGROUP
    - network: prefix veth interface name with uid info
@@ -319,7 +319,7 @@ content: |-
    - lxc-user-nic: validate request
    - doc: update Japanese lxc-user-nic manpage
    - fix: #2927 api doc generation fails under out of source build.
-   - storage: prevent uninitialized variable warning
+   - storage: prevent unitialized variable warning
    - storage: update zfs
    - conf: do lxc.mount.entry mounts right after lxc.mount.fstab
    - netns_getifaddrs: adapt to kernel changes
@@ -348,7 +348,7 @@ content: |-
    - start: use CLONE_PIDFD
    - Redirect error messages to stderr
    - coding style: update
-   - New --bbpath option and unnecessary --rootfs checks
+   - New --bbpath option and unecessary --rootfs checks
    - lxccontainer: do not display if missing privileges
    - Option --busybox-path instead of --bbpath
    - criu: Use -v4 instead of -vvvvvv

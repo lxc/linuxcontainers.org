@@ -53,7 +53,7 @@ content: |-
    * lxd/daemon: Move Daemon.isRecursionRequest to the lxd/util sub-package
    * lxd/daemon: Move Daemon.lxcpath to OS.LxcPath
    * lxd/daemon: Move Daemon.MockMode to OS.MockMode
-   * lxd/daemon: Move Daemon.CheckTrustState and Daemon.isTrustedClient to lxd/util
+   * lxd/daemon: Move Deamon.CheckTrustState and Deamon.isTrustedClient to lxd/util
    * lxd/daemon: Move filesystemDetect function into lxd/util subpackage
    * lxd/daemon: Replace Daemon with State in all model entities
    * lxd/daemon: Use select and save a few goroutines

@@ -58,7 +58,7 @@ content: |-
    - lxd/network/driver/bridge: Adds ovn.ovs_bridge config key for OVN networks using bridge as parent
    - doc/api: Removes underscore escaping when used inside backticks
    - doc/networks: Adds ovn.ovs_bridge key to bridge networks
-   - lxd/instance/drivers: Fixes crash when removing device that can't be loaded
+   - lxd/instance/drivers: Fixes crash when removing device that cant be loaded
    - lxd/db/cluster: Adds networks to project usage view
    - lxc/storage_volume: Fix usage string
    - po: Update translations

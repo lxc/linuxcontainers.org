@@ -66,7 +66,7 @@ content: |-
    - lxd: Add version subcommand
    - lxd: Increase logging during startup
    - lxd: Log the error that made Daemon.Init() fail
-   - lxd: Make the interaction between lxd daemon and waitready non-blocking
+   - lxd: Make the interaction betwean lxd daemon and waitready non-blocking
    - lxd: Make Unavailable accept an error parameter
    - lxd/cluster: Add new cluster.Promote function
    - lxd/cluster: Add new cluster.Rebalance function

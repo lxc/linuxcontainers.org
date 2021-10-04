@@ -271,7 +271,7 @@ content: |-
    - lxd: Update use of device.Instance interface
    - lxd: Update use of ForwardedResponseIfContainerIsRemote to supply instanceType
    - lxd: Update use of string instance.Type to int type
-   - lxd/api: Constructs endpoint alias routes
+   - lxd/api: Contructs endpoint alias routes
    - lxd/api: Rename container endpoint vars to instance prefix
    - lxd/apparmor: Move apparmor into its own package
    - lxd/backup: Change container field to instance type
@@ -284,7 +284,7 @@ content: |-
    - lxd/containers: Fix comment
    - lxd/containers: Migrate container_lxc to use operationlock package
    - lxd/containers: Respect raw.lxc on stop/shutdown
-   - lxd/containers: Tighten directory ownership
+   - lxd/containers: Tigthen directory ownership
    - lxd/containers: Update containerLoadNodeProjectAll to support Type filtering
    - lxd/containers: Validate POST instance type field and stores in DB
    - lxd/daemon: Add Name and Aliases support to APIEndpoint
