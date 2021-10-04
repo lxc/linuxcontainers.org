@@ -28,17 +28,6 @@ def load_json(url):
     return json.loads(urlopen(req).read().decode())
 
 
-def filter_markdown(content):
-    new = ""
-    for line in content.split("\n"):
-        if line.startswith("[details") or line.startswith("[/details"):
-            continue
-
-        new += line + "\n"
-
-    return new.strip()
-
-
 # Update all existing posts
 updated = []
 for project in PROJECTS:
@@ -61,7 +50,7 @@ date: bar
 origin: baz
 content: |-
   blah""")
-        entry["content"] = filter_markdown(dis_post["raw"])
+        entry["content"] = dis_post["raw"]
         entry["title"] = dis_topic["title"]
         date = dateutil.parser.parse(dis_topic["created_at"])
         entry["date"] = date.strftime("%Y/%m/%d %H:%m")
@@ -109,7 +98,7 @@ date: bar
 origin: baz
 content: |-
   blah""")
-    entry["content"] = filter_markdown(dis_post["raw"])
+    entry["content"] = dis_post["raw"]
     entry["title"] = dis_topic["title"]
     date = dateutil.parser.parse(dis_topic["created_at"])
     entry["date"] = date.strftime("%Y/%m/%d %H:%m")
