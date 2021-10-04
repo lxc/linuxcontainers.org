@@ -134,6 +134,13 @@ p:empty {
 /* Add spacing to pre tags */
 pre {
   margin-top: .5rem;
+  overflow: auto;
+  max-height: 50rem;
+}
+
+/* prevent line breaks in code blocks */
+pre code {
+  white-space: pre;
 }
 
 .glyphicon {
