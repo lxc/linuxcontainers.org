@@ -125,6 +125,7 @@ content: |-
   ### Complete changelog
   Here is a complete list of all changes in this release:
 
+  [details="Full commit list"]
    - shared/generate/db: Fix generation of Exists method
    - lxd/db: Make generated code stable across "make update-schema" runs
    - lxd/db: Leverage code-generation for certificates
@@ -430,6 +431,7 @@ content: |-
    - api: Add network_state_bond_bridge
    - shared/api: Extend NetworkState for bridge/bond
    - lxd/networks: Add bridge/bond details
+  [/details]
 
   ### Try it for yourself
   This new LXD release is already available for you to try on our [demo service](https://linuxcontainers.org/lxd/try-it/).

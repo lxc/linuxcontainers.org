@@ -16,6 +16,7 @@ content: |-
 
   The full list of commits is available below:
 
+  [details="Detailed changelog"]
    - proc_fuse: provide host values when kernel does not support swap accounting
    - bindings: update terminology
    - cgroups: update terminology
@@ -24,6 +25,7 @@ content: |-
    - .travis: use RTLD_NOW for tests
    - proc_fuse: remove unused variable
    - fix type mismatch
+  [/details]
 
   ### Support and upgrade
   The LXCFS 4.0 branch is supported until June 2025.

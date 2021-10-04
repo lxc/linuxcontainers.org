@@ -111,6 +111,7 @@ content: |-
 
   Full commit list:
 
+  [details="Summary"]
    - apparmor: allow various remount,bind options
    - Merge pull request #2758 from Blub/2018-12-17/stable-3.0/apparmor-bind-remount
    - cgfsng: do not free container_full_path on error
@@ -389,6 +390,7 @@ content: |-
    - lxc.pc.in: add libs.private for static linking
    - parse.c: fix fd leak from memfd_create
    - cgfsng: write cpuset.mems of correct ancestor
+  [/details]
 
 
   #### Bugfixes (LXC templates)

@@ -18,6 +18,7 @@ content: |-
 
   The full list of commits is available below:
 
+  [details="Detailed changelog"]
    - conf: handle kernels with CAP_SETFCAP
    - doc: document new idmap= option for lxc.rootfs.options
    - Skip rootfs pinning for ZFS roots.
@@ -95,6 +96,7 @@ content: |-
    - terminal: log TIOCGPTPEER failure less alarmingly
    - af_unix: report error when no fd is to be sent
    - terminal: fix error handling
+  [/details]
 
   ### Support and upgrade
   The LXC 4.0 branch is supported until June 2025.

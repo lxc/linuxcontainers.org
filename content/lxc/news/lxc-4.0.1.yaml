@@ -18,6 +18,7 @@ content: |-
 
   The full list of commits is available below:
 
+  [details="Detailed changelog"]
    - lxc_init: move main() down
    - lxc_init: add missing O_CLOEXEC
    - [lxc.service] Starts after remote-fs.target to allow containers relying on remote FS to work
@@ -59,6 +60,7 @@ content: |-
    - cgroups: fix build warning on GCC 7
    - lxccontainer: poll takes millisecond not seconds
    - Revert "start: remove unnecessary check for valid cgroup_ops"
+  [/details]
 
   ### Support and upgrade
   The LXC 4.0 branch is supported until June 2025.

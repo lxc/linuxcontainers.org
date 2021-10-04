@@ -101,6 +101,7 @@ content: |-
   ### Complete changelog
   Here is a complete list of all changes in this release:
 
+  [details="Full commit list"]
    - lxc-to-lxd: golint fix
    - lxd/cluster: golint fixes
    - lxd/migration: golint fixes
@@ -444,6 +445,7 @@ content: |-
    - lxd/device/disk: Ensures custom pool volumes are unmounted on VM device stop
    - unix-hotplug: fix device removal and zero padding
    - i18n: Update translations from weblate
+  [/details]
 
 
   ### Try it for yourself

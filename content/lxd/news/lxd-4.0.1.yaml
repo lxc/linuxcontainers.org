@@ -26,6 +26,7 @@ content: |-
 
   The full list of commits is available below:
 
+  [details="Detailed changelog"]
    - doc/instances: Fix escaping
    - lxc/network: Updates network detach checks to use bridged network property
    - lxd/network/network/utils: Updates network setting detection in IsInUse
@@ -184,6 +185,7 @@ content: |-
    - lxd/util: Tweak NetworkInterfaceAddress to only return global
    - lxd/net/util: Updates comment on NetworkInterfaceAddress behaviour change
    - shared/usbid: Use system database
+  [/details]
 
   ### Try it for yourself
   This new LXD release is already available for you to try on our [demo service](https://linuxcontainers.org/lxd/try-it/).

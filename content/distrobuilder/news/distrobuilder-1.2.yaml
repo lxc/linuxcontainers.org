@@ -15,6 +15,7 @@ content: |-
 
   The full list of commits is available below:
 
+  [details="Detailed changelog"]
    - sources: Fix Plamo 7.x
    - Cosmetic update to the README.me (index.md)
    - Updated instructions
@@ -69,6 +70,7 @@ content: |-
    - doc/packages: Clarify `url` key in `packages`
    - doc: Add filtering
    - Update gomod
+  [/details]
 
   ### Downloads
 

@@ -14,9 +14,11 @@ content: |-
 
   The full list of commits is available below:
 
+  [details="Detailed changelog"]
    - proc_cpuview: release lock before returning
    - Determine the file size from the current system file size
    - Switch to Github Actions
+  [/details]
 
   ### Support and upgrade
   The LXCFS 4.0 branch is supported until June 2025.

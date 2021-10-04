@@ -32,6 +32,7 @@ content: |-
   The resources API (`/1.0/resources`) has been extended with a list of all PCI and USB devices on the system. This is of particular use when dealing with VFIO passthrough to virtual machines or passing through USB devices to containers.
 
 
+  [details="Long example output"]
       stgraber@castiana:~$ lxc query /1.0/resources | jq .pci
       {
         "devices": [
@@ -575,6 +576,7 @@ content: |-
         ],
         "total": 6
       }
+  [/details]
 
 
   #### network: Support for multiple ipvlan NIC devices
@@ -831,6 +833,7 @@ content: |-
   ### Complete changelog
   Here is a complete list of all changes in this release:
 
+  [details="Full commit list"]
    - shared/version/api: Add trust_ca_certificates
    - doc: Add core.trust_ca_certificates
    - lxd/cluster/config: Add core.trust_ca_certificates
@@ -968,6 +971,7 @@ content: |-
    - lxd/resources: Add USB resource
    - lxd/resources: Add PCI resource
    - test/suites/static_analysis: Skip shared/usbid/load_data.go
+  [/details]
 
 
   ### Try it for yourself

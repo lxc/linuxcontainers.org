@@ -14,6 +14,7 @@ content: |-
 
   The full list of commits is available below:
 
+  [details="Detailed changelog"]
    - meminfo: show host swap values when no limit or equal limits are set
    - README: clarify SWAP
    - cgroups: Add get_memory_swappiness
@@ -23,6 +24,7 @@ content: |-
    - swap: Make /proc/swaps match /proc/meminfo
    - swap: Remove now unused variable
    - docs: fix simple typo, throuh -> through
+  [/details]
 
   ### Support and upgrade
   The LXCFS 4.0 branch is supported until June 2025.

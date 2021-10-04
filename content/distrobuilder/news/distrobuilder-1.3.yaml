@@ -13,6 +13,7 @@ content: |-
 
   The full list of commits is available below:
 
+  [details="Detailed changelog"]
    - sources/centos: Support patch releases
    - sources/centos: Fix CentOS 8-Stream
    - sources/centos: Only print error on patch releases
@@ -162,6 +163,7 @@ content: |-
    - image: Fix unified LXD tarballs
    - sources/openwrt: Remove verification
    - main: Support ISO generation with mkisofs
+  [/details]
 
   ### Downloads
 

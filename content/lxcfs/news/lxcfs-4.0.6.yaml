@@ -16,6 +16,7 @@ content: |-
 
   The full list of commits is available below:
 
+  [details="Detailed changelog"]
    - fix epoll create socket error message
    - Add support for fuse3
    - Fix `get_min_memlimit()` on non-glibc
@@ -23,6 +24,7 @@ content: |-
    - rename fuse_compat.h to avoid conflict with system header
    - Set the file size to 4k
    - diskstats: support new fields in 4.18+ kernels
+  [/details]
 
   ### Support and upgrade
   The LXCFS 4.0 branch is supported until June 2025.

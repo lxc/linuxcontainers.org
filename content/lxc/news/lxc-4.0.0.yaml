@@ -100,6 +100,7 @@ content: |-
   ### Complete changelog
   Here is a complete list of all changes in this release:
 
+  [details="Full commit list"]
   - cgroups: fix attaching to the unified cgroup
   - dir: improve dir backend
   - dir: use cleanup macro in dir_mount()
@@ -394,6 +395,7 @@ content: |-
   - Container's specific file/directory names
   - Use file/directory names from macro.h
   - tree-wide: fix wrong copy-paste for licenses
+  [/details]
 
   ### Support and upgrade
   LXC 4.0.0 will be supported until June 2025 and our current LTS release, LXC 3.0 will now switch to a slower maintenance pace, only getting critical bugfixes and security updates.

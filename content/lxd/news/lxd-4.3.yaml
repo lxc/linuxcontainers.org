@@ -91,6 +91,7 @@ content: |-
   ### Complete changelog
   Here is a complete list of all changes in this release:
 
+  [details="Full commit list"]
    - lxd/instance/drivers/driver/lxc: Adds debug logging to deviceStop
    - lxd/instance/drivers/driver/lxc: Adds driver revert on failed start in startCommon
    - lxd/instance/drivers/driver/qemu: Adds debug logging to deviceStop
@@ -238,6 +239,7 @@ content: |-
    - lxd/storage: Fix regression in truncate handling
    - lxd/cluster: Only look up raft_nodes for resolving the address of node 1
    - i18n: Update translations from weblate
+  [/details]
 
   ### Try it for yourself
   This new LXD release is already available for you to try on our [demo service](https://linuxcontainers.org/lxd/try-it/).

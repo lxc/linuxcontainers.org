@@ -102,6 +102,7 @@ content: |-
   ### Complete changelog
   Here is a complete list of all changes in this release:
 
+  [details="Full commit list"]
    - lxd/main/init/interactive: Clear config.Cluster.ClusterPassword after setting up trust
    - lxc/config_trust: Add type and name columns
    - [Doc] fix description of PATCH warning in rest-api.md
@@ -411,6 +412,7 @@ content: |-
    - lxc/config_trust: Support stdin and allow name override
    - i18n: Update translation templates
    - i18n: Update translations from weblate
+  [/details]
 
   ### Try it for yourself
   This new LXD release is already available for you to try on our [demo service](https://linuxcontainers.org/lxd/try-it/).

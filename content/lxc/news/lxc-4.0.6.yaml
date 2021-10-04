@@ -20,6 +20,7 @@ content: |-
 
   The full list of commits is available below:
 
+  [details="Detailed changelog"]
    - Update Japanese pam_cgfs(8) to reflect lack of support for pure cgroupv2
    - seccomp: Fix handling of pseudo syscalls and improve logging for rule processing.
    - seccomp: Avoid duplicate processing of rules for host native arch.
@@ -233,6 +234,7 @@ content: |-
    - conf: fix CAP_NET_ADMIN-based mount handling
    - Changed Version from 2.*.* to 4.*.*
    - make lxc-net hermetic w.r.t. existing dnsmasq config
+  [/details]
 
   ### Support and upgrade
   The LXC 4.0 branch is supported until June 2025.

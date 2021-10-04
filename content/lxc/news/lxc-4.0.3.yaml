@@ -15,6 +15,7 @@ content: |-
 
   The full list of commits is available below:
 
+  [details="Detailed changelog"]
    - apparmor: Allow boot_id
    - src/lxc/network: Fixes netlink attribute type 1 has an invalid length message
    - cgroups: ignore cgroup2 limits on non-cgroup2 layouts
@@ -84,6 +85,7 @@ content: |-
    - lxccontainer: fix non-blocking container stop
    - lxc-net: Set broadcast
    - commands: don't flood logs
+  [/details]
 
   ### Support and upgrade
   The LXC 4.0 branch is supported until June 2025.

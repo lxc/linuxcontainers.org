@@ -142,6 +142,7 @@ content: |-
   ### Complete changelog
   Here is a complete list of all changes in this release:
 
+  [details="Full commit list"]
    - lxd/device/usb: Fix check for required USB device
    - seccomp: switch back to pread()
    - nsexec: simplify userns attach
@@ -468,6 +469,7 @@ content: |-
    - lxd/cgroup: Support CGroup V2 in ParseCPU
    - lxd-agent: Don't allow connections when rebooting
    - i18n: Update translations from weblate
+  [/details]
 
   ### Try it for yourself
   This new LXD release is already available for you to try on our [demo service](https://linuxcontainers.org/lxd/try-it/).

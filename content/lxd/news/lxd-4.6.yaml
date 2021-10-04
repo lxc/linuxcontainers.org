@@ -41,6 +41,7 @@ content: |-
   ### Complete changelog
   Here is a complete list of all changes in this release:
 
+  [details="Full commit list"]
    - shared/log15: Fix due to recent unix change
    - Handle signals in non-interactive sessions.
    - Fix hang when control is not provided in non-interactive mode.
@@ -225,6 +226,7 @@ content: |-
    - s/descriptros/descriptors/
    - Revert "lxd/network/driver/bridge: Exclude /32 underlay addresses from overlay address generation"
    - lxd/network/driver/bridge: Skip lo interface when generating fan overlay address in addressForSubnet
+  [/details]
 
   ### Try it for yourself
   This new LXD release is already available for you to try on our [demo service](https://linuxcontainers.org/lxd/try-it/).

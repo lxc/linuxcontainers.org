@@ -156,6 +156,7 @@ content: |-
   ### Complete changelog
   Here is a complete list of all changes in this release:
 
+  [details="Full commit list"]
    - lxd/cluster: Leverage RolesChanges.Handover() to choose handover target
    - lxd: Increase timeout of go unit tests when ran from Emacs
    - lxd/cluster: Skip unncessary loading of nodes from database in Rebalance()
@@ -474,6 +475,7 @@ content: |-
    - lxd/device/nic/routed: networkVethFillFromVolatile usage and other host-veth helper functions
    - lxd/network/network/utils: Updates isInUseByDevices to support networks that don't match their physical parent
    - i18n: Update translations from weblate
+  [/details]
 
   ### Try it for yourself
   This new LXD release is already available for you to try on our [demo service](https://linuxcontainers.org/lxd/try-it/).

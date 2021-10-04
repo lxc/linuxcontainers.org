@@ -424,6 +424,7 @@ content: |-
   Here is a complete list of all changes in this release:
 
 
+  [details="Full commit list"]
    * lxd/cgroup: Adds cgroup package with CPU task balancing functions
    * lxd: Updates to use cgroup package
    * lxd: Changes instance and containerLXC function Id() to ID()
@@ -1659,6 +1660,7 @@ content: |-
    * lxd/storage/btrfs: Fix bad check
    * lxd/containers: Properly setup cgroup writer
    * lxd/cgroup: Fix memory limit handling
+  [/details]
 
 
   ### Try it for yourself

@@ -158,6 +158,7 @@ content: |-
   ### Complete changelog
   Here is a complete list of all changes in this release:
 
+  [details="Full commit list"]
    - lxc/move: Allow --target with cluster destination
    - i18n: Update translation templates
    - lxd/networks: Validate network config before starting networks on startup
@@ -481,6 +482,7 @@ content: |-
    - lxd/networks/ovn: Rename parent to network
    - scripts/bash: Add network config key
    - i18n: Update translations from weblate
+  [/details]
 
   ### Try it for yourself
   This new LXD release is already available for you to try on our [demo service](https://linuxcontainers.org/lxd/try-it/).

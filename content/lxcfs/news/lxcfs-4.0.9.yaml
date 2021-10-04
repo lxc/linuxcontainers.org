@@ -14,6 +14,7 @@ content: |-
 
   The full list of commits is available below:
 
+  [details="Detailed changelog"]
    - lxcfs: rework argument parsing
    - lxcfs: remove obsolete logging
    - bindings: introduce lxcfs_has_opt() helper
@@ -23,6 +24,7 @@ content: |-
    - cgroup_fuse: replace potentially problematic terminology
    - lxcfs: handle libfuse2 vs libfuse3
    - lxcfs: handle libfuse2 vs libfuse3
+  [/details]
 
   ### Support and upgrade
   The LXCFS 4.0 branch is supported until June 2025.

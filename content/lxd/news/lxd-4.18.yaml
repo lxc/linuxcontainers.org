@@ -196,6 +196,7 @@ content: |-
   ### Complete changelog
   Here is a complete list of all changes in this release:
 
+  [details="Full commit list"]
    - global: Disable the completion command
    - lxd/instance/lxc: Rework raw.lxc handling
    - lxd/storage/zfs: Fix bad key name
@@ -469,6 +470,7 @@ content: |-
    - lxd/api/cluster: Adds mutex to clusterNodesPost to prevent concurrent requests creating duplicates
    - gomod: Update dependencies
    - i18n: Update translations from weblate
+  [/details]
 
   ### Try it for yourself
   This new LXD release is already available for you to try on our [demo service](https://linuxcontainers.org/lxd/try-it/).

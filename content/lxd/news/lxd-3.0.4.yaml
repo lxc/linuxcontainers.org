@@ -16,6 +16,7 @@ content: |-
 
   ### Bugfixes
 
+  [details="Long list of commits"]
    - fix newline error in ja.po
    - test: Support AppArmor policy cache directory
    - lxd: Fix AppArmor cache policy version check
@@ -431,6 +432,7 @@ content: |-
    - lxd/containers: Fix cleanupHostVethDevices logic
    - lxd/storage/ceph: Fix bad cherry-pick from master
    - shared/termios: Fix port to sys/unix
+  [/details]
 
 
   ### Support and upgrade

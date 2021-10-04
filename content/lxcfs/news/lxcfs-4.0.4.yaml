@@ -16,6 +16,7 @@ content: |-
 
   The full list of commits is available below:
 
+  [details="Detailed changelog"]
    - proc_fuse: silence error when we find no memlimit
    - sysfs: cpuinfo: show cgroup cpuset value
    - sysfs_fuse: remove logically dead code
@@ -64,6 +65,7 @@ content: |-
    - proc_cpuview: fix max_cpu_count()
    - proc_cpuview: cleanup cpuview_proc_stat()
    - proc_cpuview: cleanup cpuview_init_head()
+  [/details]
 
   ### Support and upgrade
   The LXCFS 4.0 branch is supported until June 2025.

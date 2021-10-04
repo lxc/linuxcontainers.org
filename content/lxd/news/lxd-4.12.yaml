@@ -102,6 +102,7 @@ content: |-
   ### Complete changelog
   Here is a complete list of all changes in this release:
 
+  [details="Full commit list"]
    - containers: simplify wstatus.Close() logic in Exec()
    - containers: reap zombies on attach failure
    - seccomp: block openat2()
@@ -488,6 +489,7 @@ content: |-
    - lxd: Support for restricted.cluster.target
    - api: projects_restricted_cluster_target
    - doc/projects: Add restricted.cluster.target
+  [/details]
 
   ### Try it for yourself
   This new LXD release is already available for you to try on our [demo service](https://linuxcontainers.org/lxd/try-it/).

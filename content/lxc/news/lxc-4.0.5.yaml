@@ -16,6 +16,7 @@ content: |-
 
   The full list of commits is available below:
 
+  [details="Detailed changelog"]
    - terminal: safely allocate pts devices from inside the container
    - macro: define TIOCGPTPEER if missing
    - conf: use openat() instead of open_tree()
@@ -60,6 +61,7 @@ content: |-
    - start: improve devpts fd sending
    - conf: always send response to parent waiting for devptfs_fd
    - conf: account for early return when sending devpts fd
+  [/details]
 
   ### Support and upgrade
   The LXC 4.0 branch is supported until June 2025.

@@ -13,6 +13,7 @@ content: |-
 
   The full list of commits is available below:
 
+  [details="Detailed changelog"]
    - Advertise the (classic) snap package in the README
    - Fix link to examples dir
    - sources/oracle: Add support for Oracle Linux 8
@@ -135,6 +136,7 @@ content: |-
    - sources/apertis: Fix tests
    - doc/building: Document --vm flag
    - doc/generators: Add fstab
+  [/details]
 
   ### Downloads
 

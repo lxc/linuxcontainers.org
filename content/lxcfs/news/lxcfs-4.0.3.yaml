@@ -16,6 +16,7 @@ content: |-
 
   The full list of commits is available below:
 
+  [details="Detailed changelog"]
    - Include `:` in matching of lines in /proc/meminfo
    - relax init pid store locking a bit
    - travis: enable coverity integration
@@ -35,6 +36,7 @@ content: |-
    - cgroups: simplify cgroup_walkup_to_root()
    - proc_fuse: improve swap calculation
 
+  [/details]
 
   ### Support and upgrade
   The LXCFS 4.0 branch is supported until June 2025.

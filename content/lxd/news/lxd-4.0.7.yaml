@@ -26,6 +26,7 @@ content: |-
 
   The full list of commits is available below:
 
+  [details="Detailed changelog"]
    - lxd/networks/utils: Log forkdns refresh task starting in networkUpdateForkdnsServersTask
    - lxd/db/node: Adds certificates table to local database
    - lxd/db/certificates: Adds GetCertificates function
@@ -892,6 +893,7 @@ content: |-
    - i18n: Update translation templates
    - lxd/device: Fix duplicate MAC test
    - tests: Fix cluster networking test
+  [/details]
 
   ### Try it for yourself
   Try the latest LXD release on our [demo service](https://linuxcontainers.org/lxd/try-it/).

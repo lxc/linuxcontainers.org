@@ -23,6 +23,7 @@ content: |-
 
   The full list of commits is available below:
 
+  [details="Detailed changelog"]
    - main_checkfeature: remove logging failed shiftfs mounts
    - seccomp: log errors to convert unix connection to file
    - unixfd: improve SCM_RIGHTs file descriptor retrieval
@@ -509,6 +510,7 @@ content: |-
    - doc/instances: usb and gpu are available in VMs
    - doc/instances: Add missing header in usb device
    - lxd/storage/volumes: forwardedResponseIfVolumeIsRemote projectName argument usage
+  [/details]
 
   ### Try it for yourself
   This new LXD release is already available for you to try on our [demo service](https://linuxcontainers.org/lxd/try-it/).

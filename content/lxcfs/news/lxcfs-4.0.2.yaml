@@ -15,12 +15,14 @@ content: |-
 
   The full list of commits is available below:
 
+  [details="Detailed changelog"]
    - proc_fuse: improve /proc/meminfo
    - proc_fuse: memory virtualization improvements
    - proc_fuse: improve /proc/uptime virtualization
    - tree-wide: add and use syscall_numbers.h
    - proc_fuse: fix swap calculations
    - tests: Handle different lib paths
+  [/details]
 
   ### Support and upgrade
   The LXCFS 4.0 branch is supported until June 2025.

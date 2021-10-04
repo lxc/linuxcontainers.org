@@ -20,6 +20,7 @@ content: |-
 
   The full list of commits is available below:
 
+  [details="Detailed changelog"]
    - commands: fix check for seccomp notify support
    - configure: skip libseccomp tests if it is disabled
    - conf: fix containers retaining CAP_NET_ADMIN
@@ -813,6 +814,7 @@ content: |-
    - attach_options: unbreak header
    - conf: add personality_t
    - attach: introduce explicit personality macro
+  [/details]
 
   ### Support and upgrade
   The LXC 4.0 branch is supported until June 2025.

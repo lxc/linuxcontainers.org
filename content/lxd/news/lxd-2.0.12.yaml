@@ -20,6 +20,7 @@ content: |-
 
   The full list of commits is available below:
 
+  [details="Detailed changelog"]
    - Fix file transfers to/from stdin/stdout in snap
    - If running as root in the snap, use /proc/1/root
    - Fix failure due to bind-mount through /proc
@@ -267,6 +268,7 @@ content: |-
    - lxd/util: Add missing import
    - travis: Sync with current
    - Release LXD 2.0.12
+  [/details]
 
   ### Try it for yourself
   This new LXD release is already available for you to try on our [demo service](https://linuxcontainers.org/lxd/try-it/).

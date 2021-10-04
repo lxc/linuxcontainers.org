@@ -91,6 +91,7 @@ content: |-
   ### Complete changelog
   Here is a complete list of all changes in this release:
 
+  [details="Full commit list"]
    - lxd/storage/zfs: Fix usage calculation
    - Add go 1.14.x check
    - lxd: Cleanup error messages
@@ -379,6 +380,7 @@ content: |-
    - shared: Drop Pipe function
    - lxd/containers: Add configfs and tracefs
    - btrfs quota to simulate total disk size
+  [/details]
 
 
   ### Try it for yourself

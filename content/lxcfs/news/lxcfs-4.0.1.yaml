@@ -21,6 +21,7 @@ content: |-
 
   The full list of commits is available below:
 
+  [details="Detailed changelog"]
    - proc_cpuview: add minimal support for unified cgroup layout
    - proc_fuse: fix meminfo with unified cgroup layout
    - configure: add -Wvla and -std=gnu11
@@ -59,6 +60,7 @@ content: |-
    - cgroup_utils: remove dot_or_empty()
    - tests: Silence build output
    - cgroup_fuse: actually make asz check mean something
+  [/details]
 
   ### Support and upgrade
   The LXCFS 4.0 branch is supported until June 2025.

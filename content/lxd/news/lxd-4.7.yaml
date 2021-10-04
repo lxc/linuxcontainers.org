@@ -122,6 +122,7 @@ content: |-
   ### Complete changelog
   Here is a complete list of all changes in this release:
 
+  [details="Full commit list"]
    - lxd/cluster: Changing "no heartbeat" language in membership.go "no heartbeat since <countup>" changed to "no heartbeat for <countup>"
    - lxd/apparmor: Allow unix sockets binding
    - doc/server: Fix escaping
@@ -499,6 +500,7 @@ content: |-
    - lxd/network/driver/ovn: Adds ipv4.nat and ipv6.nat support
    - lxd/patches: Adds patchNetworkOVNEnableNAT patch to enable NAT on OVN networks
    - i18n: Update translations from weblate
+  [/details]
 
   ### Try it for yourself
   This new LXD release is already available for you to try on our [demo service](https://linuxcontainers.org/lxd/try-it/).

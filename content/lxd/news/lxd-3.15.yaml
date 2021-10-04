@@ -178,6 +178,7 @@ content: |-
   **NOTE**: This version of the resources API isn't compatible with the previous one. The data structures had to change to properly handle more complex CPU topologies (like AMD Epyc) and couldn't be done in a properly backward compatible way. As a result, the command line client will detect the `resources_v2` API and fail for servers which do not support it.
 
 
+  [details="Lengthy example output"]
       root@athos:~# lxc info --resources
       CPUs (x86_64):
         Socket 0:
@@ -783,6 +784,7 @@ content: |-
               Device: 8:137
               Read-Only: false
               Size: 8.39MB
+  [/details]
 
 
   #### Control over uid, gid and cwd during command execution
