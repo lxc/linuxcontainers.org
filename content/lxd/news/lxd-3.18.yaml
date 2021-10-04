@@ -214,7 +214,7 @@ content: |-
   This feature will soon be used as the basis for two new roles:
 
   ##### eventhub
-  Cluster members with this role will be receiving events from other cluster members and synchronise events with other event hubs. This will replace the current event handling approach of having every cluster member notify every other cluster member, reducing bandwidth and CPU usage when sending events.
+  Cluster members with this role will be receiving events from other cluster members and synchronize events with other event hubs. This will replace the current event handling approach of having every cluster member notify every other cluster member, reducing bandwidth and CPU usage when sending events.
 
   ##### database_standby
   Cluster members with this role will be receiving the live database stream, similar to normal database members. The difference is that those will not be voting members in the raft consensus, meaning that such members can be added without increasing the time needed for a database transaction to be committed.
