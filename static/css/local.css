@@ -136,6 +136,7 @@ pre {
   margin-top: .5rem;
   overflow: auto;
   max-height: 50rem;
+  white-space: pre;
 }
 
 /* prevent line breaks in code blocks */
