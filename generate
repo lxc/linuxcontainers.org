@@ -470,7 +470,7 @@ def gen_page(entry, override, prefix, **variables):
     elif item["generator"] == "news":
         # Get the prefix
         with open(content_path(item['meta']['input']), "r") as fd:
-            content = fd.read()
+            full_content = fd.read()
 
         # Load all articles
         articles = []
@@ -487,8 +487,17 @@ def gen_page(entry, override, prefix, **variables):
         articles = sorted(articles, key=lambda article: article["date"],
                           reverse=True)
 
+        # Determine the news output directory
+        news_out_path = os.path.dirname(output_path).lstrip("/")
+
+        # Keep count of the articles on the index page
+        article_count = 0
+
         # Generate the page
         for article in articles:
+
+            article_count += 1
+
             date = datetime.datetime.strptime(article["date"],
                                               "%Y/%m/%d %H:%M")
 
@@ -497,20 +506,53 @@ def gen_page(entry, override, prefix, **variables):
             else:
                 suffix = ["st", "nd", "rd"][date.day % 10 - 1]
 
+            article_date = date.strftime("%%-d%s of %%B %%Y" % suffix)
+
+            # Compose the title
             title = article["title"]
             if "origin" in article:
                 title = "<a href=\"%s\">%s</a>" % (article["origin"], title)
 
-            content += "\n\n\n## %s \n" \
-                       "<span class=\"text-muted\">%s</span>\n" % \
-                (title, date.strftime("%%-d%s of %%B %%Y" % suffix))
+            article_title = "\n\n\n## %s \n" \
+                "<span class=\"text-muted\">%s</span>\n" % \
+                (title, article_date)
 
-            content += article["content"]
+            # Compose the content
+            article_content = "[TOC]\n" + article_title + article["content"]
 
-        with open("/tmp/test.md", "w+") as fd:
-            fd.write(content)
+            # Get the file name and path
+            article_filename = date.strftime("%Y_%m_%d_%H_%M")+".html"
+            article_path = "%s/%s" % (news_out_path, article_filename)
 
-        content = md2html(content, item['meta'])
+            # Generate an output file for every news article
+            template = env.get_template(template)
+            with open(article_path, "w+") as fd:
+                fd.write(
+                    template.render(page_path=item['path'],
+                                    page_raw_path=page_raw_path,
+                                    page_title=item['title'],
+                                    page_menu=item['menu'] if "menu" in item
+                                    else None,
+                                    content=md2html(
+                                        "[%s](index.html)\n\n%s" %
+                                        (item['meta']['str_back'],
+                                         article_content),
+                                        item['meta']),
+                                    **variables))
+
+            # Collect the first five articles on the index page and add
+            # links to the rest
+            if article_count <= 5:
+                full_content += article_content
+            elif article_count == 6:
+                full_content += "\n\n\n## %s \n" % item['meta']['str_older']
+                full_content += "- [%s](%s)\n" % (article_date,
+                                                  article_filename)
+            else:
+                full_content += "- [%s](%s)\n" % (article_date,
+                                                  article_filename)
+
+        content = md2html(full_content, item['meta'])
     else:
         raise Exception("Unknown generator: %s" % item["generator"])
 
