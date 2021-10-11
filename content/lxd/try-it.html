@@ -62,10 +62,6 @@
               <th>Remote LXD</th>
               <td>lxc remote add tryit <span class="tryit_container_ip"></span> --password=<span class="tryit_container_password"></span></td>
             </tr>
-            <tr id="tryit_clock">
-              <th>Remaining time</th>
-              <td><span class="minutes"></span> minutes, <span class="seconds"></span> seconds</td>
-            </tr>
           </table>
         </div>
       </div>
@@ -374,7 +370,7 @@ lxc image delete clean-ubuntu</pre>
     <hr/>
     <div class="p-notification" id="tryit_console_panel">
       <div class="p-notification__response">
-        <h2 class="p-heading--four">Terminal</h2>
+        <h2 class="p-heading--four">Terminal (<span class="minutes"></span> minutes, <span class="seconds"></span> seconds remaining)</h2>
         <div style="padding-right: 1rem; overflow: auto; background-color: #000;">
           <div id="tryit_console" style="background-color:black;"></div>
         </div>

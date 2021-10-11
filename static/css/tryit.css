@@ -17,6 +17,18 @@ div#tryit_console_panel {
     margin-left: auto;
 }
 
+div#tryit_info_panel th {
+    width: 15em;
+}
+
+div#tryit_info_panel table {
+    margin-bottom: 0;
+}
+
 .p-notification__response {
-    width:100%;
+    width: 100%;
+}
+
+div#tryit_examples_panel p {
+    max-width: 100%;
 }
