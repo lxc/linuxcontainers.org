@@ -32,3 +32,17 @@ div#tryit_info_panel table {
 div#tryit_examples_panel p {
     max-width: 100%;
 }
+
+.tryit_progress_bar {
+    margin-top: 1em;
+}
+
+#tryit_progress button {
+    margin-right: 0.2em;
+}
+
+@media (max-width: 500px) {
+    .tryit_progress_bar {
+        display: none;
+    }
+}
