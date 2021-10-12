@@ -193,7 +193,7 @@ lxc info alpine</pre>
                   <pre>lxc launch images:ubuntu/20.04 limited -c limits.cpu=1 -c limits.memory=192MiB</pre>
                 <li>Check the current configuration and compare it to the configuration of the first (unlimited) container:
                   <pre>lxc config show limited
-                    lxc config show first</pre>
+lxc config show first</pre>
                 </li>
                 <li>Check the amount of free and used memory on the parent system and on the two containers:
                   <pre>free -m
@@ -255,8 +255,8 @@ cat /etc/*release
 exit</pre>
                 <li>Instead of logging on to the container and running commands there, you can run commands directly from the host. For example, you can install a command line tool on the container and run it:
                   <pre>lxc exec first -- apt-get update
-                    lxc exec first -- apt-get install sl -y
-                    lxc exec first -- /usr/games/sl</pre>
+lxc exec first -- apt-get install sl -y
+lxc exec first -- /usr/games/sl</pre>
                 </li>
               </ol>
             </p>
