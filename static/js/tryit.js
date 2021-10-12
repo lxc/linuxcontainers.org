@@ -230,7 +230,6 @@ $(document).ready(function() {
 
                 $('#tryit_status_panel').css("display", "none");
                 $('#tryit_start_panel').css("display", "none");
-                $('#tryit_info_panel').css("display", "inherit");
                 $('#tryit_console_row').css("display", "inherit");
                 $('#tryit_examples_panel').css("display", "inherit");
                 $('footer.p-footer').css("display", "none");
@@ -300,7 +299,6 @@ $(document).ready(function() {
 
             $('#tryit_status_panel').css("display", "none");
             $('#tryit_start_panel').css("display", "none");
-            $('#tryit_info_panel').css("display", "inherit");
             $('#tryit_console_row').css("display", "inherit");
             $('#tryit_examples_panel').css("display", "inherit");
             $('footer.p-footer').css("display", "none");
