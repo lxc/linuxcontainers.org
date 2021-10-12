@@ -2,7 +2,10 @@
 <script src="/static/js/getEmPixels.js" type="text/javascript"></script>
 <script src="/static/js/term.js" type="text/javascript"></script>
 <script src="/static/js/tryit.js" type="text/javascript"></script>
-<div class="p-strip is-shallow">
+
+<link href="/static/css/tryit.css" rel="stylesheet"/>
+
+<div class="p-strip is-shallow" id="tryit-instructions">
   <div class="row">
     <div class="col-12">
       <div class="p-notification--information" id="tryit_status_panel" style="display:none">
@@ -55,48 +58,26 @@
         </div>
       </div>
 
-      <div class="p-notification--information" id="tryit_info_panel" style="display:none">
-        <div class="p-notification__response">
-          <h2 class="p-heading--four">コンテナの情報 <!-- Container information --></h2>
-          <table class="table">
-            <tr id="tryit_lxd_row">
-              <th>LXD</th>
-              <td>lxc remote add tryit <span class="tryit_container_ip"></span> --password=<span class="tryit_container_password"></span></td>
-            </tr>
-            <tr id="tryit_clock">
-              <th>残り時間 <!-- Time --></th>
-              <td><span class="minutes"></span> 分<!-- minutes, --> <span class="seconds"></span> 秒<!-- seconds --></td>
-            </tr>
-          </table>
-        </div>
-      </div>
-
-      <div class="p-notification" id="tryit_console_panel" style="display:none">
-        <div class="p-notification__response">
-          <h2 class="p-heading--four">コンソール <!-- Console --></h2>
-          <div style="padding-right: 1rem; overflow: auto; background-color: #000;">
-            <div id="tryit_console" style="background-color:black;"></div>
-          </div>
-          <button class="p-button" id="tryit_console_reconnect" type="button" style="display:none">再接続 <!-- Reconnect --></button>
-        </div>
-      </div>
 
       <div class="p-notification--information" id="tryit_examples_panel" style="display:none">
         <div class="p-notification__response">
           <span class="p-notification__status js-collapsable">ステップバイステップでの入門</span> <!-- Step by step introduction -->
-          <ul class="nav nav-tabs" style="display:none">
-            <li class="active"><a href="#introduction" data-toggle="tab">Introduction</a></li>
-            <li><a href="#first-container" data-toggle="tab">Your first container</a></li>
-            <li><a href="#limiting-resources" data-toggle="tab">Limiting resources</a></li>
-            <li><a href="#snapshots" data-toggle="tab">Snapshots</a></li>
-            <li><a href="#creating-images" data-toggle="tab">Creating images</a></li>
-            <li><a href="#container-files" data-toggle="tab">Accessing files from the container</a></li>
-            <li><a href="#image-server" data-toggle="tab">Use a remote image server</a></li>
-            <li><a href="#remote-lxd" data-toggle="tab">Interact with remote LXD servers</a></li>
-            <li><a href="#conclusion" data-toggle="tab">Conclusion</a></li>
-          </ul>
+
+          <ol id="tryit_navigation" style="display:none">
+            <li name="introduction">はじめに</li>
+            <li name="first-container">最初のコンテナ</li>
+            <li name="limiting-resources">リソース制限</li>
+            <li name="snapshots">スナップショット</li>
+            <li name="creating-images">イメージの作成</li>
+            <li name="container-files">コンテナのファイルへのアクセス</li>
+            <li name="image-server">リモートのイメージサーバの利用</li>
+            <li name="remote-lxd">リモートの LXD サーバの操作</li>
+            <li name="conclusion">さいごに</li>
+          </ol>
+
           <div class="tab-content" id="introduction">
-            <h3>1. はじめに <!-- Introduction --></h3>
+            <div class="tryit_progress_bar"></div>
+            <h3></h3>
             <p>
               <!-- You are now root inside a LXD container with a nested LXD installed inside it. -->
               今、あなたは LXD コンテナ内に root としてログインしています。このコンテナには LXD がネストしてインストールされています。
@@ -120,14 +101,15 @@
                   <a href="#" class="p-button is--disabled" aria-disabled="true">Previous</a>
                 </li>
                 <li class="p-inline-list__item">
-                  <a href="#first-container" class="p-button js-tab-button tabNext">Next</a>
+                  <a href="#first-container" class="p-button js-tab-button tabNext tryit_goto">Next</a>
                 </li>
               </ul>
             </nav>
           </div>
 
           <div class="tab-content" id="first-container">
-            <h3>2. 最初のコンテナ <!-- Your first container --></h3>
+            <div class="tryit_progress_bar"></div>
+            <h3></h3>
             <p>
               <!-- LXD is image based, however by default no images are loaded into the image store as can be seen with: -->
               LXD はイメージベースです。しかし、デフォルトでは以下のコマンドの結果のように、イメージはロードされていません: <pre>lxc image list</pre>
@@ -171,17 +153,18 @@ lxc config show first</pre>
             <nav aria-label="...">
               <ul class="p-inline-list u-align--center">
                 <li class="p-inline-list__item">
-                  <a href="#introduction" class="p-button js-tab-button tabPrevious">Previous</a>
+                  <a href="#introduction" class="p-button js-tab-button tabPrevious tryit_goto">Previous</a>
                 </li>
                 <li class="p-inline-list__item">
-                  <a href="#limiting-resources" class="p-button js-tab-button tabNext">Next</a>
+                  <a href="#limiting-resources" class="p-button js-tab-button tabNext tryit_goto">Next</a>
                 </li>
               </ul>
             </nav>
           </div>
 
           <div class="tab-content" id="limiting-resources">
-            <h3>3. リソース制限<!-- Limiting resources --></h3>
+            <div class="tryit_progress_bar"></div>
+            <h3></h3>
             <p>
               <!-- By default your container comes with no resource limitation and inherits from its parent environment. You can confirm it with: -->
               デフォルトでは、あなたの作成したコンテナはリソース制限がなく、自身の親環境のリソースをそのまま引き継いでいます。これは以下のように確認できます。
@@ -204,17 +187,18 @@ lxc exec first -- free -m</pre>
             <nav aria-label="...">
               <ul class="p-inline-list u-align--center">
                 <li class="p-inline-list__item">
-                  <a href="#first-container" class="p-button js-tab-button tabPrevious">Previous</a>
+                  <a href="#first-container" class="p-button js-tab-button tabPrevious tryit_goto">Previous</a>
                 </li>
                 <li class="p-inline-list__item">
-                  <a href="#snapshots" class="p-button js-tab-button tabNext">Next</a>
+                  <a href="#snapshots" class="p-button js-tab-button tabNext tryit_goto">Next</a>
                 </li>
               </ul>
             </nav>
           </div>
 
           <div class="tab-content" id="snapshots">
-            <h3>4. スナップショット <!-- Snapshots --></h3>
+            <div class="tryit_progress_bar"></div>
+            <h3></h3>
             <p>
               <!-- LXD supports snapshoting and restoring container snapshots.<br />Before making a snapshot, lets do some changes to the container, for example, updating it: -->
               LXD はスナップショットの取得とコンテナのスナップショットからのリストアをサポートしています。
@@ -258,17 +242,18 @@ lxc exec first -- /usr/games/sl</pre>
             <nav aria-label="...">
               <ul class="p-inline-list u-align--center">
                 <li class="p-inline-list__item">
-                  <a href="#limiting-resources" class="p-button js-tab-button tabPrevious">Previous</a>
+                  <a href="#limiting-resources" class="p-button js-tab-button tabPrevious tryit_goto">Previous</a>
                 </li>
                 <li class="p-inline-list__item">
-                  <a href="#creating-images" class="p-button js-tab-button tabNext">Next</a>
+                  <a href="#creating-images" class="p-button js-tab-button tabNext tryit_goto">Next</a>
                 </li>
               </ul>
             </nav>
           </div>
 
           <div class="tab-content" id="creating-images">
-            <h3>5. イメージの作成 <!-- Creating images --></h3>
+            <div class="tryit_progress_bar"></div>
+            <h3></h3>
             <p>
               <!-- As your probably noticed earlier, LXD is image based, that is, all containers must be created from either a copy of an existing container or from an image. -->
               すでにお分かりのように、LXD はイメージベースです。つまり、すべてのコンテナはイメージか既存のコンテナのコピーのどちらかから作られます。
@@ -301,17 +286,18 @@ lxc delete first</pre>
             <nav aria-label="...">
               <ul class="p-inline-list u-align--center">
                 <li class="p-inline-list__item">
-                  <a href="#snapshots" class="p-button js-tab-button tabPrevious">Previous</a>
+                  <a href="#snapshots" class="p-button js-tab-button tabPrevious tryit_goto">Previous</a>
                 </li>
                 <li class="p-inline-list__item">
-                  <a href="#container-files" class="p-button js-tab-button tabNext">Next</a>
+                  <a href="#container-files" class="p-button js-tab-button tabNext tryit_goto">Next</a>
                 </li>
               </ul>
             </nav>
           </div>
 
           <div class="tab-content" id="container-files">
-            <h3>6. コンテナのファイルへのアクセス <!-- Accessing files from the container --></h3>
+            <div class="tryit_progress_bar"></div>
+            <h3></h3>
             <p>
               <!-- To pull a file from the container you can use the "lxc file pull" command: -->
               コンテナからファイルを取得するには、"lxc file pull" コマンドが使えます。
@@ -345,17 +331,18 @@ lxc delete first</pre>
             <nav aria-label="...">
               <ul class="p-inline-list u-align--center">
                 <li class="p-inline-list__item">
-                  <a href="#creating-images" class="p-button js-tab-button tabPrevious">Previous</a>
+                  <a href="#creating-images" class="p-button js-tab-button tabPrevious tryit_goto">Previous</a>
                 </li>
                 <li class="p-inline-list__item">
-                  <a href="#image-server" class="p-button js-tab-button tabNext">Next</a>
+                  <a href="#image-server" class="p-button js-tab-button tabNext tryit_goto">Next</a>
                 </li>
               </ul>
             </nav>
           </div>
 
           <div class="tab-content" id="image-server">
-            <h3>7. リモートのイメージサーバの利用 <!-- Use a remote image server --></h3>
+            <div class="tryit_progress_bar"></div>
+            <h3></h3>
             <p>
               <!-- The lxc client tool supports multiple "remotes", those remotes can be read-only image servers or other LXD hosts. -->
               クライアントツール lxc からは複数の "リモートホスト" が使えます。これらのリモートホストは、読み取り専用のイメージサーバか、他の LXD ホストのどちらかです。
@@ -404,17 +391,18 @@ lxc delete first</pre>
             <nav aria-label="...">
               <ul class="p-inline-list u-align--center">
                 <li class="p-inline-list__item">
-                  <a href="#container-files" class="p-button js-tab-button tabPrevious">Previous</a>
+                  <a href="#container-files" class="p-button js-tab-button tabPrevious tryit_goto">Previous</a>
                 </li>
                 <li class="p-inline-list__item">
-                  <a href="#remote-lxd" class="p-button js-tab-button tabNext">Next</a>
+                  <a href="#remote-lxd" class="p-button js-tab-button tabNext tryit_goto">Next</a>
                 </li>
               </ul>
             </nav>
           </div>
 
           <div class="tab-content" id="remote-lxd">
-            <h3>8. リモートの LXD サーバの操作 <!-- Interact with remote LXD servers --></h3>
+            <div class="tryit_progress_bar"></div>
+            <h3></h3>
             <p>
               <!-- For this step, you'll need a second demo session, so open a new one <a href="/lxd/try-it/" target="_blank">here</a> -->
               このステップでは、2 つ目のデモセッションが必要となります。そこで新しいセッションを <a href="/lxd/try-it/" target="_blank">ここから</a> 開いてください。
@@ -486,17 +474,18 @@ lxc image delete clean-ubuntu</pre>
             <nav aria-label="...">
               <ul class="p-inline-list u-align--center">
                 <li class="p-inline-list__item">
-                  <a href="#remote-lxd" class="p-button js-tab-button tabPrevious">Previous</a>
+                  <a href="#remote-lxd" class="p-button js-tab-button tabPrevious tryit_goto">Previous</a>
                 </li>
                 <li class="p-inline-list__item">
-                  <a href="#conclusion" class="p-button js-tab-button tabNext">Next</a>
+                  <a href="#conclusion" class="p-button js-tab-button tabNext tryit_goto">Next</a>
                 </li>
               </ul>
             </nav>
           </div>
 
           <div class="tab-content" id="conclusion">
-            <h3>9. さいごに <!-- Conclusion --></h3>
+            <div class="tryit_progress_bar"></div>
+            <h3></h3>
             <p>
               <!-- We hope this gave you a good introduction to LXD, its capabilities and how easy it is to use. -->
               この入門が LXD について、LXD でできること、LXD が簡単に使えることを理解するのに役立つ良い入門となれば幸いです。
@@ -512,7 +501,7 @@ lxc image delete clean-ubuntu</pre>
             <nav aria-label="...">
               <ul class="p-inline-list u-align--center">
                 <li class="p-inline-list__item">
-                  <a href="#image-server" class="p-button js-tab-button tabPrevious">Previous</a>
+                  <a href="#image-server" class="p-button js-tab-button tabPrevious tryit_goto">Previous</a>
                 </li>
                 <li class="p-inline-list__item">
                   <a href="#conclusion" class="p-button is--disabled" aria-disabled="true">Next</a>
@@ -577,6 +566,21 @@ lxc image delete clean-ubuntu</pre>
             </button></p>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row" id="tryit_console_row" style="display:none">
+  <div class="col-12">
+    <hr/>
+    <div class="p-notification" id="tryit_console_panel">
+      <div class="p-notification__response">
+        <h2 class="p-heading--four">コンソール <!-- Console -->(<span class="minutes"></span> 分<!-- minutes, --> <span class="seconds"></span> 秒<!-- seconds -->)</h2>
+        <div style="padding-right: 1rem; overflow: auto; background-color: #000;">
+          <div id="tryit_console" style="background-color:black;"></div>
+        </div>
+        <button class="p-button" id="tryit_console_reconnect" type="button" style="display:none">再接続 <!-- Reconnect --></button>
       </div>
     </div>
   </div>
