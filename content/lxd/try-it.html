@@ -57,19 +57,22 @@
       <div class="p-notification--information" id="tryit_examples_panel" style="display:none">
         <div class="p-notification__response">
           <span class="p-notification__status js-collapsable">Step by step instructions</span>
-          <ul class="nav nav-tabs" style="display:none">
-            <li class="active"><a href="#introduction" data-toggle="tab">Introduction</a></li>
-            <li><a href="#first-containers" data-toggle="tab">Your first containers</a></li>
-            <li><a href="#inspect-containers" data-toggle="tab">Inspect the containers</a></li>
-            <li><a href="#stop-delete" data-toggle="tab">Stop and delete containers</a></li>
-            <li><a href="#instance-configuration" data-toggle="tab">Instance configuration</a></li>
-            <li><a href="#interact" data-toggle="tab">Interact with a container</a></li>
-            <li><a href="#container-files" data-toggle="tab">Accessing files from the container</a></li>
-            <li><a href="#snapshots" data-toggle="tab">Snapshots</a></li>
-            <li><a href="#conclusion" data-toggle="tab">Conclusion</a></li>
-          </ul>
+
+          <ol id="tryit_navigation" style="display:none">
+            <li name="introduction">Introduction</li>
+            <li name="first-containers">Your first containers</li>
+            <li name="inspect-containers">Inspect the containers</li>
+            <li name="stop-delete">Stop and delete containers</li>
+            <li name="instance-configuration">Instance configuration</li>
+            <li name="interact">Interact with a container</li>
+            <li name="container-files">Access files from the container</li>
+            <li name="snapshots">Snapshots</li>
+            <li name="conclusion">Conclusion</li>
+          </ol>
+
           <div class="tab-content" id="introduction">
-            <h3>Introduction</h3>
+            <div class="tryit_progress_bar"></div>
+            <h3></h3>
             <p>You are now root inside a LXD container with a nested LXD installed inside it.</p>
             <p>Initial startup can take a few seconds due to having to generate SSL keys on a rather busy system. Further commands should then be near instantaneous.</p>
             <p>To get started, follow this step-by-step tutorial that will guide you through LXD's main features. Or just poke around and discover LXD through its manpage and <code>--help</code> option!</p>
@@ -80,17 +83,18 @@
             <nav aria-label="...">
               <ul class="p-inline-list u-align--center u-no-margin--bottom">
                 <li class="p-inline-list__item">
-                  <a href="#" class="p-button is--disabled u-no-margin--bottom" aria-disabled="true">Previous</a>
+                  <a class="p-button is--disabled u-no-margin--bottom" aria-disabled="true">Previous</a>
                 </li>
                 <li class="p-inline-list__item">
-                  <a href="#first-containers" class="p-button js-tab-button tabNext u-no-margin--bottom">Next</a>
+                  <a class="p-button js-tab-button tabNext u-no-margin--bottom tryit_goto">Next</a>
                 </li>
               </ul>
             </nav>
           </div>
 
           <div class="tab-content" id="first-containers">
-            <h3>Your first containers</h3>
+            <div class="tryit_progress_bar"></div>
+            <h3></h3>
             <p>LXD is image based and can load images from different image servers. In this tutorial, we will use the <a href="https://images.linuxcontainers.org">images:</a> server.</p>
             <p>You can list all images that are available on this server with:</p>
             <pre>lxc image list images:</pre>
@@ -115,17 +119,18 @@
             <nav aria-label="...">
               <ul class="p-inline-list u-align--center u-no-margin--bottom">
                 <li class="p-inline-list__item">
-                  <a href="#introduction" class="p-button js-tab-button tabPrevious u-no-margin--bottom">Previous</a>
+                  <a class="p-button js-tab-button tabPrevious u-no-margin--bottom tryit_goto">Previous</a>
                 </li>
                 <li class="p-inline-list__item">
-                  <a href="#inspect-containers" class="p-button js-tab-button tabNext u-no-margin--bottom">Next</a>
+                  <a class="p-button js-tab-button tabNext u-no-margin--bottom tryit_goto">Next</a>
                 </li>
               </ul>
             </nav>
           </div>
 
           <div class="tab-content" id="inspect-containers">
-            <h3>Inspect the containers</h3>
+            <div class="tryit_progress_bar"></div>
+            <h3></h3>
             <p>Check the list of containers that you launched:</p>
             <pre>lxc list</pre>
             <p>You will see that all but the third container are running. This is because you created the third container by copying the first, but you didn't start it.</p>
@@ -139,17 +144,18 @@ lxc info alpine</pre>
             <nav aria-label="...">
             <ul class="p-inline-list u-align--center u-no-margin--bottom">
               <li class="p-inline-list__item">
-                <a href="#first-containers" class="p-button js-tab-button tabPrevious u-no-margin--bottom">Previous</a>
+                <a class="p-button js-tab-button tabPrevious u-no-margin--bottom tryit_goto">Previous</a>
               </li>
               <li class="p-inline-list__item">
-                <a href="#stop-delete" class="p-button js-tab-button tabNext u-no-margin--bottom">Next</a>
+                <a class="p-button js-tab-button tabNext u-no-margin--bottom tryit_goto">Next</a>
               </li>
             </ul>
           </nav>
           </div>
 
           <div class="tab-content" id="stop-delete">
-            <h3>Stop and delete containers</h3>
+            <div class="tryit_progress_bar"></div>
+            <h3></h3>
             <p>We don't need all of these containers for the remainder of the tutorial, so let's clean some of them up.
               <ol>
                 <li>Stop the second container:
@@ -168,17 +174,18 @@ lxc info alpine</pre>
             <nav aria-label="...">
             <ul class="p-inline-list u-align--center u-no-margin--bottom">
               <li class="p-inline-list__item">
-                <a href="#inspect-containers" class="p-button js-tab-button tabPrevious u-no-margin--bottom">Previous</a>
+                <a class="p-button js-tab-button tabPrevious u-no-margin--bottom tryit_goto">Previous</a>
               </li>
               <li class="p-inline-list__item">
-                <a href="#instance-configuration" class="p-button js-tab-button tabNext u-no-margin--bottom">Next</a>
+                <a class="p-button js-tab-button tabNext u-no-margin--bottom tryit_goto">Next</a>
               </li>
             </ul>
           </nav>
           </div>
 
           <div class="tab-content" id="instance-configuration">
-            <h3>Instance configuration</h3>
+            <div class="tryit_progress_bar"></div>
+            <h3></h3>
             <p>There are several limits and configuration options that you can set for your instances. See <a href="https://linuxcontainers.org/lxd/docs/master/instances">Instance configuration</a> for an overview.</p>
             <p>Let's create another container with some resource limits.
               <ol>
@@ -186,7 +193,7 @@ lxc info alpine</pre>
                   <pre>lxc launch images:ubuntu/20.04 limited -c limits.cpu=1 -c limits.memory=192MiB</pre>
                 <li>Check the current configuration and compare it to the configuration of the first (unlimited) container:
                   <pre>lxc config show limited
-lxc config show first</pre>
+                    lxc config show first</pre>
                 </li>
                 <li>Check the amount of free and used memory on the parent system and on the two containers:
                   <pre>free -m
@@ -217,140 +224,144 @@ lxc exec limited -- nproc</pre>
               </ol>
             </p>
             <nav aria-label="...">
-            <ul class="p-inline-list u-align--center u-no-margin--bottom">
-              <li class="p-inline-list__item">
-                <a href="#stop-delete" class="p-button js-tab-button tabPrevious u-no-margin--bottom">Previous</a>
-              </li>
-              <li class="p-inline-list__item">
-                <a href="#interact" class="p-button js-tab-button tabNext u-no-margin--bottom">Next</a>
-              </li>
-            </ul>
-          </nav>
-        </div>
+              <ul class="p-inline-list u-align--center u-no-margin--bottom">
+                <li class="p-inline-list__item">
+                  <a class="p-button js-tab-button tabPrevious u-no-margin--bottom tryit_goto">Previous</a>
+                </li>
+                <li class="p-inline-list__item">
+                  <a class="p-button js-tab-button tabNext u-no-margin--bottom tryit_goto">Next</a>
+                </li>
+              </ul>
+            </nav>
+          </div>
 
-        <div class="tab-content" id="interact">
-          <h3>Interact with a container</h3>
-          <p>Let's interact with your containers.
-            <ol>
-              <li>Launch an interactive shell in your container:
-                <pre>lxc exec first -- bash</pre>
-              </li>
-              <li>Enter some commands, for example, display information about the operating system:
-                <pre>cat /etc/*release</pre>
-              </li>
-              <li>Exit the interactive shell:
-                <pre>exit</pre>
-              </li>
-              <li>Repeat the steps for your alpine container:
-                <pre>lxc exec alpine -- ash
+          <div class="tab-content" id="interact">
+            <div class="tryit_progress_bar"></div>
+            <h3></h3>
+            <p>Let's interact with your containers.
+              <ol>
+                <li>Launch an interactive shell in your container:
+                  <pre>lxc exec first -- bash</pre>
+                </li>
+                <li>Enter some commands, for example, display information about the operating system:
+                  <pre>cat /etc/*release</pre>
+                </li>
+                <li>Exit the interactive shell:
+                  <pre>exit</pre>
+                </li>
+                <li>Repeat the steps for your alpine container:
+                  <pre>lxc exec alpine -- ash
 cat /etc/*release
 exit</pre>
-              <li>Instead of logging on to the container and running commands there, you can run commands directly from the host. For example, you can install a command line tool on the container and run it:
-                <pre>lxc exec first -- apt-get update
-lxc exec first -- apt-get install sl -y
-lxc exec first -- /usr/games/sl</pre>
-              </li>
-            </ol>
-          </p>
-          <nav aria-label="...">
-            <ul class="p-inline-list u-align--center u-no-margin--bottom">
-              <li class="p-inline-list__item">
-                <a href="#instance-configuration" class="p-button js-tab-button tabPrevious u-no-margin--bottom">Previous</a>
-              </li>
-              <li class="p-inline-list__item">
-                <a href="#container-files" class="p-button js-tab-button tabNext u-no-margin--bottom">Next</a>
-              </li>
-            </ul>
-          </nav>
-        </div>
-
-
-        <div class="tab-content" id="container-files">
-          <h3>Accessing files from the container</h3>
-           <p>You can access the files from your container and interact with them.
-            <ol>
-              <li>Pull a file from the container:
-                <pre>lxc file pull first/etc/hosts .</pre>
-              </li>
-              <li>Add an entry to the file:
-                <pre>echo "1.2.3.4 my-example" &gt;&gt; hosts</pre>
-              </li>
-              <li>Push the file back to the container:
-                <pre>lxc file push hosts first/etc/hosts</pre>
-              </li>
-              <li>Use the same mechanism to access log files:
-                <pre>lxc file pull first/var/log/syslog - | less
-q</pre>
-              </li>
-            </ol>
+                <li>Instead of logging on to the container and running commands there, you can run commands directly from the host. For example, you can install a command line tool on the container and run it:
+                  <pre>lxc exec first -- apt-get update
+                    lxc exec first -- apt-get install sl -y
+                    lxc exec first -- /usr/games/sl</pre>
+                </li>
+              </ol>
             </p>
-          <nav aria-label="...">
-            <ul class="p-inline-list u-align--center u-no-margin--bottom">
-              <li class="p-inline-list__item">
-                <a href="#interact" class="p-button js-tab-button tabPrevious u-no-margin--bottom">Previous</a>
-              </li>
-              <li class="p-inline-list__item">
-                <a href="#snapshots" class="p-button js-tab-button tabNext u-no-margin--bottom">Next</a>
-              </li>
-            </ul>
-          </nav>
-        </div>
+            <nav aria-label="...">
+              <ul class="p-inline-list u-align--center u-no-margin--bottom">
+                <li class="p-inline-list__item">
+                  <a class="p-button js-tab-button tabPrevious u-no-margin--bottom tryit_goto">Previous</a>
+                </li>
+                <li class="p-inline-list__item">
+                  <a class="p-button js-tab-button tabNext u-no-margin--bottom tryit_goto">Next</a>
+                </li>
+              </ul>
+            </nav>
+          </div>
 
-        <div class="tab-content" id="snapshots">
-          <h3>Snapshots</h3>
-          <p>LXD supports creating and restoring container snapshots.
-            <ol>
-              <li>Create a snapshot called "clean":
-                <pre>lxc snapshot first clean</pre>
-              </li>
-              <li>Confirm that the snapshot has been created:
-                <pre>lxc list first
+
+          <div class="tab-content" id="container-files">
+            <div class="tryit_progress_bar"></div>
+            <h3></h3>
+            <p>You can access the files from your container and interact with them.
+              <ol>
+                <li>Pull a file from the container:
+                  <pre>lxc file pull first/etc/hosts .</pre>
+                </li>
+                <li>Add an entry to the file:
+                  <pre>echo "1.2.3.4 my-example" &gt;&gt; hosts</pre>
+                </li>
+                <li>Push the file back to the container:
+                  <pre>lxc file push hosts first/etc/hosts</pre>
+                </li>
+                <li>Use the same mechanism to access log files:
+                  <pre>lxc file pull first/var/log/syslog - | less
+q</pre>
+                </li>
+              </ol>
+            </p>
+            <nav aria-label="...">
+              <ul class="p-inline-list u-align--center u-no-margin--bottom">
+                <li class="p-inline-list__item">
+                  <a class="p-button js-tab-button tabPrevious u-no-margin--bottom tryit_goto">Previous</a>
+                </li>
+                <li class="p-inline-list__item">
+                  <a class="p-button js-tab-button tabNext u-no-margin--bottom tryit_goto">Next</a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+
+          <div class="tab-content" id="snapshots">
+            <div class="tryit_progress_bar"></div>
+            <h3></h3>
+            <p>LXD supports creating and restoring container snapshots.
+              <ol>
+                <li>Create a snapshot called "clean":
+                  <pre>lxc snapshot first clean</pre>
+                </li>
+                <li>Confirm that the snapshot has been created:
+                  <pre>lxc list first
 lxc info first</pre>
-                <code>lxc list</code> shows the number of snapshots. <code>lxc info</code> displays information about each snapshot.
-              </li>
-              <li>Break the container:
-                <pre>lxc exec first -- rm -Rf /etc /usr</pre>
-              </li>
-              <li>Confirm the breakage:
-                <pre>lxc exec first -- bash</pre>
-                Note that you do not get a shell, because you deleted the <code>bash</code> command.
-              </li>
-              <li>Restore the container to the snapshotted state:
-                <pre>lxc restore first clean</pre>
-              </li>
-              <li>Confirm that everything is back to normal:
-                <pre>lxc exec first -- bash
+                  <code>lxc list</code> shows the number of snapshots. <code>lxc info</code> displays information about each snapshot.
+                </li>
+                <li>Break the container:
+                  <pre>lxc exec first -- rm -Rf /etc /usr</pre>
+                </li>
+                <li>Confirm the breakage:
+                  <pre>lxc exec first -- bash</pre>
+                  Note that you do not get a shell, because you deleted the <code>bash</code> command.
+                </li>
+                <li>Restore the container to the snapshotted state:
+                  <pre>lxc restore first clean</pre>
+                </li>
+                <li>Confirm that everything is back to normal:
+                  <pre>lxc exec first -- bash
 exit</pre>
-              </li>
-              <li>Delete the snapshot:
-                <pre>lxc delete first/clean</pre>
-              </li>
-            </ol>
-          </p>
-          <nav aria-label="...">
-            <ul class="p-inline-list u-align--center u-no-margin--bottom">
-              <li class="p-inline-list__item">
-                <a href="#container-files" class="p-button js-tab-button tabPrevious u-no-margin--bottom">Previous</a>
-              </li>
-              <li class="p-inline-list__item">
-                <a href="#conclusion" class="p-button js-tab-button tabNext u-no-margin--bottom">Next</a>
-              </li>
-            </ul>
-          </nav>
-        </div>
+                </li>
+                <li>Delete the snapshot:
+                  <pre>lxc delete first/clean</pre>
+                </li>
+              </ol>
+            </p>
+            <nav aria-label="...">
+              <ul class="p-inline-list u-align--center u-no-margin--bottom">
+                <li class="p-inline-list__item">
+                  <a class="p-button js-tab-button tabPrevious u-no-margin--bottom tryit_goto">Previous</a>
+                </li>
+                <li class="p-inline-list__item">
+                  <a class="p-button js-tab-button tabNext u-no-margin--bottom tryit_goto">Next</a>
+                </li>
+              </ul>
+            </nav>
+          </div>
 
-        <div class="tab-content" id="conclusion">
-          <h3>Conclusion</h3>
+          <div class="tab-content" id="conclusion">
+            <div class="tryit_progress_bar"></div>
+            <h3></h3>
             <p>We hope this gave you a good introduction to LXD, its capabilities and how easy it is to use.</p>
             <p>You're welcome to use the demo service as long as you want to try LXD and play with the latest features.</p>
             <p>Enjoy!</p>
             <nav aria-label="...">
               <ul class="p-inline-list u-align--center u-no-margin--bottom">
                 <li class="p-inline-list__item">
-                  <a href="#snapshots" class="p-button js-tab-button tabPrevious u-no-margin--bottom">Previous</a>
+                  <a class="p-button js-tab-button tabPrevious u-no-margin--bottom tryit_goto">Previous</a>
                 </li>
                 <li class="p-inline-list__item">
-                  <a href="#conclusion" class="p-button is--disabled u-no-margin--bottom" aria-disabled="true">Next</a>
+                  <a class="p-button is--disabled u-no-margin--bottom" aria-disabled="true">Next</a>
                 </li>
               </ul>
             </nav>

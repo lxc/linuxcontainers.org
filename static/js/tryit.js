@@ -262,6 +262,7 @@ $(document).ready(function() {
         $('#tryit_terms_panel').css("display", "none");
         $('#tryit_accept').css("display", "none");
         $('#tryit_progress').css("display", "inherit");
+        highlightProgress(getIDFromIndex(0));
 
         $.ajax({
             url: "https://"+tryit_server+"/1.0/start?terms="+tryit_terms_hash
@@ -359,4 +360,94 @@ $(document).ready(function() {
         $('#tryit_feedback').css("display", "none");
         feedback = true;
     });
+
+    // The following functions deal with the progress bar and navigation.
+    // The navigation is defined in #tryit_navigation.
+    // Index: The index number of the li in #tryit_navigation (starting from 0).
+    // ID: The name of the li in #tryit_navigation, which must be identical to
+    //     the id on the tab-content.
+
+    function getIDFromIndex(index) {
+        return $('#tryit_navigation li:eq('+index+')')[0].getAttribute("name");
+    };
+
+    function getIndexFromID(id) {
+        return $('#tryit_navigation li').index($('#tryit_navigation li[name="'+id+'"]'));
+    };
+
+    // Highlight the progress bar button for the given step.
+    function highlightProgress(theID) {
+         $('#tryit_progress button').each(function() {
+            if (this.id === "nav-"+theID) {
+                this.classList.add('p-button--brand');
+            }
+            else  {this.classList.remove('p-button--brand');};
+        });
+    }
+
+    // Create the progress bar buttons (they are included on every tab-content).
+    function createProgressBar() {
+        var html = "<div class='p-tab-buttons is-dense'>\n\
+             <div class='p-tab-buttons__list' id='tryit_progress'>";
+
+        $('#tryit_navigation li').each(function(index) {
+            html += "<button class='p-tab-buttons__button' id='nav-"+this.getAttribute("name")+"'>";
+            html += (index+1)+"</button>";
+        });
+
+        return html+"</div></div>";
+    };
+
+    // Generate the heading containing the navigation number (Index+1) and
+    // the title from #tryit_navigation.
+    function createHeading(element) {
+        var theParent = $(element).parents("div.tab-content")[0];
+        var theIndex = getIndexFromID(theParent.id);
+        var html = (theIndex+1) +": ";
+        html += $($('#tryit_navigation li:eq('+theIndex+')')[0]).text();
+        return html;
+    };
+
+    // Include generated content.
+    $('.tryit_progress_bar').html(createProgressBar());
+    $('div.tab-content h3').each(function() {
+        $(this).html(createHeading(this));
+    });
+
+    // Action for the buttons in the progress bar (go to the new ID and
+    // highlight its button).
+    $('#tryit_progress button').click(function() {
+        realID = this.id.replace("nav-","")
+
+        window.location.href='#'+realID;
+
+        highlightProgress(realID);
+    });
+
+    // Action for the "Next" and "Previous" buttons (go to the respective
+    // new ID and highlight its button).
+    $('.tryit_goto').click(function() {
+
+        theParent = $(this).parents("div.tab-content")[0];
+
+        thisIndex = getIndexFromID(theParent.id);
+
+        var nextIndex = -1;
+        if ($(this).text() === "Next") {
+            nextIndex = thisIndex + 1;
+            if (nextIndex >= $('#tryit_navigation li').length) { nextIndex = 0; };
+        }
+        else if ($(this).text() === "Previous") {
+            nextIndex = thisIndex - 1;
+            if (nextIndex < 0) { nextIndex = 0; };
+        };
+
+        nextID = getIDFromIndex(nextIndex);
+
+        window.location.href='#'+nextID;
+
+        highlightProgress(nextID);
+
+    });
+
 });
