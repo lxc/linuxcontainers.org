@@ -326,12 +326,6 @@ $(document).ready(function() {
         }
     });
 
-    $('.tabNext').click(function(){
-        if (feedback == false && $(this).attr('href') == "#conclusion") {
-            $('#tryit_feedback').css("display", "inherit");
-        }
-    });
-
     $('.js-collapsable').click(function(){
         $(this).toggleClass('is-hidden');
     });
@@ -417,36 +411,57 @@ $(document).ready(function() {
     // Action for the buttons in the progress bar (go to the new ID and
     // highlight its button).
     $('#tryit_progress button').click(function() {
-        realID = this.id.replace("nav-","")
+        var realID = this.id.replace("nav-","")
 
         window.location.href='#'+realID;
 
         highlightProgress(realID);
+
+        if (feedback == false && (getIndexFromID(realID) >= $('#tryit_navigation li').length-1)) {
+            $('#tryit_feedback').css("display", "inherit");
+        }
+        else {
+            $('#tryit_feedback').css("display", "none");
+        };
     });
 
     // Action for the "Next" and "Previous" buttons (go to the respective
     // new ID and highlight its button).
     $('.tryit_goto').click(function() {
 
-        theParent = $(this).parents("div.tab-content")[0];
+        var theParent = $(this).parents("div.tab-content")[0];
 
-        thisIndex = getIndexFromID(theParent.id);
+        var thisIndex = getIndexFromID(theParent.id);
+
+        var displayFeedback = 0;
 
         var nextIndex = -1;
         if ($(this).text() === "Next") {
             nextIndex = thisIndex + 1;
-            if (nextIndex >= $('#tryit_navigation li').length) { nextIndex = 0; };
+            if (nextIndex >= $('#tryit_navigation li').length) {
+                nextIndex = 0;
+            };
+            if (nextIndex >= $('#tryit_navigation li').length-1) {
+                displayFeedback = 1;
+            };
         }
         else if ($(this).text() === "Previous") {
             nextIndex = thisIndex - 1;
             if (nextIndex < 0) { nextIndex = 0; };
         };
 
-        nextID = getIDFromIndex(nextIndex);
+        var nextID = getIDFromIndex(nextIndex);
 
         window.location.href='#'+nextID;
 
         highlightProgress(nextID);
+
+        if (feedback == false && displayFeedback) {
+            $('#tryit_feedback').css("display", "inherit");
+        }
+        else {
+            $('#tryit_feedback').css("display", "none");
+        };
 
     });
 
