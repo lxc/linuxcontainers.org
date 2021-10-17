@@ -15,7 +15,7 @@ CGManager はネストした LXC コンテナも、ユーザ名前空間での U
     It has now been deprecated in favor of the CGroup namespace in recent Linux kernels. On older kernels, LXCFS still offers a cgroupfs emulation that can be used instead of CGManager and is more widely compatible with existing userspace.
 -->
 !!! note 注意
-    CGManager は 2014 年 4 月まで Ubuntu の LXC でデフォルトで使われていました。その後、他のディストリビューションでも、非特権コンテナを実行が必要になり使われるようになりました。
+    CGManager は 2014 年 4 月から Ubuntu の LXC でデフォルトで使われていました。その後、他のディストリビューションでも、非特権コンテナを実行することが必要になり使われるようになりました。
 
     最近の Linux カーネルでは cgroup namespace が使われるため、現在は非推奨となっています。古いカーネルでは、LXCFS が CGManager の代わりに使える cgroup エミュレーションの機能を提供しており、既存のユーザースペースとより広く互換性があります。
 
