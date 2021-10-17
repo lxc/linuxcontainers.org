@@ -361,7 +361,7 @@ You can launch an instance with command `lxc launch`:
 	lxc launch imageserver:imagename instancename --vm
 
 <!--
-Replace:
+In the commands above, replace:
 -->
 前述のコマンド実行例は次のように置き換えます:
 
@@ -370,6 +370,10 @@ Replace:
 - `instancename` は付けたいインスタンス名を指定します（例: `ubuntuone`）。指定しなければ LXD がランダムに名前を付けます　<!-- `instancename` with a name of your choice (e.g. `ubuntuone`), if left empty LXD will pick a random name. -->
 
 ### Ubuntu の例 <!-- Example for Ubuntu -->
+<!--
+For example, to create a container based on the Ubuntu `Focal Fossa` image (provided by LXD) with the instancename `ubuntuone`, enter the following command:
+-->
+例えば、`ubuntuone`というインスタンス名を持つ、（LXD 提供の）Ubuntu `Focal Fossa` イメージベースのコンテナを作成するには、次のようなコマンドを実行します:
 
 	lxc launch ubuntu:20.04 ubuntuone
 
@@ -482,7 +486,7 @@ List all Instances:
 
     lxc list
 
-#### 起動・停止 <!-- Start/Stop -->
+### 起動・停止 <!-- Start/Stop -->
 <!--
 Start an instance:
 -->
@@ -497,7 +501,7 @@ Stop an instance:
 
     lxc stop instancename
 
-#### コンテナ内のシェル・ターミナル <!-- Shell/Terminal inside Container -->
+### コンテナ内のシェル・ターミナル <!-- Shell/Terminal inside Container -->
 <!--
 Get a shell inside a container:
 -->
@@ -515,7 +519,7 @@ root@containername:~#
 
 ```
 
-##### ユーザーとしてログインするには <!-- To login as a user instead, run: -->
+#### ユーザーとしてログインするには <!-- Login as a user instead -->
 <!--
 **Note:** In many containers you need to create a user first.
 -->
@@ -533,7 +537,7 @@ root@containername:~# exit
 
 ```
 
-#### ホストのターミナルからコマンドを実行する <!-- Run Command from Host terminal -->
+### ホストのターミナルからコマンドを実行する <!-- Run Command from Host terminal -->
 <!--
 Run a single command from host's terminal:
 -->
@@ -541,7 +545,7 @@ Run a single command from host's terminal:
 
     lxc exec containername -- apt-get update
 
-#### 仮想マシン内のシェル・ターミナル <!-- Shell/Terminal inside Virtual Machine -->
+### 仮想マシン内のシェル・ターミナル <!-- Shell/Terminal inside Virtual Machine -->
 <!--
 You can see your VM boot with:
 -->
@@ -568,8 +572,8 @@ VM のシェルから抜けるには:
 
 	exit
 
-#### ファイルやディレクトリをコンテナ〜ホスト間でコピーする <!-- Copy files and folders between container and host -->
-##### インスタンスからホストへのコピー <!-- Copy from an instance to host -->
+### ファイルやディレクトリをコンテナ〜ホスト間でコピーする <!-- Copy files and folders between container and host -->
+#### インスタンスからホストへのコピー <!-- Copy from an instance to host -->
 
 <!--
 Pull a file with:
@@ -592,7 +596,7 @@ For example:
 
     lxc file pull instancename/etc/hosts .
 
-##### ホストからインスタンスへのコピー <!-- Copy from host to instance -->
+#### ホストからインスタンスへのコピー <!-- Copy from host to instance -->
 
 <!--
 Push a file with:
@@ -608,7 +612,7 @@ Push a folder with:
 
     lxc file push -r path-on-host instancename/path-in-container
 
-#### インスタンスの削除 <!-- Remove instance -->
+### インスタンスの削除 <!-- Remove instance -->
 
 !!! warning "警告"
 	<!--
