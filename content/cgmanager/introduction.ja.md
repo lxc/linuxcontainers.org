@@ -8,6 +8,17 @@ as well as accepting unprivileged requests including resolving user namespaces U
 CGManager はシンプルな D-Bus API を通して全ての cgroup を管理する、特権を持つデーモンです。
 CGManager はネストした LXC コンテナも、ユーザ名前空間での UID/GID の解決を含む特権を持たないユーザからのリクエストも受け付けるように設計されています。
 
+<!--
+!!! note
+    CGManager was used by default with LXC in Ubuntu since April 2014 and then by other distributions as they started needing working unprivileged containers.
+
+    It has now been deprecated in favor of the CGroup namespace in recent Linux kernels. On older kernels, LXCFS still offers a cgroupfs emulation that can be used instead of CGManager and is more widely compatible with existing userspace.
+-->
+!!! note 注意
+    CGManager は 2014 年 4 月まで Ubuntu の LXC でデフォルトで使われていました。その後、他のディストリビューションでも、非特権コンテナを実行が必要になり使われるようになりました。
+
+    最近の Linux カーネルでは cgroup namespace が使われるため、現在は非推奨となっています。古いカーネルでは、LXCFS が CGManager の代わりに使える cgroup エミュレーションの機能を提供しており、既存のユーザースペースとより広く互換性があります。
+
 # コンポーネント <!-- Components -->
 ## cgmanager
 
