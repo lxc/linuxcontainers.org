@@ -23,14 +23,14 @@
               "str_back": "Back to the news overview"}},
 
     {"path": "/lxd/getting-started-cli/",
-     "title": "LXD - はじめに - コマンドライン",
-     "menu": ["LXD", "はじめに - コマンドライン"],
+     "title": "LXD - LXDを使い始めるには",
+     "menu": ["LXD", "LXDを使い始めるには"],
      "generator": "markdown",
      "meta": {"input": "lxd/getting-started-cli.ja.md"}},
 
     {"path": "/lxd/third-party-integrations/",
-     "title": "LXD - Getting started - Third-party integrations",
-     "menu": ["LXD", "Getting started - Third-party integrations"],
+     "title": "LXD - サードパーティーツールとのインテグレーション",
+     "menu": ["LXD", "サードパーティーツールとのインテグレーション"],
      "generator": "markdown",
      "meta": {"input": "lxd/third-party-integrations.md"}},
 
