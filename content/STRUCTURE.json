@@ -27,8 +27,8 @@
               "str_back": "Back to the news overview"}},
 
     {"path": "/lxd/getting-started-cli/",
-     "title": "LXD - Getting started - command line",
-     "menu": ["LXD", "Getting started - command line"],
+     "title": "LXD - Getting started",
+     "menu": ["LXD", "Getting started"],
      "generator": "markdown",
      "meta": {"input": "lxd/getting-started-cli.md"}},
 
