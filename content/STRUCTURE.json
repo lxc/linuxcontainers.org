@@ -33,8 +33,8 @@
      "meta": {"input": "lxd/getting-started-cli.md"}},
 
     {"path": "/lxd/third-party-integrations/",
-     "title": "LXD - Getting started - Third-party integrations",
-     "menu": ["LXD", "Getting started - Third-party integrations"],
+     "title": "LXD - Third-party integrations",
+     "menu": ["LXD", "Third-party integrations"],
      "generator": "markdown",
      "meta": {"input": "lxd/third-party-integrations.md"}},
 
