@@ -84,13 +84,6 @@
         -->
         LXC はツール、テンプレート、ライブラリ、言語バインディングの良く知られたセットです。低レイヤで非常に柔軟性に富んでおり、Upstream のカーネルがサポートするほとんどのコンテナ関連機能をカバーします。
       </p>
-      <p>
-        <!--
-         LXC is production ready with LTS releases coming with 5 years
-         of security and bugfix updates.
-        -->
-        LXC は production ready であり、LTS リリースが 5 年間のセキュリティアップデートとバグ修正を提供します。
-      </p>
       <p><a class="p-button" href="/ja/lxc/introduction/" role="button">詳しく見る</a></p>
     </div>
 
@@ -141,17 +134,15 @@
 
       <p>
         <!--
-        distrobuilder was created as a replacement for the old shell scripts
-        that were shipped as part of LXC to generate images.
-        Its modern design uses pre-built official images whenever available,
+        distrobuilder's modern design utilises pre-built official images whenever available,
         uses a declarative image definition (YAML) and supports a variety of
         modifications on the base image.
         -->
-        distrobuilder は、以前 LXC の一部に含まれていた、古いシェルスクリプトの置き換えとして開発しました。
-        利用できる場合にはあらかじめ構築されている公式イメージを使い、宣言型のイメージ定義（YAML）を採用し、ベースとなるイメージに対する色々な変更をサポートする、現代的な設計です。
+        distrobulder のモダンな設計では、利用できる場合は事前にビルドされた公式イメージを利用します。
+        宣言型のイメージ定義（YAML）を採用し、ベースとなるイメージに対する色々な変更をサポートします。
       </p>
 
-      <p><a class="p-button" href="/ja/distrobuilder/introduction/" role="button">Learn more</a></p>
+      <p><a class="p-button" href="/ja/distrobuilder/introduction/" role="button">詳しく見る</a></p>
     </div>
   </div>
 </div>
@@ -168,32 +159,12 @@
       <h3>CGManager</h3>
       <p>
         <!--
-          CGManager is our cgroup manager daemon. It's
+          CGManager is a cgroup manager daemon
           designed to allow nested unprivileged containers
-          to still be able to create and manage their
+          to be able to create and manage their
           cgroups through a DBus API.
         -->
         CGManager は cgroup を管理するデーモンです。DBus API を通して、ネストした非特権コンテナであっても、コンテナを作成してそのコンテナの cgroup を管理できるように設計されています。
-      </p>
-
-      <p>
-        <!--
-          CGManager has been used by default with LXC in
-          Ubuntu since April 2014 and then by other
-          distributions as they start needing working
-          unprivileged containers.
-        -->
-        CGManager は 2014 年 4 月から Ubuntu の LXC がデフォルトで使用しています。非特権コンテナの動作が必要な他のディストリビューションでも使用されています。
-      </p>
-
-      <p>
-        <!--
-          It has now been deprecated in favor of the CGroup namespace
-          in recent Linux kernels. On older kernels, LXCFS still offers
-          a cgroupfs emulation that can be used instead of cgmanager
-          and is more widely compatible with existing userspace.
-        -->
-        CGManager は最近のカーネルに cgroup namespace が実装されたため廃止予定です。古いカーネルに対しては LXCFS が cgroupfs のエミュレーション機能を提供します。LXCFS のほうが広い環境に対応できます。
       </p>
 
       <p><a class="btn btn-primary" href="/ja/cgmanager/introduction/" role="button">詳しく見る</a></p>
