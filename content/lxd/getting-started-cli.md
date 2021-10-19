@@ -102,7 +102,7 @@ You can also find native builds of the LXD client on [GitHub](https://github.com
 3. Select the latest build and download the suitable artifact.
 
 ## Installing from source
-To build and install LXD from source, follow the instructions in [Installing LXD from source](/docs/master/#installing-lxd-from-source).
+To build and install LXD from source, follow the instructions in [Installing LXD from source](/lxd/docs/master/#installing-lxd-from-source).
 
 # Initial configuration
 
@@ -146,12 +146,12 @@ You can configure the following options during the initial configuration of LXD.
 
 | Feature  | Description | Basic configuration options | More information |
 | --- | ------------- | --- | --- |
-| Clustering | A cluster combines several LXD servers. They share the same distributed database and can be managed uniformly using the LXD client (lxc) or the REST API. | default=`no`; <br> If set to `yes`, you can either connect to an existing cluster or create a new one. | LXD documentation: <br> [Clustering](/docs/master/clustering) |
+| Clustering | A cluster combines several LXD servers. They share the same distributed database and can be managed uniformly using the LXD client (lxc) or the REST API. | default=`no`; <br> If set to `yes`, you can either connect to an existing cluster or create a new one. | LXD documentation: <br> [Clustering](/lxd/docs/master/clustering) |
 | MAAS server | MAAS is an open-source tool that lets you build a data center from bare-metal servers. | default=`no`; <br> If set to `yes`, you can connect to an existing MAAS server and specify the `name`, `URL` and `API key`. | - [maas.io](https://maas.io/) <br> - [MAAS - How to manage VM hosts](https://maas.io/docs/install-with-lxd) |
-| Network bridge | Provides network access for the instances. | You can either use an existing bridge (or interface) or let LXD create a new bridge (recommended). <br> You can also create additional bridges and assign them to instances later. | LXD documentation: <br> - [Networks](/docs/master/networks) <br> - [Network interface](/docs/master/instances#type-nic) |
-| Storage pools | Instances etc. are stored in storage pools. | For testing purposes, you can create a loop-backed storage pool. <br> But for production use you should use an empty partition (or full disk) instead of loop-backed storages (because loop-backed pools are slower and their size can't be reduced). <br> The recommended backends are `ZFS` and `btrfs`. <br> You can also create additional storage pools later. | LXD documentation: <br> - [Storage](/docs/master/storage) <br> - [Comparison of methods](/docs/master/storage.html#where-to-store-lxd-data) <br> - [Backend comparison chart](/docs/master/storage#feature-comparison) |
+| Network bridge | Provides network access for the instances. | You can either use an existing bridge (or interface) or let LXD create a new bridge (recommended). <br> You can also create additional bridges and assign them to instances later. | LXD documentation: <br> - [Networks](/lxd/docs/master/networks) <br> - [Network interface](/lxd/docs/master/instances#type-nic) |
+| Storage pools | Instances etc. are stored in storage pools. | For testing purposes, you can create a loop-backed storage pool. <br> But for production use you should use an empty partition (or full disk) instead of loop-backed storages (because loop-backed pools are slower and their size can't be reduced). <br> The recommended backends are `ZFS` and `btrfs`. <br> You can also create additional storage pools later. | LXD documentation: <br> - [Storage](/lxd/docs/master/storage) <br> - [Comparison of methods](/lxd/docs/master/storage.html#where-to-store-lxd-data) <br> - [Backend comparison chart](/lxd/docs/master/storage#feature-comparison) |
 | Network access | Allows access to the server over network. |  default=`no`; <br> If set to `yes`, you can connect to the server over network. <br> You can set a `password` or accept the client certificate manually. | - |
-| Automatic image update | You can download images from image servers. In this case, images can be updated automatically. | default=`yes`; <br> If set to `yes`, LXD will update the downloaded images regularly. | LXD documentation: <br> [Image handling](/docs/master/image-handling) |
+| Automatic image update | You can download images from image servers. In this case, images can be updated automatically. | default=`yes`; <br> If set to `yes`, LXD will update the downloaded images regularly. | LXD documentation: <br> [Image handling](/lxd/docs/master/image-handling) |
 | YAML lxd init preseed | Will display a summary of your chosen configuration options in the terminal. | default=`no` | - |
 
 # Note about virtual machines
