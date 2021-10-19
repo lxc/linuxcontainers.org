@@ -1,0 +1,72 @@
+title: Distrobuilder 2.0 has been released
+date: 2021/10/18 03:10
+origin: https://discuss.linuxcontainers.org/t/distrobuilder-2-0-has-been-released/12403
+content: |-
+  ### Introduction
+  The distrobuilder team is proud to announce its initial release, distrobuilder 2.0!
+
+  As usual, this release fixes a variety of issues as Linux distributions evolve and change the way they're built. Additionally, it also improves the Windows ISO repack feature quite a bit and introduces support for directly importing an image into LXD
+
+  The main highlights are:
+
+   - windows: Support for Windows 11 and Windows Server 2022 ISO images
+   - windows: Addition of virtio GPU driver
+   - gentoo: Support for custom variants
+   - New `--import-into-lxd` command line option
+
+  The full list of commits is available below:
+
+  [details="Detailed changelog"]
+   - Makefile: Tweak generation of dist tarball
+   - sources/plamolinux: Support new pkgtools8
+   - main: Check systemd-sysctl path
+   - systemd: Properly check for instance type
+   - windows: Add Windows 11 support
+   - sources/plamolinux: Fix a process related to pkgtools8
+   - sources/plamolinux: more fix related to pkgtools8
+   - Update gomod
+   - main: Skip overlay on zfs
+   - *: Replace Wrap with WithMessage
+   - windows: Fix pongo variable name in balloon driver
+   - *: Replace RunCommand with RsyncLocal
+   - utils: Fix error handling in RsyncLocal
+   - windows: Add driver viogpudo
+   - Update mkdocs.yml
+   - main: Add support for Windows Server 2022
+   - *: Switch to errors without stack traces
+   - Update go modules
+   - sources/openwrt: Drop lxd-openwrt repo and SDK
+   - main: Log image creation
+   - sources/gentoo: Allow custom source variants
+   - *: Record created filenames
+   - main: Add --import-into-lxd flag
+   - Update go mod
+   - doc: Update packages.md
+   - doc: Update building.md
+   - main: Fix post-files actions for lxc
+   - main: Check for snap when importing LXD image
+   - shared/definition: s/-/_/
+   - generators: Add definition to generator init
+   - generators: Drop template rendering in cloud-init and dump
+   - doc: Update renamend key values
+   - doc/generators: Add missing source field
+   - doc: Mention general pongo support
+   - shared/util: Add Retry function
+   - shared/net: Use Retry for downloads
+   - sources: Use Retry for networking
+   - Update go.mod
+   - sources/debootstrap: Handle merged /usr
+   - systemd: drop unused variable
+   - systemd: double quote to prevent globbing and word splitting
+   - systemd: generate zzz-lxc-service.conf in one go
+   - main: remove NoNewPrivileges=no from systemd-generator
+   - Revert "main: remove NoNewPrivileges=no from systemd-generator"
+   - github: Bump Go versions
+   - sources/oracle: Fix rpm/yum issue
+   - Update gomod
+  [/details]
+
+  ### Downloads
+
+   - Main release tarball: [distrobuilder-2.0.tar.gz](https://linuxcontainers.org/downloads/distrobuilder/distrobuilder-2.0.tar.gz)
+   - GPG signature: [distrobuilder-2.0.tar.gz.asc](https://linuxcontainers.org/downloads/distrobuilder/distrobuilder-2.0.tar.gz.asc)
