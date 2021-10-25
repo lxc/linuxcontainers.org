@@ -544,6 +544,7 @@ def gen_page(entry, override, prefix, **variables):
             # links to the rest
             if article_count <= 5:
                 full_content += article_content
+                full_content += "\n"
             elif article_count == 6:
                 full_content += "\n\n\n## %s \n" % item['meta']['str_older']
                 full_content += "- [%s](%s)\n" % (article_date,
