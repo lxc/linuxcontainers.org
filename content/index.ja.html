@@ -1,12 +1,13 @@
 <div class="p-strip">
   <div class="row">
     <div class="col-8 suffix-1">
-      <h1>Infrastructure for Linux systems</h1>
+      <h1 id="startpage-heading">Container and virtualization tools</h1>
       <p>
       <!--
-        linuxcontainers.org is the umbrella project behind LXC,
-        LXD and LXCFS. -->
-        linuxcontainers.org は LXC、LXD、LXCFS を傘下に持つプロジェクトです
+        linuxcontainers.org is the umbrella project behind LXD,
+        LXC, LXCFS and distrobuilder.
+        -->
+        linuxcontainers.org は LXD、LXC、LXCFS、distrobuilder を傘下に持つプロジェクトです
       </p>
 
       <p>
@@ -19,12 +20,13 @@
 
       <p>
         <!--
-          Our main focus is system containers. That is, containers which
-          offer an environment as close as possible as the one you'd get from a
-          VM but without the overhead that comes with running a separate
-          kernel and simulating all the hardware.
-        -->
-        私たちは主にシステムコンテナにフォーカスを当てています。つまり、VM の環境に可能な限り近い環境でありながら、VM のように環境ごとに別々のカーネルを実行したり、ハードウェアをシミュレートすることによるオーバーヘッドがない環境を提供するコンテナです。
+        Our focus is providing containers and virtual machines that run
+        full Linux systems. While VMs supply a complete environment,
+        system containers offer an environment as close as possible to
+        the one you'd get from a VM, but without the overhead that comes
+        with running a separate kernel and simulating all the hardware.
+          -->
+        私達は、完全な Linux システムを実行するコンテナと仮想マシンの提供にフォーカスを当てています。VM が完全な環境を提供するのに対して、システムコンテナは VM から得られる環境に可能な限り近い環境を提供します。システムコンテナでは、別のカーネルを実行したり、ハードウェアのシミュレートしたりすることによるオーバーヘッドはありません。
       </p>
     </div>
     <div class="col-4">
@@ -47,42 +49,67 @@
         <div class="col-8">
           <p>
             <!--
-                LXD is the new LXC experience. It offers a
-                completely fresh and intuitive user experience
-                with a single command line tool to manage your
-                containers. Containers can be managed over the
-                network in a transparent way through a REST API.
-                It also works with large scale deployments by
-                integrating with cloud platforms like OpenNebula.
-              -->
-            LXD は LXC の新しい体験です。コンテナを管理するための一つのコマンドラインツールで、完全に新鮮で直感的なユーザ体験を提供します。コンテナを REST API を通した透過的な方法でネットワーク経由で管理できます。LXD は OpenNebula のようなクラウドプラットフォームとの統合により大規模のデプロイも扱います。
+            LXD is a next generation system container and virtual machine
+            manager. It offers a unified user experience around full Linux
+            systems running inside containers or virtual machines.
+            -->
+            LXD は、システムコンテナと仮想マシンのための次世代のマネージャーです。コンテナや仮想マシン内で実行される完全な Linux システムの統一された使い勝手や操作感を提供します。
+          </p>
+
+          <p>
+            <!--
+            LXD is image based and provides images for a wide number of
+            Linux distributions. It provides flexibility and scalability
+            for various use cases, with support for different storage
+            backends and network types and the option to install on
+            hardware ranging from an individual laptop or cloud instance
+            to a full server rack.
+            -->
+            LXD はイメージベースで、広範囲の Linux ディストリビューション用のイメージを提供しています。さまざまなタイプのストレージバックエンドやネットワークをサポートし、個人のラップトップやクラウドインスタンスからサーバーラック上のハードウェアまで、様々なハードウェアにインストールでき、色々なユースケースに対応する柔軟性と拡張性を備えています。
+          </p>
+
+          <p>
+            <!--
+            When using LXD, you can manage your instances (containers and VMs)
+            with a simple command line tool, directly through the REST API or
+            by using third-party tools and integrations. LXD implements a
+            single REST API for both local and remote access.
+            -->
+            LXD を使うと、シンプルなコマンドラインツールや REST API を直接使ったり、サードパーティーのツールやインテグレーションを使ったりして、コンテナや仮想マシンといったインスタンスを管理できます。LXD はローカルとリモートからアクセスするための単一の REST API を実装しています。
           </p>
         </div>
 
-        <div class="col-4">    
+        <div class="col-4">
           <p>
             <a class="p-button--positive" href="/ja/lxd/try-it/" role="button">試してみる</a>
           </p><p>
             <a class="p-button" href="/ja/lxd/introduction/" role="button">詳しく見る</a>
           </p>
         </div>
-        
+
       </div>
     </div>
   </div>
-  
+
   <div class="row u-equal-height">
     <div class="p-card col-4">
       <h3>LXC</h3>
       <p>
         <!--
-          LXC is the well known set of tools, templates,
-          library and language bindings. It's pretty low
-          level, very flexible and covers just about every
-          containment feature supported by the upstream
-          kernel.
+        LXC is a well-known Linux container runtime that consists of
+        tools, templates, and library and language bindings. It's pretty
+        low level, very flexible and covers just about every containment
+        feature supported by the upstream kernel.
         -->
-        LXC はツール、テンプレート、ライブラリ、言語バインディングの良く知られたセットです。低レイヤで非常に柔軟性に富んでおり、Upstream のカーネルがサポートするほとんどのコンテナ関連機能をカバーします。
+        LXC はツール群、テンプレート、ライブラリー、言語バインディングからなる広く知られたコンテナランタイムです。かなり低レベルであり、非常に柔軟で、アップストリームのカーネルがサポートするコンテナ関連機能をほぼすべてカバーしています。
+      </p>
+      <p>
+        <!--
+        LXC provides the basic functionality used under the hood by LXD.
+        However, it should not be confused with the <code>lxc</code>
+        CLI client tool provided by LXD.
+        -->
+        LXC は LXD が内部的に使用する基本的な機能を提供しています。LXD が提供する <code>lxc</code> というクライアントツールと混同しないようにしてください。
       </p>
       <p><a class="p-button" href="/ja/lxc/introduction/" role="button">詳しく見る</a></p>
     </div>
@@ -91,22 +118,12 @@
       <h3>LXCFS</h3>
       <p>
         <!--
-          Userspace (FUSE) filesystem offering two main things:
+        LXCFS is a userspace (FUSE) filesystem which offers:
         -->
-        主に以下の2つを提供する FUSE を使ったユーザスペースのファイルシステムです:
+        LXCFS は次の機能を提供するユーザースペースのファイルシステム（FUSE）です:
         <ul>
-          <li>
-            <!--
-              Overlay files for cpuinfo, meminfo, stat and uptime.
-            -->
-            cpuinfo, meminfo, stat, uptime のためのファイルを差し替えます
-          </li>
-          <li>
-            <!--
-              A cgroupfs compatible tree allowing unprivileged writes.
-            -->
-            一般ユーザ権限でも書き込める cgroupfs 互換のツリーを提供します
-          </li>
+          <li>cpuinfo, meminfo, stat, uptime のためにファイルを差し替えます（重ね合わせます）<!-- Overlay files for cpuinfo, meminfo, stat and uptime. --></li>
+          <li>一般ユーザ権限でも書き込める cgroupfs 互換のツリーを提供します<!-- A cgroupfs compatible tree allowing unprivileged writes. --></li>
         </ul>
       </p>
 
@@ -121,10 +138,14 @@
 
       <p><a class="p-button" href="/ja/lxcfs/introduction/" role="button">詳しく見る</a></p>
     </div>
-    
+
     <div class="p-card col-4">
       <h3>distrobuilder</h3>
-      <p>LXC/LXD 用のイメージ作成ツールです: <!-- Image building tool for LXC/LXD: -->
+      <p>
+        <!--
+        distrobuilder is an image building tool for LXC/LXD which offers:
+          -->
+        distrobuilder は LXC/LXD 用のイメージ作成ツールで、次のような機能を持っています:
         <ul>
           <li>複雑なイメージの定義をシンプルな YAML で定義します <!-- Complex image definition as a simple YAML document. --></li>
           <li>複数の出力フォーマットに対応します（chroot, LXD, LXC） <!-- Multiple output formats (chroot, LXD, LXC). --></li>
