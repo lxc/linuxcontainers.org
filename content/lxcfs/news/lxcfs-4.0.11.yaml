@@ -1,11 +1,13 @@
-title: LXCFS 4.0.10 has been released
+title: LXCFS 4.0.11 has been released
 date: 2021/10/19 21:10
-origin: https://discuss.linuxcontainers.org/t/lxcfs-4-0-10-has-been-released/12426
+origin: https://discuss.linuxcontainers.org/t/lxcfs-4-0-11-has-been-released/12426
 content: |-
   ### Introduction
-  The LXCFS team is pleased to announce the release of LXCFS 4.0.10!
+  The LXCFS team is pleased to announce the release of LXCFS 4.0.11!
 
-  This is the tenth bugfix release for LXCFS 4.0 which is supported until June 2025.
+  This is the eleventh bugfix release for LXCFS 4.0 which is supported until June 2025.
+
+  NOTE: This was originally released as LXCFS 4.0.10 but a bug caused the published release tarball to be missing a file. LXCFS 4.0.11 includes that fix.
 
   ### Bugfixes
   Some of the highlights for this release are:
@@ -39,6 +41,7 @@ content: |-
    - doc: guide for reload share libary file
    - macro: cast to correct integer types
    - tree-wide: set _GNU_SOURCE configure.ac
+   - build: fix lxcfs_fuse.h in release tarball
   [/details]
 
   ### Support and upgrade
@@ -47,5 +50,5 @@ content: |-
 
   ### Downloads
 
-   - Main release tarball: [lxcfs-4.0.10.tar.gz](https://linuxcontainers.org/downloads/lxcfs/lxcfs-4.0.10.tar.gz)
-   - GPG signature: [lxcfs-4.0.10.tar.gz.asc](https://linuxcontainers.org/downloads/lxcfs/lxcfs-4.0.10.tar.gz.asc)
+   - Main release tarball: [lxcfs-4.0.11.tar.gz](https://linuxcontainers.org/downloads/lxcfs/lxcfs-4.0.11.tar.gz)
+   - GPG signature: [lxcfs-4.0.11.tar.gz.asc](https://linuxcontainers.org/downloads/lxcfs/lxcfs-4.0.11.tar.gz.asc)
