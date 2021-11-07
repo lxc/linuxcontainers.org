@@ -1,0 +1,652 @@
+title: LXD 4.20 リリースのお知らせ <!-- LXD 4.20 has been released -->
+date: 2021/11/06 00:11
+origin: https://discuss.linuxcontainers.org/t/lxd-4-20-has-been-released/12540
+content: |-
+  ### はじめに <!-- Introduction -->
+  <!--
+  The LXD team is very excited to announce the release of LXD 4.20!
+  -->
+  LXD チームは LXD 4.20 のリリースをお知らせできることにとてもワクワクしています!
+
+  <!--
+  This is one very busy release with a lot of new features.
+  -->
+  このリリースは、たくさんの新しい機能満載の非常に忙しいリリースでした。
+
+  <!--
+  VM users will be happy to see the initial implementation of live migration and core scheduling support. Container users are getting new configuration keys to set sysctls.
+  -->
+  VM ユーザーは、ライブマイグレーションの初期実装とコアスケジューリングのサポートを見てハッピーになるでしょう。コンテナユーザーは sysctl 関連の新しい設定ができるようになりました。
+
+  <!--
+  Then the bulk of the new features are all network related with peer network relationships, network zones for auto-generated DNS and SR-IOV accelerated OVN networks.
+  -->
+  新機能の大部分はネットワークに関係したものです。ピアネットワークの関係、自動生成される DNS のネットワークゾーン、SR-IOV でアクセラレーションされる OVN ネットワークなどです。
+
+  <!--
+  And lastly, on the clustering front, it's now possible to better control what servers will be receiving new workloads.
+  -->
+  そして最後に、クラスタリングの面では、どのサーバーが新しいワークロードを受け取るのかをコントロールできるようになりました。
+
+  Enjoy!
+
+  ### 新機能とハイライト <!-- New features and highlights -->
+  #### 仮想マシンのライブマイグレーション <!-- Live migration of virtual machines -->
+  <!--
+  LXD now has initial support for live-migration of virtual machines.
+  -->
+  LXD に仮想マシンのライブマイグレーションの初期実装がなされました。
+
+  <!--
+  This works by simply using `lxc move` to move between two separate LXD servers or `lxc move --target` to move within a cluster. Assuming the VM is running, live migration will be attempted.
+  -->
+  この機能は、ふたつの独立したサーバー間を移動するためには `lxc move` を使うだけで、もしくはクラスター内での移動のためには `lxc move --target` を使うだけで動作します。
+
+  <!--
+  Using this requires `migration.stateful` to be enabled on the VM which will prevent it from using GPUs, USB or host PCI devices as well as disable virtiofs (limiting filesystem passthrough to 9p).
+  -->
+  これを使うには、VM 上で `migration.stateful` を有効にする必要があります。この設定を有効にすると、GPU、USB、ホストの PCI デバイスが使用できなくなり、さらに virtiofs が無効化されます（ファイルシステムパススルーが 9p に制限されます）。
+
+  <!--
+  The current implementation will effectively perform a stateful stop of the instance immediately followed with migration of the entire data (which will contain the runtime state) and restoration on the target.
+  -->
+  現時点の実装では、すぐにインスタンスのステートフルストップを実行したあと、（実行時の状態を含む）全データのマイグレーションが行われ、ターゲット上でリストアされます。
+
+  <!--
+  This should just take 2-3s when using Ceph but can take significantly longer on other storage backends. We have work scheduled over the next 6 months to improve LXD's ability to very cheaply and quickly refresh volumes on BTRFS and ZFS which will then allow similar performance for those storage backends.
+  -->
+  これは Ceph を使用している場合は 2-3 秒で済みますが、他のストレージバックエンドではかなり時間がかかる可能性があります。BTRFS と ZFS 上のボリュームを非常に手軽に素早くリフレッシュできるようになるように、今後 6 ヶ月 LXD の改良に取り組みます。これによりこれらのストレージバックエンドでも同じくらいのパフォーマンスが得られるようになるでしょう。
+
+  #### OVN 向けネットワークピアリング <!-- Network peering for OVN -->
+  <!--
+  When using OVN for LXD networking and multiple networks are defined, routing from one network to another currently exits OVN, hits the uplink network and then re-enters OVN. While this is sometimes desired to fully control the network flows, it can be a huge bottleneck.
+  -->
+  LXD のネットワーキングに OVN を使い、複数のネットワークが定義されている際に、現在は、あるネットワークから他のネットワークへのルーティングは OVN を出て、アップリンクのネットワークを通り、再度 OVN へ入ってきます。これはネットワークフローを完全にコントロールするために必要な場合もありますが、大きなボトルネックになる可能性があります。
+
+  <!--
+  To address this, LXD now supports network peers. A peer is added on each side of a pair of networks (can be across projects). Once the peer relation is established, OVN will be configured to directly route from one network to the other with traffic never leaving OVN.
+  -->
+  これを解決するために、LXD でネットワークピアをサポートしました。ピアは一組のネットワークの両側に追加されます（プロジェクト間でも可能）。ピアが確立すると OVN は、トラフィックが OVN から出ないように、一方のネットワークから他方のネットワークへ直接ルーティングするように設定されます。
+
+  <!--
+  Peer relations also allow for easier ACL rules, making it possible to use `@some-network/some-peer` in the source or destination field to affect traffic coming in or out of a specific peer network.
+  -->
+  ピアの関係を使うことで ACL ルールを簡単にすることもできます。`@some-network/some-peer` をソースもしくはデスティネーションフィールドで使うことで、特定のピアネットワークに出入りする作用させることができます。
+
+  <!--
+  A new `lxc network peer` command is used to manage those peers relations.
+  At the API level, this is all under `/1.0/networks/NAME/peers`
+  -->
+  このようなピアを管理するには、新しい `lxc network peer` コマンドを使います。API レベルでは、すべて `/1.0/networks/NAME/peers` 配下となります。
+
+  仕様 <!-- Specification -->: https://discuss.linuxcontainers.org/t/lxd-ovn-network-to-network-routing/12165
+  ドキュメント <!-- Documentation -->: https://linuxcontainers.org/lxd/docs/master/network-peers
+
+  #### ネットワークゾーン（DNS） <!-- Network zones (DNS) -->
+  <!--
+  Those managing a large set of instances across many projects will often appreciate all instances having valid forward and reverse DNS records available on their entire network.
+  -->
+  多数のプロジェクトで多数のインスタンスを管理している方々は、すべてのインスタンスが有効な正引きと逆引きの DNS レコードが、ネットワーク全体で利用できることの真価を認めるでしょう。
+
+  <!--
+  Up until now, the only option for this was to use the built-in dnsmasq DNS server and its auto-generated DNS zone but this only really works for one network in one project and doesn't easily integrate within a larger infrastructure. The alternative being to run a completely manually provisioned DNS server on the side.
+  -->
+  これまでは、内蔵の dnsmasq DNS サーバーと、dnsmasq が自動生成する DNS ゾーンを使うしかありませんでした。しかし、この方法はひとつのプロジェクト内のひとつのネットワークにしか使えませんでした。そして、大規模なインフラ内では簡単に統合して機能させられませんでした。これを解決する別の方法として、完全に手動で準備した DNS サーバーを別に動作させる選択肢がありました。
+
+  <!--
+  With this release, LXD introduces the concept of network zones. Those are effectively DNS zones that are tied to LXD networks and can be used for forward DNS records, reverse IPv4 or reverse IPv6 DNS records.
+  -->
+  今回のリリースで、LXD にネットワークゾーンの概念を導入しました。これは事実上、LXD ネットワークに結びついた DNS ゾーンです。そして、正引き DNS レコード、逆引き IPv4, IPv6 レコードに使用できます。
+
+  <!--
+  To set it up, one would first create some zones (`lxc network zone create`), then assign them for the right type of records on the right networks by setting one of:
+  -->
+  この機能を設定するには、最初にいくつかゾーンを作成します（`lxc network zone create`）。次に、次の設定のいずれかを設定し、適切なネットワーク上の適切なレコードタイプに割り当てます。
+
+   - dns.zone.forward
+   - dns.zone.reverse.ipv4
+   - dns.zone.reverse.ipv6
+
+  <!--
+  Lastly the zone must get configured with at least one peer DNS server. This is done using the following configuration keys on the zone itself:
+  -->
+  最後に、ゾーンは少なくともひとつの対となる DNS サーバーに設定する必要があります。これは、ゾーン自体をキーとする次の設定を使って行います:
+
+   - peers.NAME.address
+   - peers.NAME.key
+
+  <!--
+  Either one, or both, of those must be set for a client DNS server to be able to pull the zone from LXD.
+  -->
+  クライアントとなる DNS サーバーが LXD からゾーンを取得できるようにするためには、これらのいずれか、もしくは両方が設定されている必要があります。
+
+  <!--
+  Once that's all setup, your external DNS server can perform a zone transfer (AXFR) from LXD for that zone and then serve it. LXD itself only allows for zone transfers and cannot be directly queried.
+  -->
+  これらがすべて設定されると、外部の DNS サーバーはそのゾーンに関して LXD からゾーン転送（AXFR）を行えるようになり、そのゾーンを提供できるようになります。LXD 自身はゾーン転送だけができ、直接問い合わせはできません。
+
+  仕様 <!-- Specification -->: https://discuss.linuxcontainers.org/t/lxd-built-in-dns-server/12033
+  ドキュメント <!-- Documentation -->: https://linuxcontainers.org/lxd/docs/master/network-zones
+
+  #### OVN ネットワークでの SR-IOV アクセラレーション <!-- SR-IOV acceleration for OVN networking -->
+  <!--
+  To further improve the performance of OVN based networking on LXD, we have now added support for SR-IOV acceleration.
+  -->
+  LXD での OVN ベースのネットワークでのパフォーマンス改良のために、SR-IOV アクセラレーションをサポートするようになりました。
+
+  <!--
+  The way this works is by using physical network cards which can operate in `switchdev` mode. Such cards will then provide both a guest facing VF and a host facing representor port. When a system with a suitable card has it in `switchdev` mode, has the PF added to the OVS bridge and has OVS configured for SR-IOV offload, LXD can automatically allocate VFs for use by containers or VMs.
+  -->
+  これを動作させるには、`switchdev` モードをサポートする物理ネットワークカードを使用します。このようなカードはゲスト側の VF とホスト側の representor ポートの両方を提供します。適切なカードを持ったシステムが、カードを`switchdev`モードに設定し、OVS ブリッジに PF を追加し、OVS を SR-IOV オフロード用に設定すると、LXD はコンテナや VM が使うために VF を自動的に割り当てます。
+
+  <!--
+  When all the preprequisites are met, all that needs to be done is set `acceleration=sriov` on the LXD nic device and LXD will do the rest.
+  -->
+  すべての前提条件を満たしたとき、行う必要があるのは LXD の NIC デバイスに `acceleration=sriov` を設定することだけで、残りは LXD がやってくれます。
+
+  <!--
+  This can lead to an extreme improvement in performance especially on 40G, 100G or 200G networks as it will effectively offload the bulk of the traffic processing directly onto the physical NIC. In such an environment only the first packet in most connections will ever go through the host system and OVS/OVN, all traffic after that point is directly handled in hardware.
+  -->
+  特に 40G、100G、200G ネットワークでは、トラフィック処理の大部分を直接物理 NIC にオフロードすることになるので、パフォーマンスが大幅に向上します。このような環境では、ほとんどの接続では最初のパケットのみがホストシステムと OVS/OVN を経由し、残りのすべてのトラフィックはハードウェアで直接処理されます。
+
+  ドキュメント <!-- Documentation -->: https://linuxcontainers.org/lxd/docs/master/instances#nic-ovn
+
+  #### コンテナでの Linux sysctl 設定 <!-- Linux sysctl configuration on containers -->
+  <!--
+  A new `linux.syctl.*` set of config keys has been introduced. This allows directly setting a specific sysctl to a specific value on container startup.
+  -->
+  新たな設定 `linux.syctl.*` を導入しました。これによりコンテナ起動時に、直接特定の sysctl を特定の値に設定できるようになりました。
+
+  <!--
+  This can be more flexible than having a sysctl.d entry inside the container and can also enable accessing sysctls which are properly namespaced but require elevated privileges by having LXD apply those from the host.
+  -->
+  これはコンテナ内に sysctl.d エントリーを持つよりも柔軟性があります。LXD がホストから適用することで、適切にネームスペース化されているけれども、特権への昇格が必要な sysctl にアクセスできます。
+
+  ドキュメント <!-- Documentation -->: https://linuxcontainers.org/lxd/docs/master/instances#key/value-configuration
+
+  #### 仮想マシンのコアスケジューリング <!-- Core scheduling for virtual machines -->
+  <!--
+  Following our work on core scheduling for containers in LXD 4.19, we have now extended it to virtual machines. When running LXD on a kernel that supports core scheduling, LXD will automatically ensure that all vCPU threads for a particular VM are part of the same core scheduling group.
+  -->
+  LXD 4.19 でのコンテナに対するコアスケジューリングに続いて、コアスケジューリングを仮想マシンに拡張しました。コアスケジューリングをサポートしたカーネル上で LXD が動作している場合、LXD は、特定の VM 向けのすべての vCPU スレッドが、同じコアスケジューリンググループに属することを保証します。
+
+  <!--
+  Core scheduling is designed to allow the use of SMT on CPUs that would otherwise be at risk of attack by the guest due to the Spectre vulnerabilities. Core scheduling ensures that a guest will either use a core/thread pair or that the thread will remain unused while the guest uses the associated core.
+  -->
+  コアスケジューリングは、Spectre 脆弱性のためにゲストからアタックされるリスクがある CPU で SMT を使えるように設計されています。コアスケジューリングは、ゲストが特定のコア・スレッドのペアを両方使うか、ゲストが関連するコアを使う間スレッドが使用されないことを保証します。
+
+  #### クラスターメンバーの設定 <!-- Cluster member configuration -->
+  <!--
+  Cluster members now have support for configuration keys.
+  -->
+  クラスターメンバーが設定キーをサポートするようになりました。
+
+  <!--
+  Other than the free form `user.KEY=VALUE`, the other key being introduced is `scheduler.instance` which can be used to prevent a particular cluster member from getting automaticly placed instances, instead only getting instances that are directly placed on it through the `--target` option of the CLI.
+  -->
+  自由形式の `user.KEY=VALUE` に加えて、導入された設定キーは `scheduler.instance` です。この設定は、特定のクラスターメンバーには自動的にインスタンスは配置せず、CLI で `--target` オプションを直接指定した場合のみインスタンスを配置できます。
+
+  ドキュメント <!-- Documentation -->: https://linuxcontainers.org/lxd/docs/master/clustering#managing-a-cluster
+
+  #### ネットワークリースの改良 <!-- Improvement to network leases -->
+  <!--
+  As network leases are heavily relied upon for the new network zones feature, some improvements have been done.
+  -->
+  新しいネットワークゾーン機能は、ネットワークリースに大きく依存しているので、改良をいくつか行いました。
+
+  <!--
+  Some of the improvements are:
+  -->
+  その改良は:
+
+   - OVN ネットワークでのネットワークリースのサポートしました <!-- Support for network leases on OVN networks -->
+   - リースのリスト内にアップリンクのネットワークが表示されるようになりました <!-- Uplink networks now showing up in the list of leases -->
+   - リストに IPv6 EUI64 アドレスが含まれるようになりました（ステートフルな DHCPv6 が有効になっていないとき） <!-- IPv6 EUI64 addresses included in the list (when stateful DHCPv6 isn't enabled) -->
+
+  <!--
+  On the CLI, those records can be seen with `lxc network list-leases NETWORK-NAME`
+  -->
+  CLI では、これらのレコードは `lxc network list-leases NETWORK-NAME` で見ることができます。
+
+  ### すべての変更点（翻訳なし） <!-- Complete changelog -->
+  <!--
+  Here is a complete list of all changes in this release:
+  -->
+  このリリースでの完全な変更点のリストは次の通りです:
+
+  [details="すべてのChangeLogを見る"]
+   - lxd/certificates: remove explicit calls to UpdateCertificateProjects
+   - lxd/db/certificates: remove Cluster.UpdateCertificateProjects
+   - lxd/db/generate/db/method: fill entity id association tables on create/update
+   - lxd/db/certificates.mapper: update generated code
+   - lxd/checkfeature: check whether the kernel supports core scheduling
+   - lxd/daemon: Fix crash on lxd start when another lxd already running
+   - lxd/daemon: Don't fail shutdown if fail to close cluster DB
+   - lxd/daemon: Don't use Infof and Errorf
+   - lxd/metrics: Change ProcsTotal to gauge
+   - lxd/instance/drivers: Log metrics failures
+   - lxd-agent: Log metrics failures
+   - lxd/instance/operationalock: Change lock from using instance ID to use project and instace name
+   - lxd/instance/operationalock: Use %q for error quoting
+   - lxd/instance/operationlock: Get lock after checking for non-nil operation
+   - lxd/instance/drivers/driver/common: operationlock usage
+   - lxd/instance/drivers/driver/lxc: operationlock usage
+   - lxd/instance/drivers/driver/qemu: operationlock usage
+   - lxd/instance/instance/utils: operationlock usage
+   - lxd-agent: Drop aggregated cpu stats in metrics
+   - test: Kill LXD process if doesn't start in time
+   - lxd/main/shutdown: Fix shutdown regression when running in snap
+   - lxc: suggest 20.04 as the first container to launch instead of 18.04
+   - lxc: switch from 18.04 to 20.04 for examples of Ubuntu instances
+   - i18n: Update translation templates
+   - lxc: update wording when a cert is successfully trusted by a remote
+   - i18n: Update translation templates
+   - lxd/backup/backup/config: Adds ToInstanceDBArgs function
+   - lxd/instance/instance/utils: Adds LoadFromBackup function
+   - lxd/project/project: Update comment of InstanceParts
+   - lxd/instances: Reworks instancesOnDisk to return slice of instance.Instance
+   - lxd/instances: Updates instancesShutdown to use instancesOnDisk
+   - lxd/patches: Updates patchUpdateFromV11 and patchUpdateFromV15 to use instancesOnDisk
+   - lxd/api/internal: Use backupConf.ToInstanceDBArgs in internalImportFromBackup
+   - lxd/api/internal/recover: Updates internalRecoverImportInstance to use backupConf.ToInstanceDBArgs
+   - lxd/instances: Don't clear last power state of all instances in a cluster in instancesShutdown
+   - lxd/db/instances: Removes ResetInstancesPowerState function
+   - lxd/instances: Move shutdown timeout logic into per-instance go routine in instancesShutdown
+   - lxd/instances: Reworks instancesShutdown to handle and log shutdown failures by forcefully stopping
+   - lxd/instances: Updates instancesShutdown to accept a slice of instances
+   - lxd/instances: Renames containerAutostartList to instanceAutostartList
+   - lxd/instances: Renames instancesRestart to instancesStart
+   - lxd/daemon: Updates init to use instancesStop and instancesStart with preloaded container list
+   - lxd/daemon: Updates Ready to use updated instancesStart
+   - lxd/daemon: Updates Stop to load instances once
+   - lxd/daemon: Updates numRunningInstances to accept a list of instances to check
+   - shared/osarch/architectures: Use ARCH_UNKNOWN rather than 0 in ArchitectureId
+   - lxd/db/instances: Removes UpdateInstancePowerState function
+   - lxd/instance/drivers/driver/common: Adds recordLastState function
+   - lxd/instance/drivers: Use d.VolatileSet in onStop hook to record last power state
+   - lxd/instance/drivers: d.recordLastState usage
+   - lxd/instances/drivers: Call d.UpdateBackupFile just before starting instance process
+   - lxd/daemon: Close global database after query failure in Stop
+   - lxd/daemon: Use consistent terminology of global rather than remote database in Stop
+   - lxd/api/internal: Update internalContainerHookLoadFromReference to try and load instance from backup if DB not available
+   - lxd/instance/drivers/driver/qemu: Update getMonitorEventHandler to try and load instance from backup if DB not available
+   - lxd/storage/drivers/driver/zfs/volumes: Log dev path in UnmountVolume
+   - lxd/migration: Update protobuf config
+   - lxd/migration: Update generated protobuf
+   - gomod: Update dependencies
+   - doc/network: Avoid referring to releases by name
+   - lxd/apparmor: Allow remount using noatime
+   - lxd/apparmor: remove mount options alternations
+   - lxd/apparmor: remove another mount options alternations
+   - lxd/apparmor: remove spaces between mount options for consistency
+   - lxd/apparmor: remove duplicated mount rules (ro,remount,bind)
+   - lxd/api/cluster: Fail on no leader in internalClusterPostHandover
+   - lxd/instance: Fix image download race condition in instanceCreateFromImage
+   - lxd/networks: Report uplink networks in leases
+   - lxd/api/cluster: Fail on no leader in handoverMemberRole
+   - lxd/cluster/gateway: Log partial and initial heartbeat as info
+   - test: Adds better logging and removes handover sleeps in test_clustering_handover
+   - lxd/cluster/heartbeat: No need to log heartbeat restart
+   - test: Don't use pid files in test_clustering_shutdown_nodes
+   - test: Actually ensure cluster DB isn't reachable after its lost quorum in test_clustering_shutdown_nodes
+   - test: Use timeouts in kill_lxd
+   - lxd/storage/drivers/driver/zfs/volumes: Use normal mount rather than zfs mount
+   - tests: Unify how the instance's PID is looked up
+   - tests: add missing --force-local to `lxc stop`
+   - tests: use CSV format and column filtering where applicable
+   - tests: use CSV format and column filtering to find the name of the newly created instance
+   - tests: use grep -F when the match pattern contains regex/wildcard
+   - tests: replace `grep | cut` by awk
+   - lxd/instance/operationlock: Adds TimeoutSeconds constant
+   - lxd/instance/drivers/driver/common: Error quoting in onStopOperationSetup
+   - lxd/instance/drivers/driver/qemu: Updates onStop to be more like lxc driver
+   - test/suites: Always provide project arg in volume test
+   - lxd/sys/os: reorder kernel features
+   - os: add separate entries for pure core scheduling kernel feature and container support
+   - lxd: support core scheduling for virtual machines
+   - test/suites: Fix cephfs backup test
+   - lxd/instance/drivers/driver/qemu: Improve comments in Shutdown
+   - lxd/instance/operationlock: Add ErrNonReusuableSucceeded error and Action type and action constants
+   - lxd/instance/operationlock: Reworks Create to use Action type
+   - lxd/instance/operationlock: Reworks CreateWaitGet
+   - lxd/instance/drivers/driver/common: operationlock.Action usage
+   - lxd/instance/drivers/driver/lxc: operationlock.CreateWaitGet and operationlock.Create usage
+   - lxd/instance/drivers/driver/qemu: operationlock.CreateWaitGet and operationlock.Create usage
+   - lxd/instance/drivers/driver/qemu: Add comment in Stop about operation lock
+   - lxd/instance/drivers/driver/qemu: Keep operation alive in Shutdown
+   - lxd/instance/drivers/driver/lxc: Keep operation alive in Shutdown
+   - lxd/network: Move Leases to network package
+   - lxd: support core scheduling for container even without LXC library support
+   - lxd/instance/lxc: Properly report mapped memory
+   - lxd/daemon: Updates NodeRefreshTask to accept an isLeader and unavailableMembers argument
+   - lxd/api/cluster: Improves logging in internalClusterPostHandover
+   - lxd/cluster/gateway: Adds shutdownCtx to NewGateway and return 503 in heartbeat if shutting down
+   - lxd/storage/drivers/driver/zfs/volumes: Set mountpoint=none for filesystem volumes
+   - lxd/storage/drivers/driver/zfs/patches: Update patches to set mountpoint=none
+   - lxd/cluster/gateway: Adds HeartbeatHook type
+   - lxd/cluster/gateway: Reject heartbeat if shutting down
+   - lxd/cluster/gateway: Rework HandlerFuncs heartbeat handling
+   - lxd/cluster/heartbeat: Update heartbeatRestart to return bool if heartbeat restarted
+   - lxd/cluster/heartbeat: Pass non-updated heartbeat members as unavailable to heartbeat refresh task in heartbeat
+   - lxd/cluster/membership: Add logging to notifyNodesUpdate
+   - lxd/cluster/membership: Improve logging in Assign
+   - lxd/cluster/membership: Adds unavailableMembers support to Rebalance and newRolesChanges
+   - lxd/api/cluster: Adds unavailableMembers support to rebalanceMemberRoles
+   - lxd/api/cluster: Improve logging in rebalanceMemberRoles
+   - lxd/cluster/gateway/test: cluster.NewGateway usage
+   - lxd/cluster/gateway: Remove unnecessary logging
+   - lxd/cluster/gateway: Don't stop enrichhing raft nodes if one member name not found in currentRaftNodes
+   - test: Reduce sleeps and offline threshold in clustering tests to speed them up
+   - lxd/db/networks: Reworks GetNetworkInAnyState and its ilk to split the functionality out into separate functions
+   - shared/api/error: Improve argument name in StatusErrorMatch
+   - shared/api/error: Adds StatusErrorCheck helper function
+   - lxd/networks: Use api.StatusErrorCheck to check for not found error from d.cluster.GetNetworkInAnyState
+   - lxd/instance/drivers/driver/lxc: Fix restart locking
+   - lxd/network/driver/ovn: Fix comment on getLoadBalancerName
+   - lxd/cluster/heartbeat: Use api.StatusErrorf in error returned from HeartbeatNode
+   - test: Improve test_clustering_remove_raft_node reliability
+   - lxd/network/ovn: Add support for leases
+   - api: Add image_source_project extension
+   - shared/api: Add Project to ImagesPostSource
+   - lxd/storage/drivers/volume: Adds IsCustomBlock function
+   - lxd/storage/drivers/generic/vfs: Fixes regression in genericVFSBackupUnpack for VM config volume import
+   - lxd/network/openvswitch/ovn: Adds OVNRouterRoute type
+   - lxd/network/openvswitch/ovn: Updates LogicalRouterRouteAdd to accept multiple OVNRouterRoute args
+   - lxd/network/openvswitch/ovn: Harmonise naming conventions in LogicalRouterRouteDelete with OVNRouterRoute type
+   - lxd/network/network/utils: Removes unnecessary DB lookup via NICType function in isInUseByDevice
+   - lxd/network/network/utils: Updates UsedBy to use usedByInstanceDevices
+   - lxd/network/network/utils: Updates usedByInstanceDevices to use updated isInUseByDevice
+   - lxd/network/network/utils: Updates isInUseByProfile to use updated isInUseByDevice
+   - lxd/network/network/utils: Renames isInUseByProfile to usedByProfileDevices
+   - lxd/network/openvswitch/ovn: Update LogicalRouterRouteDelete to accept net.IPNet rather than pointer
+   - lxd/network/driver/ovn: Remove default routes and re-add as needed in setup
+   - lxd/network/driver/ovn: Update InstanceDevicePortSetup to use static route port hints
+   - lxd/network/driver/ovn: InstanceDevicePortDelete updated to handle non-pointer IPNets
+   - client: Support source project in image copies
+   - lxd/images: properly return project name in error
+   - lxd: Support source project in image copies
+   - lxc/image: Support source project in image copies
+   - doc/rest-api: Refresh swagger YAML
+   - lxd/db/config: rename UpdateConfig to UpdateClusterConfig
+   - lxd/db/generate/lex/form: smarter pluralize function
+   - lxd/db/generate/db/method: fix stmt type for generating URIs
+   - lxd/db/generate/db/parse: check stmt and method for omitting fields
+   - lxd/db/generate/db/mapping: pass table name to FieldColumnName
+   - lxd/db/generate/db/stmt: pass variable name to register function
+   - lxd/db/operations.mapper: remove ProjectID omission from operations
+   - lxd/instance/drivers/qmp/monitor: Update run to accept an interace{} for args and JSON encode internally
+   - lxd/instance/drivers/qmp/monitor: m.run usage
+   - lxd/instance/drivers/qmp/commands: m.run usage
+   - lxd/instance/drivers/qemu: Adds workaround for QEMU 6.x regression in handling memory object host-nodes setting
+   - lxd/db/cluster/update: updateFromV50
+   - lxd/db/cluster/schema: Update schema
+   - lxd/db/node: add Config field to NodeInfo
+   - lxd/db/node: populate config on Get
+   - lxd/db/node: add UpdateNodeConfig method
+   - lxd/db/node: add default config on Create
+   - lxd/db/node: bootstrap nodes with BootstrapNode
+   - lxd/db/node: skip database-standby in UpdateRoles
+   - lxd/db/node: skip nodes with manual scheduler
+   - lxd/device: Make sure vfio-pci is loaded
+   - lxc/cluster: Add --yes to remove
+   - tests: Update for change to cluster remove
+   - shared/version/api: add clustering_config
+   - shared/api/cluster: add Config to ClusterMemberPut
+   - lxd/api/cluster: use updateClusterNode for PUT/PATCH
+   - lxd/api/cluster: validate and update config on PUT/PATCH
+   - lxc/cluster: add cluster member get/set/unset
+   - doc/rest-api: Refresh swagger YAML
+   - i18n: Update translation templates
+   - doc/clustering: add clustering configuration docs
+   - test/suites/clustering: add clustering_autotarget
+   - lxd/db/config.mapper: placeholder config methods
+   - lxd: Add fsmonitor package
+   - lxd/state: Add DevMonitor to state
+   - lxd: Initialize DevMonitor in daemon
+   - lxd/device: Switch to DevMonitor
+   - lxd/device: Check prefix path in source
+   - lxd/device: Remove old inotify code
+   - test/suites: Add fsmonitor to static analysis
+   - lxd/db/networks: Fixes getStoragePool to support NULL description fields
+   - lxd/api/cluster: fix comment on clusterGet clusterPut
+   - lxd/device/nic/ovn: Improve error in Start
+   - lxd/network/acl/acl/ovn: Adds OVNIntSwitchPortGroupAddressSetPrefix function
+   - lxd/network/openvswitch/ovn: Adds address management functions
+   - lxd/network/openvswitch/ovn: Adds router policy management function
+   - lxd/network/driver/ovn: Move logical switch creation after internal network IP validation
+   - lxd/network/driver/ovn: Add address set that represents internal switch subnets and NIC routes
+   - lxd/network/driver/ovn: Adds instanceNICGetRoutes function
+   - test: Set LXD_DEVMONITOR_DIR
+   - doc/environment: Add LXD_DEVMONITOR_DIR
+   - lxd/network/driver/ovn: Reworks Update to populate active NIC routes into internal switch's address set
+   - api: Adds network_peer extension
+   - lxd/network/acl/driver/common: ValidName usage
+   - lxd/network/acl/acl/validation: Adds ValidName function
+   - lxd/network/acl/driver/common: Adds ReservedNetworkSubects slice
+   - shared/api/network/peer: Adds network peering API types
+   - lxd/db/cluster: Adds networks_peers and networks_peers_config tables
+   - lxd/db/network/peers: Peer management functions
+   - doc/rest-api: Refresh swagger YAML
+   - lxd/lifecycle/network/peer: Peer lifecycle type
+   - lxd/network/network/utils: Updates UsedBy to check if the network has any created peers
+   - lxd/networks: network.UsedBy usage
+   - lxd/network/driver/common: UsedBy usage
+   - lxd/network: Adds peer management function definitions and common not implemented implementation
+   - lxd/network/driver/common: Adds Peering feature indicator
+   - lxd/network/driver/common: Adds common peer validation function
+   - lxd/network/openvswitch/ovn: Adds peer management functions
+   - lxd/network/driver/ovn: Adds peering management functions
+   - lxd/network/peer: Network peer API endpoints
+   - client/interfaces: Adds network peer management function definitions
+   - client/lxd/network/peer: Adds network peer management client functions
+   - lxc/network/peer: Adds network peer CLI commands
+   - i18n: Update translation templates
+   - doc: Adds network peers documentation
+   - lxd/network/driver/bridge: Fix leases
+   - lxd-p2c: Allow passing existing certificate
+   - client/connection: Typo in ConnectLXD
+   - lxd/instance/post: Improve error in instancePostClusteringMigrate
+   - lxd/move: Adds stateful migration support for cross-pool instance migrations
+   - lxd/move: Consistent comment line endings in moveInstancePool
+   - lxd/instance/post: Refactor how backward compat handling of Live field in instancePost
+   - lxd/instance/post: Error quoting
+   - lxd/instance/post: Comment typo in instancePostPoolMigration
+   - lxd/instance/post: Adds stateful migration support to instancePostPoolMigration
+   - i18n: Update translation templates
+   - process_utils: move wait_for_pid_status_nointr() to common code
+   - lxd: consolidate functions into common header
+   - lxd: make C functions static
+   - lxd: add config.h for common options
+   - doc: Drop part about building LXC
+   - doc: Add bind9-dnsutils to testsuite requirements
+   - lxd: use argument struct for manip_file_in_ns()
+   - forkfile: small coding style fixes
+   - forkfile: decrease indendation level
+   - lxd/fsmonitor/drivers: Add missing FAN_MARK_FILESYSTEM
+   - doc/enviroment: Clarify that LXD_DEVMONITOR_DIR is for testing
+   - lxd/fsmonitor: Ensure path is a mountpoint
+   - lxd/instance/instance: Renames IsMigratable to CanMigrate
+   - lxd/api/cluster: inst.CanMigrate usage
+   - lxd/move: Add stateful move support to moveClusterInstance
+   - lxd/instance/post: Adds stateful migration support to instancePostClusteringMigrate
+   - i18n: Update translation templates
+   - test: Use mountpoint for test devices
+   - lxd/db/node: don't autofill node config
+   - lxd/api/cluster: make scheduler.instance optional
+   - lxd/db/query/transaction: Adds 10s timeout to Transaction
+   - lxd/cluster/gateway: Add 30s idle timeout in dqliteProxy
+   - lxd/cluster/gateway: Close remote connection in dqliteProxy
+   - lxd/cluster/events: Disconnect event listeners for offline members in eventsUpdateListeners
+   - lxd/events/events: Rework events.Listener to use websocket heartbeats
+   - shared/instance: Add linux.sysctl.*
+   - lxd: Support for linux.sysctl.* configuration keys
+   - doc: Add linux.sysctl.*
+   - api: Add linux_sysctl extension
+   - lxd/device/nic/bridged: Prevent specifying ipv{n}.address when NIC is connected to unmanaged parent bridge
+   - test: Add test for bridged NIC not able to specify static IPs when using unmanaged parent bridge
+   - lxd/events/events: Moves blocking reader into heartbeat function
+   - lxd: Removes blocking reader from event client
+   - lxd-agent: Removes blocking reader from event client
+   - lxd/fsmonitor/drivers: Log warning instead of failing
+   - lxd/cluster/gateway: Removes dqliteProxy idle timeout
+   - lxd/cluster/gateway: Update logging in dqliteProxy
+   - lxd/cluster/gateway: Set 30s TCP_USER_TIMEOUT and keep alive timers in dqliteProxy
+   - lxd/util/net: Adds SetTCPUserTimeout function
+   - lxd/db/db: retry cluster transactions once if context deadline exceeded
+   - seccomp: Pass the caller TGID to pidfd_open instead of TID
+   - lxd/instance/drivers: Check swap for metrics
+   - seccomp: verify retrieved fds when
+   - shared/validate: Add IsListOf
+   - doc: Move metrics under API
+   - api: network_dns extension
+   - doc/projects: Add restricted.networks.zones
+   - lxd/projects: Add restricted.networks.zones
+   - doc/networks: Add dns.zone
+   - lxd/network: Add dns.zone
+   - doc/server: Add core.dns_address
+   - lxd/node: Add core.dns_address
+   - shared: Add network zone API
+   - client: Rename lxd_network_forwards for consistency
+   - client: Add network zone functions
+   - lxd/db: Add networks_zones schema
+   - lxd/db: Add network zones helpers
+   - lxd/network/zone: Initial package
+   - lxd/lifecycle: Add network zones
+   - lxd: Add network zone API
+   - doc/rest-api: Refresh swagger YAML
+   - lxc/network: Add zone sub-command
+   - i18n: Update translation templates
+   - lxd/dns: Add DNS server
+   - lxd/daemon: Integrate DNS server
+   - tests: Add DNS zone tests
+   - doc: Add network zones documentation
+   - lxd/instance/qemu: Fix host-nodes on multi-node
+   - lxd/instance/drivers: Use existing DeviceTotalMemory
+   - lxd/instance/drivers: Check memory limit value for metrics
+   - lxd/migrate: Fix deadlock in sendControl
+   - lxd/migrate: Time out when waiting for connections
+   - lxd/storage/backend/lxd: Clarify errors in CreateInstanceFromCopy and CreateInstanceFromMigration
+   - lxd/instances/post: Wrap error in createFromMigration
+   - lxd/instances/post: Update comment in createFromMigration
+   - lxd/instance/drivers/driver/qemu: Implements Migrate to support stateful start after migration
+   - lxd/migrate/instance: Update new migration source and sink functions to detect container instance type for CRIU
+   - lxd/migrate/instance: Move predump setup logic inside CRIU section
+   - lxd/migrate/instance: Keep vol source arg setup logic together
+   - lxd/migrate/instance: Make CRIU logic conditional on container instance type
+   - lxd/migrate/instance: Statefully stop running VM for live migration in migrationSourceWs
+   - lxd/migrate/instance: Code style tweak in migrationSink
+   - lxd/migrate/instance: Update migrationSink Do to support VM stateful migration
+   - lxd/migrate: Update critieria for live migration to detect container instance type
+   - lxc/copy: Add comment clarifying post-migration start up logic in copyInstance
+   - lxd/instance/post: Simplify arguments to instance migration functions
+   - lxd: migrateInstance usage
+   - lxd/instance/post: Remove container references in migrateInstance
+   - lxd/instance/post: Improve comment in instancePostClusteringMigrateWithCeph
+   - lxd/storage/drivers/driver/ceph/volumes: Improve comment in MigrateVolume
+   - lxd/instance/post: Avoid loading storage pool twice in instancePostClusteringMigrateWithCeph
+   - lxd/instance/post: Remove out of date comment from instancePostClusteringMigrateWithCeph
+   - lxd/instance/post: Remove container reference in error in instancePostClusteringMigrateWithCeph
+   - lxd/instance/post: Remove trailing newline in instancePostClusteringMigrateWithCeph
+   - lxd/instance/post: Use http.StatusOK in instancePostClusteringMigrateWithCeph
+   - lxd/instance/post: Switch to api.NewURL() in instancePostClusteringMigrateWithCeph
+   - lxd/db/instances: Adds volumeType argument to UpdateInstanceNode
+   - lxd/instance/post: Replace node in errors with member
+   - lxd/instance/post: Rework instancePostClusteringMigrateWithCeph to support VM stateful migration
+   - lxd/instance/post: Update instancePostCreateInstanceMountPoint to accept an instance
+   - lxd/instance/post: Don't allow migration to same location of instance in migrateInstance
+   - lxd/instances/post: Replace node with member in error in clusterCopyContainerInternal
+   - lxd/storage/drivers/driver/ceph/volumes: Fix MigrateVolume to support VM cluster migration
+   - lxd/instance/post: Update instancePostClusteringMigrate with support for starting instance during stateless migration
+   - test: Update teardown_clustering_netns to succeed if process has already gone
+   - lxd/device/nic/bridged: Allow static IP on unmanaged bridge when MAAS subnet specified
+   - lxd/device/nic/ovn: Remove setting accept_ra sysctl unnecessarily as disable_ipv6 is set
+   - Replace 'which' with 'command -v'
+   - Use which to resolve lxc's path without resolving the shell function of the same name
+   - lxc: better advertise support for VMs
+   - i18n: Update translation templates
+   - lxd/device/device/utils/network: Renames networkSnapshotPhysicalNic to networkSnapshotPhysicalNIC
+   - lxd/device: networkSnapshotPhysicalNIC usage
+   - lxd/device/device/utils/network: Renames networkRestorePhysicalNic to networkRestorePhysicalNIC
+   - lxd/device: networkRestorePhysicalNIC usage
+   - lxd/device/nic: Split up SR-IOV functions
+   - lxd/device: Records SRIOV VF parent device in last_state.vf.parent
+   - shared/instance: Add .last_state.vf.parent support to ConfigKeyChecker
+   - lxd/device/device/utils/network: Adds useSpoofCheck arg to networkSRIOVSetupVF and networkSRIOVRestoreVF
+   - lxd/device/device/utils/network: Add support for last_state.vf.parent in networkSRIOVRestoreVF
+   - lxd/device/nic/sriov: useSpoofCheck argument usage
+   - lxd/network/network/utils/sriov: Rename sriovFindFreeVirtualFunctionMutex to SRIOVVirtualFunctionMutex
+   - lxd/network/network/utils/sriov: Remove use of lock from SRIOVFindFreeVirtualFunction
+   - lxd/device/nic/sriov: Use network.SRIOVVirtualFunctionMutex.Lock
+   - api: Add ovn_nic_acceleration extension
+   - doc/instances: Add network acceleration config
+   - lxd/network/openvswitch: Add HardwareOffloadingEnabled
+   - lxd/network: Adds SRIOVFindFreeVFAndRepresentor
+   - lxd/device/nic_ovn: Add SR-IOV support
+   - lxd/device/nic/ovn: Remove incorrect call to networkSetupHostVethLimits
+   - lxd/cluster: Fix forceful stop on restore
+   - bash-completion: Add restore snapshots
+   - lxd/operations: Updates waitForOperations to accept consoleShutdownTimeout arg
+   - lxd/daemon: Load shutdown timeout from DB in Stop()
+   - lxd/daemon: Only call waitForOperations during Stop if cluster DB is available
+   - lxd/api/internal: Wait for daemon to finish starting up before shutting down in internalShutdown
+   - forkuevent: minor fixes
+   - forkuevent: fix "--" placement
+   - lxd/instances/qemu: Enable topoext on x86_64 with SMT
+   - lxc/import: read from stdin
+   - doc/instances: Explain CPU topology in VMs
+   - cleanup: remove subtest
+   - Remove the last 'which' occurence.
+   - lxc/file: Don't use HostPath on temp files
+   - lxd/cluster: Log leader address on failure
+   - lxd/api/cluster: Sleep for 100ms to allow http.Flush to render
+   - lxd/fsmonitor: Don't crash on Walk errors
+   - lxd/instance/lxc: Only mount for file operations if stopped
+   - lxd/instance_exec: Improve and expand default PATH setting
+   - lxd/network/driver/ovn: Comment typo
+   - lxd/network/driver/ovn: Add external inbound peer address spoof protection to logicalRouterPolicySetup
+   - lxd/network/driver/ovn: Update PeerDelete to remove security policy rules from local and target routers
+   - lxd/network/acl/driver/common: Small optimisation in validateRule
+   - lxd/network/acl/driver/common: Allow named peers starting with @ in validateRuleSubjects
+   - lxd/db/network/peers: Adds GetNetworkPeersTargetNetworkIDs function
+   - lxd/network/acl/acl/ovn: Adds support for peer subjects using @<network_name>/<peer_name> in OVNEnsureACLs
+   - doc/network-acls: Adds concept of peer network subject selectors
+   - lxd/instance/drivers/driver/lxc: Adds release function to reduce repetition of liblxc clearing logic
+   - lxd/instance/drivers/driver/lxc: Release liblxc cache when stopping or shutting down
+   - lxd/network/network/interface: Adds PeerUsedBy function
+   - shared/api/network/peer: Adds UsedBy field to NetworkPeer
+   - lxd/network/peer: Populate UsedBy field
+   - lxd/network/driver/common: Adds peer used by functions
+   - lxd/network/driver/ovn: Prevent peer from being deleted if in use
+   - doc/rest-api: Refresh swagger YAML
+   - gomod: Update dependencies
+   - i18n: Update translations from weblate
+   - lxd: Move to new protobuf when possible
+   - gomod: Pin x/net to version supporting 1.13
+   - lxd/storage/btrfs: Support 5.14.2
+   - lxd/db: Use upstream context package
+   - gomod: Update dependencies
+   - gomod: Downgrade dqlite to 1.10.0
+   - lxd/storage/ceph: Properly support pre-existing empty pools
+  [/details]
+
+  ### 試用環境 <!-- Try it for yourself -->
+  <!--
+  This new LXD release is already available for you to try on our [demo service](https://linuxcontainers.org/lxd/try-it/).
+  -->
+  この新しい LXD リリースは私たちの [デモサービス](https://linuxcontainers.org/ja/lxd/try-it/) で利用できます。
+
+  ### ダウンロード <!-- Downloads -->
+  <!--
+  The release tarballs can be found on our [download page](https://linuxcontainers.org/lxd/downloads/).
+  -->
+  このリリースの tarball は [ダウンロードページ](https://linuxcontainers.org/lxd/downloads/) から取得できます。
+
+  <!--
+  Binary builds are also available for:
+  -->
+  ビルド済みバイナリーは次のように使えます:
+
+   - **Linux:** snap install lxd
+   - **MacOS:** brew install lxc
+   - **Windows:** choco install lxc
+
