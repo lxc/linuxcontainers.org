@@ -68,14 +68,14 @@ content: |-
 
   The way this works is by using physical network cards which can operate in `switchdev` mode. Such cards will then provide both a guest facing VF and a host facing representor port. When a system with a suitable card has it in `switchdev` mode, has the PF added to the OVS bridge and has OVS configured for SR-IOV offload, LXD can automatically allocate VFs for use by containers or VMs.
 
-  When all the preprequisites are met, all that needs to be done is set `acceleration=sriov` on the LXD nic device and LXD will do the rest.
+  When all the prerequisites are met, all that needs to be done is set `acceleration=sriov` on the LXD nic device and LXD will do the rest.
 
   This can lead to an extreme improvement in performance especially on 40G, 100G or 200G networks as it will effectively offload the bulk of the traffic processing directly onto the physical NIC. In such an environment only the first packet in most connections will ever go through the host system and OVS/OVN, all traffic after that point is directly handled in hardware.
 
   Documentation: https://linuxcontainers.org/lxd/docs/master/instances#nic-ovn
 
   #### Linux sysctl configuration on containers
-  A new `linux.syctl.*` set of config keys has been introduced. This allows directly setting a specific sysctl to a specific value on container startup.
+  A new `linux.sysctl.*` set of config keys has been introduced. This allows directly setting a specific sysctl to a specific value on container startup.
 
   This can be more flexible than having a sysctl.d entry inside the container and can also enable accessing sysctls which are properly namespaced but require elevated privileges by having LXD apply those from the host.
 
