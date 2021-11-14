@@ -41,7 +41,7 @@ content: |-
   -->
   コミットの全リストは次の通りです（翻訳なし）:
 
-  [details="Detailed changelog"]
+  [details="すべてのChangeLogを見る"]
    - lxd/db/generate/db/stmt: replace naturalKeyWhere with whereClause
    - lxd/db/generate/db/parse: use kind parameter for Filter generation
    - lxd/db/generate/db/method: pass query kind to Filter
