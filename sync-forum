@@ -40,9 +40,13 @@ for project in PROJECTS:
         if "origin" not in old_entry:
             continue
 
-        dis_topic = load_json(old_entry["origin"])
-        dis_post = load_json("/posts/%s" %
-                             dis_topic["post_stream"]["posts"][0]["id"])
+        try:
+            dis_topic = load_json(old_entry["origin"])
+            dis_post = load_json("/posts/%s" %
+                                 dis_topic["post_stream"]["posts"][0]["id"])
+        except Exception:
+            print("Failed to load: %s" % old_entry["origin"])
+            continue
 
         entry = yaml.load("""
 title: foo
@@ -73,9 +77,13 @@ for topic in news["topic_list"]["topics"]:
         print("%s => skipping (already exists)" % topic["title"])
         continue
 
-    dis_topic = load_json("/t/%s" % topic["id"])
-    dis_post = load_json("/posts/%s" %
-                         dis_topic["post_stream"]["posts"][0]["id"])
+    try:
+        dis_topic = load_json("/t/%s" % topic["id"])
+        dis_post = load_json("/posts/%s" %
+                             dis_topic["post_stream"]["posts"][0]["id"])
+    except Exception:
+        print("Failed to load: %s" % topic["id"])
+        continue
 
     if "release" not in dis_topic["tags"]:
         continue
