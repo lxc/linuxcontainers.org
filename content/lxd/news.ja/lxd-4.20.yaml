@@ -71,7 +71,7 @@ content: |-
   <!--
   Peer relations also allow for easier ACL rules, making it possible to use `@some-network/some-peer` in the source or destination field to affect traffic coming in or out of a specific peer network.
   -->
-  ピアの関係を使うことで ACL ルールを簡単にすることもできます。`@some-network/some-peer` をソースもしくはデスティネーションフィールドで使うことで、特定のピアネットワークに出入りする作用させることができます。
+  ピアの関係を使うことで ACL ルールを簡単にすることもできます。`@some-network/some-peer` をソースもしくはデスティネーションフィールドで使うことで、特定のピアネットワークに出入りするトラフィックに作用させることができます。
 
   <!--
   A new `lxc network peer` command is used to manage those peers relations.
