@@ -246,6 +246,7 @@ content: |-
   -->
   このリリースでのすべての変更点のリストは次のとおりです:
 
+  [details="すべてのChangeLog を見る"]
    - lxd/cluster: Leverage RolesChanges.Handover() to choose handover target
    - lxd: Increase timeout of go unit tests when ran from Emacs
    - lxd/cluster: Skip unnecessary loading of nodes from database in Rebalance()

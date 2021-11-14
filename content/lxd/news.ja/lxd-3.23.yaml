@@ -155,6 +155,7 @@ content: |-
   ### 完全な ChangeLog（翻訳なし）<!-- Complete changelog -->
   Here is a complete list of all changes in this release:
 
+  [details="すべてのChangeLog を見る"]
    - lxd/storage/zfs: Fix usage calculation
    - Add go 1.14.x check
    - lxd: Cleanup error messages

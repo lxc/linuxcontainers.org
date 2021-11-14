@@ -153,6 +153,7 @@ content: |-
   ### 完全な ChangeLog（翻訳なし） <!-- Complete changelog -->
   Here is a complete list of all changes in this release:
 
+  [details="すべてのChangeLog を見る"]
    - lxc-to-lxd: golint fix
    - lxd/cluster: golint fixes
    - lxd/migration: golint fixes

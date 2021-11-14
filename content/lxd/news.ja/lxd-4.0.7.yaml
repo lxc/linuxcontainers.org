@@ -44,6 +44,7 @@ content: |-
   -->
   コミットの全リストは次の通りです（翻訳なし）:
 
+  [details="すべてのChangeLog を見る"]
    - lxd/networks/utils: Log forkdns refresh task starting in networkUpdateForkdnsServersTask
    - lxd/db/node: Adds certificates table to local database
    - lxd/db/certificates: Adds GetCertificates function

@@ -148,6 +148,7 @@ content: |-
   ### 完全な ChangeLog（翻訳なし） <!-- Complete changelog -->
   Here is a complete list of all changes in this release:
 
+  [details="すべてのChangeLog を見る"]
    * lxd/migrate/container: Fixes migrate refresh final sync snapshot bug
    * lxd/migration/migration/volumes: Comment on Data property of VolumeSourceArgs
    * lxd/storage/drivers/driver/zfs/volumes: Explain use of volSrcArgs.Data for migration

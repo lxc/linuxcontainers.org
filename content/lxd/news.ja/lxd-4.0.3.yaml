@@ -46,6 +46,7 @@ content: |-
   -->
   コミットの全リストは次のとおりです（翻訳なし）:
 
+  [details="すべてのChangeLog を見る"]
    - lxd/storage: Better handle broken volumes
    - client: Handle unknown image sizes
    - lxd/response: Stream multi-part responses

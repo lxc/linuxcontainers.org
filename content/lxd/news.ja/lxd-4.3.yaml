@@ -133,6 +133,7 @@ content: |-
   -->
   このリリースでのすべての変更点のリストは次のとおりです:
 
+  [details="すべてのChangeLog を見る"]
    - lxd/instance/drivers/driver/lxc: Adds debug logging to deviceStop
    - lxd/instance/drivers/driver/lxc: Adds driver revert on failed start in startCommon
    - lxd/instance/drivers/driver/qemu: Adds debug logging to deviceStop

@@ -171,6 +171,7 @@ content: |-
   -->
   このリリースでの完全な変更点のリストは次のとおりです:
 
+  [details="すべてのChangeLog を見る"]
    - lxd/cluster: Changing "no heartbeat" language in membership.go "no heartbeat since <countup>" changed to "no heartbeat for <countup>"
    - lxd/apparmor: Allow unix sockets binding
    - doc/server: Fix escaping

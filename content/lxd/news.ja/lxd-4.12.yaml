@@ -188,6 +188,7 @@ content: |-
   -->
   このリリースでの完全な変更点のリストは次のとおりです:
 
+  [details="すべてのChangeLog を見る"]
    - containers: simplify wstatus.Close() logic in Exec()
    - containers: reap zombies on attach failure
    - seccomp: block openat2()

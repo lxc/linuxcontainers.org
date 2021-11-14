@@ -296,6 +296,7 @@ content: |-
   -->
   このリリースでの完全な変更点のリストは次の通りです:
 
+  [details="すべてのChangeLog を見る"]
    - global: Disable the completion command
    - lxd/instance/lxc: Rework raw.lxc handling
    - lxd/storage/zfs: Fix bad key name

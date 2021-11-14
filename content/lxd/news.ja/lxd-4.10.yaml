@@ -97,6 +97,7 @@ content: |-
   -->
   このリリースでの完全な変更点のリストは次のとおりです:
 
+  [details="すべてのChangeLog を見る"]
    - lxd/network/network/interface: Adds Project function
    - lxd/network/driver/common: Adds Project function
    - lxd/network/driver/common: Remove cluster notification and DB record removal from delete() function

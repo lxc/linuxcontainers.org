@@ -217,6 +217,7 @@ content: |-
   -->
   以下はこのリリースでの全変更の完全なリストです:
 
+  [details="すべてのChangeLog を見る"]
    - doc/instances: Fix escaping
    - lxc/network: Updates network detach checks to use bridged network property
    - lxd/network/network/utils: Updates network setting detection in IsInUse

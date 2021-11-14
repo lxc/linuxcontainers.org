@@ -39,6 +39,7 @@ content: |-
   -->
   コミットの全リストは次の通りです（翻訳なし）:
 
+  [details="すべてのChangeLog を見る"]
    - extract restart logic to new instance interface function of lxc and qemu
    - scripts/bash: Fix snap handling
    - extract common restart code to driver_common.go

@@ -220,7 +220,7 @@ content: |-
   ### 完全な Changelog （翻訳なし）<!-- Complete changelog -->
   Here is a complete list of all changes in this release:
 
-
+  [details="すべてのChangeLog を見る"]
    * Fix typo
    * Add role column to raft_nodes table
    * Make db.RaftNode an alias for dqlite.NodeInfo, which has a Role field

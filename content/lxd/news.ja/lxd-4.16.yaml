@@ -118,6 +118,7 @@ content: |-
   -->
   このリリースでの完全な変更点のリストは次の通りです:
 
+  [details="すべてのChangeLog を見る"]
    - lxd/resources: Set RPM to 1 instead of 0 when rotational
    - include: add open_tree() and mount_setattr()
    - doc/projects: Remove white list term

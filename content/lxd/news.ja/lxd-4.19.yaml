@@ -99,6 +99,7 @@ content: |-
   ### すべての変更点（翻訳なし） <!-- Complete changelog -->
   Here is a complete list of all changes in this release:
 
+  [details="すべてのChangeLog を見る"]
    - lxd/util/net: Update CanonicalNetworkAddress to return canconical IP
    - lxd/util/net: Update IsAddressCovered to use net.IP when comparing IP equality
    - lxd/endpoints/cluster: Improve error message in ClusterUpdateAddress
