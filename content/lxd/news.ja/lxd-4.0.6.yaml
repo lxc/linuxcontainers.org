@@ -571,6 +571,8 @@ content: |-
    - lxd/network: Replace ip command with ip package
    - tests: Add ip package to static_analysis test
 
+  [/details]
+
   ### 試用環境 <!-- Try it for yourself -->
   <!--
   This new LXD release is already available for you to try on our [demo service](https://linuxcontainers.org/lxd/try-it/).

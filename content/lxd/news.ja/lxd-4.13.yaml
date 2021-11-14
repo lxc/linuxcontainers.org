@@ -569,6 +569,8 @@ content: |-
    - lxd/operations: Export OperationClass type
    - client: Fix copy of VM snapshots
 
+  [/details]
+
   ### 試用環境 <!-- Try it for yourself -->
   <!--
   This new LXD release is already available for you to try on our [demo service](https://linuxcontainers.org/lxd/try-it/).

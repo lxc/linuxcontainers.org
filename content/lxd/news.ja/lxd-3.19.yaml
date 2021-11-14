@@ -1813,6 +1813,7 @@ content: |-
    * lxd/containers: Properly setup cgroup writer
    * lxd/cgroup: Fix memory limit handling
 
+  [/details]
 
   ### 試用環境 <!-- Try it for yourself -->
   <!--

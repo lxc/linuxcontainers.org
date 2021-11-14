@@ -912,6 +912,8 @@ content: |-
    - lxd/device: Fix duplicate MAC test
    - tests: Fix cluster networking test
 
+  [/details]
+
   ### 試用環境 <!-- Try it for yourself -->
   <!--
   Try the latest LXD release on our [demo service](https://linuxcontainers.org/lxd/try-it/).
