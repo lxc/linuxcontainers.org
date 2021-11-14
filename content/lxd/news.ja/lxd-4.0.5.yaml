@@ -39,6 +39,7 @@ content: |-
   -->
   コミットの全リストは次の通りです（翻訳なし）:
 
+  [details="すべてのChangeLog を見る"]
    - extract restart logic to new instance interface function of lxc and qemu
    - scripts/bash: Fix snap handling
    - extract common restart code to driver_common.go
@@ -933,6 +934,8 @@ content: |-
    - lxd/device: Have validatePCIDevice take an address
    - lxd/instance/qemu: Rename qemuNetDevPhysical to qemuPCIPhysical
    - cgroup: fix cgroup2 device driver settings
+
+  [/details]
 
   ### 試用環境 <!-- Try it for yourself -->
   <!--

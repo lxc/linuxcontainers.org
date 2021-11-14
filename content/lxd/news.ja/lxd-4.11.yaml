@@ -182,6 +182,7 @@ content: |-
   -->
   このリリースでの完全な変更点のリストは次のとおりです:
 
+  [details="すべてのChangeLog を見る"]
    - client: Fix output of GetClusterMemberNames
    - openvswitch/ovs.go: Simplify return in Installed method
    - rbac/server.go: Sleep for seconds instead of nanoseconds
@@ -385,6 +386,8 @@ content: |-
    - lxd/resources: Use %q when possible
    - lxd/images: Remove images backed by remote storage
    - i18n: Update translations from weblate
+
+  [/details]
 
   ### 試用環境 <!-- Try it for yourself -->
   <!--

@@ -38,6 +38,7 @@ content: |-
   -->
   コミットの全リストは次のとおりです（翻訳なし）:
 
+  [details="すべてのChangeLog を見る"]
    - lxd-agent: Support systemd-notify
    - lxd/qemu: Switch default unit type to notify
    - lxd/storage/backend/lxd: Updates CreateInstanceFromImage to use reverter
@@ -758,6 +759,8 @@ content: |-
    - lxd/storage: Use Truncate to create/grow VM files
    - lxd/db: Consider personalities in GetNodeWithLeastInstances
    - lxd/db: Avoid test failure in arch matching
+
+  [/details]
 
   ### 試用環境 <!-- Try it for yourself -->
   <!--

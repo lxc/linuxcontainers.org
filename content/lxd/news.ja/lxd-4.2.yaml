@@ -202,6 +202,7 @@ content: |-
   ### すべての変更点（翻訳なし）<!-- Complete changelog -->
   Here is a complete list of all changes in this release:
 
+  [details="すべてのChangeLog を見る"]
    - shared/generate/db: Fix generation of Exists method
    - lxd/db: Make generated code stable across "make update-schema" runs
    - lxd/db: Leverage code-generation for certificates
@@ -507,6 +508,8 @@ content: |-
    - api: Add network_state_bond_bridge
    - shared/api: Extend NetworkState for bridge/bond
    - lxd/networks: Add bridge/bond details
+
+  [/details]
 
   ### 試用環境 <!-- Try it for yourself -->
   <!--

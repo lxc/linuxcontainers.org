@@ -288,6 +288,7 @@ content: |-
   -->
   このリリースでの完全な変更点のリストは次のとおりです:
 
+  [details="すべてのChangeLog を見る"]
    - lxd/api/project: Reject quotes in project names
    - lxd/instance/drivers/driver/lxc: Updates initLXC to use project and instance name in callhook hook commands
    - lxd/instance/drivers/driver/lxc: Updates startCommon to quote hook command arguments
@@ -757,6 +758,8 @@ content: |-
    - lxd/project: Adds 'limits.instances' configuration key
    - api: Add projects_limits_instances extension
    - doc/api-extensions: Fix escaping
+
+  [/details]
 
   ### 試用環境 <!-- Try it for yourself -->
   <!--

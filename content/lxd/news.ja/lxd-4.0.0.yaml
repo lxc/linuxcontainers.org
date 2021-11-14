@@ -918,6 +918,7 @@ content: |-
   ### 完全な ChangeLog（翻訳なし） <!-- Complete changelog -->
   Here is a complete list of all changes in this release:
 
+  [details="すべてのChangeLog を見る"]
    - shared/version/api: Add trust_ca_certificates
    - doc: Add core.trust_ca_certificates
    - lxd/cluster/config: Add core.trust_ca_certificates
@@ -1056,6 +1057,8 @@ content: |-
    - lxd/resources: Add PCI resource
    - test/suites/static_analysis: Skip shared/usbid/load_data.go
 
+
+  [/details]
 
   ### 試用環境 <!-- Try it for yourself -->
   <!--

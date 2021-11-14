@@ -246,6 +246,7 @@ content: |-
   -->
   このリリースでのすべての変更点のリストは次のとおりです:
 
+  [details="すべてのChangeLog を見る"]
    - lxd/cluster: Leverage RolesChanges.Handover() to choose handover target
    - lxd: Increase timeout of go unit tests when ran from Emacs
    - lxd/cluster: Skip unnecessary loading of nodes from database in Rebalance()
@@ -564,6 +565,8 @@ content: |-
    - lxd/device/nic/routed: networkVethFillFromVolatile usage and other host-veth helper functions
    - lxd/network/network/utils: Updates isInUseByDevices to support networks that don't match their physical parent
    - i18n: Update translations from weblate
+
+  [/details]
 
   ### 試用環境 <!-- Try it for yourself -->
   <!--

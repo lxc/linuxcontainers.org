@@ -217,6 +217,7 @@ content: |-
   -->
   以下はこのリリースでの全変更の完全なリストです:
 
+  [details="すべてのChangeLog を見る"]
    - doc/instances: Fix escaping
    - lxc/network: Updates network detach checks to use bridged network property
    - lxd/network/network/utils: Updates network setting detection in IsInUse
@@ -838,6 +839,8 @@ content: |-
    - lxd/storage/btrfs: Fix migration from snapshot
    - Merge pull request #7330 from stgraber/master
    - i18n: Update translations from weblate
+
+  [/details]
 
   ### 試用環境 <!-- Try it for yourself -->
   <!--

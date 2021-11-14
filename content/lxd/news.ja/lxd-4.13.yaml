@@ -253,6 +253,7 @@ content: |-
   -->
   このリリースでの完全な変更点のリストは次のとおりです:
 
+  [details="すべてのChangeLog を見る"]
    - lxd/migration: Refresh protobuf
    - lxd/storage/ceph: Fix ceph.rbd.features
    - lxd/cluster/gateway: Expose node is not clustered error
@@ -567,6 +568,8 @@ content: |-
    - lxd/images: Pick a random source node for replication
    - lxd/operations: Export OperationClass type
    - client: Fix copy of VM snapshots
+
+  [/details]
 
   ### 試用環境 <!-- Try it for yourself -->
   <!--

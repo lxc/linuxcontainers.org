@@ -1,17 +1,22 @@
-title: LXCFS 4.0.10 リリースのお知らせ
+title: LXCFS 4.0.11 リリースのお知らせ
 date: 2021/10/19 21:10
-origin: https://discuss.linuxcontainers.org/t/lxcfs-4-0-10-has-been-released/12426
+origin: https://discuss.linuxcontainers.org/t/lxcfs-4-0-11-has-been-released/12426
 content: |-
   ### はじめに <!-- Introduction -->
   <!--
-  The LXCFS team is pleased to announce the release of LXCFS 4.0.10!
+  The LXCFS team is pleased to announce the release of LXCFS 4.0.11!
   -->
-  LXCFS チームが LXCFS 4.0.10 のリリースをお知らせします!
+  LXCFS チームが LXCFS 4.0.11 のリリースをお知らせします!
 
   <!--
-  This is the tenth bugfix release for LXCFS 4.0 which is supported until June 2025.
+  This is the eleventh bugfix release for LXCFS 4.0 which is supported until June 2025.
   -->
-  これは 2025 年 6 月までサポートされる LXCFS 4.0 の 10 回目のバグフィックスリリースです。
+  これは 2025 年 6 月までサポートされる LXCFS 4.0 の 11 回目のバグフィックスリリースです。
+
+  <!--
+  NOTE: This was originally released as LXCFS 4.0.10 but a bug caused the published release tarball to be missing a file. LXCFS 4.0.11 includes that fix.
+  -->
+  注意: このリリースは元は LXCFS 4.0.10 としてリリースされました。しかしバグがあったのでリリースした tarball にはファイルが足りませんでした。LXCFS 4.0.11 はこの修正を含みます。
 
   ### バグ修正 <!-- Bugfixes -->
   <!--
@@ -51,6 +56,7 @@ content: |-
    - doc: guide for reload share libary file
    - macro: cast to correct integer types
    - tree-wide: set _GNU_SOURCE configure.ac
+   - build: fix lxcfs_fuse.h in release tarball
   [/details]
 
   ### サポートとアップグレード <!-- Support and upgrade -->
@@ -63,5 +69,5 @@ content: |-
 
   ### ダウンロード <!-- Downloads -->
 
-   - リリース tarball <!-- Main release tarball -->: [lxcfs-4.0.10.tar.gz](https://linuxcontainers.org/downloads/lxcfs/lxcfs-4.0.10.tar.gz)
-   - GPG シグネチャー <!-- GPG signature -->: [lxcfs-4.0.10.tar.gz.asc](https://linuxcontainers.org/downloads/lxcfs/lxcfs-4.0.10.tar.gz.asc)
+   - リリース tarball <!-- Main release tarball -->: [lxcfs-4.0.11.tar.gz](https://linuxcontainers.org/downloads/lxcfs/lxcfs-4.0.11.tar.gz)
+   - GPG シグネチャー <!-- GPG signature -->: [lxcfs-4.0.11.tar.gz.asc](https://linuxcontainers.org/downloads/lxcfs/lxcfs-4.0.11.tar.gz.asc)

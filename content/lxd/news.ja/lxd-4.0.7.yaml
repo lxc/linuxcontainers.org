@@ -44,6 +44,7 @@ content: |-
   -->
   コミットの全リストは次の通りです（翻訳なし）:
 
+  [details="すべてのChangeLog を見る"]
    - lxd/networks/utils: Log forkdns refresh task starting in networkUpdateForkdnsServersTask
    - lxd/db/node: Adds certificates table to local database
    - lxd/db/certificates: Adds GetCertificates function
@@ -910,6 +911,8 @@ content: |-
    - i18n: Update translation templates
    - lxd/device: Fix duplicate MAC test
    - tests: Fix cluster networking test
+
+  [/details]
 
   ### 試用環境 <!-- Try it for yourself -->
   <!--

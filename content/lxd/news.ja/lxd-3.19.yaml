@@ -576,7 +576,7 @@ content: |-
   ### 完全な changelog （翻訳なし）<!-- Complete changelog -->
   Here is a complete list of all changes in this release:
 
-
+  [details="すべてのChangeLog を見る"]
    * lxd/cgroup: Adds cgroup package with CPU task balancing functions
    * lxd: Updates to use cgroup package
    * lxd: Changes instance and containerLXC function Id() to ID()
@@ -1813,6 +1813,7 @@ content: |-
    * lxd/containers: Properly setup cgroup writer
    * lxd/cgroup: Fix memory limit handling
 
+  [/details]
 
   ### 試用環境 <!-- Try it for yourself -->
   <!--

@@ -179,6 +179,7 @@ content: |-
   -->
   このリリースでの完全な変更点のリストは次のとおりです:
 
+  [details="すべてのChangeLog を見る"]
    - lxd/firewwall/drivers/drivers/nftables: Changes nftables to use a single inet table rather than separate ip and ip6 tables
    - test: Updates proxy tests to check nftables inet table
    - tests: Fix failure on 5.11 kernel
@@ -478,6 +479,8 @@ content: |-
    - lxd/images: Improve logging in imageSyncBetweenNodes
    - test: Add lxc cluster list before comparison in test_clustering_handover for visibility into cluster state
    - test: Separate stop and publish commands in test_clustering_image_replication
+
+  [/details]
 
   ### 試用環境 <!-- Try it for yourself -->
   <!--

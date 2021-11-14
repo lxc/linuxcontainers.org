@@ -171,6 +171,7 @@ content: |-
   -->
   このリリースでの完全な変更点のリストは次のとおりです:
 
+  [details="すべてのChangeLog を見る"]
    - lxd/cluster: Changing "no heartbeat" language in membership.go "no heartbeat since <countup>" changed to "no heartbeat for <countup>"
    - lxd/apparmor: Allow unix sockets binding
    - doc/server: Fix escaping
@@ -548,6 +549,8 @@ content: |-
    - lxd/network/driver/ovn: Adds ipv4.nat and ipv6.nat support
    - lxd/patches: Adds patchNetworkOVNEnableNAT patch to enable NAT on OVN networks
    - i18n: Update translations from weblate
+
+  [/details]
 
   ### 試用環境 <!-- Try it for yourself -->
   <!--

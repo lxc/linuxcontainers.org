@@ -198,6 +198,7 @@ content: |-
   -->
   このリリースでの完全な変更点のリストは次のとおりです:
 
+  [details="すべてのChangeLog を見る"]
    - lxd/device/usb: Fix check for required USB device
    - seccomp: switch back to pread()
    - nsexec: simplify userns attach
@@ -524,6 +525,8 @@ content: |-
    - lxd/cgroup: Support CGroup V2 in ParseCPU
    - lxd-agent: Don't allow connections when rebooting
    - i18n: Update translations from weblate
+
+  [/details]
 
   ### 試用環境 <!-- Try it for yourself -->
   <!--

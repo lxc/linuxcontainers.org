@@ -188,6 +188,7 @@ content: |-
   -->
   このリリースでの完全な変更点のリストは次のとおりです:
 
+  [details="すべてのChangeLog を見る"]
    - containers: simplify wstatus.Close() logic in Exec()
    - containers: reap zombies on attach failure
    - seccomp: block openat2()
@@ -574,6 +575,8 @@ content: |-
    - lxd: Support for restricted.cluster.target
    - api: projects_restricted_cluster_target
    - doc/projects: Add restricted.cluster.target
+
+  [/details]
 
   ### 試用環境 <!-- Try it for yourself -->
   <!--

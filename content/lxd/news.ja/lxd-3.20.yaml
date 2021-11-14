@@ -220,7 +220,7 @@ content: |-
   ### 完全な Changelog （翻訳なし）<!-- Complete changelog -->
   Here is a complete list of all changes in this release:
 
-
+  [details="すべてのChangeLog を見る"]
    * Fix typo
    * Add role column to raft_nodes table
    * Make db.RaftNode an alias for dqlite.NodeInfo, which has a Role field
@@ -484,6 +484,8 @@ content: |-
    * lxd/vm: Fix bad bus name on ppc64el
    * lxd/vm: Don't specify addresses for pci on ppc64
    * i18n: Update translations from weblate
+
+  [/details]
 
   ### 試用環境 <!-- Try it for yourself -->
   <!--

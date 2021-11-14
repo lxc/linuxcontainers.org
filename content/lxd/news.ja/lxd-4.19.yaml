@@ -99,6 +99,7 @@ content: |-
   ### すべての変更点（翻訳なし） <!-- Complete changelog -->
   Here is a complete list of all changes in this release:
 
+  [details="すべてのChangeLog を見る"]
    - lxd/util/net: Update CanonicalNetworkAddress to return canconical IP
    - lxd/util/net: Update IsAddressCovered to use net.IP when comparing IP equality
    - lxd/endpoints/cluster: Improve error message in ClusterUpdateAddress
@@ -344,6 +345,8 @@ content: |-
    - lxd/endpoints/network/test: Test tcp4 connection with configured 0.0.0.0 network address
    - i18n: Update translations from weblate
    - gomod: Update dependencies
+
+  [/details]
 
   ### 試用環境 <!-- Try it for yourself -->
   <!--

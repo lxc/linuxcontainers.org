@@ -41,6 +41,7 @@ content: |-
   -->
   コミットの全リストは次の通りです（翻訳なし）:
 
+  [details="すべてのChangeLog を見る"]
    - doc/instances: Fix escaping
    - lxc/network: Updates network detach checks to use bridged network property
    - lxd/network/network/utils: Updates network setting detection in IsInUse
@@ -199,6 +200,8 @@ content: |-
    - lxd/util: Tweak NetworkInterfaceAddress to only return global
    - lxd/net/util: Updates comment on NetworkInterfaceAddress behaviour change
    - shared/usbid: Use system database
+
+  [/details]
 
   ### 試用環境 <!-- Try it for yourself -->
   <!--

@@ -214,6 +214,7 @@ content: |-
   -->
   このリリースでの完全な変更点のリストは次の通りです:
 
+  [details="すべてのChangeLog を見る"]
    - shared/api: Add Address field to EventLifecycleRequestor
    - lxd/api/1.0: Wait until LXD fully started before applying API changes in doApi10UpdateTriggers
    - lxc/cluster: Fix bad format string
@@ -618,6 +619,8 @@ content: |-
    - lxd/storage/cephfs: Use new ceph parsing functions
    - lxd/device/disk: Use new ceph parsing functions
    - lxd/util: Make ceph.conf parser more tolerant
+
+  [/details]
 
    ### 試用環境 <!-- Try it for yourself -->
   <!--

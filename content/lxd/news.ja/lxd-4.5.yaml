@@ -230,6 +230,7 @@ content: |-
   -->
   このリリースでの完全な変更点のリストは次のとおりです:
 
+  [details="すべてのChangeLog を見る"]
    - lxc/move: Allow --target with cluster destination
    - i18n: Update translation templates
    - lxd/networks: Validate network config before starting networks on startup
@@ -553,6 +554,8 @@ content: |-
    - lxd/networks/ovn: Rename parent to network
    - scripts/bash: Add network config key
    - i18n: Update translations from weblate
+
+  [/details]
 
   ### 試用環境 <!-- Try it for yourself -->
   <!--

@@ -37,6 +37,7 @@ content: |-
   -->
   コミットの全リストは次の通りです（翻訳なし）:
 
+  [details="すべてのChangeLog を見る"]
    - doc/instances: Tweaks to make device type linking work
    - doc/storage: Add mention of zfs.remove_snapshots
    - simplestreams: Review and sanitize urls join
@@ -569,6 +570,8 @@ content: |-
    - lxd: Replace ip command with ip package
    - lxd/network: Replace ip command with ip package
    - tests: Add ip package to static_analysis test
+
+  [/details]
 
   ### 試用環境 <!-- Try it for yourself -->
   <!--

@@ -118,6 +118,7 @@ content: |-
   -->
   このリリースでの完全な変更点のリストは次の通りです:
 
+  [details="すべてのChangeLog を見る"]
    - lxd/resources: Set RPM to 1 instead of 0 when rotational
    - include: add open_tree() and mount_setattr()
    - doc/projects: Remove white list term
@@ -615,6 +616,8 @@ content: |-
    - lxd/lifecycle/certificate: include object in source for created lifecycle events
    - lxd/lifecycle/network/acl: include object in source for created lifecycle events
    - doc: add events.md
+
+  [/details]
 
    ### 試用環境 <!-- Try it for yourself -->
   <!--

@@ -296,6 +296,7 @@ content: |-
   -->
   このリリースでの完全な変更点のリストは次の通りです:
 
+  [details="すべてのChangeLog を見る"]
    - global: Disable the completion command
    - lxd/instance/lxc: Rework raw.lxc handling
    - lxd/storage/zfs: Fix bad key name
@@ -569,6 +570,8 @@ content: |-
    - lxd/api/cluster: Adds mutex to clusterNodesPost to prevent concurrent requests creating duplicates
    - gomod: Update dependencies
    - i18n: Update translations from weblate
+
+  [/details]
 
   ### 試用環境 <!-- Try it for yourself -->
   <!--

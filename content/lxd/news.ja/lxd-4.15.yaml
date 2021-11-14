@@ -170,6 +170,7 @@ content: |-
   -->
   このリリースでの完全な変更点のリストは次の通りです:
 
+  [details="すべてのChangeLog を見る"]
    - lxd/main/init/interactive: Clear config.Cluster.ClusterPassword after setting up trust
    - lxc/config_trust: Add type and name columns
    - [Doc] fix description of PATCH warning in rest-api.md
@@ -479,6 +480,8 @@ content: |-
    - lxc/config_trust: Support stdin and allow name override
    - i18n: Update translation templates
    - i18n: Update translations from weblate
+
+  [/details]
 
   ### 試用環境 <!-- Try it for yourself -->
   <!--
