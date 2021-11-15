@@ -8,6 +8,7 @@ LXD integrations are available for the following tools:
 
 - [Ansible](#ansible)
 - [Juju](#juju)
+- [MAAS](#maas)
 - [Terraform](#terraform)
 - [Puppet Bolt](#puppet-bolt)
 - [Packer](#packer)
@@ -39,6 +40,19 @@ To manage LXD in Ansible, you need a LXD Server (see [Set up LXD](#set-up-lxd)).
 Juju can be used to deploy a variety of workloads across many different clouds and virtualization providers. It supports both deploying workloads against a LXD server or cluster and using LXD on the machines it's deploying to separate otherwise colocated services.
 
 Take a look at the Step-by-Step Guide for LXD in the [Juju Documentation](https://juju.is/docs/olm/lxd).
+
+
+## MAAS
+
+[<img src="/static/img/logo-maas.png" alt="MAAS logo"/ height="111" width="308" style="display:block;float:none;margin-left:auto;margin-right:auto;padding-top:1em;padding-bottom:1em;">](https://maas.io/)
+
+[MAAS](https://maas.io/) is an open-source server provisioning software tool for your data centre.
+
+Self-service, remote installation of Windows, CentOS, ESXi and Ubuntu on real servers turns your data centre into a bare metal cloud.
+
+MAAS integrates with LXD to provide easy creation of virtual machines. It can automatically deploy and configure LXD as part of the deployment of a physical machine or can be connected to an existing LXD deployment to dynamically create virtual machines on it.
+
+Read about how [MAAS works](https://maas.io/how-it-works) and try MAAS and LXD in the [MAAS hands on tutorial](https://maas.io/tutorials/build-a-maas-and-lxd-environment-in-30-minutes-with-multipass-on-ubuntu).
 
 
 ## Terraform
