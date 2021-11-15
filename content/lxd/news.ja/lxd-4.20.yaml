@@ -153,9 +153,9 @@ content: |-
 
   #### コンテナでの Linux sysctl 設定 <!-- Linux sysctl configuration on containers -->
   <!--
-  A new `linux.syctl.*` set of config keys has been introduced. This allows directly setting a specific sysctl to a specific value on container startup.
+  A new `linux.sysctl.*` set of config keys has been introduced. This allows directly setting a specific sysctl to a specific value on container startup.
   -->
-  新たな設定 `linux.syctl.*` を導入しました。これによりコンテナ起動時に、直接特定の sysctl を特定の値に設定できるようになりました。
+  新たな設定 `linux.sysctl.*` を導入しました。これによりコンテナ起動時に、直接特定の sysctl を特定の値に設定できるようになりました。
 
   <!--
   This can be more flexible than having a sysctl.d entry inside the container and can also enable accessing sysctls which are properly namespaced but require elevated privileges by having LXD apply those from the host.
@@ -627,8 +627,6 @@ content: |-
    - gomod: Update dependencies
    - gomod: Downgrade dqlite to 1.10.0
    - lxd/storage/ceph: Properly support pre-existing empty pools
-  [/details]
-
   [/details]
 
   ### 試用環境 <!-- Try it for yourself -->
