@@ -87,7 +87,7 @@ More details can be found on our [getting started](/lxd/getting-started-cli/) pa
 
 # Third-party integrations
 
-LXD can also be used with other platforms and tools, like Ansible, Juju, Terraform and more.
+LXD can also be used with other platforms and tools, like Ansible, Juju, MAAS, Terraform and more.
 
 See the [Third-party integrations](/lxd/third-party-integrations/) page for details.
 
