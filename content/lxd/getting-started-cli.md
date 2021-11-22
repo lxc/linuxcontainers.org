@@ -117,9 +117,9 @@ Run the following command to start the interactive configuration process:
 
 See [Interactive setup options](#interactive-setup-options) for an explanation of the different configuration options.
 
-To create a non-optimized minimal setup with default options, you can skip the configuration steps by adding the `--auto` flag:
+To create a non-optimized minimal setup with default options, you can skip the configuration steps by adding the `--minimal` flag:
 
-    sudo lxd init --auto
+    sudo lxd init --minimal
 
 !!! note
     Compared to the interactive configuration, the minimal setup will be slower and provide less functionality. Especially the `dir storage backend` (which is used by default) is slower and doesn't provide fast snapshots, fast copy/launch, quotas and optimized backups.
