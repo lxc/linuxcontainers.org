@@ -48,10 +48,6 @@ You can apply flags to add configuration options to `lxc launch`.
 -c key=value   # apply a config key/value
 ```
 
-!!! note
-	See [Profiles](#profiles) below for details.
-
-
 Usage:
 
 	lxc launch imageserver:imagename instancename -p profile1 -c key1=value
