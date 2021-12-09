@@ -102,7 +102,7 @@ You can also find native builds of the LXD client on [GitHub](https://github.com
 3. Select the latest build and download the suitable artifact.
 
 ## Installing from source
-To build and install LXD from source, follow the instructions in [Installing LXD from source](/lxd/docs/master/#installing-lxd-from-source).
+To build and install LXD from source, follow the instructions in [Installing LXD from source](/lxd/docs/master/installing#installing-lxd-from-source).
 
 # Initial configuration
 
