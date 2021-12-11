@@ -1,0 +1,916 @@
+title: LXD 4.21 リリースのお知らせ
+date: 2021/12/10 22:12
+origin: https://discuss.linuxcontainers.org/t/lxd-4-21-has-been-released/12860
+content: |-
+  ### はじめに <!-- Introduction -->
+  <!--
+  The LXD team is very excited to announce the release of LXD 4.21!
+  -->
+  LXD チームは LXD 4.21 のリリースをお知らせできることにとてもワクワクしています!
+
+  <!--
+  For our last release of the year, we have a lot of new features as well as very many improvements, primarily around clustering, event handling, exec sessions and the LXD database.
+  -->
+  今年最後のリリースでは、多くの新機能に加えて、主にクラスタリング、イベントハンドリング、exec セッション、LXD データベース関係の多数の改良を行いました。
+
+  Enjoy!
+
+  ### 新機能とハイライト <!-- New features and highlights -->
+  #### クラスターメンバーグループ <!-- Cluster member groups -->
+  <!--
+  Operators of larger clusters will often have a few systems that differ from the rest.
+  Maybe they're older systems that are being phased out, maybe they're odd development boards of rare architectures or they're machines filled with GPUs.
+  -->
+  大きなクラスターのオペレーターは他とは異なるシステムをいくつか持っていることが多いです。
+  段階的に廃止される古いシステムや、珍しいアーキテクチャーの変わった開発ボードだったり、GPU を多数搭載したマシンだったりするかもしれません。
+
+  <!--
+  For all of those cases, it's quite useful to have a way to target new instances at one such group of machines. This could be done manually with `--target=NAME` before, but when dealing with multiple systems, you'd have to do the load balancing by hand.
+  -->
+  このようなケースでは、新しいインスタンスをこのようなマシングループの 1 つにターゲットにする方法があると非常に便利です。これは、これまでは `--target=NAME` でマニュアルで行えました。しかし、複数のシステムを扱う場合は、手作業でロードバランシングする必要があります。
+
+  <!--
+  With LXD 4.21 we now have cluster groups.
+  They can be managed through `lxc cluster group` and once assigned to the relevant servers in your cluster, you can target a specific group using `--target=@group-name`. LXD will then pick the least busy server within the group.
+  -->
+  LXD 4.21 ではクラスターグループが導入されました。
+  これは `lxc cluster group` で管理し、一度クラスター内の関連するサーバーに割り当てられると、特定のグループを `--target=@group-name` を使ってターゲットにできます。LXD はグループ内で一番負荷の低いサーバーを選択します。
+
+  <!--
+  This can also be used within projects where `restricted.cluster.groups` can be to a list of groups which the project is allowed to use. This makes it easy to handle different production vs development hardware and adjusting what projects and users can interact with which.
+  -->
+  これはプロジェクト内でも使用でき、`restricted.cluster.groups` にはプロジェクトが使用を許可されたグループのリストを指定できます。これにより、本番用と開発用の異なるハードウェアを簡単に扱うことができるようになり、どのプロジェクトとユーザーがどれとやりとりできるのかを調整できます。
+
+  <!--
+  Additionally, the recently introduced `scheduler.instance` cluster member option was also extended to now support `group` as a value. When set that way on a cluster member, it will make the LXD scheduler always skip auto-assigning workloads to that cluster member unless it's directly targeted by name or through one of its groups.
+  -->
+  加えて、最近導入された `scheduler.instance` クラスターメンバーオプションが拡張され、値として `group` が使えるようになりました。クラスターメンバー上でそのように設定されると、名前またはそのグループのひとつで直接ターゲットにされない限りは、LXD スケジューラーは常にそのクラスターメンバーに対するワークロードの自動割り当てを常にスキップするようになります。
+
+      stgraber@dakara:~$ lxc cluster group list
+      +---------+-----------------------+---------+
+      |  NAME   |      DESCRIPTION      | MEMBERS |
+      +---------+-----------------------+---------+
+      | core    | Core servers (HA)     | 4       |
+      +---------+-----------------------+---------+
+      | default | Default cluster group | 6       |
+      +---------+-----------------------+---------+
+      | lab     | Lab servers           | 2       |
+      +---------+-----------------------+---------+
+
+  仕様<!-- Specification -->: https://discuss.linuxcontainers.org/t/lxd-cluster-server-grouping/12716
+  ドキュメント <!-- Documentation -->: https://linuxcontainers.org/lxd/docs/master/clustering#cluster-groups
+
+  #### cloud-init サポートの再実装 <!-- Reworked cloud-init support -->
+  <!--
+  LXD has long supported cloud-init use in containers and virtual machines.
+  But it was always a bit hackish, done through the `user.user-data`, `user.vendor-data` and `user.network-config` keys combined with image-specific logic to write static config files that cloud-init would then pick up.
+  -->
+  LXD はコンテナと仮想マシンでの cloud-init の使用をずっとサポートしてきました。
+  しかし、それは少しハック的で、`user.user-data`、`user.vendor-data`、`user.network-config` をイメージ固有のロジックと組み合わせ、cloud-init の静的設定ファイルを作成しました。そしてそれを cloud-init がピックアップします。
+
+  <!--
+  All of this was effectively because cloud-init itself didn't treat LXD as a cloud and so didn't have a specific datasource for it.
+  -->
+  これはすべて、cloud-init が LXD をクラウドとして扱っておらず、そのため特定のデータソースを持っていなかったためです。
+
+  <!--
+  This is now changing with the cloud-init team landing support for a LXD datasource using LXD's /dev/lxd API. As part of that, we're promoting cloud-init to a first class LXD feature with the most visible change to users being the new configuration keys:
+  -->
+  これは、cloud-init チームが LXD の /dev/lxd API を使った LXD データソースのサポートを開始したことで変化しています。その一環として、cloud-init をファーストクラスの LXD の機能に昇格させました。その最も目に見える変化は新しい設定キーです。
+
+   - `cloud-init.user-data`
+   - `cloud-init.vendor-data`
+   - `cloud-init.network-config`
+
+  <!--
+  Newer images should work just fine with those new configuration keys, however the old ones will remain supported for quite a while to ease transition. Similarly, when moving to a new cloud-init which supports the dedicated datasource, the transition should be seamless with no user visible changes.
+  -->
+  新しいイメージはこれらの新しい設定キーで問題なく動作します。しかし移行を容易にするために、しばらくの間、古いイメージがサポートされたままとなります。同様に、専用のデータソースをサポートする新しい cloud-init に移行する際、移行はシームレスに行われ、ユーザーは目に見える変化はありません。
+
+  <!--
+  Then building on that, we can expect future improvements of that cloud-init datasource, introducing support for live reconfiguration when changing things like network configuration, as well as the ability to just run `cloud-init clean` and reboot to get a new run of cloud-init with an updated configuration.
+  -->
+  今後はこれを前提に、ネットワーク設定を変更する際のライブでの設定変更のサポートの導入や、`cloud-init clean` を実行して再起動し、更新された設定で cloud-init を新たに実行するといった、cloud-init データソースの将来的な改良が期待できます。
+
+  仕様 <!-- Specification -->: https://discuss.linuxcontainers.org/t/lxd-first-class-cloud-init-support/12559
+  ドキュメント <!-- Documentation -->: https://linuxcontainers.org/lxd/docs/master/cloud-init
+
+  #### 信頼済み証明書の自己更新 <!-- Trust certificate self-renewal -->
+  <!--
+  It's now possible to update an existing trusted certificate using `lxc config trust edit`.
+  This is even possible when the user has restricted access to LXD (through project restrictions).
+  -->
+  `lxc config trust edit`を使って、既存の信頼済み証明書の更新ができるようになりました。
+  これは、ユーザーが（プロジェクトの制限を通して）LXD へのアクセスを制限している場合でも有効です。
+
+  <!--
+  For restricted users, they are only allowed to update their own certificate (the one they're currently using to talk to LXD).
+  -->
+  制限されているユーザーの場合、自身の証明書（現在 LXD との通信に使っている証明書）の更新のみが許可されます。
+
+  <!--
+  This feature is primarily meant for automation systems that talk to LXD's API and that may be using short expiry on their certificates and therefore need a self to update them before they expire.
+  -->
+  この機能は主に LXD の API と通信を行う自動化されたシステムのためのもので、証明書の有効期限が短く、したがって失効前に更新を行うために自身が必要かもしれません。
+
+  #### プロジェクトでのディスクパススルーの制限 <!-- Restricted disk passthrough in projects -->
+  <!--
+  A new `restricted.devices.disk.paths` option was added to project configuration.
+  This option kicks in when `restricted.devices.disk` is set to `allow` and if it is set, can restrict what host path can be passed to the instances.
+  -->
+  新たに `restricted.devices.disk.paths` オプションがプロジェクトの設定に追加されました。
+
+  <!--
+  It's set to a comma separate list of host paths and will allow mounting that path and anything living under it.
+  -->
+  これはホストパスのコンマ区切りのリストです。そのパスとそれ以下のパスにあるものがマウントできるようになります。
+
+      lxc project set foo restricted=true
+      lxc project set foo restricted.devices.disk.paths=/home/foo
+      lxc project set foo restricted.devices.disk=allow
+
+  <!--
+  Will allow instances in project foo to use disk entries so long as the `source` property is `/home/foo` or anything inside of it.
+  -->
+  プロジェクト foo のインスタンスは、`source` プロパティが `/home/foo` かその内部であれば、ディスクエントリーを使用できます。
+
+  #### プロジェクトでの idmap uid/gid の制限 <!-- Restricted idmap uid/gid in projects -->
+  <!--
+  Related to the previous example, after allowing a user to pass in their home directory inside of their own restricted project, the next issue is that file ownership won't line up with their containers or virtual machines.
+  -->
+  前の例に関連した問題で、ユーザーが自身の制限付きプロジェクト内のホームディレクトリーを渡せるようにしたあと、次に出てくる問題はファイルの所有権がコンテナや仮想マシン内のものと一致しないことです。
+
+  <!--
+  To address this, we have a new `restricted.idmap.uid` and `restricted.idmap.gid` set of configuration options.
+  -->
+  これに対応するために、新たに `restricted.idmap.uid` と `restricted.idmap.gid` 設定オプションを追加しました。
+
+      lxc project set foo restricted=true
+      lxc project set foo restricted.devices.disk.paths=/home/foo
+      lxc project set foo restricted.devices.disk=allow
+      lxc project set foo restricted.idmap.uid=1000
+      lxc project set foo restricted.idmap.gid=1000
+
+  <!--
+  Would therefore allow that same restricted user to map uid 1000/1000 inside their instances through the use of `raw.idmap`. They'd therefore set `raw.idmap` to something like `both 1000 1000` so that uid 1000 and gid 1000 in their instances map to the real uid 1000 and gid 1000 on the host, allowing for permissions on their shared disk to line up.
+  -->
+  この結果、同じ制限されたユーザーが `raw.idmap` を使って、インスタンス内で uid 1000/1000 をマッピングできるようになります。したがって、`raw.idmap` を `both 1000 1000` のように設定して、インスタンス内の uid 1000 と gid 1000 をホスト上の実際の uid 1000 と gid 1000 にマッピングされるようにし、共有ディスク上のパーミッションが揃うようにします。
+
+  <!--
+  As part of this, `raw.idmap` has also been made valid on virtual machines so that access to shared disks in a restricted project can behave the same as they do in containers.
+  -->
+  これに関連して、`raw.idmap` が仮想マシンでも有効になりました。制限付きプロジェクト内で共有ディスクへのアクセスが、コンテナで行うのと同じようにできるようになりました。
+
+  #### `lxc --sub-commands` によるすべてのコマンドのリスト表示 <!-- List all `lxc` commands with `\-\-sub-commands` -->
+  <!--
+  As `lxc` as grown quite a bit over time, there are many many sub-commands and sub-sub-commands (and a few sub-sub-sub-commands). Rather than going through a large number of help and man pages, it's now possible to get an overview of all sub-commands with `lxc --sub-commands` or to also include some of the less common commands, `lxc --all --sub-commands`.
+  -->
+  `lxc` は時間の経過とともにかなり大きくなり、たくさんのサブコマンドやサブサブコマンドが（そしてサブサブサブコマンドがいくつか）あります。多数のヘルプや man ページを見て回るのではなく、すべてのサブコマンドを `lxc --sub-commands` ですべてのサブコマンドの概要を見ることができ、`lxc --all --sub-commands` で、あまり一般的ではないコマンドも含めることができます。
+
+  #### `--all-projects` を使ったプロジェクトをまたいだインスタンスのリスト表示 <!-- List instances across all projects with `\-\-all-projects` -->
+  <!--
+  A pretty often requested feature ever since we introduced LXD projects. We've now added APIs and CLI support for listing all projects at once!
+  -->
+  LXD のプロジェクト機能が導入されて以来、かなり頻繁にリクエストのあった機能です。すべてのプロジェクトを一度にリスト表示する API と CLI のサポートを追加しました。
+
+      stgraber@dakara:~$ lxc list --all-projects status=running
+      +---------+---------------+---------+------------------------+---------------------------------------------+-----------------+-----------+
+      | PROJECT |     NAME      |  STATE  |          IPV4          |                    IPV6                     |      TYPE       | SNAPSHOTS |
+      +---------+---------------+---------+------------------------+---------------------------------------------+-----------------+-----------+
+      | default | lxd-build     | RUNNING | 172.17.250.23 (eth0)   | 2602:fc62:b:250:216:3eff:fece:d188 (eth0)   | CONTAINER       | 0         |
+      +---------+---------------+---------+------------------------+---------------------------------------------+-----------------+-----------+
+      | default | win11         | RUNNING |                        | 2602:fc62:b:250:216:3eff:fe16:48d6 (eth0)   | VIRTUAL-MACHINE | 0         |
+      |         |               |         |                        | 2602:fc62:b:250:203b:9725:cde5:ebca (eth0)  |                 |           |
+      +---------+---------------+---------+------------------------+---------------------------------------------+-----------------+-----------+
+      | demo    | impish        | RUNNING | 172.17.250.25 (enp5s0) | 2602:fc62:b:250:216:3eff:fe63:64be (enp5s0) | VIRTUAL-MACHINE | 0         |
+      +---------+---------------+---------+------------------------+---------------------------------------------+-----------------+-----------+
+
+  #### 新しい `database-leader` クラスターロール <!-- New `database-leader` cluster role -->
+  <!--
+  Clusters have had the `database` and `database-standby` roles for a little while giving some visiblity on the internal dqlite setup. Now it's also possible to see what server was elected as the current database leader.
+  -->
+  クラスターには少し前から `database` と `database-standby` ロールがあり、内部的な dqlite のセットアップが見えるようになっていました。さらに、どのサーバーが現時点のデータベースリーダーに選出されているのかを確認できるようになりました。
+
+      stgraber@dakara:~$ lxc cluster list
+      +---------+-------------------------------------+------------------+--------------+----------------+---------------------------+--------+-------------------+
+      |  NAME   |                 URL                 |      ROLES       | ARCHITECTURE | FAILURE DOMAIN |        DESCRIPTION        | STATE  |      MESSAGE      |
+      +---------+-------------------------------------+------------------+--------------+----------------+---------------------------+--------+-------------------+
+      | asuras  | https://[2602:fc62:b:100::200]:8443 | database         | aarch64      | default        | APM X-Gene 2              | ONLINE | Fully operational |
+      +---------+-------------------------------------+------------------+--------------+----------------+---------------------------+--------+-------------------+
+      | athos   | https://[2602:fc62:b:100::204]:8443 | database-standby | x86_64       | default        | Intel Xeon E5-2695v2 (2x) | ONLINE | Fully operational |
+      +---------+-------------------------------------+------------------+--------------+----------------+---------------------------+--------+-------------------+
+      | delmak  | https://[2602:fc62:b:100::205]:8443 | database         | aarch64      | default        | Qualcomm Centriq 2400     | ONLINE | Fully operational |
+      +---------+-------------------------------------+------------------+--------------+----------------+---------------------------+--------+-------------------+
+      | entak   | https://[2602:fc62:b:100::201]:8443 | database-standby | aarch64      | default        | APM X-Gene 2              | ONLINE | Fully operational |
+      +---------+-------------------------------------+------------------+--------------+----------------+---------------------------+--------+-------------------+
+      | madrona | https://[2602:fc62:b:100::202]:8443 |                  | aarch64      | default        | APM X-Gene 2              | ONLINE | Fully operational |
+      +---------+-------------------------------------+------------------+--------------+----------------+---------------------------+--------+-------------------+
+      | vorash  | https://[2602:fc62:b:100::203]:8443 | database-leader  | aarch64      | default        | APM X-Gene 2              | ONLINE | Fully operational |
+      |         |                                     | database         |              |                |                           |        |                   |
+      +---------+-------------------------------------+------------------+--------------+----------------+---------------------------+--------+-------------------+
+
+  #### 一貫性のある単位 <!-- Consistent units -->
+  <!--
+  The default units displayed by LXD have been tweaked to be IEC (base 2) for disk and memory usage and to Metric (base 10) for network usage.
+  -->
+  LXD が表示するデフォルトの単位は、ディスクとメモリ使用量に対しては IEC (base 2)、ネットワークの使用量は Metric (base 10) となるように調整されています。
+
+  <!--
+  This is done to line up LXD's reported disk/memory usage with what tools like `df` and `free` use by default on most distributions.
+  -->
+  これは、LXD が報告するディスク・メモリ使用量が、ほとんどのディストリビューションで `df` と `free` のようなツールがデフォルトで使用する使用量と一致するように行われます。
+
+  <!--
+  The result of this change can be seen in `lxc info`, `lxc list`, `lxc project usage`, `lxc storage info` and `lxc storage volume info`.
+  -->
+  この変更の結果は、`lxc info`、`lxc list`、`lxc project usage`、`lxc storage info`、`lxc storage volume info` で見ることができます。
+
+      stgraber@dakara:~$ lxc info lxd-build
+      Name: lxd-build
+      Status: RUNNING
+      Type: container
+      Architecture: x86_64
+      PID: 8891
+      Created: 2021/08/20 16:28 EDT
+      Last Used: 2021/11/21 17:29 EST
+
+      Resources:
+        Processes: 44
+        Disk usage:
+          root: 4.43GiB
+        CPU usage:
+          CPU usage (in seconds): 670
+        Memory usage:
+          Memory (current): 550.27MiB
+          Swap (current): 3.48MiB
+        Network usage:
+          eth0:
+            Type: broadcast
+            State: UP
+            Host interface: vethb7314fa0
+            MAC address: 00:16:3e:ce:d1:88
+            MTU: 1500
+            Bytes received: 205.19MB
+            Bytes sent: 6.31MB
+            Packets received: 273612
+            Packets sent: 62221
+            IP addresses:
+              inet:  172.17.250.23/24 (global)
+              inet6: 2602:fc62:b:250:216:3eff:fece:d188/64 (global)
+              inet6: fe80::216:3eff:fece:d188/64 (link)
+          lo:
+            Type: loopback
+            State: UP
+            MTU: 65536
+            Bytes received: 100.80kB
+            Bytes sent: 100.80kB
+            Packets received: 856
+            Packets sent: 856
+            IP addresses:
+              inet:  127.0.0.1/8 (local)
+              inet6: ::1/128 (local)
+
+  #### 仮想マシンでの routed ネットワーク <!-- Routed networking in virtual machines -->
+  <!--
+  The `routed` `nictype` option has now been extended to work with virtual machines.
+  -->
+  `routed` `nictype` オプションを仮想マシンでも動作するように拡張しました。
+
+  <!--
+  However unlike containers, it's not possible for it to pre-configure the device inside of the instance and so will require manual user configuration to setup the correct address, route and DNS in the VM.
+  -->
+  しかしコンテナとは違い、インスタンス内のデバイスをあらかじめ設定することができないので、VM 内に正しいアドレス、ルート、DNS を設定するために、ユーザーによる手動の設定が必要です。
+
+  #### `routed` タイプの NIC での `ipv4.routes` と `ipv6.routes` のサポート <!-- Support for `ipv4.routes` and `ipv6.routes` on `routed` type NICs -->
+  <!--
+  Still related to the `routed` `nictype`, it's now possible to set `ipv4.routes` and `ipv6.routes` entries on those NICs.
+  -->
+  また、`routed` `nictype` に関連して、これらの NIC のエントリーに `ipv4.routes` と `ipv6.routes` を設定できるようになりました。
+
+  <!--
+  This functions the same as on other NIC types and causes the host to add a route table entry for the provided addresses or subnets, routing them to the instance directly.
+  -->
+  これは他の NIC タイプと同様に動作し、ホストは指定されたアドレスまたはサブネットに対するエントリーをルートテーブルに追加し、インスタンスに直接ルーティングします。
+
+  #### ネットワークゾーンで NAT されたアドレスをスキップするオプション <!-- Option to skip records for NAT-ed addresses in network zones -->
+  <!--
+  A new `network.nat` option was added to network zones. When set to `false`, it causes all records for a NAT-ed record to be removed from the zone.
+  -->
+  ネットワークゾーンに `network.nat` オプションが新たに追加されました。`false` に設定すると、NAT されたレコードに対するすべてのレコードがゾーンから削除されます。
+
+  <!--
+  This allows for environments where IPv4 is NAT-ed but IPv6 is globally routable to get clean DNS zones with only globally accessible records.
+  -->
+  これにより、IPv4 は NAT されており、IPv6 はグローバルにルーティングされている環境で、グローバルにアクセスできるレコードだけを持つクリーンな DNS ゾーンを取得できます。
+
+  #### セキュリティフィルタリングオプションを使った IP アドレスファミリーのブロック <!-- Allow blocking an IP address family with security filtering options -->
+  <!--
+  It is now possible completely disable an IP family inside of an instance by combining a filtering option with a `none` entry for the address.
+  -->
+  アドレスに対する `none` エントリーとフィルタリングオプションを組み合わせることで、インスタンス内の IP ファミリーを完全に無効化できるようになりました。
+
+  <!--
+  To disable IPv4:
+  -->
+  IPv4 を無効化するには:
+
+   - security.ipv4_filtering=true
+   - ipv4.address=none
+
+  <!--
+  To disable IPv6:
+  -->
+  IPv6 を無効化するには:
+
+   - security.ipv6_filtering=true
+   - ipv6.address=none
+
+  #### 遅い可能性のある `rbd du` を無効化する新たなストレージ設定オプション `ceph.rbd.du` <!-- New `ceph.rbd.du` storage config option to disable potentially slow `rbd du` -->
+  <!--
+  Ceph users may have noticed that listing disk usage of stopped instances, particularly those with many snapshots can be very very slow. There are ways to speed that up by enabling some Ceph RBD options (`fast-diff` comes to mind) but it's still not always ideal and can cause quite a bit of extra load.
+  -->
+  Ceph ユーザーは停止したインスタンス、特に多数のスナップショットを持つインスタンスのディスク使用量のリスト表示が、非常に非常に遅いことに気づいているかもしれません。Ceph RBD のオプションをいくつか有効化（`fast-diff` が思い浮かびます）してスピードアップする方法があります。それでも理想的な方法とはいえず、かなりの負荷がかかる可能性があります。
+
+  <!--
+  For those who would rather just not get the disk usage when an instance is stopped, they can now set `ceph.rbd.du=false` on their storage pool.
+  -->
+  インスタンスが停止しているときはディスク使用量を取得しないようにしたい場合は、ストレージプールで `ceph.rbd.du=false` が設定できるようになりました。
+
+  #### プロジェクト間のインスタンスとボリュームの移動の最適化 <!-- Optimized moving of instances and volumes between projects -->
+  <!--
+  LXD has supported moving instances and storage volumes between projects for a little while, but the usual way of doing that was by having the client copy the instance or volume into the new project and then delete the original.
+  -->
+  LXD は、プロジェクト間のインスタンスとストレージボリュームの移動を少し前からサポートしています。しかし移動する際の通常の方法は、クライアントがインスタンスやボリュームを新しいプロジェクトにコピーし、その後オリジナルを削除するというものでした。
+
+  <!--
+  This would cause temporary duplication of the data and cause quite a bit of load.
+  -->
+  これにより、一時的にデータが重複してしまい、かなりの負荷がかかることになります。
+
+  <!--
+  With LXD 4.21, there is now server-side support for this operation, making it as fast as a simple rename in most cases.
+  -->
+  LXD 4.21 で、この操作がサーバーサイドでサポートされるようになり、ほとんどの場合で単純な名前の変更と同じくらいの速度で行えるようになりました。
+
+  #### クラスタメンバー間のカスタムボリュームのコピー・移動のサポート <!-- Support for copying/moving custom volumes between cluster members -->
+  <!--
+  Outside of ceph/cephfs, custom storage volumes in a cluster are specific to the server they are stored on. This means that the same custom storage volume name can exist many times within a cluster and refer to different things.
+  -->
+  Ceph/CephFS 以外では、クラスター内のカスタムストレージボリュームは、それらを保存しているサーバー特有のものです。つまり、同じカスタムストレージボリューム名がクラスター内にいくつも存在でき、違うものを参照できます。
+
+  <!--
+  This was causing some issues when one wanted to copy or move one such volume between two cluster members. To address that, it's now possible to run `lxc storage volume copy POOL VOLUME-NAME TARGET-VOLUME-NAME --target SOURCE-MEMBER --destination-target DESTINATION-MEMBER`.
+  -->
+  これは、2 つのクラスターメンバー間でこのようなボリュームをコピーや移動したい場合に問題を引き起こしていました。これに対応するため、`lxc storage volume copy POOL VOLUME-NAME TARGET-VOLUME-NAME --target SOURCE-MEMBER --destination-target DESTINATION-MEMBER` を実行できるようになりました。
+
+  <!--
+  The naming can be a bit confusing as `--target` effectively refers to the source (it targets the request to that server) but the new `--destination-target` now allows for targeting the correct destination server to complete the migration.
+  -->
+  `--target` は実質ソースを参照しているため、ネーミングが少し混乱する可能性があります（そのサーバーに対するリクエストをターゲットにしているため）。しかし、新たに追加された `--destination-target` は正しい移動先サーバーをターゲットにして、マイグレーションを完了できます。
+
+  ### すべての変更点（翻訳なし）<!-- Complete changelog -->
+  <!--
+  Here is a complete list of all changes in this release:
+  -->
+  このリリースでの完全な変更点のリストは次の通りです:
+
+  [details="すべてのChangeLogを見る"]
+   - lxd/daemon: Adds systemdSocketActivated
+   - lxd/api/cluster: Exit LXD after removal from cluster if systemd socket activated in clusterPutDisable
+   - lxd/cluster/gateway: Don't restart gateway in Reset
+   - lxd/api/cluster: Don't update certificate on endpoints during clusterPutDisable
+   - lxd/db/images: Change nullable fields in Image to sql.NullTime type
+   - lxd/db/images: Image sql.NullTime field usage
+   - lxd/db/instances: Changes nullable datetime fields in Instance to sql.NullTime type
+   - lxd/db/instances: Instance sql.NullTime field usage
+   - lxd/db/snapshots: Updates InstanceSnapshot nullable datetime fields to sql.NullTime
+   - lxd/db/snapshots: InstanceSnapshot sql.NullTime field usage
+   - lxd/instance/instance/utils: InstanceSnapshot sql.NullTime field usage
+   - lxd/instance: Instance sql.NullTime field usage
+   - gomod: Upgade to go-dqlite v1.10.1
+   - lxd/api/cluster: Adds clusterPutDisableMu to control daemon replace/stop until request finished in clusterNodeDelete
+   - test/suites/clustering: Fix condition in test_clustering_remove_leader
+   - lxd/api/internal: Updates internalShutdown to wait until request context is done before exiting
+   - test/suites/clustering: Change test_clustering_remove_leader to test_clustering_remove_members
+   - shared/api/error: Update StatusErrorf to not parse format to fmt.Sprintf if no replacement arguments
+   - lxd/operations: Consistent comment endings
+   - lxd/operations: Don't duplicate local operations in operationsGet when running in single member cluster
+   - lxd/api/1.0: Prevent update of cluster.https_address in doApi10Update
+   - lxd/api/cluster: Reformat clusterAcceptMember function
+   - lxd/cluster/gateway: Change client loop logic in LeaderAddress
+   - lxd/cluster/gateway: Comment cleanup
+   - lxd/cluster/gateway: Error wrapping
+   - lxd/cluster/gateway: Don't ever return an empty leader address in LeaderAddress
+   - lxd/api/cluster: Add leader address check in internalClusterPostAccept
+   - Doc: fix typo for hardware offload
+   - Doc: fix remove non-existent anchor in link to network-peers.md
+   - lxd/db/cluster/update: Fix upgrade from 2.0/3.0 when using go-dqlite v1.10.1 NULLable fields
+   - lxd/instances: Use correct project in live migration
+   - lxd/device: Clean up mdev vGPU on failure
+   - lxd/device: Log error message on GPU mdev cleanup failure
+   - lxd/network/openvswitch/ovn: Update LogicalRouterPortAdd to accept gatewayMTU arg
+   - lxd/network/driver/ovn: client.LogicalRouterPortAdd usage
+   - lxd/instances/qemu: fix usb pass-through with more than one device
+   - lxd/device: Switch to github.com/jochenvg/go-udev
+   - gomod: Update dependencies
+   - doc: Elaborate on pongo2 date-time syntax for snapshots
+   - lxc/info: Use consistent units
+   - lxc/list: Use consistent units
+   - lxc/storage: Use consistent units
+   - lxc/storage_volume: Use consistent units
+   - lxd/api_internal: Use consistent units
+   - lxd/patches_utils: Use consistent units
+   - lxd/projects: Use consistent units
+   - tests/macaroon-identity: Switch to go-httprequest
+   - gomod: Update dependencies
+   - api: Add certificate_self_renewal API extension
+   - shared/api: Allow cert modification
+   - doc/rest-api: Refresh swagger YAML
+   - lxd: Drop fingerprint in doCertificateUpdate
+   - lxd/migrate: Only use pointers to migration.MigrationControl to avoid shallow copies
+   - Update default volume.size from 10GB to 10GiB
+   - Update default state volume size from 100MB to 100MiB
+   - lxd/db/networks: Fix panic in networkConfigAdd
+   - lxd/db/storage/pools: Fix panic in CreateStoragePool
+   - lxd/db/storage/volumes: Fix panic in storageVolumeConfigAdd
+   - lxd: Support certificate update
+   - shared/util: Removes unused IsUnixDev function
+   - lxd/project/permissions: Removes unnecessary wrapping
+   - lxd/api/project: Standardises restricted.networks.uplinks validation
+   - lxd/network/driver/ovn: Switch to n.state.Cluster.GetProject in InstanceDevicePortValidateExternalRoutes
+   - lxd/device/proxy: Improve comment in proxy validateConfig
+   - doc/projects: Improve doc on restricted key
+   - lxd/device/device/utils/disk: Error quoting and wrapping in DiskMount
+   - lxd/device/device/utils/disk: Remove block device filesystem detection from DiskMount
+   - lxd/device/disk: Unify srcPath argument treatment in createDevice
+   - lxd/device/disk: Clarify isFile logic in createDevice
+   - lxd/device/disk: Removes duplicated source path exists check in createDevice
+   - lxd/device/disk: Removes revert arg from createDevice
+   - lxd/device/disk: Switch to using open file handle for createDevice mount
+   - lxd/device/disk: Add block device filesystem detection to createDevice
+   - lxd/device/disk: Updates createDevice to return isFile boolean indicator
+   - lxd/device/disk: Updates d.createDevice usage now it returns isFile boolean
+   - lxd/device/disk: Require local source paths to be absolute in validateConfig
+   - lxd/device/disk: Stop using global logger
+   - lxd/device/disk: Adds diskSourceNotFoundError type
+   - lxd/device/disk: Replace calls to isRequired with returning diskSourceNotFoundError instead
+   - lxd/device/disk: Remove duplicated source path exists check in startVM
+   - lxd/device/disk: Add d.validateEnvironmentSourcePath function
+   - lxd/device/disk: Update Start to handle diskSourceNotFoundError
+   - seccomp: use stricter regexps when looking for Uid/Gid/Tgid in /proc/$pid/status
+   - lxd/devlxd: stricter regexp
+   - lxd/instance/drivers/driver/lxc: Fix liblxc handle leak in renderState
+   - lxd/device/config/device/runconfig: Add Revert reverter field to RunConfig
+   - lxd/instance/drivers/driver/lxc: Call runConf.Revert revert in startCommon
+   - lxd/instance/drivers/driver/qemu: Call runConf.Revert revert in Start
+   - lxd/device/disk: Switch to using file handles for local disk VM passthrough
+   - lxd/instance/drivers/driver/qemu: Rework addDriveConfig to support file descriptors encoded into device paths
+   - lxd/db: Add WarningInstanceTypeNotOperational warning
+   - lxd: Add warning entry for missing instance driver
+   - lxd/drivers: Add warning entry for missing instance driver
+   - lxd/network/ovn: Support SSL
+   - lxd/ip/neigh/proxy: Adds NeighProxy type for managing neighbour proxy entries
+   - lxd/ip/neigh: Removes conflation of neighbour proxy functionality from Neigh type
+   - lxd/device/nic/routed: Switch to ip.NeighProxy for neighbour proxy removal
+   - lxd/ip/neigh: Rework Show to return a useful struct rather than just a raw string
+   - lxd/network/network/utils: Update GetNeighbourIPs to use ip.Show()
+   - lxd/device/nic/bridged: Updated network.GetNeighbourIPs and ip package constant usage
+   - test: Add test_certificate_edit
+   - lxd/device/nic/routed: Re-work NIC driver to not depend on liblxc router NIC type
+   - test: Add routed NIC tests for neighbour proxy add/remove
+   - test: Adds check for routed NIC MAC
+   - test: Improves grep MAC test
+   - lxd/device/nic/routed: Adds VM support
+   - doc/instances: Updates routed NIC with VM support
+   - doc: Fix misspelling in server.md
+   - lxd/device/device/utils/disk: Change DiskMount mount options arg to []string
+   - lxd/device/device/utils/disk: Update diskCephfsOptions to return []string for mount options
+   - lxd/instance/drivers/driver/qemu: device.DiskMount usage
+   - lxd/device/disk: Update createDevice to use []string for mount options
+   - lxd/device/device/utils/unix: DiskMount usage
+   - lxd/instance/drivers/driver/lxc: Align start error with VM type
+   - lxd/device/disk: Readonly setting cleanup
+   - shared/validate/validate: Adds IsAbsFilePath function
+   - shared/validate/validate: Fixes comment on IsListOf
+   - shared/validate/validate: Wraps item value in IsListOf error
+   - doc/projects: Adds restricted.devices.disk.paths setting
+   - lxd/api/project: Adds restricted.devices.disk.paths validation
+   - lxd/project/permissions: Adds CheckRestrictedDevicesDiskPaths function
+   - lxd/project/permissions: Check for valid disk source path in checkRestrictions using CheckRestrictedDevicesDiskPaths
+   - lxd/device/disk: Update d.validateEnvironmentSourcePath to check for allowed paths from project
+   - lxd/device/disk: Adds localSourceOpen function
+   - lxd/device/disk: Use d.localSourceOpen in startVM
+   - lxd/device/disk: Use d.localSourceOpen in createDevice
+   - test: Add restricted dish tests
+   - shared/api: Add Project to InstancePost and SourceProject to StorageVolumePost
+   - client: Support for moving instances and custom volumes between projects
+   - lxd: Support for moving instances and custom volumes between projects
+   - lxc/move: Support for moving instances between projects
+   - lxc/storage_volume: Support for moving custome volumes between projects
+   - api: instance_project_move and storage_volume_project_move
+   - tests: Add test for moving storage volume between projects
+   - doc/rest-api: Refresh swagger YAML
+   - i18n: Update translation templates
+   - doc/instances: Clarify shift disk property is only for containers
+   - lxd: switch main_nsexec to config.h
+   - tests: Split cluster and standalone
+   - lxd: add forkusernsexec()
+   - lxd/main/daemon: Actually ignore shutdown request if shutdown ongoing
+   - shared/subprocess/proc: Simplify process cleanup channel closure
+   - lxd/instance/drivers/driver/qemu: Updates fdFiles to be slice of os.File
+   - lxd/instance/drivers/driver/qemu: Improve error in addDriveConfig
+   - lxd/instance/drivers/driver/qemu: Cancel operation on d.UpdateBackupFile error in Start
+   - lxd/device/disk: Change mountPoolVolume to return a revert function
+   - lxd/device/disk: Updates createDevice to return a revert function
+   - lxd/device/disk: createDevice should always return a non-empty device path or an error now
+   - lxd/device/device/utils/disk: Adds DiskVMVirtfsProxyStart function
+   - lxd/device/device/utils/disk: Adds DiskVMVirtfsProxyStop function
+   - lxd/device/disk: Switch to using DiskVMVirtfsProxyStart for VM 9p proxy
+   - lxd/device/disk: DiskVMVirtfsProxyStop usage
+   - lxd/device/device/utils/disk: Returns revert function from DiskVMVirtiofsdStart
+   - lxd/device/disk: DiskVMVirtiofsdStart revert usage
+   - lxd/instance/drivers/driver/qemu: device.DiskVMVirtiofsdStart revert usage
+   - lxd/device/device/utils/disk: Updates DiskVMVirtiofsdStart to pass the listen socket via file descriptor
+   - lxd/instance/drivers/driver/qemu: Remove openUnixSocket function
+   - lxd/device/device/utils/disk: Updates DiskVMVirtiofsdStart to return unix listener
+   - lxd/device/disk: Remove old virtiofsd log if needed
+   - lxd/device/disk: Close virtiofsd unix listener after VM start
+   - lxd/device/disk: Consistent comment line endings
+   - lxd/instance/drivers/driver/qemu: Consistent comment line endings
+   - lxd/instance/drivers/driver/qemu: Close virtiofsd unix listener after VM start
+   - lxd/main/forkusernsexec: Return error if uid or gid map FDs not supplied
+   - lxd/instance/drivers/driver/qemu: Make sure operation is cancelled in Stop
+   - lxd/project/permissions: Updates AllowSnapshotCreation to accept a DB project record
+   - lxd/storage/volumes/snapshot: project.AllowSnapshotCreation in storagePoolVolumeSnapshotsTypePost
+   - lxd/storage/volumes/snapshot: project.AllowSnapshotCreation usage in autoCreateCustomVolumeSnapshotsTask
+   - lxd/instance/snapshot: project.AllowSnapshotCreation usage in instanceSnapshotsPost
+   - lxd/instance: project.AllowSnapshotCreation usage in autoCreateContainerSnapshotsTask
+   - lxd/device/device/utils/disk: Close unnecessary file handles in DiskVMVirtfsProxyStart
+   - lxd/device/device/utils/disk: Close unnecessary file handles in DiskVMVirtiofsdStart
+   - lxd/device/disk: Add disk unmount call to createDevice reverter
+   - util_linux: ensure that O_NOCTTY is raised when opening terminals
+   - util_linux: ensure that pty fds are O_CLOEXEC too
+   - forkusernsexec: close file descriptors before exec
+   - forkusernsexec: add --keep-fd-up-to
+   - lxd/project/permissions: Fix wrapping in checkRestrictions
+   - lxd/project/permissions: Updates entity checkers to accept instancetype.Type
+   - shared/validate/validate: Improve comment on IsListOf
+   - shared/validate/validate: Improve error in IsInRange
+   - shared/validate/validate: Adds ParseUint32Range and IsUint32Range functions
+   - shared/validate/validate: Reworks IsNetworkPortRange to behave the same as IsUint32Range
+   - lxd/network/acl/driver/common: validate.IsNetworkPortRange usage updated
+   - lxd/instance/instance/utils: Removes ParseRawIdmap
+   - shared/idmap/parse: Adds ParseRawIdmap function
+   - lxd/instance/drivers/driver/lxc: idmap.ParseRawIdmap usage
+   - lxd/instance/instance/utils: idmap.ParseRawIdmap usage
+   - lxd/device/device/utils/disk: Uses fmt.Error for wrapping errors in DiskVMVirtfsProxyStart
+   - forkusernsexec: parse command section correctly
+   - forkusernsexec: log verbosely
+   - forkusernsexec: allow for --arg=<val> and --arg <val> syntax
+   - lxd/api/project: Ensure restricted projects have their own profiles
+   - lxd: Move to cron/v3
+   - gomod: Update dependencies
+   - shared/validate/validate: Fix bug in ParseUint32Range
+   - shared/idmap/idmapset/linux: Adds HostIDsCoveredBy function
+   - shared/idmap/idmapset/linux/test: Adds tests for HostIDsCoveredBy
+   - shared/instance: Add support for raw.idmap to VMs
+   - lxd/project/permissions: Adds raw.idmap key to isVMLowLevelOptionForbidden
+   - lxd/device/device/utils/disk: Adds diskAddRootUserNSEntry function
+   - lxd/device/device/utils/disk/test: Adds tests for diskAddRootUserNSEntry
+   - lxd/device/device/utils/disk: Adds forkusernsexecWriteIdmaps function
+   - lxd/device/device/utils/disk: Adds forkusernsexec idmap support to DiskVMVirtfsProxyStart
+   - lxd/device/device/utils/disk: Adds forkusernsexec idmap support to DiskVMVirtiofsdStart
+   - lxd/device/disk: Adds raw.idmap support for DiskVMVirtfsProxyStart and DiskVMVirtiofsdStart
+   - lxd/instance/drivers/driver/qemu: device.DiskVMVirtiofsdStart usage
+   - lxd/api/project: Adds restricted.idmap.uid and restricted.idmap.gid config keys to projects
+   - lxd/project/permissions: Adds restricted.devices.disk.paths to allRestrictions
+   - lxd/project/permissions: Adds restricted.idmap.uid and restricted.idmap.gid to allRestrictions
+   - lxd/project/permissions: Adds parseHostIDMapRange function
+   - lxd/project/permissions/test: Fix import ordering
+   - lxd/project/permission/internal/test: Adds tests for parseHostIDMapRange
+   - doc/projects: Adds restricted.idmap.{u,g}id settings
+   - lxd/project/permissions: Validate the raw.idmap setting uses only allowed host UID/GIDs when unrestricted low-level features not enabled in project.
+   - test: Fix comment typo inn devices disk restricted tests
+   - shared: Add context to DownloadFileHash
+   - client: Pass empty context to DownloadFileHash
+   - test: Adds tests of project restricted.idmap.{u,g}id settings with instance raw.idmap
+   - client/lxd_storage_volumes: Add destination target flag; Respect target flag
+   - lxc/storage_volume: Add destination target flag; Respect target flag
+   - i18n: Update translation templates
+   - doc: clean up headings in files
+   - doc: update links to configuration.md
+   - lxd/instance/drivers/driver/qemu: Return shutdown error to caller
+   - lxd/instance/drivers/driver/lxc: Return shutdown error to caller
+   - lxd/instance/drivers/driver/lxc: Return stop error to caller
+   - lxd/instance/drivers/driver/qemu: Return stop error to caller
+   - lxd/instance/drivers/driver/lxc: Make sure onStop unmount has full operation lock time
+   - lxd/instance/drivers/driver/qemu: Handle unmount errors in onStop
+   - lxd/storage/drivers/driver/zfs/volumes: Increase ZFS unmount wait time to operationlock.TimeoutSeconds
+   - lxd/instance/drivers/driver/qemu: Moves readonly config volume mount to devices directory
+   - lxd/storage/drivers/generic/vfs: Removes VMConfigDriveMountDir
+   - lxd/db/networks: Adds getCreatedNetworks to support filtering created networks by project name
+   - lxd/db/networks: Adds GetCreatedNetworksByProject function
+   - lxd/network/driver/ovn: Fix allowedUplinkNetworks to return only compatible uplink networks
+   - shared: Add cloud-init config keys
+   - lxd: Expose cloud-init config keys through /dev/lxd
+   - lxd: Expose instance type through /dev/lxd
+   - lxd: Add /1.0/devices to devlxd
+   - lxd/device: Use new cloud-init config keys
+   - lxd/instance/drivers: Use new cloud-init config keys
+   - lxd-agent: Expose instance type through /dev/lxd
+   - lxd/instance/drivers: Remove cloud-init from config share
+   - lxd/instance/drivers: Add devices to instance-data
+   - lxd-agent: Add /1.0/devices
+   - doc: Add cloud-init instance config keys
+   - doc: Update cloud-init doc
+   - scripts/bash/lxd-client: Update keys
+   - api: Add cloud_init API extension
+   - doc: Update devlxd
+   - forkusernsexec: use unix.Stderr as standard --keep-fd-up-to value
+   - lxd/network/driver/ovn: Rename getLogicRouterPeerPortName to getLogicalRouterPeerPortName
+   - lxd/network/driver/ovn: Use fmt.Errorf error wrapping
+   - lxd/network/driver/ovn: Fix bug with incorrect instance peer routes being added on NIC start
+   - lxd/device/disk: Support snap packages when opening restricted disk paths
+   - doc: Add initial sphinx support
+   - github: Add a workflow to build the documentation
+   - doc: Add sphinx navigation
+   - doc/index: Fix header level
+   - sphinx: Add substitutions
+   - sphinx: Add example redirect
+   - lxd/db/generate/db/mapping: Accept sql.NullTime in the generator
+   - doc: Fix typo in ToC entry
+   - test: Enable IPv4 forwarding for NIC routed
+   - test: Remove duplicate ping tests from routed NIC
+   - doc/instances: Remove unnecessary full stops from routed NIC table
+   - shared/termios: manually copy termios settings between Go and C
+   - shared/termios: actually copy the values not the index
+   - doc: add a cheat sheet for documentation
+   - Revert "shared/termios: actually copy the values not the index"
+   - Revert "shared/termios: manually copy termios settings between Go and C"
+   - shared/termios: Remove requirement on cgo when setting raw mode
+   - shared/termios: Removes dependency on lxd package github.com/lxc/lxd/shared
+   - test: Update test_concurrent_exec to also test with --force-noninteractive
+   - test: Add non-concurrent exec test
+   - lxc/exec: Always connect control websocket
+   - lxd/instance/drivers/driver/lxc/cmd: Use exitErr.ExitCode functions
+   - lxd/instance/drivers/driver/lxc: Close forkexec log file
+   - lxd/instance/drivers/driver/lxc: release liblxc in DevptsFd function
+   - lxd/instance/drivers/driver/lxc: Remove empty newline
+   - shared/network: Use contextual logging for websocket proxy functions
+   - test: Update test_concurrent_exec to also test with --force-noninteractive
+   - test: Add non-concurrent exec test
+   - lxd/instance/exec: Adds execWS constants for websocket numbers
+   - lxd/instance/exec: Replace allConnected with requiredConnectedCtx
+   - lxd/instance/exec: Replaces controlConnected with controlConnectedCtx
+   - lxd/instance/exec: Rework Connect to make control connection required for interactive exec
+   - lxd/instance/exec: Adds comment documenting variable use of connection number 0
+   - lxd/instance/exec: Simplify connection slot secret setup loop
+   - lxd/instance/exec: Add a timeout waiting for all required websockets to connect
+   - lxd/instance/exec: Adds belt-and-braces websocket close defer
+   - lxd/instance: Remove whitespace
+   - lxd/instance/exec: Don't get lock to access same control connection on every message in control handler
+   - lxd/instance/exec: Improve exec logger context
+   - lxd/instance/exec: Remove duplication of interactive/non-interactive control handler go routines
+   - lxd/instance/exec: Improve logging of websocket mirroring go routines
+   - lxd/instance/exec: Remove duplication of connection locking code
+   - lxd/instance/exec: Adds cmdKill and cmdKillOnce
+   - lxd/instance/exec: Removes need for controlExit
+   - lxd/instance/exec: Adds a check for remote stdout reader closing and kills command if no control connection
+   - lxd/instance/exec: Fix container devpts FD leak in non-interactive exec requests
+   - lxd/instance/exec: Log exit code of command
+   - lxd/instance/exec: Only try to detect extra PATH locations for containers
+   - doc: Increases recommended subuid and subgid ranges in machine setup.
+   - lxd-agent/main/agent: Avoid duplicate log lines by only logging to stdout/stderr
+   - lxd/instance/drivers/driver/qemu: Dont force WaitForWS
+   - lxd-agent/exec: Adds execWS constants for websocket numbers
+   - lxd-agent/exec: Replace allConnected with requiredConnectedCtx
+   - lxd-agent/exec: Adds comment documenting variable use of connection number 0
+   - lxd-agent/exec: Simplify connection slot secret setup loop
+   - lxd-agent/exec: Add a timeout waiting for all required websockets to connect
+   - lxd-agent/exec: Adds belt-and-braces websocket close defer
+   - lxd-agent/exec: Remove whitespace
+   - lxd-agent/exec: Improve exec logger context
+   - lxd-agent/exec: Start command before websocket handler go routines
+   - lxd-agent/exec: Capture command not found errors and convert them to 127 exit code
+   - lxd-agent/exec: Log exit code and use exitErr.ExitCode()
+   - lxd-agent/exec: Removs controlConnected channel and simplifies Connect function
+   - lxd-agent/exec: Use same function for interactive/non-interactive control handler go routines
+   - lxd-agent/exec: Removes controlExit
+   - doc: split out installation instructions from doc start page
+   - doc: split out FAQ from doc start page
+   - doc: clean up support information on doc start page
+   - doc: clean up doc start page
+   - shared/util/linux: Adds ExitStatus function
+   - lxd/instance/exec: Use exitStatus rather than exitCode
+   - lxd/instance/drivers/driver/qemu/cmd: Use exitStatus rather than exitCode
+   - lxd-agent/exec: Use exitStatus rather than exitCode and use shared.ExitStatus() helper
+   - lxd/instance/drivers/driver/lxc/cmd: Use exitStatus rather than exitCode and use shared.ExitStatus() helper
+   - lxd/instance/drivers/driver/qemu: Do not treat stdin as pty
+   - lxd/instance/exec: Remove internal PTY/TTY emulation use on LXD side for VM exec
+   - doc: css: temporary fixes for theme issues
+   - doc: Update Ceph docs with details for erasure coded pools
+   - Replace 18.04/Bionic Beaver by 20.04/Focal Fossa
+   - i18n: Update translation templates
+   - doc: add redirect to index.html
+   - shared/util/linux: Remove empty line in ExitStatus
+   - shared/validate/validate: Return nil error if OK in ParseUint32Range
+   - lxd/device: Improves error message for custom storage volumes when shift is true.
+   - lxd: log basic idmapped mount support
+   - lxd/instance/exec: Simplify and add logging for non-websocket based exec
+   - test: Adds tests for non-websocket based instance exec
+   - lxd/device: Fix golint
+   - lxd/db/certificates: remove UpdateCertificateProjects
+   - lxd/db/generate/db/stmt: remove '-ref' support from stmt
+   - lxd/db/generate/db/method: remove '-ref' support from method
+   - lxd/db/generate/db/lex: remove indexType function
+   - lxd/db/generate/db/method: add ifErrNotNil helper
+   - lxd/db: remove unused generator comments
+   - lxd/db/cluster/constants: format used-by uris to drop default project
+   - lxd/db: update generated code
+   - lxd/db: add URI generation and ID fields to entities with references
+   - lxd/db:update generated code
+   - lxd/db/generate/db/mapping: add TableType to Mapping
+   - lxd/db/generate/db/parse: determine TableType on parse struct
+   - lxd/db/generate/db/mapping: add Filterable field to Mapping
+   - lxd/db/generate/db/parse: don't require filters ReferenceTable/MapTable
+   - lxd/db/generate/db/stmt: support programmatic sql stmts
+   - lxd/db/generate/db/method: add support for generating reference tables
+   - lxd/db/generate/db/method: add support for filling reference fields from tables
+   - lxd/db/devices: add Devices struct and generator comments
+   - lxd/db/devices: Devices to/from API helpers
+   - lxd/db/generate/db/mapping: add DeviceType to mapping
+   - lxd/db/config: add Config struct and generator comments
+   - lxd/db: add association table files
+   - lxd/db: use Device type for Devices
+   - lxd: convert between db.Devices and API map format
+   - lxd/db/projects: use UpdateConfig to update project config
+   - lxd/db/instances: replace addProfilesToInstance with non-generated UpdateInstanceProfiles method
+   - lxd/db: add manual get-URI methods for networks/acls/storage volumes
+   - lxd/db: add non-generated GetProjectUsedBy and GetProfileUsedBy
+   - lxd/db: update generated code
+   - lxd/db/generate: use fmt.Errorf for errors
+   - lxd/db/snapshots.mapper: update generated code
+   - doc/network-zones: Add default column
+   - lxd/network/zone: Cleanup IPv4 logic
+   - api: network_dns_nat
+   - doc/network-zones: Add network.nat
+   - lxd/network/zone: Add new config option
+   - lxd/network/zone: Support network.nat
+   - lxd-agent/exec: Detect invalid exec requests
+   - lxd/instance/drivers/driver/qemu: Always send req.WaitForWS to lxd-agent exec
+   - lxd/device/nic/ovn: Clear up OVS integration bridge port earlier in stop sequence
+   - lxd/db: Add database-leaader role
+   - lxd: Support for database-leader role
+   - tests: Support for database-leader role
+   - api: Add database_leader extension
+   - lxc/cluster: Comma as delimeter for csv format
+   - doc: added link between installing.md and doc/installing.md Signed-off-by: Dillon Samra dillonsamra9@utexas.edu
+   - lxd/storage/backend/lxd: Restore VM filesystem size.state quota on backup restore
+   - lxd/storage/drivers/generic/vfs: Improve logging during backup unpack
+   - lxd/storage/drivers/driver/btrfs/volumes: Enable nodatacow on subvolume for block volumes
+   - lxd/project/permissions: Separate limits.disk validate from other keys in getInstanceLimits
+   - lxd/device/config/consts: Moves DefaultVMBlockFilesystemSize from storage/drivers package
+   - lxd/storage/drivers/volume: Switch to deviceConfig.DefaultVMBlockFilesystemSize
+   - lxd/storage/backend/lxd: Switch to deviceConfig.DefaultVMBlockFilesystemSize
+   - lxd/events/events: Switch events heartbeat to counter rather than using absolute deadline times
+   - lxd/project/permissions: Accounts for VM root disk size.state in getInstanceLimits
+   - doc/storage: Add warning about using VMs on BTRFS storage pools
+   - doc/storage: fix 2 typos
+   - lxc/--sub-command: Added --sub-command flag
+   - lxc/main: More depth in sub-commands
+   - i18n: Update translation templates
+   - lxd/storage: Switch to deviceConfig.DefaultVMBlockFilesystemSize
+   - doc: add files requires for Swagger output
+   - doc: include the Swagger API
+   - doc: override Swagger UI CSS
+   - doc: shallow clone of theme
+   - lxc/copy: Replaces profiles when -p is set.
+   - lxd/firewall/drivers: Adds util to convert port list to port ranges.
+   - lxd/firewall/drivers: Optimises SNAT rules in Xtables.
+   - doc: Clarify btrfs resize documentation
+   - api: Add instance_all_projects extension
+   - shared/api: Add Project field to Instance
+   - lxd/instance/drivers: Fill Project field for instance
+   - client: Add GetInstancesAllProjects, GetInstancesFullAllProjects, GetInstanceNamesAllProjects
+   - lxc/list: Support for all-projects flag and PROJECT column
+   - lxd/db: Support for retrieving data from multiple projects
+   - tests: Support for retrieving instances for all projects
+   - lxd: Ability to retrieve instances for all projects
+   - doc/rest-api: Refresh swagger YAML
+   - i18n: Update translation templates
+   - lxd/firewall/drivers: Optimises SNAT rules in nftables.
+   - lxd/ucred: Add connection functions
+   - lxd/cluster: Require full admin for clusterNodesPost
+   - tests: Make reboot test more reliable
+   - doc: Add ipv{n}.routes to routed nic type config
+   - lxd/ip/route: Add support for 'via' when creating routes
+   - lxd/firewall/drivers: Adds util to calculate DNAT rule optimisations.
+   - lxd/firewall/drivers: Optimises DNAT rules for xtables.
+   - lxd/firewall/drivers: Optimises DNAT rules for nftables.
+   - tests: Updates proxy device integration tests with port range optimisations.
+   - doc: fix link to rest-api.yaml
+   - api: Add clustering_groups API extension
+   - lxd: Add restricted.cluster.groups config option
+   - shared/api: Add cluster group structs
+   - lxd/db/cluster: Add cluster group tables
+   - lxd/db/cluster: Add cluster group constants
+   - lxd/db: Add cluster groups
+   - lxd/db: Fix node retrieval
+   - lxd/db: Add Groups to NodeInfo
+   - lxd/db: Add UpdateNodeClusterGroups
+   - lxd/db/cluster: Add default cluster group on start
+   - lxd/lifecycle: Add cluster groups
+   - lxd: Add /1.0/cluster/groups endpoints
+   - lxd: Add new node to default cluster group
+   - lxd: Disallow node names starting with "@"
+   - lxd: Update cluster groups on node update
+   - lxd: Allow "group" value for scheduler.instance
+   - lxd: Enable cluster group targeting
+   - client: Add cluster group
+   - lxc: Add cluster group
+   - i18n: Update translation templates
+   - doc/rest-api: Refresh swagger YAML
+   - test: Add clustering groups
+   - doc: Add cluster groups
+   - doc: fixed typo in gpu_mig section. Signed-off-by: Dillon Samra <dillonsamra9@utexas.edu>
+   - doc/storage: Split storage driver config tables
+   - doc/storage: Add missing ceph keys under cephfs
+   - doc/storage: Consistent line endings
+   - lxd/storage: Add const LO_FLAGS_DIRECT_IO flag
+   - lxd/storage: Check for kernel support and O_DIRECT flag before setting direct IO
+   - lxd/storage: Enable direct IO for loop devices in lvm
+   - lxd/storage: Enable direct IO for loop devices in btrfs
+   - lxd/db: Make GetNonPendingNetworkIDs project aware
+   - lxd/cluster: Update for GetNonPendingNetworkIDs changes
+   - lxd/cluster: Modernize coding style
+   - lxd/db: Properly initialize network map
+   - lxd/db: Coding style
+   - lxd/daemon: Ensure heartbeat member refresh task is only called with full state list
+   - lxd/network/driver/bridge: Exclude offline peers in HandleHeartbeat
+   - lxd/daemon: Update hasNodeListChanged to detect member state changes
+   - lxd/daemon: Don't remove offline members from supplied heartbeat member list in NodeRefreshTask
+   - lxd/daemon: Move calculation of member state metrics into leader-only section of NodeRefreshTask
+   - lxd/daemon: Renames hasNodeListChanged to hasMemberStateChanged
+   - lxd/daemon: Make heartbeat member state change task refresh failure retry more explicit in NodeRefreshTask
+   - lxd/device/nic/routed: Add ipv{n}.routes setting for routed NIC type by routing via first static IP specified
+   - test: Ensure routes are created for nictype routed
+   - test: Give exec chance to finish before capturing output
+   - lxd/device/nic/bridged: Allow ipv{n} filtering when ip is set to none
+   - test: Add test for filtering with no ip assigned on an unmanaged bridge
+   - doc: Add that ipv{n} address properties can be none when filtering is set
+   - lxd/cluster/gateway: Include endpoint address in dqlite connect errors
+   - client: Adds method to get events for all projects.
+   - lxd/cluster: Use GetEventsAllProjects to monitor events in the cluster.
+   - lxd/daemon: Rework how heartbeat member role rebalancing works to take into account online members
+   - lxd/daemon: Improves NodeRefreshTask comments
+   - lxd/daemon: Log when cluster member state changes as info level in NodeRefreshTask
+   - lxd/cluster/heartbeat: Use node.IsOffline in heartbeat member data
+   - lxd/db/node: Update nodeIsOffline to consider a node offline if time now is equal to offline threshold
+   - lxd/request: Adds function to save connection to request context.
+   - lxd: Adds save connection in context function to api and dev servers.
+   - lxd/ucred: Refactors GetConnFromWriter to use request context.
+   - test: Updates clustering_remove_raft_node to take into account updated offline threshold logic
+   - lxd/cluster/events: Updates eventsUpdateListeners to accept a heartbeat member list
+   - lxd/cluster/events: Load members from global DB if no heartbeat members provided in eventsUpdateListeners
+   - lxd/cluster/events: Updates eventsUpdateListeners to use heartbeat members
+   - lxd/cluster/events: Updates eventsUpdateListeners member handling
+   - lxd: Remove running eventsUpdateListeners as a continuous task
+   - lxd/cluster/events: Rename eventsUpdateListeners to EventsUpdateListeners
+   - lxd/daemon: Call cluster.EventsUpdateListeners asynchronously from heartbeat NodeRefreshTask
+   - lxd/api/cluster: Call cluster.EventsUpdateListeners asynchronously from internalClusterPostRebalance
+   - lxd/api/cluster: Don't start clustering tasks until member has actually joined the cluster in clusterPutJoin
+   - lxd/daemon: Call cluster.EventsUpdateListeners asynchronously from startClusterTasks
+   - lxc/monitor: Use GetEventsAllProjects to monitor events with lxc monitor.
+   - lxd: Accepts 'all-projects' query parameter on /1.0/events.
+   - lxd/events: Adds allGroups field to listener.
+   - lxd/storage: add ceph.rbd.du storage option
+   - doc: add new ceph.rbd.du storage option to storage configuration docs
+   - api: Add ceph_rbd_du
+   - i18n: Update translations from weblate
+   - gomod: Update dependencies
+   - doc/cluster: Clarify join question handling
+   - doc/clustering: Fix typo
+   - doc/rest-api: Refresh swagger YAML
+  [/details]
+
+  ### 試用環境 <!-- Try it for yourself -->
+  <!--
+  This new LXD release is already available for you to try on our [demo service](https://linuxcontainers.org/lxd/try-it/).
+  -->
+  この新しい LXD リリースは私たちの [デモサービス](https://linuxcontainers.org/ja/lxd/try-it/) で利用できます。
+
+  ### ダウンロード <!-- Downloads -->
+  <!--
+  The release tarballs can be found on our [download page](https://linuxcontainers.org/lxd/downloads/).
+  -->
+  このリリースの tarball は [ダウンロードページ](https://linuxcontainers.org/lxd/downloads/) から取得できます。
+
+  <!--
+  Binary builds are also available for:
+  -->
+  ビルド済みバイナリーは次のように使えます:
+
+   - **Linux:** snap install lxd
+   - **MacOS:** brew install lxc
+   - **Windows:** choco install lxc
+
