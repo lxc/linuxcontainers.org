@@ -31,7 +31,7 @@ content: |-
 
   <!--
   With LXD 4.21 we now have cluster groups.
-  They can be managed through `lxc cluster group` and once assigned to the relevant servers in your cluster, you can target a specific group using `--target=@group-name`. LXD will then pick the least busy server within the group.
+  They can be managed through `lxc cluster group` and once assigned to the relevant servers in your cluster, you can target a specific group using `-\-target=@group-name`. LXD will then pick the least busy server within the group.
   -->
   LXD 4.21 ではクラスターグループが導入されました。
   これは `lxc cluster group` で管理し、一度クラスター内の関連するサーバーに割り当てられると、特定のグループを `--target=@group-name` を使ってターゲットにできます。LXD はグループ内で一番負荷の低いサーバーを選択します。
@@ -119,6 +119,7 @@ content: |-
   This option kicks in when `restricted.devices.disk` is set to `allow` and if it is set, can restrict what host path can be passed to the instances.
   -->
   新たに `restricted.devices.disk.paths` オプションがプロジェクトの設定に追加されました。
+  このオプションは `restricted.devices.disk` が `allow` に設定されているときに有効になります。設定されている場合、インスタンスに渡すホストのパスを制限することができます。
 
   <!--
   It's set to a comma separate list of host paths and will allow mounting that path and anything living under it.
