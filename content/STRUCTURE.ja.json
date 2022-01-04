@@ -32,7 +32,7 @@
      "title": "LXD - サードパーティーツールとのインテグレーション",
      "menu": ["LXD", "サードパーティーツールとのインテグレーション"],
      "generator": "markdown",
-     "meta": {"input": "lxd/third-party-integrations.md"}},
+     "meta": {"input": "lxd/third-party-integrations.ja.md"}},
 
     {"path": "/lxd/advanced-guide/",
      "title": "LXD - 上級ガイド",
