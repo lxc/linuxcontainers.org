@@ -46,6 +46,9 @@ or
 
 Your system will then have all the LXC commands available, all its templates as well as the python3 binding should you want to script LXC.
 
+Use the following command to check whether the Linux kernel has the required configuration:
+
+    lxc-checkconfig
 
 # Creating unprivileged containers as a user
 
@@ -65,7 +68,7 @@ First of all, you need to make sure your user has a uid and gid map defined in /
 
 Next up is /etc/lxc/lxc-usernet which is used to set network devices quota for unprivileged users. By default, your user isn't allowed to create any network device on the host, to change that, add:
 
-    your-username veth lxcbr0 10
+    echo "$(id -un) veth lxcbr0 10" | sudo tee -a /etc/lxc/lxc-usernet
 
 This means that "your-username" is allowed to create up to 10 veth devices connected to the lxcbr0 bridge.
 
@@ -80,22 +83,32 @@ With that done, the last step is to create an LXC configuration file.
 
 Those values should match those found in /etc/subuid and /etc/subgid, the values above are those expected for the first user on a standard Ubuntu system.
 
-Running unprivileged containers as an unprivileged user only works if you delegate a cgroup in advance (the cgroup2 delegation model enforces this restriction, not liblxc). Use the following systemd command to delegate the cgroup:
+    mkdir -p ~/.config/lxc
+    cp /etc/lxc/default.conf ~/.config/lxc/default.conf
+    MS_UID="$(grep "$(id -un)" /etc/subuid  | cut -d : -f 2)"
+    ME_UID="$(grep "$(id -un)" /etc/subuid  | cut -d : -f 3)"
+    MS_GID="$(grep "$(id -un)" /etc/subgid  | cut -d : -f 2)"
+    ME_GID="$(grep "$(id -un)" /etc/subgid  | cut -d : -f 3)"
+    echo "lxc.idmap = u 0 $MS_UID $ME_UID" >> ~/.config/lxc/default.conf
+    echo "lxc.idmap = g 0 $MS_GID $ME_GID" >> ~/.config/lxc/default.conf
 
-    systemd-run --unit=myshell --user --scope -p "Delegate=yes" lxc-start <container-name>
+The current Ubuntu LTS 20.04 requires this extra step:
 
-NOTE: If libpam-cgfs was not installed on the host machine prior to installing LXC, you need to ensure your user belongs to the right cgroups before creating your first container. You can accomplish this by logging out and logging back in, or by rebooting the host machine.
+    export DOWNLOAD_KEYSERVER="hkp://keyserver.ubuntu.com"
 
 And now, create your first container with:
 
-    lxc-create -t download -n my-container
+    systemd-run --unit=my-unit --user --scope -p "Delegate=yes" -- lxc-create -t download -n my-container
 
-The download template will show you a list of distributions, versions and architectures to choose from. A good example would be "ubuntu", "bionic" (18.04 LTS) and "i386".
+The download template will show you a list of distributions, versions and architectures to choose from. A good example would be "ubuntu", "focal" (20.04 LTS) and "amd64".
 
+To run unprivileged containers as an unprivileged user, the user must be allocated an empty delegated cgroup (this is required because of the leaf-node and delegation model of cgroup2, not because of liblxc). See [cgroups: Full cgroup2 support](/lxc/news/2020_03_25_13_03.html#cgroups-full-cgroup2-support) for more information.
 
-A few seconds later your container will be created and you can start it with:
+It is not possible to simply start a container from a shell as a user and automatically delegate a cgroup. Therefore, you need to wrap each call to any of the `lxc-*` commands in a `systemd-run` command. For example, to start a container, use the following command instead of just `lxc-start my-container`:
 
-    lxc-start -n my-container -d
+    systemd-run --unit=my-unit --user --scope -p "Delegate=yes" -- lxc-start my-container
+
+NOTE: If libpam-cgfs was not installed on the host machine prior to installing LXC, you need to ensure your user belongs to the right cgroups before creating your first container. You can accomplish this by logging out and logging back in, or by rebooting the host machine.
 
 You can then confirm its status with either of:
 
@@ -139,3 +152,10 @@ So:
     sudo lxc-create -t download -n privileged-container
 
 Will create a new "privileged-container" privileged container on your system using an image from the download template.
+
+
+# Distribution LXC documentation
+- [Ubuntu](https://ubuntu.com/server/docs/containers-lxc)
+- [Debian](https://wiki.debian.org/LXC/CGroupV2#LXC_containers_started_by_non-root)
+- [Arch Linux](https://wiki.archlinux.org/title/Linux_Containers#Enable_support_to_run_unprivileged_containers_(optional))
+- [Fedora](https://fedoraproject.org/wiki/LXC)
