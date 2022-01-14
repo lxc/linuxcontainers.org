@@ -66,13 +66,13 @@
           <ol id="tryit_navigation" style="display:none">
             <li name="introduction">はじめに</li>
             <li name="first-container">最初のコンテナ</li>
-            <li name="limiting-resources">リソース制限</li>
+            <li name="inspect-containers">コンテナの情報を見る</li>
+            <li name="stop-delete">コンテナの停止と削除</li>
+            <li name="instance-configuration">インスタンスの設定</li>
+            <li name="interact">コンテナ内でのコマンド実行</li>
+            <li name="container-files">コンテナ内のファイルの操作</li>
             <li name="snapshots">スナップショット</li>
-            <li name="creating-images">イメージの作成</li>
-            <li name="container-files">コンテナのファイルへのアクセス</li>
-            <li name="image-server">リモートのイメージサーバの利用</li>
-            <li name="remote-lxd">リモートの LXD サーバの操作</li>
-            <li name="conclusion">さいごに</li>
+            <li name="conclusion">最後に</li>
           </ol>
 
           <div class="tab-content" id="introduction">
@@ -84,17 +84,22 @@
             </p>
 
             <p>
-              <!-- Initial startup can take a few seconds due to having to generate SSL keys on a rather busy system.<br />Further commands should then be near instantaneous. -->
-              多少負荷のある状態で SSL 鍵を生成する必要があるため、最初の起動には数秒かかる可能性があります。<br/>それ以降に実行するコマンドはすぐに実行されるはずです。
+              <!-- Initial startup can take a few seconds due to having to generate SSL keys on a rather busy system.Further commands should then be near instantaneous. -->
+              多少負荷のある状態で SSL 鍵を生成する必要があるため、最初の起動には数秒かかる可能性があります。それ以降に実行するコマンドはすぐに実行されるはずです。
             </p>
-
             <p>
-              <!-- You're welcome to just poke around and discover LXD through its manpage and \-\-help    option.<br />Or you can follow this step by step tutorial instead which will get you through LXD's main features. -->
-              自由に色々やってみて、man ページや --help オプションを使って LXD について発見してみてください。
-              <br />
-              もしくは、このステップバイステップのチュートリアルを使って、LXDの主な機能を学んでも良いでしょう。
+              <!-- To get started, follow this step-by-step tutorial that will guide you through LXD's main features. Or just poke around and discover LXD through its manpage and <code>\-\-help</code> option! -->
+              LXD をはじめるには、この LXD の主な機能を案内するステップバイステップのチュートリアルに沿って試してみてください。もしくは man ページや --help オプションを色々見たりして LXD を調べて、色々発見してみてください。
             </p>
-
+            <div class="admonition note">
+              <p class="admonition-title">Tip</p>
+              <p>
+                <!--
+                Click on any of the commands in the tutorial to copy it into the terminal.
+                  -->
+                チュートリアルのいずれかのコマンドをクリックし、ターミナルにコピーしてください。
+              </p>
+            </div>
             <nav aria-label="...">
               <ul class="p-inline-list u-align--center">
                 <li class="p-inline-list__item">
@@ -111,185 +116,265 @@
             <div class="tryit_progress_bar"></div>
             <h3></h3>
             <p>
-              <!-- LXD is image based, however by default no images are loaded into the image store as can be seen with: -->
-              LXD はイメージベースです。しかし、デフォルトでは以下のコマンドの結果のように、イメージはロードされていません: <pre>lxc image list</pre>
+              <!--
+              LXD is image based and can load images from different image servers. In this tutorial, we will use the <a href="https://images.linuxcontainers.org">images:</a> server.
+                -->
+              LXD はイメージベースです。そしてさまざまなイメージサーバーからイメージをロードできます。このチュートリアルでは、<a href="https://images.linuxcontainers.org">images:</a> サーバーを使います。
             </p>
 
+            <pre>lxc image list images:</pre>
             <p>
-              <!-- LXD knows about 3 default image servers: -->
-              LXD はデフォルトでイメージサーバが 3 つ登録されています:
-              <ul>
-                <li>ubuntu: (Ubuntu stable イメージ用 <!-- for Ubuntu stable images -->)</li>
-                <li>ubuntu-daily: (Ubuntu daily イメージ用 <!-- for Ubuntu daily images -->)</li>
-                <li>images: (その他多数のディストリビューション用 <!-- for a bunch of other distributions -->)</li>
-              </ul>
+              <!--
+              Start by launching a few containers.
+                -->
+              コンテナをいくつか起動するところから始めます。
+              <ol>
+                <li>
+                  <!--
+                  Launch a container called "first" using the Ubuntu 20.04 image:
+                    -->
+                  Ubuntu 20.04 イメージを使って "first" という名前のコンテナを起動します:
+                  <pre>lxc launch images:ubuntu/20.04 first</pre>
+                  <!--
+                  Note that launching this container takes a few seconds, because the image must be downloaded and unpacked first.
+                    -->
+                  最初はイメージをダウンロードして展開しなければならないため、コンテナの起動には少し時間がかかることに注意してください。
+                </li>
+                <li>
+                  <!--
+                  Launch a container called "second" using the same image:
+                    -->
+                  同じイメージを使って "second" という名前のコンテナを起動します:
+                  <pre>lxc launch images:ubuntu/20.04 second</pre>
+                  <!--
+                  Launching this container is quicker than launching the first, because the image is already available.
+                    -->
+                  イメージを取得済みなので、最初の（first）コンテナの起動に比べると早く起動します:
+                </li>
+                <li>
+                  <!--
+                  Copy the first container into a container called "third":
+                    -->
+                  最初の（first）コンテナを "third" という名前のコンテナとしてコピーします:
+                  <pre>lxc copy first third</pre>
+                </li>
+                <li>
+                  <!--
+                  Launch a container called "alpine" using the Alpine Edge image:
+                    -->
+                  Alpine Edge イメージを使って "alpine" という名前のコンテナを起動します:
+                  <pre>lxc launch images:alpine/edge alpine</pre>
+                </li>
+              </ol>
             </p>
-
-            <p>
-              <!-- The stable Ubuntu images can be listed with: -->
-              stable の Ubuntu イメージは以下のようにリスト表示できます:
-              <pre>lxc image list ubuntu: | less</pre>
-            </p>
-
-            <p>
-              <!-- To launch a first container called "first" using the Ubuntu 16.04 image, use: -->
-              "first" という名前の最初のコンテナを起動するには、以下のようにします:
-              <pre>lxc launch ubuntu:16.04 first</pre>
-            </p>
-
-            <p>
-              <!-- Your new container will now be visible in: -->
-              あなたが作成した新しいコンテナは以下のようにして確認できます。
-              <pre>lxc list</pre>
-            </p>
-
-            <p>
-              <!-- Running state details and configuration can be queried with: -->
-              コンテナの状態と設定は以下のようにして確認できます。
-              <pre>lxc info first
-lxc config show first</pre>
-            </p>
-
             <nav aria-label="...">
               <ul class="p-inline-list u-align--center">
                 <li class="p-inline-list__item">
                   <a href="#introduction" class="p-button js-tab-button tabPrevious tryit_goto">Previous</a>
                 </li>
                 <li class="p-inline-list__item">
-                  <a href="#limiting-resources" class="p-button js-tab-button tabNext tryit_goto">Next</a>
+                  <a href="#inspect-containers" class="p-button js-tab-button tabNext tryit_goto">Next</a>
                 </li>
               </ul>
             </nav>
           </div>
 
-          <div class="tab-content" id="limiting-resources">
+          <div class="tab-content" id="inspect-containers">
             <div class="tryit_progress_bar"></div>
             <h3></h3>
             <p>
-              <!-- By default your container comes with no resource limitation and inherits from its parent environment. You can confirm it with: -->
-              デフォルトでは、あなたの作成したコンテナはリソース制限がなく、自身の親環境のリソースをそのまま引き継いでいます。これは以下のように確認できます。
-              <pre>free -m
-lxc exec first -- free -m</pre>
+              <!--
+              Check the list of containers that you launched:
+                -->
+              起動したコンテナのリストをチェックします:
             </p>
-
+            <pre>lxc list</pre>
             <p>
-              <!-- To apply a memory limit to your container, do: -->
-              あなたが作成したコンテナに制限を追加するには以下のよう実行します。
-              <pre>lxc config set first limits.memory 128MB</pre>
+              <!--
+              You will see that all but the third container are running. This is because you created the third container by copying the first, but you didn't start it.
+                -->
+              3 つ目のコンテナ以外が起動していることが確認できるでしょう。これは、3 つ目のコンテナを最初の（first）コンテナからコピーして作成はしたものの、起動処理を実行していないからです。
             </p>
-
             <p>
-              <!-- And confirm that it's been applied with: -->
-              そして、制限が適用されたことを確認するには以下のように実行します。
-              <pre>lxc exec first -- free -m</pre>
+              <!--
+              You can start the third container with:
+                -->
+              3 つ目のコンテナを次のように起動できます:
             </p>
-
+            <pre>lxc start third</pre>
+            <p>
+              <!--
+              You can query more information about each container with:
+                -->
+              それぞれのコンテナの情報をもう少し詳しく見ることができます:
+            </p>
+            <pre>lxc info first
+lxc info second
+lxc info third
+lxc info alpine</pre>
             <nav aria-label="...">
-              <ul class="p-inline-list u-align--center">
+            <ul class="p-inline-list u-align--center u-no-margin--bottom">
+              <li class="p-inline-list__item">
+                <a class="p-button js-tab-button tabPrevious u-no-margin--bottom tryit_goto">Previous</a>
+              </li>
+              <li class="p-inline-list__item">
+                <a class="p-button js-tab-button tabNext u-no-margin--bottom tryit_goto">Next</a>
+              </li>
+            </ul>
+          </nav>
+          </div>
+
+          <div class="tab-content" id="stop-delete">
+            <div class="tryit_progress_bar"></div>
+            <h3></h3>
+            <p>
+              <!--
+              We don't need all of these containers for the remainder of the tutorial, so let's clean some of them up.
+                -->
+              チュートリアルではこの後、これらのコンテナすべては必要ありませんので、不要なコンテナを消しましょう。
+              <ol>
+                <li>2 つ目のコンテナを停止します: <!-- Stop the second container: -->
+                  <pre>lxc stop second</pre>
+                </li>
+                <li>2 つ目のコンテナを削除します: <!-- Delete the second container: -->
+                  <pre>lxc delete second</pre>
+                </li>
+                <li>3 つ目のコンテナを削除します: <!-- Delete the third container: -->
+                  <pre>lxc delete third</pre>
+                  <!--
+                  Since this container is running, you get an error message that you must stop it first. Alternatively, you can force-delete it:
+                    -->
+                  このコンテナはまだ実行中なので、最初に停止しないとエラーメッセージが出るでしょう。代わりに、強制削除できます:
+                  <pre>lxc delete third --force</pre>
+                </li>
+              </ol>
+            </p>
+            <nav aria-label="...">
+            <ul class="p-inline-list u-align--center u-no-margin--bottom">
+              <li class="p-inline-list__item">
+                <a class="p-button js-tab-button tabPrevious u-no-margin--bottom tryit_goto">Previous</a>
+              </li>
+              <li class="p-inline-list__item">
+                <a class="p-button js-tab-button tabNext u-no-margin--bottom tryit_goto">Next</a>
+              </li>
+            </ul>
+          </nav>
+          </div>
+
+          <div class="tab-content" id="instance-configuration">
+            <div class="tryit_progress_bar"></div>
+            <h3></h3>
+            <p>
+              <!--
+              There are several limits and configuration options that you can set for your instances. See <a href="https://linuxcontainers.org/lxd/docs/master/instances">Instance configuration</a> for an overview.
+                -->
+              インスタンスに設定できる制限や設定オプションがいくつか存在します。その概要については <a href="https://lxd-ja.readthedocs.io/ja/latest/instances/">インスタンスの設定</a> （英語版: <a href="https://linuxcontainers.org/lxd/docs/master/instances">Instance configuration</a>）をご覧ください。
+            </p>
+            <p>
+              <!--
+              Let's create another container with some resource limits.
+                -->
+              リソース制限を持つコンテナをもう 1 つ作ってみましょう。
+              <ol>
+                <li>コンテナを起動し、1vCPU と 192MiB メモリーの制限を設定します: <!-- Launch a container and limit it to one vCPU and 192 MiB of RAM: -->
+                  <pre>lxc launch images:ubuntu/20.04 limited -c limits.cpu=1 -c limits.memory=192MiB</pre>
+                <li>現在の設定を確認し、制限が設定されていない最初の（first）コンテナの設定と比べてみましょう: <!-- Check the current configuration and compare it to the configuration of the first (unlimited) container: -->
+                  <pre>lxc config show limited
+lxc config show first</pre>
+                </li>
+                <li>親環境のシステムと 2 つのコンテナで空きメモリーと使用済メモリーの量をチェックしましょう: <!-- Check the amount of free and used memory on the parent system and on the two containers: -->
+                  <pre>free -m
+lxc exec first -- free -m
+lxc exec limited -- free -m</pre>
+                  <!--
+                  Note that the total amount of memory is identical for the parent system and the first container, because by default, the container inherits the resources from its parent environment. The limited container, on the other hand, has only 192 MiB available.
+                    -->
+                  デフォルトでは、コンテナは親環境からリソースを軽症するため、親環境と最初の（first）コンテナではメモリの総量が同じであることに注意してください。一方で、制限を設定したコンテナは 192MiB だけが使用できます。
+                </li>
+                <li>親環境と 2 つのコンテナで使用できる CPU の数をチェックしましょう: <!-- Check the number of CPUs available on the parent system and on the two containers: -->
+                  <pre>nproc
+lxc exec first -- nproc
+lxc exec limited -- nproc</pre>
+                  <!--
+                  Again, note that the number is identical for the parent system and the first container, but reduced for the limited container.
+                    -->
+                  ふたたび、親環境と最初の（first）コンテナの数は同じで、制限を設定したコンテナでは現象していることに注意してください。
+                </li>
+              </ol>
+            </p>
+            <p>
+              <!--
+              You can also update the configuration while your container is running.
+                -->
+              実行中のコンテナの設定を更新することもできます。
+              <ol>
+                <li>コンテナのメモリ制限を設定する: <!-- Configure a memory limit for your container: -->
+                  <pre>lxc config set limited limits.memory=128MiB</pre>
+                </li>
+                <li>適用した設定をチェックする: <!-- Check that the configuration has been applied: -->
+                  <pre>lxc config show limited</pre>
+                </li>
+                <li>コンテナで使用できるメモリ量をチェックする: <!-- Check the amount of memory that is available to the container: -->
+                  <pre>lxc exec limited -- free -m</pre>
+                  <!--
+                  Note that the number has changed.
+                    -->
+                  数値が変わっていることを確認してください。
+                </li>
+              </ol>
+            </p>
+            <nav aria-label="...">
+              <ul class="p-inline-list u-align--center u-no-margin--bottom">
                 <li class="p-inline-list__item">
-                  <a href="#first-container" class="p-button js-tab-button tabPrevious tryit_goto">Previous</a>
+                  <a class="p-button js-tab-button tabPrevious u-no-margin--bottom tryit_goto">Previous</a>
                 </li>
                 <li class="p-inline-list__item">
-                  <a href="#snapshots" class="p-button js-tab-button tabNext tryit_goto">Next</a>
+                  <a class="p-button js-tab-button tabNext u-no-margin--bottom tryit_goto">Next</a>
                 </li>
               </ul>
             </nav>
           </div>
 
-          <div class="tab-content" id="snapshots">
+          <div class="tab-content" id="interact">
             <div class="tryit_progress_bar"></div>
             <h3></h3>
             <p>
-              <!-- LXD supports snapshoting and restoring container snapshots.<br />Before making a snapshot, lets do some changes to the container, for example, updating it: -->
-              LXD はスナップショットの取得とコンテナのスナップショットからのリストアをサポートしています。
-              <br />
-              スナップショットを作成する前に、コンテナに少し変更を加えてみましょう。例えば、以下のようにアップデートします。
-              <pre>lxc exec first -- apt-get update
+	      <!--
+	      Let's interact with your containers.
+		-->
+	      コンテナ内でコマンドを実行してみましょう。
+              <ol>
+                <li>コンテナ内でインタラクティブなシェルを起動します: <!-- Launch an interactive shell in your container: -->
+                  <pre>lxc exec first -- bash</pre>
+                </li>
+                <li>例えば、コマンドを入力するとオペレーティングシステムについての情報が表示されます: <!-- Enter some commands, for example, display information about the operating system: -->
+                  <pre>cat /etc/*release</pre>
+                </li>
+                <li>インタラクティブなシェルを抜けます: <!-- Exit the interactive shell: -->
+                  <pre>exit</pre>
+                </li>
+                <li>alpine コンテナで同じことを繰り返してみましょう: <!-- Repeat the steps for your alpine container: -->
+                  <pre>lxc exec alpine -- ash
+cat /etc/*release
+exit</pre>
+                <li>
+		  <!--
+		  Instead of logging on to the container and running commands there, you can run commands directly from the host. For example, you can install a command line tool on the container and run it:
+		    -->
+		  コンテナにログインしてコマンドを実行する代わりに、ホストから直接コマンドを実行できます。例えば、コンテナ上にコマンドラインツールをインストールし、それを実行できます:
+                  <pre>lxc exec first -- apt-get update
 lxc exec first -- apt-get install sl -y
 lxc exec first -- /usr/games/sl</pre>
+                </li>
+              </ol>
             </p>
-
-            <p>
-              <!-- Now that the container is all updated and cleaned, let's make a snapshot called "clean": -->
-              今、コンテナはすべてアップデートされ、クリーンな状態になりました。このスナップショットを "clean" と名づけましょう。
-              <pre>lxc snapshot first clean</pre>
-            </p>
-
-            <p>
-              <!-- Let's break our container: -->
-              ここでコンテナを破壊してみましょう。
-              <pre>lxc exec first -- rm -Rf /etc /usr</pre>
-            </p>
-
-            <p>
-              <!-- Confirm the breakage with (then exit): -->
-              壊れたことを以下のように確認してみます (実行後に exit してください)。
-              <pre>lxc exec first -- bash</pre>
-            </p>
-
-            <p>
-              <!-- And restore everything to the snapshotted state: -->
-              そして、スナップショットの状態へすべてリストアしてみましょう。
-              <pre>lxc restore first clean</pre>
-            </p>
-
-            <p>
-              <!-- And confirm everything's back to normal (then exit): -->
-              すべて普通の状態に戻っていることを確認してみましょう (実行後に exit してください)。
-              <pre>lxc exec first -- bash</pre>
-            </p>
-
             <nav aria-label="...">
-              <ul class="p-inline-list u-align--center">
+              <ul class="p-inline-list u-align--center u-no-margin--bottom">
                 <li class="p-inline-list__item">
-                  <a href="#limiting-resources" class="p-button js-tab-button tabPrevious tryit_goto">Previous</a>
+                  <a class="p-button js-tab-button tabPrevious u-no-margin--bottom tryit_goto">Previous</a>
                 </li>
                 <li class="p-inline-list__item">
-                  <a href="#creating-images" class="p-button js-tab-button tabNext tryit_goto">Next</a>
-                </li>
-              </ul>
-            </nav>
-          </div>
-
-          <div class="tab-content" id="creating-images">
-            <div class="tryit_progress_bar"></div>
-            <h3></h3>
-            <p>
-              <!-- As your probably noticed earlier, LXD is image based, that is, all containers must be created from either a copy of an existing container or from an image. -->
-              すでにお分かりのように、LXD はイメージベースです。つまり、すべてのコンテナはイメージか既存のコンテナのコピーのどちらかから作られます。
-            </p>
-
-            <p>
-              <!-- You can create new images from an existing container or a container snapshot.-->
-              あなたは既存のコンテナか、コンテナのスナップショットから新たにイメージを作成できます。
-            </p>
-
-            <p>
-              <!-- To publish our "clean" snapshot from earlier as a new image with a user friendly alias of "clean-ubuntu", run: -->
-              "clean-ubuntu" というユーザフレンドリーなエイリアスを持つ新しいイメージとして、先の "clean" という名前のスナップショットをイメージ化するには、以下のように実行します。
-              <pre>lxc publish first/clean --alias clean-ubuntu</pre>
-            </p>
-
-            <p>
-              <!-- At which point we won't need our "first" container, so just delete it with: -->
-              最初の "first" コンテナが不要であることを示すため、以下のように削除してみましょう。
-              <pre>lxc stop first
-lxc delete first</pre>
-            </p>
-
-            <p>
-              <!-- And lastly we can start a new container from our image with: -->
-              最後に、作成したイメージから新しいコンテナを起動してみましょう。
-              <pre>lxc launch clean-ubuntu second</pre>
-            </p>
-
-            <nav aria-label="...">
-              <ul class="p-inline-list u-align--center">
-                <li class="p-inline-list__item">
-                  <a href="#snapshots" class="p-button js-tab-button tabPrevious tryit_goto">Previous</a>
-                </li>
-                <li class="p-inline-list__item">
-                  <a href="#container-files" class="p-button js-tab-button tabNext tryit_goto">Next</a>
+                  <a class="p-button js-tab-button tabNext u-no-margin--bottom tryit_goto">Next</a>
                 </li>
               </ul>
             </nav>
@@ -299,185 +384,87 @@ lxc delete first</pre>
             <div class="tryit_progress_bar"></div>
             <h3></h3>
             <p>
-              <!-- To pull a file from the container you can use the "lxc file pull" command: -->
-              コンテナからファイルを取得するには、"lxc file pull" コマンドが使えます。
-              <pre>lxc file pull second/etc/hosts .</pre>
+	      <!--
+	      You can access the files from your container and interact with them.
+		-->
+	      コンテナのファイルにアクセスしたり、ファイルを操作できます。
+              <ol>
+                <li>コンテナからファイルを取得します: <!-- Pull a file from the container: -->
+                  <pre>lxc file pull first/etc/hosts .</pre>
+                </li>
+                <li>ファイルにエントリーを追加します: <!-- Add an entry to the file: -->
+                  <pre>echo "1.2.3.4 my-example" &gt;&gt; hosts</pre>
+                </li>
+                <li>コンテナにファイルを戻します: <!-- Push the file back to the container: -->
+                  <pre>lxc file push hosts first/etc/hosts</pre>
+                </li>
+                <li>ログファイルにアクセスするために同じメカニズムを使います: <!-- Use the same mechanism to access log files: -->
+                  <pre>lxc file pull first/var/log/syslog - | less
+q</pre>
+                </li>
+              </ol>
             </p>
-
-            <p>
-              <!-- Lets add an entry to it: -->
-              取得したファイルにエントリを追加しましょう。
-              <pre>echo "1.2.3.4 my-example" &gt;&gt; hosts</pre>
-            </p>
-
-            <p>
-              <!-- And push it back where it came from: -->
-              以下のようにしてファイルをコンテナに戻します。
-              <pre>lxc file push hosts second/etc/hosts</pre>
-            </p>
-
-            <p>
-              <!-- You can also use this mechanism to access log files: -->
-              以下のような方法でログファイルにアクセスすることもできます。
-              <pre>lxc file pull second/var/log/syslog - | less</pre>
-            </p>
-
-            <p>
-              <!-- We won't be needing that container anymore, so delete it with: -->
-              もうこのコンテナが不要であれば、以下のようにして削除しましょう。
-              <pre>lxc delete --force second</pre>
-            </p>
-
             <nav aria-label="...">
-              <ul class="p-inline-list u-align--center">
+              <ul class="p-inline-list u-align--center u-no-margin--bottom">
                 <li class="p-inline-list__item">
-                  <a href="#creating-images" class="p-button js-tab-button tabPrevious tryit_goto">Previous</a>
+                  <a class="p-button js-tab-button tabPrevious u-no-margin--bottom tryit_goto">Previous</a>
                 </li>
                 <li class="p-inline-list__item">
-                  <a href="#image-server" class="p-button js-tab-button tabNext tryit_goto">Next</a>
+                  <a class="p-button js-tab-button tabNext u-no-margin--bottom tryit_goto">Next</a>
                 </li>
               </ul>
             </nav>
           </div>
 
-          <div class="tab-content" id="image-server">
+          <div class="tab-content" id="snapshots">
             <div class="tryit_progress_bar"></div>
             <h3></h3>
             <p>
-              <!-- The lxc client tool supports multiple "remotes", those remotes can be read-only image servers or other LXD hosts. -->
-              クライアントツール lxc からは複数の "リモートホスト" が使えます。これらのリモートホストは、読み取り専用のイメージサーバか、他の LXD ホストのどちらかです。
+	      <!--
+	      LXD supports creating and restoring container snapshots.
+		-->
+	      LXD ではコンテナのスナップショットを作成したり、スナップショットからリストアしたりできます。
+              <ol>
+                <li>"clean" という名前のスナップショットを作ります: <!-- Create a snapshot called "clean": -->
+                  <pre>lxc snapshot first clean</pre>
+                </li>
+                <li>スナップショットが作られたことを確認します: <!-- Confirm that the snapshot has been created: -->
+                  <pre>lxc list first
+lxc info first</pre>
+		  <!--
+                  <code>lxc list</code> shows the number of snapshots. <code>lxc info</code> displays information about each snapshot.
+		  -->
+		  <code>lxc list</code> はスナップショットの数を表示します。<code>lxc info</code> はスナップショットごとの情報を表示します。
+                </li>
+                <li>コンテナを破壊します: <!-- Break the container: -->
+                  <pre>lxc exec first -- rm -Rf /etc /usr</pre>
+                </li>
+                <li>壊れたことを確認します: <!-- Confirm the breakage: -->
+                  <pre>lxc exec first -- bash</pre>
+		  <!--
+                  Note that you do not get a shell, because you deleted the <code>bash</code> command.
+		    -->
+		  <code>bash</code> コマンドを削除したので、シェルが実行できないことに注意してください。
+                </li>
+                <li>スナップショットの状態にコンテナをリストアします: <!-- Restore the container to the snapshotted state: -->
+                  <pre>lxc restore first clean</pre>
+                </li>
+                <li>すべて通常状態に戻ったことを確認します: <!-- Confirm that everything is back to normal: -->
+                  <pre>lxc exec first -- bash
+exit</pre>
+                </li>
+                <li>スナップショットを削除します: <!-- Delete the snapshot: -->
+                  <pre>lxc delete first/clean</pre>
+                </li>
+              </ol>
             </p>
-
-            <p>
-              <!-- LXC upstream runs one such server at <a href="https://images.linuxcontainers.org">https://images.linuxcontainers.org</a> which serves a set of automatically generated images for various Linux distributions. -->
-              LXC 開発元はこのようなサーバを <a href="https://images.linuxcontainers.org">https://images.linuxcontainers.org</a> で運用しています。ここでは、色々な Linux ディストリビューションのイメージを自動的に作成して提供しています。
-            </p>
-
-            <p>
-              <!-- It comes pre-added with default LXD but you can remove it or change it if you don't want it. -->
-              このサーバはデフォルトで LXD に登録されています。もしこのサーバを使わない場合は、デフォルトの登録を変更したり、削除したりできます。
-            </p>
-
-            <p>
-              <!-- You can list the available images with: -->
-              利用可能なイメージのリストは以下のように取得できます。
-              <pre>lxc image list images: | less</pre>
-            </p>
-
-            <p>
-              <!-- And spawn a new Centos 7 container with: -->
-              そして、CentOS 7 コンテナを起動するには、以下のように実行します。
-              <pre>lxc launch images:centos/7 third</pre>
-            </p>
-
-            <p>
-              <!-- Confirm it's indeed Centos 7 with: -->
-              コンテナが CentOS 7 かどうか確認するには、以下のように実行します。
-              <pre>lxc exec third -- cat /etc/redhat-release</pre>
-            </p>
-
-            <p>
-              <!-- And delete it: -->
-              そしてコンテナを削除します。
-              <pre>lxc delete -f third</pre>
-            </p>
-
-            <p>
-              <!-- The list of all configured remotes can be obtained with: -->
-              設定されたリモートホストの一覧は以下のように取得できます。
-              <pre>lxc remote list</pre>
-            </p>
-
             <nav aria-label="...">
-              <ul class="p-inline-list u-align--center">
+              <ul class="p-inline-list u-align--center u-no-margin--bottom">
                 <li class="p-inline-list__item">
-                  <a href="#container-files" class="p-button js-tab-button tabPrevious tryit_goto">Previous</a>
+                  <a class="p-button js-tab-button tabPrevious u-no-margin--bottom tryit_goto">Previous</a>
                 </li>
                 <li class="p-inline-list__item">
-                  <a href="#remote-lxd" class="p-button js-tab-button tabNext tryit_goto">Next</a>
-                </li>
-              </ul>
-            </nav>
-          </div>
-
-          <div class="tab-content" id="remote-lxd">
-            <div class="tryit_progress_bar"></div>
-            <h3></h3>
-            <p>
-              <!-- For this step, you'll need a second demo session, so open a new one <a href="/lxd/try-it/" target="_blank">here</a> -->
-              このステップでは、2 つ目のデモセッションが必要となります。そこで新しいセッションを <a href="/lxd/try-it/" target="_blank">ここから</a> 開いてください。
-            </p>
-
-            <p>
-              <!-- Copy/paste the "lxc remote add" command from the top of the page of that new session into the shell of your old session. <br />Then confirm the server fingerprint for the remote server. -->
-              その新しいセッションページのトップにある「コンテナの情報」の "LXD" 部分から以前のセッションのシェルへ "lxc remote add" コマンドをコピー＆ペーストしてください。
-              <br />
-              そしてリモートサーバのフィンガープリントを確認してください。
-            </p>
-
-            <p>
-              <!-- Note that it may take a few seconds for the new LXD daemon to listen to the network, just retry the command until it answers. -->
-              新しい LXD デーモンは、応答があるまでコマンドをリトライして、ネットワークを LISTEN するまでに数秒かかることがあるかもしれないことに注意してください。
-            </p>
-
-            <p>
-              <!-- At this point you can list the remote containers with: -->
-              この時点で、あなたは以下のようにリモートのコンテナをリスト表示できます。
-              <pre>lxc list tryit:</pre>
-            </p>
-
-            <p>
-              <!-- And its images with: -->
-              そして、リモートのイメージをリスト表示できます。
-              <pre>lxc image list tryit:</pre>
-            </p>
-
-            <p>
-              <!-- Now, lets start a new container on the remote LXD using the local image we created earlier. -->
-              さあ、先に作成したローカルイメージを使って、リモートの LXD 上で新しいコンテナを起動してみましょう。
-              <pre>lxc launch clean-ubuntu tryit:fourth</pre>
-            </p>
-
-            <p>
-              <!-- You now have a container called "fourth" running on the remote host "tryit". You can spawn a shell inside it with (then exit): -->
-              これであなたはリモートホスト "tryit" 上で "fourth" という名前で実行中のコンテナを持っていることになります。以下のようにリモートのコンテナ内でシェルを起動できます (実行後に exit してください)。
-              <pre>lxc exec tryit:fourth bash</pre>
-            </p>
-
-            <p>
-              <!-- Now let's copy that container into a new one called "fifth": -->
-              このコンテナを新しい "fifth" というコンテナにコピーしてみましょう。
-              <pre>lxc copy tryit:fourth tryit:fifth</pre>
-            </p>
-
-            <p>
-              <!-- And just for fun, move it back to our local lxd while renaming it to "sixth": -->
-              お遊び感覚で、それをローカルの LXD に "sixth" という名前に変更して移動してみましょう。
-              <pre>lxc move tryit:fifth sixth</pre>
-            </p>
-
-            <p>
-              <!-- And confirm it's all still working (then exit): -->
-              そして、それがすべて実行中であることを確認しましょう (実行後に exit してください)。
-              <pre>lxc start sixth
-lxc exec sixth -- bash</pre>
-            </p>
-
-            <p>
-              <!-- Then clean everything up: -->
-              そして、すべてをクリーンアップするには、以下のように実行します。
-              <pre>lxc delete -f sixth
-lxc delete -f tryit:fourth
-lxc image delete clean-ubuntu</pre>
-            </p>
-
-            <nav aria-label="...">
-              <ul class="p-inline-list u-align--center">
-                <li class="p-inline-list__item">
-                  <a href="#remote-lxd" class="p-button js-tab-button tabPrevious tryit_goto">Previous</a>
-                </li>
-                <li class="p-inline-list__item">
-                  <a href="#conclusion" class="p-button js-tab-button tabNext tryit_goto">Next</a>
+                  <a class="p-button js-tab-button tabNext u-no-margin--bottom tryit_goto">Next</a>
                 </li>
               </ul>
             </nav>
@@ -496,7 +483,7 @@ lxc image delete clean-ubuntu</pre>
               あなたが LXD を使い、最新の機能を体験したいということであれば、このデモサービスを使うことを歓迎します。
             </p>
 
-            <p>楽しんでください!</p>
+            <p>楽しんでください!<!-- Enjoy! --></p>
 
             <nav aria-label="...">
               <ul class="p-inline-list u-align--center">
@@ -508,6 +495,36 @@ lxc image delete clean-ubuntu</pre>
                 </li>
               </ul>
             </nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="p-notification--information" id="tryit_feedback" style="display:none">
+        <div class="p-notification__response">
+          <span class="p-notification__status js-collapsable">フィードバック<!-- Feedback --></span>
+          <div class="panel-body">
+            <form class="p-form" id="tryit_feedback_submit">
+              <div class="p-form__group">
+                <label for="feedbackRating">この試用環境を評価してください<!-- Rate your experience --></label>
+                <input type="hidden" class="rating rating-tooltip" id="feedbackRating" />
+              </div>
+              <div class="p-form__group">
+                <label for="feedbackEmail">メールアドレス（任意）<!-- Email address (optional) --></label>
+                <input type="email" class="form-control" id="feedbackEmail" placeholder="foo@bar.com"/>
+                <small id="feedbackEmailHelp" class="form-text text-muted">入力するといただいたフィードバックに関して連絡させていただきます。<!-- Fill this to allow us to contact you about your feedback. --></small>
+                <div class="form-check">
+                  <label class="form-check-label">
+                    <input type="checkbox" class="form-check-input" id="feedbackEmailUse"/>
+                    <label for="feedbackEmailUse">Canonical から LXD や関連するプロダクトに関する情報を取得する <!-- I'm interested in hearing more about LXD and related products from Canonical --></label>
+                  </label>
+                </div>
+              </div>
+              <div class="p-form__group">
+                <label for="feedbackText">フィードバック（任意）<!-- Feedback (optional) --></label>
+                <textarea class="form-control" id="feedbackText" rows="5"></textarea>
+              </div>
+              <button type="submit" class="p-button--positive">フィードバックを送信<!-- Send feedback --></button>
+            </form>
           </div>
         </div>
       </div>
@@ -541,7 +558,7 @@ lxc image delete clean-ubuntu</pre>
             You have been banned from this service due to a failure to
             respect the terms of service.
             -->
-            <p>あなたはサービス利用規約を守らなかったため、サービスの使用を禁止されています。</p>
+            <p>あなたはサービス利用規約への同意を行わなかったため、サービスの使用を禁止されています。</p>
           </div>
 
           <div class="panel-body" id="tryit_error_unknown" style="display:none">
@@ -576,7 +593,7 @@ lxc image delete clean-ubuntu</pre>
     <hr/>
     <div class="p-notification" id="tryit_console_panel">
       <div class="p-notification__response">
-        <h2 class="p-heading--four">コンソール <!-- Console -->(<span class="minutes"></span> 分<!-- minutes, --> <span class="seconds"></span> 秒<!-- seconds -->)</h2>
+        <h2 class="p-heading--four">ターミナル <!-- Terminal -->(<span class="minutes"></span> 分<!-- minutes, --> <span class="seconds"></span> 秒<!-- seconds -->)</h2>
         <div style="padding-right: 1rem; overflow: auto; background-color: #000;">
           <div id="tryit_console" style="background-color:black;"></div>
         </div>
