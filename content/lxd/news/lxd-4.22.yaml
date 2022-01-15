@@ -1,0 +1,418 @@
+title: LXD 4.22 has been released
+date: 2022/01/15 05:01
+origin: https://discuss.linuxcontainers.org/t/lxd-4-22-has-been-released/13137
+content: |-
+  ### Introduction
+  The LXD team is very excited to announce the release of LXD 4.22!
+
+  This is our first release of the year but still a pretty busy one with the all new `lxd-user` daemon, improved documentation and a number of other smaller features and enhancements.
+
+  Enjoy!
+
+  ### New features and highlights
+  #### Improved documentation
+  LXD switched over to Sphinx for its documentation generator which allows for more complex markup and better rendering.
+
+  The result is visible at https://linuxcontainers.org/lxd/docs/master/
+
+  As for the content itself, in this release, we've got a reworked `Getting started` section which re-shuffles and improves on some of the existing content.
+
+  Over the next few weeks and months, we'll be re-structuring more of the documentation and hope to have more content, of higher quality and easier to find than we had in the past.
+
+  #### User project management daemon
+  This release includes a new optional daemon, `lxd-user`. This daemon acts as a proxy to the main LXD daemon and allows for less trusted users to interact with LXD in a safe way.
+
+  An example of a use for it would be on a desktop system where not all users are fully trusted (given root access if needed). Because of LXD's security model, those users also shouldn't be given direct access to LXD as they could make use of it to elevate their privileges and take over the system.
+
+  Instead the system can be configured so only members of the `lxd` group can talk directly to LXD (and get full access to it) whereas users of the `users` group get to talk to `lxd-user`.
+
+  When a user connects to `lxd-user`, the following will automatically happen:
+   - The daemon will check if LXD was initialized, if not, it will create:
+      - A `default` storage pool (preferring `zfs` but falling back to `dir`)
+      - A `lxdbr0` network
+      - A `default` profile using that storage pool and network
+   - If it's the first time that particular user connects to `lxd-user`, it will then:
+      - Generate a TLS certificate for that user
+      - Generate a new project for that user and restrict it
+      - Tie that TLS certificate to the project
+      - Setup the `default` profile in the project
+   - Finally, it will forward any request of that user to the real LXD daemon, using the generate TLS certificate for authentication
+
+  To the end user, a first interaction with `lxd-user` looks like this:
+
+      foo@v1:~$ lxc list
+      To start your first container, try: lxc launch ubuntu:20.04
+      Or for a virtual machine: lxc launch ubuntu:20.04 --vm
+
+      +------+-------+------+------+------+-----------+
+      | NAME | STATE | IPV4 | IPV6 | TYPE | SNAPSHOTS |
+      +------+-------+------+------+------+-----------+
+
+      foo@v1:~$ lxc launch ubuntu:20.04
+      Creating the instance
+      Instance name is: welcome-earwig        
+      Starting welcome-earwig
+
+      foo@v1:~$ lxc list
+      +----------------+---------+---------------------+-----------------------------------------------+-----------+-----------+
+      |      NAME      |  STATE  |        IPV4         |                     IPV6                      |   TYPE    | SNAPSHOTS |
+      +----------------+---------+---------------------+-----------------------------------------------+-----------+-----------+
+      | welcome-earwig | RUNNING | 10.31.36.109 (eth0) | fd42:fa4a:d38d:1c7b:216:3eff:fed1:63aa (eth0) | CONTAINER | 0         |
+      +----------------+---------+---------------------+-----------------------------------------------+-----------+-----------+
+
+      foo@v1:~$ lxc project list
+      +---------------------+--------+----------+-----------------+----------+------------------------------------------+---------+
+      |        NAME         | IMAGES | PROFILES | STORAGE VOLUMES | NETWORKS |               DESCRIPTION                | USED BY |
+      +---------------------+--------+----------+-----------------+----------+------------------------------------------+---------+
+      | user-1001 (current) | YES    | YES      | YES             | NO       | User restricted project for "foo" (1001) | 3       |
+      +---------------------+--------+----------+-----------------+----------+------------------------------------------+---------+
+
+      foo@v1:~$ lxc project show user-1001
+      config:
+        features.images: "true"
+        features.networks: "false"
+        features.profiles: "true"
+        features.storage.volumes: "true"
+        restricted: "true"
+        restricted.containers.nesting: allow
+        restricted.devices.disk: allow
+        restricted.devices.disk.paths: /home/foo
+        restricted.devices.gpu: allow
+        restricted.idmap.gid: "1003"
+        restricted.idmap.uid: "1001"
+      description: User restricted project for "foo" (1001)
+      name: user-1001
+      used_by:
+      - /1.0/instances/welcome-earwig?project=user-1001
+      - /1.0/images/ced57a80f2b761c3cdab867c2296b801c6adfe521f811bacdd61410da4bc2734?project=user-1001
+      - /1.0/profiles/default?project=user-1001
+
+  This differs in a few small ways from the normal LXD experience:
+   - The CLI doesn't recommend running `lxd init` (as the user isn't allowed to)
+   - They are locked to their specific project (`user-1001` in this case)
+   - The project is restricted with just a few safe, user-specific settings in place
+
+  We hope that this makes it much easier to integrate LXD in shared environments and the fact that all of it is done on-demand and supports socket activation means that LXD can be shipped in that configuration and won't use any resources until someone on the system needs it.
+
+  #### Agent-less VM metrics
+  A new `security.agent.metrics` configuration option now allows disabling agent interactions for VM runtime metrics. In virtual machines, LXD currently relies on its `lxd-agent` process running inside the guest to provide accurate cpu, memory, disk and process usage.
+
+  However not all guests can be trusted and a malicious guest could abuse this reliance on the `lxd-agent` process to feed the host incorrect resource consumption data. Depending on what the metrics are used for in a given environment, this could impact billing or just make it much harder to track down what guest is consuming all the system resources.
+
+  When setting that new configuration option to `false`, LXD will only be talking to the agent when establishing `exec` or `file` sessions. For everything else, it will solely rely on the resource usage reported by QEMU.
+
+  #### MIG GPU UUID
+  Recent versions of the NVIDIA driver for A100 and similar MIG-supporting GPUs has changed the device identifier that's used to track down a specific MIG instance.
+
+  It used to be that each MIG instance would use the UUID of the physical GPU and then include the specific GPU instance (GI) and compute instance (CI) which is why LXD had `mig.gi` and `mig.ci`.
+
+  Now recent drivers allocate a dedicated UUID to each MIG which required us to add a matching `mig.uuid` option.
+
+  #### Live-migrate for cluster evacuation
+  With LXD having now supported VM live migration for a few releases, it was time to hook it up to our cluster evacuation logic.
+
+  Starting with this release, virtual machines that have `migration.stateful` set to `true` (required for live migration, stateful snapshots, stateful stop, ...) will now be live-migrated to their new cluster member rather than be stopped, moved and started back up.
+
+  It's also possible to force this particular behavior by setting `cluster.evacuate` to `live-migrate`. To force the previous behavior of stopping, moving and starting back, `cluster.evacuate` can be set to just `migrate` instead.
+
+  #### Inconsistent instance copies
+  When using a storage backend like `dir`, `lvm` or `ceph` which can't easily provide a consistent filesystem view without having to stop or freeze the entire instance, copying the instance while it's running is likely to fail with an `rsync` error indicating that some file changed during the transfer.
+
+  Now instead of having to actually stop the instance and try again, there is a new `--allow-inconsistent` command line argument to `lxc copy` which will tell LXD to ignore those rsync errors (and only those). This can be particularly useful when combined with `--refresh`, allowing for iterative transfers until you're ready to cut over and transfer the last few changes.
+
+  #### Optimized instance detail API
+  A new `?recursion=1` mode for the `GET /1.0/instances/NAME` endpoint has been added. This provides a response similar to that of `?recursion=2` on `GET /1.0/instances` effectively providing in one request:
+
+   - Instance information and config
+   - Current runtime state
+   - List of snapshots
+   - List of backups
+
+  This will come in handy for anyone wanting to retrieve everything about a specific instance using a single query and we're working on switching some of our own commands in the `lxc` CLI to use it.
+
+  #### TLS over unix socket
+  Lastly a very niche feature but one which was required by the `lxd-user` daemon.
+  It's now possible to authenticate using a TLS certificate through the unix socket.
+  This is done by using STARTTLS over it to tell LXD to switch to TLS and perform authentication rather than providing a standard clear text session over the local socket.
+
+  In `lxd-user` this is used so we can safely connect to the local LXD as a specific user by using a normal (restricted in this particular case) user certificate and have LXD process it as if it came over the network.
+
+
+  ### Complete changelog
+  Here is a complete list of all changes in this release:
+
+  [details="Full commit list"]
+   - lxd/db/generate/db/mapping: Add Identifier method
+   - tests: Bump pg_num to 16
+   - lxd/events/events: Don't mention node in user facing error
+   - lxd/events/event: Error quoting
+   - lxd/cluster/events: Adds EventListenerWait to allow waiting for a event listener to connect
+   - lxd/cluster/connect: Switch Connect to use EventListenerWait
+   - lxd/cluster/heartbeat: Removes deprecated Raft field from heartbeat
+   - test: Add 1s between running non-interactive exec and checking for exit status in operation
+   - lxd: Add recursion=1 support for instanceGet
+   - doc/rest-api: Refresh swagger YAML
+   - api: Add instance_get_full extension
+   - lxd/cluster/membership: Move notifyNodesUpdate call out of transaction in Join
+   - lxc/list: Better handle --all-projects
+   - doc: Fixed incorrect type of ceph.rbd.clone_copy.
+   - lxd/cluster: Update not clustered error
+   - lxd/db: Update comments
+   - lxd/cluster: Handle no available migration target
+   - fuidshift: Remove accidental binary build
+   - lxd/device/nic/routed: Enable IP forwarding on veth host_name interface
+   - test: Restores old routed NIC IPv4 forwarding behaviour
+   - lxd/cluster/upgrade: Don't panic in UpgradeMembersWithoutRole in raft ID not found
+   - lxd/cluster/upgrade: Comment clean up in UpgradeMembersWithoutRole
+   - lxd/cluster/upgrade: Removes empty line in UpgradeMembersWithoutRole
+   - lxd/cluster/upgrade: Improve variable naming in UpgradeMembersWithoutRole
+   - lxd/cluster/upgrade: Error wrapping and dont use node term in user facing errors
+   - lxd/cluster/upgrade: Adds additional logging to UpgradeMembersWithoutRole
+   - gitignore: Ignore potential binaries
+   - lxd/network/driver/bridge: Adds UsesDNSMasq function
+   - lxd/network/driver/bridge: Improve comments
+   - lxd/device/nic/bridged: Don't depend on dnsmasq pid file existence to write static allocation file
+   - lxd/device/nic/bridged: Removes duplicated pid check when killing dnsmasq
+   - lxc/utils: Make byName sort all columns
+   - lxd/db/generate/db/method: Generate URIs from get-objects stmt
+   - lxd/db: Replace 'name' generation comments and tags with 'objects'
+   - shared/api/url: Don't allow 'none' as target
+   - lxd/db/projects: Pass both project ID and Name to networks
+   - lxd/db: Use api.NewURL for non-generated GetURIs
+   - lxd/db: Remove unused URI fetching methods
+   - lxd/db/generate/db/stmt: Remove 'name' statement generation
+   - lxd/db/db: Duplicate urlsToResourceNames from client/util.go
+   - lxd/db/projects: Add generator comment for fetching projects by ID
+   - lxd/db: Update generated code
+   - lxd/db/node: Fix handling of groups
+   - lxd/db/node: Support limiting to set of groups
+   - lxd: Update GetNodeWithLeastInstances usage
+   - lxd/instances: Rework cluster group handling
+   - tests: Fix clustering_groups tests
+   - lxd/db/instance/profiles: Add missing error to stmt.Exec
+   - lxd/api/cluster: Only take clusterMembershipMutex on leader
+   - doc: use customized Furo theme
+   - doc: customize footer
+   - doc: add a header
+   - doc: remove Vanilla theme from Makefile
+   - lxd/db/cluster: Removes unused database views.
+   - lxd/endpoints: Make socketUnixListen return a UnixListener
+   - lxd/db/node: nodeIsOffline should always use UTC
+   - lxd/api/cluster: Improve logging
+   - lxd/cluster/heartbeat: Adds NewAPIHearbeat function
+   - lxd/cluster/heartbeat: Adds HearbeatCancelFunc
+   - lxd/cluster/heartbeat: Export HeartbeatRestart
+   - lxd/cluster/membership: Set tx.SetNodeHeartbeat in Join
+   - lxd/cluster/membership: Renames notifyNodesUpdate to NotifyHeartbeat
+   - lxd/cluster/gateway: Moves heartbeatLock to other heartbeat related variables
+   - lxd/daemon: Use contextual logging with local address in NodeRefreshTask
+   - lxd/daemon: Adds heartbeatHandler function
+   - lxd/daemon: Update nodeRefreshTask to only perform role changes if called from leader heartbeat send
+   - lxd/cluster/gateway: Pass HeartbeatHandler into HandlerFuncs
+   - lxd/cluster/gateway: Error message and log improvements
+   - lxd/api: d.gateway.HandlerFuncs usage
+   - lxd/cluster/heartbeat: Initialise unavailableMembers as empty slice in heartbeat
+   - lxd/cluster/heartbeat: Updates HeartbeatTask to skip starting new heartbeat if already running
+   - lxd/endpoints: Add STARTTLS and BufferedUnixConn wrappers
+   - lxd/ucred: Add support for BufferedUnixConn
+   - lxd/endpoints: Add STARTTLS support on unix socket
+   - lxd: Allow TLS auth on unix socket
+   - lxd/device/nic/routed: Don't setup auto gateway if IP family not in use
+   - test: Adds test for single family routed NIC operation
+   - lxd/db: Updates GetInstanceNamesByNodeAddress to also return project name.
+   - lxd: Prevents overwriting instances with same name but different project.
+   - test: Adds tests for passing through unix socket with disk device
+   - lxd/device/disk: Open source with O_PATH to support directories and unix sockets
+   - lxd/events/events: Renames noForward to localOnly
+   - lxd/cluster/membership: Call EventsUpdateListeners locally from NotifyHeartbeat
+   - lxd/cluster/heartbeat: Improve logging
+   - lxd: Uses api.NewURL and sets project when querying other nodes.
+   - doc: reuse content from the repo README in the doc index
+   - doc: move relevant files out of .github folder
+   - lxd/bgp: Port to v3 of gobgp
+   - gomod: Update dependencies
+   - lxd/instance/drivers/qemu: Move network state to separate function
+   - shared/instance: Add security.agent.metrics
+   - doc/instances: Add security.agent.metrics
+   - lxd/instance/drivers/qmp: Extend commands
+   - lxd/db/cluster: Adds not null constraint to all description columns.
+   - lxd/db/cluster: Adds empty description to node 1 when opening the db.
+   - lxd/db: Adds empty description where null constraints are violated.
+   - lxd/db: Removes usages of sql.NullString with descriptions.
+   - lxd/instance/drivers: Add QEMU metrics
+   - lxd/instance/drivers/qemu: Add agentMetricsEnabled helper function
+   - lxd/instance/drivers/qemu: Use qemu metrics if set
+   - lxd/instance/drivers/qemu: Validate security.agent.metrics for state
+   - doc/api-extensions: Fix header formatting
+   - api: Add qemu_metrics extension
+   - doc: fix link in README
+   - lxd/clustert/heartbeat: Logging improvements in Send
+   - lxd/cluster/info: Logging improvement in loadInfo
+   - lxd/cluster/membership: Logging improvement
+   - lxd/api/cluster: No need to call cluster.EventsUpdateListeners in internalClusterPostRebalance
+   - test: Add short sleep for clustering rebalance to allow raft nodes to settle after join
+   - lxd/migrate: Change allConnected channel in migrationSourceWs to be struct{}
+   - lxd/migrate: Change allConnected channel in migrationSink to be struct{}
+   - lxd/util/net: Adds SetTCPTimeouts and ExtractTCPConn functions
+   - lxd/cluster/gateway: Updates dqliteProxy to use util.ExtractTCPConn and util.SetTCPTimeouts
+   - lxd/migrate: Updates migrationSourceWs to use util.ExtractTCPConn and util.SetTCPTimeouts
+   - lxd/migrate/instance: Defers a call to disconnect in migrationSourceWs Do
+   - lxd/daemon: Introduce daemonStorageSplitVolume
+   - lxd/images: Don't cleanup unknown images from shared volume
+   - lxd: Checks that the host node is clustered before editing.
+   - lxc/alias: Allows users to reference specific arguments.
+   - lxd/cluster/heartbeat: Cancel APIHeartbeat Send during spread sleep if context is cancelled
+   - lxd/cluster/heartbeat: Detect aborted heartbeat round quicker
+   - lxd/cluster/heartbeat: Move defer setup to after lock is released
+   - lxd/cluster/heartbeat: Move clustered check before locking and context setup
+   - lxd/cluster/events: Rework listener connect notification to support multiple addresses
+   - lxd/cluster/connect: EventListenerWait usage in Connect
+   - client/events: Get lock before checking e.disconnected in Disconnect
+   - client/lxd: Adds eventConn to store events websocket connection
+   - client/lxd/events: Store events websocket connection in getEvents
+   - lxd/cluster/membership: Update NotifyHeartbeat to have access to gateway so it can cancel ongoing heartbeat
+   - lxd/cluster/events: Close client connection on events get failure in eventsConnect
+   - lxd/cluster/events: Use looked up listener rather than doing another map retrieval
+   - client/events: Replace chActive and disconnected with context
+   - lxd/events/events: Improve logging in Listener
+   - lxd/events: Removes duplicate event connection logging
+   - lxd-agent/events: Removes unnecessary logging in eventsSocket
+   - lxd/cluster/events: Clarify event connections are clients to another server
+   - lxd/cluster/recover: Return separate error if no raft role found
+   - lxd: Fix progress indicator for 'lxc export'
+   - doc: Bump minimum Go to 1.16
+   - doc: Bump minimum LXC to 4.0.0
+   - doc: Bump minimum kernel to 5.4
+   - gomod: Update dependencies
+   - lxd/device/gpu: Add support for mig.uuid
+   - api: gpu_mig_uuid
+   - doc/instances: Add mig.uuid on MIG GPU
+   - shared/network: Differentiate websocket network errors
+   - lxd/instance/exec: Simplify websocket error handling
+   - lxd/instance/drivers/driver/qemu/cmd: Don't attempt to send signal to lxd-agent exec process if finished
+   - lxd/instance/drivers/driver/qemu/cmd: Run cleanup function after command has finished in Wait
+   - lxd/instance/exec: Close attachedChildIsDead channel first in finisher
+   - lxd/instance/exec: Only attempt to kill process if still running when a control connection error occurs
+   - lxd-agent/exec: Close attachedChildIsDead channel first in finisher
+   - lxd-agent/exec:  Only attempt to kill process if still running when a control connection error occurs
+   - daemon: fix feature indentation
+   - lxd: Fix overriding public property by auto-update
+   - lxd/db/storage/volumes/snapshots: Update GetExpiredStorageVolumeSnapshots to support sql.NullTime ExpiryDate field
+   - lxd/instance/drivers: Specify number of USB ports
+   - doc: improve placement of header
+   - lxd/db/backups: Fixes GetStoragePoolVolumeBackups to handle null StoragePoolVolumeBackup.ExpiryDate
+   - doc: fix broken include
+   - doc: fix links in contributing docs
+   - shared/network: Differentiate websocket handler function debug messages
+   - lxd-agent/exec: Treat websocket.CloseMessage the same as websocket disconnection
+   - lxd/instance/exec: Treat websocket.CloseMessage the same as websocket disconnection
+   - doc: change file inclusion to use comments instead of text
+   - automatically add labels to PRs that contain doc changes
+   - api: Move storage_volume Writable() function
+   - api: Add Writable() function for storage snapshot
+   - lxc/storage_volume: Properly handle snapshots in set
+   - i18n: Update translation templates
+   - lxd/instance: Prevent nvidia.runtime on privileged containers
+   - shared/usbid: Document reasons to fork
+   - shared/log15: Remove fork
+   - lxd: Update imports for log15
+   - lxd-agent: Update imports for log15
+   - client: Update imports for log15
+   - lxc: Update imports for log15
+   - shared/logging: Update imports for log15
+   - shared: Update imports for log15
+   - shared/logging: Update for current log15
+   - gomod: Update dependencies
+   - gomod: Update go-dqlite dependency to include fix for local timezone conversion removal
+   - doc: fix scrolling in tables
+   - doc: remove spaces at the end of the line
+   - doc: prevent linking of *.ci, *.as and similar
+   - doc: remove manual list of components
+   - api: Adds event_project extension
+   - shared/api/event: Adds Project field to Event struct
+   - doc/rest-api: Refresh swagger YAML
+   - lxd/events/events: Rename group concept to projectName
+   - lxd/events/events: Store project name inside event and update broadcast to use it
+   - client/lxd: Change eventListeners to be keyed on project name using map[string][]*EventListener
+   - client/events: Add projectName field to store project that event listener is using
+   - client/events: Update Disconnect to use listener projectName to clear listeners
+   - client/lxd/events: Use connection's project and allProjects argument to maintain listeners keyed on project name
+   - client/lxd: Convert eventConn to map  of connections keyed on project
+   - client/connection: Initialise eventListeners and eventConns
+   - client/lxd/events: Save websocket connections by project
+   - client/lxd/server: Initialise websocket event listeners and connections in UseProject and UseTarget
+   - lxd/lifecycle/instance: Use URL builder in Event
+   - lxd/instance/drivers/driver/lxc: Update devlxdEventSend to use map[string]interface{}
+   - lxd/instance/drivers/driver/qemu: Update devlxdEventSend to use map[string]interface{}
+   - lxd/events: Move common functionality between external and devlxd servers into common file and types
+   - lxd/events/devlxdEvents: Adds devlxd event server
+   - lxd/events/common: listenerCommon
+   - lxd/events/events: Server
+   - lxd/events/devlxdEvents: DevLXDServer
+   - lxd/state/state: Update DevlxdEvents to events.DevLXDServer
+   - lxd/daemon: Switch to using events.DevLXDServer for devlxdEvents
+   - lxd/devlxd: d.devlxdEvents.AddListener usage
+   - lxd/instance/drivers/driver/lxc: d.state.DevlxdEvents.Send usage in devlxdEventSend
+   - lxd-agent/events: Remove lxd-agent as location in eventsSocket and subscribe to all project events
+   - github: Add API label to labeler
+   - lxd/device/disk: Ensure disk FDs are marked CLOEXEC
+   - lxd/fsmonitor/drivers/driver/fanotify: Ensure FDs are marked CLOEXEC
+   - lxd/seccomp/seccomp: Ensure FDs are marked CLOEXEC
+   - lxd/storage/drivers/utils/cgo: Ensure FD is opened with CLOEXEC in get_unused_loop_dev_legacy
+   - lxd/util/net: Fix return value in ExtractTCPConn
+   - lxd/events/common: Import ordering
+   - lxd/events/common: Adds support for receiving events from listener client
+   - lxd/events/events: Adds receive event handler to AddListener
+   - lxd/events: d.events.AddListener usage
+   - lxd-agent/events: d.events.AddListener usage
+   - client/interfaces: Adds SendEvent function signature
+   - client/lxd: Adds eventConnsLock to control write access to eventConns
+   - client/lxd/events: Use r.eventConnsLock to control access to r.eventConns
+   - client/lxd/events: Implement SendEvent function
+   - lxd/instance/qemu: Always set memory sharing on memory-backend-file
+   - lxc/exec: Expose interactive to handler
+   - lxc/exec: Don't send SIGWINCH when non-interactive
+   - fsmonitor: s/syscall.CloseOnExec()/unix.CloseOnExec()/g
+   - fsmonitor: close fd from open_by_handle_at()
+   - lxd/main: Automatically attempt live-migration during cluster evacuation.
+   - doc: Update cluster.evacuate to include new 'live-migrate' option
+   - api: Add 'live-migrate' config option to cluster.evacuate.
+   - lxd: Export storage pool availability functions
+   - lxd-user: Initial implementation
+   - lxd-user: use atomic operations
+   - lxd-user: Fix default network name
+   - lxc: Support for restricted projects on unix socket
+   - lxd-user: Reduce verbosity
+   - lxd: ensure file descriptors are closed before starting container
+   - lxd/db/cluster: Fixes v19 migration for sqlite 3.37.
+   - lxd/network: Fixes misspelling of interface.
+   - api: Adds instance_allow_inconsistent_copy extension.
+   - shared/api: Adds AllowInconsistent to instance source.
+   - client: Adds AllowInconsistent to InstanceCopyArgs.
+   - lxd/migration: Adds AllowInconsistent flag to VolumeSourceArgs.
+   - lxd/storage/drivers: Ignore rsync error 24 if allowInconsistent.
+   - lxd/storage: Adds allowInconsistent to pool interface.
+   - lxd: Passes allowInconsistent from instance source to pool method.
+   - lxc/copy: Adds --allow-inconsistent flag.
+   - lxc/move: Adds --allow-inconsistent flag.
+   - i18n: Updates translation templates.
+   - doc/rest-api: Refresh swagger YAML
+   - lxd/storage/ceph: Align standard arguments
+   - lxd/storage/ceph: Always pass user/id to ceph/rbd
+   - doc: only link the Swagger files that we actually need
+   - lxd/device: Adds ping check for nic routed device.
+   - i18n: Update translations from weblate
+   - gomod: Update dependencies
+  [/details]
+
+  ### Try it for yourself
+  This new LXD release is already available for you to try on our [demo service](https://linuxcontainers.org/lxd/try-it/).
+
+  ### Downloads
+  The release tarballs can be found on our [download page](https://linuxcontainers.org/lxd/downloads/).
+
+  Binary builds are also available for:
+
+   - **Linux:** snap install lxd
+   - **MacOS:** brew install lxc
+   - **Windows:** choco install lxc
