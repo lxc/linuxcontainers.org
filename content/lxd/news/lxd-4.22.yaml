@@ -10,6 +10,17 @@ content: |-
   Enjoy!
 
   ### New features and highlights
+  #### Update minimal requirements
+  As we get closer to LXD 5.0 LTS, we're raising the minimal requirements to build and run LXD. This was mostly externally driven due to some of our dependencies no longer supporting older versions of Go.
+
+  The new requirements are:
+
+   - Go 1.16 or higher (may get bumped to 1.17 for LXD 5.0)
+   - LXC 4.0.x
+   - Linux 5.4
+
+  Details may be found here: https://linuxcontainers.org/lxd/docs/master/requirements/
+
   #### Improved documentation
   LXD switched over to Sphinx for its documentation generator which allows for more complex markup and better rendering.
 
@@ -27,6 +38,7 @@ content: |-
   Instead the system can be configured so only members of the `lxd` group can talk directly to LXD (and get full access to it) whereas users of the `users` group get to talk to `lxd-user`.
 
   When a user connects to `lxd-user`, the following will automatically happen:
+
    - The daemon will check if LXD was initialized, if not, it will create:
       - A `default` storage pool (preferring `zfs` but falling back to `dir`)
       - A `lxdbr0` network
@@ -88,6 +100,7 @@ content: |-
       - /1.0/profiles/default?project=user-1001
 
   This differs in a few small ways from the normal LXD experience:
+
    - The CLI doesn't recommend running `lxd init` (as the user isn't allowed to)
    - They are locked to their specific project (`user-1001` in this case)
    - The project is restricted with just a few safe, user-specific settings in place
