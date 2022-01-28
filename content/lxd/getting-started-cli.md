@@ -176,7 +176,7 @@ LXD uses `qemu` to provide the VM functionality.
 !!! note
 	Currently, virtual machines support fewer features than containers, but the plan is to support the same set of features for both instance types in the future.
 
-    To see which features are available for virtual machines, check the condition column in the [Instance configuration](/lxd/docs/master/instances#keyvalue-configuration) documentation.
+    To see which features are available for virtual machines, check the condition column in the [Instance configuration](/lxd/docs/master/instances#key-value-configuration) documentation.
 
 ## Launch an instance
 Use the `lxc launch` command to launch an instance. You must specify the image that you want to launch and a name for the instance that you are creating.
