@@ -474,7 +474,7 @@ Enter the following command to delete an instance:
     -->
     誤ってインスタンスを削除しないようにするには、「[インスタンスの誤った削除を防ぐ](https://linuxcontainers.org/ja/lxd/advanced-guide/#_50)」をご覧ください。
 
-## インスタンスの設定 <!-- Configure instances -->
+## <a name="configure-instances"></a>インスタンスの設定 <!-- Configure instances -->
 <!--
 See [Instance configuration](/lxd/docs/master/instances) in the LXD documentation for a list of configuration options that you can specify for your instances.
 -->

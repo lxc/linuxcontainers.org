@@ -172,7 +172,7 @@ More details can be found on our [getting started](/lxd/getting-started-cli/) pa
 
 # サードパーティーツールとのインテグレーション <!-- Third-party integrations -->
 <!--
-LXD can also be used with other platforms and tools, like Ansible, Juju, Terraform and more.
+LXD can also be used with other platforms and tools, like Ansible, Juju, MAAS, Terraform and more.
 -->
 LXD は Ansible、Juju、Terraform などの他のプラットフォームやツールと一緒に使うこともできます。
 
