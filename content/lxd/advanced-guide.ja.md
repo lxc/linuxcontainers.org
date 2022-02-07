@@ -10,61 +10,34 @@
 	まだ LXD をセットアップしていないのであれば、まずは「[はじめに - コマンドライン](/ja/lxd/getting-started-cli/)」を最初にご覧ください。
 
 <!--
-This Guide gives you more information about the several features of LXD.
+This guide gives you more information about the several features of LXD.
 -->
 このガイドでは、いくつかの LXD の機能について詳細な情報を紹介しています。
 
 
 # インスタンスの設定 <!-- Configuration of instances -->
 <!--
-A list of configuration keys can be found in the [LXD documentation for instances](/lxd/docs/master/instances#keyvalue-configuration).
+See [Configure instances](/lxd/getting-started-cli/#configure-instances).
 -->
-設定キーのリストは[LXDドキュメントのインスタンスの項](https://lxd-ja.readthedocs.io/ja/latest/instances/)でご覧いただけます。
+[インスタンスの設定](/ja/lxd/getting-started-cli/#configure-instances)をご覧ください。
 
-<!--
-You can apply them during launch of instances (see [launch flags](#lxc-launch-flags)) or add them [later](#Apply-and-edit-options-later).
--->
-インスタンスを起動する際にオプションを指定することも（[起動オプション](#lxc-launch)をご覧ください）、[あとで追加する](#_13)こともできます。
-
-<!--
-Basically you can apply two types of configurations:
--->
-基本的に、次のふたつのタイプの設定を追加できます:
-
-- [一般オプション](https://lxd-ja.readthedocs.io/ja/latest/instances/#keyvalue) <!-- [General options](/lxd/docs/master/instances#keyvalue-configuration), including: -->
-    - インスタンスの起動 <!-- instance start -->
-    - セキュリティ <!-- security -->
-    - ハードウェアに対する制限 <!-- hardware limits -->
-    - カーネルモジュール <!-- kernel modules -->
-    - スナップショット <!-- snapshots -->
-    - user キー（cloud-init用）<!-- user keys (for cloud-init instructions) -->
-    - など <!-- and more  -->
-- [デバイス](https://lxd-ja.readthedocs.io/ja/latest/instances/#_4) <!-- [Devices](/lxd/docs/master/instances#device-types), including: -->
-    - ネットワーク <!-- network -->
-    - ストレージ <!-- storage -->
-    - usb
-    - ソケット <!-- sockets -->
-    - gpu
-    - など <!-- and more -->
-
-
-### コンテナと仮想マシンの違い <!-- Difference between Containers and Virtual Machines -->
 <!--
 For now virtual machines support less features than containers.
-You can see what configuration options are available for virtual machines in the [LXD documentation for instances](/lxd/docs/master/instances#keyvalue-configuration).
-All categories and keys that contain the terms `virtual-machine` or `VM` are supported.
 -->
-現時点では、仮想マシンに対するサポートは、コンテナがサポートする機能よりも少ないです。
-仮想マシンで設定できるオプションは[LXD公式文書のインスタンスのセクション](https://lxd-ja.readthedocs.io/ja/latest/instances/#keyvalue)でご覧いただけます。
-「サポートされるインスタンスタイプ」で`VM`と書かれているカテゴリー、"Condition" で `virtual-machine` と書かれている設定キーが仮想マシンでサポートされています。
+現時点では、仮想マシンがサポートする機能は、コンテナがサポートする機能よりも少ないです。
 
-### lxc launch コマンドのオプション <!-- lxc launch flags -->
+<!--
+You can see what configuration options are available for virtual machines in the [LXD documentation for instances](/lxd/docs/master/instances#keyvalue-configuration).All categories and keys that contain the terms `virtual-machine` or `VM` are supported.
+-->
+仮想マシンで設定できるオプションは[LXD公式文書のインスタンスのセクション](https://lxd-ja.readthedocs.io/ja/latest/instances/#keyvalue)でご覧いただけます。「サポートされるインスタンスタイプ」で`VM`と書かれているカテゴリー、"Condition" で `virtual-machine` と書かれている設定キーが仮想マシンでサポートされています。
+
+## lxc launch コマンドのオプション <!-- lxc launch flags -->
 <!--
 You can apply flags to add configuration options to `lxc launch`.
 -->
 `lxc launch`でオプションを指定して、設定オプションを追加できます。
 
-##### 設定に関連するオプションのリスト: <!-- Short list of flags: -->
+### 設定に関連するオプションのリスト: <!-- Short list of flags: -->
 <!-- use html table? -->
 ```
 -p profilename   # プロファイルの適用
@@ -73,272 +46,27 @@ You can apply flags to add configuration options to `lxc launch`.
 ```
 
 <!--
-!!! note
-	See [Profiles](#profiles) below for details.
--->
-!!! note "注意"
-	詳しくは後の[プロファイル](#_6)をご覧ください。
-
-<!--
 Usage:
 -->
 使い方:
 
 	lxc launch imageserver:imagename instancename -p profile1 -c key1=value
 
+!!! note "注意"
+	<!--
+    To apply multiple profiles or config keys, use one flag for each, like:
+	-->
+	複数のプロファイルや設定キーを適用するには、次のようにそれぞれにひとつの設定を与えます:
+	
+	    lxc launch imageserver:imagename instancename -p profile1 -p profile2
+
+	    lxc launch imageserver:imagename instancename -c key1=value -c key2=value
+
+## <a name="profiles">プロファイル <!-- Profiles -->
 <!--
-**Note:**
+See [Use profiles](/lxd/getting-started-cli/#use-profiles).
 -->
-**注意**
-
-<!--
-To apply multiple profiles or config keys, use one flag for each, like:
--->
-複数のプロファイルや設定キーを適用するには、次のようにそれぞれにひとつの設定を与えます:
-
-	lxc launch imageserver:imagename instancename -p profile1 -p profile2
-
-	lxc launch imageserver:imagename instancename -c key1=value -c key2=value
-
-
-### プロファイル <!-- Profiles -->
-<!--
-Profiles are like configuration files for instances (but they are saved in a database).
--->
-プロファイルはインスタンスに対する設定ファイルのようなものです（設定はデータベースに保存されますが）。
-
-#### プロファイルを与えない場合・デフォルトプロファイル <!-- No profile/Default profile -->
-<!--
-If you don't apply specific profiles to an instance, only the `default` profile is applied automatically.
--->
-特定のプロファイルをインスタンスに適用しない場合、`default` という名前のプロファイルのみが自動的に適用されます。
-
-<!--
-You can view the content of the `default` profile with:
--->
-次のように `default` プロファイルの内容を確認できます:
-
-	lxc profile show default
-
-#### プロファイルの作成 <!-- Create a profile -->
-<!--
-Use:
--->
-次のように作成します:
-
-	lxc profile create profilename
-
-<!--
-After that edit the profile, see below.
--->
-その後、あとで説明するようにプロファイルを編集します。
-
-#### プロファイルの編集 <!-- Edit a profile -->
-<!--
-Profiles can be edited in multiple ways:
--->
-プロファイルを編集する方法は複数あります:
-
-##### 1. テキストファイルに記載し、プロファイルの内容を適用する <!-- 1. Write a textfile and apply the content to a profile -->
-<!--
-See [Write a profile](#write-a-profile) below for details.
--->
-詳しくはあとの[プロファイルを記述する](#_12)の項をご覧ください。
-
-##### 2. ターミナルエディタでプロファイルを編集 <!-- 2. Edit a profile with a terminal editor -->
-<!--
-Use:
--->
-次のように編集します:
-
-	lxc profile edit profilename
-
-###### エディタの選択 <!-- Choose a specific editor -->
-<!--
-You can set the editor in `/home/user/.profile`.
--->
-`/home/user/.profile`でエディタを設定できます。
-
-<!--
-This will set the standard terminal editor to `nano`:
--->
-次のように標準のターミナルエディタとして`nano`を設定します:
-
-	echo 'export EDITOR=nano' >> ~/.profile
-
-
-##### プロファイル中の設定キーに値を設定する <!-- 3. Set specific keys in a profile -->
-<!--
-Use:
--->
-次のように設定します:
-
-	lxc profile set profilename key=value
-
-
-#### プロファイルを記述する <!-- Write a profile -->
-<!--
-Profiles are written in yaml (markup language).
-So you need to follow a specific syntax.
--->
-プロファイルは yaml で記述します。次のような指定の書式にしたがう必要があります。
-
-<!--
-Steps:
--->
-手順:
-
-1. 空のテキストファイルを作成し、`profilename.profile` という名前を付けます（`profilename`という部分は任意の名前に置き換えてください） <!-- Create an empty textfile and name it `profilename.profile` (replace `profilename` with a name of your choice). -->
-2. 好きなエディタでそのファイルを開きます <!-- Open the file with a texteditor of your choice. -->
-3. 編集して保存します <!-- Edit and save. -->
-
-<!--
-**Example** (`default` profile):
--->
-**例** （`default`プロファイル）
-
-```
-config: {}
-description: ""
-devices:
-  eth0:
-    name: eth0
-    nictype: bridged
-    parent: lxdbr0
-    type: nic
-  root:
-    path: /
-    pool: one
-    type: disk
-name: default
-used_by: []
-
-```
-
-<!--
-**Explanation:**
--->
-**説明:**
-
-##### `config:`
-<!--
-You can apply all configuration keys listed in [LXD documentation - Instance keys](https://linuxcontainers.org/lxd/docs/master/instances#keyvalue-configuration).
--->
-[LXD公式ドキュメント - インスタンスの設定キーの項](https://lxd-ja.readthedocs.io/ja/latest/instances/#keyvalue) にあるすべての設定キーを適用できます。
-
-<!--
-  Example:
-  -->
-例:
-
-```
-config:
-  snapshots.expiry: 1M
-  security.protection.delete: true
-  security.idmap.isolated: true
-
-```
-
-##### `description:`
-<!--
-Adds a description for the profile. <!\-\- or the instance? \-\->
-Can be empty.
--->
-プロファイルの説明を追加できます。空でも構いません。
-
-##### `devices:`
-<!--
-You can apply all configuration keys listed in [LXD documentation - Instance device types](https://linuxcontainers.org/lxd/docs/master/instances#device-types).
--->
-[LXD公式ドキュメント - インスタンスのデバイスタイプの項](https://lxd-ja.readthedocs.io/ja/latest/instances/#_4) にあるすべての設定キーを適用できます。
-
-##### `name:`
-<!--
-Name of the profile (replace with a name of your choice).
--->
-プロファイル名（任意の名前を付けられます）。
-
-##### `used_by:`
-<!--
-Stays empty, will indicate to which instances this profile is applied.
--->
-空のままにしておきます。どのインスタンスがこのプロファイルを適用したかが入ります。
-
-
-#### プロファイルを LXD に追加 <!-- Add the profile to LXD -->
-<!--
-Create a new empty profile:
--->
-空のプロファイルを作成します:
-
-	lxc profile create myprofile
-
-<!--
-"Copy" the textfile to the new profile:
--->
-テキストファイルを新しいプロファイルに「コピー」します:
-
-	cat myprofile.profile | lxc profile edit myprofile
-
-<!--
-Now you can apply this profile to an instance during [launch](#lxc-launch-flags) or later (see below).
--->
-これで、このプロファイルをインスタンスを[起動](#lxc-launch)する際か、あとで適用できます（後述）。
-
-### あとで設定オプションを適用・編集する <!-- Apply and edit options later -->
-<!--
-You can apply/remove/modify a profile or [edit the instance configuration directly](#edit-instance-configuration).
--->
-プロファイルを適用・削除・修正したり、直接[インスタンスの設定を編集](#_17)できます。
-
-#### プロファイルの適用 <!-- Apply a profile -->
-<!--
-Use:
--->
-次のように実行します:
-
-	lxc profile add instancename profilename
-
-#### プロファイルの削除 <!-- Remove a profile -->
-<!--
-Use:
--->
-次のように削除します:
-
-	lxc profile remove instancename profilename
-
-#### プロファイルの編集 <!-- Edit a profile -->
-<!--
-Use:
--->
-次のように編集します:
-
-	lxc profile edit profilename
-
-#### インスタンスの設定の編集 <!-- Edit instance configuration -->
-<!--
-Edit the instance configuration in a terminal editor:
--->
-ターミナルエディタでインスタンスの設定を編集するには:
-
-	lxc config edit instancename
-
-<!--
-Set specific keys:
--->
-特定の設定キーに設定を行うには:
-
-	lxc config set instancename key=value
-
-
-### 設定の確認 <!-- Show configuration -->
-<!--
-This will show all applied configurations (including attached profiles):
--->
-次のように適用されているすべての設定を確認します（適用されているプロファイルを含む）;
-
-	lxc config show instancename -e
-
+[プロファイルの使用](/ja/lxd/getting-started-cli/#use-profiles)をご覧ください。
 
 # Cloud-init
 <!--
