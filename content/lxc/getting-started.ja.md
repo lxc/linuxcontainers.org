@@ -92,17 +92,18 @@ On such an Ubuntu system, installing LXC is as simple as:
 Ubuntu では、LXC をインストールするのは次のように簡単です:
 
     sudo apt-get install lxc 
-	
-もしくは
-	
-    sudo snap install lxd
 
 <!--
-Your system will then have all the LXC commands available, all its templates
-as well as the python3 binding should you want to script LXC.
+Your system will then have all the LXC commands available, all its templates as well as the python3 binding should you want to script LXC.
 -->
 あなたのシステム上には、利用可能な LXC コマンドの全て、テンプレートの全て、LXC 処理のスクリプトに必要な python3 バインディングがインストールされるでしょう。
 
+<!--
+Use the following command to check whether the Linux kernel has the required configuration:
+-->
+Linux カーネルに必要な機能を持っているかどうかをチェックするには次のコマンドを使います:
+
+    lxc-checkconfig
 
 # 非特権コンテナの作成 <!-- Creating unprivileged containers as a user -->
 
@@ -163,7 +164,7 @@ By default, your user isn't allowed to create any network device on the host, to
 次に、非特権ユーザに与えるネットワークデバイスの範囲を設定するために使う /etc/lxc/lxc-usernet を設定します。
 デフォルトでは、ホスト上で全くネットワークデバイスを割り当てできないことになっていますので、このファイルに以下のような設定を追加します:
 
-    your-username veth lxcbr0 10
+    echo "$(id -un) veth lxcbr0 10" | sudo tee -a /etc/lxc/lxc-usernet
 
 <!--
 This means that "your-username" is allowed to create up to 10 veth devices connected to the lxcbr0 bridge.
@@ -190,47 +191,54 @@ With that done, the last step is to create an LXC configuration file.
     * lxc.idmap = g 0 100000 65536
 
 <!--
-Those values should match those found in /etc/subuid and /etc/subgid, the values above are those expected
-for the first user on a standard Ubuntu system.
+Those values should match those found in /etc/subuid and /etc/subgid, the values above are those expected for the first user on a standard Ubuntu system.
 -->
 ここで設定した値は /etc/subuid と /etc/subgid にある値と一致している必要があり、標準の Ubuntu システムの初期ユーザのために存在が必要です。
 
-<!--
-Running unprivileged containers as an unprivileged user only works if you delegate a cgroup in 
-advance (the cgroup2 delegation model enforces this restriction, not liblxc). Use the following 
-systemd command to delegate the cgroup:
--->
-非特権ユーザとして非特権ユーザーとして実行するには、事前に cgroup の権限委譲（delegate）が必要です（liblxc でなく cgroup2 の権限委譲モデルがこれを強制します）。次の systemd コマンドで cgroup の権限委譲を行います:
+    mkdir -p ~/.config/lxc
+    cp /etc/lxc/default.conf ~/.config/lxc/default.conf
+    MS_UID="$(grep "$(id -un)" /etc/subuid  | cut -d : -f 2)"
+    ME_UID="$(grep "$(id -un)" /etc/subuid  | cut -d : -f 3)"
+    MS_GID="$(grep "$(id -un)" /etc/subgid  | cut -d : -f 2)"
+    ME_GID="$(grep "$(id -un)" /etc/subgid  | cut -d : -f 3)"
+    echo "lxc.idmap = u 0 $MS_UID $ME_UID" >> ~/.config/lxc/default.conf
+    echo "lxc.idmap = g 0 $MS_GID $ME_GID" >> ~/.config/lxc/default.conf
 
-    systemd-run --unit=myshell --user --scope -p "Delegate=yes" lxc-start <container-name>
-
 <!--
-NOTE: If libpam-cgfs was not installed on the host machine prior to installing LXC, you need to 
-ensure your user belongs to the right cgroups before creating your first container. You can accomplish 
-this by logging out and logging back in, or by rebooting the host machine.
+The current Ubuntu LTS 20.04 requires this extra step:
 -->
-注意: もし、LXC をインストールする前に libpam-cgfs がホストマシン上にインストールされていない場合、最初のコンテナを作成する前にそのユーザが正しい cgroup に確実に所属しているようにする必要があります。これはログアウト・ログインするか、ホストマシンをリブートするとそのようになるでしょう。
+現時点の Ubuntu LTS 20.04 は次の追加の手順が必要です:
+
+    export DOWNLOAD_KEYSERVER="hkp://keyserver.ubuntu.com"
 
 <!--
 And now, create your first container with:
 -->
-さて、以下のようにコンテナを作ってみましょう:
+そして、最初のコンテナを作成しましょう:
 
-    lxc-create -t download -n my-container
-
-<!--
-The download template will show you a list of distributions, versions and architectures to choose from.
-A good example would be "ubuntu", "bionic" (18.04 LTS) and "i386".
--->
-ダウンロードテンプレートが選択できるディストリビューション、バージョン、アーキテクチャのリストを表示します。
-例として一番良いのは "ubuntu"、"bionic" (18.04 LTS)、"i386" でしょう。
+    systemd-run --unit=my-unit --user --scope -p "Delegate=yes" -- lxc-create -t download -n my-container
 
 <!--
-A few seconds later your container will be created and you can start it with:
+The download template will show you a list of distributions, versions and architectures to choose from. A good example would be "ubuntu", "focal" (20.04 LTS) and "amd64".
 -->
-しばらくすると、コンテナが作成されますので、以下のように実行します:
+ダウンロードするテンプレートでは、選択できるディストリビューション、バージョン、アーキテクチャが表示されます。例えば、"ubuntu"、"focal"（20.04 LTS）、"amd64" のようなものです。
 
-    lxc-start -n my-container -d
+<!--
+To run unprivileged containers as an unprivileged user, the user must be allocated an empty delegated cgroup (this is required because of the leaf-node and delegation model of cgroup2, not because of liblxc). See [cgroups: Full cgroup2 support](/lxc/news/2020_03_25_13_03.html#cgroups-full-cgroup2-support) for more information.
+-->
+非特権ユーザーとして非特権コンテナを実行するには、事前に空の権限移譲された cgroup を割り当てる必要があります（これが必要な理由は cgroup2 のリーフノードと権限移譲モデルのためであり、liblxc で必要なわけではありません）。より詳細な情報は [cgroups: cgroup2 のフルサポート](/ja/lxc/news/2020_03_25_13_03.html#cgroups-cgroup2)をご覧ください。
+
+<!--
+It is not possible to simply start a container from a shell as a user and automatically delegate a cgroup. Therefore, you need to wrap each call to any of the `lxc-*` commands in a `systemd-run` command. For example, to start a container, use the following command instead of just `lxc-start my-container`:
+-->
+ユーザーとしてシェルからコンテナを単純に起動し、自動的に cgroup を権限移譲することはできません。そのため、`lxc-*` コマンド群を呼び出すごとに、`systemd-run` コマンドでラップする必要があります。例えば、コンテナを起動するには、単に `lxc-start my-container` と実行する代わりに次のように実行します:
+
+    systemd-run --unit=my-unit --user --scope -p "Delegate=yes" -- lxc-start my-container
+
+<!--
+NOTE: If libpam-cgfs was not installed on the host machine prior to installing LXC, you need to ensure your user belongs to the right cgroups before creating your first container. You can accomplish this by logging out and logging back in, or by rebooting the host machine.
+-->
+注意: もし、LXC をインストールする前に libpam-cgfs がホストマシン上にインストールされていない場合、最初のコンテナを作成する前にそのユーザが正しい cgroup に確実に所属しているようにする必要があります。これはログアウト・ログインするか、ホストマシンをリブートするとそのようになるでしょう。
 
 <!--
 You can then confirm its status with either of:
@@ -301,8 +309,6 @@ give access to root inside a privileged container to an untrusted party.
 -->
 ディストリビューションによっては、特権コンテナはケーパビリティをいくつか落としたり、apparmor プロファイルや、SELinux コンテキスト、seccomp ポリシーでプロテクトされているかもしれません。しかし、最終的にはプロセスは root 権限で実行されますので、信頼できないユーザに特権コンテナ内の root 権限を与えるべきではありません。
 
-
-
 <!--
 If you still have to create privileged containers, it's quite simple. Simply don't do any of the configuration
 described above and LXC will create privileged containers.
@@ -320,3 +326,9 @@ Will create a new "privileged-container" privileged container on your system usi
 -->
 
 以上のコマンドで、ダウンロードテンプレートからのイメージを使って、システム上に新しい "privileged-container" という名前の特権コンテナが作成されるでしょう。
+
+# 各ディストリビューションの LXC に関するドキュメント <!-- Distribution LXC documentation -->
+- [Ubuntu](https://ubuntu.com/server/docs/containers-lxc)
+- [Debian](https://wiki.debian.org/LXC/CGroupV2#LXC_containers_started_by_non-root)
+- [Arch Linux](https://wiki.archlinux.org/title/Linux_Containers#Enable_support_to_run_unprivileged_containers_(optional))
+- [Fedora](https://fedoraproject.org/wiki/LXC)
