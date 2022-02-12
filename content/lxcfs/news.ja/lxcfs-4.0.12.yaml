@@ -25,7 +25,7 @@ content: |-
   <!--
   The full list of commits is available below:
   -->
-  コミットの全リストは次の通りです:
+  コミットの全リストは次の通りです（翻訳なし）:
 
   [details="すべてのChangeLogを見る"]
    - build: make sue _FILE_OFFSET_BITS is defined to 64bit
