@@ -1,0 +1,38 @@
+title: LXCFS 4.0.12 has been released
+date: 2022/02/02 23:02
+origin: https://discuss.linuxcontainers.org/t/lxcfs-4-0-12-has-been-released/13287
+content: |-
+  ### Introduction
+  The LXCFS team is pleased to announce the release of LXCFS 4.0.12!
+
+  This is the twelfth bugfix release for LXCFS 4.0 which is supported until June 2025.
+
+  ### Bugfixes
+  Some of the highlights for this release are:
+
+   - CPU sum in /proc/stat is now preserved on cpuset changes
+   - Expose an empty cgroup tree when host system is on a unified hierarchy
+
+  The full list of commits is available below:
+
+  [details="Detailed changelog"]
+   - build: make sue _FILE_OFFSET_BITS is defined to 64bit
+   - Skip cpu revise when cfs quota is disable
+   - empty cgroup dir if set unified_cgroup_hierarchy=1
+   - make meminfo and swaps cgroupv2 aware
+   - proc_fuse: use correct type for swap variables
+   - proc_cpuview: use PRIu64 to print uint64_t
+   - proc_fuse: use PRIu64 to print uint64_t
+   - proc_loadavg: use PRIu64 to print uint64_t
+   - fix and reformat format strings
+   - Preseve cpu sum in /proc/stat when cpuset changes
+  [/details]
+
+  ### Support and upgrade
+  The LXCFS 4.0 branch is supported until June 2025.
+  Only bugfixes and securitiy issues get included into the stable bugfix releases, so it's always safe and recommended to keep up and run the latest bugfix release.
+
+  ### Downloads
+
+   - Main release tarball: [lxcfs-4.0.12.tar.gz](https://linuxcontainers.org/downloads/lxcfs/lxcfs-4.0.12.tar.gz)
+   - GPG signature: [lxcfs-4.0.12.tar.gz.asc](https://linuxcontainers.org/downloads/lxcfs/lxcfs-4.0.12.tar.gz.asc)
