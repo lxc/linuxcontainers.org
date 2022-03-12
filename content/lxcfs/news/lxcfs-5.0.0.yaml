@@ -5,7 +5,7 @@ content: |-
   ### Introduction
   The LXCFS team is pleased to announce the release of LXCFS 5.0.0!
 
-  This is the result of two years of work since the LXCFS 4.0.0 release and is the fourth LTS release for the LXCFS project. This release will be supported until June 2025.
+  This is the result of two years of work since the LXCFS 4.0.0 release and is the fourth LTS release for the LXCFS project. This release will be supported until June 2027.
 
   ### Major changes
   #### Switch to meson
