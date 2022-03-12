@@ -1,0 +1,66 @@
+title: LXCFS 5.0 LTS リリースのお知らせ <!-- LXCFS 5.0 LTS has been released -->
+date: 2022/03/10 23:03
+origin: https://discuss.linuxcontainers.org/t/lxcfs-5-0-lts-has-been-released/13535
+content: |-
+  ### はじめに <!-- Introduction -->
+  <!--
+  The LXCFS team is pleased to announce the release of LXCFS 5.0.0!
+  -->
+  LXCFS チームが LXCFS 5.0.0 のリリースをお知らせします!
+
+  <!--
+  This is the result of two years of work since the LXCFS 4.0.0 release and is the fourth LTS release for the LXCFS project. This release will be supported until June 2027.
+  -->
+  このリリースは LXCFS 4.0.0 をリリースして以来の 2 年間の作業の成果です。そして LXCFS プロジェクトの 4 つ目の LTS リリースです。このリリースは 2027 年 6 月までサポートされます。
+
+  ### 主な変更点 <!-- Major changes -->
+  #### meson への移行 <!-- Switch to meson -->
+  <!--
+  With this release of LXCFS, autotools is being replaced by `meson` as the build tooling. Compatibility `Makefile` targets are provided for `all`, `install` and `dist`.
+  -->
+  この LXCFS のリリースでは、ビルドツールとして autotools が `meson` に置き換わっています。互換性のある `Makefile` ターゲットが `all`、`install`、`dist` に対して提供されています。
+
+  <!--
+  This is a change which is particularly relevant for packagers as it otherwise has no user visible impact.
+  -->
+  これは、ユーザーの目に見える変化はなく、特にパッケージ作成者に関係する変更です。
+
+  #### cgroup2 サポート <!-- CGroup2 support -->
+  <!--
+  LXCFS 5.0 properly detects and handles cgroup2, using the cgroup2 hierarchy to fetch the resource consumption information for the container. It also automatically disables the `cgroup` directory feature when run on a cgroup2 system.
+  -->
+  LXCFS 5.0 は cgroup2 を適切に検出、処理し、cgroup2 階層を使ってコンテナのリソース消費の情報を取得します。また、cgroup2 システム上で実行すると、`cgroup` ディレクトリ機能が自動的に無効化されます。
+
+  #### /proc/slabinfo のサポート <!-- /proc/slabinfo support -->
+  <!--
+  The per-cgroup slab allocation is now used to provide a container view of `/proc/slabinfo`.
+  -->
+  cgroup ごとの slab アロケーションが、`/proc/slabinfo` のコンテナ内のビューを提供するために使われるようになりました。
+
+  #### /sys/devices/system/cpu/ サポート <!-- /sys/devices/system/cpu/ support -->
+  <!--
+  In addition to the existing `/sys/devices/system/cpu/online` support, LXCFS will now virtualize the entire `/sys/devices/system/cpu` directory in order to hide CPUs which aren't available to the container.
+  -->
+  既存の `/sys/devices/system/cpu/online` のサポートに加えて、LXCFS は `/sys/devices/system/cpu` ディレクトリ全体の仮想化を行うようになりました。これによりコンテナが利用できない CPU を隠蔽するようになりました。
+
+  ### サポートとアップグレード <!-- Support and upgrade -->
+  <!--
+  LXCFS 5.0.0 will be supported until June 2027 and our current LTS release, LXCFS 4.0 will now switch to a slower maintenance pace, only getting critical bugfixes and security updates.
+  -->
+  LXCFS 5.0.0 は 2027 年 6 月までサポートされます。そして現在の LTS リリースである LXCFS 4.0 はメンテナンスのペースが低頻度になり、重要なバグフィックスとセキュリティアップデートのみ提供されるようになります。
+
+  <!--
+  We strongly recommend all LXCFS users to plan an upgrade to the 5.0 branch.
+  -->
+  すべての LXCFS ユーザーは 5.0 ブランチへアップデートすることを強く推奨します。
+
+  ### ダウンロード <!-- Downloads -->
+
+   - リリース tarball <!-- Main release tarball -->: [lxcfs-5.0.0.tar.gz](https://linuxcontainers.org/downloads/lxcfs/lxcfs-5.0.0.tar.gz)
+   - GPG シグネチャ <!-- GPG signature -->: [lxcfs-5.0.0.tar.gz.asc](https://linuxcontainers.org/downloads/lxcfs/lxcfs-5.0.0.tar.gz.asc)
+
+  ### コントリビューター <!-- Contributors -->
+  <!--
+  The LXCFS 5.0.0 release was brought to you by a total of 21 contributors.
+  -->
+  LXCFS 5.0.0 は合計 21 名のコントリビューターによりリリースされました。
