@@ -135,6 +135,14 @@ content: |-
 
   Learn more here: https://discuss.linuxcontainers.org/t/official-grafana-dashboard-for-lxd/13438
 
+  #### Degraded startup (missing disk)
+  LXD can now startup with one or more storage pools missing.
+  In this scenario, the storage pool will be held back and retried repeatedly in the background. All instances and volumes depending on that pool will similarly be blocked until the pool comes back online.
+
+  This should be useful both as a recovery mechanism when a storage pool dies for some reason as well as allowing some scenarios where one or more pools are on external media and may not be available at startup time.
+
+  Do note however that LXD upgrade operations will most likely require all pools be present, so it is still possible to see LXD to fail startup due to missing storage pools when an upgrade migration step must be run across all instances and volumes.
+
   #### `restricted.containers.interception` project option
   A new project restriction option was introduced. `restricted.containers.interception` allows for the use of most `security.syscalls.intercept` options with the current exception of:
 
