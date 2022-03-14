@@ -1,0 +1,604 @@
+title: LXD 4.24 has been released
+date: 2022/03/14 06:03
+origin: https://discuss.linuxcontainers.org/t/lxd-4-24-has-been-released/13550
+content: |-
+  ### Introduction
+  The LXD team is very excited to announce the release of LXD 4.24!
+
+  This should be the last release of the 4.x series with our next release being LXD 5.0 LTS.
+
+  Enjoy!
+
+  ### New features and highlights
+  #### `lxc file mount` and new files API
+  LXD now offers a completely new file API. This is internally based on a native Go implementation of the SFTP protocol and is both directly available through `GET /1.0/instances/NAME/sftp` and was retrofited to handle our existing files API.
+
+  The result is significantly faster file operations, especially when made in parallel or in fast succession. Much reduced footprint thanks to not having to spawn a sub-process for every request nor having to ship around the files being accessed/retrieved.
+
+  The new API also makes integrating with `sshfs` possible which in turn gives us the new `lxc file mount` command allowing mounting any instance into a local path on the client.
+
+      stgraber@dakara:~$ mkdir netbox01
+      stgraber@dakara:~$ lxc file mount s-dcmtl-cluster:netbox01/ netbox01/
+      sshfs mounting "netbox01/" on "netbox01"
+      Press ctrl+c to finish
+
+      stgraber@dakara:~$ ls -lh netbox01/
+      total 76K
+      lrwxrwxrwx 1 root   root       7 Mar  9 02:45 bin -> usr/bin
+      drwxr-xr-x 1 root   root    4.0K Apr 15  2020 boot
+      drwxr-xr-x 1 root   root     500 Mar 10 14:53 dev
+      drwxr-xr-x 1 root   root    4.0K Mar 10 12:17 etc
+      drwxr-xr-x 1 root   root    4.0K Mar  9 18:31 home
+      lrwxrwxrwx 1 root   root       7 Mar  9 02:45 lib -> usr/lib
+      lrwxrwxrwx 1 root   root       9 Mar  9 02:45 lib32 -> usr/lib32
+      lrwxrwxrwx 1 root   root       9 Mar  9 02:45 lib64 -> usr/lib64
+      lrwxrwxrwx 1 root   root      10 Mar  9 02:45 libx32 -> usr/libx32
+      drwxr-xr-x 1 root   root    4.0K Mar  9 02:45 media
+      drwxr-xr-x 1 root   root    4.0K Mar  9 02:45 mnt
+      drwxr-xr-x 1 root   root    4.0K Mar  9 19:09 opt
+      dr-xr-xr-x 1 nobody nogroup    0 Mar 10 14:53 proc
+      drwx------ 1 root   root    4.0K Mar 10 17:19 root
+      drwxr-xr-x 1 root   root     400 Mar 10 14:53 run
+      lrwxrwxrwx 1 root   root       8 Mar  9 02:45 sbin -> usr/sbin
+      drwxr-xr-x 1 root   root    4.0K Mar  9 02:45 srv
+      dr-xr-xr-x 1 nobody nogroup    0 Mar 10 14:53 sys
+      drwxrwxrwt 1 root   root    4.0K Mar 13 22:30 tmp
+      drwxr-xr-x 1 root   root    4.0K Mar  9 02:45 usr
+      drwxr-xr-x 1 root   root    4.0K Mar  9 02:46 var
+
+  #### Cluster event hub role
+  LXD uses an event API to track the progress of operations as well as provide easy ways to monitor the lifecycle of instances across the entire cluster.
+
+  By default, this works as a full mesh where each LXD server is connected to all others, receiving all their events and broadcast all of its local events to all others.
+
+  When dealing with larger clusters, this can lead to quite a few connections and network traffic. To improve this, we have now introduced a new `event-hub` role which can be assigned to at least two cluster members. When set, the event handling will switch from the default `full-mesh` mode to the new `hub` mode.
+
+      stgraber@dakara:~$ lxc cluster list
+      +----------+-------------------------------------+------------------+--------------+----------------+---------------------------+--------+-------------------+
+      |   NAME   |                 URL                 |      ROLES       | ARCHITECTURE | FAILURE DOMAIN |        DESCRIPTION        | STATE  |      MESSAGE      |
+      +----------+-------------------------------------+------------------+--------------+----------------+---------------------------+--------+-------------------+
+      | asuras   | https://[2602:fc62:b:100::200]:8443 |                  | aarch64      | apm-chassis01  | APM X-Gene 2              | ONLINE | Fully operational |
+      +----------+-------------------------------------+------------------+--------------+----------------+---------------------------+--------+-------------------+
+      | athos    | https://[2602:fc62:b:100::204]:8443 | database-standby | x86_64       | athos          | Intel Xeon E5-2695v2 (2x) | ONLINE | Fully operational |
+      +----------+-------------------------------------+------------------+--------------+----------------+---------------------------+--------+-------------------+
+      | celestis | https://[2602:fc62:b:100::206]:8443 |                  | aarch64      | celestis       | LibreComputer Potato      | ONLINE | Fully operational |
+      +----------+-------------------------------------+------------------+--------------+----------------+---------------------------+--------+-------------------+
+      | delmak   | https://[2602:fc62:b:100::205]:8443 | database         | aarch64      | delmak         | Qualcomm Centriq 2400     | ONLINE | Fully operational |
+      +----------+-------------------------------------+------------------+--------------+----------------+---------------------------+--------+-------------------+
+      | entak    | https://[2602:fc62:b:100::201]:8443 | database         | aarch64      | apm-chassis01  | APM X-Gene 2              | ONLINE | Fully operational |
+      +----------+-------------------------------------+------------------+--------------+----------------+---------------------------+--------+-------------------+
+      | madrona  | https://[2602:fc62:b:100::202]:8443 | database-leader  | aarch64      | apm-chassis02  | APM X-Gene 2              | ONLINE | Fully operational |
+      |          |                                     | database         |              |                |                           |        |                   |
+      +----------+-------------------------------------+------------------+--------------+----------------+---------------------------+--------+-------------------+
+      | vorash   | https://[2602:fc62:b:100::203]:8443 | database-standby | aarch64      | apm-chassis02  | APM X-Gene 2              | ONLINE | Fully operational |
+      +----------+-------------------------------------+------------------+--------------+----------------+---------------------------+--------+-------------------+
+      stgraber@dakara:~$ lxc info | grep server_event_mode
+        server_event_mode: full-mesh
+      stgraber@dakara:~$ lxc cluster edit athos
+      stgraber@dakara:~$ lxc info | grep server_event_mode
+        server_event_mode: full-mesh
+      stgraber@dakara:~$ lxc cluster edit delmak
+      stgraber@dakara:~$ lxc info | grep server_event_mode
+        server_event_mode: hub-client
+      stgraber@dakara:~$ lxc cluster list
+      +----------+-------------------------------------+------------------+--------------+----------------+---------------------------+--------+-------------------+
+      |   NAME   |                 URL                 |      ROLES       | ARCHITECTURE | FAILURE DOMAIN |        DESCRIPTION        | STATE  |      MESSAGE      |
+      +----------+-------------------------------------+------------------+--------------+----------------+---------------------------+--------+-------------------+
+      | asuras   | https://[2602:fc62:b:100::200]:8443 |                  | aarch64      | apm-chassis01  | APM X-Gene 2              | ONLINE | Fully operational |
+      +----------+-------------------------------------+------------------+--------------+----------------+---------------------------+--------+-------------------+
+      | athos    | https://[2602:fc62:b:100::204]:8443 | event-hub        | x86_64       | athos          | Intel Xeon E5-2695v2 (2x) | ONLINE | Fully operational |
+      |          |                                     | database-standby |              |                |                           |        |                   |
+      +----------+-------------------------------------+------------------+--------------+----------------+---------------------------+--------+-------------------+
+      | celestis | https://[2602:fc62:b:100::206]:8443 |                  | aarch64      | celestis       | LibreComputer Potato      | ONLINE | Fully operational |
+      +----------+-------------------------------------+------------------+--------------+----------------+---------------------------+--------+-------------------+
+      | delmak   | https://[2602:fc62:b:100::205]:8443 | event-hub        | aarch64      | delmak         | Qualcomm Centriq 2400     | ONLINE | Fully operational |
+      |          |                                     | database         |              |                |                           |        |                   |
+      +----------+-------------------------------------+------------------+--------------+----------------+---------------------------+--------+-------------------+
+      | entak    | https://[2602:fc62:b:100::201]:8443 | database         | aarch64      | apm-chassis01  | APM X-Gene 2              | ONLINE | Fully operational |
+      +----------+-------------------------------------+------------------+--------------+----------------+---------------------------+--------+-------------------+
+      | madrona  | https://[2602:fc62:b:100::202]:8443 | database-leader  | aarch64      | apm-chassis02  | APM X-Gene 2              | ONLINE | Fully operational |
+      |          |                                     | database         |              |                |                           |        |                   |
+      +----------+-------------------------------------+------------------+--------------+----------------+---------------------------+--------+-------------------+
+      | vorash   | https://[2602:fc62:b:100::203]:8443 | database-standby | aarch64      | apm-chassis02  | APM X-Gene 2              | ONLINE | Fully operational |
+      +----------+-------------------------------------+------------------+--------------+----------------+---------------------------+--------+-------------------+
+      stgraber@dakara:~$ 
+
+  #### Reworked `lxc storage volume info`
+  `lxc storage volume info` has been significantly reworked to provide an output much more in line with that of `lxc info` rather than the limited YAML output it was providing before.
+
+  It will now show details about the storage volume, its type, location, disk usage as well as any related snapshots and backups.
+
+      stgraber@dakara:~$ lxc storage volume info default foo
+      Name: foo
+      Type: custom
+      Content type: filesystem
+      Usage: 192.00KiB
+      
+      Snapshots:
+      +-------+-------------+------------+
+      | NAME  | DESCRIPTION | EXPIRES AT |
+      +-------+-------------+------------+
+      | snap0 |             |            |
+      +-------+-------------+------------+
+
+  #### AppArmor profiles for image extractors
+  As an additional security layer, LXD now automatically generates a tempoary AppArmor profile whenever it unpacks an image or backup.
+
+  This protects LXD systems against potential attacks on `tar`, `unquashfs` or any of the compression/decompression programs that those call. The profile only allows access to the paths required to read/write the image/backup and its content.
+
+  #### Grafana dashboard
+  LXD now ships with a [Grafana](https://grafana.com) dashboard.
+
+  You can either get the dashboard JSON directly from the LXD release tarball or perhaps more conveniently from the [Grafana website](https://grafana.com/grafana/dashboards/15726).
+
+  ![grafana1|690x404](upload://fpR8rHoQ9BzKypqWFWb9Bhx9pqX.jpeg)
+
+  Learn more here: https://discuss.linuxcontainers.org/t/official-grafana-dashboard-for-lxd/13438
+
+  #### `restricted.containers.interception` project option
+  A new project restriction option was introduced. `restricted.containers.interception` allows for the use of most `security.syscalls.intercept` options with the current exception of:
+
+   - `security.syscalls.intercept.mount.allowed`
+   - `security.syscalls.intercept.mount.shift`
+
+  Setting this option to `allow` will make it possible for users to enable system call interception on their instances, making it easier to run some workloads like Docker.
+
+  Enabling this option does create an increased attack surface and good opportunity for Denial of Service attacks against the host system as each intercepted system call will cause a temporary task to be spawned on the host to perform the request action in the instance.
+
+  Documentation: https://linuxcontainers.org/lxd/docs/master/projects/
+
+  #### `core.metrics_authentication` server option
+  A new server option was introduced to allow unauthenticated use of LXD's metrics API. When `core.metrics_authentication` is set to `false`, the metrics server running at the address set through `core.metrics_address` will no longer check the client certificate of the requestor and will return metrics for all projects.
+
+  This should only ever be used when proper TLS based authentication isn't possible and should be used in conjuction with firewalling to restrict what server can access the metrics endpoint.
+
+  #### Network interface name and MTU in virtual machines
+  A new configuration option, `agent.nic_config`, was introduced for Virtual Machines.
+
+  When set, the LXD agent running inside of the VM will rename and reconfigure the network interfaces at boot time so that their `name` and `mtu` properties as set in the LXD configuration get applied to the interface inside of the VM.
+
+  This gets the behavior much closer to that of a container but it's worth noting that VM images generally expect the network interface to be named `enp5s0` and that using another name will most likely need changes to the network configuration of the instance.
+
+  #### I/O uring support for VM storage
+  LXD virtual machines now detect host support for [IO_uring](https://en.wikipedia.org/wiki/Io_uring) and if available and compatible with the storage pool in use, will have QEMU use it for block I/O.
+
+  This can lead to much faster I/O on compatible systems as well as reduced load on the host system.
+
+  #### `ipv4.neighbor_probe` and `ipv6.neighbor_probe` NIC options
+  In LXD 4.23, we introduced logic to detect an existing IPv4 or IPv6 address on startup for instances using a `routed` network interface. While this test usually makes sense and avoids potential misconfigurations, there are cases where it makes sense to turn it off.
+
+  For this reason, we've now introduced two new configuration keys to control this behavior:
+
+   - `ipv4.neighbor_probe`
+   - `ipv6.neighbor_probe`
+
+  Documentation: https://linuxcontainers.org/lxd/docs/master/instances/#nic-routed
+
+  ### Complete changelog
+  Here is a complete list of all changes in this release:
+
+  [details="Full commit list"]
+   - lxd-agent: Fix bad copy/paste
+   - lxd/daemon: Fix http response error typos
+   - lxd-migrate: Support certificate tokens
+   - lxd/util/http: Improves comment on CheckTrustState
+   - lxd/util/http: Var naming clarity in CheckTrustState
+   - lxd/daemon: Adds the trusted cluster member fingerprint to the request context username field in Authenticate
+   - lxd/events/events: Adds EventSource type and constants
+   - lxd/events/common: Removes localOnly concept from common listener
+   - lxd/events/devlxdEvents: Removes isLocal concept
+   - lxd/events/events: Replaces isLocal with excludeSources concept for AddListener
+   - lxd/events: Updates d.events.AddListener usage with excludeSources
+   - lxd-agent/events: Updates d.events.AddListener with excludeSources
+   - test: Adds basic cluster event tests
+   - lxd/events/events: Removes listener level location concept and replaces with server location concept
+   - lxd-agent/events: d.events.AddListener usage to remove listener level location
+   - lxd/events: Updates d.events.AddListener to remove listener location
+   - lxd/cluster/events: Prevent concurrent running of EventsUpdateListeners
+   - go.mod: bump github.com/mdlayher/vsock@v1.0.1
+   - lxd/main_init_interactive: Add missing :
+   - lxc/console: Don't crash on manual disconnect
+   - doc/metrics: stop tuning job's scrape_interval now that results are cached 8s only
+   - doc/metrics: don't assume any default scrape_interval value
+   - lxd/response: Modernize FileResponse
+   - lxd-agent: Update for FileResponse changes
+   - lxd: Update for FileResponse changes
+   - lxd/response: Rename FileModify to FileModified
+   - lxd/fsmonitor/drivers: Ignore stale file handle errors.
+   - lxd/apparmor: Remove state.State dependency from apparmor package
+   - lxd/device: Remove state.State dependency from apparmor package
+   - lxd/instance/drivers: Remove state.State dependency from apparmor package
+   - lxd/network: Remove state.State dependency from apparmor package
+   - lxd/storage/drivers/driver/zfs: Set all dataset mountpoint settings to legacy
+   - lxd/cluster/membership: Run EventsUpdateListeners in NotifyHeartbeat in wait group
+   - lxd/cluster/heartbeat: Only upsert member offline error in APIHeartbeat.Send if context not cancelled
+   - lxd/cluster/heartbeat: Save member state gathered so far if heartbeat is cancelled
+   - lxd/cluster/heartbeat: Comment improvement
+   - lxd/cluster/heartbeat: Immediately ping remaining members when ctx is cancelled in APIHeartbeat.Send
+   - lxd/cluster/gateway: Export HeartbeatLock
+   - lxd/cluster/heartbeat: g.HeartbeatLock usage
+   - lxd/cluster/heartbeat: Wait for ongoing heartbeat to finish in NotifyHeartbeat
+   - lxc/config_trust: Support --name flag for tokens
+   - client: Replace chConnected with ctxConnected
+   - client/lxd/events: Updates SendEvent to use context deadline for timeout
+   - test: Update clustering membership tests to not expect a specific promotion order of members
+   - lxc/network_zone: Fix typo (entriess to entries)
+   - lxc/cluster: Fix typo (doest to does)
+   - i18n: Update translation templates
+   - test: Update cluster rebalance tests to not use member specific role logic
+   - test: Add cluster show to failure domains test to capture cluster state on intermittent test failure
+   - shared/api/url: Add WithQuery
+   - lxd/daemon: Run nodeRefreshTask inside cluster.EventsUpdateListeners as part of wait group
+   - lxd/cluster/heartbeat: Fix comment
+   - client: Introduce DoHTTP
+   - client: DoHTTP usage
+   - lxc/query: Use DoHTTP
+   - lxd/api_metrics: Rename resp to metricSet
+   - lxd/api_metrics: Support target
+   - doc/rest-api: Refresh swagger YAML
+   - lxd/certificates: Fix token generation over HTTPS
+   - lxd/cgroup: Fix bad cpuset check
+   - lxc/cluster_group: Update long descriptions
+   - i18n: Update translation templates
+   - lxd/device/nic/routed: Comment ending
+   - lxd/device/nic/routed: Moves parent and vlan check to validation
+   - lxd/device/nic/routed: Remove feature check of liblxc as no longer depends on it
+   - lxd/device/nic/routed: Adds d.effectiveParentName to cache result from network.GetHostDevice
+   - lxd/device/nic/routed: Fixes bug where if vlan effective interface didn't exist start would fail
+   - lxd/device/nic/routed: Align with macvlan logic for setting up vlan interface
+   - lxd/device/nic/routed: Delete created VLAN device on start failure
+   - lxd/device/nic/routed: Use d.effectiveParentName for consistent in postStop
+   - lxd/device/nic/routed: Adds missing comment to checkIPAvailability
+   - lxd/device/device/utils/network: Sets ARP probe timeout based on context deadline in isIPAvailable
+   - lxd/device/device/utils/network: Removes use of unnecessary go routines in isIPAvailable
+   - lxd/device/device/utils/network: Change isIPAvailable signature to return bool for found and separate probe errors
+   - lxd/device/nic/routed: Updates checkIPAvailability to use updated isIPAvailable
+   - test: Adds test for routed vlan without parent
+   - test: Adds routed NIC test for VLAN parent interface creation
+   - doc/metrics: use secp384r1 curve with SHA384 signature
+   - lxd/device/nic/routed: Adds ipv{n}.neighbor_probe option
+   - doc: Adds routed NIC ipv{n}.neighbor_probe setting
+   - lxd/device/nic/bridged: Update setupHostFilters to return a reverter
+   - lxd/device/nic/bridged: Only call d.removeFilters in postStop if filtering enabled
+   - api: Adds instance_nic_routed_neighbor_probe extension
+   - test: Adds tests for routed NIC IP available detection
+   - test: Fix incorrect command in clustering_failure_domains
+   - test: Fix profile leak
+   - lxd/instance/qemu: Allow live update of cluster.evacuate
+   - lxd/certificates: Better handle authentication
+   - lxd/db/node: Adds ClusterRoleEventHub constant and ID entry
+   - lxd/db/node: Removes unused functions RemoveNodeRole and CreateNodeRole
+   - lxd/db/node: Changes Roles field type to []ClusterRole in NodeInfo struct
+   - lxd/db/node: Error formatting
+   - lxd/cluster/heartbeat: Adds supplementary non-database member role info to heartbeat
+   - lxd/cluster/events: Populate heartbeat member roles from DB in EventsUpdateListeners
+   - lxd/cluster/events: Adds eventHubMinHosts constant
+   - lxd/cluster/events: Adds EventMode type and constants
+   - lxd/cluster/events: Adds ServerEventMode function
+   - lxd/cluster/events: Adds RoleInSlice function
+   - lxd/cluster/events: Updates EventsUpdateListeners to only connect to event-hub servers
+   - lxd/cluster/events: Rework listener connect notification to support hub addresses
+   - lxd/cluster/events: Store remote event listener client in eventListenerClient type.
+   - lxd/cluster/events: Use localAddress rather than networkAddress var name
+   - lxd/cluster/events: Adds SetEventMode to eventListenerClient
+   - lxd/cluster/events: Ensure logging inside EventsUpdateListeners is done outside of listenersLock lock
+   - lxd/cluster/events: Log an error when there are no active cluster event listeners
+   - lxd/cluster/events: Adds EventHubPush function
+   - lxd/events/events: Adds InjectFunc type
+   - lxd/cluster/events: EventsUpdateListeners InjectFunc usage
+   - lxd/events/events: Renames Forward to Inject to better reflect what it does
+   - lxd/events/events: Adds NotifyFunc support
+   - lxd/events/events: Adds ability to exclude events from certain locations from being broadcasted
+   - lxd/api/cluster: Trigger notify heartbeat on event-hub member change in updateClusterNode
+   - lxd/cluster/membership: state.Events.Inject usage
+   - lxd/daemon: d.events.Inject usage
+   - lxd/daemon: Wires up cluster.EventHubPush to events.NewServer notify handler
+   - lxd-agent/daemon: events.NewServer usage
+   - lxd-agent/events: d.events.AddListener excludeSources usage
+   - lxd/events: Adds support for receiving events from cluster members in eventsSocket
+   - shared/api/server: Adds ServerEventMode to ServerEnvironment
+   - lxd/api/1.0: Populates ServerEventMode in server environment struct
+   - api: Adds event_hub API extension
+   - doc/rest-api: Refresh swagger YAML
+   - lxd/cluster/events: Move state update in EventsUpdateListeners to end
+   - lxd/cluster/events: log No active cluster event listeners
+   - test: Updates clustering events tests to with event-hub support
+   - test: Fix clustering_handover test to not expect a certain member promotion order
+   - shared/validate: Moves ValidHostname to validate package.
+   - shared/validate: Adds IsDeviceName, refactoring logic from IsHostname.
+   - lxd/device: Ensures device names are valid when validating config and instantiating.
+   - shared/idmap: Add SysProcIDMap functions
+   - lxd/storage: Sync before snapshotting
+   - lxd/main_forkfile: Replace with SFTP server
+   - lxd-agent: Replace file API with SFTP
+   - gomod: Add pkg/sftp
+   - lxd/instance: Add FileSocket to the interface
+   - lxd/instance/lxc: Implement FileSocket
+   - lxd/instance/qemu: Implement FileSocket
+   - lxd/instance: Add FileSFTP to the interface
+   - lxd/instance/lxc: Implement FileSFTP
+   - lxd/instance/qemu: Implement FileSFTP
+   - lxd/instance: Remove FilePull
+   - lxd/instance: Remove FileRemove
+   - lxd/instance: Remove FileExists
+   - lxd/instance: Remove FilePush
+   - lxd/instance/lxc: Port to using FileSFTP
+   - lxd/instance_file: Port to SFTP
+   - gomod: Update dependencies
+   - shared/util: IsTrue description
+   - shared/util: Adds IsTrueOrEmpty function
+   - shared/util: IsFalse description
+   - shared/util: Adds IsFalseOrEmpty function
+   - lxd/device/nic/routed: shared.IsTrueOrEmpty usage
+   - lxd/device/disk: Use shared.IsTrueOrEmpty and shared.IsFalseOrEmpty
+   - lxd/device/disk: Replace use of !shared.IsTrue with shared.IsFalseOrEmpty for security.shifted
+   - lxd/device/gpu: Replace !shared.IsTrue shared.IsFalseOrEmpty for nvidia.runtime
+   - lxd/device/nic: Replace !shared.IsTrue with IsFalse or IsFalseOrEmpty
+   - lxd/device/proxy: Replace !shared.IsTrue with shared.IsFalseOrEmpty
+   - lxd/storage: Adds allowInconsistent to pool interface RefreshInstance signature.
+   - lxd: Passes allowInconsistent from instanceCreateAsCopyOpts into pool.RefreshInstance.
+   - lxd/storage: Uses allowInconsistent in call to MigrateInstance on refresh.
+   - lxd/storage/filesystem: Add SyncFS
+   - lxd/storage: Use filesystem.Syncfs
+   - lxd/storage/drivers: Replace !shared.IsTrue with shared.IsFalse for rsync.compression option
+   - lxd/storage/drivers/driver/ceph: Replace !shared.IsTrue with shared.IsFalse or shared.IsFalseOrEmpty
+   - lxd/storage/drivers/driver/lvm: Replaces !shared.IsTrue with shared.IsFalse or shared.IsFalseOrEmpty
+   - lxd/storage/drivers/driver/zfs/volumes: Replace !shared.IsTrue with shared.IsFalse for zfs.clone_copy
+   - lxd/storage/drivers/zfs: Replace !shared.IsTrue with shared.IsFalse or shared.IsFalseOrEmpty
+   - lxd/api/cluster: Replace !shared.IsTrue with shared.IsFalseOrEmpty for features.networks
+   - lxd/api/project: Replace !shared.IsTrue with shared.IsFalse for features.profiles
+   - lxd/devlxd: Replace !shared.IsTrue with shared.IsFalseOrEmpty for security.devlxd.images
+   - lxd/instance: Replace shared.IsTrue with shared.IsFalseOrEmpty for snapshots.schedule.stopped
+   - lxd/patches: Replace !shared.IsTrue with shared.IsFalse
+   - lxd/apparmor/instance: Replace !shared.IsTrue with shared.IsFalseOrEmpty for security.privileged
+   - lxd/instance/drivers/driver/lxc: Replace !shared.IsTrue with !shared.IsFalseOrEmpty for security.idmap.isolated
+   - lxd/instance/drivers/driver/lxc: Replace !shared.IsTrue with shared.IsFalse for limits.memory.swap
+   - lxd/dnsmasq/dhcpalloc: Replaces !shared.IsTrue with shared.IsFalseOrEmpty for ipv6.dhcp.stateful
+   - lxd/instance/drivers/driver/qemu: Replaces !shared.IsTrue with shared.IsFalseOrEmpty for migration.stateful
+   - lxd/instance/instance/utils: Replace !shared.IsTrue with shared.IsFalseOrEmpty for security.privileged
+   - lxd/networ/driver: Replace !shared.IsTrue with shared.IsFalseOrEmpty for ipv{n}.nat
+   - lxd/network/driver/bridge: Replace !shared.IsTrue with shared.IsFalseOrEmpty ipv6.dhcp.stateful
+   - lxd/network/driver/ovn: Replace !shared.IsTrue with shared.IsFalseOrEmpty for restricted option for projects
+   - lxd/network/driver/ovn: Replace !shared.IsTrue with IsFalse for ipv{n}.dhcp
+   - lxd/network/driver/physical: Replace !shared.IsTrue with shared.IsFalseOrempty for volatile.last_state.created
+   - lxd/network/zone: Replace shared.IsTrue usage for NAT logic
+   - lxd/project/permissions: Replace !shared.IsTrue with shared.IsFalse for features.images
+   - lxd/project/permissions: Replace !shared.IsTrue with shared.IsFalseOrEmpty for security.idmap.isolated
+   - lxd/project/permissions: Replace !shared.IsTrue with shared.IsFalseOrEmpty for restricted
+   - lxd/seccomp: Replace !shared.IsTrue with shared.IsFalseOrEmpty for syscall interception settings
+   - lxd/instance/drivers/driver/qemu: Replace !shared.IsFalse with shared.IsTrueOrEmpty for security.secureboot
+   - test: Adds check for negated shared.Is(True|False)*() function calls
+   - test: Exclude .git dir from static grep checks
+   - test: Removes reference to non-existent package shared/subtest
+   - lxd/db/generate: Fix bad loop logic
+   - lxd/instance/lxc: Use contextual logger in Metrics
+   - doc: add Open Graph metadata
+   - doc: use bugfix for Open Graph Sphinx extension
+   - lxd/storage: Moves PathNameEncode and PathNameDecode to filesystem package
+   - lxd/storage/drivers/driver/btrfs/volumes: filesystem.PathNameEncode usage
+   - lxd/device: filesystem.PathNameEncode and filesystem.PathNameDecode usage
+   - lxd/dnsmasq/dnsmasq: Update dnsMasqEntryFileName to use storageDrivers.PathNameEncode to escape device name
+   - lxd/device/device/load: Update New to return device even if name validation fails
+   - shared/validate/validate: Relax IsDeviceName checks
+   - test: Adds missing device name validation tests
+   - doc: fix Open Graph version
+   - lxd/dnsmasq: Adds staticAllocationDeviceSeparator const
+   - lxd/dnsmasq: Renames dnsMasqEntryFileName to StaticAllocationFileName
+   - lxd/dnsmasq: StaticAllocationFileName usage
+   - lxd/dnsmasq: StaticAllocationFileName test
+   - lxd/dnsmasq: Removes Name and Static field and replaces with StaticFileName field
+   - lxd/dnsmasq: Updates DHCPStaticAllocation to just accept a deviceStaticFileName
+   - lxd/dnsmasq: Update DHCPAllAllocations to use StaticFileName field
+   - lxd/dnsmasq: DHCPStaticAllocation usage
+   - lxd/dnsmasq/dhcpalloc: Updates getDHCPFreeIPv4 and getDHCPFreeIPv6 to accept deviceStaticFileName argument
+   - lxd/network/network/utils: dnsmasq.DHCPStaticAllocation updated usage with deviceStaticFileName
+   - lxd/device/nic/bridged: dnsmasq.DHCPStaticAllocation updated usage with deviceStaticFileName
+   - lxd/apparmor: AppArmor support for extractors
+   - lxd/archive: Add archive package
+   - shared/subprocess: Support for file descriptors
+   - lxd/backup: AppArmor support for extractors
+   - lxd: AppArmor support for extractors
+   - lxd/storage/drivers: AppArmor support for extractors
+   - lxd/storage: AppArmor support for extractors
+   - shared: Move Unpack to lxd/archive
+   - lxd/db/warnings/types: Removes unused WarningTypes and population code
+   - lxd/warnings: Renames ResolveWarningsOlderThan to ResolveWarningsByLocalNodeOlderThan
+   - lxd/daemon: warnings.ResolveWarningsByLocalNodeOlderThan usage
+   - lxd/warnings: Fix entityID logic bugs in resolve and delete functions
+   - shared: Adds agent.rename_interfaces config key for VMs.
+   - lxd/device/config: Adds NicConfig struct for passing data into VM.
+   - lxd/device/bridged: Returns interface MTU as part of run configuration.
+   - lxd/instance/drivers: Writes nic data to VM config share.
+   - lxd-agent: Reads nic configuration and applies it at startup.
+   - doc: Adds agent.rename_interfaces config key.
+   - api: Adds agent_rename_interfaces extension.
+   - lxd/db/query/dump: Add context param to query.Dump
+   - lxd/db/query/transaction: Add TransactionCtx
+   - doc: fix the footer
+   - lxd/device/config/device/runconfig: Long form import
+   - lxd/device/config/device/runconfig: Adds NICConfigDir constant
+   - lxd/device/config/device/runconfig: Adds DeviceName and NICName to NICConfig struct
+   - lxd-agent/network: Updates NIC config parsing to use map of deviceConfig.NICConfig
+   - lxd/instance/drivers/driver/qemu: deviceConfig.NICConfigDir usage
+   - doc: Fix cert pathing in metrics.md
+   - lxd/instance/drivers/driver/qemu: Escape the NIC device name in QEMU config with filesystem.PathNameEncode
+   - lxd/instance/drivers/driver/qemu: Use proper quoting in error from addNetDevConfig
+   - lxd/instance/drivers/driver/qemu: Removes device name used as nic name in addNetDevConfig
+   - lxd/instance/drivers/driver/qemu: Reworks writeNICDevConfig
+   - lxd/device/device/utils/network: Reworks networkCreateVethPair and networkCreateTap to return MTU value used
+   - lxd/device/nic/bridged: networkCreateVethPair and networkCreateTap usage
+   - lxd/device/nic/ovn: networkCreateVethPair and networkCreateTap usage
+   - lxd/device/nic/p2p: networkCreateVethPair and networkCreateTap usage
+   - lxd/device/nic/routed: networkCreateVethPair and networkCreateTap usage
+   - lxd/device/nic/routed: Adds missing name property for VM device
+   - lxd/device/nic/routed: Make routed NIC hotpluggable
+   - lxd/device/nic/macvlan: Adds support for mtu applying via lxd-agent in VMs
+   - test: Work around very intermittent ip: RTNETLINK answers: File exists error
+   - api: Renames agent_rename_interfaces to agent_nic_config
+   - lxd: Rename agent.rename_interfaces to agent.nic_config
+   - doc/instances: Removes trailing whitespace
+   - lxd/util/sys: Move RuntimeLiblxcVersionAtLeast to instance package
+   - lxd/util/sys: Move GetIdmapSet to shared/idmap
+   - lxd/db/generate: Add leftjoin support
+   - lxd/db/generate: Adds coalesce support for joined fields
+   - lxd/db/generate: Removes white space
+   - lxd/db/generate/db/mapping: Adds WarningStatus and WarningType to column types
+   - lxd/db/generate/db/stmt: Update filter generation to use []string for where statement
+   - lxd/db/generate/db/stmt: Ensure coalesced fields are fitered on their coalesced value
+   - lxd/db/warnings: Uses DB generator for warnings functions
+   - lxd: tx.GetWarnings usage
+   - lxd/instance/drivers/driver/common: tx.DeleteWarnings usage
+   - lxd/db/warnings: Avoid duplication results in UpsertWarning
+   - lxd/instance/qemu: Properly wrap error
+   - lxd/instance: Introduce Info.Features
+   - lxd/instance/qemu: Add checkFeature
+   - lxd/instance/qemu: Detect and use io_uring
+   - lxd/instance/drivers/driver/lxc: Remove duplicate import of github.com/lxc/lxd/lxd/storage
+   - lxd/instance/test: Fix inconsistent import name of github.com/lxc/lxd/lxd/storage
+   - shared/api/storage/pool: Adds StoragePoolStatusUnvailable constant
+   - lxd/db/warnings/types: Adds WarningStoragePoolUnvailable, description and severity
+   - lxd/storage: Update setupStorageDriver to retry initializing failed pools
+   - lxd/storage/pool/interface: Adds ToAPI
+   - lxd/storage/backend/mock: Implements ToAPI
+   - lxd/storage/backend/lxd: Implements ToAPI
+   - lxd/storage/backend/lxd: Adds unavailablePools variable and maintains via Mount function result
+   - lxd/storage/backend/lxd: Description typo for GetVolume
+   - lxd/storage/backend/lxd: Update LocalStatus to return StoragePoolStatusUnvailable if not initialised locally
+   - lxd/storage/pools: Switch to loading pool and using the ToAPI and LocalStatus functions
+   - lxc/storage: Add STATE column output even in non-clustered environment
+   - lxd/storage/backend/lxd: Adds isStatusReady function to check if pool is ready for use
+   - lxd/storage/backend/lxd: Delete persistent warnings on pool delete
+   - lxd/storage/load: Adds Patch function
+   - lxd/patches: Updates patchGenericStorage to call storagePools.Patch()
+   - lxd/storage/utils: Adds logging to ImageUnpack
+   - lxd/apparmor/archive: Adds additional permissions for unsquashfs to apparmor profile
+   - lxd/archive/archive: Don't use supplementary unpacker command
+   - lxd/archive/archive: Better return structure (golint)
+   - lxd/archive: Improve error and logging in Unpack
+   - lxd/instance/drivers/driver/qemu: Fix VM support detection regression
+   - lxd/instance/qemu: Fix incorrect comment
+   - lxd/instance/qemu: Disable io_uring on loop pools
+   - lxd/instance/qemu: io_uring naming consistency
+   - lxd/apparmor: Allow rw remount of /run
+   - Add the Grafana dashboard (15726)
+   - shared/tcp/tcp/timeouts: Adds tcp package with functions for setting timeouts
+   - lxd: github.com/lxc/lxd/shared/tcp usage
+   - lxd/util/net: Removes TCP timeout functions
+   - test: Wait longer for second node to be demoted
+   - lxd/network/driver/common: Fix typos in errors
+   - lxc/storage_volume: Fix list of default columns
+   - i18n: Update translation templates
+   - lxd/warnings: Removes unused functions
+   - lxd/network/driver/bridge: As network ID is globally unique, delete warnings by ID on delete
+   - lxd/networks: Removes duplicated warnings delete call
+   - lxd/network/driver/bridge: Don't refresh BGP prefixes during forward update
+   - lxd/bgp: Fix RemovePrefixByOwner when multiple matches
+   - doc: whitespace changes
+   - doc: moving content
+   - shared/tcp/tcp/timeouts: Adds support for using net.TCPConn directly with ExtractConn
+   - client/lxd: Adds setURLQueryAttributes function
+   - lxd/instance/drivers/driver/qemu: Close connection on client error in FileSFTP
+   - lxd/instance/drivers/driver/lxc: Close connection on client error in FileSFTP
+   - Replace github.com/pkg/errors with fmt and errors
+   - Replace errors.Unwrap() with errors.Is()
+   - Use %w in fmt.Errorf to wrap errors
+   - gomod: Update dependencies
+   - i18n: Update translation templates
+   - test: Update godeps.list
+   - lxd/db/query: Fix IsRetriableError
+   - doc: add some headings
+   - lxd/instance/sftp: Adds /1.0/instances/<name>/sftp handler
+   - client/interfaces: Adds GetInstanceFileSFTP and GetInstanceFileSFTPConn to InstanceServer
+   - client/lxd/instances: Adds SFTP support to ProtocolLXD
+   - lxc/file: Adds mount command
+   - test/godeps.list: Updates godeps
+   - i18n: Update translation templates
+   - doc/rest-api: Refresh swagger YAML
+   - lxd/device/disk: Store the storage pool inside device to avoid repeated DB queries
+   - lxd/device/disk: Return VM mount directio and loop backed options
+   - lxd/instance/drivers/driver/qemu: Detect io_uring support for root and custom block volumes
+   - doc: update Network ACLs documentation
+   - doc: add required links
+   - doc: whitespace changes
+   - doc: move content
+   - doc: add some headings
+   - doc: update network forwards documentation
+   - lxd/task/group: Clarify message about tasks still running
+   - lxd/daemon: Error not checked from ResolveWarningsByLocalNodeOlderThan
+   - lxd/device/disk: Remove duplicated import
+   - lxd/storage/backend/lxd: Don't try mounting volumes if pool not available
+   - lxd/storage: Add and use error ErrPoolUnavailable
+   - lxd/instance/drivers: Moves shared storagePool var into common
+   - lxd/storage/load: Adds UnavailablePools function
+   - lxd/storage: Update setupStorageDriver to call instancesStart when pool is subsequently initialised
+   - lxd/instances: Updates instancesStart to check disk pools are available
+   - lxd/instance/drivers/driver/qemu: Improve secureboot needs to be disabled error
+   - lxc/file: Adds support for setting up local SFTP server for mount command
+   - i18n: Update translation templates
+   - lxd/device/disk: Detect disk pool VM mount options using single call to os.Stat
+   - lxd/network/openvswitch/ovn: Update LogicalRouterRoutes to support recent versions of ovn
+   - seccomp: pass a pidfd to process_still_alive
+   - lxd/apparmor/archive: Expand all paths
+   - lxd/instance/qemu: Switch TPM mode to CRB
+   - lxc/storage_volume: Tweak error message
+   - lxc/storage_volume: Align `info` with `lxc info`
+   - i18n: Update translation templates
+   - doc/instances: Fix missing escaping
+   - api: projects_restricted_intercept
+   - lxd/projects: Add restricted.containers.interception
+   - lxd/project: Add restricted.containers.intercept
+   - doc: Add restricted.containers.interception
+   - scripts: Add restricted.containers.interception
+   - tests: Validate restricted.containers.interception
+   - lxd/node: Fix typo in metrics_address description
+   - api: metrics_authentication
+   - lxd/cluster: Add core.metrics_authentication
+   - lxd/metrics: Allow disabling authentication
+   - doc/server: Add core.metrics_authentication
+   - scripts/bash: Update completion for metrics
+   - tests: Add test for core.metrics_authentication
+   - lxd/device/device/utils/disk: Update DiskVMVirtiofsdStart to check sharePath is absolute
+   - lxd/device/disk: Start virtfs-proxy-helper after virtiofsd
+   - lxd/instance/drivers/driver/lxc: Disable idmapped mounts if LXD_SHIFTFS_DISABLE=true
+   - lxd/instance/qemu: Disable hv_passthrough when migratable
+   - lxd/apparmor: Attempt to deref exePath
+   - grafana: fix project disk usage overview of the rootfs
+   - grafana: use available bytes when computing rootfs used space
+   - grafana: bump dashboard version
+   - lxc/utils/sort: Move sorting helpers to utils package
+   - lxc: Use utils package for sorting tables.
+   - lxd/apparmor: Handle missing paths
+   - lxd/instance/qemu: Set spawn=allow
+   - lxd/instance_file: Add last-modified header
+   - doc/rest-api: Refresh swagger YAML
+   - lxd/instance_file: Fix gofmt
+   - lxc/file: Adds --listen flag to mount command
+   - i18n: Update translation templates
+   - lxc/file: Check instance exists in mount SSH SFTP listener mode
+   - test: Adds basic file mount SSH SFTP listener tests
+   - lxd: Adds IdmappedMounts field to OS struct
+   - lxd/db/generate/db/stmt: Add leftjoin support to naturalKeySelect
+   - lxd/db/generate/db/stmt: Only join fields contained within natural key in naturalKeySelect
+   - lxd/db/warnings: Use WarningExists from DB generator
+   - lxd/device/nic: Lock concurrent access to networkSRIOVRestoreVF
+   - lxd/device: Allow ipv{n}.address=none for managed networks.
+   - lxd/device: Check ip{n}.address != none before allocating.
+   - tests: Check that all protocols are blocked when ipv{n}.address=none
+   - lxd/storage/drivers/generic/vfs: Pass --numeric-owner to tar unpack command
+   - tests: Fix ordering in bridge filtering test
+   - i18n: Update translations from weblate
+   - gomod: Update dependencies
+   - i18n: Update translations from weblate
+  [/details]
+
+  ### Try it for yourself
+  This new LXD release is already available for you to try on our [demo service](https://linuxcontainers.org/lxd/try-it/).
+
+  ### Downloads
+  The release tarballs can be found on our [download page](https://linuxcontainers.org/lxd/downloads/).
+
+  Binary builds are also available for:
+
+   - **Linux:** snap install lxd
+   - **MacOS:** brew install lxc
+   - **Windows:** choco install lxc
