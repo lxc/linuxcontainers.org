@@ -180,6 +180,24 @@ content: |-
   -->
   詳しくはこちらを参照してください: https://discuss.linuxcontainers.org/t/official-grafana-dashboard-for-lxd/13438
 
+  #### デグレードした状態での起動（ディスクが見えない場合）<!-- Degraded startup (missing disk) -->
+  <!--
+  LXD can now startup with one or more storage pools missing.
+  In this scenario, the storage pool will be held back and retried repeatedly in the background. All instances and volumes depending on that pool will similarly be blocked until the pool comes back online.
+  -->
+  LXD は 1 つ以上のストレージプールが欠けた状態でも起動するようになりました。
+  このシナリオでは、ストレージプールは保留状態になり、バックグラウンドで繰り返しリトライします。そのプールに依存するインスタンスとボリュームは、プールがオンラインに復帰するまで同様にブロックされます。
+
+  <!--
+  This should be useful both as a recovery mechanism when a storage pool dies for some reason as well as allowing some scenarios where one or more pools are on external media and may not be available at startup time.
+  -->
+  この機能はストレージプールが何かの理由で死んだ場合のリカバリーの仕組みや、1 つ以上のプールが外部メディア上にあり起動時に利用できないようなシナリオの両方で役に立つはずです。
+
+  <!--
+  Do note however that LXD upgrade operations will most likely require all pools be present, so it is still possible to see LXD to fail startup due to missing storage pools when an upgrade migration step must be run across all instances and volumes.
+  -->
+  しかし、LXD のアップグレード操作ではすべてのプールが存在している必要がある可能性が高いため、すべてのインスタンスやボリュームに対してアップグレードの移行手順を実行しなければいけない場合、ストレージプールが見つからないため、LXD は起動に失敗する可能性があることに注意してください。
+
   #### `restricted.containers.interception` project option
   <!--
   A new project restriction option was introduced. `restricted.containers.interception` allows for the use of most `security.syscalls.intercept` options with the current exception of:
