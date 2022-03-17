@@ -158,7 +158,7 @@ content: |-
   追加のセキュリティレイヤーとして、イメージの展開やバックアップをするたびに、LXD は一時的な AppArmor プロファイルを自動的に生成するようになりました。
 
   <!--
-  This protects LXD systems against potential attacks on `tar`, `unquashfs` or any of the compression/decompression programs that those call. The profile only allows access to the paths required to read/write the image/backup and its content.
+  This protects LXD systems against potential attacks on `tar`, `unsquashfs` or any of the compression/decompression programs that those call. The profile only allows access to the paths required to read/write the image/backup and its content.
   -->
   これは `tar` や `unquashfs` や、それらが呼び出すあらゆる圧縮・解凍プログラムからの潜在的な攻撃から LXD システムを保護します。このプロファイルは、イメージ、バックアップとそのコンテンツの読み書きに必要なパスへのアクセスのみを許可します。
 
