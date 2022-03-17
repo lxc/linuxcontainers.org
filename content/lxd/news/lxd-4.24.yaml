@@ -124,7 +124,7 @@ content: |-
   #### AppArmor profiles for image extractors
   As an additional security layer, LXD now automatically generates a tempoary AppArmor profile whenever it unpacks an image or backup.
 
-  This protects LXD systems against potential attacks on `tar`, `unquashfs` or any of the compression/decompression programs that those call. The profile only allows access to the paths required to read/write the image/backup and its content.
+  This protects LXD systems against potential attacks on `tar`, `unsquashfs` or any of the compression/decompression programs that those call. The profile only allows access to the paths required to read/write the image/backup and its content.
 
   #### Grafana dashboard
   LXD now ships with a [Grafana](https://grafana.com) dashboard.
