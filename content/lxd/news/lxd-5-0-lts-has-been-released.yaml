@@ -1,0 +1,643 @@
+title: LXD 5.0 LTS has been released
+date: 2022/04/04 04:04
+origin: https://discuss.linuxcontainers.org/t/lxd-5-0-lts-has-been-released/13723
+content: |-
+  ### Introduction
+  The LXD team is very excited to announce the release of LXD 5.0 LTS!
+
+  This is our 4th LTS release and quite an exciting one for anyone coming from LXD 4.0 as it significantly steps up LXD's abilities, especially when operating in clustered environments.
+
+  The changelog below is split so that both users of LXD 4.24 and LXD 4.0 can see what we have in store for them.
+
+  As with all our other LTS releases, this one will be supported for 5 years (June 2027) and will receive a number of bugfix and security point releases over that time.
+
+  As for LXD 4.0, we'll be releasing one last bugfix release as 4.0.10 in the near future before we enter security-only maintenance mode for its remaining 3 years.
+
+  Enjoy!
+
+  ### Breaking changes
+  #### Changes in minimum requirements
+  As with any new LTS release, we've updated our minimum requirements to a set which we believe we can maintain for the next 5 years.
+
+  This is now:
+
+   - Kernel version: 5.4
+   - Go version: 1.18
+   - LXC version: 4.0.x
+   - QEMU version: 6.0
+
+  Additionally, we've updated LXD to require TLS 1.3 for all incoming and outgoing network connections.
+
+  Documentation: https://linuxcontainers.org/lxd/docs/master/requirements/
+
+  #### Changes in supported upgrade path
+  Up until now, LXD has been fully backward compatible and so would support directly upgrading LXD 0.1 straight to the very latest LXD release.
+
+  This became increasingly costly in the amount of code we had to keep around to handle data migration. This was also causing us to keep depending on old dependencies that have gone unmaintained for years and becoming a potential security risk.
+
+  As a result, LXD 5.0 was changed to only support upgrading from LXD 4.0 or higher.
+  Users coming from an earlier release will need to first upgrade to LXD 4.0.x prior to upgrading to LXD 5.0.
+
+  ### New features and highlights since LXD 4.24
+  #### Disk hot-plug for virtual machines
+  It's now possible to dynamically add and remove `disk` devices to virtual machines.
+  This is only supported with block volumes and can be achieve through editing the list of devices on the instance. The guest will see the new disk being plugged into the SCSI bus.
+
+  #### USB hot-plug for virtual machines
+  Similarly to disks, it's now possible to dynamically add and remove `usb` devices to virtual machines.
+  This again is achieved by editing the list of devices on the instance and will cause a simple USB hotplug event into the guest.
+
+  #### Startup with degraded networking
+  Following the degraded storage pool handling in LXD 4.24, we have now added the same feature but for networks.
+
+  This means that should a network be unable to start, for example because of a missing dependent device, LXD itself will no longer fail to start. Instead it will start as many of the instances as it can and will then start the remaining instances once the network can be started.
+
+  #### New `ovn-chassis` cluster member role
+  A new `ovn-chassis` cluster member role was added.
+  This is only relevant to clusters using OVN for networking. On such clusters, assigning this role allows restricting what servers will act as OVN chassis (effectively routers).
+
+  When none have the role (default), then they all participate as usual. As soon as the role is assigned to one or more server, those will start acting as the OVN chassis with the others disabling their chassis feature.
+
+  This allows a better balance of network and CPU resources on a cluster and also allows for disabling the OVN chassis feature on less powerful or degraded systems.
+
+  #### Optimized refresh of storage volumes
+  For a few releases now, LXD has supported refreshing existing instances or custom storage volumes.
+
+  The way this would work is by first performing a normal copy of the instance or volume and then refreshing that copy. The initial copy would use the optimized migration logic like zfs or btrfs send/receive while the later refresh logic would use simple rsync.
+
+  This approach however really doesn't work well with virtual machines where rsync isn't of much use and can also lead to excessive transfer sizes for what should otherwise be small changes between snapshots.
+
+  To improve that, LXD will now use the optimized migration logic for refreshes too. When both source and target server use the same storage pool and a supported LXD version, they will automatically be using snapshots and send/receive rather than rsync.
+
+  #### Reworked cloud-init instance-id logic
+  Ever since LXD has supported cloud-init, it has used the instance name as the cloud-init instance-id.
+  This meant that the only thing which would trigger a cloud-init re-run would be the instance changing name, either through an instance rename or because of it being copied.
+
+  To better match the behavior seen in other cloud environments, LXD now instead uses a UUID as the instance-id and will reset that UUID on instance renames, instance copies but also on any changes to the cloud-init configuration keys (user-data, vendor-data and network-config) as well as changes to the list of network interfaces.
+
+  #### `sched_setscheduler` system call interception
+  LXD now supports intercepting the `sched_setscheduler` system call.
+  This allows unprivileged LXD containers to change process priorities beyond what's allowed for unpriivleged users. This was motivated by Android containers needing advanced control on process priorities.
+
+  #### `lvm.thinpool_metadata_size` storage pool option
+  A new LVM storage pool option was added to control the size of the thinpool metadata size.
+  When not set, LVM is allowed to figure out an appropriate value.
+
+  #### Reworked `lxc network info`
+  `lxc network info` was updated to cover a variety of additional network information.
+  This includes:
+
+   - Bond information
+   - Bridge information
+   - VLAN information
+   - OVN network information (HA chassis)
+
+  Here's an example for a bridge:
+
+      stgraber@castiana:~$ lxc network info lxdbr0
+      Name: lxdbr0
+      MAC address: 00:16:3e:d6:0a:4c
+      MTU: 1500
+      State: up
+      Type: broadcast
+
+      IP addresses:
+        inet»·10.128.192.1/24 (global)
+        inet6»fd42:ae5f:98ab:a816::1/64 (global)
+        inet6»fe80::216:3eff:fed6:a4c/64 (link)
+
+      Network usage:
+        Bytes received: 207.51kB
+        Bytes sent: 9.02MB
+        Packets received: 2667
+        Packets sent: 2967
+
+      Bridge:
+        ID: 8000.00163ed60a4c
+        STP: false
+        Forward delay: 1500
+        Default VLAN ID: 1
+        VLAN filtering: true
+        Upper devices: tapbb4affbb, vethb8985ecc
+
+  ### Highlights for those coming from LXD 4.0
+  It's very hard to condense everything we've been doing for the past two years into something that can be read in just a few minutes, but LXD grew a lot since its last LTS.
+  Virtual machines are effectively at feature parity with containers now, a lot of networking options were added and so did clustering and project features.
+
+  #### Virtual Machines
+
+   - vTPM support
+   - Arbitrary PCI device passthrough
+   - Live migration (and stateful snapshot/stop)
+   - Network device hotplug
+   - Block custom volume
+
+  #### Networking
+
+   - Overlay networking with OVN
+   - Network ACLs for bridge and OVN networks
+   - Network forwards (floating IPs)
+   - BGP announcement of network routes and routed IP addresses
+   - Network peering (OVN)
+   - Network zones (DNS)
+   - Network acceleration (SR-IOV)
+
+  #### Storage
+
+   - Instance and volume refreshes
+   - Block custom storage volumes
+
+  #### Projects
+
+   - Resource limits
+   - Restricted cluster targets
+   - Restricted certificates
+   - Networks (OVN)
+   - Usage report
+   - Desktop integration
+
+  #### Migration
+
+   - Reworked migration tool (`lxd-migrate`) with support for both containers and VMs
+
+  #### Clustering
+
+   - Failure domains to properly balance database roles
+   - Easy cluster evacuation support
+   - Server groups for targeting and restrictions
+   - Instance metrics (OpenMetrics) with Grafana dashboard
+
+  ### Complete changelog
+  Here is a complete list of all changes in this release:
+
+  [details="Full commit list"]
+   - shared/util/linux: only complain on xattr size increase
+   - fix typo
+   - lxc/file: Update the description in lxc file mount
+   - i18n: Update translation templates
+   - sphinx: Don't pin dependencies
+   - lxd/db: Support for expiry_date in GetLocalStoragePoolVolumeSnapshotsWithType
+   - lxd: Support for expiry date in storagePoolVolumeSnapshotsTypeGet
+   - lxd: Warn if exec control connection disconnects prematurely
+   - lxd/cluster/heartbeat: Ensure g.Cluster is available
+   - client/lxd: Add 5 second handshake timeout to websocket.Dialer
+   - lxd: Add 5 second handshake timeout to websocket.Dialer
+   - test: Add 5 second handshake timeout to websocket.Dialer
+   - lxd/db: Add snapshot id to return value in GetExpiredStorageVolumeSnapshots
+   - lxd/storage: Prevent concurent snapshot for a volume
+   - lxd: Prevent concurent snapshot expiry for a volume
+   - lxd/instance_sftp: Handle projects on forward
+   - client: Use DialTLS for SFTP connections
+   - client: Replace addMacaroonHeaders with addClientHeaders function
+   - client/lxd: Removes duplicated header setting in rawQuery
+   - client: Replaces r.httpHost with r.httpBaseURL from net/url package
+   - test: Fix container devices nic bridged filtering tests on recent versions of nftables
+   - client/lxd/instances: Avoids connecting twice in rawSFTPConn
+   - test: Update file manipulation tests to use projects
+   - lxd/instance: Improve var naming and comments related to pruneExpiredInstanceSnapshots
+   - lxd/storage/volumes/snapshot: Improve var naming and comments related to pruneExpiredCustomVolumeSnapshots
+   - lxd/instance/drivers/driver/lxc: Create log path for forkfile if missing in FileSFTPConn
+   - lxd/instance/drivers/driver/lxc: Clean up forkfile.pid on exit
+   - lxd/cluster/upgrade: Improve logging in triggerUpdate
+   - lxc/network: Extend coverage of 'lxc network info'
+   - i18n: Update translation templates
+   - lxc/file: Use random auth creds if --no-auth and --auth-user flags not specified
+   - test: Update SSH SFTP tests
+   - i18n: Update translation templates
+   - tests/includes: Adds util to wait for DAD to complete.
+   - tests: Uses wait_for_dad util instead of sleep.
+   - doc: restrict docutils version to fix parsing of notes
+   - lxd/firewall: Accept slices of IPv4 and IPv6 networks for bridge filter.
+   - lxd/device: Adds function to calculate allowed IPv4 and IPv6 subnets.
+   - lxd/device: Use allowedIPNets to set up the firewall rules.
+   - lxd/bgp: Handle multiple matches in RemovePrefix
+   - lxd/bgp: Fix issue with modifying paths list while iterating
+   - lxd/bgp: Don't fail on missing path
+   - doc: add an extension for including YouTube links
+   - doc: add related YouTube links
+   - lxd/daemon: Adds kernelVersion to daemon struct
+   - lxd/state/state: Adds KernelVersion field to State structure
+   - lxd/instance/drivers/driver/qemu: Use d.state.KernelVersion
+   - lxd/instance/drivers/driver/qemu: Only enable io_uring support in kernels <= 5.13.0
+   - lxd/cgroup/abstractions: Wrap parse errors to give context of problematic value
+   - lxd/storage/utils: Prevent white space in storage pool names
+   - doc: update YouTube extension to be ignored by OpenGraph
+   - doc: open YouTube links in a new window
+   - lxd/storage/drivers: Add ErrSnapshotDoesNotMatchIncrementalSource
+   - lxd/storage/drivers/zfs: Support optimized refresh
+   - lxd/storage/drivers/btrfs: Add volumeSnapshotsSorted
+   - lxd/storage/drivers/btrfs: Support optimized refresh
+   - lxd/migration: Add new zfs feature to protobuf
+   - lxd/migration: Add new zfs feature
+   - lxd/migration: Add Refresh option to source
+   - lxd/storage/drivers/zfs: Add migration header structs and functions
+   - lxd/storage: Indicate to sender to use incremental streams
+   - lxd/storage/drivers/zfs: Support optimized refresh for migration
+   - lxd/migration: Add  header_subvolume_uuids to protobuf
+   - lxd/storage/drivers/btrfs: Add UUIDs to subvolume info
+   - lxd/migration: Add BtrfsFeatureSubvolumeUUIDs
+   - lxd/storage/drivers/btrfs: Add getSubvolume*UUID functions
+   - lxd/storage/drivers/btrfs: Support optimized refresh for migration
+   - lxd/migration: Consider refresh and common features
+   - lxd/instance/lxc: Handle long forkfile socket paths
+   - lxd/cluster: Don't mask lack of cluster response
+   - lxd/device: Use allowedIPNets when clearing firewall rules.
+   - lxd/firewall/drivers: Fix typo in comment.
+   - lxd/firewall/drivers: Adds subnetMask and subnetHexPrefix utils.
+   - lxd/firewall/drivers: Update ebtable and ip6table rule generation.
+   - lxd/firewall/drivers: Update ebtables rule matching logic.
+   - tests: Ensure firewall does not drop packets from within ipv4.routes.
+   - tests: Corrects host IP in IPv6 tests.
+   - tests: Change address of ipv6 network interface.
+   - tests: Tests ipv6.routes and ipv6.routes.external rules.
+   - lxd/firewall/drivers: Updates nftables bridge filter to accept multple subnets.
+   - lxd/firewall/drivers: Remove FilterAllIPv{n} consts.
+   - tests: Updates tests for new nftables rules.
+   - lxc/file: Ensure sshfs closes on exit request
+   - lxd/response/upgrade: Adds Upgrade function to upgrade an HTTP connection
+   - lxd-agent/sftp: response.Upgrade usage
+   - lxd/cluster/gateway: response.Upgrade usage
+   - lxd/instance/sftp: response.Upgrade usage
+   - i18n: Update translations from weblate
+   - lxd/storage: Renames setupStorageDriver to storageStartup
+   - lxd: storageStartup usage
+   - lxd/storage: Comment consistency with networkStartup
+   - lxd/networks: Corrects comment copy/paste error
+   - lxd/device/config/devices: More efficient allocations
+   - lxd/device/device/interface: Adds PreStartCheck
+   - lxd/device/device/common: No-op PreStartCheck
+   - lxd/device/disk: Adds PreStartCheck function to check if storage pool is available
+   - lxd/device/disk: Included wrapped error in diskSourceNotFoundError
+   - lxd/instance/drivers: Expand start up validation to check for root disk storage pool availability
+   - lxd/storage/load: Replaces UnavailablePools with IsAvailable
+   - lxd/storage/errors: Removes unused ErrPoolUnavailable error var
+   - lxd/storage/backend/lxd: IsAvailable usage
+   - lxd/storage/backend/lxd: Replaces use of ErrPoolUnavailable with generic http.StatusServiceUnavailable
+   - lxd/instances: Prevent concurrent running of instancesStart
+   - lxd/instances: Updates instancesStart to detect http.StatusServiceUnavailable error class
+   - lxd/instance/drivers: Call device.PreStartcheck() from deviceStart()
+   - lxd/instance/drivers: Use device rather than devName in contextual logging
+   - lxd/instance/drivers/driver/qemu: Log project and instance name in getAgentMetrics
+   - lxd/storage: Increase log warnings to errors in storageStartup
+   - shared/api: Add Project to ImageExportPost
+   - client: Support for target project when copy image with push mode
+   - lxd: Support for target project when copy image with push mode
+   - lxc/image: Add target-project flag to 'image copy' command
+   - api: images_target_project
+   - tests: Add tests for copying image between projects
+   - i18n: Update translation templates
+   - doc/instances: Add volatile.cloud-init.instance-id
+   - doc/dev-lxd: Update instance-id to UUID
+   - shared/instance: Add volatile.cloud-init.instance-id
+   - lxd/devlxd: Use volatile.cloud-init.instance-id
+   - lxd/instance: Implement volatile.cloud-init.instance-id
+   - lxd-agent: Add cloud-init-id field
+   - lxd/instance/qemu: Use volatile.cloud-init.instance-id
+   - lxd/instance: Add resetInstanceID
+   - lxd/instance: Reset instance-id on rename
+   - lxd/instance: Reset the instance-id on relevant config changes
+   - tests: Add test for instance-id
+   - lxd/devlxd: Fix argument naming
+   - lxd/instance: Add CloudInitID
+   - lxd/device/device/interface: Adds Name and Config to Device interface
+   - lxd/instance/drivers/driver/lxc: Update deviceLoad to just return Device
+   - lxd/instance/drivers/driver/lxc: Updates lxcCreate to use deviceLoad and deviceAdd
+   - lxd/instance/drivers/driver/lxc: Updated usage of deviceLoad
+   - lxd/instance/drivers/driver/lxc: Updates deviceAdd to accept a device
+   - lxd/instance/drivers/driver/lxc: Updates deviceStart to accept a device
+   - lxd/instance/drivers/driver/lxc: Adds Adding device log message
+   - lxd/instance/drivers/driver/lxc: Updates startCommon to use deviceLoad and deviceStart separately
+   - lxd/instance/drivers/driver/lxc: Updates updateDevices to use deviceLoad and deviceAdd/deviceUpdate separately
+   - lxd/instance/drivers/driver/qemu: Update deviceLoad to just return Device
+   - lxd/instance/drivers/driver/qemu: d.deviceLoad usage
+   - lxd/instance/drivers/driver/qemu: Adds Adding device log message
+   - lxd/instance/drivers/driver/qemu: Adds Removing device log message
+   - lxd/instance/drivers/driver/qemu: Update deviceAdd to accept a device
+   - lxd/instance/drivers/driver/qemu: Updates qemuCreate to use deviceLoad and deviceAdd
+   - lxd/instance/drivers/driver/qemu: Updates updateDevices to use deviceLoad and deviceAdd/deviceUpdate separately
+   - lxd/isntance/drivers/driver/qemu: Updates deviceStart to accept a device
+   - lxd/instance/drivers/driver/qemu: deviceStart usage
+   - lxd/instance/drivers: Load all devices before starting them during instance start
+   - lxd/instance/drivers: Add pre-start device checks when starting instance devices
+   - lxd/instance/drivers/driver/lxc: Update deviceStop to accept a device
+   - lxd/instance/drivers/driver/lxc: Update startCommon to pass device to d.deviceStop
+   - lxd/instance/drivers/driver/lxc: Updates cleanupDevices to pass device to d.deviceStop
+   - lxd/instance/drivers/driver/lxc: Updates updateDevices to pass device to d.deviceStop
+   - lxd/instance/drivers/driver/qemu: Updates deviceStop to accept device
+   - lxd/instance/drivers/driver/qemu: Update Start to pass device to deviceStop
+   - lxd/instance/drivers/driver/qemu: Updates updateDevices to pass device to deviceStop
+   - lxd/instance/drivers/driver/qemu: Updates cleanupDevices to pass device to deviceStop
+   - lxd/response/smart: Adds IsNotFoundError function
+   - lxd: Replace checks for various not found errors with response.IsNotFound() usage
+   - lxd/instance: Move VMAgentData to instancetype
+   - lxc/utils/table: add compact table
+   - i18n: Update translation templates
+   - shared/api/network: Adds NetworkStatusUnavailable constant
+   - lxd/db/warnings/types: Rename WarningNetworkStartupFailure to WarningNetworkUnvailable
+   - lxd/network/network/load: Adds IsAvailable and function
+   - lxd/network/driver/common: Adds setAvailable and setUnavailable functions
+   - lxd/network/driver/common: Updates LocalStatus to return api.NetworkStatusUnavailable if unavailable.
+   - lxd/network/network/interface: Adds Locations
+   - lxd/network/driver/common: Implements Locations
+   - lxd/network/driver/bridge: Updates Start to set availability
+   - lxd/network/driver/bridge: Remove warning management from driver
+   - lxd/network/driver/macvlan: Updates Start to set availability
+   - lxd/network/driver/sriov: Updates Start to set availability
+   - lxd/network/driver/physical: Check parent exists when starting
+   - lxd/network/driver/physical: Updates Start to set availability
+   - lxd/network/driver/physical: Remove warning management from driver
+   - lxd/network/driver/physical: Remove duplicate start log
+   - lxd/network/driver/ovn: Updates Start to set availability
+   - lxd/network/driver/ovn: Refuse to start if uplink network is unavailable
+   - lxd/network/driver/ovn: Remove warning management from driver
+   - lxd/networks: Updates networkStartup to retry starting degraded networks in the background
+   - lxd/networks: Updates doNetworkGet to accept an allNodes argument
+   - lxd/networks: Updates networksGet to improve naming, comments and doNetworkGet usage
+   - lxd/networks: Updates networkGet to improve naming, comments and doNetworkGet usage
+   - lxc/network: Always add State column to network list output
+   - lxd/device/nic: Adds PreStartCheck function for NICs with managed parent network support
+   - lxd/network/driver/common: Delete network from unavailableNetworks on delete
+   - lxd/storage: Update comment in storageStartup
+   - lxd/network/driver/common: Delete warnings on delete
+   - lxd/network/driver/bridge: Remove duplicated warnings delete step
+   - lxd/network/network/load: Adds PatchPreCheck function
+   - lxd/patches: Adds patchPostNetworks stage
+   - lxd/dameon: Adds hook for patchPostNetworks stage
+   - lxd/patches: Adds patchGenericNetwork function and updates network patches to use it
+   - lxd/storage/backend/lxd: Replaces bespoke revert with revert package
+   - shared/api: Adds AllowInconsistent to InstancePost.
+   - client: Pass allowInconsistent into instance post request.
+   - lxd/instance_post: Use allowInconsistent value in migrations.
+   - doc: Updates API spec.
+   - doc/environment: Adds LXD_IDMAPPED_MOUNTS_DISABLE env var
+   - lxd/daemon: Detect LXD_IDMAPPED_MOUNTS_DISABLE env var and disable idmapped mount support
+   - lxd/storage/utils: Adds VolumeDBDelete function
+   - lxd/storage/backend/lxd: Replace usage of RemoveStoragePoolVolume with VolumeDBDelete
+   - lxd/storage/utils: Reduce arguments of VolumeDBCreate in style of VolumeDBDelete
+   - lxd/storage/backend/lxd: VolumeDBCreate usage
+   - doc: add an extension for adding Discourse links
+   - doc: add links to tutorials on Discourse
+   - doc: add links to specifications on Discourse
+   - lxd/instance/drivers: Moves StoragePool and getStoragePool to common
+   - lxd/network/ovn: Don't use HostPathFollow on OVN configs
+   - lxd-agent: cleaner shutdown sequence
+   - lxd/networks: Don't keep trying to start removed degraded networks
+   - lxd/storage/load: Update GetPoolByInstance to use instance's StoragePool() function
+   - lxd/storage/backend/lxd: Ensure we use errors.Is when checking for drivers.ErrNotSupported
+   - lxd/instance: Avoid extra query when copying instance snapshot's creation time
+   - lxd/storage/utils: Adds VolumeDBGet function
+   - lxd/storage/backend/lxd: Renames and reworks instanceRootVolumeConfig into instanceEffectiveRootVolumeConfig
+   - lxd/storage/backend/lxd: b.instanceEffectiveRootVolumeConfig usage
+   - lxd/storage/utils: Updates comment on VolumeDBCreate
+   - lxd/storage/pool/interface: Rename srcVolOnly to snapshots for RefreshCustomVolume and CreateCustomVolumeFromCopy
+   - lxd/storage/backend: Update RefreshCustomVolume and CreateCustomVolumeFromCopy to use snapshots arg
+   - lxd/storage/volumes: pool.CreateCustomVolumeFromCopy and pool.RefreshCustomVolume usage
+   - lxd/storage/utils: Renames and reworks VolumeSnapshotsGet to VolumeDBSnapshotsGet
+   - lxd/migrate/storage/volumes: storagePools.VolumeDBSnapshotsGet usage
+   - lxd/storage/backend/lxd: VolumeDBSnapshotsGet usage
+   - lxd/storage/backend/lxd: Allocate snapshotNames more efficiently in CreateCustomVolumeFromCopy
+   - lxd/migrate/instance: Don't ignore existing snapshot instances on migrate receiver
+   - lxd/storage/backend/lxd: Comment improvements CreateCustomVolumeFromCopy
+   - grafana: Add missing datasource field
+   - github: Add Go 1.18
+   - doc/clustering: Make more space in table
+   - doc/clustering: Remove condition column
+   - doc/clustering: Add section about roles
+   - lxd/network/ovn: Fix typo
+   - lxd/network/ovn: Fix bad comment
+   - lxd/api_internal: Sort endpoints
+   - doc: rename extension file
+   - doc: rename stylesheet classes for extension
+   - doc: update the extension to allow for general related links
+   - doc: add related links to the documentation
+   - lxd/storage/utils: Updates VolumeDBSnapshotsGet to accept drivers.VolumeType arg
+   - lxd/storage/backend/lxd: VolumeDBSnapshotsGet usage
+   - lxd/migrate/storage/volumes: Updates storagePools.VolumeDBSnapshotsGet usage
+   - lxd/db/storage/volumes: Updates GetLocalStoragePoolVolumeSnapshotsWithType to populate ID and Config fields
+   - lxd/instance/qemu: Fix regression in cdrom handling
+   - api: Adds cluster_allow_inconsistent_copy extension.
+   - lxd/storage/backend/lxd: Use more efficient allocations in GetVolume
+   - lxd/storage/utils: Removes unnecessary duplicate check in VolumeDBCreate
+   - lxd/storage/drivers/volume: Adds VolumeType.IsInstance function
+   - lxd/storage/backend/lxd: Define instanceDiskVolumeEffectiveFields
+   - lxd/storage/utils: Check that instanceDiskVolumeEffectiveFields are not used for instance volumes DB records
+   - lxd/storage/backend/lxd: Reworks instanceEffectiveRootVolumeConfig into instanceEffectiveRootVolume
+   - lxd/storage/backend/lxd: b.instanceEffectiveRootVolume usage
+   - lxd/instance/drivers/qmp: Support adding and removing block devices
+   - lxd/instance/drivers/qemu: Use RemoveDevice for NIC
+   - lxd/device/disk: Support hot-plugging
+   - lxd/instance/drivers/qemu: Remove unnecessary check
+   - lxd/instance/drivers/qemu: Add qemuBlockDevIDPrefix
+   - lxd/instance/drivers/qemu: Add deviceAttachBlockDevice
+   - lxd/instance/drivers/qemu: Add deviceDetachBlockDevice
+   - lxd/instance/drivers/qmp: Add FD set commands
+   - lxd/device/config: Put root device first
+   - lxd/instance/drivers/qemu: Enable hotplugging raw disks
+   - lxd/instance/drivers/qemu: Drop string builder arg
+   - lxd/device: Validate disk device name length
+   - lxd/instance/drivers/qemu: Remove qemuDrive template
+   - lxd/instance/drivers/qemu: Disallow hotplugging directories
+   - lxd/images: Remove old db entry after image refresh
+   - lxd/operations: Remove all operations for the member in waitForOperations
+   - lxd/daemon: waitForOperations usage
+   - shared/network: Improve error returned from RFC3493Dialer
+   - lxd/operations: Updates operationsGet to exclude offline members like operationsGetByType
+   - lxd/operations: Aligns operationsGetByType with operationsGet
+   - lxd/db/operations: Renames GetNodesWithRunningOperations to reflect what it does
+   - lxd/operations: tx.GetNodesWithOperations usage
+   - lxd/state: Rename Context field to ShutdownCtx
+   - lxd: State.ShutdownCtx usage
+   - lxd/operations/operations: Don't remove DB record in done when LXD is shutting down
+   - doc/authentication: mention ECDSA keys as recommend
+   - test: Add manual refresh test
+   - lxd/instance/drivers/qemu: Fix block devices
+   - shared/network: remove CBC + SHA1 ciphersuites
+   - shared/network: enable ChaCha20-Poly1305 Cipher Suites for TLS 1.2
+   - shared/network: prefer AES-128 over AES-256
+   - lxd/instance/drivers/driver/lxc: Remove storage volume DB record creation from lxcCreate
+   - lxd/instance/drivers/driver/qemu: Remove storage volume DB record creation from qemuCreate
+   - lxd/instance/instance/utils: Removes unused volumeConfig arg from Create
+   - lxd/instance/instance/utils: Removes unused volumeConfig arg from CreateInternal
+   - lxd/instance/drivers/load: Removes unused volumeConfig arg from create
+   - lxd: CreateInternal usage
+   - lxd/storage: Removes unused FillInstanceConfig
+   - lxd/storage/backend/lxd: CreateInstance storage volume DB records
+   - lxd/storage/backend/lxd: CreateInstanceFromImage storage volume DB records
+   - lxd/storage/backend/lxd: CreateInstanceSnapshot storage volume DB records
+   - lxd/storage/backend/lxd: CreateInstanceFromMigration storage volume DB records
+   - lxd/storage/backend/lxd: CreateInstanceFromCopy storage volume DB records
+   - lxd/instance: Remove volume settings copying from source in instanceCreateAsCopy
+   - lxd/storage/backend/lxd: RefreshInstance storage volume DB records
+   - lxd/storage/backend/lxd: CreateInstanceFromBackup storage volume DB records
+   - lxd/storage/backend/lxd: Error quoting in UpdateInstance
+   - lxd/storage/pool/interface: Update ImportCustomVolume signature
+   - lxd/storage/backend/lxd: Update ImportCustomVolume with new signature
+   - lxd/api/internal/recover: pool.ImportCustomVolume usage
+   - lxd/storage/pool/interface: Update ImportInstance to accept pool volume info
+   - lxd/storage/backend/mock: ImportInstance updated signature
+   - lxd/storage/backend/mock: ImportCustomVolume updated signature
+   - lxd/storage/backend/lxd: ImportInstance storage volume DB record management
+   - lxd/api/internal/recover: pool.ImportInstance usage
+   - lxd/instance/post: pool.ImportInstance usage
+   - lxd/db/instances: Start using api.StatusErrorf http.StatusNotFound
+   - lxd/db/storage/pools: Start using api.StatusErrorf http.StatusNotFound
+   - test: Improve container_recover test to explicitly check for existence of storage DB records
+   - lxd/storage/backend/lxd: No need to wrap errors from VolumeDBCreate
+   - lxd/instance/test: Fix TestContainer_LoadFromDB to create storage volume record
+   - global: Set TLS 1.3 baseline
+   - gomod: Bump to 1.18
+   - doc/requirements: Bump minimal requirements
+   - github: Drop Go 1.17.x
+   - lxd/device: Update to support netip
+   - test/macaroon-identity: Reduce external dependencies
+   - lxd/cluster: Remove legacy upgrade code
+   - gomod: Update dependencies
+   - Makefile: Update for Go 1.18
+   - lxc/export: Fix help message
+   - i18n: Update translation templates
+   - Revert "lxd-agent: cleaner shutdown sequence"
+   - api: cluster_ovn_chassis
+   - doc/clustering: Add ovn-chassis role
+   - lxd/db: Add ovn-chassis role
+   - lxd/network/ovn: Handle ovn-chassis role
+   - lxd/network: Add networkRestartOVN
+   - lxd/daemon: Detect change in OVN chassis layout
+   - shared/util: Adds generic HasKey function for checking if a map key exists
+   - doc: fix typo
+   - doc: whitespace changes only
+   - doc: reordering content
+   - doc: add some headings
+   - doc: update network zones documentation
+   - doc: updates from review
+   - lxc/cluster: Make add easier to script
+   - lxc/config_trust: Make add easier to script
+   - i18n: Update translation templates
+   - lxd/networks: Avoid needless OVN restart on startup
+   - client/operations: Fix incorrect interpolation of % characters in errors
+   - shared/util: Remove line wrap
+   - lxd/db: Add OperationRemoveOrphanedOperations
+   - lxd/images: Code style for error handling in pruneExpiredImagesInProject
+   - lxd/images: Ensure full fingerprint is returned in imageDelete
+   - lxd: Removes doDeleteImageFromPool to reduce DB queries loading pools
+   - lxd/images: Contextual logging in autoUpdateImage
+   - lxd/images: Log errors in distributeImage
+   - lxd/images: Improve errors in distributeImage
+   - lxd/images: Log old image fingerprint on DB delete error in autoUpdateImages
+   - Revert "lxd/images: Remove old db entry after image refresh"
+   - lxd/db/images: Switch to api.StatusErrorf in GetImage
+   - lxd/db/images: Whitespace
+   - lxd/images: Error improvements in autoUpdateImagesTask
+   - lxd/images: Error and comment improvements in autoUpdateImages
+   - lxd/images: Distribute refreshed image and delete old image record in imageRefresh
+   - lxd/images: Only distribute images if there are >1 members in autoUpdateImages
+   - lxd/operations/operations: Convert to contextual logging for operation remove warning
+   - lxd/db/db/internal/test: Fix Test_ImageGet_for_missing_fingerprint
+   - lxd/storage/backend/lxd: Fix existing image check for rsync in CreateInstanceFromMigration
+   - test: Improve tests for image refresh
+   - shared/network: require TLS 1.2+ if LXD_INSECURE_TLS
+   - test: Improve clustering image refresh tests
+   - test: Fix test_image_refresh to work with random mode
+   - test: Extract pool driver from standalone pool for cluster image refresh tests
+   - lxd/storage/load: Rename GetPoolByName to LoadByName
+   - lxd: storagePools.LoadByName usage
+   - lxd/storage/load: Renames GetPoolByInstance to LoadByInstance
+   - lxd: storagePools.LoadByInstance usage
+   - lxd/storage: Renames load.go to pool_load.go
+   - lxd/instance/drivers/qmp: Add AddDevice
+   - lxd/instance/drivers/qmp: Use AddDevice internally
+   - lxd/instance/drivers: Use QMP to add USB devices
+   - lxd/instance/drivers/qemu: Remove unused arguments
+   - lxd/instance/drivers/templates: Remove qemuUSBDev
+   - lxd/device/usb: Always set busnum and devnum
+   - lxd/device/usb: Include bus and dev num in device name
+   - lxd/device/usb: Populate runConf on stop
+   - lxd/instance/driver/qemu: Support USB hotplugging
+   - lxd/instance/drivers/qemu: Use fixed number of USB devices
+   - lxd/devices/usb: Add USB device to runConf
+   - lxd/instance/drivers/qemu: Implement DeviceEventHandler
+   - lxd/device/usb: Support hotplugging
+   - lxd/operations: Add function to remove orphaned operations
+   - lxd/daemon: Remove orphaned operations periodically
+   - lxd: Drop devPaths logic
+   - Replace interface{} with any
+   - doc: add link to multi-user video
+   - doc/instances: Extend key column
+   - doc/syscall-interception: Cover bpf and mount
+   - api: container_syscall_intercept_sched_setscheduler
+   - doc: Add security.syscalls.intercept.sched_setscheduler
+   - doc/syscall-interception: Add sched_setscheduler
+   - shared/instance: Add security.syscalls.intercept.sched_setscheduler
+   - scripts/bash: security.syscalls.intercept.sched_setscheduler
+   - lxd/seccomp: Add sched_setscheduler
+   - lxd: intercept sched_setscheduler() system call
+   - lxd/patches: Removes all patches applied since LXD 4.0.0
+   - lxd/db: Removes functions used by removed patches
+   - lxd/storage: Remove patches not needed since LXD 4.0.0
+   - lxd/patches/utils: Removes file
+   - lxd/patches: Removes unused functions
+   - lxd/storage: Remove check for storage_api patch being applied
+   - test: Update sql test to check for more recent patch
+   - doc/storage: Adds lvm.thinpool_metadata_size
+   - lxd/storage/drivers/driver/lvm/utils: Adds thinpoolMetadataSize arg to createDefaultThinPool
+   - lxd/storage/pools/config: Legacy validation for lvm.thinpool_metadata_size
+   - lxd/storage/drivers/driver/lvm: Adds lvm.thinpool_metadata_size support
+   - lxd/storage/drivers/driver/lvm/utils: Don't round 0 or empty string in roundedSizeBytesString
+   - scripts/bash/lxd-client: Adds lvm.thinpool_metadata_size to bash auto complete
+   - api: Adds storage_lvm_thinpool_metadata_size API extension
+   - test: Fix LVM quota size checks
+   - test/includes: Adds LVM support to spawn_lxd_and_join_cluster
+   - test: Remove LVM exclusion from test_clustering_image_refresh
+   - test: Remove LVM exclusion from test_clustering_storage_single_node
+   - test: Remove LVM exclusion from test_clustering_evacuation
+   - test: Remove LVM exclusion from test_clustering_storage
+   - client: Fix logger calls
+   - lxd/db/query: Fix logger calls
+   - lxd/device: Fix bad logger calls
+   - shared/logging: Remove unused functions
+   - shared/logger: Add Ctx
+   - global: Switch to logger.Ctx
+   - shared/logger: Port to logrus
+   - lxd: Switch to using new logger
+   - lxd-agent: Switch to using new logger
+   - lxc: Switch to using new logger
+   - shared/logging: Remove deprecated package
+   - lxd/events: Port to logrus
+   - lxc/monitor: Port to logrus
+   - gomod: Drop log15
+   - lxd: make sure we're operating relative to the correct pid namespace
+   - client: More flexible server comparison
+   - i18n: Update translations from weblate
+   - lxd/storage/drivers: Properly use logger.Ctx
+   - lxd/storage: Properly use logger.Ctx
+   - shared/logger: Properly handle context
+   - lxd/certificates: Check validty on upload/update
+   - lxd/network/zone: Don't allow duplicate entries
+   - lxd: Remove LegacyLocalDatabasePath
+   - lxd: Removes LegacyGlobalDatabasePath
+   - lxd: Remove legacyPatches
+   - lxd: Remove legacyPatches from OpenNode
+   - lxd: Don't return a pre-clustering dump from OpenNode
+   - lxd/db/legacy: Removes file
+   - lxd/db/db: Remove unused Begin
+   - lxd/db: Remove schema.Hook from EnsureSchema
+   - lxd/db/transaction: Removes unused Tx
+   - tests: Remove database_update
+   - lxd/cluster: Remove legacy upgrade logic
+   - lxd/db: Rename ForLegacyPatches to DirectAccess
+   - lxd/certificates: Require a minimum of 2048bit RSA
+   - tests: Make certificate_edit use an EC cert
+   - tests: Bump easy-rsa key to 4096
+   - lxd/operations: Don't crash on missing state
+  [/details]
+
+  ### Try it for yourself
+  This new LXD release is already available for you to try on our [demo service](https://linuxcontainers.org/lxd/try-it/).
+
+  ### Downloads
+  The release tarballs can be found on our [download page](https://linuxcontainers.org/lxd/downloads/).
+
+  Binary builds are also available for:
+
+   - **Linux:** snap install lxd
+   - **MacOS:** brew install lxc
+   - **Windows:** choco install lxc
