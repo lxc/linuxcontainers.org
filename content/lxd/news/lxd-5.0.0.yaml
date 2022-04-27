@@ -11,7 +11,7 @@ content: |-
 
   As with all our other LTS releases, this one will be supported for 5 years (June 2027) and will receive a number of bugfix and security point releases over that time.
 
-  As for LXD 4.0, we'll be releaing one last bugfix release as 4.0.10 in the near future before we enter security-only maintenance mode for its remaining 3 years.
+  As for LXD 4.0, we'll be releasing one last bugfix release as 4.0.10 in the near future before we enter security-only maintenance mode for its remaining 3 years.
 
   Enjoy!
 
@@ -119,13 +119,6 @@ content: |-
         Default VLAN ID: 1
         VLAN filtering: true
         Upper devices: tapbb4affbb, vethb8985ecc
-
-
-  #### New `lxc cluster role` sub-command
-  To help scripting the addition and removal of cluster member roles, a new `lxc cluster role` sub-command was added.
-
-      stgraber@castiana:~$ lxc cluster role add celestis ovn-chassis
-      stgraber@castiana:~$ lxc cluster role remove celestis ovn-chassis
 
   ### Highlights for those coming from LXD 4.0
   It's very hard to condense everything we've been doing for the past two years into something that can be read in just a few minutes, but LXD grew a lot since its last LTS.
