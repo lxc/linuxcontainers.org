@@ -1,0 +1,97 @@
+title: Distrobuilder 2.1 has been released
+date: 2022/04/27 16:04
+origin: https://discuss.linuxcontainers.org/t/distrobuilder-2-1-has-been-released/13954
+content: |-
+  ### Introduction
+  The distrobuilder team is proud to announce the release of distrobuilder 2.1!
+
+  Outside of the usual updates to account for changes made by various distributions, the main highlights are:
+
+   - Removal of Ubuntu Core support
+   - Validation of YAML configuration
+   - Support for local files in the `rootfs` source
+   - Support for native Windows 11 drivers when available
+   - Addition of virtiostor driver on Windows
+   - New `--sources-dir` and `--keep-sources` command line arguments
+   - Update to LXD's new cloud-init configuration keys
+   - Change of logging framework (logrus)
+
+  The full list of commits is available below:
+
+  [details="Detailed changelog"]
+   - sources/oracle: Run yum with --skip-broken
+   - ubuntu.yaml: add releases hirsute, impish, jammy
+   - sources: Fix Oracle 7 for aarch64
+   - sources: Fix Oracle install script
+   - sources/rootfs: Support local files
+   - doc: Mention local image files for rootfs downloader
+   - main: Add --sources-dir and --keep-sources
+   - sources: Pass sourcesDir to downloaders
+   - shared,sources: Reorganize code
+   - sources: Drop arguments on VerifyFile
+   - sources: Drop arguments on GetSignedContent
+   - sources: Drop arguments on CreateGPGKeyring
+   - main: Change directory of virtioISOPath
+   - doc: Add --sources-dir and --keep-sources
+   - sources: Fix RHEL common build directories
+   - main: Fix timeout handler
+   - generators: Use new cloud-init config keys
+   - main: Handle interrupt and timeout with context
+   - *: Add context to RunCommand
+   - *: Add stdin and stdout to RunCommand
+   - *: Replace lxd.RunCommand* with shared.RunCommand
+   - sources: Add context to recvGPGKeys
+   - generators: Fix cloud-init network config
+   - generators: Add trailing newline to cloud-init files
+   - managers: Add missing context to struct
+   - Update gomod
+   - *: Allow cancelling downloads using context
+   - *: Clean up failed downloads
+   - .github/workflows: Drop Go 1.13
+   - sources: Fix downloads with multiple hashes
+   - sources: Drop Sabayon
+   - managers: Drop luet
+   - Update gomod
+   - *: Switch from zap to logrus
+   - sources/alt: Support armhf
+   - gomod: Update dependencies
+   - systemd: Use absolute path to udevadm
+   - generators/cloud-init: Fix network-config
+   - systemd-generator: Handle /bin/udevadm
+   - generators/cloud-init: Fix content override
+   - Add compatibility with CentOS 9 stream.
+   - systemd: Add override for ProcSubset
+   - Fixed typo
+   - lxd-agent: cleaner shutdown sequence
+   - windows: Use available w11 and 2k22 drivers
+   - sources: Switch to own Unpack function
+   - Update gomod
+   - Revert "lxd-agent: cleaner shutdown sequence"
+   - vm: Use discard mount option
+   - Update gomod
+   - github: Drop go 1.16.x and 1.17.x
+   - Makefile: Update for go 1.18
+   - vm: Optimise mount options for speed
+   - Satisfy staticcheck
+   - Update gomod
+   - Makefile: Switch to staticcheck
+   - main: Fix image targets for LXD
+   - lxd-agent: Sync with upstream LXD
+   - main: override systemd features only when security.nesting=false
+   - source: Return error correctly
+   - sources/ubuntu: Drop Ubuntu Core
+   - Remove data directory
+   - shared/definition: Add DefinitionFilterType
+   - main: Use UnmarshalStrict
+   - main: Add validate sub-command
+   - main: Use DefinitionFilterType
+   - shared/definition: Fix unmarshalling of DefinitionFilterType
+   - test: Add TestDefinitionFilterTypeUnmarshalYAML
+   - main: systemd's ReadWritePaths came with version 231
+   - windows: Add viostor driver
+  [/details]
+
+  ### Downloads
+
+   - Main release tarball: [distrobuilder-2.1.tar.gz](https://linuxcontainers.org/downloads/distrobuilder/distrobuilder-2.1.tar.gz)
+   - GPG signature: [distrobuilder-2.1.tar.gz.asc](https://linuxcontainers.org/downloads/distrobuilder/distrobuilder-2.1.tar.gz.asc)

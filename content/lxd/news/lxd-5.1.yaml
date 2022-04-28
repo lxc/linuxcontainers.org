@@ -1,0 +1,133 @@
+title: LXD 5.1 has been released
+date: 2022/04/28 03:04
+origin: https://discuss.linuxcontainers.org/t/lxd-5-1-has-been-released/13956
+content: |-
+  ### Introduction
+  The LXD team is very excited to announce the release of LXD 5.1!
+
+  This release comes with a lot of bugfixes following the LXD 5.0 LTS releases, all of which will also be in the upcoming LXD 5.0.1 LTS bugfix release. But don't worry, there are also a handful of new features.
+
+  Enjoy!
+
+  ### New features and highlights
+  #### Sysinfo system call interception
+  A new `security.syscalls.intercept.sysinfo` option has been added which when enabled will cause LXD to intercept the `sysinfo` system call and emulate it.
+
+  This allows for values that would normally reflect the entire physical system to be replaced by values that properly reflect the container.
+
+  Depending on what software is used inside of the container, enabling this may result in better service configuration to respect the container's limits.
+
+      stgraber@dakara:~$ lxc launch images:alpine/edge a1 -c limits.memory=1GiB
+      Creating a1
+      Starting a1
+      stgraber@dakara:~$ lxc exec a1 -- free -m
+                    total        used        free      shared  buff/cache   available
+      Mem:          63600       57777        5792        1572          31        1022
+      Swap:          2048           8        2040
+      stgraber@dakara:~$ lxc config set a1 security.syscalls.intercept.sysinfo=true
+      stgraber@dakara:~$ lxc restart a1
+      stgraber@dakara:~$ lxc exec a1 -- free -m
+                    total        used        free      shared  buff/cache   available
+      Mem:           1024           2        1020           0           3        1022
+      Swap:             0           0           0
+      stgraber@dakara:~$
+
+  #### `lxc cluster role` sub-command
+  To help scripting the addition and removal of cluster member roles, a new `lxc cluster role` sub-command was added.
+
+        stgraber@castiana:~$ lxc cluster role add celestis ovn-chassis
+        stgraber@castiana:~$ lxc cluster role remove celestis ovn-chassis
+
+  #### `lxc storage volume info` shows volume total size
+  The `lxc storage volume info` command now shows both the Used size and the Total volume size when this one is known.
+
+      stgraber@dakara:~$ lxc storage volume create default foo size=5GiB
+      Storage volume foo created
+      stgraber@dakara:~$ lxc storage volume info default foo
+      Name: foo
+      Type: custom
+      Content type: filesystem
+      Usage: 192.00KiB
+      Total: 5.00GiB
+
+  #### Configurable host network interface naming pattern
+  A new `instances.nic.host_name` server configuration key allows changing the pattern used when creating new host side network interfaces.
+
+  By default LXD uses a `random` pattern which leads to interface names like `vethXYZ` or `tapXYZ` where `XYZ` is a completely random string of characters. This however does not make it very easy to track down a particular instance from the network name.
+
+  As an alternative, the new configuration option can now be set to `mac` which will lead to interface names including the most important part of the MAC address after a `lxd` prefix.
+
+      stgraber@dakara:~$ lxc launch images:alpine/edge a1
+      Creating a1
+      Starting a1
+      stgraber@dakara:~$ lxc info a1 | grep "Host interface"
+            Host interface: veth0c1f893c
+      stgraber@dakara:~$ lxc config set instances.nic.host_name mac
+      stgraber@dakara:~$ lxc restart a1
+      stgraber@dakara:~$ lxc info a1 | grep "Host interface"
+            Host interface: lxd163ecf0121
+
+  #### Setting profiles during an image copy
+  For quite a while now, LXD has supported assigning a list of profiles to a particular image such that any new instance created from the image would get those profiles applied (unless specifically overridden by the user).
+
+  Until now, this had to be setup through `lxc image edit` after the image was added to the image store.
+
+  This release now adds a new `--profile` flag to `lxc image copy` allowing for profiles to be added directly at image copy time.
+
+      stgraber@dakara:~$ lxc profile create foo
+      Profile foo created
+      stgraber@dakara:~$ lxc profile create bar
+      Profile bar created
+      stgraber@dakara:~$ lxc image copy images:alpine/edge local: --alias alpine --profile default --profile foo --profile bar
+      Image copied successfully!
+      stgraber@dakara:~$ lxc launch alpine a1
+      Creating a1
+      Starting a1
+      stgraber@dakara:~$ lxc config show a1
+      architecture: x86_64
+      config:
+        image.architecture: amd64
+        image.description: Alpine edge amd64 (20220427_13:00)
+        image.os: Alpine
+        image.release: edge
+        image.requirements.secureboot: "false"
+        image.serial: "20220427_13:00"
+        image.type: squashfs
+        image.variant: default
+        volatile.base_image: d263389bb3f9298a7de94cb11c1b44b12dcc7191be3aca245ae2f7cdf380be02
+        volatile.cloud-init.instance-id: b7b2e897-231c-4a7a-852d-b0dc1e8945f6
+        volatile.eth0.host_name: veth129b577b
+        volatile.eth0.hwaddr: 00:16:3e:af:81:98
+        volatile.idmap.base: "0"
+        volatile.idmap.current: '[{"Isuid":true,"Isgid":false,"Hostid":1000000,"Nsid":0,"Maprange":1000000000},{"Isuid":false,"Isgid":true,"Hostid":1000000,"Nsid":0,"Maprange":1000000000}]'
+        volatile.idmap.next: '[{"Isuid":true,"Isgid":false,"Hostid":1000000,"Nsid":0,"Maprange":1000000000},{"Isuid":false,"Isgid":true,"Hostid":1000000,"Nsid":0,"Maprange":1000000000}]'
+        volatile.last_state.idmap: '[]'
+        volatile.last_state.power: RUNNING
+        volatile.uuid: cd2edd5b-4d22-4222-8de4-1e7b5304fb22
+      devices: {}
+      ephemeral: false
+      profiles:
+      - bar
+      - default
+      - foo
+      stateful: false
+      description: ""
+
+  ### Complete changelog
+  Here is a complete list of all changes in this release:
+
+  [details="Full commit list"]
+  TODO
+  [/details]
+
+  ### Try it for yourself
+  This new LXD release is already available for you to try on our [demo service](https://linuxcontainers.org/lxd/try-it/).
+
+  ### Downloads
+  The release tarballs can be found on our [download page](https://linuxcontainers.org/lxd/downloads/).
+
+  Binary builds are also available for:
+
+   - **Linux:** snap install lxd
+   - **MacOS:** brew install lxc
+   - **Windows:** choco install lxc
