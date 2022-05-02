@@ -1,0 +1,653 @@
+title: LXD 5.1 リリースのお知らせ
+date: 2022/04/28 03:04
+origin: https://discuss.linuxcontainers.org/t/lxd-5-1-has-been-released/13956
+content: |-
+  ### はじめに <!-- Introduction -->
+  <!--
+  The LXD team is very excited to announce the release of LXD 5.1!
+  -->
+  LXD チームは LXD 5.1 のリリースをお知らせできることにとてもワクワクしています!
+
+  <!--
+  This release comes with a lot of bugfixes following the LXD 5.0 LTS releases, all of which will also be in the upcoming LXD 5.0.1 LTS bugfix release. But don't worry, there are also a handful of new features.
+  -->
+  このリリースは LXD 5.0 LTS に続く、多数のバグ修正を含むリリースです。このバグ修正は、今後リリースされる LXD 5.0.1 LTS バグ修正リリースにも含まれる予定です。心配は無用です。新機能もいくつかあります。
+
+  Enjoy!
+
+  ### 新機能とハイライト <!-- New features and highlights -->
+  #### sysinfo システムコールのインターセプション <!-- Sysinfo system call interception -->
+  <!--
+  A new `security.syscalls.intercept.sysinfo` option has been added which when enabled will cause LXD to intercept the `sysinfo` system call and emulate it.
+  -->
+  新たに `security.syscalls.intercept.sysinfo` を追加しました。これを有効にすると、LXD は `sysinfo` システムコールをインターセプトし、このシステムコールをエミュレートします。
+
+  <!--
+  This allows for values that would normally reflect the entire physical system to be replaced by values that properly reflect the container.
+  -->
+  これにより、通常は物理システム全体を反映した値をコンテナの値を反映した値に適切に置き換えることができるようになります。
+
+  <!--
+  Depending on what software is used inside of the container, enabling this may result in better service configuration to respect the container's limits.
+  -->
+  コンテナ内で使用されているソフトウェアによっては、これを有効にすることでコンテナの制限を尊重するより良いサービス設定につながる可能性があります。
+
+      stgraber@dakara:~$ lxc launch images:alpine/edge a1 -c limits.memory=1GiB
+      Creating a1
+      Starting a1
+      stgraber@dakara:~$ lxc exec a1 -- free -m
+                    total        used        free      shared  buff/cache   available
+      Mem:          63600       57777        5792        1572          31        1022
+      Swap:          2048           8        2040
+      stgraber@dakara:~$ lxc config set a1 security.syscalls.intercept.sysinfo=true
+      stgraber@dakara:~$ lxc restart a1
+      stgraber@dakara:~$ lxc exec a1 -- free -m
+                    total        used        free      shared  buff/cache   available
+      Mem:           1024           2        1020           0           3        1022
+      Swap:             0           0           0
+      stgraber@dakara:~$
+
+  #### `lxc cluster role` サブコマンド <!-- `lxc cluster role` sub-command -->
+  <!--
+  To help scripting the addition and removal of cluster member roles, a new `lxc cluster role` sub-command was added.
+  -->
+  クラスターメンバーロールの追加や削除をスクリプティングの助けになるよう、新たに `lxc cluster role` サブコマンドを追加しました。
+
+        stgraber@castiana:~$ lxc cluster role add celestis ovn-chassis
+        stgraber@castiana:~$ lxc cluster role remove celestis ovn-chassis
+
+  #### `lxc storage volume info` によるボリューム総量の表示 <!-- `lxc storage volume info` shows volume total size -->
+  <!--
+  The `lxc storage volume info` command now shows both the Used size and the Total volume size when this one is known.
+  -->
+  `lxc storage volume info` コマンドは、使用量と総量がわかっている場合、両方を表示するようになりました。
+
+      stgraber@dakara:~$ lxc storage volume create default foo size=5GiB
+      Storage volume foo created
+      stgraber@dakara:~$ lxc storage volume info default foo
+      Name: foo
+      Type: custom
+      Content type: filesystem
+      Usage: 192.00KiB
+      Total: 5.00GiB
+
+  #### ホストのネットワークインターフェースのネーミングパターンが設定可能に <!-- Configurable host network interface naming pattern -->
+  <!--
+  A new `instances.nic.host_name` server configuration key allows changing the pattern used when creating new host side network interfaces.
+  -->
+  新たに `instances.nic.host_name` というサーバー設定項目を追加し、ホスト側のネットワークインターフェースを作成するときに、使用するパターンを変更できるようになりました。
+
+  <!--
+  By default LXD uses a `random` pattern which leads to interface names like `vethXYZ` or `tapXYZ` where `XYZ` is a completely random string of characters. This however does not make it very easy to track down a particular instance from the network name.
+  -->
+  デフォルトでは、LXD は `random` パターンを使います。この値は、`vethXYZ` や `tapXYZ` のような、`XYZ` が完全にランダムな文字列からなるインターフェース名になります。しかし、これではネットワーク名から特定のインスタンスを見つけるのが簡単ではありません。
+
+  <!--
+  As an alternative, the new configuration option can now be set to `mac` which will lead to interface names including the most important part of the MAC address after a `lxd` prefix.
+  -->
+  代わりに、この新しい設定を `mac` と設定できます。このように設定すると、インターフェース名は `lxd` の文字列の後に MAC アドレスの最も重要な部分を含む名前になります。
+
+      stgraber@dakara:~$ lxc launch images:alpine/edge a1
+      Creating a1
+      Starting a1
+      stgraber@dakara:~$ lxc info a1 | grep "Host interface"
+            Host interface: veth0c1f893c
+      stgraber@dakara:~$ lxc config set instances.nic.host_name mac
+      stgraber@dakara:~$ lxc restart a1
+      stgraber@dakara:~$ lxc info a1 | grep "Host interface"
+            Host interface: lxd163ecf0121
+
+  #### 退避モードのオーバーライド <!-- Overrideable evacuation mode -->
+  <!--
+  When evacuating a cluster member, LXD looks at the `cluster.evacuate` configuration key to determine what to do with each individual instance. This works great for normal cluster evacuations, but there are situations, such as wanting to shutdown an entire cluster, where one may want to override that action.
+  -->
+  クラスターメンバーの退避を行う際、LXD は `cluster.evacuate` の値を見て、それぞれのインスタンスについて何をすべきかを決定します。これは通常のクラスター退避の場合には有効に働きますが、クラスター全体のシャットダウンを待っている場合などは、この動作を上書きしたい場合があります。
+
+  <!--
+  It's now possible with `lxc cluster evacuate --action=stop` which in this case will stop all instances regardless of their configuration. Do this on all of your cluster members and you'll be ready to shutdown your entire cluster. Once back up, use `lxc cluster restore` and the instances will start back up.
+  -->
+  `lxc cluster evacuate --action=stop` を使うと、設定に関わらずすべてのインスタンスがストップします。これをすべてのクラスターメンバーに行うと、クラスター全体をシャットダウンする準備が整います。バックアップが完了したら、`lxc cluster restore` を使うと、すべてのインスタンスが起動状態に戻ります。
+
+  #### イメージコピー中のプロファイル設定 <!-- Setting profiles during an image copy -->
+  <!--
+  For quite a while now, LXD has supported assigning a list of profiles to a particular image such that any new instance created from the image would get those profiles applied (unless specifically overridden by the user).
+  -->
+  かなり長い間、LXD は特定のイメージにプロファイルのリストを割り当てることをサポートしています。イメージから作成した新しいインスタンスが、これらのプロファイルを取得し適用します（ユーザーがそれをオーバーライドする指示をしない限り）。
+
+  <!--
+  Until now, this had to be setup through `lxc image edit` after the image was added to the image store.
+  -->
+  これまでは、イメージがイメージストアに追加されたあとに、`lxc image edit` を使って、このような設定をセットアップする必要がありました。
+
+  <!--
+  This release now adds a new `--profile` flag to `lxc image copy` allowing for profiles to be added directly at image copy time.
+  -->
+  このリリースで、`lxc image copy` に `--profile` フラグを追加しました。これにより、イメージのコピー時に直接プロファイルを追加できるようになりました。
+
+      stgraber@dakara:~$ lxc profile create foo
+      Profile foo created
+      stgraber@dakara:~$ lxc profile create bar
+      Profile bar created
+      stgraber@dakara:~$ lxc image copy images:alpine/edge local: --alias alpine --profile default --profile foo --profile bar
+      Image copied successfully!
+      stgraber@dakara:~$ lxc launch alpine a1
+      Creating a1
+      Starting a1
+      stgraber@dakara:~$ lxc config show a1
+      architecture: x86_64
+      config:
+        image.architecture: amd64
+        image.description: Alpine edge amd64 (20220427_13:00)
+        image.os: Alpine
+        image.release: edge
+        image.requirements.secureboot: "false"
+        image.serial: "20220427_13:00"
+        image.type: squashfs
+        image.variant: default
+        volatile.base_image: d263389bb3f9298a7de94cb11c1b44b12dcc7191be3aca245ae2f7cdf380be02
+        volatile.cloud-init.instance-id: b7b2e897-231c-4a7a-852d-b0dc1e8945f6
+        volatile.eth0.host_name: veth129b577b
+        volatile.eth0.hwaddr: 00:16:3e:af:81:98
+        volatile.idmap.base: "0"
+        volatile.idmap.current: '[{"Isuid":true,"Isgid":false,"Hostid":1000000,"Nsid":0,"Maprange":1000000000},{"Isuid":false,"Isgid":true,"Hostid":1000000,"Nsid":0,"Maprange":1000000000}]'
+        volatile.idmap.next: '[{"Isuid":true,"Isgid":false,"Hostid":1000000,"Nsid":0,"Maprange":1000000000},{"Isuid":false,"Isgid":true,"Hostid":1000000,"Nsid":0,"Maprange":1000000000}]'
+        volatile.last_state.idmap: '[]'
+        volatile.last_state.power: RUNNING
+        volatile.uuid: cd2edd5b-4d22-4222-8de4-1e7b5304fb22
+      devices: {}
+      ephemeral: false
+      profiles:
+      - bar
+      - default
+      - foo
+      stateful: false
+      description: ""
+
+  ### すべての変更点 <!-- Complete changelog -->
+  <!--
+  Here is a complete list of all changes in this release:
+  -->
+  このリリースでの完全な変更点のリストは次の通りです:
+
+  [details="すべてのChangeLogを見る"]
+   - doc: move networking content to new files
+   - doc: add new files to the networking docs
+   - doc: move network-peers
+   - doc: move network-acls
+   - doc: move network-forwards
+   - doc: move network-zones
+   - doc: clean up headings for networking section
+   - doc: update and add content for networking
+   - doc: add links to network_ovn_peers
+   - doc: add links to network_zones
+   - doc: add links to network_forwards
+   - doc: add links to network_acls
+   - doc: general cleanup
+   - doc: general cleanup network_acls
+   - doc: general cleanup network_forwards
+   - doc: general cleanup network_zones
+   - lxd/storage/btrfs: Fix usage nested
+   - lxd/instance/qemu: Fix bad topoext logic
+   - lxc: Fix typo in notes
+   - lxd/networks: Removes references to nodes in user facing errors
+   - lxd/networks: Clone per-node config on networksPostCluster
+   - lxd/storage/pools: Removes references to nodes in user facing errors
+   - lxd/db/storage/pools: Renames StoragePoolNodeConfigKeys to NodeSpecificStorageConfig
+   - lxd: db.NodeSpecificStorageConfig usage
+   - lxd/cluster/config: Remove legacy server level storage settings defaults
+   - lxd/cluster/config: Remove deprecatedStorage
+   - lxd/storage/utils: Removes ValidName
+   - lxd/storage/pool/interface: Adds Type interface
+   - lxd/storage/pool/load: Adds LoadByType function
+   - lxd/storage/backend/mock: Adds ValidateName function
+   - lxd/storage/backend/lxd: Adds ValidateName function
+   - lxd/storage/utils: Improve validation of rsync.bwlimit
+   - lxd/storage/backend/lxd: Validate earlier in Create
+   - lxd/storage/pools/utils: Updates storagePoolValidate to use poolType.ValidateName
+   - lxd/storage/volumes/snapshot: Updates storagePoolVolumeSnapshotsTypePost to use pool.ValidateName
+   - lxd/storage/utils: Unexport some variables now unused outside of storage package
+   - lxd/storage/pool/interface: Adds Validate signature
+   - lxd/storage/backend/lxd: Adds Validate function
+   - lxd/storage/backend/mock: Adds Validate function
+   - lxd/storage/backend/lxd: Call b.ValidateName in Create
+   - lxd/storage: size is not a common pool option
+   - lxd/storage/drivers/driver/common: Removes pool name from validatePool errors
+   - lxd/storage/pools: Don't call storagePoolValidate from storagePoolsPostCluster
+   - lxd/storage/pools: Call pool.Validate directly in doStoragePoolUpdate
+   - lxd/storage/pools/utils: Call poolType.Validate in storagePoolValidate
+   - lxd/storage/pools/config: Remove legacy storagePoolConfigKeys and storagePoolValidateConfig
+   - lxd/storage/pools: Clone per-node config in storagePoolsPostCluster
+   - lxd/storage/pools/utils: Whitespace in storagePoolDBCreate
+   - lxd/storage/pools/utils: Expand arg types to storagePoolDBCreate
+   - lxd/storage/pools/utils: Use revert in storagePoolCreateGlobal
+   - lxd/storage/pools/config: Remove file
+   - lxd/storage/pools/utils: Removes call to storagePoolFillDefault in storagePoolDBCreate
+   - lxd/storage/pools/utils: Rely on pool.Create to fill default pool config in storagePoolCreateLocal
+   - lxd/storage/drivers/utils: Adds loopFileSizeDefault function
+   - lxd/storage/drivers: Generate per-node loop file size from loopFileSizeDefault in Create
+   - lxd/storage/drivers/driver/lvm/utils: Adds lvmThinpoolDefaultName constant
+   - lxd/storage/drivers/driver/lvm: Populate lvm.thinpool_name if not specified in Create
+   - lxd/storage/utils: Removes unused functions and variables
+   - lxd/storage/pool/load: Removes unused CreatePool function
+   - lxd: Fix typo in notes
+   - doc/rest-api: Refresh swagger YAML
+   - shared: Adds method to remove elements from a slice.
+   - lxc: Adds cluster role <add>/<remove> commands.
+   - i18n: Update translation templates.
+   - test: Removes cluster edit <stdin> where possible.
+   - lxd/db/generate/db/method/v2: Add V2 method generation
+   - lxd/db/certificate/projects.mapper: Update generated code
+   - lxd/db/certificates: Remove Projects from db Certificate struct
+   - lxd/db/certificates.mapper: Update generated code
+   - lxd/db: Use ClusterTx with ToAPI for filling reference fields
+   - lxd/db/certificates: Pass projects into create/update helpers
+   - lxd/db/certificates: Transition to using ClusterTx
+   - lxd/events: Use ClusterTx instead of opening new transactions
+   - lxd/certificates: Open fewer txes, use API structs for all fields
+   - lxd/api/cluster: Update cert projects manually
+   - lxd/instance/drivers/qemu: Add serial key to device
+   - shared: Add SplitNTrimSpace
+   - lxc: Move to shared.SplitNTrimSpace
+   - lxd: Move to shared.SplitNTrimSpace
+   - lxd/util: Remove SplitNTrimSpace
+   - lxd/cluster: Don't overwrite original volatile.evacuate.origin
+   - lxd/daemon/images: Renames imageDownloadLock to imageOperationLock
+   - lxd/images: Use SmartError when handling error from d.cluster.GetImage
+   - lxd/images: Use imageID rather than imageId
+   - lxd/images: Add locking on imageDelete
+   - shared/api: Add Total field
+   - lxd: Add total field to /1.0/storage-pools/{name}/volumes/{type}/{volume}/state API
+   - api: storage_volume_state_total
+   - lxd/db/generate: Replace ErrNoSuchObject with api.StatusErrorf(http.StatusNotFound)
+   - lxd/db: Applies changes to db generator
+   - doc/rest-api: Refresh swagger YAML
+   - lxd/util/net: Assign default port if no port given
+   - lxd/instance/qemu: Allow using external firmware or kernel
+   - lxd/instance/drivers: Fix context logging
+   - lxd/storage/utils: Use volName in context logging for consistency
+   - lxd/storage/volumes/snapshots: Use volName in context logging for consistency
+   - lxd/storage/drivers/driver/ceph/utils: Use volName in context logging for consistency
+   - lxd/storage/drivers/driver/lvm/volumes: Remove non-thinpool volume activation/deactivation workarounds
+   - lxd/storage/drivers/driver/lvm/utils: Updates activateVolume and deactivateVolume to accept Volume type
+   - lxd/storage/drivers/driver/lvm: activateVolume and deactivateVolume usage
+   - lxd/storage/drivers/generic/vfs: Check for close errors
+   - shared/instancewriter/instance/tar/writer: Check for close errors
+   - doc: move Sphinx extensions to a separate repo
+   - lxd/storage/drivers/volume: Check for unmount errors in MountTask
+   - lxd/device/device/utils/disk: Use storageDrivers.TryUnmount without MNT_DETACH in DiskMountClear
+   - doc: whitespace changes and reordering content
+   - doc: add headings
+   - lxd/storage/drivers/utils: Adds debug logging to TryUnmount
+   - lxd/instance/qemu: Tweak warning on -bios/-kernel
+   - lxd/storage/drivers/driver/lvm/utils: Don't deactivate non-thinpool snapshot volume if parent mounted
+   - test: Removes old storage pool driver exclusions
+   - lxd/storage/drivers/generic/vfs: Detect close errors in genericVFSMigrateVolume
+   - lxd/instance: Fix RuntimeLiblxcVersionAtLeast to handle ~
+   - shared: allow EOPNOTSUPP from llistxattr()
+   - doc: update BGP server documentation
+   - lxd/instance/drivers/driver/qemu: Correctly detect dish source path filesystem
+   - lxd/instance/drivers/driver/qemu: Improve disk error context and comments
+   - lxd/instance/drivers/driver/qemu: Fixes incorrect FD garbage collection in addDriveConfig
+   - lxd/instance/drivers/driver/qemu: Remove unnecessary duplicated stat of disk source
+   - lxd/instance/drivers/driver/qemu: Add input checks to addDriveConfig
+   - lxd/device/disk: Pass cloud-init:config drive to QEMU using file descriptor
+   - lxd/device/disk: Return explicit nil on error in localSourceOpen
+   - test/suites/migration: Check optimized refresh
+   - lxd/storage/drivers/btrfs: Change how subvolumes are received
+   - lxd/storage/drivers/btrfs: Move subvolumes after reception
+   - lxd/storage/drivers/btrfs: Update CreateVolumeFromBackup
+   - lxd/instance/operationlock: Add update
+   - lxd/instance/lxc: Use locking in Update
+   - lxd/instance/qemu: Use locking in Update
+   - lxd/instance/qemu: Replace container with instance
+   - lxd/instance: Reword operationlock errors
+   - lxd/migration/wsproto: Check websocket argument
+   - lxd/storage/backend: Fix VolumeDBDelete revert
+   - lxd/cluster: fix typo in comment
+   - test/includes: remove unnessary subshells
+   - lxd/api/cluster: Remove duplicated not found error handling
+   - lxd/api: Update not found error matching
+   - lxd/db: Replaces use of ErrNoSuchObject with api.StatusErrorf(http.StatusNotFound)
+   - lxd/db/errors: Removes ErrNoSuchObject constant
+   - lxd/db: Don't use "node" in user facing errors
+   - lxd/db/network/zones: Fix query case in GetNetworkZone
+   - lxd/operations: Replace use of db.ErrNoSuchObject with api.StatusErrorf(http.StatusNotFound)
+   - lxd/response/smart: Remove db.ErrNoSuchObject use
+   - lxd/storage/drivers/driver/ceph: Replaces use of db.ErrNoSuchObject with  api.StatusErrorf(http.StatusNotFound)
+   - lxd/storage/drivers/lvm: Replaces use of errLVMNotFound with api.StatusErrorf(http.StatusNotFound)
+   - lxd/backup/backup/config: Default to container instance type if not specified in backup config
+   - test: Update backup test error response checks
+   - lxd/storage/drivers/zfs: Close stderr after copy
+   - doc: order tables alphabetically
+   - doc: add IDs for easier linking
+   - doc: move content to different files and include
+   - doc/network/bridge: move IPv6 prefix section
+   - doc/network/bridge: make config table for network_bridge consistent
+   - doc/network/ovn: make config table for network_ovn consistent
+   - doc/network/macvlan: make config table for network_macvlan consistent
+   - doc/network/physical: make config table for network_physical consistent
+   - doc/network/sriov: make config table for network_sriov consistent
+   - doc: add a reusable note about IP address format
+   - doc/network/bridge: add name space and format information for table
+   - doc/network/physical: add name space and format information for table
+   - doc/network/ovn: add name space and format information for table
+   - doc/network/macvlan: add name space and format information for table
+   - doc/network/sriov: add name space and format information for table
+   - doc/network/physical: add supported features for network_physical
+   - doc/network/ovn: add supported features for network_ovn and hide ToC
+   - doc/network/bridge: add supported features for network_bridge and hide ToC
+   - doc/network/bridge: content updates network_bridge
+   - doc/network/ovn: content updates network_ovn
+   - doc/network/physical: content updates network_physical
+   - doc/network/sriov: content updates network_sriov
+   - doc/network/macvlan: content updates network_macvlan
+   - doc/network/external: content updates network_external
+   - global: Update doc links to /latest
+   - README: Use links to public doc pages
+   - CONTRIBUTING: Use links to public doc pages
+   - lxd/storage/drivers/generic/vfs: Updates genericVFSCopyVolume to not copy block volume files twice
+   - lxd/storage/drivers/driver/dir/volumes: Use reverter in CreateVolumeSnapshot
+   - lxd/storage/drivers/utils: copyDevice arg type expansion
+   - lxd/storage/drivers/utils: Catch file close errors in copyDevice
+   - lxd/fsmonitor: Hide permission errors
+   - lxd/instance/lxc: Better handle missing apparmor
+   - lxd/apparmor/dnsmasq: Support non-snap nesting
+   - lxd/apparmor/dnsmasq: Properly handle logpath
+   - lxd/instance/qemu: Avoid conflicting vsock IDs
+   - lxd/storage/drivers/driver/dir/volumes: Updates CreateVolumeSnapshot to copy block volumes using io.Copy
+   - lxd/storage/backend/lxd: Create instance snapshot symlink in CreateInstanceFromCopy
+   - api: instance_file_head
+   - lxd/daemon: Add support for HEAD
+   - lxd/instance_file: Implement HEAD
+   - doc/rest-api: Refresh swagger YAML
+   - lxd/storage/drivers/utils: Update copyDevice to use low priority dd with 16M byte size and direct i/o
+   - lxd: No need to import deprecated syscall
+   - lxd/storage/utils: Run qemu-img dd with low priority and 16M buffer
+   - lxd/instance/drivers/driver/qemu: Run qemu-img with low priority in Export
+   - lxd: Error quoting fixes
+   - lxd: Use SmartError rather than NotFound
+   - lxd/networks: Don't return os.ErrNotExist from doNetworkGet
+   - test: drop dependency on uuidgen
+   - lxd/cluster: Add instances.nic.host_name config key
+   - lxd/network: Support for instances.nic.host_name config key
+   - lxd/device: Support for instances.nic.host_name config key
+   - doc: Add instances.nic.host_name
+   - api: instances.nic.host_name
+   - lxd-agent: Ignore both trans= and msize= when on virtiofs
+   - lxd/instance/qemu: Set msize on 9p
+   - lxd/main_forkfile: Update comment
+   - shared/idmap: Expose IdmapSet on all platforms
+   - shared/subprocess: Add SetUserns
+   - lxd/device/disk: Port to SetUserns
+   - lxd: Remove forkuserns
+   - global: Remove legacy build tags
+   - lxd/instance_exec: Improve error on openpty
+   - lxd/util: Extend tests for CanonicalNetworkAddress
+   - lxd/devlxd: Don't expand format strings
+   - tests: Test for format string in devlxd
+   - lxd/instance: Prevent deleting volatile keys
+   - lxd/instance: Update tests
+   - lxd/instance: Don't allow root pool changes
+   - tests: Test root disk device pool override
+   - tests: Fix typo in storage_profiles test
+   - doc: make it explicit that automake is needed to build LXD
+   - doc: LXD requires Golan 1.18 now
+   - lxd/main_init_interactive: Mention port
+   - lxd/db/generate/db/method/v2: Create methods for reference tables
+   - lxd/db/projects: Use v2 generator, remove UsedBy/Config fields
+   - lxd/db/projects.mapper: Update generated code
+   - lxd/db/projects: Populate config in ToAPI
+   - lxd/db/projects: Use GetProjectConfig
+   - lxd/db/projects: Removed UsedBy handling from db package
+   - tests: Add test for instances.nic.host_name
+   - lxd/storage/drivers/zfs: Check if raw flag can be used
+   - lxd/storage/drivers/zfs: Use -w in `zfs send` if possible
+   - shared/subprocess: Fix comment
+   - shared/api: Update to new godoc comment
+   - client: Update to new godoc syntax
+   - lxd/api/project: Add projectUsedBy
+   - shared/api/project: Add URL method
+   - lxd/storage/volumes/utils: Use api.Project for InstanceList
+   - lxd/api/project: Use api.Project over db.Project
+   - lxd: manually fetch project Config or use api struct
+   - lxd/project/permissions/test: Fix tests
+   - lxd/api/project: Return immediately if project is used
+   - shared/cert: Update test certs to EC
+   - Revert "Skip clustering-related unit tests, see issue #6122"
+   - lxd: Remove old clustering tests
+   - lxd/cluster/connect: Modify ConnectIfInstanceIsRemote to return a client configured with project
+   - lxd/instance/console: Use api.NewURL in instanceConsolePost
+   - lxd/instance/exec: Use api.NewURL in instanceExecPost
+   - lxd: No need to use UseProject() with client from ConnectIfInstanceIsRemote
+   - lxd/migrate: Adds migrationControlResponse type
+   - lxd/migrate: Update controlChannel to return migrationControlResponse
+   - lxd: golint fixes
+   - lxd/migrate/instance: migrationControlResponse usage
+   - lxd/migrate/storage/volumes: migrationControlResponse usage
+   - lxd/device/device/utils/disk: Look for QEMU helpers in /usr/libexec/
+   - lxd: Switch to using api.StatusErrorCheck where appropriate
+   - lxd/db/generate: Update to use api.StatusErrorCheck
+   - lxd/db: Regenerates DB functions
+   - lxd/storage/drivers/zfs: send -w is possible since 0.8.0
+   - lxd/state: Make InstanceTypes store errors
+   - lxd/instance/drivers: Replace SupportedInstanceTypes with DriverStatuses
+   - lxd: DriverStatuses usage
+   - lxd/instance: Report driver errors
+   - lxd/instance/qemu: Improve errors in Info
+   - lxd-agent: Fix trans= handling
+   - lxd/instance/drivers/driver/qemu: Update Export to use qemu-img convert in direct I/O mode
+   - lxd/storage/utils: Updates ImageUnpack to use qemu-img convert in direct I/O mode
+   - lxd/storage/drivers/utils: Update copyDevice to open files in read only mode
+   - lxd/storage/drivers/driver/dir/volumes: Reduce var scope in CreateVolumeSnapshot
+   - lxd/storage/drivers/driver/dir/volumes: Use dd to restore block volumes in RestoreVolume
+   - lxd/instance: Enforce a 64 chars device name limit
+   - doc/instances: Mention 64 chars limit on device names
+   - lxd/device/disk: Drop 27 chars limit
+   - lxd/storage/utils: Disable format detection in qemu-img info in ImageUnpack
+   - lxd/instance/qemu: Use a hash for long disk names
+   - lxd/instance: Fix Update calls for ephemeral instances
+   - tests: Add restart test for ephemeral instances
+   - test: simplify handling of `set -x`
+   - lxd/db/generate: Don't list bash completion
+   - lxd/storage: Forward instance volume state request
+   - client: Add GetMetrics
+   - lxd/device/proxy: Fix comment typo
+   - doc: Remove user-facing mentions of cluster node
+   - lxd: Replace local node mentions with local member
+   - lxd/api/cluster: Request that projects with restricted.networks be created first in clusterInitMember
+   - lxd/init: Re-arrange initDataNodeApply order
+   - lxd/init: Error quoting in initDataNodeApply
+   - lxd/init: Create relevant networks before and after projects in initDataNodeApply
+   - test: Check that default project networks are created before projects during cluster member join
+   - doc/reference/network/bridge: Clarify ipv{n}.nat default value added when creating networks
+   - lxd/instance/drivers/driver/qemu: Catch stateful resume errors in Snapshot
+   - test: fix copy-n-paste error
+   - lxd/instance/drivers/driver/qemu: Pass nvram file by FD and make writable by QEMU process
+   - lxd/console: Move PTS logic to LXC driver
+   - lxd/instance/qemu: Switch to socket for console
+   - lxd/apparmor: Treat ramfs the same as tmpfs
+   - lxd/network/driver/sriov: Mark network as available on successful start
+   - lxd/storage/drivers/zfs: Fix optimized refresh in migration
+   - lxd/storage/drivers/zfs: Delete volume before copying
+   - test/suites/migration: Run optimized refresh test
+   - lxd-agent: Enable gorilla UseEncodedPath
+   - lxd-agent: Unescape URL path variables
+   - lxd: Enable gorilla UseEncodedPath
+   - lxd: Unescape path URL variables
+   - lxd/instance/drivers/driver/qemu: Centralise logic for UEFI architecture detection
+   - lxd/instance/drivers/driver/qemu: Only use NVRAM firmware template on UEFI architectures
+   - lxd/instance/drivers/driver/qemu/templates: Removes duplicated arch check in qemuDriveFirmware
+   - lxd/network/zone/zone: Improve validation of network zone name
+   - test: Improve network zone tests
+   - test/suites/migration: Add more refresh tests
+   - lxd/db: Support for profiles in CreateImage
+   - lxd: Support for profiles in image copying
+   - shared/api: Add Profiles field to ImageExportPost
+   - client: Support for profiles in image copying
+   - lxc/image: Add a '--profile' option to lxc image copy
+   - api: image_copy_profile
+   - tests: Add tests for '--profile' option in image copy
+   - doc/rest-api: Refresh swagger YAML
+   - i18n: Update translation templates
+   - gateway: Separate, smaller timeout for client request
+   - lxd/instance/drivers: Ensure that devices are added and removed in the correct order
+   - lxd/storage/drivers/volume: Still attempt to unmount on task error in MountTask
+   - lxd/storage/drivers: Be explicit with logic brackets
+   - shared/util/linux: report "Detected poll(POLLNVAL) event" at debug level
+   - shared/util/linux: fix typos in comments
+   - shared/util/linux: drop trailing "." in logs
+   - lxd/internal: Coding style
+   - lxd/db/query: Coding style
+   - lxd/main_interactive: Fix bad servername
+   - lxc/copy: Add description of modes
+   - lxc/move: Add description of modes
+   - i18n: Update translation templates
+   - lxd/init: Eliiminate serverName
+   - lxc/utils: Fix bad error string
+   - i18n: Update translation templates
+   - lxd/instance/qemu: Don't timeout during migration
+   - test: restore "set -x" at the end of respawn_lxd()
+   - lxd/db/generate/db/parse: Add ParsePackage
+   - lxd/db/generate: Use sql.Tx param for generated functions
+   - lxd/db/generate/db/stmt: Parse any imported package
+   - test: avoid unbound var if cleanup() is called early on
+   - lxd/storage/drivers/driver/lvm/volumes: Fix restoration of block volume snapshots
+   - lxd/storage/drivers/driver/lvm/utils: Use 100%ORIGIN as size for non-thin snapshots
+   - lxd/instance/drivers/driver/qemu: Removes unused return var from unmount
+   - lxd/storage/drivers/driver/lvm/utils: Code style in activateVolume
+   - lxd/storage/drivers/driver/lvm/volumes: Restrict var scope in volDevPath
+   - lxd/storage/drivers/generic/vfs: Catch unmount errors in genericVFSBackupUnpack
+   - lxd/sys: Fix vsockID detection
+   - test: Don't leave files behind
+   - lxd/storage: Allow parallel writes in qemu-img
+   - lxd/storage/drivers: Extend CephMonitors
+   - lxd/storage/cephfs: Simplify use of CephMonitors
+   - lxd/device/disk: Simplify cephfs handling
+   - lxd/db: Specify cluster package in generator comments
+   - lxd/db/projects.mapper: Remove Certificates/Projects from db package
+   - lxd/db/cluster/projects: Add cluster package db entities
+   - lxd/db/cluster/projects.mapper: Generate cluster package methods/stmts
+   - lxd/db/db/unified: Add unified DB struct
+   - lxd/state/state: Use unified DB struct
+   - lxd/db/db: Store cluster statements in global map
+   - lxd/db/transaction: Add Tx method
+   - lxd/db/db: Add ctx to cluster.Transaction
+   - lxd: Use new DB type and Transaction method
+   - lxd/tests: fix tests
+   - lxd/db/generate/db/lex: Fix adjective pluralization
+   - Cluster: use gateway context for client.Leader requests
+   - lxd/db/query/transaction: Removes TransactionCtx and updates Transaction to take a context
+   - Cluster: granular locking in Gateway.Handlerfuncs
+   - lxd: query.Transaction usage
+   - lxd/db/query: Gets both schema and data from sqlite.
+   - lxd/db/query: Updates tests for refactored dump functions.
+   - lxd: Updates SQLGet handler for refactored SQL dump.
+   - test/suites/sql: Removes test for schema table data when getting schema only.
+   - test: rename unused var to "_"
+   - lxd/db/query: Return the table schema sql verbatim from sqlite_master.
+   - lxd/db/query: Dumps all entities in sqlite_master table.
+   - lxd/db/query: Updates tests to remove quotes.
+   - lxd/db/query: Adds index to test schema and dump output.
+   - lxd/sql: Do not format output of .dump and .schema.
+   - test/sql: Adds some checks to ensure other db schema entities are captured.
+   - lxc: Replace 20.04/Focal Fossa by 22.04/Jammy Jellyfish
+   - doc: Replace 20.04/Focal Fossa by 22.04/Jammy Jellyfish
+   - shared/api: Replace 20.04/Focal Fossa by 22.04/Jammy Jellyfish
+   - lxd/db: Replace 20.04/Focal Fossa by 22.04/Jammy Jellyfish
+   - doc/rest-api: Refresh swagger YAML
+   - i18n: Update translation templates
+   - lxd: Moves swagger response definitions to response package.
+   - test/suites/static_analysis: Modifies deadcode exception to new dir.
+   - lxd/seccomp/seccomp: Fix comment on HandleSchedSetschedulerSyscall
+   - api: Adds container_syscall_intercept_sysinfo extension
+   - doc/instances: Adds security.syscalls.intercept.sysinfo documentation
+   - doc/syscall-interception: Add sysinfo
+   - scripts/bash: security.syscalls.intercept.sysinfo
+   - shared/instance: Add security.syscalls.intercept.sysinfo
+   - lxd/cgroup/abstraction: Adds GetEffectiveMemoryLimit function
+   - doc: move content and add headings
+   - lxd/db/generate/file/write: Support adding build comments
+   - lxd/db: Specify build comments in generator comments
+   - lxd/db/generate/file/write: Add interface flag
+   - lxd/db/warnings: Add interface flag to generator comments
+   - shared/cert: Adds method for returning the public key as an x509 cert.
+   - lxd/cgroup/file: Fix incorrect path matching for /init.scope in NewFileReadWriter
+   - lxd/instance/drivers/driver/lxc: cg.GetEffectiveMemoryLimit usage in Metrics
+   - lxd/seccomp: Add sysinfo handler
+   - test: syscall interception
+   - test: Fix start_external_auth_daemon to work with git 2.34.1
+   - test: Adds syscall sysinfo interception test
+   - lxd/db/generate/db: Returns a status error on create if entry already exists.
+   - doc: whitespace changes
+   - lxd/db/cluster: Regenerates schema.
+   - doc: update documentation for integrating with systemd-resolved
+   - lxd/db/generate: Returns status error if delete operation affects zero rows.
+   - lxd/db/cluster: Regenerates database files.
+   - lxd/project: Allow sysinfo intercept
+   - lxd/device/disk: Handle long paths in virtiofsd
+   - gomod: Update github.com/canonical/go-dqlite to v1.11.1
+   - lxd/resources: Handle nested devices
+   - lxd/instance/drivers/driver/lxc: Update deviceRemove to accept a device.Device
+   - lxd/instance/drivers/driver/qemu: Update deviceRemove to accept a device.Device
+   - lxc/file: Fix edit in snap environment
+   - lxd/storage/drivers/driver/lvm/utils: Don't try and deactive snapshot non-thin volume if parent volume in use
+   - lxd/instance/drivers/driver/lxc: Removes unmounted return var from unmount
+   - lxd/storage/pool/interface: Remove unmounted indicator from UnmountInstance and UnmountInstanceSnasphot
+   - lxd/storage/pool/backend/mock: Remove unmounted indicator from UnmountInstance and UnmountInstanceSnasphot
+   - lxd/storage/pool/backend/lxd: Remove unmounted indicator from UnmountInstance and UnmountInstanceSnasphot
+   - lxd/instance/drivers/driver/lxc: pool.UnmountInstance and pool.UnmountInstanceSnapshot usage
+   - lxd/instance/drivers/driver/qemu: pool.UnmountInstance usage
+   - lxd/device/disk: Updates applyQuota with MountInstance usage
+   - lxd/storage/utils: Updates InstanceUnmount to not return unmounted indicator
+   - lxd/storage/drivers/generic/vfs: Comment typo
+   - shared/api: nowadays various types of certs are accepted
+   - doc/rest-api: Refresh swagger YAML
+   - i18n: Update translations from weblate
+   - gomod: Update dependencies
+   - api: clustering_evacuation_mode
+   - shared/api: Add Mode to ClusterMemberStatePost
+   - lxd/cluster: Support evacuation mode override
+   - lxc/cluster: Add --action to evacuate
+   - i18n: Update translation templates
+   - doc/rest-api: Refresh swagger YAML
+   - lxc/storage: Show volume total size
+   - i18n: Update translation template
+   - test: Skip seccomp notify tests if seccomp notify not supported
+   - lxd/storage/drivers/btrfs: Delete volume after receiving new one
+   - lxd/storage/drivers/btrfs: Check length of snapshots slice
+   - test: Extend refresh migration tests
+   - shared/cancel: Renames Canceler to HTTPRequestCanceller.
+   - doc: mention that ECDSA cert generation requires openssl 1.1.0+
+   - lxd/storage/utils: Improve logging in ImageUnpack
+   - lxd/storage/drivers/driver/common: Adds allowUnsafeResize argument to runFiller
+   - lxd/storage/drivers/driver/btrfs/volumes: runFiller usage
+   - lxd/storage/drivers/driver/ceph/volumes: d.runFiller usage
+   - lxd/storage/drivers/driver/cephfs/volumes: d.runFiller usage
+   - lxd/storage/drivers/driver/dir/volumes: d.runFiller usage
+   - lxd/storage/drivers/driver/lvm/volumes: d.runFiller usage
+   - lxd/storage/drivers/driver/zfs/volumes: d.runFiller usage
+   - shared/cancel: Adds simple Canceller type wrapping a context.Context.
+   - lxc/delete: Validate all instances exist
+   - i18n: Update translation templates
+  [/details]
+
+  ### 試用環境 <!-- Try it for yourself -->
+  <!--
+  This new LXD release is already available for you to try on our [demo service](https://linuxcontainers.org/lxd/try-it/).
+  -->
+  この新しい LXD リリースは私たちの [デモサービス](https://linuxcontainers.org/ja/lxd/try-it/) で利用できます。
+
+  ### ダウンロード <!-- Downloads -->
+  <!--
+  The release tarballs can be found on our [download page](https://linuxcontainers.org/lxd/downloads/).
+  -->
+  このリリースの tarball は [ダウンロードページ](https://linuxcontainers.org/lxd/downloads/) から取得できます。
+
+  <!--
+  Binary builds are also available for:
+  -->
+  ビルド済みバイナリーは次のように使えます:
+
+   - **Linux:** snap install lxd
+   - **MacOS:** brew install lxc
+   - **Windows:** choco install lxc
