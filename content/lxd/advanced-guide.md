@@ -164,98 +164,35 @@ See [LXD documentation - Projects](/lxd/docs/master/projects) for more informati
 See [LXD documentation - Security](/lxd/docs/master/security) for details on Server security.
 
 ## Remote servers
+See [Image handling](/lxd/docs/master/image-handling/) for detailed information.
+
 LXD supports different kinds of remote servers:
 
-* `simplestream servers`: pure image servers (see [below](#set-up-simplestream-servers))
-* `LXD-Servers`: regular LXD-Servers that you can manage over a network (can also be used as image servers). You can choose between multiple methods:
-    * [Default (TLS + password)](#default-tls-password)
-    * [Public (image) server](#public-image-server)
-    * [Candid](#candid) (Authentication service)
-    * [Candid+RBAC](#candid-rbac) (Role Based Access Control)
+* `Simple streams servers`: Pure image servers that use the [simple streams format](https://git.launchpad.net/simplestreams/tree/).
+* `Public LXD servers`: Empty LXD servers with no storage pools and no networks that serve solely as image servers. Set the `core.https_address` configuration option (see [Server configuration](/lxd/docs/master/server/#server-configuration)) to `:8443` and do not configure any authentication methods to make the LXD server publicly available over the network on port 8443. Then set the images that you want to share to `public`.
+* `LXD servers`: Regular LXD servers that you can manage over a network, and that can also be used as image servers. For security reasons, you should restrict the access to the remote API and configure an authentication method to control access. See [Access to the remote API](/lxd/docs/master/security/#access-to-the-remote-api) and [Remote API authentication](/lxd/docs/master/authentication/) for more information.
 
-### Set up simplestream servers
-There are multiple servers available, for example:
+### Use a remote simple streams server
 
-- the LXD image server from Avature: [Link to GitHub Repo](https://github.com/Avature/lxd-image-server)
-
-**Connect to a simplestream server:**
-
-See [Add simplestream servers](#add-simplestream-servers).
-
-### Set up your LXD server as remote server
-
-#### Default (TLS + password)
-This will set up a server with authentication based on TLS-certificates. For easier adding of clients, you can set a password which will authenticate the clients the first time they connect.
-
-Set up a LXD-server as a remote server, with:
-
-    lxc config set core.https_address "[::]"
-    lxc config set core.trust_password some-password
-
-`core.https_address "[::]"` tells LXD to bind all addresses on port 8443.       `core.trust_password` sets a trust password to be used by new clients.
-
-!!! note
-    It is recommended that `core.https_address` should be set to the single address where the server should be available (rather than any address on the host), and firewall rules should be set to only allow access to the LXD port from authorized hosts/subnets.
-    Furthermore, `core.trust_password` should be unset after all clients have been added. This prevents brute-force attacks trying to guess the password.
-
-For details see: [LXD Documentation - Security](/lxd/docs/master/security)
-
-**Connect to this server:**
-
-See [Add remote servers](#add-remote-servers) for how to add a server to your clients remote server list.
-
-#### Public image server
-You can use an empty LXD Server (with no storage pools, no networks etc.) as a public image server.
-
-Install LXD and run:
-
-	lxc config set core.https_address :8443
-
-This will make the LXD-Server available over network on port 8443. You also need to set the images you want to share, to `public`.
-
-#### Candid
-Candid is an Authentication service. See [Ubuntu tutorials - Candid authentication for LXD](https://ubuntu.com/tutorials/candid-authentication-lxd#1-overview) for details and howto.
-
-#### Candid + RBAC
-See [LXD documentation - Security RBAC](https://linuxcontainers.org/lxd/docs/master/security#role-based-access-control-rbac) for details.
-
-
-### Add remote servers
-
-#### Add simplestream servers
-Use:
+To add a simple streams server as a remote, use the following command:
 
 	lxc remote add some-name https://example.com/some/path --protocol=simplestreams
 
-A list of images on that server can be obtained with:
+### Use a remote LXD server
 
-    lxc image list some-name:
-
-Launch an instance based on an image of that server:
-
-    lxc launch some-name:image-name your-instance [--vm]
-
-
-#### Add remote LXD servers
-
-##### Default (TLS + password)
-You can add more servers to the remote server list with:
+To add a LXD server as a remote, use the following command:
 
 	lxc remote add some-name <IP|FQDN|URL> [flags]
 
-Example with IP:
+Some authentication methods require specific flags (for example, use `lxc remote add some-name <IP|FQDN|URL> --auth-type=candid` for Candid authentication). See [Remote API authentication](/lxd/docs/master/authentication/) for more information.
+
+An example using an IP address:
 
     lxc remote add remoteserver2 1.2.3.4
 
-This will prompt you to confirm the remote server fingerprint and then ask you for the password.
+This will prompt you to confirm the remote server fingerprint and then ask you for the password or token, depending on the authentication method used by the remote.
 
-##### Candid
-Use:
-
-	lxc remote add some-name <IP|FQDN|URL> --auth-type=candid
-
-
-#### Use remote servers
+### Use remote servers
 
 #### Image list on a remote server
 A list of images on that server can be obtained with:
