@@ -297,189 +297,60 @@ See [LXD documentation - Security](/lxd/docs/master/security) for details on Ser
 
 ## リモートサーバー <!-- Remote Servers -->
 <!--
+See [Image handling](/lxd/docs/master/image-handling/) for detailed information.
+-->
+詳しい情報は[イメージの扱い](https://lxd-ja.readthedocs.io/ja/latest/image-handling/)（[英語版](/lxd/docs/master/image-handling/)）をご覧ください。
+
+<!--
 LXD supports different kinds of remote servers:
 -->
-LXD はいろいろな種類のリモートサーバーに対応しています:
+LXD は色々な種類のリモートサーバーをサポートしています:
 
 <!--
-* `simplestream servers`: pure image servers (see [below](#setup-simplestream-servers))
-* `LXD-Servers`: regular LXD-Servers that you can manage over a network (can also be used as image servers). You can choose between multiple methods:
-    * [Default (TLS + Password)](#default-tls-password)
-    * [Public (image) server](#public-image-server)
-    * [Candid](#candid) (Authentication service)
-    * [Candid+RBAC](#candid-rbac) (Role Based Access Control)
+* `Simple streams servers`: Pure image servers that use the [simple streams format](https://git.launchpad.net/simplestreams/tree/).
+* `Public LXD servers`: Empty LXD servers with no storage pools and no networks that serve solely as image servers. Set the `core.https_address` configuration option (see [Server configuration](/lxd/docs/master/server/#server-configuration)) to `:8443` and do not configure any authentication methods to make the LXD server publicly available over the network on port 8443. Then set the images that you want to share to `public`.
+* `LXD servers`: Regular LXD servers that you can manage over a network, and that can also be used as image servers. For security reasons, you should restrict the access to the remote API and configure an authentication method to control access. See [Access to the remote API](/lxd/docs/master/security/#access-to-the-remote-api) and [Remote API authentication](/lxd/docs/master/authentication/) for more information.
 -->
-* `simplestream servers`: 純粋なイメージサーバー（[後述](#simplestream)）
-* `LXD-Servers`: ネットワーク経由で管理できる通常の LXD サーバー（イメージサーバーとしても使えます）。複数の方法を選択できます:
-    * [デフォルト（TLS + Password）](#tls-password)
-	* [公開（イメージ）サーバー](#_26)
-	* [Candid](#candid) （認証サービス）
-	* [Candid+RBAC](#candid-rbac) （ロールベースのアクセスコントロール）
+* `Simple streams サーバー`: [simple streams フォーマット](https://git.launchpad.net/simplestreams/tree/)を使った純粋なイメージサーバー
+* `公開 LXD サーバー`: ストレージプールやネットワークを持たない空の LXD サーバーで、イメージサーバーとしてのみ機能します。`core.https_address` オプション（詳しくは[サーバー設定](https://lxd-ja.readthedocs.io/ja/latest/server/)を参照）を `:8443` に設定し、認証を設定しないことで、ネットワークに 8443 番ポートで LXD サーバーを一般公開します。そして、共有したいイメージを `public` に設定します。
+* `LXD サーバー`: ネットワーク上で管理できる通常の LXD サーバーを、イメージサーバーとしても使えます。セキュリティ上の理由から、リモート API へのアクセスを制限し、アクセスを制御するために認証方法を設定する必要があります。詳細は、[リモート API へのアクセス](https://lxd-ja.readthedocs.io/ja/latest/security/#api)と[リモート API 認証](https://lxd-ja.readthedocs.io/ja/latest/authentication/)をご覧ください。
 
-### simplestream サーバーのセットアップ <!-- Setup simplestream servers -->
-<!--
-There are multiple servers available, for example:
--->
-いろいろなサーバーが存在します。例えば:
+### リモートの Simple streams サーバーの使用 <!-- Use a remote simple streams server -->
 
 <!--
-- the LXD image server from Avature: [Link to GitHub Repo](https://github.com/Avature/lxd-image-server)
+To add a simple streams server as a remote, use the following command:
 -->
-- Avature の LXD イメージサーバー: [GitHub リポジトリ](https://github.com/Avature/lxd-image-server)
-
-<!--
-**Connect to a simplestreams server:**
--->
-**simplestream サーバーへの接続:**
-<!--
-See [Add Simplestream servers](#add-simplestream-servers).
--->
-[simplestream サーバーの追加](#simplestream_1)をご覧ください。
-
-### リモートサーバーとして LXD サーバーをセットアップする <!-- Setup your LXD server as remote server -->
-#### デフォルト（TLS + Password） <!-- Default (TLS + Password) -->
-<!--
-This will setup a server with authentication based on TLS-certificates.
-For easier adding of clients, you can set a password which will authenticate the clients the first time they connect.
--->
-ここでは TLS 証明書ベースの認証でサーバーをセットアップします。クライアントの追加を簡単にするために、初回接続時にクライアントを認証するためのパスワードを設定できます。
-
-<!--
-Set up a LXD-server as a remote server, with:
--->
-次のようにリモートサーバーとして LXD サーバーを設定します:
-
-    lxc config set core.https_address "[::]"
-    lxc config set core.trust_password some-password
-
-<!--
-`core.https_address "[::]"` tells LXD to bind all addresses on port 8443.
-`core.trust_password` sets a trust password to be used by new clients.
--->
-
-* `core.https_address "[::]"` は LXD に、全アドレスのポート 8443 番をバインドするよう設定します
-* `core.trust_password` は新しいクライアントのための認証パスワードを設定します
-
-<!--
-**Note:**
--->
-**注意**
-<!--
-It is recommended that `core.https_address` should be set to the single address where the server should be available (rather than any address on the host), and firewall rules should be set to only allow access to the LXD port from authorized hosts/subnets.
--->
-`core.https_address` はサーバーで使える単一のアドレスに設定することが推奨です（ホスト上の全アドレスでなく）。そして信頼できるホスト・サブネットからだけ LXD へのアクセスを許可するファイアウォールのルールを設定するのがよいでしょう。
-
-<!--
-Furthermore, `core.trust_password` should be unset after all clients have been added. This prevents brute-force attacks trying to guess the password.
--->
-さらに `core.trust_password` は、すべてのクライアントを追加したあとに削除すべきです。これにより、ブルートフォース攻撃でパスワードを推測することを防げます。
-
-<!--
-For details see: [LXD Documentation - Security](/lxd/docs/master/security)
--->
-詳しくは [LXDドキュメントのセキュリティの項](https://lxd-ja.readthedocs.io/ja/latest/security/) をご覧ください。
-
-<br>
-
-<!--
-**Connect to this Server:**
--->
-**サーバーへの接続:**
-<!--
-See [Add LXD servers](#add-lxd-servers) for how to add a server to your clients remote server list.
--->
-クライアントのリモートサーバーリストにサーバーを追加するには、[リモートサーバーの追加](#_27) をご覧ください。
-
-#### パブリック・イメージサーバー<!-- Public image server -->
-<!--
-You can use an empty LXD Server (with no storage pools, no networks etc.) as a public image server.
--->
-（ストレージプールやネットワークなどがない）空の LXD サーバーをパブリックのイメージサーバーとして使うことができます。
-
-<!--
-Install LXD and run:
--->
-LXD をインストールし、次のように実行します:
-
-	lxc config set core.https_address :8443
-
-<!--
-This will make the LXD-Server available over network on port 8443.
-You also need to set the images you want to share, to `public`.
--->
-これで LXD サーバーが、8443 番ポートでネットワーク経由で利用できるようになります。さらに、共有したいイメージを `public` に設定する必要があります。
-
-#### Candid
-<!--
-Candid is an Authentication service.
-See [Ubuntu tutorials - Candid authentication for LXD](https://ubuntu.com/tutorials/candid-authentication-lxd#1-overview) for details and howto.
--->
-Candid は認証サービスです。
-詳細と使い方は [Ubuntu のチュートリアル - Candid authentication for LXD](https://ubuntu.com/tutorials/candid-authentication-lxd#1-overview) をご覧ください。
-
-#### Candid + RBAC
-<!--
-See [LXD documentation - Security RBAC](https://linuxcontainers.org/lxd/docs/master/security#role-based-access-control-rbac) for details.
--->
-詳しくは [LXD ドキュメントのセキュリティのRBACに関する部分](https://lxd-ja.readthedocs.io/ja/latest/security/#role-based-access-control-rbac) をご覧ください。
-
-### リモートーサーバーの追加 <!-- Add remote servers -->
-
-#### Simplestream サーバーの追加 <!-- Add Simplestream servers -->
-<!--
-Use:
--->
-次のように追加します:
+リモートサーバーとして Simple streams サーバーを追加するには、次のように実行します:
 
 	lxc remote add some-name https://example.com/some/path --protocol=simplestreams
 
-<!--
-A list of images on that server can be obtained with:
--->
-サーバーに存在するイメージのリストは次のように取得できます:
-
-    lxc image list some-name:
+### リモートの LXD サーバーの使用 <!-- Use a remote LXD server -->
 
 <!--
-Launch a instance based on an image of that server:
+To add a LXD server as a remote, use the following command:
 -->
-そのサーバーのイメージを使ってインスタンスを起動するには次のように実行します:
-
-    lxc launch some-name:image-name your-instance [--vm]
-
-
-#### リモートの LXD サーバーの追加 <!-- Add remote LXD servers -->
-
-##### デフォルト（TLS + パスワード） <!-- Default (TLS + Password) -->
-<!--
-You can add more servers to the remote server list with:
--->
-次のようにリモートサーバーのリストにサーバーを追加できます:
+リモートサーバーとして LXD サーバーを追加するには、次のように実行します:
 
 	lxc remote add some-name <IP|FQDN|URL> [flags]
 
 <!--
-Example with IP:
+Some authentication methods require specific flags (for example, use `lxc remote add some-name <IP|FQDN|URL> --auth-type=candid` for Candid authentication). See [Remote API authentication](/lxd/docs/master/authentication/) for more information.
+-->
+認証方式によっては特定のオプションが必要です（例えば、Candid 認証の場合は `lxc remote add some-name <IP|FQDN|URL> --auth-type=candid` となります）。詳しい情報は[リモート API 認証](https://lxd-ja.readthedocs.io/ja/latest/authentication/)をご覧ください。
+
+<!--
+An example using an IP address:
 -->
 IP アドレスを使う場合の例は次のとおりです:
 
     lxc remote add remoteserver2 1.2.3.4
 
 <!--
-This will prompt you to confirm the remote server fingerprint and then ask you for the password.
+This will prompt you to confirm the remote server fingerprint and then ask you for the password or token, depending on the authentication method used by the remote.
 -->
-実行すると、リモートサーバーのフィンガープリントを確認するプロンプトが表示されます。それからパスワードを聞かれます。
+実行すると、リモートサーバーのフィンガープリントを確認するプロンプトが表示されます。それからリモートサーバーが使用している認証方式に応じて、パスワードまたはトークンを聞かれます。
 
-##### Candid
-<!--
-Use:
--->
-次のように実行します:
-
-	lxc remote add some-name <IP|FQDN|URL> --auth-type=candid
-
-
-#### リモートサーバーの使用 <!-- Use remote servers -->
+### リモートサーバーの使用 <!-- Use remote servers -->
 
 #### リモートサーバーのイメージリスト <!-- Image list on a remote server -->
 <!--
