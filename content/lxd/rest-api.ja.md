@@ -8,11 +8,9 @@ LXD currently only implements a single version of the API, called "1.0".
 LXD では、現時点で "1.0" と呼ばれる単一のバージョンの API のみが実装されています。
 
 <!--
-Details on that API can be found at:
-[https://github.com/lxc/lxd/blob/master/doc/rest-api.md](https://github.com/lxc/lxd/blob/master/doc/rest-api.md)
+An interactive version of the API documentation can be [found here](https://linuxcontainers.org/lxd/api/master/). And some more general information about the API can be [found here](https://linuxcontainers.org/lxd/docs/master/rest-api).
 -->
-API の詳細は以下でご覧いただけます:
-[https://github.com/lxc/lxd/blob/master/doc/rest-api.md](https://github.com/lxc/lxd/blob/master/doc/rest-api.md)
+API ドキュメントのインタラクティブバージョンは[こちら]((https://linuxcontainers.org/lxd/api/master/)でご覧いただけます。そして API に関するもっと一般的な情報は[こちら](https://linuxcontainers.org/lxd/docs/master/rest-api)にあります。
 
 ## API の後方互換性 <!-- API backward compatibility -->
 
