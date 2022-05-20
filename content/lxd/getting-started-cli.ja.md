@@ -12,8 +12,7 @@ LXD では 3 つのリリースブランチが並行してメンテナンスさ�
  * フィーチャーリリース: <!-- Feature releases: -->LXD 4.x
 
 <!--
-LTS releases are recommended for production environments as they will benefit from regular bugfix
-and security updates but will not see new features added or any kind of behavioral change.
+LTS releases are recommended for production environments as they will benefit from regular bugfix and security updates but will not see new features added or any kind of behavioral change.
 -->
 LTS リリースは本番環境での使用におすすめです。定期的なバグフィックスとセキュリティアップデートが行われますが、新しい機能の追加や動作が変わるような変更は行われないためです。
 

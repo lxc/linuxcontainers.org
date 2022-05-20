@@ -1,9 +1,12 @@
 # ディストリビューションのパッケージ <!-- Distribution packages -->
 <!--
 LXD is shipped by a number of Linux distributions.
-Installation instructions can be found in our [getting started](/lxd/getting-started-cli/) guide.
 -->
 LXD はたくさんのディストリビューションに含まれています。
+
+<!--
+Installation instructions can be found in our [getting started](/lxd/getting-started-cli/) guide.
+-->
 インストール方法については [はじめに](/ja/lxd/getting-started-cli/) のページをご覧ください。
 
 # 現時点の開発バージョン <!-- Current development version -->
