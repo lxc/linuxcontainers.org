@@ -5,7 +5,7 @@ content: |-
   ### Introduction
   The LXC team is pleased to announce the release of LXC 5.0.0!
 
-  This is the result of two years of work since the LXC 4.0.0 release and is the third LTS release for the LXC project. This release will be supported until June 2027.
+  This is the result of two years of work since the LXC 4.0.0 release and is the fifth LTS release for the LXC project. This release will be supported until June 2027.
 
   ### Major changes
   #### Switch to meson
@@ -38,7 +38,7 @@ content: |-
    - veth.vlan.id
    - veth.vlan.tagged.id
 
-  The former sets the primary (untagged) VLAN while the latter is used to set additional tagged VLANs on the device. This rqeuires the use of VLAN filtering on the parent bridge device.
+  The former sets the primary (untagged) VLAN while the latter is used to set additional tagged VLANs on the device. This requires the use of VLAN filtering on the parent bridge device.
 
   #### Configurable transmit/receive queues on VETH devices
   Still on VETH devices. It's now possible to customize the number of receive and transmit queues through two new configuration options:
