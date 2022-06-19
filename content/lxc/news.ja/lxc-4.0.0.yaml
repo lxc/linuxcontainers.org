@@ -9,9 +9,9 @@ content: |-
   LXC チームは LXC 4.0.0 のリリースをお知らせできてとてもうれしいです!
 
   <!--
-  This is the result of two years of work since the LXC 3.0.0 release and is the third LTS release for the LXC project. This release will be supported until June 2025.
+  This is the result of two years of work since the LXC 3.0.0 release and is the fourth LTS release for the LXC project. This release will be supported until June 2025.
   -->
-  このリリースは LXC 3.0.0 リリース以来 2 年に渡る作業の結果で、LXC プロジェクトにとって 3 つめの LTS リリースです。このリリースは 2025 年 6 月までサポートされます。
+  このリリースは LXC 3.0.0 リリース以来 2 年に渡る作業の結果で、LXC プロジェクトにとって 4 つめの LTS リリースです。このリリースは 2025 年 6 月までサポートされます。
 
   ### 主な変更点 <!-- Major changes -->
 
