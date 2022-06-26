@@ -33,7 +33,7 @@ content: |-
   This interacts with a userspace caching daemon such as cachefilesd in a similar fashion to what NFS and other network filesystems can do.
   -->
   Ceph ファイルシステムがカーネルの fscache の使用をサポートしました。
-  これは、NFS や他のネットワークファイルシステムと同様に、cachefilesd のようなユーザースペースのキャッシュデーモンやりとりできます。
+  これは、NFS や他のネットワークファイルシステムと同様に、cachefilesd のようなユーザースペースのキャッシュデーモンとやりとりできます。
 
   <!--
   To enable the use of fscache for LXD managed cephfs pools, you may now set `cephfs.fscache` to `true` on the storage pool.
