@@ -72,7 +72,7 @@ To avoid this you can either configure IPv6 addresses on the default bridge by s
 # Reporting security issues
 To ensure security issues can be fixed as quickly as possible and simultaneously in all Linux distributions, issues should be reported either:
 
- * By e-mail to all serge.hallyn (at) ubuntu (dot) com AND stgraber (at) ubuntu (dot) com AND christian.brauner (at) ubuntu (dot) com
+ * By e-mail to all serge (at) hallyn (dot) com AND stgraber (at) ubuntu (dot) com AND brauner (at) kernel (dot) org
  * By opening a private security bug at [https://launchpad.net/ubuntu/+source/lxc/+filebug](https://launchpad.net/ubuntu/+source/lxc/+filebug)
 
 We will then confirm the security issue, come up with fixes against all supported releases, provide you those patches for testing and then get a CVE assigned as well as a coordinated release date for you and the Linux distribution community.
