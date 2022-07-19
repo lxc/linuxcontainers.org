@@ -10,7 +10,7 @@ LXD では、現時点で "1.0" と呼ばれる単一のバージョンの API �
 <!--
 An interactive version of the API documentation can be [found here](https://linuxcontainers.org/lxd/api/master/). And some more general information about the API can be [found here](https://linuxcontainers.org/lxd/docs/master/rest-api).
 -->
-API ドキュメントのインタラクティブバージョンは[こちら]((https://linuxcontainers.org/lxd/api/master/)でご覧いただけます。そして API に関するもっと一般的な情報は[こちら](https://linuxcontainers.org/lxd/docs/master/rest-api)にあります。
+API ドキュメントのインタラクティブバージョンは[こちら](https://linuxcontainers.org/lxd/docs/latest/api/)でご覧いただけます。そして API に関するもっと一般的な情報は[こちら](https://linuxcontainers.org/lxd/docs/latest/restapi_landing/)にあります。
 
 ## API の後方互換性 <!-- API backward compatibility -->
 
@@ -46,7 +46,7 @@ are neither supported nor endorsed by the LXD project.
 * Node.js:
   * [ts-lxd](http://github.com/trufflesuite/ts-lxd)
   * [node-lxd](http://github.com/alandoherty/node-lxd)
-* Java: 
+* Java:
   * [jlxd](http://github.com/digitalspider/jlxd)
   * [relxd](https://github.com/relxd/lxd-sdk)
 * Haskell: [lxd-client](https://hackage.haskell.org/package/lxd-client)
