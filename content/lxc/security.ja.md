@@ -159,7 +159,7 @@ To ensure security issues can be fixed as quickly as possible and simultaneously
 -->
 セキュリティ上の問題ができるだけ素早く同時に全ての Linux ディストリビューションで解決するように、問題は以下のどちらかの方法で報告してください:
 
- * serge.hallyn (at) ubuntu (dot) com と stgraber (at) ubuntu (dot) com の両名に E-mail で <!-- By e-mail to both serge.hallyn (at) ubuntu (dot) com AND stgraber (at) ubuntu (dot) com -->
+ * serge (at) hallyn (dot) com と stgraber (at) ubuntu (dot) com と brauner (at) kernel (dot) org の 3 名すべてに E-mail で <!-- By e-mail to all serge (at) hallyn (dot) com AND stgraber (at) ubuntu (dot) com AND brauner (at) kernel (dot) org -->
  * <!-- By opening a private security bug at --> [https://launchpad.net/ubuntu/+source/lxc/+filebug](https://launchpad.net/ubuntu/+source/lxc/+filebug) に非公開のセキュリティバグをオープンする
 
 <!--
