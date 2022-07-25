@@ -21,6 +21,9 @@ content: |-
 
   To enable the use of fscache for LXD managed cephfs pools, you may now set `cephfs.fscache` to `true` on the storage pool.
 
+  #### lxd-migrate binaries
+  Starting with LXD 5.3 prebuilt `lxd-migrate` binaries can be downloaded from the [LXD Github releases](https://github.com/lxc/lxd/releases) page.  This allows the use of `lxd-migrate` on a source machine without having to build it manually.
+
   ### Complete changelog
   Here is a complete list of all changes in this release:
 
