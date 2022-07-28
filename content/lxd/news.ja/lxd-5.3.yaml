@@ -40,6 +40,12 @@ content: |-
   -->
   LXD が管理する cephfs プールで fscache が使用できるように、ストレージプールで `cephfs.fscache` を `true` に設定できるようになりました。
 
+  #### lxd-migrate バイナリ <!-- lxd-migrate binaries -->
+  <!--
+  Starting with LXD 5.3 prebuilt `lxd-migrate` binaries can be downloaded from the [LXD Github releases](https://github.com/lxc/lxd/releases) page.  This allows the use of `lxd-migrate` on a source machine without having to build it manually.
+  -->
+  LXD 5.3 以降、ビルド済み `lxd-migrate` バイナリーが [LXD Github releases](https://github.com/lxc/lxd/releases) ページからダウンロードできます。これで、手動でビルドしなくてもソースマシン上で `lxd-migrate` が使えます。
+
   ### すべての変更点 <!-- Complete changelog -->
   <!--
   Here is a complete list of all changes in this release:
