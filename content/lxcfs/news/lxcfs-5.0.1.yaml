@@ -1,0 +1,62 @@
+title: LXCFS 5.0.1 has been released
+date: 2022/07/26 23:07
+origin: https://discuss.linuxcontainers.org/t/lxcfs-5-0-1-has-been-released/14709
+content: |-
+  ### Introduction
+  The LXCFS team is pleased to announce the release of LXCFS 5.0.1!
+
+  This is the first bugfix release for LXCFS 5.0 which is supported until June 2027.
+
+  ### Bugfixes
+  Some of the highlights for this release are:
+
+   - Various fixes related to the meson migration
+   - Fixes to /sys/devices/system/cpu handling on FUSE2
+   - Fix for a formatting issue in /proc/stat
+   - Fix for a CGroup2 issue in handling cgroups with no CPU limits
+   - Fix to library reload logic
+
+  The full list of commits is available below:
+
+  [details="Detailed changelog"]
+   - lxcfs_fuse: ensure lxcfs_fuse_compat.h is included after including fuse header
+   - tree-wide: remove struct stat argument from DIR_FILLER and make it static inline
+   - tree-wide: ensure that file information is set even with legacy fuse
+   - tests: add test for issue #522
+   - meson: Include documentation
+   - workflows: disable documentation generation
+   - sysfs: Don't incorrectly filter entries
+   - tests: Fix sysfs test
+   - utils: add and use opathdir()
+   - sysfs_fuse: fix indendation
+   - sysfs_fuse: generate file info for cpu<nr> entries as well
+   - meson: bump fuse version
+   - github: add fuse3 tests
+   - meson: handle fuse versions with buggy dt_type handling
+   - init/meson: Use libdir instead of hardcoded /lib path
+   - Query systemd system unit dir.
+   - support explicit fuse version choice
+   - github: Re-organize Github Actions
+   - tests: Skip sysfs test on older FUSE versions
+   - init: Fix install paths for sysvinit and openrc
+   - meson: Support multiple init systems
+   - meson: Syntax nit
+   - proc_fuse: extra space in /proc/stat
+   - util: remove doubled comment
+   - sysfs: correct file size of /sys/devices/system/cpu/online.
+   - sysfs: cleanup sys_devices_system_cpu_online_getsize
+   - cgroup v2: return cpuset cpu count when no quota is set
+   - re-initialize library after reload
+   - replace opathdir with opendir_flags
+   - github: Restrict permissions
+   - github: Validate target branch
+  [/details]
+
+  ### Support and upgrade
+  The LXCFS 5.0 branch is supported until June 2027.
+  Only bugfixes and securitiy issues get included into the stable bugfix releases, so it's always safe and recommended to keep up and run the latest bugfix release.
+
+  ### Downloads
+
+   - Main release tarball: [lxcfs-5.0.1.tar.gz](https://linuxcontainers.org/downloads/lxcfs/lxcfs-5.0.1.tar.gz)
+   - GPG signature: [lxcfs-5.0.1.tar.gz.asc](https://linuxcontainers.org/downloads/lxcfs/lxcfs-5.0.1.tar.gz.asc)

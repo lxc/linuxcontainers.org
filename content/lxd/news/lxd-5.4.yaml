@@ -32,7 +32,7 @@ content: |-
   Specification: https://discuss.linuxcontainers.org/t/lxd-network-load-balancers-ovn/14317
 
   #### Bi-directional vsock interface (VM)
-  For LXC VMs, the LXD daemon interacts with an agent (lxd-agent) running inside of the virtual machine. This allows for things like `lxc exec` and `lxc file` to work in a similar way with a VM as they would a container.
+  For LXD VMs, the LXD daemon interacts with an agent (lxd-agent) running inside of the virtual machine. This allows for things like `lxc exec` and `lxc file` to work in a similar way with a VM as they would a container.
 
   This is done through each VM listening on vsock and the host connecting to the agent.
   However until this release, there was no way for the agent to connect to the host.
