@@ -1,0 +1,62 @@
+title: LXC 5.0.1 リリースのお知らせ
+date: 2022/07/28 22:07
+origin: https://discuss.linuxcontainers.org/t/lxc-5-0-1-has-been-released/14724
+content: |-
+  ### はじめに <!-- Introduction -->
+  <!--
+  The LXC team is pleased to announce the release of LXC 5.0.1!
+  -->
+  LXC チームが LXC 5.0.1 のリリースをお知らせします!
+
+  <!--
+  This is the first bugfix release for LXC 5.0 which is supported until June 2027.
+  -->
+  このリリースは LXC 5.0 の最初のバグ修正リリースです。このリリースは 2027 年 6 月までサポートされます。
+
+  ### バグ修正 <!-- Bugfixes -->
+  <!--
+  As usual this bugfix releases focus on stability and hardening.
+  Some of the highlights for this release are:
+  -->
+  このバグ修正リリースは、通常通り、安定性とハードニングに焦点を当てています。
+
+   - ホストのバインドマウントが使われた場合、コンテナの起動に失敗するマウントの問題を修正しました <!-- Fixed a mount issue resulting in container startup failure when host bind-mounts were used -->
+   - libcap の検出周辺のさまざまな meson パッケージングの問題を修正しました <!-- Various meson packaging fixes especially around libcap detection -->
+
+  <!--
+  The full list of commits is available below:
+  -->
+  コミットの全リストは次の通りです（翻訳なし）:
+
+  [details="すべてのChangeLogを見る"]
+   - meson: Generate compile commands by iterating over an array
+   - Fix uninitialized read in parse_cap when libcap is not used
+   - use systemd dbus StartTransientUnit for unpriv cgroup2
+   - fix for issue 4026: set broadcast to 0.0.0.0 for /31 and /32
+   - conf: log file descriptors on error during idmapped mount setup
+   - start: don't overwrite file descriptors during namespace preservation
+   - start: record inherited namespaces earlier to make it available for idmapped rootfs setup
+   - conf: fix append_ttyname()
+   - start: fix namespace sharing
+   - add check for statvfs
+   - Fix off-by-one error constructing mount options
+   - Store mount options in correct variable
+   - meson: add remaining still-in-use config checks
+   - src/lxc/log.h: fix STRERROR_R_CHAR_P
+   - meson.build: fix build with -Dcapabilities=false
+   - meson.build: fix build without stack-protector
+   - README: update security mails
+  [/details]
+
+  ### サポートとアップグレード <!-- Support and upgrade -->
+  <!--
+  The LXC 5.0 branch is supported until June 2027.
+  Only bugfixes and securitiy issues get included into the stable bugfix releases, so it's always safe and recommended to keep up and run the latest bugfix release.
+  -->
+  LXC 5.0 ブランチは 2027 年 6 月までサポートされます。
+  stable のバグフィックスリリースでは、バグとセキュリティに関する問題に対する修正のみが行われますので、常に安全です。最新のバグフィックスリリースの状態を維持し、実行することをおすすめします。
+
+  ### ダウンロード <!-- Downloads -->
+
+   - リリース tarball <!-- Main release tarball -->: [lxc-5.0.1.tar.gz](https://linuxcontainers.org/downloads/lxc/lxc-5.0.1.tar.gz)
+   - GPG シグネチャー <!-- GPG signature -->: [lxc-5.0.1.tar.gz.asc](https://linuxcontainers.org/downloads/lxc/lxc-5.0.1.tar.gz.asc)
