@@ -1,0 +1,592 @@
+title: LXD 5.4 リリースのお知らせ
+date: 2022/07/25 01:07
+origin: https://discuss.linuxcontainers.org/t/lxd-5-4-has-been-released/14683
+content: |-
+  ### はじめに <!-- Introduction -->
+  <!--
+  The LXD team is very excited to announce the release of LXD 5.4!
+  -->
+  LXD チームは LXD 5.4 のリリースをお知らせできることにとてもワクワクしています!
+
+  <!--
+  This should be the beginning of us pushing out quite a few new features over the next few releases with this one coming with one major new feature and the foundation needed for more to come.
+  -->
+  今回のリリースは、今後のリリースに含まれるかなりの新機能の始まりになるでしょう。新機能の 1 つは主要な新機能で、今後さらに必要となる機能の基盤となる機能です。
+
+  Enjoy!
+
+  ### アップグレード時の注意 <!-- Upgrade notes -->
+  #### vsock API の変更（LXD VM）<!-- Changes to vsock API (LXD VMs) -->
+  <!--
+  As part of the work on the bi-directional vsock interface (see below), we noticed the our TLS arrangement for host to guest communications inside of LXD VMs was quite broken.
+  -->
+  両方向の vsock インターフェース（下記参照）の作業の一環で、LXD VM 内部のホストからゲストへの通信での TLS の扱いがかなり壊れていることに気づきました。
+
+  <!--
+  Nothing that would be a concern from a security standpoint as the server and client authentication were all done correctly, but for some reason we were doing TLS over TLS which doubled the overhead for no good reason and actually prevented the REST/HTTP layer from accessing details about the client.
+  -->
+  サーバーとクライアントの認証はすべて正しく行われていたので、セキュリティの観点では懸念することはありません。特に理由もなく TLS over TLS を行っていたので、意味もなくオーバーヘッドが 2 倍になり、実際に REST/HTTP レイヤーがクライアントについての詳細にアクセスすることを妨げていました。
+
+  <!--
+  This release fixes this issue by updating both LXD and the VM agent to only do a single layer of TLS. Unfortunately, this isn't something we could handle in a backwards compatible way...
+  -->
+  このリリースでは LXD と VM エージェントの両方をアップデートし、TLS の単一のレイヤーでのみ処理されるようにして、この問題を修正しました。残念ながら、これは後方互換性のある方法で処理できるものではありません…
+
+  <!--
+  As a result, upon upgrading to LXD 5.4, agent communication will break with all running virtual machines. This will affect `lxc exec` and `lxc file`. Restarting the affected VMs with `lxc restart` will correct this by having the VM restart with an updated version of the agent.
+  -->
+  この結果、LXD 5.4 へのアップグレードを行うと、すべての実行中の仮想マシンとのエージェントの通信が切断されます。これは `lxc exec` と `lxc file` に影響します。`lxc restart` で影響を受けた VM を再起動することで、更新されたバージョンのエージェントで VM を再起動され、この問題が修正されます。
+
+  ### 新機能とハイライト <!-- New features and highlights -->
+  #### ロードバランサー（OVN） <!-- Load-balancers (OVN) -->
+  <!--
+  The biggest new feature in this release. This introduces the concept of network load balancers to LXD.
+  -->
+  このリリース最大の新機能です。ネットワークロードバランサーのコンセプトが LXD に導入されます。
+
+  <!--
+  Similar in concept to the existing network forwards feature, load-balancers differ in that a particular address or port can have multiple target with OVN handling load-balancing by hashing the source and destination addresses.
+  -->
+  既存のネットワークフォワード機能とコンセプトが似ていますが、ロードバランサーは特定のアドレスやポートが複数のターゲットを持て、OVN がソースとデスティネーションアドレスをハッシュ化することでロードバランシングを処理するという点で異なります。
+
+  <!--
+  This is all handled through `lxc network load-balancer` and is currently restricted to OVN networks.
+  -->
+  この機能はすべて `lxc network load-balancer` を通して扱い、現時点では OVN ネットワークに限定されています。
+
+  ドキュメント <!-- Documentation -->: https://linuxcontainers.org/lxd/docs/latest/howto/network_load_balancers/
+
+  仕様 <!-- Specification -->: https://discuss.linuxcontainers.org/t/lxd-network-load-balancers-ovn/14317
+
+  #### 双方向 vsock インターフェース（VM） <!-- Bi-directional vsock interface (VM) -->
+  <!--
+  For LXC VMs, the LXD daemon interacts with an agent (lxd-agent) running inside of the virtual machine. This allows for things like `lxc exec` and `lxc file` to work in a similar way with a VM as they would a container.
+  -->
+  LXD の VM では、LXD デーモンは仮想マシン内で動作するエージェント（lxd-agent）と相互に動作します。このような動作によって、`lxc exec` や `lxc file` のようなコマンドが、コンテナと同じように動作します。
+
+  <!--
+  This is done through each VM listening on vsock and the host connecting to the agent.
+  However until this release, there was no way for the agent to connect to the host.
+  -->
+  これは、各 VM が vsock をリスンし、ホストがエージェントに接続することで行われます。
+  しかし、今回のリリースまで、エージェントからホストに接続する方法はありませんでした。
+
+  <!--
+  This was mostly fine with the only side effect of this being some missing features over the /dev/lxd guest API. But with more planned work for VM features, we really needed a way for the agent to directly connect to the host.
+  -->
+  これはゲストの /dev/lxd API に少し機能が欠けていたという副作用以外にはほぼ問題がありませんでした。しかし、VM に関する機能の将来的に計画している作業で、本当にエージェントが直接ホストに接続する方法が必要でした。
+
+  <!--
+  This is now possible with this release as LXD will itself listen on vsock and allow VMs to connect to it. Similarly to our normal agent connections, this is all authenticated through TLS certificates so LXD can tell what VM is talking to it and ensure that it is in fact the agent (or something having access to the agent keys) talking to it.
+  -->
+  今回のリリースで、LXD 自身が vsock をリスンし、VM が接続できるようになりました。通常のエージェント接続と同様に、この接続はすべて TLS 証明書によって認証されるため、LXD はどの VM と通信しているのか、そしてエージェント（もしくはエージェントキーにアクセスできる何か）が通信していることが確認できます。
+
+  仕様 <!-- Specification -->: https://discuss.linuxcontainers.org/t/lxd-bidirectional-vsock-interface-for-vms/14066
+
+  #### ストレージドキュメントの見直し <!-- Reworked storage documentation -->
+  <!--
+  Following our recent rework of the networking documentation, in this release, it's the storage documentation that got significantly reworked and reorganized.
+  -->
+  先日のネットワークのドキュメントに続き、このリリースではストレージのドキュメントを大幅に見直し、再構成しました。
+
+  <!--
+  This brings in a much clearer structure, some new content and will keep evolving over the next few releases.
+  -->
+  この作業で構造がよりクリアになり、いくつかのコンテンツが追加され、今後数回のリリースで進化を続けるでしょう。
+
+  ドキュメント <!-- Documentation -->: https://linuxcontainers.org/lxd/docs/latest/explanation/storage/
+
+  #### 一貫性のあるストレージボリュームの設定 <!-- Consistent storage volume configuration -->
+  <!--
+  As part of the documentation effort above, we discovered some inconsistencies in how storage volume configurations were applied to storage volumes.
+  -->
+  前述のドキュメント見直しで、ストレージボリュームの設定をストレージボリュームに適用する方法に矛盾があることが判明しました。
+
+  <!--
+  Specifically, storage pools can have configuration keys with the following pattern `volume.XYZ`. Those keys should then be applied to any newly created volume, effectively acting as a default value.
+  -->
+  具体的には、ストレージプールは `volume.XYZ` のようなパターンの設定キーを持てます。これらのキーは新しく作成したボリュームに適用され、事実上デフォルト値として機能するはずです。
+
+  <!--
+  Where things weren't consistent is that not all volume keys were supported and moreover, when supported, in some cases the key would be correctly copied into the volume config but in other cases, it would not and instead be propagated from the pool to the volumes, leading to issues should the pool configuration be modified.
+  -->
+  一貫性がなかったのは、すべてのボリュームキーがサポートされているわけではありませんでした。さらに、サポートされている場合でもキーがボリューム設定に正しくコピーされる場合もあれば、そうでない場合もあり、その場合プールからボリュームにキーが反映される場合もあり、プール構成が変更された時に問題となります。
+
+  <!--
+  LXD 5.4 makes all of this consistent by having all storage volumes keys be supported and by having them all only get copied from pool to volume at creation time.
+  -->
+  LXD 5.4 では、すべてのボリュームキーがサポートされ、作成時にプールからボリュームにのみコピーされることですべての一貫性を保っています。
+
+  #### lxd-benchmark のプロジェクトサポート <!-- Project support in lxd-benchmark -->
+  <!--
+  The built-in benchmarking tool, `lxd-benchmark` (`lxd.benchmark` for snap users) hasn't been touched in quite a few years. While dusting it off recently, we noticed that its lack of project support was problematic for us and trivial to add.
+  -->
+  ビルトインのベンチマークツールである `lxd-benchmark` （snap を使っている場合は `lxd.benchmark`）はここ数年間手が加えられていませんでした。最近このツールを引っ張り出してきたところ、プロジェクトのサポートがないことが問題であり、それを追加するのは簡単であることがわかりました。
+
+  <!--
+  So now, it's been added and `lxd-benchmark` will now accept a `--project NAME` argument.
+  -->
+  このため、プロジェクトサポートが追加され、`lxd-benchmark` で `--project NAME` 引数を取るようになりました。
+
+  ### すべての変更点（翻訳なし） <!-- Complete changelog -->
+  <!--
+  Here is a complete list of all changes in this release:
+  -->
+  このリリースでの完全な変更点のリストは次の通りです:
+
+  [details="すべてのChangeLogを見る"]
+   - doc: storage: clarify moving of storage volumes
+   - doc: fix version switcher to work for latest
+   - lxd/network/openvswitch: Use %s so that delimiting quotes are not escaped.
+   - shared/subprocess/manager: Improve errors in ImportProcess
+   - doc: storage: clarify that most docs are about custom volumes
+   - doc: fix typo
+   - gomod: Switch to github for go-lxc
+   - gomod: Update dependencies
+   - lxd: Update to github path for go-lxc
+   - lxc-to-lxd: Update to github path for go-lxc
+   - lxd: Use liblxc's RuntimeLiblxcVersionAtLeast
+   - shared/api: Fix typo in event name
+   - shared/api: Add missing events
+   - shared/api: Sort events
+   - doc/events: Add missing events
+   - doc/events: Sort entries
+   - lxd/lifecycle: Use event names from api package
+   - client: End all function comments with a full-stop.
+   - client: Fixes imports.
+   - lxc/config: End comments with a full-stop.
+   - lxc/utils: End comments with a full-stop.
+   - lxc/utils: Fix import order.
+   - lxc: End comments with a full-stop.
+   - lxc: Fixes import order.
+   - lxc: Removes unnecessary whitespace.
+   - lxc-to-lxd: Ends all comments with a full-stop.
+   - lxd/apparmor: Ends all comments with a full-stop.
+   - lxd/cgroup: Ends all comments with a full-stop.
+   - lxd/bgp: Fixes import order.
+   - lxd/cluster/config: Ends all comments with a full-stop.
+   - lxd/cluster/config: Removes unnecessary whitespace.
+   - lxd/cluster/config: Fixes imports.
+   - lxd/cluster: Ends all comments with a full-stop.
+   - lxd/cluster: Removes unnecessary whitespace.
+   - lxd/cluster: Fixes imports.
+   - lxd/config: Fixes imports.
+   - lxd/config: Ends all comments with a full-stop.
+   - lxd-generate: Ensure generated comments end with a full-stop.
+   - lxd/db/cluster: Ends all comments with a full-stop.
+   - lxd/db/cluster: Fixes imports.
+   - lxd/db/generate/db: Removes unnecessary whitespace.
+   - lxd/db/generate/db: Fixes imports.
+   - lxd/db/generate/db: Ends all comments with a full-stop.
+   - lxd/db/generate/lex: Ends all comments with a full-stop.
+   - lxd/db/generate/lex: Fixes imports.
+   - lxd/db/generate: Removes unnecessary whitespace.
+   - lxd/db/generate: Fixes imports.
+   - lxd/db/operationtype: Ends all comments with a full-stop.
+   - lxd/db/query: Fixes imports.
+   - lxd/db/schema: Ends all comments with a full-stop.
+   - lxd/db: Removes unnecessary whitespace.
+   - lxd/db: Fixes imports.
+   - lxd/db: Ends all comments with a full-stop.
+   - lxd/device/nictype: Removes unnecessary whitespace.
+   - lxd/device: Ends all comments with a full-stop.
+   - lxd/device: Removes unnecessary whitespace.
+   - lxd/device: Fixes imports.
+   - lxd/dnsmasq: Removes unnecessary whitespace.
+   - lxd/endpoints: Fixes imports.
+   - lxd/endpoints: Ends all comments with a full-stop.
+   - lxd/filter: Fixes imports.
+   - lxd/filter: Removes unnecessary whitespace.
+   - lxd/firewall/drivers: Ends all comments with a full-stop.
+   - lxd/firewall/drivers: Removes unnecessary whitespace.
+   - lxd/fsmonitor/drivers: Ends all comments with a full-stop.
+   - lxd/instance/drivers/qmp: Ends all comments with a full-stop.
+   - lxd/instance/drivers/qmp: Removes unnecessary whitespace.
+   - lxd/instance/drivers: Removes unnecessary whitespace.
+   - lxd/instance/drivers: Fixes imports.
+   - lxd/instance/drivers: Ends all comments with a full-stop.
+   - lxd/instance: Ends all comments with a full-stop.
+   - lxd/ip: Ends all comments with a full-stop.
+   - lxd/lifecycle: Ends all comments with a full-stop.
+   - lxd/maas: Ends all comments with a full-stop.
+   - lxd/metrics: Ends all comments with a full-stop.
+   - lxd/migration: Ends all comments with a full-stop.
+   - lxd/network/acl: Removes unnecessary whitespace.
+   - lxd/network/openvswitch: Removes unnecessary whitespace.
+   - lxd/network/zone: Fixes imports.
+   - lxd/network: Removes unnecessary whitespace.
+   - lxd/network: Ends all comments with a full-stop.
+   - lxd/node: Ends all comments with a full-stop.
+   - lxd/node: Fixes imports.
+   - lxd/operations: Ends all comments with a full-stop.
+   - lxd/operations: Removes unnecessary whitespace.
+   - lxd/project: Removes unnecessary whitespace.
+   - lxd/project: Ends all comments with a full-stop.
+   - lxd/rbac: Ends all comments with a full-stop.
+   - lxd/request: Ends all comments with a full-stop.
+   - lxd/resources: Ends all comments with a full-stop.
+   - lxd/response: Ends all comments with a full-stop.
+   - lxd/seccomp: Removes unnecessary whitespace.
+   - lxd/seccomp: Fixes imports.
+   - lxd/storage/drivers: Ends all comments with a full-stop.
+   - lxd/storage/drivers: Removes unnecessary whitespace.
+   - lxd/storage/memorypipe: Ends all comments with a full-stop.
+   - lxd/storage: Removes unnecessary whitespace.
+   - lxd/storage: Ends all comments with a full-stop.
+   - lxd/sys: Ends all comments with a full-stop.
+   - lxd/sys: Fixes imports.
+   - lxd/task: Removes unnecessary whitespace.
+   - lxd/task: Fixes imports.
+   - lxd/template: Ends all comments with a full-stop.
+   - lxd/util: Fixes imports.
+   - lxd/util: Ends all comments with a full-stop.
+   - lxd/util: Removes unnecessary whitespace.
+   - lxd: Fixes imports.
+   - lxd: Removes unnecessary whitespace.
+   - lxd: Ends all comments with a full-stop.
+   - lxd: Fixes misspelling.
+   - lxd-agent: Fixes imports.
+   - lxd-agent: Removes unnecessary whitespace.
+   - lxd-agent: Ends all comments with a full-stop.
+   - lxd-benchmark/benchmark: Removes unnecessary whitespace.
+   - lxd-migrate: Ends all comments with a full-stop.
+   - shared/api: Ends all comments with a full-stop.
+   - shared/cancel: Ends all comments with a full-stop.
+   - shared/cmd: Ends all comments with a full-stop.
+   - shared/dnsutil: Ends all comments with a full-stop.
+   - shared/eagain: Ends all comments with a full-stop.
+   - shared/i18n: Ends all comments with a full-stop.
+   - shared/idmap: Ends all comments with a full-stop.
+   - shared/idmap: Fixes imports.
+   - shared/ioprogress: Ends all comments with a full-stop.
+   - shared/logger: Ends all comments with a full-stop.
+   - shared/osarch: Ends all comments with a full-stop.
+   - shared/simplestreams: Ends all comments with a full-stop.
+   - shared/subprocess: Ends all comments with a full-stop.
+   - shared/subprocess: Fixes imports.
+   - shared/units: Ends all comments with a full-stop.
+   - shared/version: Ends all comments with a full-stop.
+   - shared: Ends all comments with a full-stop.
+   - shared: Fixes imports.
+   - shared: Removes unnecessary whitespace.
+   - test/macaroon-identity: Fixes imports.
+   - test/macaroon-identity: Ends all comments with a full-stop.
+   - golangci: Adds golangci-lint configuration file.
+   - doc: add link to YouTube video about image handling
+   - lxd/instance/lxc: Don't fail on missing apparmor
+   - client: Inserts newlines after blocks.
+   - fuidshift: Inserts newlines after blocks.
+   - lxc: Inserts newlines after blocks.
+   - lxc-to-lxd: Inserts newlines after blocks.
+   - lxd-agent: Inserts newlines after blocks.
+   - lxd-benchmark: Inserts newlines after blocks.
+   - lxd-migrate: Inserts newlines after blocks.
+   - lxd-user: Inserts newlines after blocks.
+   - shared: Inserts newlines after blocks.
+   - test: Inserts newlines after blocks.
+   - lxd/archive: Inserts newlines after blocks.
+   - lxd/backup: Inserts newlines after blocks.
+   - lxd/bgp: Inserts newlines after blocks.
+   - lxd/cgroup: Inserts newlines after blocks.
+   - lxd/cluster: Inserts newlines after blocks.
+   - lxd/config: Inserts newlines after blocks.
+   - lxd/db: Inserts newlines after blocks.
+   - lxd/device: Inserts newlines after blocks.
+   - lxd/dns: Inserts newlines after blocks.
+   - lxd/dnsmasq: Inserts newlines after blocks.
+   - lxd/endpoints: Inserts newlines after blocks.
+   - lxd/events: Inserts newlines after blocks.
+   - lxd/filter: Inserts newlines after blocks.
+   - lxd/firewall/drivers: Inserts newlines after blocks.
+   - lxd/fsmonitor/drivers: Inserts newlines after blocks.
+   - lxd/instance: Inserts newlines after blocks.
+   - lxd/ip: Inserts newlines after blocks.
+   - lxd/maas: Inserts newlines after blocks.
+   - lxd/metrics: Inserts newlines after blocks.
+   - lxd/migration: Inserts newlines after blocks.
+   - lxd/network: Inserts newlines after blocks.
+   - lxd/operations: Inserts newlines after blocks.
+   - lxd/project: Inserts newlines after blocks.
+   - lxd/rbac: Inserts newlines after blocks.
+   - lxd/request: Inserts newlines after blocks.
+   - lxd/resources: Inserts newlines after blocks.
+   - lxd/response: Inserts newlines after blocks.
+   - lxd/rsync: Inserts newlines after blocks.
+   - lxd/seccomp: Inserts newlines after blocks.
+   - lxd/storage: Inserts newlines after blocks.
+   - lxd/sys: Inserts newlines after blocks.
+   - lxd/task: Inserts newlines after blocks.
+   - lxd/util: Inserts newlines after blocks.
+   - lxd/vsock: Inserts newlines after blocks.
+   - lxd: Inserts newlines after blocks.
+   - lxc: Removes all one-line assign and check statements.
+   - lxc-to-lxd: Removes all one-line assign and check statements.
+   - lxd/backup: Removes all one-line assign and check statements.
+   - lxd/cluster: Removes all one-line assign and check statements.
+   - lxd-generate: One-line assign and check statements.
+   - lxd/db/generate: Removes all one-line assign and check statements.
+   - lxd/db/generate: Use multiline import syntax.
+   - lxd/db: Removes all one-line assign and check statements.
+   - lxd/db: Use multiline import syntax.
+   - lxd/config: Use multiline import syntax.
+   - lxd/device: Removes all one-line assign and check statements.
+   - lxd/device: Use multiline import syntax.
+   - lxd/dnsmasq: Removes all one-line assign and check statements.
+   - lxd/firewall/drivers: Removes all one-line assign and check statements.
+   - lxd/firewall/drivers: Use multiline import syntax.
+   - lxd/fsmonitor/drivers: Use multiline import syntax.
+   - lxd/instance/drivers: Removes all one-line assign and check statements.
+   - lxd/network/acl: Removes all one-line assign and check statements.
+   - lxd/network/openvswitch: Removes all one-line assign and check statements.
+   - lxd/network: Removes all one-line assign and check statements.
+   - lxd/refcount: Removes all one-line assign and check statements.
+   - lxd/resources: Removes all one-line assign and check statements.
+   - lxd/response: Removes all one-line assign and check statements.
+   - lxd/rsync: Removes all one-line assign and check statements.
+   - lxd/seccomp: Removes all one-line assign and check statements.
+   - lxd/storage/drivers: Removes all one-line assign and check statements.
+   - lxd/storage: Removes all one-line assign and check statements.
+   - lxd/util: Removes all one-line assign and check statements.
+   - lxd/util: Use multiline import syntax.
+   - lxd: Removes all one-line assign and check statements.
+   - lxd-agent: Removes all one-line assign and check statements.
+   - lxd-migrate: Removes all one-line assign and check statements.
+   - shared/api: Use multiline import syntax.
+   - shared/cancel: Use multiline import syntax.
+   - shared/idmap: Removes all one-line assign and check statements.
+   - shared/instancewriter: Removes all one-line assign and check statements.
+   - shared/termios: Removes all one-line assign and check statements.
+   - shared/usbid: Removes all one-line assign and check statements.
+   - shared: Removes all one-line assign and check statements.
+   - test: Removes all one-line assign and check statements.
+   - test/lint: Adds shell based linters.
+   - Makefile: Updates static-analysis target.
+   - test/suites: Removes static analysis suite.
+   - workflows: Adds static analysis job.
+   - lxd/network/driver/common: Fix comment typos
+   - lxd/db/network/forwards: Fix error handling in GetNetworkForward
+   - lxd/network/driver/common: Adds forwardTarget type
+   - lxd/network/driver/bridge: Update forwardConvertToFirewallForwards to support new forward target type
+   - lxd/network/driver/common: Adds usageType field to externalSubnetUsage
+   - lxd/network/driver/common: Update forwardValidate to use forwardTarget type
+   - lxd/network/driver/bridge: Update subnet usage to use usageType
+   - lxd/network/driver/ovn: Updates to support subnet use usageType field
+   - lxd/network/openvswitch/ovn: Updates LoadBalancerApply to support multiple targets via OVNLoadBalancerTarget
+   - lxd/network/driver/ovn: Update forwardFlattenVIPs to support updated openvswitch.OVNLoadBalancerVIP
+   - lxd/network/driver/ovn: Fix network ForwardUpdate revert
+   - test/lint/client-imports: grep for fixed string before sorting
+   - test/lint/i18n-up-to-date: move lxd.pot instead of copying it
+   - test/lint/mixed-whitespace: only process files with .sh extention
+   - test/lint/mixed-whitespace: only process files with .sh extention
+   - test/lint/negated-is-bool: use git grep and only check .go files
+   - test/lint/newline-after-block: use git ls-files instead of find
+   - test/lint/no-short-form-imports: use git grep and avoid early exit
+   - test/lint/trailing-space: use git grep and only check .sh files
+   - Makefile: use run-parts to run test/lint
+   - test/lint: tell git grep to consider tracked and untracked files
+   - test/lint: tell git ls-files to consider tracked and untracked files
+   - lxd/network/driver/ovn: Inserts newlines after blocks.
+   - i18n: Update translation templates
+   - test/lint/i18n-up-to-date: don't leave dirty .po files behind
+   - workflows: Removes unit tests and reinstates ubuntu client tests.
+   - lxd/db/generate/lex: Use cases.Title instead of deprecated strings.Title.
+   - lxd/db/generate/db/method/v2: Fix config error handling
+   - lxd/db/cluster/mapper: Update generated code
+   - doc/ovn: fix steps for OVN cluster setup
+   - doc: fix nested ordered lists
+   - test: Update test_container_devices_disk_socket to test both start time and hotplug
+   - test: Adds test_container_devices_disk_char to check passing char devices as disks
+   - workflows/static-analysis: Download but do not update dependencies.
+   - gomod: Update dependencies
+   - client: Move to bakery.v3
+   - lxc: Move to bakery.v3
+   - lxd-migrate: Move to bakery.v3
+   - lxd: Move to bakery.v3
+   - test: Move to bakery.v3
+   - gomod: Update dependenies
+   - lxd/resources: Handle invalid VPD lengths
+   - lxd/response: Fix swagger structs
+   - doc/rest-api: Refresh swagger YAML
+   - lxd/db/cluster/projects: Improve error in ToAPI
+   - lxd/db/instances: Optimise query pattern for InstanceList
+   - lxd/db/instance: Remove profiles arg from instanceFunc in InstanceList
+   - lxd: InstanceList updated usage
+   - lxd-benchmark: Add --project flag
+   - lxd/db/instances/test: Specify expected and actual order correctly in TestInstanceList
+   - lxd/db/instances: InstanceList
+   - lxd/db/instances: Adds InstanceListOpts type to allow retrieving config and devices optional for InstanceList
+   - lxd: Update InstanceList usage
+   - api: Adds network_load_balancer API extension
+   - shared/api: Adds network load balancer types
+   - shared/api/event/lifecycle: Adds network load balancer lifecycle constants
+   - lxd/lifecycle/network/load/balancer: Adds network load balancer lifecycle helper
+   - lxd/db/cluster: Adds networks_load_balancers and networks_load_balancers_config tables
+   - lxd/db/network/load/balancers: Adds network load balancer DB functions
+   - lxd/network: Adds LoadBalancers field to Info and enables it for OVN networks
+   - lxd/network/driver/common: Adds loadBalancerPortMap type
+   - lxd/network/driver/common: Adds subnetUsageNetworkLoadBalancer constant
+   - lxd/network: Add load balancer functions to interface and common driver
+   - lxd/network/driver/ovn: Updates getExternalSubnetInUse to account for load balancers
+   - lxd/network/driver/ovn: Load balancer management functions
+   - lxd/network/load/balancers: Adds load balancer API endpoints
+   - client/lxd/server: Adds CheckExtension function
+   - client: Adds network load balancer functions
+   - lxc: Adds network load balancer commands
+   - doc/rest-api: Refresh swagger YAML
+   - i18n: Update translation templates
+   - doc: Add missing network forward delete section
+   - doc: Adds network load balancer documentation
+   - lxd/storage/drivers/volume: Don't use short arguments in NewVolume
+   - lxd/storage/backend/lxd: Improve logging in CreateInstanceFromBackup
+   - doc/storage: structure configuration options section
+   - doc/storage: structure driver notes
+   - lxd/instance/qemu: Fix qemuCPU template broken numa section
+   - lxd/storage/backend/lxd: Add missing size.state check to UpdateInstance
+   - lxd/storage/backend/lxd: Replaces instanceEffectiveRootVolume with applyInstanceRootDiskOverrides
+   - lxd/storage/backend/lxd: b.applyInstanceRootDiskOverrides usage
+   - lxd/storage/backend: Update b.applyInstanceRootDiskOverrides usage in CreateInstanceFromCopy
+   - test: Updates tests to check for instance root disk size not leaking into storage volume DB record
+   - lxd-agent: Remove legacy code
+   - lxd/vsock: Undo double TLS
+   - lxd-agent: Undo double TLS
+   - lxd/instance/operationlock: Allow InstanceOperation.Action() to be called on nil InstanceOperation
+   - lxd/instance/drivers/driver/lxc: Don't wait for update operation to complete when removing disk from running container
+   - Revert "lxd/db/instances: Adds InstanceListOpts type to allow retrieving config and devices optional for InstanceList"
+   - Revert "lxd: Update InstanceList usage"
+   - test: Fixes lint errors for shellcheck 0.8.0.
+   - workflows: Installs shellcheck version 0.8.0.
+   - Makefile: Warns if shellcheck version is not 0.8.0.
+   - doc/storage: add introductions for storage drivers
+   - doc/storage: clean up terminology
+   - doc/storage: clean up driver notes
+   - doc/storage: clean up tables
+   - doc/storage/ceph: add information about remote storage
+   - doc/storage/cephfs: clarify that the file system must exist
+   - doc/instances: add link to NVIDIA video
+   - lxd: Replace use of cluster "node" with "member" in user facing text
+   - doc: add a more complete prometheus.yaml example
+   - doc/networks: move load balancers documentation under OVN
+   - lxd/db/generate/db/method/v2: Properly attach package name for external calls
+   - lxd/db/generate/db/stmt: Allow overriding table name with config key
+   - lxd/db/generate/db/method/v2: Limit generated method references to same package
+   - doc/networks: small fixes to load balancer docs
+   - lxd/resources: Better handle invalid VPD
+   - doc/storage: add tip about volume.* configuration
+   - doc/storage: remove limitation about XFS as file system for Ceph
+   - doc/storage: remove mentions of ceph.osd.force_reuse
+   - doc: Fix use of setup/set up
+   - lxd-agent: Always close file
+   - lxd-agent: Introduce CONNECTED state
+   - shared/api: Add API10Put
+   - lxd-agent: Add PUT /1.0 endpoint
+   - lxd/endpoints: Add vsock endpoint
+   - lxd/vsock: Add port argument to HTTPClient
+   - lxd/instance: Add VM interface
+   - lxd/instance/drivers: Add advertiseVsockAddress
+   - lxd/instance/drivers: Add AgentCertificate
+   - lxd/db/instances: Add GetLocalInstanceWithVsockID
+   - shared/api: Add VsockServerGet
+   - lxd/response: Add devLxdResponse
+   - lxd/devlxd: Use response.DevLxdResponse
+   - lxd/devlxd: Allow setting hoist function for devlxd server
+   - lxd: Add vsock server
+   - lxd-agent: Use vsock interface for devlxd
+   - lxd/instance/drivers/qemu: Handle LXD-AGENT-READY event
+   - lxd/instance/drivers/qmp: Call event handler if lxd-agent becomes ready
+   - lxd/instance/drivers/qemu: Remove instance-data file
+   - api: Add vsock_api
+   - lxd/instance/drivers: Handle security.devlxd config change
+   - lxd/endpoints: Update endpoints test
+   - lxd/storage: Add poolAndVolumeCommonRules function
+   - lxd/storage/drivers: Support common pool and volume configuration options
+   - lxd/storage/drivers: Support for propagation of the volume.* configuration options to the new storage volume
+   - doc: Update storage config keys propagation
+   - tests: Test propagation volume.* config keys for new storage volumes
+   - lxd/storage/drivers/driver/ceph: Mark ceph.osd.force_reuse as deprecated
+   - scripts/bash/lxd-client: Remove ceph.osd.force_reuse
+   - lxc/monitor: Clarify that --log-level can only be used with pretty formatting mode
+   - i18n: Update translation templates
+   - doc/storage: add a howto for launching instances in a specific pool
+   - doc/storage: add howto for resizing storage
+   - doc/storage: "size" option missing for Btrfs & LVM storage pools
+   - lxd/storage/drivers/driver/lvm/utils: Fix parse errors when instance not running
+   - doc/storage: move content from FAQ to storage section
+   - lxd/resources: Better handle ethtool errors
+   - lxd/instance/drivers: Handle QEMU I/O errors
+   - lxd/db/cluster: Make config table value fields NOT NULL
+   - client: Use 30s HTTP header timeout in GetImageFile and GetPrivateImageFile
+   - lxd/daemon/images: Use 30s HTTP header timeout in ImageDownload
+   - lxd/db/node: Make config table value fields NOT NULL
+   - lxd/instance/drivers/driver/qemu: Fix instance reference leak in getMonitorEventHandler
+   - doc: Update cloud-init.md with user-data examples
+   - lxd/instance/drivers: Rename LXD-AGENT-READY to LXD-AGENT-STARTED
+   - lxd/instance/drivers/qmp: Rename agentReady to agentStarted
+   - lxd/instance/drivers: Rename AgenReady to AgentStarted
+   - lxd/db/generate/db/method: Fix v1 generator code style
+   - lxd/devices: Improve comments in devicesRegister
+   - lxd/db/instances: Add support for instancetype.Any to InstanceList
+   - lxd/instance/instance/utils: Updates LoadNodeAll to use InstanceList
+   - lxd/instance: Updates instanceLoadNodeProjectAll to use InstanceList
+   - lxd/cluster/config/config: Adds InstancesNICHostname function
+   - lxd/device/device/common: Updates generateHostName to use d.state.GlobalConfig.InstancesNICHostname
+   - lxd/cluster/config/config: Adds BackupsCompressionAlgorithm function
+   - lxd/backup: Use s.GlobalConfig.BackupsCompressionAlgorithm
+   - lxd/certificates: Updates certificatesPost to use config.TrustPassword
+   - lxd/cluster/config/config: Adds NetworkOVNIntegrationBridge function
+   - lxd/device/nic/ovn: Use d.state.GlobalConfig.NetworkOVNIntegrationBridge
+   - lxd/cluster/config/config: Adds ImagesCompressionAlgorithm function
+   - lxd/images: Updates imgPostInstanceInfo to use d.State().GlobalConfig.ImagesCompressionAlgorithm
+   - lxd/cluster/config/config: Adds NetworkOVNNorthboundConnection function
+   - lxd/network/openvswitch/ovn: Updates NewOVN to use s.GlobalConfig.NetworkOVNNorthboundConnection
+   - lxd/instance/drivers/driver/common: Updates MAAS functions to use d.state.GlobalConfig.MAASController
+   - lxd/cluster/config/config: Removes unused GetString function
+   - lxd/cluster/config/config: Adds ImagesAutoUpdateCached function
+   - lxd/instances/post: Updates createFromImage to use GlobalConfig.ImagesAutoUpdateCached
+   - lxd/cluster/config/config: Removes unused GetBool function
+   - lxd/cluster/config/config: Adds ImagesAutoUpdateIntervalHours function
+   - lxd/daemon/images: Updates ImageDownload to use GlobalConfig.ImagesAutoUpdateIntervalHours
+   - lxd/images: Updates autoUpdateImage to use GlobalConfig.ImagesAutoUpdateIntervalHours
+   - lxd/cluster/config/config: Adds ImagesRemoteCacheExpiryDays function
+   - lxd/images: Updates pruneExpiredImagesInProject to use GlobalConfig.ImagesRemoteCacheExpiryDays
+   - lxd/cluster/config/config: Removes unused GetInt64 function
+   - lxd/cluster/config/config: Removes unused configGet function
+   - lxd/storage/utils: Remove unnecessary tx.GetLocalNodeName from VolumeUsedByExclusiveRemoteInstancesWithProfiles
+   - lxd/network/network/utils/sriov: Remove unnecessary tx.GetLocalNodeName from SRIOVGetHostDevicesInUse
+   - lxd/network/driver/bridge: Remove unnecessary tx.GetLocalNodeName from ForwardCreate
+   - lxd/api/cluster: Remove unnecessary tx.GetLocalNodeName from clusterGet
+   - lxd/db/node: Adds comment about usage to GetLocalNodeName
+   - lxd/events: Remove unnecessary tx.GetLocalNodeName from eventsSocket
+   - lxd/instance/instance/utils: Remove unnecessary tx.GetLocalNodeName from CreateInternal
+   - lxd/instances/post: Remove unnecessary tx.GetLocalNodeName from createFromCopy
+   - lxd/profiles/utils: Remove unnecessary tx.GetLocalNodeName from doProfileUpdate
+   - lxd/profiles/utils: Remove unnecessary tx.GetLocalNodeName from doProfileUpdateCluster
+   - lxd/storage/backend/lxd: Remove unnecessary tx.GetLocalNodeName from ImportInstance
+   - lxd/storage/pools: Remove unnecessary tx.GetLocalNodeName from storagePoolsPostCluster
+   - shared/api: Remove non-API structs
+   - lxd-agent: Add API package
+   - lxd-agent: Update for new API structs
+   - lxd: Update for new API structs
+   - gomod: Update dependencies
+   - i18n: Update translations from weblate
+  [/details]
+
+  ### 試用環境 <!-- Try it for yourself -->
+  <!--
+  This new LXD release is already available for you to try on our [demo service](https://linuxcontainers.org/lxd/try-it/).
+  -->
+  この新しい LXD リリースは私たちの [デモサービス](https://linuxcontainers.org/ja/lxd/try-it/) で利用できます。
+
+  ### ダウンロード <!-- Downloads -->
+  <!--
+  The release tarballs can be found on our [download page](https://linuxcontainers.org/lxd/downloads/).
+  -->
+  このリリースの tarball は [ダウンロードページ](https://linuxcontainers.org/lxd/downloads/) から取得できます。
+
+  <!--
+  Binary builds are also available for:
+  -->
+  ビルド済みバイナリーは次のようにして使えます:
+
+   - **Linux:** snap install lxd
+   - **MacOS:** brew install lxc
+   - **Windows:** choco install lxc
