@@ -28,7 +28,7 @@ content: |-
   -->
   コミットの全リストは次の通りです（翻訳なし）:
 
-  [details="Detailed changelog"]
+  [details="すべてのChangeLogを見る"]
    - meson: Generate compile commands by iterating over an array
    - Fix uninitialized read in parse_cap when libcap is not used
    - use systemd dbus StartTransientUnit for unpriv cgroup2
