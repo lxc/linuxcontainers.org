@@ -70,9 +70,9 @@ Backup and export
   * [Live migration](https://linuxcontainers.org/lxd/docs/master/migration) (using CRIU)
 
 Configurability
-: * [Multiple storage backends](https://linuxcontainers.org/lxd/docs/master/storage) (with configurable storage pools and storage volumes)
-  * [Network management](https://linuxcontainers.org/lxd/docs/master/networks) (including bridge creation and configuration, cross-host tunnels, ...)
-  * [Advanced resource control](https://linuxcontainers.org/lxd/docs/master/instances#resource-limits-via-) (CPU, memory, network I/O, block I/O, disk usage and kernel resources)
+: * [Multiple storage backends](https://linuxcontainers.org/lxd/docs/master/explanation/storage/) (with configurable storage pools and storage volumes)
+  * [Network management](https://linuxcontainers.org/lxd/docs/master/explanation/networks/) (including bridge creation and configuration, cross-host tunnels, ...)
+  * [Advanced resource control](https://linuxcontainers.org/lxd/docs/master/instances/#resource-limits-via-limits-kernel-limit-name) (CPU, memory, network I/O, block I/O, disk usage and kernel resources)
   * [Device passthrough](https://linuxcontainers.org/lxd/docs/master/container-environment) (USB, GPU, unix character and block devices, NICs, disks and paths)
 
 
@@ -115,7 +115,7 @@ LXD is written in Go. It is free software and developed under the [Apache 2 lice
 
 The LXD source code is available on [GitHub](https://github.com/lxc/lxd).
 
-There are no CLA or similar legal agreements required to contribute to LXD. However, we require commits be signed-off (following the DCO - Developer Certificate of Ownership). See the [Contribution guidelines](https://github.com/lxc/lxd/blob/master/doc/contributing.md) for more information.
+There are no CLA or similar legal agreements required to contribute to LXD. However, we require commits be signed-off (following the DCO - Developer Certificate of Ownership). See the [Contribution guidelines](https://linuxcontainers.org/lxd/docs/latest/contributing/) for more information.
 
 [<img src="/static/img/GitHub_Logo.png" alt="GitHub logo" style="display:block;float:none;margin-left:auto;margin-right:auto;padding:1em 0;max-height:120px"/>](https://github.com/lxc/lxd)
 

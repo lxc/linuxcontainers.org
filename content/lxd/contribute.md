@@ -10,7 +10,7 @@ Contributions sent upstream for review must be based on the current git tree and
 
 Contributions to LXD must be submitted as GitHub pull-requests and we require them to be signed-off.
 
-More details on contribution guidelines may be found [here](https://linuxcontainers.org/lxd/docs/master/contributing)
+More details on contribution guidelines can be found [here](https://linuxcontainers.org/lxd/docs/latest/contributing).
 
 # Stable release backports
 
