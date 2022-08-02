@@ -246,11 +246,11 @@ def is_translated_outdated(prefix, page_raw_path):
                              translated_structure))
 
     # ensure filtered lists are not empty
-    if(main and translated):
+    if main and translated:
         main_entry = main[0]
         translated_entry = translated[0]
 
-        if("meta" in main_entry and "meta" in translated_entry):
+        if "meta" in main_entry and "meta" in translated_entry:
             # compare markdown file path mtimes
             source_path = content_path(main_entry["meta"]["input"])
             translated_path = content_path(translated_entry["meta"]["input"])
