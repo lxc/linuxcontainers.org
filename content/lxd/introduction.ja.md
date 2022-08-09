@@ -140,15 +140,15 @@ Backup and export
 
 <!--
 Configurability
-: * [Multiple storage backends](https://linuxcontainers.org/lxd/docs/master/storage) (with configurable storage pools and storage volumes)
-  * [Network management](https://linuxcontainers.org/lxd/docs/master/networks) (including bridge creation and configuration, cross-host tunnels, ...)
-  * [Advanced resource control](https://linuxcontainers.org/lxd/docs/master/instances#resource-limits-via-) (CPU, memory, network I/O, block I/O, disk usage and kernel resources)
+: * [Multiple storage backends](https://linuxcontainers.org/lxd/docs/master/explanation/storage/) (with configurable storage pools and storage volumes)
+  * [Network management](https://linuxcontainers.org/lxd/docs/master/explanation/networks/) (including bridge creation and configuration, cross-host tunnels, ...)
+  * [Advanced resource control](https://linuxcontainers.org/lxd/docs/master/instances/#resource-limits-via-limits-kernel-limit-name) (CPU, memory, network I/O, block I/O, disk usage and kernel resources)
   * [Device passthrough](https://linuxcontainers.org/lxd/docs/master/container-environment) (USB, GPU, unix character and block devices, NICs, disks and paths)
 -->
 設定が可能であること
-: * [複数のストレージバックエンド](https://lxd-ja.readthedocs.io/ja/latest/storage/)（[原文](https://linuxcontainers.org/lxd/docs/master/storage)）（設定可能なストレージプールとストレージボリューム）
-  * [ネットワーク管理](https://lxd-ja.readthedocs.io/ja/latest/networks/)（[原文](https://linuxcontainers.org/lxd/docs/master/networks)）（ブリッジの作成、設定、ホスト間トンネルなどを含む）
-  * [高度なリソース制御](https://lxd-ja.readthedocs.io/ja/latest/instances/#limitskernellimit-name-limitskernellimit-name-)（[原文](https://linuxcontainers.org/lxd/docs/master/instances#resource-limits-via-)）（CPU、メモリー、ネットワーク I/O、ブロック I/O、ディスク使用量、カーネルリソース）
+: * [複数のストレージバックエンド](https://lxd-ja.readthedocs.io/ja/latest/explanation/storage/)（[原文](https://linuxcontainers.org/lxd/docs/master/explanation/storage/)）（設定可能なストレージプールとストレージボリューム）
+  * [ネットワーク管理](https://lxd-ja.readthedocs.io/ja/latest/explanation/networks/)（[原文](https://linuxcontainers.org/lxd/docs/master/explanation/networks/)）（ブリッジの作成、設定、ホスト間トンネルなどを含む）
+  * [高度なリソース制御](https://lxd-ja.readthedocs.io/ja/latest/instances/#limits-kernel-limit-name)（[原文](https://linuxcontainers.org/lxd/docs/master/instances/#resource-limits-via-limits-kernel-limit-name)）（CPU、メモリー、ネットワーク I/O、ブロック I/O、ディスク使用量、カーネルリソース）
   * [デバイスパススルー](https://lxd-ja.readthedocs.io/ja/latest/container-environment/)（[原文](https://linuxcontainers.org/lxd/docs/master/container-environment)）（USB、GPU、UNIX キャラクター・ブロックデバイス、NIC、ディスク、パス）
 
 
@@ -230,9 +230,9 @@ The LXD source code is available on [GitHub](https://github.com/lxc/lxd).
 LXD のソースコードは [GitHub](https://github.com/lxc/lxd) 上で公開されています。
 
 <!--
-There are no CLA or similar legal agreements required to contribute to LXD. However, we require commits be signed-off (following the DCO - Developer Certificate of Ownership). See the [Contribution guidelines](https://github.com/lxc/lxd/blob/master/doc/contributing.md) for more information.
+There are no CLA or similar legal agreements required to contribute to LXD. However, we require commits be signed-off (following the DCO - Developer Certificate of Ownership). See the [Contribution guidelines](https://linuxcontainers.org/lxd/docs/latest/contributing/) for more information.
 -->
-LXD に貢献するのに必要な CLA や同様の法的合意はありません。しかし、コミットを signed-off する必要があります (DCO - Developer Certificate of Ownership に従います)。詳しくは[コントリビュート](https://lxd-ja.readthedocs.io/ja/latest/contributing/)（[原文](https://github.com/lxc/lxd/blob/master/doc/contributing.md)）をご覧ください。
+LXD に貢献するのに必要な CLA や同様の法的合意はありません。しかし、コミットを signed-off する必要があります (DCO - Developer Certificate of Ownership に従います)。詳しくは[コントリビュート](https://lxd-ja.readthedocs.io/ja/latest/contributing/)（[原文](https://linuxcontainers.org/lxd/docs/latest/contributing/)）をご覧ください。
 
 [<img src="/static/img/GitHub_Logo.png" alt="GitHub logo" style="display:block;float:none;margin-left:auto;margin-right:auto;padding:1em 0;max-height:120px"/>](https://github.com/lxc/lxd)
 
