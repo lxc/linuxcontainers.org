@@ -18,9 +18,9 @@ You can clone lxd directly with:
     git clone https://github.com/lxc/lxd
 
 <!--
-For Building instructions, see the [LXD Documentation](https://linuxcontainers.org/lxd/docs/master/#installing-lxd-from-source).
+For Building instructions, see the [LXD Documentation](https://linuxcontainers.org/lxd/docs/latest/installing/#installing-lxd-from-source).
 -->
-ビルド方法については、[LXD のドキュメント（日本語訳）](https://lxd-ja.readthedocs.io/ja/latest/#lxd_2)（[原文](https://linuxcontainers.org/lxd/docs/master/#installing-lxd-from-source)）をご覧ください。
+ビルド方法については、[LXD のドキュメント](https://lxd-ja.readthedocs.io/ja/latest/installing/#installing-from-source)（[原文](https://linuxcontainers.org/lxd/docs/latest/installing/#installing-lxd-from-source)）をご覧ください。
 
 # リリース版 tarball <!-- Release tarballs -->
 <!--
@@ -31,4 +31,4 @@ stable リリース版の tarball は以下から取得できます。
 <!--
 For Building instructions, see the [LXD Documentation](https://linuxcontainers.org/lxd/docs/master/#installing-lxd-from-source).
 -->
-ビルド方法については、[LXD のドキュメント（日本語訳）](https://lxd-ja.readthedocs.io/ja/latest/#lxd_2)（[原文](https://linuxcontainers.org/lxd/docs/master/#installing-lxd-from-source)）をご覧ください。
+ビルド方法については、[LXD のドキュメント](https://lxd-ja.readthedocs.io/ja/latest/installing/#installing-from-source)（[原文](https://linuxcontainers.org/lxd/docs/latest/installing/#installing-lxd-from-source)）をご覧ください。

@@ -19,9 +19,9 @@ Contributions to LXD must be submitted as GitHub pull-requests and we require th
 LXD への貢献は GitHub のプルリクエストとして提出しなければいけません。そして、Signed-off-by による署名 (サインオフ) が必要です。
 
 <!--
-More details on contribution guidelines may be found [here](https://github.com/lxc/lxd/blob/master/CONTRIBUTING.md)
+More details on contribution guidelines can be found [here](https://linuxcontainers.org/lxd/docs/latest/contributing).
 -->
-貢献に関するガイドラインの詳細は [こちら](https://github.com/lxc/lxd/blob/master/CONTRIBUTING.md) にあります。
+貢献に関するガイドラインの詳細は [こちら](https://lxd-ja.readthedocs.io/ja/latest/contributing/) （[原文](https://linuxcontainers.org/lxd/docs/latest/contributing)）にあります。
 
 # 安定版 (stable) リリースへのバックポート <!-- Stable release backports -->
 
