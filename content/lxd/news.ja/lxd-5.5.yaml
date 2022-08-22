@@ -25,7 +25,7 @@ content: |-
   <!--
   This is done by adding a whole new concept of storage buckets along with dedicated command (`lxc storage bucket`) and APIs.
   -->
-  これはストレージバケットというまったく新しい概念と、専用のコマンド（`lxc storage bucket`）と API をを追加することで実現しています。
+  これはストレージバケットというまったく新しい概念と、専用のコマンド（`lxc storage bucket`）と API を追加することで実現しています。
 
   <!--
   This allows LXD users to create new storage buckets, assign them a size limit and then manage access keys to that bucket. The bucket has its own URL with an S3 API.
