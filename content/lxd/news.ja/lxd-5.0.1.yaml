@@ -33,7 +33,7 @@ content: |-
   <!--
   As a result, upon upgrading to LXD 5.0.1, agent communication will break with all running virtual machines. This will affect `lxc exec` and `lxc file`. Restarting the affected VMs with `lxc restart` will correct this by having the VM restart with an updated version of the agent.
   -->
-  この結果、LXD 5.4 へのアップグレードを行うと、すべての実行中の仮想マシンとのエージェントの通信が切断されます。これは `lxc exec` と `lxc file` に影響します。`lxc restart` で影響を受けた VM を再起動することで、更新されたバージョンのエージェントで VM を再起動され、この問題が修正されます。
+  この結果、LXD 5.0.1 へのアップグレードを行うと、すべての実行中の仮想マシンとのエージェントの通信が切断されます。これは `lxc exec` と `lxc file` に影響します。`lxc restart` で影響を受けた VM を再起動することで、更新されたバージョンのエージェントで VM を再起動され、この問題が修正されます。
 
   ### バグ修正と改良 <!-- Bugfixes and improvements -->
   <!--
