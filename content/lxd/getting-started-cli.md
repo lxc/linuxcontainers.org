@@ -5,8 +5,8 @@
 ## Choose your release
 LXD upstream maintains different release branches in parallel:
 
- * Long term support (LTS) releases: currently LXD 4.0.x and LXD 3.0.x
- * Feature releases: LXD 4.x
+ * Long term support (LTS) releases: currently LXD 5.0.x and LXD 4.0.x
+ * Feature releases: LXD 5.x
 
 LTS releases are recommended for production environments as they will benefit from regular bugfix and security updates but will not see new features added or any kind of behavioral change.
 
@@ -34,9 +34,9 @@ Complete the following steps to install the snap:
    For the latest feature release, use:
 
         sudo snap install lxd
-   For the LXD 4.0 LTS release, use:
+   For the LXD 5.0 LTS release, use:
 
-        sudo snap install lxd --channel=4.0/stable
+        sudo snap install lxd --channel=5.0/stable
 
 For more information about LXD snap packages (regarding more versions, update management etc.), see [Managing the LXD snap](https://discuss.linuxcontainers.org/t/managing-the-lxd-snap/8178).
 

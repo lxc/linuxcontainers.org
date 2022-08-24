@@ -97,7 +97,7 @@ LXD has two kind of releases:
  * LTS releases
  * Feature releases
 
-The current LTS release is LXD 4.0, which is supported until June 2025 and gets frequent bugfix and security updates but does not receive any feature additions.
+The current LTS release is LXD 5.0, which is supported until June 2027 and gets frequent bugfix and security updates but does not receive any feature additions.
 
 Feature releases are pushed out every month or so and contain new features as well as bugfixes. The normal support length for those releases is of about a month, or until the next release comes out. Some Linux distributions might offer longer support for particular feature releases that they decided to ship.
 
