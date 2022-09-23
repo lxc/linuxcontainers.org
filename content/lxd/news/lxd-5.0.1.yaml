@@ -17,6 +17,13 @@ content: |-
 
   As a result, upon upgrading to LXD 5.0.1, agent communication will break with all running virtual machines. This will affect `lxc exec` and `lxc file`. Restarting the affected VMs with `lxc restart` will correct this by having the VM restart with an updated version of the agent.
 
+  **WORKAROUND:** It's possible to manually replace the `lxd-agent` binary with a refreshed version inside of the guest. Either doing this proactively (it will break communication until LXD is updated) or after the fact through SSH or text console access. The steps assuming a systemd system are:
+
+    - systemctl stop lxd-agent
+    - Replace /run/lxd_agent/lxd-agent with the new version of the binary
+    - mount -o bind /bin/true /lib/systemd/lxd-agent-setup
+    - systemctl start lxd-agent
+
   ### Bugfixes and improvements
   This release includes a couple of months worth of bugfixes and minor improvements from the development branch.
 
