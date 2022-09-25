@@ -8,8 +8,8 @@ LXD upstream maintains three release branches in parallel:
 -->
 LXD では 3 つのリリースブランチが並行してメンテナンスされています:
 
- * 長期サポート（LTS）リリース: <!-- Long term support (LTS) releases: -->LXD 4.0.x or LXD 3.0.x
- * フィーチャーリリース: <!-- Feature releases: -->LXD 4.x
+ * 長期サポート（LTS）リリース: <!-- Long term support (LTS) releases: -->LXD 5.0.x or LXD 4.0.x
+ * フィーチャーリリース: <!-- Feature releases: -->LXD 5.x
 
 <!--
 LTS releases are recommended for production environments as they will benefit from regular bugfix and security updates but will not see new features added or any kind of behavioral change.
@@ -55,9 +55,9 @@ Complete the following steps to install the snap:
    フィーチャーリリースの場合は、次のように実行します: <!-- For the latest feature release, use: -->
 
         sudo snap install lxd
-   LXD 4.0 LTS リリースの場合は、次のように実行します:<!-- For the LXD 4.0 LTS release, use: -->
+   LXD 5.0 LTS リリースの場合は、次のように実行します:<!-- For the LXD 5.0 LTS release, use: -->
 
-        sudo snap install lxd --channel=4.0/stable
+        sudo snap install lxd --channel=5.0/stable
 
 <!--
 For more information about LXD snap packages (regarding more versions, update management etc.), see [Managing the LXD snap](https://discuss.linuxcontainers.org/t/managing-the-lxd-snap/8178).
