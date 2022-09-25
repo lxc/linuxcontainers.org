@@ -80,14 +80,14 @@ Ubuntu LTS リリースに含まれる LXC に対する商用サポートは [Ca
 ## 延長サポート <!-- Extended support -->
 
 <!--
-LXC 4.0 and 3.0 are long term support releases:
- - LXC 4.0 will be supported until June 1st 2025
- - LXC 3.0 will be supported until June 1st 2023
+LXC 5.0 and 4.0 are long term support releases:
+ - LXC 5.0 will be supported until June 1st 2025
+ - LXC 4.0 will be supported until June 1st 2023
 -->
 LXC 4.0、3.0 は長期サポート版のリリースです。
 
+ - LXC 5.0 は 2027 年 6 月 1 日までサポートされます
  - LXC 4.0 は 2025 年 6 月 1 日までサポートされます
- - LXC 3.0 は 2023 年 6 月 1 日までサポートされます
 
 <!--
 This is thanks to [Canonical Ltd](http://www.canonical.com) and Ubuntu who include the long term support releases of LXC into their own LTS releases and work closely with LXC upstream to maintain our stable branches.

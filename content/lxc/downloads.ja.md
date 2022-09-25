@@ -8,15 +8,15 @@ LXC は大部分の Linux ディストリビューションに含まれていま
 インストールする場合は、ディストリビューションのパッケージマネージャで LXC を選択するのが簡単でしょう。
 
 <!--
-Distributions also often provide backports of newer versions of LXC for their stable releases. You may want to look for that, especially if your distribution doesn't include LXC 4.0 or 3.0.
+Distributions also often provide backports of newer versions of LXC for their stable releases. You may want to look for that, especially if your distribution doesn't include LXC 5.0 or 4.0.
 -->
 ディストリビューションでは、ディストリビューションの stable リリースに対する LXC のより新しいバージョンのバックポートが提供されるケースも多いでしょう。
-LXC 4.0 や 3.0 がディストリビューションの stable リリースに含まれない場合は特に、それを使うことも選択肢の一つでしょう。
+LXC 5.0 や 4.0 がディストリビューションの stable リリースに含まれない場合は特に、それを使うことも選択肢の一つでしょう。
 
 <!--
-For production environment, try to stick to LXC 4.0.x or 3.0.x as these are the long term, stable releases which we will support until June 2025 (4.0.x) and June 2023 (3.0.x) respectively.
+For production environment, try to stick to LXC 5.0.x or 4.0.x as these are the long term, stable releases which we will support until June 2027 (5.0.x) and June 2025 (4.0.x) respectively.
 -->
-Production 環境では、長期サポート版の stable リリースである LXC 4.0.x もしくは 3.0.x を使い続けることをお勧めします。それぞれ 2025 年 6 月（4.0.x）、2023 年 6 月（3.0.x）までサポートします。
+Production 環境では、長期サポート版の stable リリースである LXC 5.0.x もしくは 4.0.x を使い続けることをお勧めします。それぞれ 2027 年 6 月（5.0.x）、2025 年 6 月（4.0.x）までサポートします。
 
 <!--
 For Ubuntu users, we have official PPAs for LXC:
@@ -32,8 +32,8 @@ And for those who want development snapshots:
 開発中のスナップショットが必要な場合はこちらです:
 
  * [lxc-git-master](https://launchpad.net/~ubuntu-lxc/+archive/lxc-git-master): "master" ブランチ <!-- "master" branch -->
- * [lxc-git-stable-3.0](https://launchpad.net/~ubuntu-lxc/+archive/lxc-git-stable-3.0): "stable-3.0" ブランチ <!-- "stable-3.0" branch -->
-  * [lxc-git-stable-4.0](https://launchpad.net/~ubuntu-lxc/+archive/lxc-git-stable-4.0): "stable-4.0" ブランチ <!-- "stable-4.0" branch -->
+ * [lxc-git-stable-5.0](https://launchpad.net/~ubuntu-lxc/+archive/lxc-git-stable-5.0): "stable-5.0" ブランチ <!-- "stable-5.0" branch -->
+ * [lxc-git-stable-4.0](https://launchpad.net/~ubuntu-lxc/+archive/lxc-git-stable-4.0): "stable-4.0" ブランチ <!-- "stable-4.0" branch -->
 
 # 現時点の開発バージョン <!-- Current development version -->
 
@@ -43,7 +43,7 @@ LXC has two active git branches:
 LXC にはアクティブな git ブランチが 3 つ存在します:
 
  * **master**: 現在の開発ブランチ <!-- Current development branch -->
- * **stable-3.0**: LXC 3.0.x 向けの Stable 更新用ブランチ <!-- Stable update branch for LXC 3.0.x -->
+ * **stable-5.0**: LXC 5.0.x 向けの Stable 更新用ブランチ <!-- Stable update branch for LXC 5.0.x -->
  * **stable-4.0**: LXC 4.0.x 向けの Stable 更新用ブランチ <!-- Stable update branch for LXC 4.0.x -->
 
 <!--
