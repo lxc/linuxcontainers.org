@@ -35,6 +35,16 @@ content: |-
   -->
   この結果、LXD 5.0.1 へのアップグレードを行うと、すべての実行中の仮想マシンとのエージェントの通信が切断されます。これは `lxc exec` と `lxc file` に影響します。`lxc restart` で影響を受けた VM を再起動することで、更新されたバージョンのエージェントで VM を再起動され、この問題が修正されます。
 
+  <!--
+  **WORKAROUND:** It's possible to manually replace the `lxd-agent` binary with a refreshed version inside of the guest. Either doing this proactively (it will break communication until LXD is updated) or after the fact through SSH or text console access. The steps assuming a systemd system are:
+  -->
+  **回避方法:** ゲスト内部で更新されたバージョンに手動で置き換えることができます。積極的に行う（LXDが更新されるまで通信が途絶えます）か、SSH もしくはテキストコンソールで事後に行うかのどちらかです。systemd を使ったシステムであると想定した場合の手順は次の通りです:
+
+    - systemctl stop lxd-agent
+    - `/run/lxd_agent/lxd-agent` を新しいバージョンのバイナリに置き換えます <!-- Replace /run/lxd_agent/lxd-agent with the new version of the binary -->
+    - mount -o bind /bin/true /lib/systemd/lxd-agent-setup
+    - systemctl start lxd-agent
+
   ### バグ修正と改良 <!-- Bugfixes and improvements -->
   <!--
   This release includes a couple of months worth of bugfixes and minor improvements from the development branch.
