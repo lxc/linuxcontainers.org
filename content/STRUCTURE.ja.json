@@ -98,7 +98,7 @@
     {"path": "/lxd/irc/",
      "menu": ["LXD", "IRC"],
      "generator": "link",
-     "meta": {"url": "https://kiwiirc.com/client/irc.libera.chat/#lxc"}},
+     "meta": {"url": "https://web.libera.chat/#lxc"}},
 
     {"path": "/lxd/github/",
      "menu": ["LXD", "GitHub"],
@@ -190,7 +190,7 @@
     {"path": "/lxc/irc/",
      "menu": ["LXC", "IRC"],
      "generator": "link",
-     "meta": {"url": "https://kiwiirc.com/client/irc.libera.chat/#lxc"}},
+     "meta": {"url": "https://web.libera.chat/#lxc"}},
 
     {"path": "/lxc/github/",
      "menu": ["LXC", "GitHub"],
@@ -266,7 +266,7 @@
     {"path": "/lxcfs/irc/",
      "menu": ["LXCFS", "IRC"],
      "generator": "link",
-     "meta": {"url": "https://kiwiirc.com/client/irc.libera.chat/#lxc"}},
+     "meta": {"url": "https://web.libera.chat/#lxc"}},
 
     {"path": "/lxcfs/github/",
      "menu": ["LXCFS", "GitHub"],
@@ -334,7 +334,7 @@
     {"path": "/distrobuilder/irc/",
      "menu": ["distrobuilder", "IRC"],
      "generator": "link",
-     "meta": {"url": "https://kiwiirc.com/client/irc.libera.chat/#lxc"}},
+     "meta": {"url": "https://web.libera.chat/#lxc"}},
 
     {"path": "/distrobuilder/github/",
      "menu": ["distrobuilder", "GitHub"],
