@@ -50,6 +50,22 @@ downloads/lxcfs/
 downloads/lxd/
 ```
 
+All steps for creating a sparse checkout
+
+```
+git clone --filter=blob:none --no-checkout git@github.com:lxc/linuxcontainers.org.git
+cd linuxcontainers.org/
+git sparse-checkout set --cone
+echo -e '/*\n!downloads' >> .git/info/sparse-checkout
+git checkout master
+git pull
+mkdir -p downloads/cgmanager/
+mkdir -p downloads/distrobuilder/
+mkdir -p downloads/lxc/
+mkdir -p downloads/lxcfs/
+mkdir -p downloads/lxd/
+```
+
 ### Generating the website
 
     ./generate
