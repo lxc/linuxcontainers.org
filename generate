@@ -96,25 +96,8 @@ def gen_menu(structure, override, prefix):
             continue
 
         if len(item['menu']) == 1:
-            if "generator" in item and item['generator'] == "manpages":
-                # Dynamic manpage menu
-                man_menu = []
-                man_path = item['meta']['dir'].lstrip("/")
-
-                for entry in sorted(os.listdir(man_path)):
-                    if not os.path.isfile("%s/%s" % (man_path, entry)):
-                        continue
-
-                    if entry.startswith("."):
-                        continue
-
-                    entry_link = "/%s/%s" % (item['path'].lstrip("/"), entry)
-                    man_menu.append((entry_link, entry))
-
-                menu.append((man_menu, item['menu'][0]))
-            else:
-                # Simple menu entry
-                menu.append((item['path'], item['menu'][0]))
+            # Simple menu entry
+            menu.append((item['path'], item['menu'][0]))
         else:
             # Drop-down menu
             if sub_menu_title != item['menu'][0]:
@@ -123,26 +106,8 @@ def gen_menu(structure, override, prefix):
                 sub_menu = []
                 sub_menu_title = item['menu'][0]
 
-            if "generator" in item and item['generator'] == "manpages":
-                # Dynamic manpage menu
-                man_menu = []
-                man_path = item['meta']['dir'].lstrip("/")
-
-                for entry in sorted(os.listdir(man_path)):
-                    if not os.path.isfile("%s/%s" % (man_path, entry)):
-                        continue
-
-                    if entry.startswith("."):
-                        continue
-
-                    entry_link = "/%s/man%s/%s.html" % (
-                        item['path'].lstrip("/"), entry.split(".")[-1], entry)
-                    man_menu.append((entry_link, entry))
-
-                sub_menu.append((man_menu, item['menu'][-1]))
-            else:
-                # Simple menu entry
-                sub_menu.append((item['path'], item['menu'][-1]))
+            # Simple menu entry
+            sub_menu.append((item['path'], item['menu'][-1]))
 
     # Process the last drop-down menu
     if structure and sub_menu_title:

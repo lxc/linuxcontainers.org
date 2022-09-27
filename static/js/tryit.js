@@ -385,7 +385,7 @@ $(document).ready(function() {
              <div class='p-tab-buttons__list' id='tryit_progress'>";
 
         $('#tryit_navigation li').each(function(index) {
-            html += "<button class='p-tab-buttons__button' id='nav-"+this.getAttribute("name")+"'>";
+            html += "<button class='p-button is-dense' id='nav-"+this.getAttribute("name")+"'>";
             html += (index+1)+"</button>";
         });
 
