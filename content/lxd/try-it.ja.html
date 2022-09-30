@@ -8,9 +8,9 @@
 <div class="p-strip is-shallow" id="tryit-instructions">
   <div class="row">
     <div class="col-12">
-      <div class="p-notification--information" id="tryit_status_panel" style="display:none">
-        <div class="p-notification__response">
-          <h2 class="p-heading--four">サーバの状態 <!-- Server status --></h2>
+      <div class="p-card" id="tryit_status_panel" style="display:none">
+        <div class="p-card__content">
+          <h2 class="p-heading--4">サーバの状態 <!-- Server status --></h2>
           <span class="p-notification__body" id="tryit_online_message" style="display:none">接続元 <!-- You are connected over: --><span id="tryit_protocol"></span> (<span id="tryit_address"></span>)<<br/>
           デモサーバは現在ユーザセッションを <span id="tryit_count"></span> セッション実行中です (最大 <span id="tryit_max"></span> セッション中)<!-- The demo server is currently running <span id="tryit_count"></span> user sessions out of <span id="tryit_max"></span> --></span>
 
@@ -35,32 +35,32 @@
         </div>
       </div>
 
-      <div class="p-notification--information" id="tryit_terms_panel" style="display:none">
-        <div class="p-notification__response">
-          <h2 class="p-heading--four">サービス利用規約 <!-- Terms of service --></h2>
+      <div class="p-card" id="tryit_terms_panel" style="display:none">
+        <div class="p-card__content">
+          <h2 class="p-heading--4">サービス利用規約 <!-- Terms of service --></h2>
           <span id="tryit_terms"></span>
         </div>
       </div>
 
-      <div class="p-notification--information" id="tryit_start_panel" style="display:none">
-        <div class="p-notification__response">
-          <h2 class="p-heading--four">試用開始 <!-- Start --></h2>
+      <div class="p-card" id="tryit_start_panel" style="display:none">
+        <div class="p-card__content">
+          <h2 class="p-heading--4">試用開始 <!-- Start --></h2>
           <div id="tryit_accept_terms">
             <input type="checkbox" value="" id="tryit_terms_checkbox" />
             <label for="tryit_terms_checkbox">
              私はサービス利用規約を読み、同意しました <!-- I have read and I accept the terms of service above -->
             </label>
-            <button type="submit" id="tryit_accept" class="btn btn-primary" disabled="">Start</button>
+            <button type="submit" id="tryit_accept" class="p-button--positive" disabled="">Start</button>
           </div>
           <div id="tryit_progress" style="display:none;width:100%;text-align:center;">
-            <p class="p-heading--four">コンテナの起動中... <!-- Starting the container... --> <i class="p-icon--spinner u-animation--spin"></i></p>
+            <p class="p-heading--4">コンテナの起動中... <!-- Starting the container... --> <i class="p-icon--spinner u-animation--spin"></i></p>
           </div>
         </div>
       </div>
 
 
-      <div class="p-notification--information" id="tryit_examples_panel" style="display:none">
-        <div class="p-notification__response">
+      <div class="p-card" id="tryit_examples_panel" style="display:none">
+        <div class="p-card__content">
           <span class="p-notification__status js-collapsable">ステップバイステップでの入門</span> <!-- Step by step introduction -->
 
           <ol id="tryit_navigation" style="display:none">
@@ -103,7 +103,7 @@
             <nav aria-label="...">
               <ul class="p-inline-list u-align--center">
                 <li class="p-inline-list__item">
-                  <a href="#" class="p-button is--disabled" aria-disabled="true">Previous</a>
+                  <a href="#" class="p-button is-disabled" aria-disabled="true">Previous</a>
                 </li>
                 <li class="p-inline-list__item">
                   <a href="#first-container" class="p-button js-tab-button tabNext tryit_goto">Next</a>
@@ -491,7 +491,7 @@ exit</pre>
                   <a href="#image-server" class="p-button js-tab-button tabPrevious tryit_goto">Previous</a>
                 </li>
                 <li class="p-inline-list__item">
-                  <a href="#conclusion" class="p-button is--disabled" aria-disabled="true">Next</a>
+                  <a href="#conclusion" class="p-button is-disabled" aria-disabled="true">Next</a>
                 </li>
               </ul>
             </nav>
@@ -499,8 +499,8 @@ exit</pre>
         </div>
       </div>
 
-      <div class="p-notification--information" id="tryit_feedback" style="display:none">
-        <div class="p-notification__response">
+      <div class="p-card" id="tryit_feedback" style="display:none">
+        <div class="p-card__content">
           <span class="p-notification__status js-collapsable">フィードバック<!-- Feedback --></span>
           <div class="panel-body">
             <form class="p-form" id="tryit_feedback_submit">
@@ -588,12 +588,12 @@ exit</pre>
   </div>
 </div>
 
-<div class="row" id="tryit_console_row" style="display:none">
-  <div class="col-12">
+<div id="tryit_console_row" style="display:none">
+  <div class="row">
     <hr/>
-    <div class="p-notification" id="tryit_console_panel">
-      <div class="p-notification__response">
-        <h2 class="p-heading--four">ターミナル <!-- Terminal -->(<span class="minutes"></span> 分<!-- minutes, --> <span class="seconds"></span> 秒<!-- seconds -->)</h2>
+    <div class="p-card" id="tryit_console_panel">
+      <div class="p-card__content">
+        <h2 class="p-heading--4">ターミナル <!-- Terminal -->(<span class="minutes"></span> 分<!-- minutes, --> <span class="seconds"></span> 秒<!-- seconds -->)</h2>
         <div style="padding-right: 1rem; overflow: auto; background-color: #000;">
           <div id="tryit_console" style="background-color:black;"></div>
         </div>

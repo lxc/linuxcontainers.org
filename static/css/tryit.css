@@ -12,7 +12,7 @@ div#tryit-instructions {
 }
 
 div#tryit_console_panel {
-    max-width: 1122px; /* 1170px from local.css - 2x24px padding */
+    width: 100%;
     margin-right: auto;
     margin-left: auto;
 }
@@ -29,7 +29,13 @@ div#tryit_info_panel table {
     width: 100%;
 }
 
+div#tryit_examples_panel pre,
+div#tryit_examples_panel h3 {
+    margin-bottom: 0;
+}
+
 div#tryit_examples_panel p {
+    margin-bottom: 0.5rem;
     max-width: 100%;
 }
 

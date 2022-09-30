@@ -90,6 +90,10 @@ p:empty {
 }
 
 /* Terminal */
+#tryit_accept {
+  display: block;
+}
+
 #tryit_console * {
   margin-top: 0;
   line-height: 1.5;
@@ -124,11 +128,6 @@ p:empty {
 /* Align text in notifications */
 [class^="p-notification"] {
   text-align: left;
-}
-
-/* Make the page width wider */
-.row {
-  max-width: 1170px;
 }
 
 /* Add spacing to pre tags */
@@ -195,93 +194,6 @@ pre code {
 
 #tryit_feedback .js-collapsable.is-hidden ~ .panel-body {
   display: none;
-}
-
-/* NAVIGATION */
-.p-navigation__logo {
-  font-size: 1.5rem;
-  line-height: 3rem;
-  padding: 0.2rem;
-}
-
-.p-navigation__logo img {
-  width: 45px;
-}
-
-.p-navigation__link {
-  position: relative;
-}
-
-.p-navigation__sub-links {
-  background-color: #fff;
-  opacity: 0;
-  padding: 0;
-  transition: all 0.5s ease;
-  z-index: 100;
-}
-
-.p-dropdown {
-  display: none;
-  margin: 0;
-  visibility: hidden;
-}
-
-@media (min-width: 769px) {
-  .p-navigation__sub-links {
-    border-color: #cdcdcd;
-    border-style: solid;
-    border-width: 0 1px 1px;
-    left: 0;
-    position: absolute;
-    width: 20rem;
-  }
-
-  .p-navigation__sub-links.is-split {
-    -moz-column-count: 2;
-    -moz-column-gap: 0;
-    -webkit-column-count: 2;
-    -webkit-column-gap: 0;
-    column-count: 2;
-    column-gap: 0;
-  }
-
-  .p-navigation__sub-links.is-split li {
-    -webkit-column-break-inside: avoid;
-    page-break-inside: avoid;
-    break-inside: avoid;
-  }
-
- .p-navigation__sub-links .p-navigation__sub-links {
-    border-width: 1px;
-    left: 19.875rem;
-    top: 0;
-  }
-}
-
-.p-dropdown__toggle {
-  position: relative;
-}
-
-.p-dropdown__toggle.is-active > .p-dropdown {
-  display: block;
-  opacity: 1;
-  visibility: visible;
-}
-
-.p-navigation__sub-link {
-  display: block;
-  font-size: .875rem;
-  padding: .5rem 1rem;
-}
-
-@media (max-width: 768px) {
-  .p-navigation__sub-link {
-    padding: .5rem 1.5rem;
-  }
-}
-
-.p-navigation__sub-link:not(.p-heading--five):hover {
-  background-color: #f7f7f7;
 }
 
 @media (min-width: 769px) {
@@ -409,6 +321,7 @@ iframe {
   background-color: #fff;
   border: 0;
   padding: .3375rem 1rem;
+  margin-bottom: 1px;
 }
 
 .tabbed-set label:hover {
@@ -438,4 +351,22 @@ iframe {
 /* add space below a details block */
 summary {
   margin-bottom: 2rem;
+}
+
+.p-navigation__image {
+  max-height: 2.5rem;
+}
+
+.p-breadcrumbs__items {
+  margin-bottom: 0.5rem;
+}
+
+.p-footer {
+  padding-bottom: 4rem;
+  padding-top: 4rem;
+}
+
+.p-footer {
+  border-top: 1px solid #cdcdcd;
+  position: relative;
 }

@@ -1,82 +1,49 @@
-var dropdownToggles = document.querySelectorAll('.p-dropdown__toggle');
-var dropdownToggleLinks = document.querySelectorAll('.p-dropdown__toggle-link');
+function toggleDropdown(toggle, open) {
+  var parentElement = toggle.parentNode;
+  var dropdown = document.getElementById(toggle.getAttribute('aria-controls'));
+  dropdown.setAttribute('aria-hidden', !open);
 
-function isDescendant(parent, child) {
-  var node = child.parentNode;
-  while (node != null) {
-    if (node == parent) {
-      return true;
-    }
-    node = node.parentNode;
+  if (open) {
+    parentElement.classList.add('is-active');
+  } else {
+    parentElement.classList.remove('is-active');
   }
-  return false;
 }
 
-dropdownToggleLinks.forEach(function(dropdownToggleLink) {
-  dropdownToggleLink.addEventListener('click', function(event) {
-    event.preventDefault();
+function closeAllDropdowns(toggles) {
+  toggles.forEach(function (toggle) {
+    toggleDropdown(toggle, false);
   });
-});
+}
 
-dropdownToggles.forEach(function(dropdownToggle) {
-  dropdownToggle.addEventListener('click', function(event) {
-    event.stopPropagation();
+function handleClickOutside(toggles, containerClass) {
+  document.addEventListener('click', function (event) {
+    var target = event.target;
 
-    var clickedDropdown = this;
+    if (target.closest) {
+      if (!target.closest(containerClass)) {
+        closeAllDropdowns(toggles);
+      }
+    }
+  });
+}
 
-    dropdownToggles.forEach(function(dropdownToggle) {
-      var dropdownContent = document.getElementById(dropdownToggle.id + "-menu");
+function initNavDropdowns(containerClass) {
+  var toggles = [].slice.call(document.querySelectorAll(containerClass + ' [aria-controls]'));
 
-      if (dropdownToggle === clickedDropdown) {
-        if (dropdownToggle.classList.contains('is-active')) {
-          closeMenu(dropdownToggle, dropdownContent);
-        } else {
-          dropdownToggle.classList.add('is-active');
-          dropdownContent.classList.remove('u-hide');
+  handleClickOutside(toggles, containerClass);
 
-          if (window.history.pushState) {
-            window.history.pushState(null, null, '#' + dropdownToggle.id);
-          }
-        }
-      } else {
-        if (!isDescendant(dropdownContent, clickedDropdown)) {
-          dropdownToggle.classList.remove('is-active');
-          dropdownContent.classList.add('u-hide');
-        }
+  toggles.forEach(function (toggle) {
+    toggle.addEventListener('click', function (e) {
+      e.preventDefault();
+
+      const wasOpen = toggle.parentElement.classList.contains('is-active');
+      closeAllDropdowns(toggles);
+      if (!wasOpen) {
+        toggleDropdown(toggle, true);
       }
     });
   });
-});
-
-function closeMenu(dropdownToggle, dropdownContent) {
-  dropdownToggle.classList.remove('is-active');
-  if (window.history.pushState) {
-    window.history.pushState(null, null, window.location.href.split('#')[0]);
-  }
 }
 
-if (window.location.hash) {
-  var tabId = window.location.hash.split('#')[1];
-  var tab = document.getElementById(tabId);
-  var tabContent = document.getElementById(tabId + '-menu');
-
-  if (tab) {
-    setTimeout(function() {
-      document.getElementById(tabId).click();
-    }, 0);
-  }
-}
-
-function closeMainMenu() {
-  var navigationLinks = document.querySelectorAll('.p-dropdown__toggle');
-
-  navigationLinks.forEach(function(navLink) {
-    navLink.classList.remove('is-active');
-  });
-}
-
-document.addEventListener('click', function(event) {
-  if (!event.target.closest('.p-dropdown__link') && !event.target.closest('.p-dropdown__toggle a')) {
-    closeMainMenu();
-  }
-});
+initNavDropdowns('.p-navigation__item--dropdown-toggle')
