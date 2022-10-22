@@ -123,7 +123,7 @@ content: |-
   <!--
   Those cover a lot of Go's internal memory allocation and Go routine metrics as well as a couple of LXD specific metrics like the daemon uptime and the number of background operations being run.
   -->
-  これらは、多くの Go の内部メモリー割り当てと Go ルーチンメトリクスに加えて、デーモンの稼働時間や実行中のバックグラウンド操作数などの LXD 特有のメトリクスもいくつかカバーしています。
+  これらは、多くの Go の内部メモリー割り当てと goroutine メトリクスに加えて、デーモンの稼働時間や実行中のバックグラウンド操作数などの LXD 特有のメトリクスもいくつかカバーしています。
 
   #### クラスター加入用トークンの有効期限 <!-- Cluster join token expiry -->
   <!--
