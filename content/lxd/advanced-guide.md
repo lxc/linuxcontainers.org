@@ -9,37 +9,7 @@ This guide gives you more information about several features of LXD.
 
 
 # Configuration of instances
-See [Configure instances](/lxd/getting-started-cli/#configure-instances).
-
-For now virtual machines support less features than containers.
-
-You can see what configuration options are available for virtual machines in the [LXD documentation for instances](/lxd/docs/master/instances#keyvalue-configuration). All categories and keys that contain the terms `virtual-machine` or `VM` are supported.
-
-## lxc launch flags
-You can apply flags to add configuration options to `lxc launch`.
-
-### Short list of flags:
-<!-- use html table? -->
-```
--p profilename   # apply a profile
-
--c key=value   # apply a config key/value
-```
-
-Usage:
-
-	lxc launch imageserver:imagename instancename -p profile1 -c key1=value
-
-!!! note
-    To apply multiple profiles or config keys, use one flag for each, like:
-
-	    lxc launch imageserver:imagename instancename -p profile1 -p profile2
-
-	    lxc launch imageserver:imagename instancename -c key1=value -c key2=value
-
-## Profiles
-
-See [Use profiles](/lxd/getting-started-cli/#use-profiles).
+See [How to create instances](/lxd/docs/latest/howto/instances_create) and [How to configure instances](/lxd/docs/latest/howto/instances_configure).
 
 # Cloud-init
 `cloud-init` is a software for automatic customization of a Linux distribution.
@@ -355,17 +325,17 @@ After the image is built, see [Import images](#import-images) for how to import 
 
 
 # Networks
-See LXD-documentation for details:
+See the LXD documentation for details:
 
-* [Networks documentation](/lxd/docs/master/networks)
-* [Network devices](/lxd/docs/master/instances#type-nic)
-* [Proxy devices](/lxd/docs/master/instances#type-proxy)
+* [Networks documentation](/lxd/docs/latest/networks)
+* [Network devices](/lxd/docs/latest/reference/devices_nic)
+* [Proxy devices](/lxd/docs/latest/reference/devices_proxy)
 
 
-# Storages
-See LXD-documentation for details:
+# Storage
+See the LXD documentation for details:
 
-[Storage documentation](/lxd/docs/master/storage)
+[Storage documentation](/lxd/docs/latest/storage)
 
 
 # Command aliases
@@ -386,18 +356,6 @@ For example:
 	lxc alias add delete "delete -i"
 
 This will link the command `lxc delete` to `lxc delete -i`. So if you run `lxc delete` the LXD-client will run `lxc delete -i` instead.
-
-# Tips & tricks
-
-## Prevent accidental deletion of an instance
-`Method 1`: Set an alias to be always prompted for approval when using `lxc delete`:
-
-	lxc alias add delete "delete -i"
-
-`Method 2`: Or apply this configuration key to the instance: `security.protection.delete=true`
-
-This way the instance can't be deleted, until you change this config key.
-
 
 # Further information & links
 You find more information on the following pages:
