@@ -1,0 +1,301 @@
+title: LXD 5.8 has been released
+date: 2022/11/18 16:11
+origin: https://discuss.linuxcontainers.org/t/lxd-5-8-has-been-released/15686
+content: |-
+  ### Introduction
+  The LXD team is very excited to announce the release of LXD 5.8!
+
+  Another reasonably light release as the entire LXD team has been traveling to Prague for some meetings over the past few weeks.
+
+  Nevertheless, we got to land some pretty exciting features and performance improvements in time for this release!
+
+  Enjoy!
+
+  ### New features and highlights
+  #### CPU hotplug in VMs
+  The value of `limits.cpu` in virtual machines can now be live updated.
+  This allows for hot-plugging and hot-removing of CPUs to the virtual machine.
+
+      stgraber@castiana:~$ lxc launch images:ubuntu/22.04/cloud v1 --vm
+      Creating v1
+      Starting v1
+      stgraber@castiana:~$ lxc exec v1 -- lscpu -e -a
+      CPU NODE SOCKET CORE L1d:L1i:L2:L3 ONLINE
+        0    0      0    0 0:0:0:0          yes
+
+      stgraber@castiana:~$ lxc config set v1 limits.cpu=2
+      stgraber@castiana:~$ lxc exec v1 -- lscpu -e -a
+      CPU NODE SOCKET CORE L1d:L1i:L2:L3 ONLINE
+        0    0      0    0 0:0:0:0          yes
+        1    -      -    - -                 no
+
+      stgraber@castiana:~$ lxc exec v1 -- bash
+      root@v1:~# echo 1 > /sys/bus/cpu/devices/cpu1/online
+      exit
+
+      stgraber@castiana:~$ lxc exec v1 -- lscpu -e -a
+      CPU NODE SOCKET CORE L1d:L1i:L2:L3 ONLINE
+        0    0      0    0 0:0:0:0          yes
+        1    0      0    1 3:3:3:0          yes
+
+      stgraber@castiana:~$ lxc config set v1 limits.cpu=1
+      stgraber@castiana:~$ lxc exec v1 -- lscpu -e -a
+      CPU NODE SOCKET CORE L1d:L1i:L2:L3 ONLINE
+        0    0      0    0 0:0:0:0          yes
+      stgraber@castiana:~$
+      stgraber@castiana:~$ lxc launch images:ubuntu/22.04/cloud v1 --vm
+      Creating v1
+      Starting v1
+      stgraber@castiana:~$ lxc exec v1 -- lscpu -e -a
+      CPU NODE SOCKET CORE L1d:L1i:L2:L3 ONLINE
+        0    0      0    0 0:0:0:0          yes
+
+      stgraber@castiana:~$ lxc config set v1 limits.cpu=2
+      stgraber@castiana:~$ lxc exec v1 -- lscpu -e -a
+      CPU NODE SOCKET CORE L1d:L1i:L2:L3 ONLINE
+        0    0      0    0 0:0:0:0          yes
+        1    -      -    - -                 no
+
+      stgraber@castiana:~$ lxc exec v1 -- bash
+      root@v1:~# echo 1 > /sys/bus/cpu/devices/cpu1/online
+      exit
+
+      stgraber@castiana:~$ lxc exec v1 -- lscpu -e -a
+      CPU NODE SOCKET CORE L1d:L1i:L2:L3 ONLINE
+        0    0      0    0 0:0:0:0          yes
+        1    0      0    1 3:3:3:0          yes
+
+      stgraber@castiana:~$ lxc config set v1 limits.cpu=1
+      stgraber@castiana:~$ lxc exec v1 -- lscpu -e -a
+      CPU NODE SOCKET CORE L1d:L1i:L2:L3 ONLINE
+        0    0      0    0 0:0:0:0          yes
+      stgraber@castiana:~$
+
+  #### Device override on init and launch
+  It's now possible to override specific devices at `lxc launch` or `lxc init` time.
+  This is particularly useful to set a custom root disk size.
+
+      stgraber@castiana:~$ lxc launch images:ubuntu/22.04 u1 -d root,size=20GiB
+      Creating u1
+      Starting u1
+      stgraber@castiana:~$ lxc exec u1 -- df -h /
+      Filesystem               Size  Used Avail Use% Mounted on
+      rpool/lxd/containers/u1   21G  327M   20G   2% /
+      stgraber@castiana:~$
+
+  #### Record of volume creation date
+  Custom storage volumes now feature a creation date.
+
+      stgraber@castiana:~$ lxc storage volume create default foo
+      Storage volume foo created
+
+      stgraber@castiana:~$ lxc storage volume show default foo
+      config: {}
+      description: ""
+      name: foo
+      type: custom
+      used_by: []
+      location: none
+      content_type: filesystem
+      project: default
+      created_at: 2022-11-18T16:49:36.857660311Z
+
+  This puts custom storage volumes in line with what's done for instances and images as well as provide additional useful information when dealing with migration and refreshes.
+
+  ### Complete changelog
+  Here is a complete list of all changes in this release:
+
+  [details="Full commit list"]
+   - doc: Clarify that remote token expiry default to no expiry
+   - doc: Add missing expires_at field to token structs
+   - lxd/db/operationtype: Rename to RemoveExpiredTokens
+   - lxd: Remove auto removal of cluster join tokens
+   - lxd: Add tasks for expired token removal
+   - shared/api/init: Add exported preseed structs
+   - lxd/main/init/preseed: Update usages
+   - shared/version/api: Update api extensions
+   - lxd/device: Continue if device is nil
+   - lxc: Extend image filtering
+   - lxd/network/driver/ovn: Get dynamically allocated IPs from OVN switch port even if not using DHCP
+   - shared/cert: Add GenerateTrustCertificate to shared package
+   - lxd/cluster/connect: Update usages
+   - lxd/cluster/connect: Use 409 error for existing trusted cert
+   - test/suites: Unset join_token_expiry when done
+   - test/suites: Increase join_token_expiry to 10 seconds
+   - doc/authentication: clarify expiration of cluster join tokens
+   - lxd/api/internal: Only cancel shutdown wait if forced
+   - lxd/operations: Simplify waitForOperations
+   - lxd/daemon: Remove unnecessary log message in Stop
+   - lxc init: Fix usage line in the help output
+   - doc/instances: restructure content
+   - doc/instances: quick clean-up of content
+   - i18n: Update translation templates
+   - lxd/device/nic/bridged: Relax duplicate instance name check
+   - test: Update check for bridged NIC duplicate instance DNS name
+   - api: Adds storage_volumes_created_at extension
+   - shared/api/storage/pool/volume: Adds CreatedAt field to StorageVolume and StorageVolumeSnapshot structs
+   - lxd/db/cluster: Adds creation_date column to storage_volumes and storage_volumes_snapshots table
+   - lxd/db/storage/volume/snapshots: Comment and error improvements to CreateStorageVolumeSnapshot
+   - lxd/db/storage/volume/snapshots: Adds creationDate argument to CreateStorageVolumeSnapshot
+   - lxd/db/storage/volume/snapshots: Clarify projectName argument in CreateStorageVolumeSnapshot
+   - lxd/db/storage/volumes: Clarify projectName argument in CreateStoragePoolVolume
+   - lxd/db/storage/volumes: Comment and error improvements to CreateStoragePoolVolume
+   - lxd/db/storage/volumes: Adds creationDate argument to CreateStoragePoolVolume
+   - lxd/storage/utils: Adds creationDate argument to VolumeDBCreate
+   - lxd: Update storage volume tests
+   - lxd/storage/utils: Adds creationDate argument to VolumeDBCreate
+   - lxd/db/storage/volumes: Updates GetStoragePoolVolumesWithType to populate creation date
+   - lxd/db/storage/volumes: Updates GetStoragePoolVolumeWithID to populate creation date
+   - lxd/db/storage/volumes: Updates GetStoragePoolVolumes to populate creation date
+   - lxd/db/storage/volumes: Updates GetLocalStoragePoolVolumeSnapshotsWithType to populate creation date
+   - lxd/db/storage/volumes: Updates GetCustomVolumesInProject to populate creation date
+   - lxd/db/storage/volume/snapshots: Updates GetStorageVolumeSnapshotWithID to populate creation date
+   - lxd/db/storage/volume/snapshots: Updates GetExpiredStorageVolumeSnapshots to populate creation date
+   - lxd/storage/backend/lxd: Use instance's creation date for storage volume creation date in CreateInstance
+   - lxd/storage/backend/lxd: Updates CreateInstanceFromBackup to populate creation date
+   - lxd/storage/backend/lxd/patches: Updates patchMissingSnapshotRecords with VolumeDBCreate usage
+   - lxd/storage/backend/lxd: Use new instance to populate creation date in CreateInstanceFromCopy
+   - lxd/storage/backend/lxd: Use source snapshot for creation date in RefreshCustomVolume
+   - lxd/storage/backend/lxd: Use source snapshot for creation date in RefreshInstance
+   - lxd/storage/backend/lxd: Use new instance for creation date in CreateInstanceFromImage
+   - lxd/storage/backend/lxd: Use new instance for creation date in CreateInstanceFromMigration
+   - lxd/storage/backend/lxd: Use new instance for creation date in CreateInstanceSnapshot
+   - lxd/storage/backend/lxd: Populate creation date in EnsureImage
+   - lxd/storaga/backend/lxd: Populate creation date in CreateCustomVolume
+   - lxd/storage/backend/lxd: Populate creation date in CreateCustomVolumeFromCopy
+   - lxd/storage/backend/lxd: Populate creation date in CreateCustomVolumeFromMigration
+   - lxd/storage/backend/lxd: Populate creation date in ImportCustomVolume
+   - lxd/storage/backend/lxd: Populate creation date in CreateCustomVolumeSnapshot
+   - lxd/storage/backend/lxd: Populate creation date in GenerateInstanceBackupConfig
+   - lxd/storage/backend/lxd: Populate creation date in ImportInstance
+   - lxd/storage/backend/lxd: Populate creation date in CreateCustomVolumeFromBackup
+   - lxc/storage/volume: Adds Created output to cmdStorageVolumeInfo
+   - lxd/storage/volumes/snapshot: Add creation date to the API output
+   - test: Add storage volume creation date tests
+   - shared/netutils/network/linux/cgo: Don't call net.InterfaceByIndex in NetnsGetifaddrs
+   - lxd/instance/instance/interface: Allow passing host interface info into Render* functions
+   - lxd/instance/drivers/driver/lxc: Update Render functions to allow receiving list of host interface info
+   - lxd/instance/drivers/driver/qemu: Render* function interface updates
+   - lxd/instance: Update Render* function usage
+   - lxd/main/forknet: netutils.NetnsGetifaddrs usage
+   - lxc: Adds util to parse device overrides.
+   - lxc: Use device override parser in lxc copy.
+   - lxd/instance/instance/interface: Adds hostInterfaces argument to Metrics
+   - lxd/instance/drivers: Updated Metrics implementation to accept hostInterfaces argument
+   - lxd/api/metrics: inst.Metrics usage
+   - Add resolv.conf location under WSL
+   - doc: remove intro sentence for configuration
+   - lxc: Fetch profiles and apply device overrides on init/launch.
+   - po: Updates pot files.
+   - doc/clustering: clarify that you should remove offline members
+   - shared/validate: Add CPU set validator
+   - shared: Use validator function for limits.cpu
+   - suites/basic: Adds test for overriding device config on init.
+   - lxd: Sets Location field to hostname for GET /1.0 in devlxd API.
+   - lxd/instances/lxc: Fix build on MIPS
+   - doc/instances: add instructions on managing instances
+   - doc/instances: move QEMU config howto to configuration section
+   - doc/instances: make titles more consistent
+   - doc/instances: add instructions for configuring instances
+   - doc/instances: update Live update column
+   - doc/instances: update Profiles documentation
+   - lxd/storage/pools: Initialize pool config if nil
+   - devlxd: Do not return devlxd info if turned off
+   - lxd/instance/drivers: Add function to get agent connection info
+   - lxd/instance/drivers: Use getAgentConnectionInfo()
+   - lxd/instance/drivers: Add function to store connection info
+   - lxd/instance/drivers: Notify lxd-agent about devlxd early
+   - lxd-agent: Add function to store connection info
+   - client/util: Use ConnectionArgs.Proxy with unix socket client
+   - lxd-agent: Return correct error when querying devlxd
+   - lxd-agent: Start devlxd before calling systemd-notify
+   - lxd: Remove shadowed variable name.
+   - scripts/bash/lxd-client: Add missing file mount sub-command
+   - doc: add SFTP to the wordlist
+   - doc/instances: add instructions for accessing files
+   - lxd: Check LXD ready state before changing instance
+   - lxd/network/driver/bridge: Adds MTU DHCP option when using fan mode
+   - shared/api: Add devlxd structs
+   - lxd/instance/drivers/qmp: Add function to query hotpluggable CPUs
+   - lxd/instance/drivers: Add function to hot-(un)plug CPUs
+   - lxd: Use shared devlxd structs
+   - lxd-agent/api: Use shared devlxd structs
+   - doc/instances: add instructions for running commands and logging on
+   - doc: fix broken link
+   - test/suites/sql: safe grep usage
+   - lxd/device/tpm: Handle TPM devices in profiles
+   - doc/projects: add YouTube video
+   - doc/migration: add YouTube video
+   - doc: the location is set in responses from GET /1.0 in devlxd API
+   - workflows: update package definitions only once
+   - workflows: use apt-get instead of apt to avoid a warning
+   - shared/api: fix typos s/cerated/created/
+   - doc/rest-api: Refresh swagger YAML
+   - doc: add a reminder to run "make update-api" in contributing doc
+   - lxd/init: Use strict checking for preseed
+   - test/lint: Check that doc/rest-api.yaml is kept up to date
+   - workflows: sort package list and remove duplicated "libdqlite-dev"
+   - doc: Fix configuration directory in remotes.md
+   - build(deps): bump actions/dependency-review-action from 2 to 3
+   - lxd/instances: Comment clarification
+   - lxd/fsmonitor/drivers/driver/fanotify: Add context to getEvents
+   - lxd/instances: Limit shutdown concurrency to number of instances or number of CPU cores (which ever is less)
+   - lxd/daemon: Removes duplicated Stopping instances logging
+   - test: Increase lxc_remote timeout to 120s
+   - doc/instances: add example for filtering by location
+   - lxd/migrate: Remove uneccessary error log entry in migrationSourceWs.Connect
+   - shared/tcp/tcp/timeout/user: Improve error message in SetUserTimeout
+   - shared/tcp/tcp/timeouts: Adds userTimeout argument to SetTimeouts
+   - client: tcp.SetTimeouts default larger user timeout usage
+   - lxd: tcp.SetTimeouts default larger user timeout usage
+   - lxd/cluster/gateway: tcp.SetTimeouts usage keeping original 30s timeout
+   - lxd/storage/backend/lxd: Update DeleteImage to not use GetImageFromAnyProject
+   - lxd/acme: Switch to github.com/go-acme/lego/v4
+   - Update gomod
+   - lxd/devlxd: Populate NIC device hwaddr field from volatile in devlxdDevicesGet
+   - test: Fix delay in lxd shutdown during devlxd test
+   - devlxd-client: Adds devices support
+   - test: Adds devlxd NIC devices hwaddr check
+   - doc/security: add YouTube link
+   - lxd/api: Improve top level 404 log message
+   - lxd/instance/operationlock: Adds instance initiated concept to InstanceOperation
+   - lxd/instance/drivers: Fixes container initiated instance-shutdown lifecycle event
+   - lxd/instance/drivers: Drop unnecessary line
+   - lxd/instance/drivers: Set CPU QEMU template depending on pinning
+   - lxc/instance/drivers: Dynamically add CPUs on start
+   - lxd/instance/drivers: Allow CPU hotplugging for VMs
+   - api: Add cpu_hotplug extension
+   - doc: Mention limits.cpu live update for VMs
+   - lxd/storage/utils: Adds generic CompareSnapshots function and type
+   - lxd/instance/instance/utils: Removes unused CompareSnapshots function
+   - lxd/instance: Updates instanceCreateAsCopy to use storagePools.CompareSnapshots
+   - lxd/migrate/instance: Update migrationSink.Do to use storagePools.CompareSnapshots
+   - lxd/migrate/instance: Remove unused migrationCompareSnapshots
+   - lxd/storage/backend/lxd: Updates RefreshCustomVolume to use CompareSnapshots
+   - lxd/instance/instance/utils: Return nil error on success in LoadFromBackup
+   - lxd/api/internal: Return explicit nil instance on error in internalContainerHookLoadFromReference
+   - lxd/migrate/storage/volumes: Updates migrationSink.DoStorage to use storagePools.CompareSnapshots
+   - lxd/migrate/storage/volumes: Removes unused migrationStorageCompareSnapshots
+   - test: Updates migration tests now that migrating custom volumes uses creation date comparison
+   - test: Reduce "shellcheck disable=SC2034" usage
+   - lxd/device/disk: Fix attaching cephfs volumes to VMs
+   - lxd/cluster/resolve: Don't convert not found error in ResolveTarget to internal server error
+   - lxc/storage/volume: Fix copying storage volume to a remote from a cluster member
+   - lxd/storage/drivers/driver/zfs/volumes: Allow zfs.blocksize to control volblocksize
+   - lxd/storage/utils: Improve error and comment in VolumeDBCreate
+   - gomod: Update dependencies
+   - i18n: Update translations from weblate
+   - gomod: Fix minio build
+  [/details]
+
+  ### Try it for yourself
+  This new LXD release is already available for you to try on our [demo service](https://linuxcontainers.org/lxd/try-it/).
+
+  ### Downloads
+  The release tarballs can be found on our [download page](https://linuxcontainers.org/lxd/downloads/).
+
+  Binary builds are also available for:
+
+   - **Linux:** snap install lxd
+   - **MacOS:** brew install lxc
+   - **Windows:** choco install lxc
