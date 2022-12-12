@@ -1,0 +1,258 @@
+title: LXD 5.9 has been released
+date: 2022/12/12 01:12
+origin: https://discuss.linuxcontainers.org/t/lxd-5-9-has-been-released/15907
+content: |-
+  ### Introduction
+  The LXD team is very excited to announce the release of LXD 5.9!
+
+  This is going to be our last release of 2022.
+  We wish you all happy holidays and look forward to seeing you all in 2023!
+
+  As the last release of the year, this was also a shortened development cycle of just three weeks, most of which was spent on bugfixes and performance improvements, perfect to wrap up the year!
+
+  Enjoy!
+
+  ### New features and highlights
+
+  ### Complete changelog
+  Here is a complete list of all changes in this release:
+
+  #### Network zones project feature
+  Prior to this release, network zones (DNS) were tied to `features.networks`, effectively requiring the use of OVN in order to get per-project DNS zones.
+
+  This has now been split up into a new `features.networks.zones` allowing for use of per-project zones in environment that don't use `features.networks`. When dealing with a shared network, that network may specify multiple zones (comma separated). Each zone will then only contain records for the project it belong to.
+
+  [details="Full commit list"]
+   - lxd/network/driver/bridge: Remove unnecessary query for server name in Leases
+   - lxd: Fix use of inst.Project() in logs with inst.Project().Name
+   - lxd/api/metrics: Fix race condition on map access in metricsGet
+   - lxd/instance/drivers/driver/qemu: Fix blockNodeName to use base64 raw URL format
+   - lxd/instance/post: Prevent moving instance to invalid (or empty) name
+   - lxd/db: Fix default profile assigment on image creation in the default project
+   - lxd/db/cluster: Fix the comment for InitProjectWithoutImages function
+   - lxd/main: Fix that change project "features.images" to "false" didn't add the project default profile to images from "default" project
+   - lxd/instance/drivers: Restrict CPU hotplugging
+   - lxd/instance/drivers: Fix CPU hotplug check
+   - lxd/instance/drivers: Handle unset limits.cpu
+   - tests: Add test for correct default profile assigment to images in projects with "features.images=false"
+   - lxd/device/tpm: Expose tpmrm to the container
+   - doc: allow returning traffic in DOCKER-USER custom chain
+   - scripts/bash/lxd-client: fix autocompletion not working
+   - lxd/util: Skip cephobject in AvailableStorageDrivers
+   - lxd/apparmor/archive: Fix image unpack apparmor profile in archiveProfile
+   - lxd/daemon/storage: Improve errors in daemonStorageValidate
+   - lxd/api/1.0: Improve errors in doApi10Update
+   - lxd/storage/drivers/volume: Use roundVolumeBlockFileSizeBytes in ConfigSizeFromSource
+   - test: Add test for custom volume image unpack
+   - lxd/storage/drivers/volume: Update Test_Volume_ConfigSizeFromSource tests
+   - lxd/device/nic: Add hwaddr key to liblxc NIC config
+   - lxd/containers: Fix error handling on stop/shutdown
+   - lxd/containers: release the liblxd instance if raw.lxc is invalid
+   - lxd/fsmonitor/drivers/driver/fsnotify: Switch away from github.com/fsnotify/fsnotify package
+   - lxd/device/device/utils/unix/events: Adds event action to error log in unixRunHandlers
+   - lxd/device/unix/common: Detect missing source device in unixDeviceAttributes
+   - lxd/fsmonitor/drivers/common: Clean file paths for handler registrations
+   - lxd/fsmonitor/drivers/interface: Adds Name() to definition
+   - lxd/fsmonitor/drivers/driver/inotify: Renames fsnotify driver to inotify
+   - lxd/fsmonitor/drivers/driver/fanotify: Adds Name() function
+   - lxd/fsmonitor/drivers/load: Rename fsnotify to inotify
+   - lxd/fsmonitor/load: Use inotify instead of fsnotify
+   - Replace "the the" with "the"
+   - lxd/main/forkdns: Replace github.com/fsnotify/fsnotify with k8s.io/utils/inotify
+   - lxd/main/forkdns: Wrap error and don't include newline in returned error
+   - gomod: Adds k8s.io/utils
+   - lxd/device/device/utils/unix/events: Only call filepath.Clean once in unixRegisterHandler
+   - lxd/device/device/utils/unix/events: Don't use logger.Debugf in unixRegisterHandler
+   - config: Fix inconsistency with acme.agree_tos option
+   - lxc/init: Improve cmdInit device override to work nicely with --storage and --network flags
+   - lxd/utils: Improve error in parseDeviceOverrides
+   - i18n: Update translation templates
+   - lxd/storage/drivers/interface: Add roundVolumeBlockSizeBytes definition to Driver interface
+   - lxd/storage/drivers/driver/common: Move roundVolumeBlockSizeBytes to common driver
+   - lxd/storage/drivers: pool driver roundVolumeBlockSizeBytes usage
+   - lxd/storage/drivers/utils: Removes unused roundVolumeBlockFileSizeBytes function
+   - lxd/storage/drivers/driver/lvm: Overrides roundVolumeBlockSizeBytes function
+   - lxd/network/network/utils: Adds filter support to UsedByInstanceDevices
+   - lxd/network/driver/bridge: Updates Leases to use UsedByInstanceDevices
+   - lxd/network/driver/ovn: Update Leases to use UsedByInstanceDevices
+   - lxd: Remove nictype checks for ovn
+   - qemu: Add more feature checks
+   - qemu: Check CPU hotplug support using features not architectures
+   - drivers: Issue log message when instance type is operational
+   - lxd/network/driver/common: Adds netType var and moves Type() to common
+   - lxd/network/driver: Removes per-driver Type() function
+   - lxd/network/network/load: Ensure LoadByType initialises netType variable
+   - lxd/network/network/utils: Adds network type to NIC connected to network logic
+   - lxd/device/nic/bridged: Update checkAddressConflict to use UsedByInstanceDevices
+   - lxd/device/nic/ovn: Pass network type to UsedByInstanceDevices
+   - lxd/network/driver/bridge: Pass network type to UsedByInstanceDevices
+   - lxd/network/driver/ovn: Pass network type to UsedByInstanceDevices
+   - lxd/network/driver/common: Pass network type to UsedBy
+   - lxd/networks: Pass network type to network.UsedBy
+   - test: Add timeout to interactive edit commands
+   - test: check LXC driver version instead of QEMU's
+   - test: image short fingerprints are 12 chars long
+   - test: use `grep` instead of `cat | grep`
+   - doc/instances: clean up devices overview section
+   - doc/devices: clean up docs for `none` device type
+   - doc/devices: sort tables for `nic` device type alphabetically
+   - test: use `awk` instead of `awk | awk`
+   - test: use `awk` instead of `grep | cut`
+   - ceph: Drop unnecessary volume.block.* config keys
+   - Makefile: optimize `find` call
+   - Makefile: check `test/extras/*.sh` using shellcheck
+   - test/extras: shellcheck fixes
+   - shared/subprocess/testscript/signal.sh: lookup signal name to trap
+   - doc: simplify markdown error postprocessing
+   - doc: move trap before preprocessing
+   - doc: silence `command -v`'s output
+   - lxd/project/permissions: Use consistent quoting in errors
+   - lxd/project/permissions: Improve error wrapping
+   - lxd/storage/volumes: Pass request context to transaction
+   - lxd/instance/put: Use request context for transaction
+   - lxd/storage/volumes: Don't check project limits when doing a volume snapshot restore
+   - lxd/network/driver/bridge: Only include downstream OVN virtual router addresses for network's project in Leases
+   - lxd/network/driver/bridge: Add network's own gateway IPs to Leases list
+   - lxd/network/driver/ovn: Add network's own gateway IPs to Leases list
+   - lxd/device/proxy: Simplify check in validateConfig
+   - doc: add link to Running in production YouTube video
+   - api: Adds projects_networks_zones extension
+   - doc: Adds features.networks.zones project feature and updates networks dns.zone.forward setting
+   - doc: Update network zones howto with multiple forward zones info
+   - lxd/db/cluster/update: Patch to add features.networks.zones=true to any project that has features.networks=true
+   - lxd/db/cluster/projects: Reworks project features info and adds features.networks.zone feature
+   - lxd/db/migration: Switch to using cluster.ProjectFeatures in importPreClusteringData
+   - lxd/db/cluster/open: ProjectFeatures usage
+   - lxd/api/project: cluster.ProjectFeatures usage in projectsPost
+   - lxd/api/project: Use cluster.ProjectFeatures in projectChange
+   - lxc/project: Adds features.networks.zones support to cmdProjectList
+   - lxd/project/project: Clarifies comment on NetworkProject
+   - lxd/project/project: Adds NetworkZoneProjectFromRecord and NetworkZoneProject functions
+   - lxd-user/lxd: Enable features.networks.zones project feature by default for user projects
+   - lxd/api/project: Add validation for features.networks.zones
+   - lxd/network/zones: Make network zones belong to their effective network zone project
+   - lxd/network/zones: Use current method of generating API URLs
+   - lxd/network/zone/zone: Update usedBy to handle networks having multiple zones
+   - lxd/network/driver: Update validatation of network forward zone key
+   - lxd/db/network/zones: Rename GetNetworkZones to GetNetworkZonesByProject
+   - lxd/network/zones: GetNetworkZonesByProject usage
+   - lxd/network/zone/reverse: Update reverse function to take net.IP
+   - lxd/network/zone/zone: Update Content to handle networks supporting multiple forward zones
+   - lxd/db/network/zones: Removes unused GetNetworksForZone function
+   - i18n: Update translation templates
+   - test: Update tests to check for network zones project views
+   - docs: Added snap version directory for local remotes
+   - lxd/network/zones: Use project.NetworkZoneProject in networkZonesGet
+   - lxd/apparmor: fix AppArmor profile for qemu-img
+   - lxd/db/generate/db/method: Add generic struct fetching functions
+   - lxd/db/cluster/warnings.mapper: Update generated code
+   - lxd/main/forkdns: Updates serversFileMonitor to only watch for inotify.InMovedTo event
+   - test: Don't use temporary pid files for forkdns
+   - test: Simulate what LXD does when building forkdns servers.conf
+   - test: kill -9 forkdns processes to ensure they are killed
+   - test: Make network zones more strict
+   - doc/howto/cluster/manage: Adds `--cohort="+"` to snap refresh command
+   - lxd/instance/drivers/driver/qemu: Use errors.Is in renderState
+   - lxd/instance/drivers/driver/qemu: Adds non-agent metrics fallback in Metrics
+   - lxd/instance/drivers/driver/qemu: Use shared.IsTrueOrEmpty in agentMetricsEnabled
+   - client/connection: Don't use logger.Debugf
+   - lxd/api/metrics: Correctly size slice of project names in projectNames
+   - lxd/api/metrics: Use request context for DB transaction
+   - lxd/api/metrics: Get internal metrics using existing DB transaction in metricsGet
+   - lxd/api/metrics: Move duplicated code into invalidProjects function
+   - lxd/locking/lock: Adds context support to Lock
+   - lxd: locking.Lock usage
+   - lxd/api/metrics: Use multiple OR filters to avoid calling InstanceList multiple times
+   - lxd/query: Only repeat query as plain request for JSON decode errors in cmdQuery
+   - lxd/api/metrics: Use locking.Lock with timeout in metricsGet
+   - lxd/api/metrics: Limit concurrency of instance metrics building in metricsGet
+   - lxd/api/metrics: Pre-allocate newMetrics map to right size
+   - lxd/db/instances: Adds context argument to InstanceList
+   - lxd: InstanceList with context usage
+   - lxd/api/metrics: Pass request context to InstanceList in metricsGet
+   - lxd/endpoints/vsock: Update VsockAddress to return net.Addr interface
+   - lxd/instance/drivers/driver/qemu: Fix nested VMs in getAgentConnectionInfo
+   - lxd/instance/drivers/driver/qemu: Don't generate agent.conf if no host vsock info in generateConfigShare
+   - lxd/device/nic: Use api.NetworkStatusUnavailable constant
+   - lxd/resources/network: Ignore errors from ethtoolAddPortInfo
+   - doc/devices: clean up docs for `nic` device type
+   - doc/devices: sort tables alphabetically
+   - doc/devices: clean up docs for `disk` device type
+   - doc/devices: clean up docs for `gpu` device type
+   - doc/devices: clean up docs for `infiniband` device type
+   - doc/devices: clean up docs for `pci` device type
+   - doc/devices: clean up docs for `proxy` device type
+   - doc/devices: clean up docs for `tpm` device type
+   - doc/devices: clean up docs for `unix-block` device type
+   - doc/devices: clean up docs for `unix-char` device type
+   - doc/devices: clean up docs for `unix-hotplug` device type
+   - doc/devices: clean up docs for `usb` device type
+   - doc/devices: document device option override at creation
+   - doc/devices: fix doc on how to use a specific VF as a NIC
+   - lxd/migrate/instance: Don't use multi-sync when using optimized transfer mode
+   - lxd/storage/drivers: Make using volSrcArgs.{MultiSync|FinalSync} with MigrateVolume an error
+   - lxd/storage/drivers/driver/zfs/volumes: Remove unused multi-sync logic from migrateVolumeOptimized
+   - lxd/instance/drivers: Improve pool name change check error
+   - lxd/storage/drivers/driver/zfs/volumes: Use deferred option for deleting temporary snapshots
+   - test: Force stop containers in migration tests
+   - lxd/storage/drivers/utils: Use consistent error quoting in TryUnmount
+   - lxd/storage/drivers/driver/zfs/volumes: Use existing dataset var in UnmountVolume
+   - lxd/api/1.0: Move wait for server to be ready out of doApi10UpdateTriggers
+   - lxd/api/1.0: Explicitly use context.Background() in api10Put and doApi10Update
+   - lxd/api/1.0: Use request context in doApi10Update when validating request
+   - lxd/api/1.0: Use contextual logging
+   - lxd/storage: Disable io_uring on ZFS
+   - lxd/instance/drivers/qmp/commands: Updates SendFile to use Go's JSON encoder
+   - lxd/instance/drivers/qmp/commands: Adds CloseFile function
+   - lxd/instance/drivers/driver/qemu: Fix macvlan NICs losing connectivity on LXD restart
+   - lxd/instance/drivers/qmp/commands: Adds QueryCPUs function
+   - lxd/instance/drivers/driver/qemu: Fix multi-queue NIC support in addNetDevConfig
+   - lxd/device/nic/sriov: Fix nicSRIOV to pass VF MAC address to VM if not specified
+   - lxd/instance/drivers/driver/qemu: Improve MAC parse error in writeNICDevConfig
+   - lxd/apparmor: fix AppArmor instance_qemu profile
+   - lxd/migrate/instance: Consider RBD transfer non-optimised
+   - doc/instances: clean up docs for instance properties
+   - doc/instances: reorder instance options docs
+   - doc/instances: fix links to instance options
+   - doc/instances: add how-to guide for creating snapshots
+   - lxd/storage/drivers/driver/ceph/volumes: Don't expect multi-sync for live optimized transfer in CreateVolumeFromMigration
+   - lxd/storage/drivers/driver/ceph/volumes: Don't allow multi-sync for optimized transfer in MigrateVolume
+   - Revert "lxd/migrate/instance: Consider RBD transfer non-optimised"
+   - doc/instances: clean up instance options
+   - doc/snapshots: add information about snapshot pattern format
+   - doc/instances: clean up unit reference
+   - doc/instances: move Override QEMU configuration
+   - doc/instances: clean up QEMU override section
+   - lxd/storage/drivers/interface: Make HasVolume return an error
+   - lxd/storage/backend/lxd: b.driver.HasVolume usage
+   - lxd/storage/backend/lxd: Check storage pool is ready before checking usage
+   - lxd/storage/drivers/driver/btrfs/volumes: HasVolume usage
+   - lxd/storage/drivers/driver/ceph: HasVolume usage
+   - lxd/storage/drivers/driver/cephfs: HasVolume usage
+   - lxd/storage/drivers/driver/common: HasVolume usage
+   - lxd/storage/drivers/driver/dir: HasVolume usage
+   - lxd/storage/drivers/driver/lvm: HasVolume usage
+   - lxd/storage/drivers/driver/mock: HasVolume usage
+   - lxd/storage/drivers/driver/zfs: Renames checkDataset to datasetExists
+   - lxd/storage/drivers/generic/vfs: Updates genericVFSHasVolume to return an error
+   - lxd/storage/drivers/driver/ceph: Adds placeholder volume exists check for Mount
+   - lxd/storage/drivers/driver/ceph/volumes: Updates hasVolume to return an error
+   - lxd/storage/drivers/driver/ceph: Adds 10s timeout to GetVolumeUsage and rbdMapVolume
+   - lxd/instance/drivers/qmp: Adds SetAction function
+   - lxd/instance/drivers/driver/qemu: Set reboot action to shutdown
+   - lxd/instance/drivers: Ignore in-use unmount errors on instance stop
+   - i18n: Update translations from weblate
+   - gomod: Update dependencies
+  [/details]
+
+  ### Try it for yourself
+  This new LXD release is already available for you to try on our [demo service](https://linuxcontainers.org/lxd/try-it/).
+
+  ### Downloads
+  The release tarballs can be found on our [download page](https://linuxcontainers.org/lxd/downloads/).
+
+  Binary builds are also available for:
+
+   - **Linux:** snap install lxd
+   - **MacOS:** brew install lxc
+   - **Windows:** choco install lxc
