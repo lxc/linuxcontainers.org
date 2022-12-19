@@ -14,13 +14,15 @@ content: |-
 
   ### New features and highlights
 
-  ### Complete changelog
-  Here is a complete list of all changes in this release:
+
 
   #### Network zones project feature
   Prior to this release, network zones (DNS) were tied to `features.networks`, effectively requiring the use of OVN in order to get per-project DNS zones.
 
   This has now been split up into a new `features.networks.zones` allowing for use of per-project zones in environment that don't use `features.networks`. When dealing with a shared network, that network may specify multiple zones (comma separated). Each zone will then only contain records for the project it belong to.
+
+  ### Complete changelog
+  Here is a complete list of all changes in this release:
 
   [details="Full commit list"]
    - lxd/network/driver/bridge: Remove unnecessary query for server name in Leases
