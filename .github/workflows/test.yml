@@ -8,9 +8,10 @@ jobs:
       fail-fast: false
       matrix:
         python:
-          - 3.6
           - 3.8
           - 3.9
+          - 3.10
+          - 3.11
     runs-on: ubuntu-latest
     steps:
       - name: Install python
