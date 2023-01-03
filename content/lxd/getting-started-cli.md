@@ -110,7 +110,7 @@ Before you can create a LXD instance (a container or a virtual machine), you mus
 
 See [How to initialize LXD](/lxd/docs/latest/howto/initialize/) for instructions.
 
-## Security and access control
+# Security and access control
 Access control for LXD is based on group membership. The root user and all members of the `lxd` group can interact with the local daemon.
 
 If the `lxd` group is missing on your system, create it and restart the LXD daemon. You can then add trusted users to the group. Anyone added to this group will have full control over LXD.
@@ -133,7 +133,7 @@ In the following we will use the built-in remote image servers ([see below](#use
 
 For more options see [Advanced Guide - Advanced options for Images](/lxd/advanced-guide#advanced-options-for-images).
 
-### Use remote image servers
+## Use remote image servers
 The easiest way is to use a built-in remote image server.
 
 You can get a list of built-in image servers with:
@@ -146,7 +146,7 @@ LXD comes with 3 default servers:
  2. `ubuntu-daily:` (for daily Ubuntu images)
  3. `images:` (for a [bunch of other distros](https://images.linuxcontainers.org))
 
-#### List images on server
+### List images on server
 
 To get a list of remote images on server `images`, type:
 
@@ -158,7 +158,7 @@ _Most details in the list should be self-explanatory._
 
 - Alias with `cloud`: refers to images with built-in cloud-init support (see [Advanced Guide - Cloud-Init](/lxd/advanced-guide#cloud-init) and [official cloud-init documentation](https://cloudinit.readthedocs.io/en/latest/))
 
-#### Search for images
+### Search for images
 You can search for images, by applying specific elements (e.g. the name of a distribution).
 
 Show all Debian images:
@@ -169,7 +169,7 @@ Show all 64-bit Debian images:
 
 	lxc image list images: debian amd64
 
-### Images for virtual machines
+## Images for virtual machines
 It is recommended to use the `cloud` variants of images (visible by the `cloud`-tag in their `ALIAS`). They include cloud-init and the LXD-agent. They also increase their size automatically and are tested daily.
 
 # Further information & links
