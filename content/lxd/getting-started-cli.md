@@ -184,9 +184,3 @@ You find more information on the following pages:
 
 - [Forum](https://discuss.linuxcontainers.org/)
     - [Tutorials Section](https://discuss.linuxcontainers.org/c/tutorials)
-
- <!-- footnotes -->
-
- [^1]: [Running virtual machines with lxd](https://discuss.linuxcontainers.org/t/running-virtual-machines-with-lxd-4-0/7519), including a short howto for a Microsoft Windows VM.
-
-///Footnotes Go Here///
