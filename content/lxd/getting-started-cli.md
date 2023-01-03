@@ -102,31 +102,15 @@ You can also find native builds of the LXD client on [GitHub](https://github.com
 3. Select the latest build and download the suitable artifact.
 
 ## Installing from source
-To build and install LXD from source, follow the instructions in [Installing LXD from source](/lxd/docs/master/installing#installing-lxd-from-source).
+To build and install LXD from source, follow the instructions in [Installing LXD from source](/lxd/docs/latest/installing#installing-lxd-from-source).
 
 # Initial configuration
 
-!!! note
-	"Instances" means both containers and virtual machines.
+Before you can create a LXD instance (a container or a virtual machine), you must configure LXD.
 
-Before you can create an instance, you need to configure LXD.
+See [How to initialize LXD](/lxd/docs/latest/howto/initialize/) for instructions.
 
-Run the following command to start the interactive configuration process:
-
-    sudo lxd init
-
-See [Interactive setup options](#interactive-setup-options) for an explanation of the different configuration options.
-
-To create a non-optimized minimal setup with default options, you can skip the configuration steps by adding the `--minimal` flag:
-
-    sudo lxd init --minimal
-
-!!! note
-    Compared to the interactive configuration, the minimal setup will be slower and provide less functionality. Especially the `dir storage backend` (which is used by default) is slower and doesn't provide fast snapshots, fast copy/launch, quotas and optimized backups.
-
-    If you want to use an optimized setup, go through the interactive configuration process instead.
-
-## Security and access control
+# Security and access control
 Access control for LXD is based on group membership. The root user and all members of the `lxd` group can interact with the local daemon.
 
 If the `lxd` group is missing on your system, create it and restart the LXD daemon. You can then add trusted users to the group. Anyone added to this group will have full control over LXD.
@@ -136,24 +120,7 @@ Because group membership is normally only applied at login, you might need to ei
 !!! warning
 	Anyone with access to the LXD socket can fully control LXD, which includes the ability to attach host devices and file systems. Therefore, you should only give access to users who would be trusted with root access to the host.
 
-    You can learn more about LXD security [here](/lxd/docs/master/security).
-
-## Interactive setup options
-
-You can configure the following options during the initial configuration of LXD.
-
-`default=no` means the feature is disabled by default.
-
-| Feature  | Description | Basic configuration options | More information |
-| --- | ------------- | --- | --- |
-| Clustering | A cluster combines several LXD servers. They share the same distributed database and can be managed uniformly using the LXD client (lxc) or the REST API. | default=`no`; <br> If set to `yes`, you can either connect to an existing cluster or create a new one. | LXD documentation: <br> [Clustering](/lxd/docs/master/clustering) |
-| MAAS server | MAAS is an open-source tool that lets you build a data center from bare-metal servers. | default=`no`; <br> If set to `yes`, you can connect to an existing MAAS server and specify the `name`, `URL` and `API key`. | - [maas.io](https://maas.io/) <br> - [MAAS - How to manage VM hosts](https://maas.io/docs/install-with-lxd) |
-| Network bridge | Provides network access for the instances. | You can either use an existing bridge (or interface) or let LXD create a new bridge (recommended). <br> You can also create additional bridges and assign them to instances later. | LXD documentation: <br> - [Networks](/lxd/docs/master/networks) <br> - [Network interface](/lxd/docs/latest/reference/devices_nic) |
-| Storage pools | Instances etc. are stored in storage pools. | For testing purposes, you can create a loop-backed storage pool. <br> But for production use you should use an empty partition (or full disk) instead of loop-backed storages (because loop-backed pools are slower and their size can't be reduced). <br> The recommended backends are `ZFS` and `btrfs`. <br> You can also create additional storage pools later. | LXD documentation: <br> - [About storage](/lxd/docs/master/explanation/storage/) <br> - [Storage drivers](/lxd/docs/master/reference/storage_drivers/) |
-| Network access | Allows access to the server over network. |  default=`no`; <br> If set to `yes`, you can connect to the server over network. <br> You can set a `password` or accept the client certificate manually. | - |
-| Automatic image update | You can download images from image servers. In this case, images can be updated automatically. | default=`yes`; <br> If set to `yes`, LXD will update the downloaded images regularly. | LXD documentation: <br> [Image handling](/lxd/docs/master/image-handling) |
-| YAML lxd init preseed | Will display a summary of your chosen configuration options in the terminal. | default=`no` | - |
-
+    You can learn more about LXD security [here](/lxd/docs/latest/security).
 
 # Instances
 
@@ -166,7 +133,7 @@ In the following we will use the built-in remote image servers ([see below](#use
 
 For more options see [Advanced Guide - Advanced options for Images](/lxd/advanced-guide#advanced-options-for-images).
 
-### Use remote image servers
+## Use remote image servers
 The easiest way is to use a built-in remote image server.
 
 You can get a list of built-in image servers with:
@@ -179,7 +146,7 @@ LXD comes with 3 default servers:
  2. `ubuntu-daily:` (for daily Ubuntu images)
  3. `images:` (for a [bunch of other distros](https://images.linuxcontainers.org))
 
-#### List images on server
+### List images on server
 
 To get a list of remote images on server `images`, type:
 
@@ -191,7 +158,7 @@ _Most details in the list should be self-explanatory._
 
 - Alias with `cloud`: refers to images with built-in cloud-init support (see [Advanced Guide - Cloud-Init](/lxd/advanced-guide#cloud-init) and [official cloud-init documentation](https://cloudinit.readthedocs.io/en/latest/))
 
-#### Search for images
+### Search for images
 You can search for images, by applying specific elements (e.g. the name of a distribution).
 
 Show all Debian images:
@@ -202,7 +169,7 @@ Show all 64-bit Debian images:
 
 	lxc image list images: debian amd64
 
-### Images for virtual machines
+## Images for virtual machines
 It is recommended to use the `cloud` variants of images (visible by the `cloud`-tag in their `ALIAS`). They include cloud-init and the LXD-agent. They also increase their size automatically and are tested daily.
 
 # Further information & links
@@ -211,15 +178,9 @@ You find more information on the following pages:
 
 - [Advanced Guide](/lxd/advanced-guide)
 
-- [LXD documentation](/lxd/docs/master/index)
-    - [Security](/lxd/docs/master/security)
-    - [FAQ](/lxd/docs/master/faq)
+- [LXD documentation](/lxd/docs/latest/index)
+    - [Security](/lxd/docs/latest/security)
+    - [FAQ](/lxd/docs/latest/faq)
 
 - [Forum](https://discuss.linuxcontainers.org/)
     - [Tutorials Section](https://discuss.linuxcontainers.org/c/tutorials)
-
- <!-- footnotes -->
-
- [^1]: [Running virtual machines with lxd](https://discuss.linuxcontainers.org/t/running-virtual-machines-with-lxd-4-0/7519), including a short howto for a Microsoft Windows VM.
-
-///Footnotes Go Here///
