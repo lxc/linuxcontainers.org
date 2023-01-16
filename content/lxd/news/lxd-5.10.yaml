@@ -31,7 +31,7 @@ content: |-
 
   By user request, we have now extended that to also cover network usage with 4 new charts covering top transmit traffic, top receive traffic as well as top transmit packets and top receive packages.
 
-  ![image|690x304](https://discuss.linuxcontainers.org/uploads/default/optimized/2X/0/07daf7cb4aec899c06c5e43381231b9e173bde7d_2_690x304.jpeg)
+  ![image|690x304](https://discuss.linuxcontainers.org/uploads/default/optimized/2X/8/8bd6053b924c4249b8dadf19056ea06567e5b28c_2_690x304.png)
 
   As a reminder, our dashboard can be either downloaded directly from the LXD source repository at https://github.com/lxc/lxd/blob/master/grafana/LXD.json
 
