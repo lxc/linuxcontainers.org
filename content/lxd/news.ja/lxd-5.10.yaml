@@ -1,0 +1,278 @@
+title: LXD 5.10 リリースのお知らせ
+date: 2023/01/13 21:01
+origin: https://discuss.linuxcontainers.org/t/lxd-5-10-has-been-released/16143
+content: |-
+  ### はじめに <!-- Introduction -->
+  <!--
+  The LXD team is very excited to announce the release of LXD 5.10!
+  -->
+  LXD チームは LXD 5.10 のリリースをお知らせできることにとてもワクワクしています!
+
+  <!--
+  As our first release of 2023, this is a bit of a lighter one as the team has been enjoying a two weeks break for the holidays. Next month's release is going to be where we see some of the larger new features of 2023 start landing.
+  -->
+  2023 年の最初のリリースは、チームが 2 週間の休暇を楽しんだため、少し軽めのリリースになっています。来月のリリースは、2023 年に実装されるより大きな機能のいくつかを紹介する予定です。
+
+  <!--
+  That's not to say that LXD 5.10 is boring. Besides a continued push to get the most performance out of our database and preparatory work for upcoming features, this still manages to introduce some quality of life improvements and a good number of bugfixes.
+  -->
+  これは LXD 5.10 がつまらないということではありません。データベースのパフォーマンスを最大限引き出すための継続的な取り組みと、今後の機能のための準備作業に加え、品質向上と十分な数のバグフィックスが行われています。
+
+  Enjoy!
+
+  ### 新機能とハイライト <!-- New features and highlights -->
+  #### インスタンスのドキュメントの作り直し <!-- Reworked instance documentation -->
+  <!--
+  The instance documentation has now been re-structured to match the new style of our documentation. This means separate pages for instructions on performing common actions as well as separate pages for the various device types.
+  -->
+  インスタンスのドキュメントを、新しいスタイルのドキュメントにマッチするように再構成しました。一般的な処理を実行するための手順や、様々なデバイスタイプに関する個別のページに分割しました。
+
+  <!--
+  This makes it all easier to navigate as well as significantly easier to link to.
+  -->
+  これにより、ドキュメントの閲覧が簡単になるとともに、各ページへのリンクも大幅に簡単になります。
+
+  ドキュメント <!-- Documentation -->: https://linuxcontainers.org/lxd/docs/latest/instances/
+
+  #### サーバーのドキュメントの作り直し <!-- Reworked server documentation -->
+  <!--
+  The server documentation has also seen some initial re-organization happening to it.
+  There's still more to come in that area as we work towards cleaning up the Manage LXD section of the documentation, but in this release you can already see a better structured main page with clean sub-sections and navigation.
+  -->
+  サーバーのドキュメントについても、いくつか再構成をはじめました。サーバーのドキュメントに関しては、ドキュメントの LXD の管理セクションを整理する作業が残っています。しかし、このリリースで整理されたサブセクションとナビゲーションを持つ、よりよい構造のメインページをご覧いただけます。
+
+  ドキュメント <!-- Documentation -->: https://linuxcontainers.org/lxd/docs/latest/server/
+
+  #### Grafana ダッシュボード上のネットワークの円グラフ <!-- Network pie charts in the Grafana dashboard -->
+  <!--
+  Our Grafana dashboard is a great way to identify your top instances.
+  Up until now, we had charts covering the top 5 instances for CPU, memory and disk.
+  -->
+  LXD の Grafana ダッシュボードは、トップのインスタンスを特定するすばらしい方法です。
+  これまでは、CPU、メモリー、ディスクのトップ 5 インスタンスをカバーするグラフがありました。
+
+  <!--
+  By user request, we have now extended that to also cover network usage with 4 new charts covering top transmit traffic, top receive traffic as well as top transmit packets and top receive packages.
+  -->
+  今回、ユーザーからの要望で、ネットワークの利用状況についてもカバーするようになりました。送信トラフィック、受信トラフィック、送信パケット、受信パケットの上位を示す 4 つの新しいグラフを追加しました。
+
+  ![image|690x304](upload://17utH5YyFZX6uVIzU0tl8UFIanj.jpeg)
+
+  <!--
+  As a reminder, our dashboard can be either downloaded directly from the LXD source repository at https://github.com/lxc/lxd/blob/master/grafana/LXD.json
+  -->
+  ダッシュボードは、LXD のソースリポジトリーの https://github.com/lxc/lxd/blob/master/grafana/LXD.json から直接ダウンロードできます。
+
+  <!--
+  Or it can be retrieved from Grafana directly (ID 15726): https://grafana.com/grafana/dashboards/15726-lxd/
+  -->
+  もしくは、Grafana から直接取得できます（ID 15726）: https://grafana.com/grafana/dashboards/15726-lxd/
+
+  #### NIC デバイスの送信キューの長さが設定可能に <!-- Configurable network transmit queue length on NIC devices -->
+  <!--
+  A new `queue.tx.length` setting is now available for veth-based `nic` devices.
+  This means it's limited to containers using one of `bridged`, `p2p` or `routed` nic types.
+  -->
+  新たに veth ベースの `nic` デバイスで `queue.tx.length` という設定が利用できるようになりました。
+  これは、この機能の使用が NIC タイプが `bridged`、`p2p`、`routed` のいずれかを使うコンテナに限定されるということです。
+
+  <!--
+  This new configuration key allows for setting the `txqueuelen` setting on the network interface. This can be useful when encountering latency issues that are related to packet queuing and can be used to either decrease the queue length forcing a lower latency behavior or on the contrary, increasing the queue length to try to increase throughput.
+  -->
+  この新たな設定項目は、ネットワークインターフェースの `txqueuelen` を設定できます。これは、パケットのキューイングに関係したレイテンシーの問題に遭遇した場合に役に立つ可能性があり、キューの長さを減らして低遅延な動作を強制するか、逆にキューの長さを増やしてスループットを向上させるために使えます。
+
+  ### すべての変更点（翻訳なし）<!-- Complete changelog -->
+  <!--
+  Here is a complete list of all changes in this release:
+  -->
+  このリリースでの完全な変更点のリストは次の通りです:
+
+  [details="すべてのChangeLogを見る"]
+   - lxd/storage/ceph: Remove osd map timeout
+   - doc/instances: small clarifications to the snapshot documentation
+   - doc/devices: Sort macvlan NIC device options in table
+   - doc/cloud-init: add info about merging user-data and vendor-data
+   - doc/instances: clarify misleading description for `linux.sysctl.*`
+   - doc/initialization: add page for `lxd init`
+   - doc/installing: quick cleanup of headings
+   - doc/preseed: move the content from preseed.md to the init page
+   - doc/init: clean up documentation of the preseed file initialization
+   - doc/storage: add links to MicroCeph
+   - doc/clustering: add links and instructions for MicroCloud
+   - doc: add MicroCeph and MicroCloud to wordlist
+   - lxd/instance/drivers/qmp: Don't mask unexpected monitor response errors with sentinel
+   - doc/security: move to a separate section
+   - doc/security: clean up section
+   - doc/configuration: remove Configuration section
+   - lxd/db/images: Updates GetImagesFingerprints to use transactions
+   - lxd/db/images: Updates GetImageAliases to use transactions
+   - lxd/db/images: Updates GetImageAlias to use transaction
+   - lxd/db/images: Updates DeleteImageAlias to use transactions
+   - lxd/db/images: Updates CreateImageAlias to use transactions
+   - lxd/db/images: Updates UpdateImageAlias to use transaction
+   - lxd/db/images: Updates CreateImage to use transaction context
+   - lxd/db/db/internal/test: Update image tests
+   - lxd/util/http: Update EtagCheck to return api.StatusError with http.StatusPreconditionFailed
+   - lxd/images: Updates imagesPost to use single transaction
+   - lxd/images: Updates doImagesGet to use transactions
+   - lxd/images: Updates imagesGet to use doImagesGet
+   - lxd/images: Updates doImageGet to use transactions
+   - lxd/images: Updates imageGet to use doImageGet
+   - lxd/images: Updates imageAliasesPost to use single transaction
+   - lxd/images: Updates imageAliasesGet to use single transaction
+   - lxd/images: Updates imageAliasGet to use single transaction
+   - lxd/images: Updates imageAliasDelete to use single transaction
+   - lxd/images: Updates imageAliasPut to use single transaction
+   - lxd/images: Updates imageAliasPatch to use a single transaction
+   - lxd/images: Updates imageAliasPost to use a single transaction
+   - lxd/storage/volumes: Updates storagePoolVolumesGet to use tx.GetImagesFingerprints
+   - lxd/instance/instance/utils: Updates ResolveImage to use transaction
+   - lxd/instance/drivers/driver/qemu: Show actual qemu path in checkFeatures
+   - lxd/instance/drivers/driver/qemu: Remove -bios flag from qemu feature check invocation
+   - lxd/instance/drivers/driver/qemu: Extract stderr output from qemu during checkFeatures
+   - lxd/instance/drivers/driver/qemu: Add -no-user-config to qemu invocation in checkFeatures
+   - lxd/instances/post: Remove profile loading from createFromImage
+   - lxd/instances/post: Remove profile loading from createFromNone
+   - lxd/instances/post: Remove profile loading from createFromMigration
+   - lxd/instances/post: Use correct error quoting in createFromMigration
+   - lxd/instances/post: Remove profile loading from createFromCopy and clusterCopyContainerInternal
+   - lxd/instances/post: Centralise profile validation and loading in instancesPost
+   - lxd/instance/instance/utils: Removes fetchInstanceDatabaseObject function
+   - lxd/instance/instance/utils: Updates SuitableArchitectures to accept optional source instance
+   - lxd/instances/post: instance.SuitableArchitectures usage
+   - lxd/instances/post: Moves local clustered check earlier
+   - lxd/instances/post: Move target group check into initial transaction
+   - lxd/instances/post: Pass request context into DB transaction
+   - lxd/instances/post: Don't shadow err in instancesPost
+   - lxd/instances/post: Keep related error checking together in instancesPost
+   - lxd/instances/post: Move InstanceType and Source instance logic earlier in instancesPost
+   - lxd/instances/post: Use instance.ValidName in instancesPost
+   - lxd/instances/post: Remove duplicated instance name check in createFromImage
+   - lxd/instances/post: Update createFromImage to use req.Type for image type
+   - lxd/instances/post: Don't load target project again in createFromImage
+   - lxd/instance: Fix error quoting in instanceCreateFromImage
+   - lxd/instance/instance/utils: Updates ResolveImage to use a transaction
+   - lxd/instance/instance/utils: Updates SuitableArchitectures to accept a source image reference
+   - lxd/instance: Updates instanceCreateFromImage to accept a source image directly
+   - lxd/db/db/internal/test: tx.GetCachedImageSourceFingerprint usage
+   - lxd/db/images: Updates GetCachedImageSourceFingerprint to use transaction
+   - lxd/daemon/images: tx.GetCachedImageSourceFingerprint usage
+   - lxd/instances/post: Update createFromImage to accept image info and alias directly
+   - lxd/instances/post: Updates instancesPost to resolve image profiles early
+   - lxd: Move to current bakery version
+   - lxd-migrate: Move to current bakery version
+   - client: Move to current bakery version
+   - lxc: Move to current bakery version
+   - test/macaroon-identity: Move to current bakery version
+   - tests: Update godeps.list
+   - gomod: Update dependencies
+   - lxd/instance/drivers/driver/qemu: Update architectureSupportsUEFI to add arch argumnent
+   - lxd/instance/drivers/driver/qemu: Update checkFeatures to add -bios flag for UEFI architectures
+   - lxd/instance: Improve logging in autoCreateInstanceSnapshots
+   - lxd-migrate: Fix usage string
+   - doc: fix version conflicts for doc tools
+   - lxd/storage/drivers/driver/zfs: Improve error when existing zpool isn't empty
+   - lxd/storage/s3/miniod: Wait 10s for minio process to start
+   - doc/lxd-migrate: add information about updating the configuration
+   - lxd/instance/drivers: Don't fail Start if renaming old log file doesn't exist
+   - lxd/storage/backend/lxd: Improve bucket errors
+   - forksyscall: ensure that parent mount is dependent mount
+   - lxd/storage/drivers/driver/btrfs/utils: Fix getQGroup to suport BTRFS >= 6.0.1
+   - lxd/storage/s3/miniod: Wait for config to be available before considering ready
+   - forksyscall: avoid double MS_MOVE
+   - lxd/db/query/dump: Correctly generate CREATE TABLE statement
+   - lxd/db/query/dump: Correctly escape single quote and \n and \r
+   - lxd/db/query/dump/test: Fix dump tests
+   - lxd/db/warnings: Store warning times in UTC
+   - gomod: Update github.com/shirou/gopsutil/v3
+   - lxc/init: Fix --no-profiles flag
+   - test: Adds test for lxc init --no-profiles
+   - lxd/instance/drivers/driver/qemu: Add qemuMachineType function
+   - lxd/instance/drivers/driver/qemu/config/test: Fix architecture tests
+   - lxd/instance/drivers/driver/qemu/config/test: Fix whitespace
+   - lxd/instance/drivers/driver/qemu: Adds -machine type argument to checkFeatures
+   - lxd/network add function to get txqlen
+   - lxd/instances/post: Move cluster member targetting checks higher up
+   - lxd/instances/post: Use architecture from source image in request
+   - lxd/instances/post: Remove logger.Debugf usage
+   - lxd/instances/post: Rework cluster member targetting logic
+   - lxd/instances/post: Only check project instance creation permissions on initial cluster member
+   - lxd/instances/post: Send notification header when redirection create request to different cluster member
+   - lxd/db/node: Adds GetCandidateMembers function
+   - lxd/db/node: Reworks GetNodeWithLeastInstances to accept list of candidate members
+   - lxd/db/node/test: Update tx.GetNodeWithLeastInstances tests
+   - lxd/instances/post: Split generation of candidate cluster members from selection of member with fewest instances
+   - lxd/api/cluster: tx.GetNodeWithLeastInstances usage
+   - lxd/ip add function to set txqlen
+   - grafana: add top network usage graphs
+   - fix dead lock bug
+   - lxd/instance/drivers: Fixes delete of ephemeral VM on stop
+   - gomod: Update dependencies
+   - lxd/instance/instance/utils: Updates SuitableArchitectures to return api.StatusError for bad requests
+   - lxd/instance/instance/utils: Accept db.ClusterTx in SuitableArchitectures
+   - lxd/instances/post: Move instance.SuitableArchitectures and tx.GetCandidateMembers into existing transaction
+   - lxd/db/node: Skip pending nodes in GetCandidateMembers
+   - lxd/db/node: Modified GetCandidateMembers to accept list of all cluster members
+   - lxd: tx.GetCandidateMembers usage
+   - lxd/project/permissions: Removes unused tx argument from CheckClusterTargetRestriction
+   - lxd: project.CheckClusterTargetRestriction usage
+   - lxd/instances/post: Reject use of target parameter when not clustered in instancesPost
+   - lxd/instances/post: Allow targeting all cluster groups if project restricted.cluster.groups is empty
+   - lxd/instances/post: Check manually targeted cluster member belongs to one of restricted.cluster.groups
+   - lxd/db/node: Updates GetNodeWithLeastInstances to return NodeInfo
+   - lxd/db/node/test: tx.GetNodeWithLeastInstances usage
+   - lxd/api/cluster: Updates evacuateClusterMember tx.GetNodeWithLeastInstances usage
+   - lxd/instances/post: Updates instancesPost tx.GetNodeWithLeastInstances usage
+   - test: Update cluster targeting tests
+   - test: Restructure test_clustering_membership to be less flaky
+   - test: Lower boot.host_shutdown_timeout during clustering evacuation tests
+   - lxd/api/cluster: Improve logging in evacuateClusterMember
+   - lxd/db: Changed snapshot sort from date to datetime
+   - lxd/api: Add support for serving the UI
+   - doc: Fix broken cloud-init doc links
+   - lxd/db/instances: Sort snapshots by creation time and then ID in GetInstanceSnapshotsNames and GetNextInstanceSnapshotIndex
+   - lxd/info: Use snapshot order from server in instanceInfo
+   - lxd/db/storage/volumes: Order by volume snapshot creation date first in GetStoragePoolVolume
+   - doc/networks: add instructions for attaching a network to an instance
+   - doc/server: struture the server options page
+   - doc/server: split up configuration table
+   - doc/server: update links to point to more specific sections
+   - doc/server: clean up configuration options
+   - lxd/device Add support for setting txqueuelen on veth based NICs
+   - test: Add test for setting txqueuelen of nic bridged device
+   - api: Adds txqueuelen api description
+   - lxd/instances/post: Reduce scope of target member and group variables
+   - lxd/instances/post: Updates comments
+   - lxd/db/node: Make NodeInfo.ToAPI more efficient when called multiple times
+   - lxd/db/node: Improve GetNodeMaxVersion comment
+   - lxd/api/cluster: Updates member functions to use modified ToAPI function
+   - lxd/api/cluster: Consistent error quoting
+   - lxd/db/node: Don't run unnecessary query for getting offline threshold in GetCandidateMembers
+   - lxd: tx.GetCandidateMembers usage
+   - lxd/db/node/test: Updated tx.GetCandidateMembers usage
+   - lxd/api/cluster: Fixes clusterNodesPost API description
+   - doc/rest-api: Refresh swagger YAML
+   - gomod: Update dependencies
+   - i18n: Update translations from weblate
+  [/details]
+
+  ### 試用環境 <!-- Try it for yourself -->
+  <!--
+  This new LXD release is already available for you to try on our [demo service](https://linuxcontainers.org/lxd/try-it/).
+  -->
+  この新しい LXD リリースは私たちの [デモサービス](https://linuxcontainers.org/ja/lxd/try-it/) で利用できます。
+
+  ### ダウンロード <!-- Downloads -->
+  <!--
+  The release tarballs can be found on our [download page](https://linuxcontainers.org/lxd/downloads/).
+  -->
+  このリリースの tarball は [ダウンロードページ](https://linuxcontainers.org/lxd/downloads/) から取得できます。
+
+  <!--
+  Binary builds are also available for:
+  -->
+  ビルド済みバイナリーは次のようにして使えます:
+
+   - **Linux:** snap install lxd
+   - **MacOS:** brew install lxc
+   - **Windows:** choco install lxc
