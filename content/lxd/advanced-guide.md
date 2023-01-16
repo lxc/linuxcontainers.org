@@ -60,16 +60,16 @@ config:
 This will upgrade all installed packages and install package1 and package2.
 
 #### More instructions for cloud-init
-For more instructions see [examples in  the cloud-init documentation](https://cloudinit.readthedocs.io/en/latest/topics/examples.html).
+For more instructions see [examples in  the cloud-init documentation](https://cloudinit.readthedocs.io/en/latest/reference/examples.html).
 
 #### Other config-sections for instance data
 
-- `user.meta-data` - see [cloud-init docs - instance metadata](https://cloudinit.readthedocs.io/en/latest/topics/instancedata.html)
-- `user.vendor-data` - see [cloud-init docs - vendordata](https://cloudinit.readthedocs.io/en/latest/topics/vendordata.html)
-- `user.network-config` - see [cloud-init docs - network configuration](https://cloudinit.readthedocs.io/en/latest/topics/network-config.html)
+- `user.meta-data` - see [cloud-init docs - instance metadata](https://cloudinit.readthedocs.io/en/latest/explanation/instancedata.html)
+- `user.vendor-data` - see [cloud-init docs - vendordata](https://cloudinit.readthedocs.io/en/latest/explanation/vendordata.html)
+- `user.network-config` - see [cloud-init docs - network configuration](https://cloudinit.readthedocs.io/en/latest/reference/network-config.html)
 
 !!! Tip
-    You can check whether the syntax is correct with: [cloud-init FAQ - debug user-data](https://cloudinit.readthedocs.io/en/latest/topics/faq.html#how-can-i-debug-my-user-data)
+    You can check whether the syntax is correct with: [cloud-init FAQ - debug user-data](https://cloudinit.readthedocs.io/en/latest/reference/faq.html#how-can-i-debug-my-user-data)
 
 ### Apply the profile
 After you saved the textfile, we can apply it with the following steps.

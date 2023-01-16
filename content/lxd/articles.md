@@ -7,7 +7,6 @@
  * [UOS November 2015: Introduction to LXD by Stéphane Graber](https://www.youtube.com/watch?v=B_vRmItDORo)
  * [ODS Tokyo 2015: Pure-Container OpenStack by Tycho Andersen & James Page](https://www.youtube.com/watch?v=AZ0vmsxrT9U)
  * [Container Camp London 2015: Introduction to LXD by Stéphane Graber](https://www.youtube.com/watch?v=yEr_EIZG0ZM)
- * [Container Summit 2015: LXD by Dustin Kirkland](https://player.vimeo.com/video/140220196?api=1&player_id=140220196)
  * [ODS Vancouver 2015: LXD vs KVM by Ryan Harper & James Page](https://www.youtube.com/watch?v=90oxad2r8_E)
  * [UOS May 2015: LXD basic usage by Tycho Andersen](https://www.youtube.com/watch?v=oF-xGkwki6Y)
  * [Fosdem 2015: LXD: The Container Hypervisor by Serge Hallyn](http://video.fosdem.org/2015/devroom-virtualisation/lxd.mp4)
@@ -34,10 +33,9 @@
  * [Where we're going with LXD by Dustin Kirkland](http://blog.dustinkirkland.com/2014/11/where-were-going-with-lxd.html)
 
 # External blogs and reviews
- * [Super Fast Local Workloads With LXD, ZFS, and Juju by Jorge Castro](http://www.jorgecastro.org/2016/02/12/super-fast-local-workloads-with-juju/])
  * [Finally, a private cloud platform for the SME](https://www.linkedin.com/pulse/finally-private-cloud-platform-sme-jamie-brown)
  * [Using LXD with ZFS by Dean Henrichsmeyer](http://blog.beret.net/8kpahtrgn)
  * [A Quick Introduction to LXD BY Scott Lowe](http://blog.scottlowe.org/2015/05/06/quick-intro-lxd/)
- * [Hands on With LXD on Tutum Blog](http://blog.tutum.co/2014/12/09/hands-on-with-lxd)
- * [LXD, ZFS and bridged networking on Ubuntu 16.04 LTS - Jason Bayton](https://bayton.org/2016/05/lxd-zfs-and-bridged-networking-on-ubuntu-16-04-lts/)
- * [Mount CIFS/SMB shares RW in LXD containers - Jason Bayton](https://bayton.org/2016/05/mount-cifssmb-shares-rw-in-lxd-containers/)
+ * [Hands on With LXD on Tutum Blog](https://tutumcloud.wordpress.com/2014/12/09/hands-on-with-lxd/)
+ * [LXD, ZFS and bridged networking on Ubuntu 16.04 LTS - Jason Bayton](https://bayton.org/docs/linux/lxd/lxd-zfs-and-bridged-networking-on-ubuntu-16-04-lts/)
+ * [Mount CIFS/SMB shares RW in LXD containers - Jason Bayton](https://bayton.org/docs/linux/lxd/mount-cifssmb-shares-rw-in-lxd-containers/)

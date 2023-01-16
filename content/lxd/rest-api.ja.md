@@ -33,7 +33,7 @@ The following API clients are developed by the LXD project.
 -->
 以下の API クライアントは LXD プロジェクトが開発しています。
 
-* Go [lxd.Client](https://github.com/lxc/lxd/blob/master/client.go)
+* Go [lxd.Client](https://godoc.org/github.com/lxc/lxd/client)
 * Python [pylxd](https://github.com/lxc/pylxd)
 
 <!--
