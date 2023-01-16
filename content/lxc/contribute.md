@@ -15,7 +15,7 @@ The easy way is to use : `git commit -s`
 and if you forgot "-s" on a previous commit : `git commit --amend -s`
 
 ## The mailing-list way
-You may contribute to LXC either by sending a patch or patchset directly on the [lxc-devel mailing-list](https://lists.linuxcontainers.org/listinfo/lxc-devel).
+You may contribute to LXC either by sending a patch or patchset directly on the [lxc-devel mailing-list](https://lists.linuxcontainers.org/).
 
 You can use `git format-patch` to generate mailable patch.
 
