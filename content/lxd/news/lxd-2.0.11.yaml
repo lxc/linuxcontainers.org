@@ -8,7 +8,7 @@ content: |-
   Minor improvements:
 
    * LXD 2.0.11 is now snap aware and can be installed from the "2.0" track.
-   * The documentation is now available on ReadTheDocs: https://lxd.readthedocs.io/en/stable-2.0/
+   * The documentation is now available on ReadTheDocs
    * It's now possible to interrupt image downloads.
    * Added a new security.idmap.base config key (overrides the base uid/gid of the container).
    * Added support for delta image downloads.

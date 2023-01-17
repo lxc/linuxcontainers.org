@@ -52,8 +52,8 @@ content: |-
   The full list of deprecated keys and their new counterparts can be gathered from the [LXC 2.1 release announcement](https://discuss.linuxcontainers.org/t/lxc-2-1-has-been-released/487).
   -->
   LXC 3.0 以降、レガシーな設定項目はすべてサポートされません。
-  廃止された設定と、対応する新しい設定のすべてのリストは、[LXC 2.1 リリースのお知らせ](http://localhost/ja/lxc/news/#lxc-211-2017-10-19) を参照してください。
-  
+  廃止された設定と、対応する新しい設定のすべてのリストは、[LXC 2.1 リリースのお知らせ](https://linuxcontainers.org/ja/lxc/news/2017_09_05_00_00.html) を参照してください。
+
   <!--
   The `lxc-update-config` tool can be used to convert an older, now invalid, configuration to the new format.
   -->
