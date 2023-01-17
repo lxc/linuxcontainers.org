@@ -1,7 +1,11 @@
 
 # ディストリビューションでのインストール
 
+<!--
 CGManager is deprecated and we're recommending most Linux distributions remove those packages.
+-->
+CGManager は非推奨で、ほとんどの Linux ディストリビューションでこのパッケージを削除することを推奨しています。
+
 
 # 現時点の開発バージョン
 

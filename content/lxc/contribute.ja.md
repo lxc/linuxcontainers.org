@@ -35,9 +35,9 @@ and if you forgot "-s" on a previous commit : `git commit --amend -s`
 
 ## <!-- The mailing-list way -->メーリングリストへのパッチの投稿
 <!--
-You may contribute to LXC either by sending a patch or patchset directly on the [lxc-devel mailing-list](https://lists.linuxcontainers.org/listinfo/lxc-devel).
+You may contribute to LXC either by sending a patch or patchset directly on the [lxc-devel mailing-list](https://lists.linuxcontainers.org/).
 -->
-パッチ、もしくはパッチセットを直接 [lxc-devel メーリングリスト](https://lists.linuxcontainers.org/listinfo/lxc-devel) に送ることによって LXC に貢献できます。
+パッチ、もしくはパッチセットを直接 [lxc-devel メーリングリスト](https://lists.linuxcontainers.org/) に送ることによって LXC に貢献できます。
 
 <!--
 You can use `git format-patch` to generate mailable patch.
