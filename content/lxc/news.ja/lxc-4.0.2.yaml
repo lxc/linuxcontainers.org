@@ -17,7 +17,7 @@ content: |-
   <!--
   This release fixes a number of issues that were reported shortly following the original [4.0.0](https://discuss.linuxcontainers.org/t/lxc-4-0-lts-has-been-released/7182) and [4.0.1](https://discuss.linuxcontainers.org/t/lxc-4-0-1-lts-has-been-released/7310) releases. Some of the highlights include:
   -->
-  このリリースでは、[4.0.0](/ja/lxc/news/#lxc-40-lts) と [4.0.1](ja/lxc/news/#lxc-401-lts) リリース後に報告された多数の問題を修正しています。主なものは次の通りです:
+  このリリースでは、[4.0.0](https://linuxcontainers.org/ja/lxc/news/2020_03_25_13_03.html) と [4.0.1](https://linuxcontainers.org/ja/lxc/news/2020_04_06_20_04.html) リリース後に報告された多数の問題を修正しています。主なものは次の通りです:
 
    - RISC-V 64bit サポート <!-- RISC-V 64bit support -->
    - `lxc-user-nic` でのより良いグループの扱い <!-- Better group handling in lxc-user-nic -->

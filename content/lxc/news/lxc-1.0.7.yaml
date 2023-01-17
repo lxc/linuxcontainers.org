@@ -40,8 +40,8 @@ content: |-
    * fixed typo in comment
    * audit: added capacity and reserve() to nlmsg
    * rmdir and lxc\_unpriv returns non-negative error codes
-   * typofixes - https://github.com/vlajos/misspell\_fixer
-  
+   * typofixes - https://github.com/vlajos/misspell_fixer
+
   Bindings:
   
    * add src/python-lxc/setup.py into .gitignore
