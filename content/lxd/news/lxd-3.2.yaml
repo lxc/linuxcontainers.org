@@ -10,14 +10,14 @@ content: |-
   ### The changes in this release include
   Features:
 
-   * Added a [new API to /dev/lxd](http://lxd.readthedocs.io/en/latest/dev-lxd/#10images) allowing for direct download of public
+   * Added a [new API to /dev/lxd](https://linuxcontainers.org/lxd/docs/latest/dev-lxd/#images-fingerprint-export) allowing for direct download of public
      and cached images from the host (requires security.devlxd.images)
    * Added support for copying and moving containers between storage pools
-   * Big improvements to the [proxy device](https://lxd.readthedocs.io/en/latest/containers/#type-proxy):
+   * Big improvements to the [proxy device](https://linuxcontainers.org/lxd/docs/latest/reference/devices_proxy/):
       * Unix socket support (including OOB packets)
       * UDP support
       * Port ranges for UDP and TCP
-   * New [simplified cluster join API](https://lxd.readthedocs.io/en/latest/rest-api/#10cluster)
+   * New [simplified cluster join API](https://linuxcontainers.org/lxd/docs/latest/api/)
 
   Bugfixes:
 

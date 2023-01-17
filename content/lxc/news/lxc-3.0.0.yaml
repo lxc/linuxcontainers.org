@@ -35,7 +35,7 @@ content: |-
   chb@conventiont|~
   > lxc-stop xenial
   ```
-  [<img src='/uploads/default/original/1X/7861eb06f384affb0b2c0ba419e09a2004354c40.png' alt='asciicast'>](https://asciinema.org/a/174496)
+  [<img src='https://discuss.linuxcontainers.org/uploads/default/original/1X/7861eb06f384affb0b2c0ba419e09a2004354c40.png' alt='asciicast'>](https://asciinema.org/a/174496)
 
   #### Removed support for all legacy configuration keys
   All legacy configuration keys are unsupported from LXC 3.0 onwards.
@@ -62,7 +62,7 @@ content: |-
       lxc-create c3 -t busybox
      ```
 
-      [<img src='/uploads/default/original/1X/3719f8fe09f03069e3741d1ba64141f3d9540b54.png' alt='asciicast'>](https://asciinema.org/a/165788)
+      [<img src='https://discuss.linuxcontainers.org/uploads/default/original/1X/3719f8fe09f03069e3741d1ba64141f3d9540b54.png' alt='asciicast'>](https://asciinema.org/a/165788)
 
    - lxc-download (download our pre-built images)
      This template lets you download pre-built images from our image servers. This is likely what currently most users are using to create unprivileged containers.
@@ -74,7 +74,7 @@ content: |-
 
      where the `--metadata` flag needs to point to a file containing the metadata for the container. This is simply the standard `meta.tar.xz` file that comes with any pre-built `LXC` container image. The `--fstree` flag needs to point to a filesystem tree. Creating a container is then just:
 
-     [<img src='/uploads/default/original/1X/87cd149d5b1ffc2bfb11e62b26eba610d1a1eb77.png' alt='asciicast'>](https://asciinema.org/a/165783)
+     [<img src='https://discuss.linuxcontainers.org/uploads/default/original/1X/87cd149d5b1ffc2bfb11e62b26eba610d1a1eb77.png' alt='asciicast'>](https://asciinema.org/a/165783)
 
    - lxc-oci (use OCI application container images)
      This is the template which can be used to download and run OCI containers. Using it is as simple as:
@@ -83,7 +83,7 @@ content: |-
      ```
      Here's another asciicast:
 
-     [<img src='/uploads/default/original/1X/e76c06d093d3e9079562ea15fc57656958001683.png' alt='asciicast'>](https://asciinema.org/a/165784)
+     [<img src='https://discuss.linuxcontainers.org/uploads/default/original/1X/e76c06d093d3e9079562ea15fc57656958001683.png' alt='asciicast'>](https://asciinema.org/a/165784)
 
 
   #### Moving the cgroup PAM module into the LXC tree
@@ -101,7 +101,7 @@ content: |-
 
           sudo lxc-create -t oci -n u1 -- -u docker://ubuntu
 
-     [<img src='/uploads/default/original/1X/e76c06d093d3e9079562ea15fc57656958001683.png' alt='asciicast'>](https://asciinema.org/a/165784)
+     [<img src='https://discuss.linuxcontainers.org/uploads/default/original/1X/e76c06d093d3e9079562ea15fc57656958001683.png' alt='asciicast'>](https://asciinema.org/a/165784)
 
   The URL is specified in the same format as for `skopeo copy`.
 
@@ -156,7 +156,7 @@ content: |-
   #### Support for daemonized app containers
   LXC has been running application container through a minimal init system since its first release in 2008. PID namespaces expect a functional init system capable of handling signals and reaping exiting child processes. This is why application containers always run the application as the second process.
   New versions of LXC will now additionally allow you to run basically any process daemonized:
-  [<img src='/uploads/default/original/1X/ef61a968b654bf44f3506d8ccc95d4cd83407e46.png' alt='asciicast'>](https://asciinema.org/a/174498)
+  [<img src='https://discuss.linuxcontainers.org/uploads/default/original/1X/ef61a968b654bf44f3506d8ccc95d4cd83407e46.png' alt='asciicast'>](https://asciinema.org/a/174498)
 
   #### Remove all internal symbols from `lxc-*` tools
   The `lxc-*` tools now only entirely rely on the public LXC API.

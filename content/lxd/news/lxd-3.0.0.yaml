@@ -25,7 +25,7 @@ content: |-
   The main contributor for this feature, Free Ekanayaka also gave a longer presentation on LXD clustering at FOSDEM 2018 which you can check out here:
   https://www.youtube.com/watch?v=DVqMeo3lvv0
 
-  You can also check the documentation here: https://lxd.readthedocs.io/en/stable-3.0/clustering/
+  You can also check the documentation here: https://linuxcontainers.org/lxd/docs/latest/clustering/
 
   ## Physical to container migration with `lxd-p2c`
   A new tool called `lxd-p2c` makes it possible to import a system's filesystem into a LXD container using the LXD API.
@@ -44,7 +44,7 @@ content: |-
 
   This lets you save a lot of space and greatly simplifies maintenance.
 
-  [<img src='/uploads/default/original/1X/9a5250359953dd84b660525e5b301c2763074959.png' alt='asciicast'>](https://asciinema.org/a/174076)
+  [<img src='https://discuss.linuxcontainers.org/uploads/default/original/1X/9a5250359953dd84b660525e5b301c2763074959.png' alt='asciicast'>](https://asciinema.org/a/174076)
 
   ## Hotplug support for `unix-char` and `unix-block` devices
   A new `required` property has been added to all unix type devices. When set to false, LXD will wait until the requested path is available on the host before automatically passing it into the container.
