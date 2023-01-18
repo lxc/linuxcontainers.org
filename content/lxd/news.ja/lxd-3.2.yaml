@@ -16,14 +16,14 @@ content: |-
   ### このリリースに含まれる変更点 <!-- The changes in this release include -->
   新機能 <!-- Features -->:
 
-   * [/dev/lxd に新しい API](http://lxd.readthedocs.io/en/latest/dev-lxd/#10image) を追加しました。これにより、ホストから、パブリックとキャッシュされたイメージの直接ダウンロードができるようになります（`security.devlxd.images`の設定が必要です） <!-- Added a [new API to /dev/lxd](http://lxd.readthedocs.io/en/latest/dev-lxd/#10images) allowing for direct download of public
+   * [/dev/lxd に新しい API](https://linuxcontainers.org/lxd/docs/latest/dev-lxd/#images-fingerprint-export) を追加しました。これにより、ホストから、パブリックとキャッシュされたイメージの直接ダウンロードができるようになります（`security.devlxd.images`の設定が必要です） <!-- Added a [new API to /dev/lxd](https://linuxcontainers.org/lxd/docs/latest/dev-lxd/#images-fingerprint-export) allowing for direct download of public
      and cached images from the host (requires security.devlxd.images) -->
    * ストレージプール間のコンテナのコピーと移動ができるようになりました <!-- Added support for copying and moving containers between storage pools -->
-   * [proxy device](https://lxd.readthedocs.io/en/latest/containers/#type-proxy) の大きな改良 <!-- Big improvements to the [proxy device](https://lxd.readthedocs.io/en/latest/containers/#type-proxy) -->:
+   * [proxy device](https://linuxcontainers.org/lxd/docs/latest/reference/devices_proxy/) の大きな改良 <!-- Big improvements to the [proxy device](https://linuxcontainers.org/lxd/docs/latest/reference/devices_proxy/) -->:
       * Unix ソケットのサポート（OOB パケットを含みます）<!-- Unix socket support (including OOB packets) -->
       * UDP のサポート <!-- UDP support -->
       * UDP と TCP のポートの範囲 <!-- Port ranges for UDP and TCP -->
-   * [シンプルになった新しいクラスタへ参加するための API](https://lxd.readthedocs.io/en/latest/rest-api/#10cluster) <!-- New [simplified cluster join API](https://lxd.readthedocs.io/en/latest/rest-api/#10cluster) -->
+   * [シンプルになった新しいクラスタへ参加するための API](https://linuxcontainers.org/lxd/docs/latest/api/) <!-- New [simplified cluster join API](https://linuxcontainers.org/lxd/docs/latest/api/) -->
 
   バグ修正 <!-- Bugfixes -->:
 

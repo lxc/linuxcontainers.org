@@ -163,7 +163,7 @@ For more instructions see [examples in  the cloud-init documentation](https://cl
 -->
 - `user.meta-data` - [cloud-init docs - instance metadata](https://cloudinit.readthedocs.io/en/latest/explanation/instancedata.html) を参照
 - `user.vendor-data` - [cloud-init docs - vendordata](https://cloudinit.readthedocs.io/en/latest/explanation/vendordata.html) を参照
-- `user.network-config` - [cloud-init docs - network configuration](https://cloudinit.readthedocs.io/en/latest/explanation/network-config.html) を参照
+- `user.network-config` - [cloud-init docs - network configuration](https://cloudinit.readthedocs.io/en/latest/reference/network-config.html) を参照
 
 <!--
 !!! Tip

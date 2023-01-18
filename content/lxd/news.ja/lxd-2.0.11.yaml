@@ -11,7 +11,7 @@ content: |-
   細かな改良点 <!-- Minor improvements--> :
 
    * LXD 2.0.11 は snap で利用できるようになり、"2.0" トラックからインストールできます <!-- LXD 2.0.11 is now snap aware and can be installed from the "2.0" track. -->
-   * ドキュメントが ReadTheDocs で読めるようになりました <!-- The documentation is now available on ReadTheDocs--> : https://lxd.readthedocs.io/en/stable-2.0/
+   * ドキュメントが ReadTheDocs で読めるようになりました <!-- The documentation is now available on ReadTheDocs-->
    * イメージのダウンロードを中断できるようになりました <!-- It's now possible to interrupt image downloads. -->
    * 新たな security.idmap.base.config キーを追加しました (コンテナのベースの uid/gid を上書きします) <!-- Added a new security.idmap.base config key (overrides the base uid/gid of the container). -->
    * イメージの差分ダウンロードのサポートを追加しました <!-- Added support for delta image downloads. -->
