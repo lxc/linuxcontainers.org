@@ -52,9 +52,9 @@ content: |-
   <iframe width="560" height="315" src="https://www.youtube.com/embed/DVqMeo3lvv0?rel=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
 
   <!--
-  You can also check the documentation here: [https://lxd.readthedocs.io/en/stable-3.0/clustering/](https://lxd.readthedocs.io/en/stable-3.0/clustering/)
+  You can also check the documentation here: [https://linuxcontainers.org/lxd/docs/latest/clustering/](https://linuxcontainers.org/lxd/docs/latest/clustering/)
   -->
-  ドキュメントもこちらでチェックできます: [https://lxd.readthedocs.io/en/stable-3.0/clustering/](https://lxd.readthedocs.io/en/stable-3.0/clustering/)
+  ドキュメントもこちらでチェックできます: [https://linuxcontainers.org/lxd/docs/latest/clustering/](https://linuxcontainers.org/lxd/docs/latest/clustering/)
 
   #### lxd-p2c を使った物理からコンテナへのマイグレーション <!-- Physical to container migration with `lxd-p2c` -->
   <!--

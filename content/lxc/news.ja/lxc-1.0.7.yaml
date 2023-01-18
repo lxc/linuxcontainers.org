@@ -43,8 +43,8 @@ content: |-
    * コメントの typo の修正を行いました <!-- fixed typo in comment -->
    * audit: capacity と reserve() を netlink メッセージに追加しました (訳注: netlink メッセージがオーバーフローしないようにしました)<!-- added capacity and reserve() to nlmsg -->
    * rmdir と lxc\_unpriv がマイナスの値を返さないようにしました <!-- rmdir and lxc\_unpriv returns non-negative error codes -->
-   * typo の修正をしました - https://github.com/vlajos/misspell\_fixer を使って <!-- typofixes - https://github.com/vlajos/misspell\_fixer -->
-  
+   * typo の修正をしました - https://github.com/vlajos/misspell_fixer を使って <!-- typofixes - https://github.com/vlajos/misspell_fixer -->
+
   バインディング <!-- Bindings -->:
   
    * src/python-lxc/setup.py を .gitignore に追加しました <!-- add src/python-lxc/setup.py into .gitignore -->
