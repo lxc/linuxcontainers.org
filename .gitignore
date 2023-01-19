@@ -7,3 +7,4 @@ extensions/__pycache__
 .vscode
 .idea
 .venv
+linkchecker-out.txt

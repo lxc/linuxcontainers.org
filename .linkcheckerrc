@@ -1,0 +1,9 @@
+[checking]
+maxrequestspersecond=5
+
+[filtering]
+nofollow=https\:\/\/linuxcontainers\.org\/lxd\/docs\/
+checkextern=1
+
+[output]
+fileoutput=text
