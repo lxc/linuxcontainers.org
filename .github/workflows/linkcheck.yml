@@ -18,8 +18,4 @@ jobs:
         run: sudo pip install LinkChecker
 
       - name: Run linkchecker
-        run: linkchecker https://linuxcontainers.org/ -f .linkcheckerrc
-
-      - name: Print log
-        if: failure()
-        run: cat linkchecker-out.txt
+        run: if ! linkchecker https://linuxcontainers.org/ -f .linkcheckerrc; then cat linkchecker-out.txt; exit 1; fi

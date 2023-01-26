@@ -7,3 +7,8 @@ checkextern=1
 
 [output]
 fileoutput=text
+warnings=0
+ignoreerrors=
+  ^.* ^Error: ConnectionError:
+  ^.* ^Error: ReadTimeout:
+  ^.* ^Error: No host for mailbox.org found.
