@@ -127,50 +127,8 @@ Because group membership is normally only applied at login, you might need to ei
 See [Instances](/lxd/docs/latest/instances).
 
 # Images
-Instances are based on images, which contain a basic operating system (for example a Linux distribution) and some other LXD-related information.
 
-In the following we will use the built-in remote image servers ([see below](#use-remote-image-servers)).
-
-For more options see [Advanced Guide - Advanced options for Images](/lxd/advanced-guide#advanced-options-for-images).
-
-## Use remote image servers
-The easiest way is to use a built-in remote image server.
-
-You can get a list of built-in image servers with:
-
-	lxc remote list
-
-LXD comes with 3 default servers:
-
- 1. `ubuntu:` (for stable Ubuntu images)
- 2. `ubuntu-daily:` (for daily Ubuntu images)
- 3. `images:` (for a [bunch of other distros](https://images.linuxcontainers.org))
-
-### List images on server
-
-To get a list of remote images on server `images`, type:
-
-	lxc image list images:
-
-**Details:**
-
-_Most details in the list should be self-explanatory._
-
-- Alias with `cloud`: refers to images with built-in cloud-init support (see [Advanced Guide - Cloud-Init](/lxd/advanced-guide#cloud-init) and [official cloud-init documentation](https://cloudinit.readthedocs.io/en/latest/))
-
-### Search for images
-You can search for images, by applying specific elements (e.g. the name of a distribution).
-
-Show all Debian images:
-
-	lxc image list images: debian
-
-Show all 64-bit Debian images:
-
-	lxc image list images: debian amd64
-
-## Images for virtual machines
-It is recommended to use the `cloud` variants of images (visible by the `cloud`-tag in their `ALIAS`). They include cloud-init and the LXD-agent. They also increase their size automatically and are tested daily.
+See [Images](/lxd/docs/latest/images/).
 
 # Further information & links
 
