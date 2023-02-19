@@ -58,7 +58,7 @@ content: |-
   <!--
   Something that was requested [over 5 years ago now](https://github.com/lxc/lxd/issues/3873) but recently caught our attention thanks to Docker and Android is the interest for using ZFS as a storage backend but not store data within ZFS datasets but rather use ZFS volumes.
   -->
-  [5 年以上前](https://github.com/lxc/lxd/issues/3873)からの要望ですが、Docker や Android のおかげで最近注目したのが、ZFS をストレージバックエンドとして使いながら、ZFS データセットにデータを保存するのではなく、ZFS ボリュームとして使いたいという話です。
+  [5 年以上前](https://github.com/lxc/lxd/issues/3873)からの要望ですが、Docker や Android のおかげで最近注目されたのが、ZFS をストレージバックエンドとして使いながら、ZFS データセットにデータを保存するのではなく、ZFS ボリュームとして使いたいという話です。
 
   <!--
   This leads to an experience that's very similar to LVM or Ceph but on the very capable ZFS backend. It can also be used to mix and match, having some specific custom volumes use zvol while the rest of the data uses datasets.
