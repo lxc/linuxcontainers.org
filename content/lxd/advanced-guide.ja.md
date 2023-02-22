@@ -57,7 +57,7 @@ Usage:
     To apply multiple profiles or config keys, use one flag for each, like:
 	-->
 	複数のプロファイルや設定キーを適用するには、次のようにそれぞれにひとつの設定を与えます:
-	
+
 	    lxc launch imageserver:imagename instancename -p profile1 -p profile2
 
 	    lxc launch imageserver:imagename instancename -c key1=value -c key2=value
@@ -560,13 +560,13 @@ You can define multiple keys in templates:
 -->
 | セクション: | 説明: | ドキュメント: |
 | --- | --- | --- |
-| `image` | ディストリビューション、アーキテクチャ、リリースなどを定義します | [image.md](https://github.com/lxc/distrobuilder/blob/master/doc/image.md) 参照 |
-| `source` | メインパッケージのソースやキーなどを定義します | [source.md](https://github.com/lxc/distrobuilder/blob/master/doc/source.md) 参照 |
-| `targets` | 特定のターゲット（例: LXDクライアント、インスタンスなど）に対する設定を定義します | [targets.md](https://github.com/lxc/distrobuilder/blob/master/doc/targets.md) 参照 |
-| `files` | ファイルを変更するための generators を定義します | [generators.md](https://github.com/lxc/distrobuilder/blob/master/doc/generators.md) 参照 |
-| `packages` | インストールしたり削除したりするパッケージ、追加するリポジトリを定義します | [packages.md](https://github.com/lxc/distrobuilder/blob/master/doc/packages.md) 参照 |
-| `actions` | イメージをビルドする途中の特定のステップの後に実行するスクリプトを定義します | [actions.md](https://github.com/lxc/distrobuilder/blob/master/doc/actions.md) 参照 |
-| `mappings` | 特定のディストリビューションで使われているアーキテクチャ文字列と LXD で使われるアーキテクチャ文字列の差異をマッピングします (例: x86_64: amd64) | [mappings.md](https://github.com/lxc/distrobuilder/blob/master/doc/mappings.md) 参照 |
+| `image` | ディストリビューション、アーキテクチャ、リリースなどを定義します | [Image](/distrobuilder/docs/latest/reference/image/) 参照 |
+| `source` | メインパッケージのソースやキーなどを定義します | [Source](/distrobuilder/docs/latest/reference/source/) 参照 |
+| `targets` | 特定のターゲット（例: LXDクライアント、インスタンスなど）に対する設定を定義します | [Targets](/distrobuilder/docs/latest/reference/targets/) 参照 |
+| `files` | ファイルを変更するための generators を定義します | [Generators](/distrobuilder/docs/latest/reference/generators/) 参照 |
+| `packages` | インストールしたり削除したりするパッケージ、追加するリポジトリを定義します | [Package management](/distrobuilder/docs/latest/reference/packages/) 参照 |
+| `actions` | イメージをビルドする途中の特定のステップの後に実行するスクリプトを定義します | [Actions](/distrobuilder/docs/latest/reference/actions/) 参照 |
+| `mappings` | 特定のディストリビューションで使われているアーキテクチャ文字列と LXD で使われるアーキテクチャ文字列の差異をマッピングします (例: x86_64: amd64) | [Mappings](/distrobuilder/docs/latest/reference/mappings/) 参照 |
 
 <!--
 !!! note "Note for VMs"
@@ -607,7 +607,7 @@ After the image is built, see [Import Images](#import-images) for how to import 
 <!--
 See [Building.md on distrobuilder's GitHub repo](https://github.com/lxc/distrobuilder/blob/master/doc/building.md#lxd-image) for details.
 -->
-詳しくは [distrobuilder の Github リポジトリの Building.md](https://github.com/lxc/distrobuilder/blob/master/doc/building.md#lxd-image) をご覧ください。
+詳しくは [How to build images](/distrobuilder/docs/latest/howto/build/#lxd-image) をご覧ください。
 
 ##### 仮想マシンイメージ <!-- Virtual Machines Image -->
 <!--
@@ -642,7 +642,7 @@ After the image is built, see [Import Images](#import-images) for how to import 
 [Distrobuilder documentation](https://github.com/lxc/distrobuilder/tree/master/doc)
 -->
 * [Distrobuilder GitHub リポジトリ](https://github.com/lxc/distrobuilder)
-* [Distrobuilder ドキュメント](https://github.com/lxc/distrobuilder/tree/master/doc)
+* [Distrobuilder ドキュメント](/distrobuilder/docs/latest/)
 
 # ネットワーク <!-- Networks -->
 <!--

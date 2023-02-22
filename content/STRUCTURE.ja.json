@@ -303,7 +303,7 @@
     {"path": "/distrobuilder/documentation",
      "menu": ["distrobuilder", "ドキュメント"],
      "generator": "link",
-     "meta": {"url": "https://distrobuilder.readthedocs.io/en/latest/"}},
+     "meta": {"url": "/distrobuilder/docs/latest/"}},
 
     {"path": "/distrobuilder/contribute/",
      "title": "distrobuilder - コントリビュート",

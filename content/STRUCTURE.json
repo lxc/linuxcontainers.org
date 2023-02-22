@@ -47,7 +47,7 @@
     {"path": "/lxd/documentation",
      "menu": ["LXD", "Documentation"],
      "generator": "link",
-     "meta": {"url": "/lxd/docs/master/"}},
+     "meta": {"url": "/lxd/docs/latest/"}},
 
     {"path": "/lxd/rest-api/",
      "title": "LXD - REST API",
@@ -324,7 +324,7 @@
     {"path": "/distrobuilder/documentation",
      "menu": ["distrobuilder", "Documentation"],
      "generator": "link",
-     "meta": {"url": "https://distrobuilder.readthedocs.io/en/latest/"}},
+     "meta": {"url": "/distrobuilder/docs/latest/"}},
 
     {"path": "/distrobuilder/contribute/",
      "title": "distrobuilder - Contribute",
