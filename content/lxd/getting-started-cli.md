@@ -122,6 +122,12 @@ Because group membership is normally only applied at login, you might need to ei
 
     You can learn more about LXD security [here](/lxd/docs/latest/security).
 
+# Firewall issues
+
+You might see issues with your firewall blocking network access for your instances, or connectivity issues because you run LXD and Docker on the same host.
+
+See [How to configure your firewall](/lxd/docs/latest/howto/network_bridge_firewalld/) for information on how to resolve such issues.
+
 # Instances
 
 See [Instances](/lxd/docs/latest/instances).
