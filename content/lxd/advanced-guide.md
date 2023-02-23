@@ -135,13 +135,8 @@ See [LXD documentation - Projects](/lxd/docs/master/projects) for more informati
 For building your own images, you can use [`distrobuilder`](https://github.com/lxc/distrobuilder) (a tool developed by us).
 
 ## Install distrobuilder
-You can install distrobuilder via snap or compile it manually:
 
-### Install via Snap
-See [https://snapcraft.io/distrobuilder](https://snapcraft.io/distrobuilder).
-
-### Compile
-See [Instructions on distrobuilder GitHub repo](https://github.com/lxc/distrobuilder/#installing-from-source).
+See [How to install `distrobuilder`](/distrobuilder/docs/latest/howto/install/).
 
 ## Write or edit a template
 You need an image template (e.g. `ubuntu.yaml`) to give instructions to distrobuilder.
@@ -161,13 +156,13 @@ You can define multiple keys in templates:
 
 | Section: | Description: | Documentation: |
 | ---      | ---          | ---            |
-| `image`  | defines distribution, architecture, release etc.| see [image.md](https://github.com/lxc/distrobuilder/blob/master/doc/image.md) |
-| `source` | defines main package source, keys etc. | see [source.md](https://github.com/lxc/distrobuilder/blob/master/doc/source.md) |
-| `targets` | defines configs for specific targets (e.g. LXD-client, instances etc.) |  see [targets.md](https://github.com/lxc/distrobuilder/blob/master/doc/targets.md) |
-| `files` | defines generators to modify files | see [generators.md](https://github.com/lxc/distrobuilder/blob/master/doc/generators.md) |
-| `packages` | defines packages for install or removal; add repositories |   see [packages.md](https://github.com/lxc/distrobuilder/blob/master/doc/packages.md) |
-| `actions` | defines scripts to be run after specific steps during image building |  see [actions.md](https://github.com/lxc/distrobuilder/blob/master/doc/actions.md) |
-| `mappings` | maps different terms for architectures for specific distributions (e.g. x86_64: amd64) | see [mappings.md](https://github.com/lxc/distrobuilder/blob/master/doc/mappings.md) |
+| `image`  | defines distribution, architecture, release etc.| see [Image](/distrobuilder/docs/latest/reference/image/) |
+| `source` | defines main package source, keys etc. | see [Source](/distrobuilder/docs/latest/reference/source/) |
+| `targets` | defines configs for specific targets (e.g. LXD-client, instances etc.) |  see [Targets](/distrobuilder/docs/latest/reference/targets/) |
+| `files` | defines generators to modify files | see [Generators](/distrobuilder/docs/latest/reference/generators/) |
+| `packages` | defines packages for install or removal; add repositories |   see [Package management](/distrobuilder/docs/latest/reference/packages/) |
+| `actions` | defines scripts to be run after specific steps during image building |  see [Actions](/distrobuilder/docs/latest/reference/actions/) |
+| `mappings` | maps different terms for architectures for specific distributions (e.g. x86_64: amd64) | see [Mappings](/distrobuilder/docs/latest/reference/mappings/) |
 
 
 !!! note "Note for VMs"
@@ -187,7 +182,7 @@ Replace:
 
 After the image is built, see [Import images](/lxd/docs/latest/howto/images_copy/#import-an-image-from-files) for how to import your image to LXD.
 
-See [Building.md on distrobuilder's GitHub repo](https://github.com/lxc/distrobuilder/blob/master/doc/building.md#lxd-image) for details.
+See [How to build images](/distrobuilder/docs/latest/howto/build/#lxd-image) for details.
 
 ### Virtual machine image
 Build a virtual machine image with:
@@ -205,7 +200,7 @@ After the image is built, see [Import images](/lxd/docs/latest/howto/images_copy
 ## More information
 [Distrobuilder GitHub repo](https://github.com/lxc/distrobuilder)
 
-[Distrobuilder documentation](https://github.com/lxc/distrobuilder/tree/master/doc)
+[Distrobuilder documentation](/distrobuilder/docs/latest/)
 
 # Networks
 See the LXD documentation for details:

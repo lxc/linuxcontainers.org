@@ -10,4 +10,4 @@ Contributions sent upstream for review must be based on the current git tree and
 
 Contributions to distrobuilder must be submitted as GitHub pull-requests and we require them to be signed-off.
 
-More details on contribution guidelines may be found [here](https://github.com/lxc/distrobuilder/blob/master/CONTRIBUTING.md)
+More details on contribution guidelines may be found [here](https://github.com/lxc/distrobuilder/blob/master/CONTRIBUTING.md).
