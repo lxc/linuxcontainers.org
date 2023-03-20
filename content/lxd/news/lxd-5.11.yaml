@@ -5,7 +5,7 @@ content: |-
   ### Introduction
   The LXD team is very excited to announce the release of LXD 5.11!
 
-  This is a pretty packed release with a couple of big highlight features, specifically the instance placement scriplet and ZFS zvol support but also included are quite a few other smaller features, performance improvements and bugfixes.
+  This is a pretty packed release with a couple of big highlight features, specifically the instance placement scriptlet and ZFS zvol support but also included are quite a few other smaller features, performance improvements and bugfixes.
 
   Enjoy!
 
