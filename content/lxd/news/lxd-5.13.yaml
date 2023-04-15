@@ -1,0 +1,376 @@
+title: LXD 5.13 has been released
+date: 2023/04/15 05:04
+origin: https://discuss.linuxcontainers.org/t/lxd-5-13-has-been-released/16949
+content: |-
+  ### Introduction
+  The LXD team is very excited to announce the release of LXD 5.13!
+
+  This is quite the jam packed release featuring a lot of improvements for those using OVN networks, but also very exciting developments for VM users, including much faster live migration and AMD SEV support. On top of that, we're also adding OpenID Connect support for user authentication, dedicated network bridges for multi-user environments and a long requested one, the ability to resize storage pools through LXD itself.
+
+  Enjoy!
+
+  ### New features and highlights
+  #### Fast live migration for virtual machines
+  For quite a while now LXD has supported live migration of virtual machines.
+  But the way this was done was far from ideal. It was effectively all dependent on LXD's support for stateful stop, that is, the ability to write down all the memory and CPU state to disk, then fully stop the virtual machine but with the ability to start it back up exactly where it left off.
+
+  That means that for live migration, the process was effectively to write down all the memory (potentially several GiBs of it), write down the CPU state, then have the VM exit, move all the state (disk, memory and CPU) to the target system and finally restore it.
+
+  When using shared storage like Ceph and a VM with just 1GiB or so of RAM, it could be done with only a 5-10s downtime where the VM would be unresponsive on the network.
+
+  When using local storage instead, things could get much much worse depending on the size of the VM, with times approaching a minute being quite common.
+
+  Now with LXD 5.13, things have changed. We now have a mechanism that allows the source and target servers to communicate right from the start of the migration. This allows for performing any disk state transfer in the background while the VM is still running, then transferring any remaining disk changes as well as the memory through multiple iterations of the migration logic and finally cut over to the target system.
+
+  This allows to almost fully eliminate any perceivable downtime and provide what most people expect when they think of live migration.
+
+  Specification: https://discuss.linuxcontainers.org/t/lxd-online-vm-live-migration-qemu-to-qemu/16635
+
+  #### AMD SEV support for virtual machines
+  LXD now supports AMD SEV for memory encryption of virtual machines.
+
+  It's controlled through a few new configuration keys:
+
+   - `security.sev`
+   - `security.sev.es`
+   - `security.sev.session.dh`
+   - `security.sev.session.data`
+
+  On compatible systems (AMD EPYC with firmware and kernel support enabled), setting `security.sev` to `true` will have the VM get its memory encrypted with a per-VM key handled by the firmware.
+
+  Systems supporting AMD SEV-ES can then turn on `security.sev.es` to also have the CPU state encrypted for extra security.
+
+  Lastly, LXD also supports feeding custom session keys which combined with LXD's existing vTPM support can be used to ensure that the firmware is set up with those user provided keys and that the host operator doesn't have any ability to temper with the VM.
+
+  Specification: https://discuss.linuxcontainers.org/t/lxd-support-for-amd-sev-in-vm/16642
+  Documentation: https://linuxcontainers.org/lxd/docs/latest/reference/instance_options/#instance-options-security
+
+  #### OpenID Connect authentication
+  As part of a push to provide a more industry standard solution to authentication and authorization in LXD, we've begun the work by adding support for OpenID Connect for authentication.
+
+  We need to stress that only authentication is supported at this stage. Any user that's approved by the OIDC Identity Provider configured in LXD will get full access to LXD comparable to that of being in the `lxd` group.
+
+  This is configured through a few new configuration keys:
+
+   - `oidc.issuer`
+   - `oidc.client.id`
+   - `oidc.audience` (only relevant for some providers)
+
+  LXD uses the Device Code flow for authentication with our CLI tool triggering the browser based authentication flow, then getting and storing the access and refresh tokens and providing those to LXD on all interactions.
+
+  Specification: https://discuss.linuxcontainers.org/t/lxd-openid-connect-authentication/16570
+  Documentation: https://linuxcontainers.org/lxd/docs/latest/server/#openid-connect-configuration
+
+  #### VDPA for network acceleration on OVN
+  LXD has had support for SR-IOV based accelerated NICs on OVN networks for a little while now. Those would be mostly normal looking Virtual Functions passed to the guest but configured in a way that the traffic sent through that VF ends in an OpenVswitch bridge rather than through the physical switch on the card.
+
+  This mechanism then allows LXD to have those VFs tied to specific OVN networks.
+  Combined with flow offloading support in OpenVswitch, this allows for very high throughput with little to none CPU usage on the system as only the initial packet of any connection is see by OpenVswitch, all subsequent traffic is handled through flow rules pushed to the physical NIC.
+
+  While this works great, there are a couple of annoying limitations from it.
+  The main one is that the VF passed to the VM will appear as the same vendor and model as the physical NIC, also requiring the guest to have suitable drivers for it.
+  The second one is a consequence of the first. As we're dealing with a VF from a physical card. We can't live-migrate any such VMs as there are no mechanisms to extract any state that's internal to the NIC nor any guarantee that the target system has an absolutely identical NIC available.
+
+  Enter VDPA. With VDPA, the guest doesn't get to know what the physical NIC is. Instead the guest sees a perfectly normal virtio-net device, same as non-accelerated networking.
+  Behind the scenes, that virtio-net device actually has its RX/TX queues mapped to a VF which is then connected into OpenVswitch and OVN the same way as would be done for SR-IOV. Now, no drivers are needed in the guest and the NIC can theoretically be remapped to a standard non-accelerated virtio-net device prior to migration, allowing for live-migration.
+
+  In practice, this is driven through a new value for the `acceleration` property on OVN NICs. It now supports `vdpa` alongside the existing `sriov`. Note however that this is limited to virtual machines, containers cannot use VDPA.
+
+  On the hardware front, pretty much only NVIDIA ConnectX-6 and later support what's needed for VDPA to work in this way.
+
+  Documentation: https://linuxcontainers.org/lxd/docs/latest/reference/devices_nic/#nictype-ovn
+
+  #### Layer 3 only suppport on OVN
+  Normal OVN networking gets you a perfectly standard /24 subnet for IPv4 and /64 subnet for IPv6. That is, a L2 network which supports broadcast, multicast, ...
+
+  But what if you want to have something that's L3 only?
+
+  Well, it's now possible by using two new config keys:
+
+   - `ipv4.l3only`
+   - `ipv6.l3only`
+
+  Setting those will cause the matching protocol to instead use a /32 or /128 respectively, preventing any broadcast or multicast and requiring all traffic go through the (virtual) router.
+
+  Documentation: https://linuxcontainers.org/lxd/docs/latest/reference/devices_nic/#nictype-ovn
+
+  #### Nested NIC support on OVN networks
+  A neat feature of OVN is the ability to get up to 4096 additional NICs into an instance without having to use additional PCI addresses for additional virtual NICs.
+
+  The way this is done is by assigning OVN interfaces to a VLAN on the primary interface.
+  Then in the instance that VLAN can be split out, either for direct consumption or to be given to a container or put in a bridge.
+
+  LXD now supports this by allowing for additional OVN `nic` devices to be defined with a `parent` property that needs to be set to the name of the main NIC and a `vlan` property that's used to specify the VLAN ID to use.
+
+  Documentation: https://linuxcontainers.org/lxd/docs/latest/reference/devices_nic/#nictype-ovn
+
+  #### Per user bridge in multi-user setups
+  Our `lxd-user` daemon which provides on-demand project creation on multi-user systems has now been updated to make use of a feature introduced some releases ago.
+
+  That feature is the abiltiy to restrict the list of networks available within a project.
+  Now on project creation, lxd-user will automatically create a dedicated network for the project and then configure that project to only allow the use of that one network.
+
+  This now prevents any kind of network conflicts between the various users on the system.
+
+  #### Support for growing existing storage pools
+  A long requested feature, it's now possible to directly resize a loop-backed storage pool.
+
+  The way to do is is pretty straightforward too, just change the `size` property to whatever size you want and the pool will be grown for you. This only works on pools that were created by LXD on top of a loop file. And it replaces our previous manual instructions on growing such pools.
+
+  Do note that shrinking isn't supported as that can be a pretty major headache to do correctly.
+
+  Documentation: https://linuxcontainers.org/lxd/docs/latest/howto/storage_pools/#storage-resize-pool
+
+  #### Reworked project documentation
+  And on the documentation front, we now have our project documentation using the new layout!
+
+  Documentation: https://linuxcontainers.org/lxd/docs/latest/explanation/projects/
+
+  ### Complete changelog
+  Here is a complete list of all changes in this release:
+
+  [details="Full commit list"]
+   - storage: Correctly set VolumeOnly in VolumeSourceArgs
+   - storage, migration: Add snapshots argument to MigrationTypes
+   - btrfs: Use rsync when refreshing volume only
+   - zfs: Use rsync when refreshing volume only
+   - doc: Update optimized volume transfer
+   - lxd/instance/qemu: vmgenid isn't supported on aarch64
+   - doc: Add source.wipe
+   - lxd/storage/drivers/driver/ceph/volumes: Don't fail CreateVolumeSnapshot when freezing filesystem not possible
+   - lxd/instance/post: Stop instance before moving statelessly between cluster members
+   - client/connection: Add URL to debug logging in ConnectLXDWithContext
+   - lxd/instance/post: Reworks instancePostClusteringMigrate to avoid self-connecting to the source member's API
+   - lxd/instance/post: Removes delete action from internalClusterInstanceMovedPost
+   - lxd/migrate: Add clusterSameNameMove field to migrationSourceWs
+   - lxd/migrate/instance: Adds clusterSameNameMove to newMigrationSource
+   - lxd: newMigrationSource usage
+   - lxd/instance/post: Pass cluster same name move hint to newMigrationSource in instancePostClusteringMigrate
+   - lxd/instance/instance/interface: Moves ClusterSameNameMove from MigrateReceiveArgs to MigrateArgs
+   - lxd/migrate/instance: MigrationArgs usage in migrationSink.Do
+   - lxd/migrate/instance: Set ClusterSameNameMove in migrationSourceWs.Do
+   - lxd/instance/qemu: struct/insert func for vmgenid description in `qemu.conf`
+   - lxd/instance/qemu: add VM Generation ID to QEMU config
+   - lxd-user: Use per-user bridge
+   - lxd/instance/drivers/driver/qemu: Fix VM start with vmgenid
+   - doc/devices/pci: add link to YouTube video
+   - lxd/instance: `checkFeatures` returns a `map[string]any` instead of `[]string`
+   - lxd/db/generate/db/method: Use tx.ExecContext over tx.Exec
+   - lxd/db/cluster: Update generated code
+   - lxd/migrate: Setup timeouts in migrationSink.Connect
+   - shared/network: Add read lock to WebsocketIO
+   - shared/network: Use WriteMessage optimized method in WebsocketIO.Write
+   - lxd/storage/drivers: Removes use of cmd.StdoutPipe when piping stdout to websocket
+   - client/lxd: Log warning when failing to call tcp.SetTimeouts
+   - lxd: Log warning when failing to call tcp.SetTimeouts
+   - lxd: auto snap create and pruning are in the same task
+   - lxd: chan mgmt improvement for goroutines created by `autoCreateInstSnap` and early return if cancelled ctx
+   - lxd/instance/qemu: Defer call to remove file descriptors after QEMU process starts
+   - lxd/instance/qmp: Add query-sev-capabilities
+   - lxd/apparmor/qemu: Add /dev/sev and /tmp/lxd_sev_* to profile
+   - lxd/instance/qemu: Add QEMU config definition for SEV
+   - lxd/device: Skip virtiofs when SEV is enabled
+   - lxd/instance/qemu: Check if SEV is supported on host
+   - lxd/instance/qemu: Use KVM acceleration
+   - lxd/instance/qemu: Enable SEV if `security.sev=true`
+   - shared/instance: Add security.sev config options
+   - doc: Add security.sev
+   - api: amd_sev
+   - doc/network: Expand on txqueuelen
+   - doc/authentication: Update minimum TLS
+   - lxc/config: Fix config trust fail when remote is specified
+   - shared/simplestreams: Add support for disk-kvm.img.vcdiff
+   - lxd/api: Don't crash by passing a nil localConfig
+   - lxd/storage/pool/interface: Adds CleanupInstancePaths definition
+   - lxd/storage/backend/mock: Adds CleanupInstancePaths function
+   - lxd/storage/backend/lxd: Adds CleanupInstancePaths function
+   - lxd/migrate: Replace clusterSameNameMove with clusterMoveSourceName property
+   - lxd/instance: newMigrationSource clusterMoveSourceName arg usage
+   - lxd/instance/instance/interface: Replace ClusterSameNameMove with MigrateArgs.ClusterMoveSourceName
+   - lxd/instance/post: Forward request to target member if source member offline in instancePost
+   - lxd/instance/post: Reworks instancePostClusteringMigrate
+   - lxd/instance/post: Reworks instancePostClusteringMigrateWithCeph
+   - lxd/instance/post: Updates migrateInstance to load source & target cluster member info
+   - lxd: migrateInstance usage
+   - lxd: Removes unused internal/cluster/instance-moved API endpoint
+   - lxd/instance/drivers/driver/qemu: Make instance agent vsock advertise message a warning
+   - lxd/instance/drivers: args.ClusterMoveSourceName usage
+   - lxd/instance/drivers: Don't remove remote volumes on error during cluster move
+   - lxd/migration/migration/volumes: Adds ClusterMove to VolumeSourceArgs and ClusterMoveSourceName to VolumeTargetArgs
+   - lxd/instance/drivers: Populate VolumeSourceArgs.ClusterMove in MigrateSend
+   - lxd/instance/drivers: Populate VolumeTargetArgs.ClusterMoveSourceName in MigrateReceive
+   - lxd/instances/post: Reworks createFromMigration to use req.Source.Source name
+   - lxd/storage/backend/lxd: Fix typo
+   - lxd/storage/backend/lxd: Updates CreateInstanceFromMigration to handle remote shared storage cluster moves
+   - lxd/storage/drivers/driver/ceph/volumes: Move cluster move logic from MigrateVolume to CreateVolumeFromMigration
+   - lxd/instance/qemu: Cleanup vmgenid
+   - lxd/instance/qemu: Refactor cpuTopology
+   - lxd/migrate: Removes separate src and dest migrationFields fields from migrationSink
+   - lxd: Updates use of embedded migrationFields in migrationSink
+   - lxd/migrate/instance: Simplify logic in newMigrationSink
+   - shared/cancel: Replace http.Client with http.Client.Do
+   - shared: Update to new CancelableDownload
+   - lxd: Update to new CancelableDownload
+   - client: Use DoHTTP on all CancelableDownload
+   - client: Make lxdDownloadImage use DoHTTP
+   - lxd/instances: Don't use notify for targetting
+   - lxd/instance/instance/interface: Updates MigrateArgs to use functions for returning migration connections
+   - lxd/migrate/instance: instance.MigrateArgs usage
+   - lxd/instance/drivers/driver/lxc: Updates MigrateSend to use connection functions
+   - lxd/instance/drivers/driver/lxc: Updates MigrateReceive to use connection functions
+   - lxd/instance/drivers/driver/qemu: Updates MigrateSend to use connection functions
+   - lxd/instance/drivers/driver/qemu: Updates MigrateReceive to use connection functions
+   - shared/network: Sets 5s handshake timeout in WebsocketUpgrader
+   - lxd/migration/connection: Adds migrationConn concept
+   - lxd/migrate: Replaces the individual connection variables with a map of migrationConn types
+   - lxd/migrate/instance: Updates newMigrationSource to accept pushTarget information
+   - lxd/migrate/instance: Updates newMigrationSink to setup migrationConn map
+   - lxd/migrate/storage/volumes: Updates newStorageMigrationSource to accept push target info
+   - lxd/migrate/storage/volumes: Updates newStorageMigrationSink to use the migrationConn map
+   - lxd/storage/volumes: newStorageMigrationSink usage
+   - lxd/storage/volumes: Pass req.Target to newStorageMigrationSource
+   - lxd/instances/post: Use setupWebsocketDialer in createFromMigration
+   - lxd/instance/post: Pass req.Target to newMigrationSource
+   - lxd/instance/post: Update instancePostClusteringMigrate with newMigrationSource usage
+   - lxd/instance/snapshot: Pass req.Target to newMigrationSource
+   - lxd/storage/backend/lxd: Clarify freezing comment in MigrateInstance
+   - lxd/migrate/instance: Change connection stream helper functions to return error
+   - lxd/instance: Updates usage of migration connection stream helper functions
+   - lxd/migrate: Log push mode on source
+   - lxd/migrate/instance: Only wait for control connection to be established in top level migration subsystem
+   - lxd/instance/drivers/driver/lxc: Wait for essential connections in MigrateSend and MigrateReceieve
+   - lxd/instance/drivers/driver/qemu: Wait for essential connections in MigrateSend and MigrateReceieve
+   - lxd/instance/drivers/driver/qemu: Remove unnecessary variable defintion in MigrateSend
+   - lxd/instance/drivers/driver/qemu: Separate checkpoint restore from restoreState into restoreStateHandle
+   - lxd/instance/drivers/driver/qemu: Separate checkpoint save from saveState into saveStateHandle
+   - lxd/instance/drivers/driver/qemu: Update saveState and restoreState to support restoring from live migration handle
+   - lxd/instance/drivers/load: Adds global temporary instance reference storage
+   - lxd/instance/drivers/driver/common: Adds volatileSetPersistDisable
+   - lxd/migration: Update protobuf version
+   - lxd/migration: Adds CRIUType_VM_QEMU protobuf type
+   - lxd/storage/drivers/driver/types: Adds LiveMigrationQEMU to Info struct
+   - lxd/storage/drivers/driver/ceph: Enable LiveMigrationQEMU
+   - lxd/instance/drivers/driver/qemu: Add support for using an existing instance reference in getMonitorEventHandler stop hook handler
+   - lxd/instance/drivers/driver/qemu: Add support shared remote storage live migration in MigrateSend and MigrateReceive
+   - drivers: Add function loopDeviceSetCapacity
+   - zfs: Allow growing pool size
+   - btrfs: Allow growing pool size
+   - lvm: Allow growing pool size
+   - storage: Prevent shrinking storage pools
+   - test: Test storage pool resize
+   - api: Add `storage_pool_resize` API extension
+   - doc: Update storage pool resize
+   - doc: Update description of storage pool `size` key
+   - lxd/instance/drivers/qmp/monitor: Remove whitespace
+   - lxd/instance/drivers/qmp/commands: Don't wait for initial check in MigrateIncoming
+   - lxd/instance/drivers/qmp/commands: Split Migrate into MigrateWait
+   - lxd/instance/drivers/qmp/commands: Fix revert in AddBlockDevice
+   - lxd/instance/drivers/qmp/commands: Remove invalid comment in RemoveBlockDevice
+   - lxd/instance/drivers/qmp/commands: Remove unnecessary disconnected checks
+   - lxd/instance/drivers/qmp/commands: Comment endings
+   - lxd/instance/drivers/qmp/commands: Simplify CloseFile by using m.run
+   - lxd/instance/drivers/qmp/commands: Updates SendFileWithFDSet to return a pointer to AddFdInfo
+   - lxd/instance/drivers/driver/qemu: Updates saveState to only support saving to state file
+   - lxd/instance/drivers/driver/qemu: Move live state transfer logic into MigrateSend
+   - api: Adds migration_vm_live extension
+   - lxd/storage/backend/lxd: Adds info log about freezing instance during migration
+   - lxd/instance/drivers/qmp/commands: Adds live migration related functions
+   - lxd/apparmor/instance/qemu: Allow qemu to use abstract unix sockets
+   - lxd/storage/drivers: Removes LiveMigrationQEMU
+   - lxd/instance/drivers/driver/qemu: Improve errors in start
+   - lxd/instance/drivers/driver/qemu: Consider a VM in postmigrate status as api.Frozen
+   - lxd/instance/drivers/driver/qemu: Allow a frozen VM to be forcefully stopped
+   - lxd/instance/drivers/driver/qemu: Improve comment on saveStateHandle
+   - lxd/instance/drivers/driver/qemu: Add config validation check to MigrateSend
+   - lxc/network: Add an example to create
+   - i18n: Update translation templates
+   - doc/projects: draft new structure
+   - doc/projects: move existing content
+   - doc/projects: clean up "About projects"
+   - doc/projects: add "How to create and configure projects"
+   - doc/projects: add "How to work with different projects"
+   - doc/projects: clean up "Project configuration"
+   - doc/server: fix copy&paste error
+   - doc/projects: add "How to confine projects to specific users"
+   - lxc/cluster: Don't allow both arg and flag name on add
+   - i18n: Update translation templates
+   - lxd/instance/drivers/driver/qemu: Adds non-shared storage live migration support
+   - lxd/instance/drivers/qmp/commands: Comment typo
+   - lxd/instance/drivers/qmp/commands: Allow cancellation of MigrateIncoming
+   - lxd/instance/drivers/driver/qemu: Cancel restoreStateHandle in restoreState when remote connection is closed
+   - lxd/instance/drivers/driver/qemu: Fix migration block device cleanup on error in migrateSendLive
+   - doc: add links to YouTube videos
+   - lxd/storage/drivers/driver/zfs/volumes: Don't ascertain current volmode status for block backed volumes twice in UnmountVolume
+   - lxd/storage/drivers/driver/zfs/volumes: Avoid double caching VM volumes in the ARC cache
+   - lxd/storage/drivers/driver/zfs/volumes: Fix block volumes not being deactivated
+   - lxd/device/nic/ovn: Improve same instance multi-NIC DNS name conflict error in checkAddressConflict
+   - lxd/device/nic/bridged: Improve same instance multi-NIC DNS name conflict error in checkAddressConflict
+   - api: Adds ovn_nic_nesting extension
+   - doc: Adds nested and vlan properties to the ovn NIC
+   - lxd/network/openvswitch/ovn: Add nested VLAN port support OVNSwitchPortOpts and LogicalSwitchPortAdd
+   - lxd/network/driver/ovn: Add nested VLAN port support to InstanceDevicePortStart
+   - lxd/device/nic/ovn: Adds validation for nested and vlan combination settings
+   - lxd/device/nic/ovn: Don't perform DNS name conflict checks on nested NICs in checkAddressConflict
+   - lxd/device/nic/ovn: Add support for nested VLAN ports
+   - lxd/auth/candid: Move candid to own package
+   - client: Move candid to own file
+   - api: Add oidc extension
+   - lxd/auth/oidc: Add new package
+   - lxd/cluster/config: Add OIDC config keys
+   - lxd/daemon: Add OpenID Connect support
+   - client: Add support for OIDC
+   - lxc: Add support for OIDC
+   - doc: Add OIDC subsection
+   - doc: Add `OpenID` and `OIDC` to sphinx wordlist
+   - tests: Update godeps.list
+   - gomod: Update dependencies
+   - i18n: Update translation templates
+   - lxd/device/device/utils/network: Improve errors in networkSRIOVSetupVF
+   - lxd/device/device/utils/network: Use combined probe and interface wait via networkPCIBindWaitInterface
+   - lxd/network/network/utils: Removes unused InterfaceBindWait
+   - lxd/network/network/utils/sriov: Split SRIOVFindRepresentorPort into its own separate function
+   - lxd/device/nic/ovn: Improve errors in Start
+   - lxd/device/nic/ovn: Clean up allocated VF on failure in Start
+   - lxd/device/nic/ovn: Remove representor port from integration bridge when using acceleration=sriov
+   - lxd/device/nic/ovn: Fix VF interface cleanup on Stop when using acceleration=sriov
+   - gomod: Update dependencies
+   - i18n: Update translations from weblate
+   - lxd/metrics: Don't duplicate entries
+   - lxd/metrics: Also cache empty projects
+   - lxd/instance/qemu: Only use KVM mode for feature detection on X86
+   - lxc/launch: Extend examples
+   - i18n: Update translations
+   - doc/cheat-sheet: update with more markup
+   - api: Adds network_ovn_l3only extension
+   - lxd/network/openvswitch/ovn: Support indicating netmask in DHCPv4 options
+   - lxd/network/openvswitch/ovn: Add Discard support to LogicalRouterRouteAdd
+   - lxd/network/network/utils: Adds IPToNet function
+   - lxd/network/driver/ovn: Add l3only mode
+   - doc: Adds l3only settings to ovn network
+   - doc/authentication: mention that RBAC is covered by Ubuntu Pro
+   - doc/footer: add community links
+   - lxd/response: Add support for compression
+   - lxd/metrics: Add compression support
+   - lxd/ip: Add utility functions for vDPA device create/list/delete
+   - api: Add the `ovn_nic_acceleration_vdpa` extension
+   - shared/api: Add vDPA net card to resources API
+   - doc/rest-api: Refresh swagger YAML
+   - lxd/resources: Expose VDPA to the resources API
+   - lxd/device/nic: Add support for vDPA in OVN NIC device
+   - lxd/instance/qemu: Add vDPA QEMU parameters to create net device
+   - doc/reference: Add VDPA related options
+   - gomod: Update dependencies
+   - i18n: Update translations from weblate
+  [/details]
+
+  ### Try it for yourself
+  This new LXD release is already available for you to try on our [demo service](https://linuxcontainers.org/lxd/try-it/).
+
+  ### Downloads
+  The release tarballs can be found on our [download page](https://linuxcontainers.org/lxd/downloads/).
+
+  Binary builds are also available for:
+
+   - **Linux:** snap install lxd
+   - **MacOS:** brew install lxc
+   - **Windows:** choco install lxc
