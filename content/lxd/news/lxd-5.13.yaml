@@ -40,7 +40,7 @@ content: |-
 
   Systems supporting AMD SEV-ES can then turn on `security.sev.es` to also have the CPU state encrypted for extra security.
 
-  Lastly, LXD also supports feeding custom session keys which combined with LXD's existing vTPM support can be used to ensure that the firmware is set up with those user provided keys and that the host operator doesn't have any ability to temper with the VM.
+  Lastly, LXD also supports feeding custom session keys which combined with LXD's existing vTPM support can be used to ensure that the firmware is set up with those user provided keys and that the host operator doesn't have any ability to tamper with the VM.
 
   Specification: https://discuss.linuxcontainers.org/t/lxd-support-for-amd-sev-in-vm/16642
   Documentation: https://linuxcontainers.org/lxd/docs/latest/reference/instance_options/#instance-options-security
@@ -80,7 +80,7 @@ content: |-
 
   Documentation: https://linuxcontainers.org/lxd/docs/latest/reference/devices_nic/#nictype-ovn
 
-  #### Layer 3 only suppport on OVN
+  #### Layer 3 only support on OVN
   Normal OVN networking gets you a perfectly standard /24 subnet for IPv4 and /64 subnet for IPv6. That is, a L2 network which supports broadcast, multicast, ...
 
   But what if you want to have something that's L3 only?
@@ -92,7 +92,7 @@ content: |-
 
   Setting those will cause the matching protocol to instead use a /32 or /128 respectively, preventing any broadcast or multicast and requiring all traffic go through the (virtual) router.
 
-  Documentation: https://linuxcontainers.org/lxd/docs/latest/reference/devices_nic/#nictype-ovn
+  Documentation: https://linuxcontainers.org/lxd/docs/latest/reference/network_ovn/#configuration-options
 
   #### Nested NIC support on OVN networks
   A neat feature of OVN is the ability to get up to 4096 additional NICs into an instance without having to use additional PCI addresses for additional virtual NICs.
@@ -100,7 +100,7 @@ content: |-
   The way this is done is by assigning OVN interfaces to a VLAN on the primary interface.
   Then in the instance that VLAN can be split out, either for direct consumption or to be given to a container or put in a bridge.
 
-  LXD now supports this by allowing for additional OVN `nic` devices to be defined with a `parent` property that needs to be set to the name of the main NIC and a `vlan` property that's used to specify the VLAN ID to use.
+  LXD now supports this by allowing for additional OVN `nic` devices to be defined with a `nested` property that needs to be set to the name of the main NIC and a `vlan` property that's used to specify the VLAN ID to use.
 
   Documentation: https://linuxcontainers.org/lxd/docs/latest/reference/devices_nic/#nictype-ovn
 
