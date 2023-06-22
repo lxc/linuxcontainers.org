@@ -34,6 +34,9 @@ content: |-
   #### `lxc publish --reuse`
   Similar to `lxc snapshot --reuse`, it's now possible to use `lxc publish --reuse --alias NAME` to have LXD publish an instance as an image, re-using an existing alias.
 
+  #### Support for specifying the size of an LVM thinpool
+  When using an existing LVM VG, the `size` property of the pool is now used to set the size of the LVM thinpool.
+
   #### Total disk and memory reporting
   Additional API fields were added to to the instance state API to get the total disk and total amount of memory on top of the existing usage data.
 
