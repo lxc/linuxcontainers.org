@@ -47,23 +47,8 @@ See the LXD documentation for details:
 
 
 # Command aliases
-You can create internal command aliases with:
 
-	lxc alias
-
-List all aliases:
-
-	lxc alias list
-
-Create a new alias:
-
-	lxc alias add <alias> <target>
-
-For example:
-
-	lxc alias add delete "delete -i"
-
-This will link the command `lxc delete` to `lxc delete -i`. So if you run `lxc delete` the LXD-client will run `lxc delete -i` instead.
+See [How to add command aliases](/lxd/docs/latest/howto/lxc_alias/).
 
 # Further information & links
 You find more information on the following pages:
