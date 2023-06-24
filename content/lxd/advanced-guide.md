@@ -30,75 +30,7 @@ See [LXD documentation - Projects](/lxd/docs/master/projects) for more informati
 
 # Using `distrobuilder` to build images
 
-For building your own images, you can use [`distrobuilder`](https://github.com/lxc/distrobuilder) (a tool developed by us).
-
-## Install distrobuilder
-
-See [How to install `distrobuilder`](/distrobuilder/docs/latest/howto/install/).
-
-## Write or edit a template
-You need an image template (e.g. `ubuntu.yaml`) to give instructions to distrobuilder.
-
-You can start by using one of the example templates below. Modify those templates so they fit your needs.
-
-See [Template details](#template-details) below for an overview of configuration keys.
-
-### Example templates
-Standard template (includes all available options): [https://github.com/lxc/distrobuilder/blob/master/doc/examples/scheme.yaml](https://github.com/lxc/distrobuilder/blob/master/doc/examples/scheme.yaml)
-
-Official LXD templates for various distributions: [https://github.com/lxc/lxc-ci/tree/master/images](https://github.com/lxc/lxc-ci/tree/master/images)
-
-### Template details
-You can define multiple keys in templates:
-
-
-| Section: | Description: | Documentation: |
-| ---      | ---          | ---            |
-| `image`  | defines distribution, architecture, release etc.| see [Image](/distrobuilder/docs/latest/reference/image/) |
-| `source` | defines main package source, keys etc. | see [Source](/distrobuilder/docs/latest/reference/source/) |
-| `targets` | defines configs for specific targets (e.g. LXD-client, instances etc.) |  see [Targets](/distrobuilder/docs/latest/reference/targets/) |
-| `files` | defines generators to modify files | see [Generators](/distrobuilder/docs/latest/reference/generators/) |
-| `packages` | defines packages for install or removal; add repositories |   see [Package management](/distrobuilder/docs/latest/reference/packages/) |
-| `actions` | defines scripts to be run after specific steps during image building |  see [Actions](/distrobuilder/docs/latest/reference/actions/) |
-| `mappings` | maps different terms for architectures for specific distributions (e.g. x86_64: amd64) | see [Mappings](/distrobuilder/docs/latest/reference/mappings/) |
-
-
-!!! note "Note for VMs"
-	You should either build an image with cloud-init support (provides automatic size growth) or set a higher size in the template, because the standard size is relatively small (~4 GB). Alternatively you can also grow it manually.
-
-## Build an image
-
-### Container image
-Build a container image with:
-
-	distrobuilder build-lxd filename [target folder]
-
-Replace:
-
-* `filename` - with a template file (e.g. `ubuntu.yaml`).
-* (optional)`[target folder]` - with the path to a folder of your choice; if not set, distrobuilder will use the current folder
-
-After the image is built, see [Import images](/lxd/docs/latest/howto/images_copy/#import-an-image-from-files) for how to import your image to LXD.
-
-See [How to build images](/distrobuilder/docs/latest/howto/build/#lxd-image) for details.
-
-### Virtual machine image
-Build a virtual machine image with:
-
-	distrobuilder build-lxd filename --vm [target folder]
-
-Replace:
-
-* `filename` - with a template file (e.g. `ubuntu.yaml`).
-* (optional)`[target folder]` - with the path to a folder of your choice; if not set, distrobuilder will use the current folder
-
-
-After the image is built, see [Import images](/lxd/docs/latest/howto/images_copy/#import-an-image-from-files) for how to import your image to LXD.
-
-## More information
-[Distrobuilder GitHub repo](https://github.com/lxc/distrobuilder)
-
-[Distrobuilder documentation](/distrobuilder/docs/latest/)
+See [Use `distrobuilder` to create images](/distrobuilder/docs/latest/tutorials/use) in the [Distrobuilder documentation](/distrobuilder/docs/latest/).
 
 # Networks
 See the LXD documentation for details:
@@ -115,23 +47,8 @@ See the LXD documentation for details:
 
 
 # Command aliases
-You can create internal command aliases with:
 
-	lxc alias
-
-List all aliases:
-
-	lxc alias list
-
-Create a new alias:
-
-	lxc alias add <alias> <target>
-
-For example:
-
-	lxc alias add delete "delete -i"
-
-This will link the command `lxc delete` to `lxc delete -i`. So if you run `lxc delete` the LXD-client will run `lxc delete -i` instead.
+See [How to add command aliases](/lxd/docs/latest/howto/lxc_alias/).
 
 # Further information & links
 You find more information on the following pages:
