@@ -1,0 +1,386 @@
+title: LXD 5.15 リリースのお知らせ
+date: 2023/06/22 15:06
+origin: https://discuss.linuxcontainers.org/t/lxd-5-15-has-been-released/17493
+content: |-
+  ### はじめに <!-- Introduction -->
+  <!--
+  The LXD team is very excited to announce the release of LXD 5.15!
+  -->
+  LXD チームは LXD 5.15 のリリースをお知らせできることにとてもワクワクしています!
+
+  <!--
+  While not the most jam packed LXD release ever, this release includes some long requested features like support for non-UEFI virtual machines as well as the ability to rebuild instances in place.
+  -->
+  このリリースは、これまでのリリースの中で、それほど機能が詰まったリリースではありません。しかし、このリリースには、非 UEFI 仮想マシンのサポートや、インスタンスをその場でリビルドする機能など、以前からリクエストが多かった機能が含まれています。
+
+  <!--
+  It also adds a few smaller features and fixes a lot of bugs!
+  -->
+  いくつか小さい機能の追加や多数のバグ修正も含まれています!
+
+  Enjoy!
+
+  ### 新機能とハイライト <!-- New features and highlights -->
+  #### LXD 仮想マシンでの非 UEFI 仮想マシンサポート（CSM） <!-- Non-UEFI support in LXD VMs (CSM) -->
+  <!--
+  LXD virtual machines have been designed to use a very modern machine definition from the start. This means a QEMU q35 machine type combined with a UEFI firmware (EDK2) and even Secure Boot enabled by default.
+  -->
+  LXD の仮想マシンは、最初からかなり新しいマシン定義を使うように設計されています。これは、QEMU q35 マシンタイプと UEFI ファームウェア（EDK2）を組み合わせており、デフォルトでセキュアブートが有効になっていることを意味します。
+
+  <!--
+  While this works great for modern operating systems, this can be a problem when migrating existing physical or virtual machines into LXD as those machines may be using a legacy firmware (BIOS) and not be bootable under UEFI.
+  -->
+  これは最新の OS では最適ですが、既存の物理マシンや仮想マシンを LXD に移行する場合、これらのマシンがレガシーなファームウェア（BIOS）を使用しており、UEFI からは起動しない可能性があり、問題となる可能性があります。
+
+  <!--
+  This can now be addresed by setting `security.csm` to `true` combined with disabling UEFI Secure Boot by setting `security.secureboot` to `false`. This causes the UEFI firmware provided with LXD to enable CSM (Compatibiltiy Support Module) as well as tweaking the PCI layout of the VM slightly to allow booting a non-UEFI operating system installation.
+  -->
+  この問題は、`security.csm` を true に設定し、`security.secureboot` を false に設定することで、UEFI セキュアブートを無効にすることで対処できるようになりました。これにより LXD が提供する UEFI ファームウェアで CSM（互換性サポートモジュール）が有効になり、VM の PCI レイアウトが少し調整されて、非 UEFI OS をインストールしても起動できるようになります。
+
+  #### インスタンスのリビルド <!-- Instance rebuild -->
+  <!--
+  It's now possible to rebuild a LXD instance, effectively wiping its storage and reinitializing it with a clean image, keeping all configuration, devices, ... attached to that instance.
+  -->
+  LXD インスタンスのリビルドができるようになりました。効率的にストレージを消去し、クリーンなイメージで最初期化し、そのインスタンスの設定、接続されたデバイスなどをすべて維持できるようになりました。
+
+  例<!-- Example -->:
+
+      lxc rebuild images:ubuntu/22.04 foo
+
+  仕様 <!-- Specification -->: https://discuss.linuxcontainers.org/t/lxd-adding-support-for-instance-rebuild/17195
+  ドキュメント <!-- Documentation -->: https://linuxcontainers.org/lxd/docs/master/howto/instances_manage/#rebuild-an-instance
+
+  #### NUMA ノードに基づくコンテナの固定 <!-- Container pinning based on NUMA nodes -->
+  <!--
+  On systems with multiple NUMA nodes (mostly multi-socket servers), it's usually a good idea to have all your processes running on the same node. This allows for effecient memory sharing across processes.
+  -->
+  複数の NUMA ノードを持つシステム（主にマルチソケットサーバー）では、通常はすべてのプロセスを同じノードで動かすことは良い考えです。これにより、プロセス間で効率的なメモリ共有ができます。
+
+  <!--
+  In the past, you could have done that in LXD by manually looking at your NUMA nodes in `lxc info --resources` and then update `limits.cpu` with a specific pinning configuration for that.
+  -->
+  以前 LXD では、`lxc info --resources` で NUMA ノードを手動で確認し、そのための特定の固定設定で `limits.cpu` を更新して、そのようなことを行えました。
+
+  <!--
+  But having LXD handle some amount of scheduling is useful to spread load evenly on the system, so we have now introduced the `limits.cpu.nodes` config key which can be used to specify the NUMA node (or nodes) to use for the instance, allowing for `limits.cpu` to remain a simple CPU count rather than a specific pinning.
+  -->
+  しかし、LXD にある程度のスケジューリングを処理させることは、システムの負荷を均等に分散するのに役立ちます。そのため、インスタンスが使う NUMA ノードを指定できる、`limits.cpu.nodes` 設定キーを導入しました。これにより、`limits.cpu` は固定のための指定ではなく、シンプルに CPU 数のままとなります。
+
+  例 <!-- Example -->:
+
+      lxc config set foo limits.cpu=4 limits.cpu.nodes=2
+
+  仕様 <!-- Specification -->: https://discuss.linuxcontainers.org/t/lxd-restrict-cpu-placement-to-numa-nodes/17354
+  ドキュメント <!-- Documentation -->: https://linuxcontainers.org/lxd/docs/master/reference/instance_options/#resource-limits
+
+  #### API 内のユーザー認証情報 <!-- User authentication information in API -->
+  <!--
+  To allow for the LXD UI and other similar consumers to know who the user is logged in as and what authentication was used, additional metadata has been added to the API.
+  -->
+  LXD UI や他の同様のコンシューマーが、ユーザーが誰としてログインしているか、どの認証方式を使っているかを知れるように、API に追加のメタデータが追加されました。
+
+  例 <!-- Example -->:
+
+      stgraber@dakara:~$ lxc info s-shf-cluster: | grep -i ^auth_user
+      auth_user_name: stgraber@stgraber.net
+      auth_user_method: candid
+
+  ### すべての変更点 <!-- Complete changelog -->
+  <!--
+  Here is a complete list of all changes in this release:
+  -->
+  このリリースでの完全な変更点のリストは次の通りです:
+
+  [details="すべてのChangeLogを見る"]
+   - lxd/storage/backend/lxd: Switch to errgroup for migration in CreateInstanceFromCopy
+   - lxd/storage/backend/lxd: Switch to errgroup for migration in RefreshInstance
+   - lxd/storage/backend/lxd: Use source pool to indicate if source instance needs to be frozen in CreateInstanceFromCopy
+   - lxd/storage/backend/lxd: Allow copying running VMs in CreateInstanceFromCopy
+   - lxd/storage/backend/lxd: Use same instance freezing logic from CreateInstanceFromCopy in RefreshInstance
+   - lxd/storage/backend/lxd: Allow migrating running VMs when using raw block mode transfer in MigrateInstance
+   - lxd/storage/drivers: Record future improvement areas for non-optimized consistent migrations in MigrateVolume
+   - lxd/instance: Clarify lock exclusive error for target instance in instanceCreateAsCopy
+   - lxc/copy: Remove pointless error check in copyInstance
+   - lxc/copy: Don't try and modify root disk's pool when doing refresh in cmdCopy
+   - lxd/instance/drivers/driver/qemu: Fixes crash if /dev/vhost-net not available
+   - doc: Fix descrption for lxd_memory_Inactive_anon_bytes metric
+   - lxd/metrics: fix copy-n-paste error for MemoryInactiveAnonBytes help text
+   - lxd/storage/drivers/utils: Updates loopFileSizeDefault to consider non-root free space
+   - doc/faq: Drop reference to eth1
+   - shared/instance: Separate some instance type specific config key validation
+   - shared/ws/mirror: Allow passing nil to Exec
+   - lxd/device/nic/ovn: Enable hotplug for VMs
+   - doc: restructure the Manage LXD and Internals sections
+   - doc/server: clean up content of new server/client section
+   - doc/internals: very quick cleanup
+   - doc/instances: clean up "Container runtime environment"
+   - doc/cluster: link directly to cluster options instead of server options
+   - doc/cluster: add information about automatic evacuation
+   - doc/UI: update instructions for enabling the UI
+   - doc/CPU limits: clarify what live update means for CPU limits
+   - lxd/instance/instance/interface: Adds PowerStateRunning and PowerStateStopped constants
+   - lxd: instance.PowerStateRunning and instance.PowerStateStopped usage
+   - lxd: Unifies instance auto start logic
+   - lxd/api/cluster: Fix instance start after cluster heal in evacuateInstances
+   - doc/faq: add information about `lxc monitor`
+   - lxc/init: Accept Description field from stdin
+   - doc/API: add video link and small updates
+   - lxc/publish: Perform alias and image deletion after image creation
+   - lxd/storage/pool/interface: Updates ImportInstance and ImportCustomVolume to return reverter
+   - lxd/storage/backend/mock: Update ImportInstance and ImportCustomVolume signatures
+   - lxd/storage/backend/lxd: Return reverter from ImportCustomVolume
+   - lxd/storage/backend/lxd: Return reverter from ImportInstance
+   - lxd/instance/post: ImportInstance usage
+   - lxd/api/internal/recover: Use pool.ImportInstance and pool.ImportCustomVolume reverters in internalRecoverScan
+   - lxd/daemon: Use dbCluster as alias to github.com/lxc/lxd/lxd/db/cluster
+   - lxd/cluster: Use dbCluster as alias for github.com/lxc/lxd/lxd/db/cluster
+   - lxd/daemon: Pass shutdownCtx to transaction during startup
+   - lxd/daemon: Clear any left over operations for member when starting up
+   - doc/storage/zfs: add missing storage volume configuration
+   - doc: update SSL to TLS
+   - test/backends: Don't use default 5GiB size for lvm pool
+   - gomod: Updates github.com/canonical/go-dqlite
+   - lxd/db: `UpdateImageLastUseDate` is a `ClusterTx` method
+   - lxd/instance/operationlock: Fix comment typo
+   - lxd/locking/lock: Clarify comment
+   - lxd/events/internalListener: Clarify comment
+   - lxd/db/images: Don't say node in user facing error message
+   - lxd/instance: Move image distribution logic from instanceCreateFromImage to createFromImage
+   - lxd/instance/drivers/driver/qemu: Set shutdown and panic actions in start
+   - lxd/instance/drivers/driver/qemu: Handle more QMP statuses in statusCode
+   - lxd/instance/drivers/driver/qemu: Comment improvement
+   - test: Use smaller storage volumes for quota tests
+   - test: Use smaller pools and volumes in GIB and MiB respectively
+   - lxd/storage/drivers/driver/btrfs: Adds revert to Create
+   - lxd/storage/backend/lxd: Delete newly created storage pool if mount fails in Create
+   - test: BTRFS nospace_cache usage was failing to mount on 5.19.0-43-generic
+   - lxd/db/images/test: Fix image test
+   - lxd/instance/drivers/driver/qemu: Pause on panic
+   - lxd/operations/operations: Return operation result error from Wait
+   - lxd/acme: op.Wait usage in autoRenewCertificate
+   - lxd/api/cluster: op.Wait usage in autoHealClusterTask
+   - lxd/backup: op.Wait usage pruneExpiredContainerBackupsTask
+   - lxd/images: op.Wait usage in autoUpdateImagesTask
+   - lxd/images: op.Wait usage in pruneExpiredImagesTask
+   - lxd/images: op.Wait usage in pruneLeftoverImages
+   - lxd/images: op.Wait usage in autoSyncImagesTask
+   - lxd/instance: op.Wait usage in pruneExpiredAndAutoCreateInstanceSnapshotsTask
+   - lxd/instance/instance/types: op.Wait usage in instanceRefreshTypesTask
+   - lxd/instance/post: op.Wait usage in instancePostClusteringMigrate
+   - lxd/logging: op.Wait usage in expireLogsTask
+   - lxd/operations: op.Wait and SmartError usage in operationWaitGet
+   - lxd/operations: op.Wait usage in autoRemoveOrphanedOperationsTask
+   - lxd/storage/volumes/snapshot: op.Wait usage in pruneExpiredAndAutoCreateCustomVolumeSnapshotsTask
+   - lxd/tokens: op.Wait usage in autoRemoveExpiredTokens
+   - lxd/warnings: op.Wait usage in pruneResolvedWarningsTask
+   - lxd/instance/instance/types: Remove pre Go 1.8 check in instanceRefreshTypesTask
+   - api: Set correct instance resource path for snapshot operations
+   - doc/faq: add info about hanging instances
+   - lxd/instance/drivers/driver/qemu: Fix potential race condition with context being cancelled too early in restoreState
+   - lxd/storage/drivers/driver/zfs: Fix zfs list recommendation in Create
+   - lxd/storage: Honor target storage config when migrating
+   - test: Add zfs specific cross-pool copy
+   - lxc: Add func `getImgInfo` and move `guessImage`
+   - lxd: Add function `getSourceImageFromInstanceSource`
+   - lxd/client: Add `getSourceImageConnectionInfo`
+   - lxd: Add function `ensureImageIsLocallyAvailable`
+   - lxd: Add function `ensureDownloadedImageFitWithinBudget`
+   - i18n: update translation files
+   - lxd/network/utils/sriov: Fix SRIOV representor port lookup
+   - lxd/network/utils/sriov: Add SRIOVGetSwitchAndPFID
+   - lxd/network/utils/sriov: Fix typo in comment
+   - doc: Update max value of `net.core.bpf_jit_limit`
+   - lxddoc: Introducing lxddoc, a swagger-like documetation tool
+   - lxddoc: Add README
+   - lxddoc: Integrate lxd-doc to `make doc`
+   - lxd: cluster config doc
+   - lxd/storage: Call QemuImg with both image and destination path for unique apparmor profile generation
+   - lxd/apparmor: Use a unique apparmor profile for qemu-img unpacking
+   - lxd/instance: Add ExecOutputPath helper function
+   - lxd/instance/drivers/driver/qemu: Fix addNetDevConfig to match the tap interface settings that qemu uses
+   - lxd/instance/drivers/driver/qemu: Don't load vhost_net module in checkFeatures
+   - lxc/utils: Change sort ByName interface name to SortColumnsNaturally
+   - lxd/apparmor/qemuimg: Add profileName argument to qemuImgProfile
+   - lxd/apparmor/qemuimg: Updates qemuImgProfileLoad to return the profile name
+   - lxd/apparmor/qemuimg: Removes unused getProfileName
+   - lxd/apparmor/qemuimg: Call deleteProfile directly in QemuImg
+   - lxd/apparmor/qemuimg: Removes unused qemuImgDelete and qemuImgUnload
+   - lxc/copy: Don't try and modify volatile.idmap.next on refresh if not set in source
+   - lxd/instance_exec: Fix exec record-output location
+   - doc/devices/nic: `ovn` NICs support hotplugging for VMs now
+   - lxd/network/network/utils: Update pingIP to accept context and return error
+   - lxd/api: Add exec-output endpoints
+   - lxd/network/driver/ovn: pingIP usage
+   - lxd/network/driver/ovn: Rename pingOVNRouterIPv6 to pingOVNRouter
+   - lxd/network/driver/ovn: Ping OVN virtual router external IPs when using physical uplink in startUplinkPortPhysical
+   - doc: Update wrong description for return value of validatePCIDevice
+   - lxd/device: Add helper function to check if the requested device matches the given GPU card
+   - lxd/device: Use the new helper function gpuSelected to check if a GPU for a container should be skipped
+   - lxd/device: Remove obsolete if statement since the check for GPU id is already performed in the gpuSelected function
+   - doc: Update godoc to resemble the actual functionality after moving out logic
+   - lxd/device: Make gpuSelectd generic to support all kinds of GPU device types
+   - doc: Extend notes to define which id exactly is meant by GPU card id
+   - doc: fix typo in error message affecting all GPU types when trying to use multiple device settings that interfere with each other
+   - lxd/storage/utils: Improve errors in ImageUnpack
+   - lxd/instance_logs: Add exec-output handlers
+   - lxd/response: Fix cleanup called before file is closed
+   - lxd/daemon: No need to delete left over operations in init as this is done in OpenCluster
+   - lxd/operations/operations: Don't log warning when deleting operation if record not found
+   - doc/rest-api: Refresh swagger YAML
+   - lxd/instance_logs: Call cleanup.Fail directly
+   - lxd/response: Call cleanup at the end of each processed file
+   - shared/cmd: Moves lxc/utils to shared/cmd.
+   - shared/cmd: Adds RenderSlice method and sorting utils.
+   - shared/cmd: Adds tests for SortByPrecedence.
+   - shared/cmd: Adds tests for RenderSlice.
+   - i18n: Updates pot files.
+   - api: auth_user
+   - shared/api: Add auth_user_name and auth_user_method
+   - lxd/api: Add auth_user_name and auth_user_method
+   - doc/rest-api: Refresh swagger YAML
+   - lxd/db: return an error in `UpdateWarningStatus` is no row is affected (ID does nott exist)
+   - lxd/db: return an error in `UpdateWarningState` is the warning is not found
+   - lxd/storage/zfs/utils: Add helper function to get multiple dataset properties
+   - lxd/storage/zfs/volumes: Fix ZFS does not respect atime=off option
+   - api: security_csm
+   - shared/instance: Add security.csm
+   - scripts/bash: Add security.csm
+   - doc/instance: Add security.csm
+   - lxd/instance/qemu/bus: Introduce allocateDirect
+   - lxd/instance/qemu: Move SCSI to root bridge on CSM
+   - lxd/instance/qemu: Move GPU to root bridge on CSM
+   - lxd/apparmor/qemu: Add support for multiple OVMF builds
+   - lxd/instance/qemu: Support multiple OVMF firmwares
+   - lxd/endpoints: make sure to not access passed the end of the slice
+   - lxd/apparmor/archive: Fix snap handling
+   - lxc/remote: Fix rename of global remotes
+   - lxd/main/forkproxy: use %v consistently when printing errors
+   - lxd/main/forkproxy: use Println() when no format specifier is used
+   - lxd/main/init/interactive: use Print() and Println() when no format specifier is needed
+   - lxd/main/sql: use Println() when no format specifier is used
+   - lxd/main/recover: use Println() when no format specifier is used
+   - lxd/main/cluster: use Print() when no format specifier is needed
+   - lxd-benchmark: use Println() instead of Printf()
+   - lxd-migrate: use Print() and Println() when no format specifier is needed
+   - lxc/info: use Print() when no format specifier is needed
+   - lxc/file: use Println() when no format specifier is used
+   - shared/cmd: use Print() when no format specifier is used
+   - lxd/instance/drivers/driver/lxc: Update initLXC to return a pointer to liblxc.Container
+   - lxd/instance/drivers/driver/lxc: Update cgroup to require being passed a liblxc.Container
+   - lxd/instance/drivers/driver/lxc: Updates loadRawLXCConfig to accept a liblxc.Container
+   - lxd/instance/drivers/driver/lxc: Update to use local liblxc.Container returned from d.initLXC
+   - lxd/instance: Don't return instance.Instance from instanceCreateFromImage
+   - test: Improve liblxc file handle leak detection
+   - lxd/isntance/drivers/driver/lxc: SetFinalizer for clearing liblxc.Container reference once in initLXC
+   - lxd/storage/drivers/driver/zfs/volumes: Only delete volume on failure if not doing refresh in createVolumeFromMigrationOptimized
+   - lxd/device/gpu/physical: Fix panic when GPU device doesn't have DRM support in startContainer
+   - test: Busybox's nc command blocks on stdin once connected so close stdin
+   - test: Add debug output for clustering events
+   - test: Set tmpfs size explicitly to ensure space for 5GiB pool
+   - lxd/device: Fix regression for not properly checking for GPU DRM information
+   - lxd-migrate: Fix SecureBoot handling
+   - api: Add `instance_rebuild` API extension
+   - shared/api: New InstancePost attributes to handle instance rebuilding
+   - lxd/db/operationtype: New operation for instance rebuild
+   - lxd/client: New client method to handle instance rebuilding
+   - lxd/instance: Driver level rebuild logic
+   - lxd: Add instance rebuild server endpoint
+   - lxc: Add `rebuild` command in CLI
+   - doc: generate rest-api.yaml
+   - doc: instance rebuild howto
+   - tests: Adding instance rebuild testing
+   - i18n: update translation files
+   - Revert "lxd/device: Fix regression for not properly checking for GPU DRM information"
+   - github: Simplify static-analysis tests
+   - lxd/sys: Remove loading vhost_vsock module on init
+   - lxd/instance/drivers: Get vsockID during qemu chectFeatures
+   - shared/util: Add `StringPrefixInSlice(key string, list []string) bool`
+   - lxd/operations: Use `map[string][]api.URL` as resources
+   - lxd/operations: include project name in resource URL
+   - lxc: Use api.URL in resources passed to `OperationCreate`
+   - lxd: Use api.URL in resources passed to `OperationCreate`
+   - lxd: replace "1.0" API version by `version.APIVersion`
+   - lxd-agent: Use api.URL in resources passed to `OperationCreate`
+   - Makefile: ensure that update-po fails on any error
+   - Makefile: tell msgmerge to not create backups that we delete afterward
+   - Makefile: update lxd-doc target to not exit a subshell on error
+   - github: re-add gettext package as static-analysis needs it
+   - lxd/storage/drivers/driver/btrfs/utils: Don't fail on failure to set subvolume readonly during delete
+   - lxd/storage/drivers/driver/btrfs/utils: Don't try and delete subvolume twice if failed first time and recursion not enabled
+   - test: Add debug logging for clustering events tests
+   - github: Add system tests
+   - lxd/instance/rebuild: Fix operation resources type in instanceRebuildPost
+   - test: skip cleanup if executing from a GitHub Action runner
+   - lxd/storage/drivers/btrfs: Add FillConfig function
+   - lxd/storage/drivers/ceph: Add FillConfig function
+   - lxd/storage/drivers/cephfs: Add FillConfig function
+   - lxd/storage/drivers/cephobject: Add FillConfig function
+   - lxd/storage/drivers/dir: Add FillConfig function
+   - lxd/storage/drivers/lvm: Add FillConfig function
+   - lxd/storage/drivers/zfs: Add FillConfig function
+   - lxd/storage/drivers/mock: Add FillConfig function
+   - lxd/storage/drivers: Add FillConfig function to the storage driver interface
+   - lxd/api_internal_recover: Populate config defaults
+   - lxc/info: Show mdev profile name
+   - i18n: Update translation templates
+   - lxd/device/gpu/mdev: Add locking
+   - lxd/instance/qemu: Disable x-vga on mdev GPUs
+   - doc: move .sphinx directory and conf.py file
+   - lxd/bgp: Allow one hour for LXD restart
+   - lxd/ip: improve performance of `getVhostVDPADevInPath`
+   - lxd/instance/drivers/driver/qemu: Load vhost_vsock kernel module if /dev/kvm is available
+   - shared/util: Use more efficient ReadDir in PathIsEmpty
+   - test: Cleanly shutdown lxd before cleaning up in test_database_no_disk_space
+   - doc: fix symbolic link to rest-api.yaml after moving the directory
+   - lxd/resources: Refactor `resources.ParseCpuset`
+   - lxd/resources: Add `resources.ParseNumaNodeSet`
+   - lxd: schedule instance on NUMA nodes if specified
+   - lxd/instance: Reschedule instance if `limits.cpu.nodes` is updated.
+   - shared/instance: Add `limits.cpu.nodes` field to instance config keys
+   - doc: Add `limits.cpu.nodes`
+   - api: Add `limits.cpu.nodes`
+   - github: Switch to setup-go v4
+   - github: Checkout code before setting up Go
+   - github: Add latest stable Go version test for LXD system tests
+   - github: Adds support for running LXD unit tests and renames Static Analysis to Code tests
+   - github: Rename Unit tests (client) to Client tests
+   - test: Switch to line buffering for clustering_events monitor collection
+   - github: Add random pool backend test
+   - test: Add sleep between restarting instance and checking monitor logs in clustering_events
+   - doc: add a .readthedocs.yaml file
+   - doc: move requirement setup from the Makefile to conf.py
+   - doc: hide the version selector on RTD
+   - *: replace Seek(0, 0) by Seek(0, io.SeekStart) as the later is clearer
+   - doc: fix styling of version box on RTD
+   - github: Adds ceph support
+   - github: Add support for Go tip
+   - github: Use apt-get autoperge
+   - github: Combine documentation steps into a single job
+   - doc: move installation instructions from the website
+   - github: Add some ceph test optimisations
+   - lxd/instance/qemu: Fix vsock id type
+   - lxd/instance/lxc: Fix live cgroup updates
+   - i18n: Update translations from weblate
+   - gomod: Update dependencies
+  [/details]
+
+  ### 試用環境 <!-- Try it for yourself -->
+  <!--
+  This new LXD release is already available for you to try on our [demo service](https://linuxcontainers.org/lxd/try-it/).
+  -->
+  この新しい LXD リリースは私たちの [デモサービス](https://linuxcontainers.org/ja/lxd/try-it/) で利用できます。
+
+  ### ダウンロード <!-- Downloads -->
+  <!--
+  The release tarballs can be found on our [download page](https://linuxcontainers.org/lxd/downloads/).
+  -->
+  このリリースの tarball は [ダウンロードページ](https://linuxcontainers.org/lxd/downloads/) から取得できます。
+
+  <!--
+  Binary builds are also available for:
+  -->
+  ビルド済みバイナリーは次のようにして使えます:
+
+   - **Linux:** snap install lxd
+   - **MacOS:** brew install lxc
+   - **Windows:** choco install lxc
