@@ -11,7 +11,7 @@ content: |-
   <!--
   While not the most jam packed LXD release ever, this release includes some long requested features like support for non-UEFI virtual machines as well as the ability to rebuild instances in place.
   -->
-  このリリースは、これまでのリリースの中で、それほど機能が詰まったリリースではありません。しかし、このリリースには、非 EFI 仮想マシンのサポートや、インスタンスをその場でリビルドする機能など、以前からリクエストが多かった機能が含まれています。
+  このリリースは、これまでのリリースの中で、それほど機能が詰まったリリースではありません。しかし、このリリースには、非 UEFI 仮想マシンのサポートや、インスタンスをその場でリビルドする機能など、以前からリクエストが多かった機能が含まれています。
 
   <!--
   It also adds a few smaller features and fixes a lot of bugs!
