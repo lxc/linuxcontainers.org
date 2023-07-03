@@ -11,7 +11,7 @@ API_URL = "https://discuss.linuxcontainers.org"
 API_USERNAME = "system"
 API_KEY = os.environ["API_KEY"]
 
-PROJECTS = ("lxc", "lxcfs", "lxd", "distrobuilder")
+PROJECTS = ("lxc", "lxcfs", "distrobuilder")
 
 
 def load_json(url):

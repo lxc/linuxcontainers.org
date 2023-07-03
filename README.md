@@ -1,8 +1,7 @@
 # linuxcontainers.org
 
 This branch contains the content and site generator of the
-https://linuxcontainers.org website. Backend code for [Try it](https://linuxcontainers.org/lxd/try-it/)
-part is located at https://github.com/lxc/lxd-demo-server
+https://linuxcontainers.org website.
 
 ## Contributing
 
@@ -12,10 +11,6 @@ Read our [contributing guidelines](CONTRIBUTING.md) for details.
 ### Open Issues
 
 Take a look at the [open issues on Github](https://github.com/lxc/linuxcontainers.org/issues/), to see where you could help.
-
-For example:
-
-* [Advanced Guide for LXD](https://github.com/lxc/linuxcontainers.org/issues/413)
 
 ## Generate & run a local copy
 
@@ -47,7 +42,6 @@ downloads/cgmanager/
 downloads/distrobuilder/
 downloads/lxc/
 downloads/lxcfs/
-downloads/lxd/
 ```
 
 All steps for creating a sparse checkout
@@ -63,7 +57,6 @@ mkdir -p downloads/cgmanager/
 mkdir -p downloads/distrobuilder/
 mkdir -p downloads/lxc/
 mkdir -p downloads/lxcfs/
-mkdir -p downloads/lxd/
 ```
 
 ### Generating the website
@@ -98,15 +91,6 @@ You can now navigate to the site (in a browser of your choice) with the containe
 
     185.5.3.12:8777
 
-## LXD documentation
-
-Download the HTML of the LXD documentation from the latest workflow run at https://github.com/lxc/lxd/actions/workflows/sphinx.yml. Look for an artifact with filename `documentation.zip`. Unzip it into the local output folder: 
-
-    mkdir -p linuxcontainers.org/output/lxd/docs/master
-    unzip documentation.zip -d linuxcontainers.org/output/lxd/docs/master/
-
-You must repeat this process after `./generate` runs, because it cleans the output folder.
-
 ## Man pages
 
 Download the man pages from jenkins https://jenkins.linuxcontainers.org/job/lxc-build-tarballs/ and unzip them into the respective folder. For LXC:
@@ -116,7 +100,7 @@ Download the man pages from jenkins https://jenkins.linuxcontainers.org/job/lxc-
 Ensure that `man2html` is installed. `./generate` calls this tool and injects the main menu on top.
 
 To install `man2html`:
-    
+
     apt install man2html
 
 ## Bug reports & Content requests

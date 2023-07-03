@@ -1,10 +1,22 @@
+<div class="p-strip--light" style="padding-bottom:0; padding-top:0;">
+  <div class="row">
+    <div class="col-12">
+      <div class="p-notification--information">
+        <div class="p-notification__content">
+          <h5 class="p-notification__title">LXD has moved to Canonical</h5>
+          <p class="p-notification__message">Read the <a href="/lxd/">project announcement here</a>.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
 <div class="p-strip">
   <div class="row">
     <div class="col-8 suffix-1">
       <h1 id="startpage-heading">Container and virtualization tools</h1>
-      <p>linuxcontainers.org is the umbrella project behind LXD,
-        LXC, LXCFS and distrobuilder.</p>
+      <p>linuxcontainers.org is the umbrella project behind LXC,
+         LXCFS, distrobuilder, libresource and lxcri.</p>
 
       <p>The goal is to offer a distro and vendor neutral environment
         for the development of Linux container technologies.</p>
@@ -30,52 +42,18 @@
 
   <div class="row">
     <div class="p-card col-12">
-      <h3>LXD</h3>
-      <div class="row">
-        <div class="col-8">
-          <p>LXD is a next generation system container and virtual machine
-            manager. It offers a unified user experience around full Linux
-            systems running inside containers or virtual machines.</p>
-
-          <p>LXD is image based and provides images for a wide number of
-            Linux distributions. It provides flexibility and scalability
-            for various use cases, with support for different storage
-            backends and network types and the option to install on
-            hardware ranging from an individual laptop or cloud instance
-            to a full server rack.</p>
-
-          <p>When using LXD, you can manage your instances (containers and VMs)
-            with a simple command line tool, directly through the REST API or
-            by using third-party tools and integrations. LXD implements a
-            single REST API for both local and remote access.</p>
-        </div>
-
-        <div class="col-4">
-          <p>
-            <a class="p-button--positive" href="/lxd/try-it/" role="button">Try it online</a>
-          </p><p>
-            <a class="p-button" href="/lxd/introduction/" role="button">Learn more</a>
-          </p>
-        </div>
-
-      </div>
-    </div>
-  </div>
-
-  <div class="row u-equal-height">
-    <div class="p-card col-4">
       <h3>LXC</h3>
       <p>LXC is a well-known Linux container runtime that consists of
         tools, templates, and library and language bindings. It's pretty
         low level, very flexible and covers just about every containment
         feature supported by the upstream kernel.</p>
-      <p>LXC provides the basic functionality used under the hood by LXD.
-        However, it should not be confused with the <code>lxc</code>
-        CLI client tool provided by LXD.</p>
+
       <p><a class="p-button" href="/lxc/introduction/" role="button">Learn more</a></p>
     </div>
+  </div>
 
-    <div class="p-card col-4">
+  <div class="row u-equal-height">
+    <div class="p-card col-6">
       <h3>LXCFS</h3>
       <p>LXCFS is a userspace (FUSE) filesystem which offers:
         <ul>
@@ -91,9 +69,9 @@
       <p><a class="p-button" href="/lxcfs/introduction/" role="button">Learn more</a></p>
     </div>
 
-    <div class="p-card col-4">
+    <div class="p-card col-6">
       <h3>distrobuilder</h3>
-      <p>distrobuilder is an image building tool for LXC/LXD which offers:
+      <p>distrobuilder is an image building tool for containers and virtual machines:
         <ul>
           <li>Complex image definition as a simple YAML document.</li>
           <li>Multiple output formats (chroot, LXD, LXC).</li>
@@ -108,17 +86,36 @@
       <p><a class="p-button" href="/distrobuilder/introduction/" role="button">Learn more</a></p>
     </div>
   </div>
+
+  <div class="row u-equal-height">
+    <div class="p-card col-6">
+      <h3>libresource</h3>
+      <p>library of interfaces through which we can get system resource
+         information like memory, CPU, stat, networking, device etc. Currently
+         most of such information is read from /proc and /sys.</p>
+
+      <p><a class="p-button" href="https://github.com/lxc/libresource/" role="button">Learn more</a></p>
+    </div>
+
+    <div class="p-card col-6">
+      <h3>lxcri</h3>
+      <p>lxcri is a wrapper around LXC which can be used as a drop-in
+         container runtime replacement for use by CRI-O.</p>
+
+      <p><a class="p-button" href="https://github.com/lxc/lxcri/" role="button">Learn more</a></p>
+    </div>
+  </div>
 </div>
 
 <div class="p-strip--light">
   <div class="row">
-    <div class="col-8">
+    <div class="col-12">
       <h2>Deprecated projects</h2>
     </div>
   </div>
 
   <div class="row u-equal-height">
-    <div class="p-card col-8">
+    <div class="p-card col-6">
       <h3>CGManager</h3>
       <p>CGManager is a cgroup manager daemon
         designed to allow nested unprivileged containers

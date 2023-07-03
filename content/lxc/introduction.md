@@ -39,12 +39,8 @@ Based on the needs and available resources from the various distributions, speci
 
 Other releases will typically be maintained on a best effort basis which typically means until the next stable release is out.
 
-Commercial support for LXC on Ubuntu LTS releases can be obtained from [Canonical Ltd](http://www.canonical.com).
-
 ## Extended support
 LXC 5.0 and 4.0 are long term support releases:
 
  - LXC 5.0 will be supported until June 1st 2027
  - LXC 4.0 will be supported until June 1st 2025
-
-This is thanks to [Canonical Ltd](http://www.canonical.com) and Ubuntu who include the long term support releases of LXC into their own LTS releases and work closely with LXC upstream to maintain our stable branches.

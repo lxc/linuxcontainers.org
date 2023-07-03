@@ -182,10 +182,6 @@ Add the original text as comments inside the text, with:
 
 `<!-- original text -->`
 
-**Example:**
-
-Take a look at the [source file of the japanese version of the advanced guide](https://raw.githubusercontent.com/lxc/linuxcontainers.org/master/content/lxd/advanced-guide.ja.md).
-
 # Test your changes
 
 Before opening a pull request, you should test the changes you made.

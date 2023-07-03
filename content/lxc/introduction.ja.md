@@ -72,11 +72,6 @@ Other releases will typically be maintained on a best effort basis which typical
 -->
 他のリリースは、一般的に次の stable リリースが出るまでを指すベストエフォートの原則で、一般的にはメンテナンスされるでしょう。
 
-<!--
-Commercial support for LXC on Ubuntu LTS releases can be obtained from [Canonical Ltd](http://www.canonical.com).
--->
-Ubuntu LTS リリースに含まれる LXC に対する商用サポートは [Canonical Ltd](http://www.canonical.com) から受けることができます。
-
 ## 延長サポート <!-- Extended support -->
 
 <!--
@@ -88,8 +83,3 @@ LXC 4.0、3.0 は長期サポート版のリリースです。
 
  - LXC 5.0 は 2027 年 6 月 1 日までサポートされます
  - LXC 4.0 は 2025 年 6 月 1 日までサポートされます
-
-<!--
-This is thanks to [Canonical Ltd](http://www.canonical.com) and Ubuntu who include the long term support releases of LXC into their own LTS releases and work closely with LXC upstream to maintain our stable branches.
--->
-これは、[Canonical Ltd](http://www.canonical.com) と Ubuntu が LTS (長期サポート版) に LXC の LTS を含めているためであり、stable ブランチをメンテナンスするために LXC の開発元と密接に連携しているためです。
