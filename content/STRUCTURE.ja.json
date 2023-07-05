@@ -4,6 +4,11 @@
      "menu": ["ホーム"],
      "meta": {"input": "index.ja.html"}},
 
+    {"path": "/lxd/",
+     "title": "LXD - Has been moved to Canonical",
+     "generator": "markdown",
+     "meta": {"input": "lxd/moved-to-canonical.ja.md"}},
+
 
     {"path": "/lxc/introduction/",
      "title": "LXC - イントロダクション",
