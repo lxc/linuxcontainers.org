@@ -18,7 +18,7 @@ While the team behind Linux Containers regrets that decision and will be missing
 Concretely, the expected changes are:
 
 - https://github.com/lxc/lxd will now become https://github.com/canonical/lxd
-- https://linuxcontainers.org/lxd will disappear and be replaced with a mention directing users to [https://ubuntu.com/lxd](https://canonical.com/lxd)
+- https://linuxcontainers.org/lxd will disappear and be replaced with a mention directing users to [https://ubuntu.com/lxd](https://ubuntu.com/lxd)
 - The LXD YouTube channel will be handed over to the Canonical team
 - The LXD section on the LinuxContainers community forum will slowly be sunset in favor of the Ubuntu Discourse forum run by Canonical
 - The LXD CI infrastructure will be moved under Canonical’s care
