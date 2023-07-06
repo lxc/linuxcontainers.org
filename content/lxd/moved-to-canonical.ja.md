@@ -18,7 +18,7 @@ Date: 4th of July 2023
 <!--
 Hello,
 -->
-こんにちわ。
+こんにちは。
 
 <!--
 Canonical, the creator and main contributor of the LXD project has decided that after over 8 years as part of the Linux Containers community, the project would now be better served directly under Canonical’s own set of projects.
