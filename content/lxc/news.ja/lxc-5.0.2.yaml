@@ -1,0 +1,124 @@
+title: LXC 5.0.2 LTS リリースのお知らせ
+date: 2023/01/20 19:01
+origin: https://discuss.linuxcontainers.org/t/lxc-5-0-2-lts-has-been-released/16210
+content: |-
+  ### はじめに <!-- Introduction -->
+  <!--
+  The LXC team is pleased to announce the release of LXC 5.0.2!
+  -->
+  LXC チームが LXC 5.0.2 のリリースをお知らせします!
+
+  <!--
+  This is the second bugfix release for LXC 5.0 which is supported until June 2027.
+  -->
+  このリリースは LXC 5.0 の 2 回目のバグ修正リリースです。このリリースは 2027 年 6 月までサポートされます。
+
+  ### 脆弱性の修正 <!-- Security fix -->
+  <!--
+  This release does fix one CVE which was recently open against LXC.
+  [CVE-2022-47952](https://nvd.nist.gov/vuln/detail/CVE-2022-47952) covers the use of `lxc-user-nic` (setuid binary) as a way to uncover the existence of files at locations which would normally not be accessible to the user.
+  -->
+  このリリースでは、LXC に対して最近公開された CVE を 1 つ修正しています。
+  [CVE-2022-47952](https://nvd.nist.gov/vuln/detail/CVE-2022-47952) は、ユーザーが通常アクセスできない場所に存在するファイルを発見する方法として、`lxc-user-nic` の使用を取り上げています。
+
+  <!--
+  This is classified as a low severity CVE and was reported to us publicly through Github along with a fix. Given this was not released under embargo and given the low impact of this issue, we made the decision to process it as we would any other bugfix to liblxc.
+  -->
+  この問題は CVE で low severity に分類され、修正とともに Github を通して公に報告されました。これは制限（embargo）下でリリースされておらず、この問題の影響が低いことを考慮して、liblxc に対する他のバグ修正と同様にこの問題を処理することに決定しました。
+
+  ### バグ修正 <!-- Bugfixes -->
+  <!--
+  As usual this bugfix releases focus on stability and hardening.
+  -->
+  いつも通り、このバグ修正リリースは安定性とハードニングにフォーカスを当てています。
+
+  <!--
+  Some of the highlights for this release are:
+  -->
+  このリリースのいくつかのハイライトは次の通りです:
+
+   - meson への切り替えの結果生じた様々なビルド時の問題の修正 <!-- Fix a variety of build issues resulting from the switch to meson -->
+   - lxc-attach: リターンコードの欠落を修正 <!-- Fix missing return codes -->
+   - core: コンテナの root に（マウントの）ピアグループを設定する <!-- Setup peer group for container's root -->
+   - checkconfig: 最新のカーネルでの出力をより有用に <!-- Make output more useful on modern kernels -->
+   - lxc-user-nic: 非特権ユーザーにファイルの存在が漏洩する問題を修正 <!-- Fix issue resulting in leaking file existence to unprivileged users -->(CVE-2022-47952)
+
+  <!--
+  The full list of commits is available below:
+  -->
+  コミットの全リストは次の通りです（翻訳なし）:
+
+  [details="すべてのChangeLogを見る"]
+   - meson.build: allow explicit distrosysconfdir
+   - build: detect where struct mount_attr is declared
+   - build: detect sys/pidfd.h availability
+   - cgroups: fix -Waddress warning
+   - build: fix handling of dependancies to fix build on openSUSE
+   - build: only build init.lxc.static if libcap is statically linkable
+   - build: drop build-time systemd dependency
+   - src/lxc/meson.build: fix the static library path
+   - meson.build: strip newlines from git output
+   - meson.build: strip newline for variable assignments
+   - gitignore: Simplify
+   - build: check for FS_CONFIG_* header symbol in sys/mount.h
+   - tree-wide: wipe direct or indirect linux/mount.h inclusion
+   - tree-wide: use struct clone_args directly
+   - tree-wide: use struct open_how directly
+   - meson: fix docbook2x detection
+   - tree-wide: minimize liburing.h inclusion
+   - mount: move mount utilities from syscall_wrappers.h into mount_utils.h
+   - mount_utils: remove conf.h include
+   - build: prevent the inclusion of linux/mount.h with a hack
+   - tree-wide: split open helpers into open_utils.h
+   - use sd_bus_call_method_async to replace the asyncv one
+   - fix error message when use tools with -? option
+   - Update cifuzz.yml
+   - build(deps): bump actions/checkout from 2 to 3
+   - conf: allow cross-device links
+   - Update README.md
+   - lxc-attach: Fix lost return codes of spawned processes that are killed
+   - lxc/attach: Detect EACCES from execvp and convert to 126 exit status
+   - tools: lxc-destroy: update help message for --force
+   - tests: lxc-test-checkpoint-restore: use trap to do cleanup
+   - Unroll IN_SET since the max usage is 2 elements check
+   - tests: lxc-test-reboot: Fix build on ia64
+   - README: remove lgtm
+   - cgroups: use userns_exec_full() during cgroup removal
+   - cgroups: only allocate user namespace if we have to
+   - conf: create separate peer group for container's root
+   - apparmor: allow shared mounts in start-container.in
+   - conf: ensure mount tunnel is a dependent mount
+   - github: fix coverity build
+   - github: fix coverity (add libpam-dev)
+   - apparmor: properly check lxc_strmmap ret value
+   - network: always initialize struct nl_handler
+   - cgroups: fix buffer out-of-bounds access in enable_controllers_delegation
+   - cgroups: check snprintf retval in unpriv_systemd_create_scope
+   - state: additional check in lxc_wait to prevent OOB
+   - cgroups: fix cgroup layout detection in __initialize_cgroups
+   - build: use cc.get_define to detect FS_CONFIG_* symbols
+   - src/lxc/meson.build: fix build without apparmor
+   - checkconfig: Fix mixed tabs/spaces
+   - checkconfig: Hide version if no lxc-start
+   - checkconfig: Tweak layout
+   - checkconfig: Tweak cgroup handling
+   - checkconfig: Fix filesystem capability check
+   - build: force linking against liblxc
+   - Patching an incoming CVE (CVE-2022-47952)
+   - lxc_user_nic: fix get_mtu() error handling
+   - lxc-default-cgns apparmor profile: allow overlay mounts
+   - Fix build error on sparc64 caused by using the gold linker
+  [/details]
+
+  ### サポートとアップグレード <!-- Support and upgrade -->
+  <!--
+  The LXC 5.0 branch is supported until June 2027.
+  Only bugfixes and securitiy issues get included into the stable bugfix releases, so it's always safe and recommended to keep up and run the latest bugfix release.
+  -->
+  LXC 5.0 ブランチは 2027 年 6 月までサポートされます。
+  stable のバグフィックスリリースでは、バグとセキュリティに関する問題に対する修正のみが行われますので、常に安全です。最新のバグフィックスリリースの状態を維持し、実行することをおすすめします。
+
+  ### ダウンロード <!-- Downloads -->
+
+   - リリース tarball <!-- Main release tarball -->: [lxc-5.0.2.tar.gz](https://linuxcontainers.org/downloads/lxc/lxc-5.0.2.tar.gz)
+   - GPG シグネチャー <!-- GPG signature -->: [lxc-5.0.2.tar.gz.asc](https://linuxcontainers.org/downloads/lxc/lxc-5.0.2.tar.gz.asc)
