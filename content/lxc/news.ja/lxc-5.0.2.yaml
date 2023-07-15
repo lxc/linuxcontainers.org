@@ -24,7 +24,7 @@ content: |-
   <!--
   This is classified as a low severity CVE and was reported to us publicly through Github along with a fix. Given this was not released under embargo and given the low impact of this issue, we made the decision to process it as we would any other bugfix to liblxc.
   -->
-  この問題は CVE で low severity に分類され、修正とともに Github を通して公に報告されました。これは制限（embargo）下でリリースされておらず、この問題の影響が低いことを考慮して、liblxc に対する他のバグ修正と同様にこの問題を処理することに決定しました。
+  この問題は CVE で low severity に分類され、修正とともに GitHub を通して公に報告されました。これは制限（embargo）下でリリースされておらず、この問題の影響が低いことを考慮して、liblxc に対する他のバグ修正と同様にこの問題を処理することに決定しました。
 
   ### バグ修正 <!-- Bugfixes -->
   <!--

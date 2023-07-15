@@ -47,7 +47,7 @@ content: |-
 
   # サポート中のリリース <!-- Currently supported releases -->
   <!--
-  There are currently two remaining LTS releases, `3.0` with support lasting until June 2023 and `4.0` with support until June 2021.
+  There are currently two remaining LTS releases, `4.0` with support lasting until June 2025 and `5.0` with support until June 2027.
   -->
   現在サポート中の LTS リリースは 2 つあります。2025 年 6 月までサポートされる `4.0` リリースと、2027 年 6 月までサポートされる `5.0` です。
 
