@@ -1,0 +1,65 @@
+title: LXCFS 5.0.3 LTS リリースのお知らせ
+date: 2023/01/17 02:01
+origin: https://discuss.linuxcontainers.org/t/lxcfs-5-0-3-lts-has-been-released/16167
+content: |-
+  ### はじめに <!-- Introduction -->
+  <!--
+  The LXCFS team is pleased to announce the release of LXCFS 5.0.3!
+  -->
+  LXCFS チームが LXCFS 5.0.3 のリリースをお知らせします!
+
+  <!--
+  This is the third bugfix release for LXCFS 5.0 which is supported until June 2027.
+  -->
+  これは 2027 年 6 月までサポートされる LXCFS 5.0 の 3 回目のバグフィックスリリースです。
+
+  ### バグ修正 <!-- Bugfixes -->
+  <!--
+  Some of the highlights for this release are:
+  -->
+  このリリースで対応、修正された主な項目は次の通りです:
+
+   - FUSE3 で実行した場合の VFS キャッシングの問題を修正 <!-- Fixes VFS caching issues when run under FUSE3 -->
+   - `/sys/devices/system/cpu` フィルタリングの動作に関する問題をいくつか修正 <!-- Fixes some behavioral issues with the new /sys/devices/system/cpu filtering -->
+   - ia64 でのビルドの問題を修正 <!-- Fixes building on ia64 -->
+   - `/proc/cpuinfo` のパーソナリティをまたがるコンテンツを適切に扱うようにした <!-- Properly handles cross-personality content for /proc/cpuinfo -->
+
+  <!--
+  The full list of commits is available below:
+  -->
+  コミットの全リストは次の通りです（翻訳なし）:
+
+  [details="すべてのChangeLogを見る"]
+   - set oom_score_adj of lxcfs process to -1000
+   - init: respect --prefix when installing systemd unit files
+   - Fix build on ia64
+   - doc: guide for mount /sys/devices/system/cpu in docker demo
+   - utils: add safe_uint32() helper
+   - macro.h: add strnprintf macro
+   - utils: add get_task_personality helper
+   - cpuview: paththrough personality when reading cpuinfo
+   - cpuview: fix possible use-after-free in find_proc_stat_node
+   - github: make coverity workflow work with meson
+   - README: how to build with sanitizers
+   - cpuset_parse: check input string in cpuset_nexttok
+   - github: enable ASAN and UBSAN during PR tests
+   - lxcfs: explicitly enable direct_IO for libfuse3
+   - lxcfs: fix copypaste typo in error message
+   - /proc/stat: render physical cpu number in non-view mode
+   - sysfs: don't mask cpus in /sys/devices/system/cpu
+   - lxcfs: handle NULL path in lxcfs_releasedir/lxcfs_release
+   - cpuview: fix ABBA deadlock in find_proc_stat_nod
+  [/details]
+
+  ### サポートとアップグレード <!-- Support and upgrade -->
+  <!--
+  The LXCFS 5.0 branch is supported until June 2027.
+  Only bugfixes and securitiy issues get included into the stable bugfix releases, so it's always safe and recommended to keep up and run the latest bugfix release.
+  -->
+  LXCFS 5.0 ブランチは 2027 年 6 月までサポートされます。
+  stable のバグフィックスリリースでは、バグとセキュリティに関する問題に対する修正のみが行われますので、常に安全です。最新のバグフィックスリリースの状態を維持し、実行することをおすすめします。
+
+  ### ダウンロード <!-- Downloads -->
+
+   - リリース tarball <!-- Main release tarball -->: [lxcfs-5.0.3.tar.gz](https://linuxcontainers.org/downloads/lxcfs/lxcfs-5.0.3.tar.gz)
+   - GPG シグネチャー <!-- GPG signature -->: [lxcfs-5.0.3.tar.gz.asc](https://linuxcontainers.org/downloads/lxcfs/lxcfs-5.0.3.tar.gz.asc)
