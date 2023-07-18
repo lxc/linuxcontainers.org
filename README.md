@@ -51,7 +51,7 @@ git clone --filter=blob:none --no-checkout git@github.com:lxc/linuxcontainers.or
 cd linuxcontainers.org/
 git sparse-checkout set --cone
 echo -e '/*\n!downloads' >> .git/info/sparse-checkout
-git checkout master
+git checkout main
 git pull
 mkdir -p downloads/cgmanager/
 mkdir -p downloads/distrobuilder/
