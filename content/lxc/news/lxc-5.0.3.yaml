@@ -1,0 +1,55 @@
+title: LXC 5.0.3 LTS has been released
+date: 2023/07/25 22:07
+origin: https://discuss.linuxcontainers.org/t/lxc-5-0-3-lts-has-been-released/17708
+content: |-
+  ### Introduction
+  The LXC team is pleased to announce the release of LXC 5.0.3!
+
+  This is the third bugfix release for LXC 5.0 which is supported until June 2027.
+
+  ### Bugfixes
+  As usual this bugfix releases focus on stability and hardening.
+
+  Some of the highlights for this release are:
+
+   - Fix nftables syntax for IPv6 NAT
+   - Added support for squashfs OCI images
+   - Fixes when running LXC with io_uring
+
+  The full list of commits is available below:
+
+  [details="Detailed changelog"]
+   - drop broken lxc-test-fuzzers
+   - Fix typo: bev_type -> bdev_type
+   - Fix strlcat's return value checks
+   - lxc-net.in: fix nftables syntax for IPv6 NAT
+   - initutils: use PRIu64 for uint64_t in setproctitle
+   - apparmor: don't try to mmap empty files
+   - Add support for squashfs images in oci via atomfs
+   - Allow fuse mounts in apparmor start-container.
+   - tree-wide: convert fcntl(FD_CLOEXEC) to SOCK_CLOEXEC
+   - console-log test: make sure container is stopped before restarting
+   - make setproctitle()'s /proc/pid/stat parsing safe
+   - setproctitle(): Handle potential NULL return from strrchr()
+   - file_utils: rename fd_make_nonblocking to fd_make_blocking
+   - file_utils: add fd_make_nonblocking helper
+   - terminal: make a terminal FDs non-blocking
+   - mainloop: io_uring: disable IORING_POLL_ADD_MULTI
+   - rename functions which clash with libsystemd's
+   - src/tests: Fix container creation errors
+   - tests: fix parse_config_file seccomp test
+   - explicitly convert *mainloop_handler to __u64
+   - github: Add DCO/target tests
+   - get_hierarchy: dont WARN about no usable controller
+   - CONTRIBUTING: add a note on AI generated code
+   - github: Update for main branch
+  [/details]
+
+  ### Support and upgrade
+  The LXC 5.0 branch is supported until June 2027.
+  Only bugfixes and securitiy issues get included into the stable bugfix releases, so it's always safe and recommended to keep up and run the latest bugfix release.
+
+  ### Downloads
+
+   - Main release tarball: [lxc-5.0.3.tar.gz](https://linuxcontainers.org/downloads/lxc/lxc-5.0.3.tar.gz)
+   - GPG signature: [lxc-5.0.3.tar.gz.asc](https://linuxcontainers.org/downloads/lxc/lxc-5.0.3.tar.gz.asc)
