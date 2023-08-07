@@ -9,6 +9,13 @@ Github: https://github.com/canonical/lxd
 フォーラム <!-- Forum -->: https://discourse.ubuntu.com/c/lxd/
 ドキュメント <!-- Documentation -->: https://documentation.ubuntu.com/lxd/
 
+<!--
+**NOTE**: A community fork of LXD, Incus, is now part of the Linux Containers project.
+You can learn more here: https://linuxcontainers.org/incus/
+-->
+**注意**: LXD のコミュニティーフォークである Incus が Linux Container に加わりました。
+詳しくは https://linuxcontainers.org/incus/ をご覧ください。
+
 # プロジェクトからのアナウンス <!-- Project announcement -->
 <!--
 Date: 4th of July 2023
