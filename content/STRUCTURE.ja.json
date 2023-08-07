@@ -4,6 +4,42 @@
      "menu": ["ホーム"],
      "meta": {"input": "index.ja.html"}},
 
+    {"path": "/incus/",
+     "generator": "alias",
+     "meta": {"target": "/incus/introduction/"}},
+
+    {"path": "/incus/introduction/",
+     "title": "Incus - イントロダクション",
+     "menu": ["Incus", "イントロダクション"],
+     "generator": "markdown",
+     "meta": {"input": "incus/introduction.ja.md"}},
+
+    {"path": "/incus/forum/",
+     "menu": ["Incus", "フォーラム"],
+     "generator": "link",
+     "meta": {"url": "https://discuss.linuxcontainers.org"}},
+
+    {"path": "/incus/mailing-lists/",
+     "menu": ["Incus", "メーリングリスト"],
+     "generator": "link",
+     "meta": {"url": "https://lists.linuxcontainers.org"}},
+
+    {"path": "/incus/irc/",
+     "menu": ["Incus", "IRC"],
+     "generator": "link",
+     "meta": {"url": "https://web.libera.chat/#lxc"}},
+
+    {"path": "/incus/github/",
+     "menu": ["Incus", "GitHub"],
+     "generator": "link",
+     "meta": {"url": "https://github.com/lxc/incus"}},
+
+    {"path": "/incus/github-actions/",
+     "menu": ["Incus", "GitHub Actions"],
+     "generator": "link",
+     "meta": {"url": "https://github.com/lxc/incus/actions"}},
+
+
     {"path": "/lxd/",
      "title": "LXD - Has been moved to Canonical",
      "generator": "markdown",
