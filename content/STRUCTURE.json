@@ -6,6 +6,42 @@
      "meta": {"input": "index.html"}},
 
 
+    {"path": "/incus/",
+     "generator": "alias",
+     "meta": {"target": "/incus/introduction/"}},
+
+    {"path": "/incus/introduction/",
+     "title": "Incus - Introduction",
+     "menu": ["Incus", "Introduction"],
+     "generator": "markdown",
+     "meta": {"input": "incus/introduction.md"}},
+
+    {"path": "/incus/forum/",
+     "menu": ["Incus", "Forum"],
+     "generator": "link",
+     "meta": {"url": "https://discuss.linuxcontainers.org"}},
+
+    {"path": "/incus/mailing-lists/",
+     "menu": ["Incus", "Mailing lists"],
+     "generator": "link",
+     "meta": {"url": "https://lists.linuxcontainers.org"}},
+
+    {"path": "/incus/irc/",
+     "menu": ["Incus", "IRC"],
+     "generator": "link",
+     "meta": {"url": "https://web.libera.chat/#lxc"}},
+
+    {"path": "/incus/github/",
+     "menu": ["Incus", "GitHub"],
+     "generator": "link",
+     "meta": {"url": "https://github.com/lxc/incus"}},
+
+    {"path": "/incus/github-actions/",
+     "menu": ["Incus", "GitHub Actions"],
+     "generator": "link",
+     "meta": {"url": "https://github.com/lxc/incus/actions"}},
+
+
     {"path": "/lxd/",
      "title": "LXD - Has been moved to Canonical",
      "generator": "markdown",
