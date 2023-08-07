@@ -1,3 +1,14 @@
+html {
+  font-family: 'Inter', sans-serif;
+  overflow-x: hidden !important;
+}
+
+@supports (font-variation-settings: normal) {
+  html {
+    font-family: 'Inter var', sans-serif;
+  }
+}
+
 body {
   padding-top: 0 !important;
 }
@@ -44,10 +55,6 @@ h6:hover a.headerlink {
   display: block;
 }
 
-html {
-  overflow-x: hidden !important;
-}
-
 .p-breadcrumbs__link + .second-level-nav, .p-breadcrumbs__link + .second-level-nav .p-breadcrumbs__link {
   display: inline-block;
   margin-bottom: 0;
@@ -74,6 +81,10 @@ html {
 .p-notification__body {
   margin-top: 1rem;
   text-align: left;
+}
+
+p {
+  max-width: 42em;
 }
 
 p:empty {
@@ -355,10 +366,6 @@ summary {
 
 .p-navigation__image {
   max-height: 2.5rem;
-}
-
-.p-breadcrumbs__items {
-  margin-bottom: 0.5rem;
 }
 
 .p-footer {
