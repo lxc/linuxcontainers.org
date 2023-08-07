@@ -6,6 +6,10 @@ Github: https://github.com/canonical/lxd
 Forum: https://discourse.ubuntu.com/c/lxd/
 Documentation: https://documentation.ubuntu.com/lxd/
 
+
+**NOTE**: A community fork of LXD, Incus, is now part of the Linux Containers project.
+You can learn more here: https://linuxcontainers.org/incus/
+
 # Project announcement
 Date: 4th of July 2023
 
