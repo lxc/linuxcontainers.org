@@ -1,3 +1,7 @@
+.xterm {
+    padding: 5px;
+}
+
 div#tryit_console_row {
     position: fixed;
     bottom: 0;
@@ -7,14 +11,18 @@ div#tryit_console_row {
     background: #fff;
 }
 
-div#tryit-instructions {
-    padding-bottom: 380px;
-}
-
 div#tryit_console_panel {
     width: 100%;
     margin-right: auto;
     margin-left: auto;
+}
+
+div#tryit_console {
+    max-height: 20em;
+}
+
+div#tryit-instructions {
+    padding-bottom: 380px;
 }
 
 div#tryit_info_panel th {
