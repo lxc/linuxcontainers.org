@@ -1,0 +1,461 @@
+<script src="/static/js/jquery.min.js" type="text/javascript"></script>
+<script src="/static/js/getEmPixels.js" type="text/javascript"></script>
+<script src="/static/js/xterm.js" type="text/javascript"></script>
+<script src="/static/js/xterm-addon-attach.js" type="text/javascript"></script>
+<script src="/static/js/xterm-addon-fit.js" type="text/javascript"></script>
+<script src="/static/js/bootstrap-rating.min.js" type="text/javascript"></script>
+<script src="/static/js/tryit.js" type="text/javascript"></script>
+
+<link href="/static/css/tryit.css" rel="stylesheet"/>
+<link href="/static/css/xterm.css" rel="stylesheet"/>
+
+<div class="p-strip is-shallow" id="tryit-instructions">
+  <div class="row">
+    <div class="col-12">
+      <noscript>
+        <div class="p-notification--negative">
+          <div class="p-card__content">
+            <span class="p-notification__status">JavaScriptが必要です: <!-- JavaScript required: --></span>
+            <p>Incus のデモサービスは JavaScript を使用しています。<!-- The Incus demo service client is entirely JavaScript based. --></p>
+            <p>お使いのウェブブラウザーが JavaScript をサポートしていないか、インストールされている拡張機能によってこのサイトの JavaScript が無効化されているようです。<!-- It appears the your web browser doesn't support JavaScript or that you or an extension you installed is disabling JavaScript for this site. --></p>
+            <p>このサービスを使うためには、JavaScript サポートを有効にして、ページを再読込する必要があります。<!-- To use this service, you will need to enable JavaScript support and refresh the page. --></p>
+          </div>
+        </div>
+      </noscript>
+
+      <div class="p-card" id="tryit_status_panel" style="display:none">
+        <div class="p-card__content">
+          <h2 class="p-heading--4">Server status</h2>
+          <span class="p-notification__body" id="tryit_online_message" style="display:none">接続元: <!-- You are connected over: --><span id="tryit_protocol"></span> (<span id="tryit_address"></span>)<br/>デモサーバーは現在ユーザーセッションを <!-- The demo server is currently running --><span id="tryit_count"></span> セッション実行中です（最大 <!-- user sessions out of --><span id="tryit_max"></span>セッション中）。<!-- . --></span>
+
+          <span class="p-notification__body" id="tryit_maintenance_message" style="display:none">デモサービスは現在メンテナンスのために停止しています。数分後にはサービスを再開する予定です。 <!-- The demo service is currently down for maintenance and should be back online in a few minutes. --></span>
+
+          <span class="p-notification__body" id="tryit_unreachable_message" style="display:none">あなたがお使いのブラウザからデモサーバへアクセスできません。<br />おそらく、あなたのサイトのファイアウォールかプロキシの問題、もしくはサーバ側のネットワーク、電源、その他の深刻な障害のためと思われます。<!-- Your browser couldn't reach the demo server.<br />This is either (most likely) because of a firewall or proxy issue on your side or because of a network, power or other catastrophic server side failure. --></span>
+        </div>
+      </div>
+
+      <div class="p-card" id="tryit_terms_panel" style="display:none">
+        <div class="p-card__content">
+          <h2 class="p-heading--4">サービス利用規約 <!-- Terms of service --></h2>
+          <span id="tryit_terms"></span>
+        </div>
+      </div>
+
+      <div class="p-card" id="tryit_start_panel" style="display:none">
+        <div class="p-card__content">
+          <h2 class="p-heading--4">試用開始 <!-- Start --></h2>
+          <div id="tryit_accept_terms">
+            <input type="checkbox" value="" id="tryit_terms_checkbox" />
+            <label for="tryit_terms_checkbox">
+             私はサービス利用規約を読み、同意しました。
+             <!--
+             I have read and I accept the terms of service above.
+             -->
+            </label>
+            <button type="submit" id="tryit_accept" class="p-button--positive" disabled="">Start</button>
+          </div>
+          <div id="tryit_progress" style="display:none;width:100%;text-align:center;">
+            <p class="p-heading--4">インスタンスの起動中 <!-- Creating a new instance --><i class="p-icon--spinner u-animation--spin"></i></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="p-card" id="tryit_examples_panel" style="display:none">
+        <div class="p-card__content">
+          <span class="p-notification__status js-collapsable">ステップバイステップでの入門 <!-- Step by step instructions --></span>
+
+          <ol id="tryit_navigation" style="display:none">
+            <li name="introduction">はじめに <!-- Introduction --></li>
+            <li name="first-instances">最初のインスタンス <!-- Your first instances --></li>
+            <li name="inspect-instances">インスタンスの情報を見る <!-- Inspect the instances --></li>
+            <li name="stop-delete">インスタンスの停止と削除 <!-- Stop and delete instances --></li>
+            <li name="instance-configuration">インスタンスの設定 <!-- Instance configuration --></li>
+            <li name="interact">インスタンスの操作 <!-- Interact with an instance --></li>
+            <li name="instance-files">インスタンス内のファイル操作 <!-- Access files from the instance --></li>
+            <li name="snapshots">スナップショット <!-- Snapshots --></li>
+            <li name="conclusion">さいごに <!-- Conclusion --></li>
+          </ol>
+
+          <div class="tab-content" id="introduction">
+            <div class="tryit_progress_bar"></div>
+            <h3></h3>
+            <p>
+              あなたは今、リモートの Incus クラスター内で実行中の Incus 仮想マシン内にいます<br />
+              この仮想マシンには Incus がプリインストールされており、事前に必要な構成がされています
+              <!--
+               You are now inside an Incus virtual machine running on a remote Incus cluster.<br />
+               This virtual machine has Incus pre-installed and pre-configured for you. --></p>
+            <p>
+              Incus をはじめるには、この Incus の主な機能を案内するステップバイステップのチュートリアルに沿って試してみてください。<br />
+              もしくは man ページや <code>--help</code> オプションを色々見たりして LXD を調べて、色々発見してみてください！
+              <!--
+               To get started, follow this step-by-step tutorial that will guide you through Incus's main features.<br />
+               Or just poke around and discover Incus through its manpage and <code>--help</code> option! --></p>
+            <div class="admonition note">
+              <p class="admonition-title">Tip</p>
+              <p>チュートリアルのいずれかのコマンドをクリックし、ターミナルにコピーしてください。<!-- Click on any of the commands in the tutorial to copy it into the terminal. --></p>
+            </div>
+            <nav aria-label="...">
+              <ul class="p-inline-list u-align--center u-no-margin--bottom">
+                <li class="p-inline-list__item">
+                  <a class="p-button is-disabled u-no-margin--bottom" aria-disabled="true">Previous</a>
+                </li>
+                <li class="p-inline-list__item">
+                  <a class="p-button js-tab-button tabNext u-no-margin--bottom tryit_goto">Next</a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+
+          <div class="tab-content" id="first-instances">
+            <div class="tryit_progress_bar"></div>
+            <h3></h3>
+            <p>Incus はイメージベースです。そしてさまざまなイメージサーバーからイメージをロードできます。このチュートリアルでは、<a href="https://images.linuxcontainers.org">images:</a> サーバーを使います。<!-- Incus is image based and can load images from different image servers. In this tutorial, we will use the <a href="https://images.linuxcontainers.org">images:</a> server. --></p>
+            <p>この Incus サーバーは現在何も動いていません。次のコマンドで確認できます: <!-- This Incus server is currently empty, you can make sure of that with: --></p>
+            <pre>incus list</pre>
+            <p>いくつかインスタンスを起動してみましょう。<!-- Start by launching a few instances. -->
+              <ol>
+                <li>Ubuntu 20.04 イメージを使って "first" という名前のコンテナを起動します: <!-- Launch a container called "first" using the Ubuntu 20.04 image: -->
+                  <pre>incus launch images:ubuntu/20.04 first</pre>
+                  最初はイメージをダウンロードして展開しなければならないため、コンテナの起動には少し時間がかかることに注意してください。<!-- Note that launching this container takes a few seconds, because the image must be downloaded and unpacked first. -->
+                </li>
+                <li>同じイメージを使って "second" という名前のコンテナを起動します:<!-- Launch a container called "second" using the same image: -->
+                  <pre>incus launch images:ubuntu/20.04 second</pre>
+                  イメージを取得済みなので、最初の（first）コンテナの起動に比べると早く起動します: <!-- Launching this container is quicker than launching the first, because the image is already available. -->
+                </li>
+                <li>最初の（first）コンテナを "third" という名前のコンテナとしてコピーします: <!-- Copy the first container into a container called "third": -->
+                  <pre>incus copy first third</pre>
+                </li>
+                <li>Alpine Edge イメージを使って "alpine" という名前のコンテナを起動します: <!-- Launch a container called "alpine" using the Alpine Edge image: -->
+                  <pre>incus launch images:alpine/edge alpine</pre>
+                </li>
+                <li>Debian 12 イメージを使って "debian" という名前の仮想マシンを起動します: <!-- Launch a virtual machine called "debian" using the Debian 12 image: -->
+                  <pre>incus launch images:debian/12 debian --vm</pre>
+                </li>
+              </ol>
+            </p>
+            <nav aria-label="...">
+              <ul class="p-inline-list u-align--center u-no-margin--bottom">
+                <li class="p-inline-list__item">
+                  <a class="p-button js-tab-button tabPrevious u-no-margin--bottom tryit_goto">Previous</a>
+                </li>
+                <li class="p-inline-list__item">
+                  <a class="p-button js-tab-button tabNext u-no-margin--bottom tryit_goto">Next</a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+
+          <div class="tab-content" id="inspect-instances">
+            <div class="tryit_progress_bar"></div>
+            <h3></h3>
+            <p>起動したインスタンスのリストをチェックします: <!-- Check the list of instances that you launched: --></p>
+            <pre>incus list</pre>
+            <p>3 つ目のコンテナ以外が起動していることが確認できるでしょう。これは、3 つ目のコンテナを最初の（first）コンテナからコピーして作成はしたものの、起動処理を実行していないからです。<!-- You will see that all but the third instance are running. This is because you created the third instance by copying the first, but you didn't start it. --></p>
+            <p>3 つ目のインスタンスを次のように起動できます: <!-- You can start the third instance with: --></p>
+            <pre>incus start third</pre>
+            <p>それぞれのコンテナの情報をもう少し詳しく見ることができます: <!-- You can query more information about each instance with: --></p>
+            <pre>incus info first
+incus info second
+incus info third
+incus info alpine
+incus info debian</pre>
+            <nav aria-label="...">
+            <ul class="p-inline-list u-align--center u-no-margin--bottom">
+              <li class="p-inline-list__item">
+                <a class="p-button js-tab-button tabPrevious u-no-margin--bottom tryit_goto">Previous</a>
+              </li>
+              <li class="p-inline-list__item">
+                <a class="p-button js-tab-button tabNext u-no-margin--bottom tryit_goto">Next</a>
+              </li>
+            </ul>
+          </nav>
+          </div>
+
+          <div class="tab-content" id="stop-delete">
+            <div class="tryit_progress_bar"></div>
+            <h3></h3>
+            <p>チュートリアルではこの後、これらのインスタンスすべては必要ありませんので、不要なインスタンスを消しましょう。<!-- We don't need all of these instances for the remainder of the tutorial, so let's clean some of them up. -->
+              <ol>
+                <li>2 つ目のインスタンスを停止します: <!-- Stop the second instance: -->
+                  <pre>incus stop second</pre>
+                </li>
+                <li>2 つ目のインスタンスを削除します: <!-- Delete the second instance: -->
+                  <pre>incus delete second</pre>
+                </li>
+                <li>3 つ目のインスタンスを削除します: <!-- Delete the third instance: -->
+                  <pre>incus delete third</pre>
+                  このコンテナはまだ実行中なので、最初に停止しないとエラーメッセージが出るでしょう。その代わりに、強制的に削除できます: <!-- Since this instance is running, you get an error message that you must stop it first. Alternatively, you can force-delete it: -->
+                  <pre>incus delete third --force</pre>
+                </li>
+              </ol>
+            </p>
+            <nav aria-label="...">
+            <ul class="p-inline-list u-align--center u-no-margin--bottom">
+              <li class="p-inline-list__item">
+                <a class="p-button js-tab-button tabPrevious u-no-margin--bottom tryit_goto">Previous</a>
+              </li>
+              <li class="p-inline-list__item">
+                <a class="p-button js-tab-button tabNext u-no-margin--bottom tryit_goto">Next</a>
+              </li>
+            </ul>
+          </nav>
+          </div>
+
+          <div class="tab-content" id="instance-configuration">
+            <div class="tryit_progress_bar"></div>
+            <h3></h3>
+            <p>インスタンスに設定できる制限や設定オプションがいくつか存在します。その概要については <a href="https://linuxcontainers.org/incus/docs/main/instances">Instance configuration</a>（参考: <a href="https://lxd-ja.readthedocs.io/ja/latest/instances/">LXDドキュメント日本語訳ページ</a>）をご覧ください。<!-- There are several limits and configuration options that you can set for your instances. See <a href="https://linuxcontainers.org/incus/docs/main/instances">Instance configuration</a> for an overview. --></p>
+            <p>リソース制限を持つインスタンスをもう 1 つ作ってみましょう。<!-- Let's create another instance with some resource limits. -->
+              <ol>
+                <li>コンテナを起動し、1vCPU と 192MiB メモリーの制限を設定します: <!-- Launch a container and limit it to one vCPU and 192 MiB of RAM: -->
+                  <pre>incus launch images:ubuntu/20.04 limited -c limits.cpu=1 -c limits.memory=192MiB</pre>
+                <li>現在の設定を確認し、制限が設定されていない最初の（first）コンテナの設定と比べてみましょう: <!-- Check the current configuration and compare it to the configuration of the first (unlimited) instance: -->
+                  <pre>incus config show limited
+incus config show first</pre>
+                </li>
+                <li>親環境のシステムと 2 つのコンテナで空きメモリーと使用済メモリーの量をチェックしましょう: <!-- Check the amount of free and used memory on the parent system and on the two instances: -->
+                  <pre>free -m
+incus exec first -- free -m
+incus exec limited -- free -m</pre>
+                  デフォルトでは、コンテナは親環境からリソースを継承するため、親環境と最初の（first）インスタンスではメモリの総量が同じであることに注意してください。一方で、制限を設定したインスタンスは 192MiB だけが使用できます。<!-- Note that the total amount of memory is identical for the parent system and the first instance, because by default, the container inherits the resources from its parent environment. The limited instance, on the other hand, has only 192 MiB available. -->
+                </li>
+                <li>親環境と 2 つのインスタンスで使用できる CPU の数をチェックしましょう: <!-- Check the number of CPUs available on the parent system and on the two instances: -->
+                  <pre>nproc
+incus exec first -- nproc
+incus exec limited -- nproc</pre>
+                  ふたたび、親環境と最初の（first）インスタンスの CPU 数は同じで、制限を設定したインスタンスでは現象していることに注意してください。<!-- Again, note that the number is identical for the parent system and the first instance, but reduced for the limited instance. -->
+                </li>
+              </ol>
+            </p>
+            <p>実行中のインスタンスの設定を更新することもできます。<!-- You can also update the configuration while your instance is running. -->
+              <ol>
+                <li>インスタンスのメモリ制限を設定する: <!-- Configure a memory limit for your instance: -->
+                  <pre>incus config set limited limits.memory=128MiB</pre>
+                </li>
+                <li>適用した設定をチェックする:  <!-- Check that the configuration has been applied: -->
+                  <pre>incus config show limited</pre>
+                </li>
+                <li>インスタンスで使用できるメモリ量をチェックする: <!-- Check the amount of memory that is available to the instance: -->
+                  <pre>incus exec limited -- free -m</pre>
+                  数値が変わっていることを確認してください。<!-- Note that the number has changed. -->
+                </li>
+              </ol>
+            </p>
+            <nav aria-label="...">
+              <ul class="p-inline-list u-align--center u-no-margin--bottom">
+                <li class="p-inline-list__item">
+                  <a class="p-button js-tab-button tabPrevious u-no-margin--bottom tryit_goto">Previous</a>
+                </li>
+                <li class="p-inline-list__item">
+                  <a class="p-button js-tab-button tabNext u-no-margin--bottom tryit_goto">Next</a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+
+          <div class="tab-content" id="interact">
+            <div class="tryit_progress_bar"></div>
+            <h3></h3>
+            <p>インスタンス内でコマンドを実行してみましょう。<!-- Let's interact with your instances. -->
+              <ol>
+                <li>インスタンス内でインタラクティブなシェルを起動します: <!-- Launch an interactive shell in your instance: -->
+                  <pre>incus exec first -- bash</pre>
+                </li>
+                <li>例えば、以下のコマンドを入力するとオペレーティングシステムについての情報が表示されます: <!-- Enter some commands, for example, display information about the operating system: -->
+                  <pre>cat /etc/*release</pre>
+                </li>
+                <li>インタラクティブなシェルを抜けます: <!-- Exit the interactive shell: -->
+                  <pre>exit</pre>
+                </li>
+                <li>alpine インスタンスで同じことを繰り返してみましょう: <!-- Repeat the steps for your alpine instance: -->
+                  <pre>incus exec alpine -- ash
+cat /etc/*release
+exit</pre>
+                <li>インスタンスにログインしてコマンドを実行する代わりに、ホストから直接コマンドを実行できます。例えば、コンテナ上にコマンドラインツールをインストールし、それを実行できます: <!-- Instead of logging on to the instance and running commands there, you can run commands directly from the host. For example, you can install a command line tool on the instance and run it: -->
+                  <pre>incus exec first -- apt-get update
+incus exec first -- apt-get install sl -y
+incus exec first -- /usr/games/sl</pre>
+                </li>
+              </ol>
+            </p>
+            <nav aria-label="...">
+              <ul class="p-inline-list u-align--center u-no-margin--bottom">
+                <li class="p-inline-list__item">
+                  <a class="p-button js-tab-button tabPrevious u-no-margin--bottom tryit_goto">Previous</a>
+                </li>
+                <li class="p-inline-list__item">
+                  <a class="p-button js-tab-button tabNext u-no-margin--bottom tryit_goto">Next</a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+
+
+          <div class="tab-content" id="instance-files">
+            <div class="tryit_progress_bar"></div>
+            <h3></h3>
+            <p>インスタンスのファイルにアクセスしたり、ファイルを操作できます。<!-- You can access the files from your instance and interact with them. -->
+              <ol>
+                <li>インスタンスからファイルを取得します: <!-- Pull a file from the instance: -->
+                  <pre>incus file pull first/etc/hosts .</pre>
+                </li>
+                <li>ファイルにエントリーを追加します: <!-- Add an entry to the file: -->
+                  <pre>echo "1.2.3.4 my-example" &gt;&gt; hosts</pre>
+                </li>
+                <li>インスタンスにファイルを戻します: <!-- Push the file back to the instance: -->
+                  <pre>incus file push hosts first/etc/hosts</pre>
+                </li>
+                <li>ログファイルにアクセスするために同じメカニズムを使います: <!-- Use the same mechanism to access log files: -->
+                  <pre>incus file pull first/var/log/syslog - | less
+q</pre>
+                </li>
+              </ol>
+            </p>
+            <nav aria-label="...">
+              <ul class="p-inline-list u-align--center u-no-margin--bottom">
+                <li class="p-inline-list__item">
+                  <a class="p-button js-tab-button tabPrevious u-no-margin--bottom tryit_goto">Previous</a>
+                </li>
+                <li class="p-inline-list__item">
+                  <a class="p-button js-tab-button tabNext u-no-margin--bottom tryit_goto">Next</a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+
+          <div class="tab-content" id="snapshots">
+            <div class="tryit_progress_bar"></div>
+            <h3></h3>
+            <p>Incus ではインスタンスのスナップショットを作成したり、スナップショットからリストアしたりできます。<!-- Incus supports creating and restoring instance snapshots. -->
+              <ol>
+                <li>"clean" という名前のスナップショットを作ります: <!-- Create a snapshot called "clean": -->
+                  <pre>incus snapshot create first clean</pre>
+                </li>
+                <li>スナップショットが作られたことを確認します: <!-- Confirm that the snapshot has been created: -->
+                  <pre>incus snapshot list first</pre>
+                </li>
+                <li>インスタンスを破壊します: <!-- Break the instance: -->
+                  <pre>incus exec first -- rm -Rf /etc /usr</pre>
+                </li>
+                <li>壊れたことを確認します: <!-- Confirm the breakage: -->
+                  <pre>incus exec first -- bash</pre>
+                  <code>bash</code> コマンドを削除したので、シェルが実行できないことに注意してください。<!-- Note that you do not get a shell, because you deleted the <code>bash</code> command. -->
+                </li>
+                <li>スナップショットの状態にインスタンスをリストアします: <!-- Restore the instance to the snapshotted state: -->
+                  <pre>incus snapshot restore first clean</pre>
+                </li>
+                <li>すべて通常状態に戻ったことを確認します: <!-- Confirm that everything is back to normal: -->
+                  <pre>incus exec first -- bash
+exit</pre>
+                </li>
+                <li>スナップショットを削除します: <!-- Delete the snapshot: -->
+                  <pre>incus snapshot delete first clean</pre>
+                </li>
+              </ol>
+            </p>
+            <nav aria-label="...">
+              <ul class="p-inline-list u-align--center u-no-margin--bottom">
+                <li class="p-inline-list__item">
+                  <a class="p-button js-tab-button tabPrevious u-no-margin--bottom tryit_goto">Previous</a>
+                </li>
+                <li class="p-inline-list__item">
+                  <a class="p-button js-tab-button tabNext u-no-margin--bottom tryit_goto">Next</a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+
+          <div class="tab-content" id="conclusion">
+            <div class="tryit_progress_bar"></div>
+            <h3></h3>
+            <p>この入門が Incus について、Incus でできること、Incus が簡単に使えることを理解するのに役立つ良い入門となれば幸いです。<!-- We hope this gave you a good introduction to Incus, its capabilities and how easy it is to use. --></p>
+            <p>あなたが Incus を使い、最新の機能を体験したいということであれば、このデモサービスを使うことを歓迎します。<!-- You're welcome to use the demo service as long as you want to try Incus and play with the latest features. --></p>
+            <p>Enjoy!</p>
+            <nav aria-label="...">
+              <ul class="p-inline-list u-align--center u-no-margin--bottom">
+                <li class="p-inline-list__item">
+                  <a class="p-button js-tab-button tabPrevious u-no-margin--bottom tryit_goto">Previous</a>
+                </li>
+                <li class="p-inline-list__item">
+                  <a class="p-button is-disabled u-no-margin--bottom" aria-disabled="true">Next</a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="p-card" id="tryit_feedback" style="display:none">
+        <div class="p-card__content">
+          <span class="p-notification__status js-collapsable">フィードバック<!-- Feedback --></span>
+          <div class="panel-body">
+            <form class="p-form" id="tryit_feedback_submit">
+              <div class="p-form__group">
+                <label for="feedbackRating">この試用環境を評価してください<!-- Rate your experience --></label>
+                <input type="hidden" class="rating rating-tooltip" id="feedbackRating" />
+              </div>
+              <div class="p-form__group">
+                <label for="feedbackEmail">メールアドレス（任意）<!-- Email address (optional) --></label>
+                <input type="email" class="form-control" id="feedbackEmail" placeholder="foo@example.com"/>
+                <small id="feedbackEmailHelp" class="form-text text-muted">入力するといただいたフィードバックに関して連絡させていただきます。<!-- Fill this to allow us to contact you about your feedback. --></small>
+                <div class="form-check">
+                  <label class="form-check-label">
+                    <input type="checkbox" class="form-check-input" id="feedbackEmailUse"/>
+                    <label for="feedbackEmailUse">Incus に関する情報をもっと取得する<!-- I'm interested in hearing more about Incus --></label>
+                  </label>
+                </div>
+              </div>
+              <div class="p-form__group">
+                <label for="feedbackText">フィードバック（任意）<!-- Feedback (optional) --></label>
+                <textarea class="form-control" id="feedbackText" rows="5"></textarea>
+              </div>
+              <button type="submit" class="p-button--positive">フィードバックを送信<!-- Send feedback --></button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <div class="p-notification--negative" id="tryit_error_panel" style="display:none">
+        <div class="p-notification__response">
+          <span class="p-notification__status" id="tryit_error_panel_create" style="display:none">新しいインスタンスを作成できません <!-- Unable to create a new instance --></span>
+          <span class="p-notification__status" id="tryit_error_panel_access" style="display:none">インスタンスにアクセスできません <!-- Unable to access the instance --></span>
+          <div class="panel-body" id="tryit_error_full" style="display:none">
+            <p>サーバが上限に達しています。数分後にもう一度お試しください。<!-- The server is currently full, please try again in a few minutes. --></p>
+            <p><button class="p-button tryit_goback" type="button">やりなおす<!-- Start over --></button></p>
+          </div>
+          <div class="panel-body" id="tryit_error_quota" style="display:none">
+            <p>同時に実行できるセッションの最大数に達しました。現在実行中のセッションが期限切れになるまでお待ちください。<!-- You have reached the maximum number of concurrent sessions, please wait for some to expire before starting more of them. --></p>
+            <p><button class="p-button tryit_goback" type="button">やりなおす<!-- Start over --></button></p>
+          </div>
+          <div class="panel-body" id="tryit_error_banned" style="display:none">
+            <p>あなたはサービス利用規約への同意を行わなかったため、サービスの使用を禁止されています。<!-- You have been banned from this service due to a failure to respect the terms of service. --></p>
+          </div>
+          <div class="panel-body" id="tryit_error_unknown" style="display:none">
+            <p>原因不明のエラーが起きました。数分後にもう一度お試しください。<!-- An unknown error occurred. Please try again in a few minutes. --></p>
+            <p><button class="p-button tryit_goback" type="button">やりなおす<!-- Start over --></button></p>
+          </div>
+          <div class="panel-body" id="tryit_error_missing" style="display:none">
+            <p>あなたが接続しようとしているインスタンスが存在しません。<!-- The instance you're trying to connect to doesn't exist anymore. --></p>
+            <p><button class="p-button tryit_goback" type="button">やりなおす<!-- Start over --></button></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="tryit_console_row" style="display:none">
+  <div class="row">
+    <hr/>
+    <div class="p-card" id="tryit_console_panel">
+      <div class="p-card__content">
+        <h2 class="p-heading--4">ターミナル<!-- Terminal -->（残り <span class="minutes"></span> 分<!-- minutes --><!-- , --><span class="seconds"></span> 秒<!-- seconds remaining -->）</h2>
+        <div style="overflow: auto; background-color: #000;">
+          <div id="tryit_console"></div>
+        </div>
+        <button class="p-button" id="tryit_console_reconnect" type="button" style="display:none">再接続<!-- Reconnect --></button>
+      </div>
+    </div>
+  </div>
+</div>

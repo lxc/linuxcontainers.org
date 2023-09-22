@@ -14,6 +14,12 @@
      "generator": "markdown",
      "meta": {"input": "incus/introduction.ja.md"}},
 
+    {"path": "/incus/try-it/",
+     "title": "Incus - オンラインでの試用",
+     "menu": ["Incus", "オンラインでの試用"],
+     "generator": "html",
+     "meta": {"input": "incus/try-it.ja.html"}},
+
     {"path": "/incus/forum/",
      "menu": ["Incus", "フォーラム"],
      "generator": "link",
