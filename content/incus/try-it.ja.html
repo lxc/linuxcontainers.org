@@ -87,7 +87,7 @@
                This virtual machine has Incus pre-installed and pre-configured for you. --></p>
             <p>
               Incus をはじめるには、この Incus の主な機能を案内するステップバイステップのチュートリアルに沿って試してみてください。<br />
-              もしくは man ページや --help オプションを色々見たりして LXD を調べて、色々発見してみてください。
+              もしくは man ページや <code>--help</code> オプションを色々見たりして LXD を調べて、色々発見してみてください！
               <!--
                To get started, follow this step-by-step tutorial that will guide you through Incus's main features.<br />
                Or just poke around and discover Incus through its manpage and <code>--help</code> option! --></p>
@@ -262,7 +262,7 @@ incus exec limited -- nproc</pre>
                 <li>インスタンス内でインタラクティブなシェルを起動します: <!-- Launch an interactive shell in your instance: -->
                   <pre>incus exec first -- bash</pre>
                 </li>
-                <li>例えば、コマンドを入力するとオペレーティングシステムについての情報が表示されます: <!-- Enter some commands, for example, display information about the operating system: -->
+                <li>例えば、以下のコマンドを入力するとオペレーティングシステムについての情報が表示されます: <!-- Enter some commands, for example, display information about the operating system: -->
                   <pre>cat /etc/*release</pre>
                 </li>
                 <li>インタラクティブなシェルを抜けます: <!-- Exit the interactive shell: -->
@@ -327,7 +327,7 @@ q</pre>
           <div class="tab-content" id="snapshots">
             <div class="tryit_progress_bar"></div>
             <h3></h3>
-            <p>LXD ではインスタンスのスナップショットを作成したり、スナップショットからリストアしたりできます。<!-- Incus supports creating and restoring instance snapshots. -->
+            <p>Incus ではインスタンスのスナップショットを作成したり、スナップショットからリストアしたりできます。<!-- Incus supports creating and restoring instance snapshots. -->
               <ol>
                 <li>"clean" という名前のスナップショットを作ります: <!-- Create a snapshot called "clean": -->
                   <pre>incus snapshot create first clean</pre>
@@ -422,7 +422,7 @@ exit</pre>
           <span class="p-notification__status" id="tryit_error_panel_access" style="display:none">インスタンスにアクセスできません <!-- Unable to access the instance --></span>
           <div class="panel-body" id="tryit_error_full" style="display:none">
             <p>サーバが上限に達しています。数分後にもう一度お試しください。<!-- The server is currently full, please try again in a few minutes. --></p>
-            <p><button class="p-button tryit_goback" type="button">Start over</button></p>
+            <p><button class="p-button tryit_goback" type="button">やりなおす<!-- Start over --></button></p>
           </div>
           <div class="panel-body" id="tryit_error_quota" style="display:none">
             <p>同時に実行できるセッションの最大数に達しました。現在実行中のセッションが期限切れになるまでお待ちください。<!-- You have reached the maximum number of concurrent sessions, please wait for some to expire before starting more of them. --></p>
