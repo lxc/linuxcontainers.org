@@ -163,6 +163,9 @@ $(document).ready(function() {
 
                 if (data.server_status == 1) {
                     $('#tryit_maintenance_message').css("display", "inherit");
+                    if (data.server_message != "") {
+                        $('#tryit_maintenance_message').text(data.server_message);
+                    }
                     $('#tryit_status_panel').css("display", "inherit");
                     $('#tryit_status_panel').addClass('panel-warning');
                     $('#tryit_status_panel').removeClass('panel-success');
