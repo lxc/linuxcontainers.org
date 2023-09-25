@@ -2,6 +2,8 @@ $(document).ready(function() {
     var tryit_terms_hash = "";
     var tryit_console = "";
     var tryit_server = "incus-demo.linuxcontainers.org";
+    var tryit_server_rest = "https://" + tryit_server
+    var tryit_server_websocket = "wss://" + tryit_server
     var original_url = window.location.href.split("?")[0];
     var term = null
     var sock = null
@@ -76,7 +78,7 @@ $(document).ready(function() {
 
         var height = term.rows;
         var width = term.cols;
-        sock = new WebSocket("wss://"+tryit_server+"/1.0/console?id="+id+"&width="+width+"&height="+height);
+        sock = new WebSocket(tryit_server_websocket + "/1.0/console?id=" + id + "&width=" + width + "&height=" + height);
         sock.onopen = function (e) {
             attachAddon = new AttachAddon.AttachAddon(sock);
             term.loadAddon(attachAddon);
@@ -154,11 +156,10 @@ $(document).ready(function() {
 
     if (tryit_console == "") {
         $.ajax({
-            url: "https://"+tryit_server+"/1.0",
+            url: tryit_server_rest + "/1.0",
             success: function(data) {
                 if (data.session_console_only == true) {
                     $('#tryit_ssh_row').css("display", "none");
-                    $('#tryit_lxd_row').css("display", "none");
                 }
 
                 if (data.server_status == 1) {
@@ -180,7 +181,7 @@ $(document).ready(function() {
                 $('#tryit_status_panel').css("display", "inherit");
 
                 $.ajax({
-                    url: "https://"+tryit_server+"/1.0/terms"
+                    url: tryit_server_rest + "/1.0/terms"
                 }).then(function(data) {
                     tryit = data;
                     $('#tryit_terms').html(data.terms);
@@ -200,7 +201,7 @@ $(document).ready(function() {
         });
     } else {
         $.ajax({
-            url: "https://"+tryit_server+"/1.0/info?id="+tryit_console,
+            url: tryit_server_rest + "/1.0/info?id=" + tryit_console,
             success: function(data) {
                 if (data.status && data.status != 0) {
                     $('#tryit_start_panel').css("display", "none");
@@ -257,7 +258,7 @@ $(document).ready(function() {
         var last_response_len = false;
         var last_response = "";
         $.ajax({
-            url: "https://"+tryit_server+"/1.0/start?terms="+tryit_terms_hash,
+            url: tryit_server_rest + "/1.0/start?terms=" + tryit_terms_hash,
             xhrFields: {
               onprogress: function(e) {
                 var this_response, response = e.currentTarget.response;
@@ -362,7 +363,7 @@ $(document).ready(function() {
                                "email": $('#feedbackEmail').val(),
                                "email_use": feedbackEmailUse,
                                "message": $('#feedbackText').val()})
-        $.ajax({url: "https://"+tryit_server+"/1.0/feedback?id="+tryit_console,
+        $.ajax({url: tryit_server_rest + "/1.0/feedback?id=" + tryit_console,
                 type: "POST",
                 data: data,
                 contentType: "application/json"})
