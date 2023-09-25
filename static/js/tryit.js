@@ -254,9 +254,34 @@ $(document).ready(function() {
         $('#tryit_progress').css("display", "inherit");
         highlightProgress(getIDFromIndex(0));
 
+        var last_response_len = false;
+        var last_response = "";
         $.ajax({
-            url: "https://"+tryit_server+"/1.0/start?terms="+tryit_terms_hash
+            url: "https://"+tryit_server+"/1.0/start?terms="+tryit_terms_hash,
+            xhrFields: {
+              onprogress: function(e) {
+                var this_response, response = e.currentTarget.response;
+                if (last_response_len === false)
+                {
+                    this_response = response;
+                    last_response_len = response.length;
+                }
+                else
+                {
+                    this_response = response.substring(last_response_len);
+                    last_response_len = response.length;
+                }
+                last_response = this_response;
+
+                data = $.parseJSON(this_response);
+                if (data.message != "") {
+                  $('#tryit_start_status').text(data.message);
+                }
+              }
+            }
         }).then(function(data) {
+            data = $.parseJSON(last_response);
+
             if (data.status && data.status != 0) {
                 if (data.status == 1) {
                     window.location.href = original_url;
