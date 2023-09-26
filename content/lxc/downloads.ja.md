@@ -18,23 +18,6 @@ For production environment, try to stick to LXC 5.0.x or 4.0.x as these are the 
 -->
 Production 環境では、長期サポート版の stable リリースである LXC 5.0.x もしくは 4.0.x を使い続けることをお勧めします。それぞれ 2027 年 6 月（5.0.x）、2025 年 6 月（4.0.x）までサポートします。
 
-<!--
-For Ubuntu users, we have official PPAs for LXC:
--->
-Ubuntu ユーザは、LXC のオフィシャルな PPA があります:
-
- * [lxc-lts](https://launchpad.net/~ubuntu-lxc/+archive/lxc-lts): 最新の長期サポート版リリース <!-- Latest long term release -->
- * [lxc-stable](https://launchpad.net/~ubuntu-lxc/+archive/lxc-stable): 最新の stable リリース <!-- Latest stable release -->
-
-<!--
-And for those who want development snapshots:
--->
-開発中のスナップショットが必要な場合はこちらです:
-
- * [lxc-git-master](https://launchpad.net/~ubuntu-lxc/+archive/lxc-git-master): "master" ブランチ <!-- "master" branch -->
- * [lxc-git-stable-5.0](https://launchpad.net/~ubuntu-lxc/+archive/lxc-git-stable-5.0): "stable-5.0" ブランチ <!-- "stable-5.0" branch -->
- * [lxc-git-stable-4.0](https://launchpad.net/~ubuntu-lxc/+archive/lxc-git-stable-4.0): "stable-4.0" ブランチ <!-- "stable-4.0" branch -->
-
 # 現時点の開発バージョン <!-- Current development version -->
 
 <!--
