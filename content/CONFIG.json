@@ -1,5 +1,6 @@
 {
     "languages": [
                     ["", "English", "Language"],
-                    ["ja", "日本語", "言語"]]
+                    ["ja", "日本語", "言語"],
+                    ["de", "Deutsch", "Sprache"]]
 }
