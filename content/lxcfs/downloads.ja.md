@@ -10,13 +10,6 @@ Distributions also often provide backports of newer versions of LXCFS for their 
 -->
 ディストリビューションでは、stable リリース向けに新しいバージョンの LXCFS のバックポートを提供することがよくあります。特に、お使いのディストリビューションに LXCFS が含まれていない場合や、新しい 4.0 ブランチでない場合には、探してみる必要があるかもしれません。
 
-<!--
-For Ubuntu users, we have an official PPA for LXCFS:
--->
-Ubuntuユーザは、LXCFS の公式 PPA があります:
-
-* [lxcfs-stable](https://launchpad.net/~ubuntu-lxc/+archive/lxcfs-stable): 最新の stable リリース <!-- Latest stable release -->
-
 # 現時点の開発バージョン <!-- Current development version -->
 
 <!--
