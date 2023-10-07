@@ -97,22 +97,25 @@ def gen_menu(structure, override, prefix):
 
         if len(item['menu']) == 1:
             # Simple menu entry
-            menu.append((item['path'], item['menu'][0]))
+            menu.append((item['path'], item['menu'][0],
+                         item.get("generator", "") == "link"))
         else:
             # Drop-down menu
             if sub_menu_title != item['menu'][0]:
                 if sub_menu:
-                    menu.append((sub_menu, sub_menu_title))
+                    menu.append((sub_menu, sub_menu_title, False))
                 sub_menu = []
                 sub_menu_title = item['menu'][0]
 
             # Simple menu entry
-            sub_menu.append((item['path'], item['menu'][-1]))
+            sub_menu.append((item['path'], item['menu'][-1],
+                             item.get("generator", "") == "link"))
 
     # Process the last drop-down menu
     if structure and sub_menu_title:
         if sub_menu:
-            menu.append((sub_menu, sub_menu_title))
+            menu.append((sub_menu, sub_menu_title,
+                         item.get("generator", "") == "link"))
 
     return menu
 

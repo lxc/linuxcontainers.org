@@ -38,7 +38,11 @@
                       </li>
                     {% else %}
                       <li>
-                        <a href="{{ sub_entry[0] }}"  class="p-navigation__dropdown-item{% if page_menu[1] == sub_entry[1] %} is-selected{% endif %}">{{ sub_entry[1] }}</a>
+                        {% if sub_entry[2] %}
+                        <a href="{{ sub_entry[0] }}" target="_blank" class="p-navigation__dropdown-item{% if page_menu[1] == sub_entry[1] %} is-selected{% endif %}">{{ sub_entry[1] }}</a>
+                        {% else %}
+                        <a href="{{ sub_entry[0] }}" class="p-navigation__dropdown-item{% if page_menu[1] == sub_entry[1] %} is-selected{% endif %}">{{ sub_entry[1] }}</a>
+                        {% endif %}
                       </li>
                     {% endif %}
                   {% endfor %}
