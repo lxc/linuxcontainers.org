@@ -2,7 +2,9 @@
     {"path": "/",
      "title": "",
      "menu": ["ホーム"],
+     "generator": "html",
      "meta": {"input": "index.ja.html"}},
+
 
     {"path": "/incus/",
      "generator": "alias",
@@ -20,30 +22,37 @@
      "generator": "html",
      "meta": {"input": "incus/try-it.ja.html"}},
 
-    {"path": "/incus/forum/",
-     "menu": ["Incus", "フォーラム"],
+    {"path": "/incus/docs/",
+     "menu": ["Incus", "ドキュメント"],
      "generator": "link",
-     "meta": {"url": "https://discuss.linuxcontainers.org"}},
+     "meta": {"url": "https://linuxcontainers.org/incus/docs/main/"}},
 
-    {"path": "/incus/mailing-lists/",
-     "menu": ["Incus", "メーリングリスト"],
-     "generator": "link",
-     "meta": {"url": "https://lists.linuxcontainers.org"}},
-
-    {"path": "/incus/irc/",
-     "menu": ["Incus", "IRC"],
-     "generator": "link",
-     "meta": {"url": "https://web.libera.chat/#lxc"}},
+    {"path": "/incus/downloads/",
+     "title": "Incus - ダウンロード",
+     "menu": ["Incus", "ダウンロード"],
+     "generator": "downloads",
+     "meta": {"dir": "/downloads/incus",
+              "input": "incus/downloads.ja.md"}},
 
     {"path": "/incus/github/",
      "menu": ["Incus", "GitHub"],
      "generator": "link",
      "meta": {"url": "https://github.com/lxc/incus"}},
 
-    {"path": "/incus/github-actions/",
-     "menu": ["Incus", "GitHub Actions"],
+    {"path": "/incus/forum/",
+     "menu": ["Incus", "フォーラム"],
      "generator": "link",
-     "meta": {"url": "https://github.com/lxc/incus/actions"}},
+     "meta": {"url": "https://discuss.linuxcontainers.org"}},
+
+    {"path": "/incus/irc/",
+     "menu": ["Incus", "IRC"],
+     "generator": "link",
+     "meta": {"url": "https://web.libera.chat/#lxc"}},
+
+    {"path": "/incus/mailing-lists/",
+     "menu": ["Incus", "メーリングリスト"],
+     "generator": "link",
+     "meta": {"url": "https://lists.linuxcontainers.org"}},
 
 
     {"path": "/lxd/",
@@ -51,6 +60,10 @@
      "generator": "markdown",
      "meta": {"input": "lxd/moved-to-canonical.ja.md"}},
 
+
+    {"path": "/lxc/",
+     "generator": "alias",
+     "meta": {"target": "/lxc/introduction/"}},
 
     {"path": "/lxc/introduction/",
      "title": "LXC - イントロダクション",
@@ -80,9 +93,14 @@
      "generator": "markdown",
      "meta": {"input": "lxc/documentation.ja.md"}},
 
+    {"path": "/lxc/apidoc/",
+     "generator": "directory",
+     "meta": {"input": "lxc/apidoc"}},
+
     {"path": "/lxc/manpages/",
      "title": "LXC - Man ページ",
      "menu": ["LXC", "Man ページ"],
+     "generator": "manpages",
      "meta": {"dir": "/manpages/lxc/ja"}},
 
     {"path": "/lxc/contribute/",
@@ -143,6 +161,9 @@
      "meta": {"url": "https://jenkins.linuxcontainers.org/view/LXC/"}},
 
 
+    {"path": "/lxcfs/",
+     "generator": "alias",
+     "meta": {"target": "/lxcfs/introduction/"}},
 
     {"path": "/lxcfs/introduction/",
      "title": "LXCFS - イントロダクション",
