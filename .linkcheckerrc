@@ -2,7 +2,7 @@
 maxrequestspersecond=5
 
 [filtering]
-nofollow=https\:\/\/linuxcontainers\.org\/lxd\/docs\/
+nofollow=https\:\/\/linuxcontainers\.org\/incus\/docs\/
 checkextern=1
 
 [output]
