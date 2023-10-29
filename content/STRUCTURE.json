@@ -16,6 +16,12 @@
      "generator": "markdown",
      "meta": {"input": "incus/introduction.md"}},
 
+    {"path": "/incus/announcement/",
+     "title": "Incus - Announcement",
+     "menu": ["Incus", "Announcement"],
+     "generator": "markdown",
+     "meta": {"input": "incus/announcement.md"}},
+
     {"path": "/incus/try-it/",
      "title": "Incus - Try it online",
      "menu": ["Incus", "Try it online"],
