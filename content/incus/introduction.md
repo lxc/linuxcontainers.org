@@ -1,33 +1,85 @@
-# Introducing Incus
-Date: 7th of August 2023
+[TOC]
 
-The Linux Containers project is excited to announce its latest addition, Incus!
+# What is Incus?
+Incus is a next generation system container and virtual machine manager. It offers a unified user experience around full Linux systems running inside containers or virtual machines.
 
-Incus isn’t a completely new project however, it’s a fork of LXD created by Aleksa Sarai.
-[Aleksa Sarai](https://github.com/cyphar) is most known for his work on runc, umoci and other OpenContainers projects as well as contributions to the Linux kernel.
+Incus is image based and provides images for a [wide number of Linux distributions](https://images.linuxcontainers.org). It provides flexibility and scalability for various use cases, with support for different storage backends and network types and the option to install on hardware ranging from an individual laptop or cloud instance to a full server rack.
 
-But in addition to all that, he’s also been the long time packager of LXD in OpenSUSE.
-Aleksa created the fork shortly after Canonical’s decision to take LXD away from Linux Containers with the name Incus being introduced immediately following the LXD 5.16 release. This fork was first intended as a personal project, but has since gathered quite a bit of interest both from the community as well as from former LXD contributors.
+When using Incus, you can manage your instances (containers and VMs) with a simple command line tool, directly through the REST API or by using third-party tools and integrations. Incus implements a single REST API for both local and remote access.
+
+The Incus project was created by Aleksa Sarai as a community driven fork of Canonical's Incus. See here for the [announcement](/incus/announcement/).
+
+## Get started
+To get a better idea of what Incus is and what it does, you can [try it online](/incus/try-it/)!
+
+Then if you want to run it locally, take a look at our [getting started guide](/incus/docs/main/tutorial/first_steps/).
+
+## Containers and virtual machines
+Incus provides support for system containers and virtual machines.
+
+When running a system container, Incus simulates a virtual version of a full operating system. To do this, it uses the functionality provided by the kernel running on the host system.
+
+When running a virtual machine, Incus uses the hardware of the host system, but the kernel is provided by the virtual machine. Therefore, virtual machines can be used to run, for example, a different operating system.
+
+You can learn more about the differences between application containers, system containers and virtual machines in [our documentation](/incus/docs/main/explanation/containers_and_vms/).
+
+# Features
+Some of the biggest features of Incus are:
+
+Core API
+: * [Secure by design](/incus/docs/main/security) (through unprivileged containers, resource restrictions, authentication, ...)
+  * [Intuitive](/incus/docs/main/rest-api) (with a simple, clear API and crisp command line experience)
+  * [Scalable](/incus/docs/main/clustering) (from containers on your laptop to clusters of thousands of compute nodes)
+  * [Event based](/incus/docs/main/events) (providing logging, operation, and lifecycle events)
+  * [Remote usage](/incus/docs/main/remotes) (same API used for local and network access)
+  * [Project support](/incus/docs/main/projects) (as a way to compartmentalize sets of images and profiles)
+
+Instances and profiles
+: * [Image based](https://images.linuxcontainers.org) (with images for a wide variety of Linux distributions, published daily)
+  * [Instances](/incus/docs/main/instances) (containers and virtual-machines)
+  * [Configurable through profiles](/incus/docs/main/profiles) (applicable to both containers and virtual machines)
+
+Backup and export
+: * [Backup and recovery](/incus/docs/main/backup) (for all objects managed by Incus)
+  * [Snapshots](/incus/docs/main/reference/instance_options/#snapshot-scheduling-and-configuration) (to save and restore the state of an instance)
+  * [Container and image transfer](/incus/docs/main/image-handling) (between different hosts, using images)
+  * [Instance migration](/incus/docs/main/migration) (importing existing instances or transferring them between servers)
+
+Configurability
+: * [Multiple storage backends](/incus/docs/main/explanation/storage/) (with configurable storage pools and storage volumes)
+  * [Network management](/incus/docs/main/explanation/networks/) (including bridge creation and configuration, cross-host tunnels, ...)
+  * [Advanced resource control](/incus/docs/main/reference/instance_options/#resource-limits) (CPU, memory, network I/O, block I/O, disk usage and kernel resources)
+  * [Device passthrough](/incus/docs/main/reference/devices/) (USB, GPU, unix character and block devices, NICs, disks and paths)
 
 
-After some discussion with Aleksa and a fair bit of encouragement from our community, we have made the decision to take Incus under the umbrella of Linux Containers and will commit to it the infrastructure which was previously made available to LXD.
+# Availability
+Incus works on any recent Linux distribution.
 
-The goal of Incus is to provide a fully community led alternative to Canonical’s LXD as well as providing an opportunity to correct some mistakes that were made during LXD’s development which couldn’t be corrected without breaking backward compatibility.
+Incus upstream doesn't directly provide packages, but packages are available in a number of distributions or can be found in 3rd party repositories.
 
-In addition to Aleksa, the initial set of maintainers for Incus will include [Christian Brauner](https://github.com/brauner), [Serge Hallyn](https://github.com/hallyn), [Stéphane Graber](https://github.com/stgraber) and [Tycho Andersen](https://github.com/tych0), effectively including the entire team that once created LXD.
+For Debian and Ubuntu users, we recommend the [packages provided by Zabbly](https://github.com/zabbly/incus).
 
-There is no clearly defined roadmap at this point. Incus will be tracking changes happening in LXD and will likely in time diverge from it as different decisions get made.
-A stable release of Incus is likely at least a couple of months away so existing LXD users shouldn’t rush to find a way to migrate quite yet!
+In addition, the Incus client is available for Windows and macOS. You can use the client to connect to an Incus server running on a Linux machine.
 
-You can find more details or ask us your questions here:
+More details can be found in our [installation guide](/incus/docs/main/reference/devices/).
 
-- Github: [https://github.com/lxc/incus](https://github.com/lxc/incus)
-- Forum: [https://discuss.linuxcontainers.org](https://discuss.linuxcontainers.org)
+# Support
+Incus has two kind of releases:
 
-Sincerely,
+ * LTS releases
+ * Feature releases
 
-Aleksa Sarai and the Linux Containers team:
+At present, no LTS releases have been released.
 
-&nbsp;&nbsp;  Christian Brauner
-&nbsp;&nbsp;  Serge Hallyn
-&nbsp;&nbsp;  Stéphane Graber
+Feature releases are pushed out every month or so and contain new features as well as bugfixes. The normal support length for those releases is of about a month, or until the next release comes out. Some Linux distributions might offer longer support for particular feature releases that they decided to ship.
+
+Commercial support for Incus can be obtained from [Zabbly](https://zabbly.com/incus).
+
+# Language, licensing and contributions
+Incus is written in Go. It is free software and developed under the [Apache 2 license](https://www.apache.org/licenses/LICENSE-2.0).
+
+The Incus source code is available on [GitHub](https://github.com/lxc/incus).
+
+There are no CLA or similar legal agreements required to contribute to Incus. However, we require commits be signed-off (following the DCO - Developer Certificate of Ownership). See the [Contribution guidelines](/incus/docs/latest/contributing/) for more information.
+
+[<img src="/static/img/GitHub_Logo.png" alt="GitHub logo" style="display:block;float:none;margin-left:auto;margin-right:auto;padding:1em 0;max-height:120px"/>](https://github.com/lxc/incus)
