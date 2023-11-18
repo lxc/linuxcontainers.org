@@ -28,6 +28,16 @@
      "generator": "html",
      "meta": {"input": "incus/try-it.html"}},
 
+    {"path": "/incus/news/",
+     "title": "Incus - News",
+     "menu": ["Incus", "News"],
+     "generator": "news",
+     "meta": {"dir": "/content/incus/news/",
+              "input": "incus/news.md",
+              "toc_depth": "2-2",
+              "str_older": "Older news",
+              "str_back": "Back to the news overview"}},
+
     {"path": "/incus/docs/",
      "menu": ["Incus", "Documentation"],
      "generator": "link",
