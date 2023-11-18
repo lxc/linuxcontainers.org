@@ -1,0 +1,209 @@
+title: Distrobuilder 3.0 has been released
+date: 2023/11/11 03:11
+origin: https://discuss.linuxcontainers.org/t/distrobuilder-3-0-has-been-released/18260
+content: |-
+  ### Introduction
+  The distrobuilder team is proud to announce the release of distrobuilder 3.0!
+
+  Outside of the usual updates to account for changes made by various distributions, the main highlights are:
+
+   - Incus is now used in place of LXD
+   - Distributions
+     - A lot of updates to handle newer distribution releases
+     - Added support for VyOS
+     - Added support for Slackware
+     - Added support for NixOS
+   - Several improvements to the systemd generator, which is also now shipped as a standalone file
+   - Pongo templates can now be used in actions
+   - Reworked documentation
+
+  The full list of commits is available below:
+
+  [details="Detailed changelog"]
+   - main: the systemd generator doesn't do anything on VMs
+   - main: simplify NetworkManager and cloud-init handling
+   - main: do distro ID comparison (quick) before grepping (slower)
+   - main: add is_lxc_privileged_container function
+   - main: Stop doing terrible things to NetworkManager
+   - udev: Allow NetworkManager to manage veth interfaces
+   - main: export LC_ALL=C
+   - image/lxd: stop using qcow2 compat=0.10 (aka qcow2-v2)
+   - sources/almalinux: Format isoRunner script
+   - sources/almalinux: Drop hard-coded GPG key
+   - doc/examples: Fix typos in examples
+   - main: Reintroduce NetworkManager workaround
+   - shared/util: Use multiple threads when compressing
+   - main: Mask systemd-firstboot.service
+   - sources/centos: Disable fastestmirror plugin
+   - sources/centos: Use baseurl instead of metalink for repos
+   - sources/gentoo: Download portage tree
+   - managers/portage: Make refresh a no-op
+   - sources/opensuse: Change URL path to Leap images
+   - doc/generators: Fix link to LXD image format
+   - sources/opensuse: Validate found tarball links
+   - sources: Support Rocky Linux 9
+   - sources/rhel: Check directory before listing its entries
+   - sources/rocky: Fix gpg key and mirrorlist for v9
+   - doc: mention that Windows Server 2022 is supported
+   - Drop deprecated io/ioutil package
+   - Update gomod
+   - shared/archive: Fix call to RunCommandWithFds
+   - shared/definition: Add Pongo support for actions
+   - main,managers: Add Pongo support for actions
+   - sources/alpine: Always download latest point release
+   - source/alpine: Properly handle latest release when using edge
+   - shared/logger: Set log output to stdout
+   - shared/logger: Add padding to log level texts
+   - sources/oracle: Find updates through iteration
+   - sources/openwrt: Support OpenWrt 22.03
+   - Add output note to image.md
+   - Add rootfs-http to downloaders list
+   - manages/{dnf,yum}: Use --nobest on package updates
+   - managers/yum: Use --nobest only if available
+   - Revert "managers: Drop luet"
+   - sources: Support Springdale Linux 9
+   - gomod: Exclude buggy dependency
+   - Update gomod
+   - systemd: Mask systemd-binfmt.service
+   - source: add support for openeuler downloader
+   - change release style to 22.03-LTS-SPx and try to select latest version
+   - sources: Set user-agent for downloads
+   - image,shared: Allow specifying compression level
+   - image,shared: Allow use of lzo/lzop interchangeably
+   - utils: Add missing user-agent string
+   - sources: Increase TLS handshake timeout for downloads
+   - sources: Pass client to downloadChecksum
+   - main: Log error when main command fails
+   - sources: Update openEuler tests
+   - main: Ensure main error is logged
+   - funtoo-http: Add support to next release
+   - Update gomod
+   - .github: Switch Go versions
+   - doc: basic Sphinx setup
+   - doc: apply Diataxis
+   - doc: add GitHub action for automatic doc tests
+   - doc: fix typos, linting and broken links
+   - doc: add workflow to build documentation
+   - doc: add link to snap
+   - doc: remove version switcher (since we only have one version)
+   - doc: only include GitHub link in the footer for actual pages
+   - Fix broken link to use.md
+   - doc/github workflows: cancel concurrent runs
+   - doc: fix documentation warnings
+   - doc: Update actions regards to the hook post-files
+   - build(deps): bump github.com/opencontainers/runc from 1.1.4 to 1.1.5
+   - Update CI test distros
+   - Use LXD-style static analysis
+   - Satisfy static analysis
+   - build-dir: Add with-post-files flag
+   - doc: Update `build-dir` usage
+   - Fix remaining static analysis issues
+   - main: Don't create cache directory if only validating
+   - main: Check cmd in postRun function
+   - shared/osarch: Use armv7 for alpine linux
+   - main: Fix cache directory removal if it's a mountpoint
+   - windows: Detect Windows architecture from filename
+   - sources/rocky: Support Rocky Vault
+   - sources: Add VyOS
+   - *: Set fstype when mounting
+   - sources/openwrt: Fix URL paths for arm builds
+   - main: Allow masking units created by the lxc system-generator
+   - github: Add DCO and target check
+   - generators/lxd-agent: Use setup script for OpenRC
+   - doc: add missing content for the tutorial
+   - *: Drop support for upstart (no longer used)
+   - Makefile: Add missing .PHONY for update-gomod
+   - github: Align tests with LXD's tests
+   - github: Run all doc tests in a single job
+   - github: Move doc tests to the main tests.yml
+   - github: Align builds with LXD's builds
+   - github: Add dependency-review action to check for vulnerable deps
+   - github: inclusive naming should fail on error
+   - shared/util: Sort tar archives by name
+   - image/lxd: Don't make rootfs.squashfs exportable via NFS
+   - *: Update short description to mention VM images are supported
+   - lxd-generator: Fix masking units created by generator
+   - definition: Add Source.Components
+   - doc/reference: add components field
+   - source: Update openEuler test
+   - Update gomod
+   - Update imports to github.com/canonical/lxd
+   - doc: Update index.md
+   - sphinx: Update link to LXD docs
+   - generators/lxd-agent: Update documentation in service file
+   - Add CODE_OF_CONDUCT.md
+   - main: Move VM check to global command
+   - *: Apply filters on start
+   - definition: Filter LXC targets
+   - definition: Filter environment variables
+   - Revert "definition: Filter environment variables"
+   - Revert "definition: Filter LXC targets"
+   - Revert "*: Apply filters on start"
+   - Revert "main: Move VM check to global command"
+   - main: Move VM check to global command
+   - *: Apply filters on start
+   - definition: Filter LXC targets
+   - definition: Filter environment variables
+   - Revert "definition: Filter environment variables"
+   - Revert "definition: Filter LXC targets"
+   - Revert "*: Apply filters on start"
+   - Revert back to last working state
+   - shared:	Add filter to DefinitionTargetLXCConfig
+   - image/lxc: Filter LXC metadata
+   - Pass full definition to SetupChroot
+   - shared: Add filter to DefinitionEnvVars
+   - shared: Filter environment variables
+   - github: Update branch target
+   - windows: Mount Windows ISO as UDF instead of ISO9660
+   - Fix troubleshoot link
+   - Do not bring the networking down on container startup when using routed nic together with NetworkManager, as in this case networking is configured externally by lxd.
+   - systemd: Tweak generator to handle systemd 254
+   - systemd: Disable ImportCredentials when privileged on 254+
+   - udev: Trigger lxd-agent even on change events
+   - systemd: Make sure subshell returns success
+   - github: replace golang 1.19 with 1.21
+   - Add support for slackware - added http source (works with 15.0 and current) - added slackpkg manager (upgrade/clean fail if there are   not any packages to upgrade/clean)
+   - global: Use incus repository
+   - Update gomod
+   - global: Rename files lxd -> incus
+   - main: Rename {build,pack}-lxd to {build,pack}-incus
+   - generators,image: Rename LXD to Incus
+   - definition: Rename targets.lxd to targets.incus
+   - global: Rename lxd import to incus
+   - sphinx: Change URL to Incus
+   - README: Update for Incus
+   - global: Rename output files
+   - Rename lxd-agent to incus-agent
+   - global: Rename build-lxd to build-incus
+   - global: Rename pack-lxd to pack-incus
+   - generators: Remove mentions of LXD
+   - distrobuilder: Remove mentions of LXD
+   - doc: Update for Incus
+   - sphinx: Add Incus
+   - sources: Fix slackware
+   - Update gomod
+   - dnf: Also use nobest for install
+   - incus-agent: Fix lxd-agent fallback logic
+   - Update gomod
+   - shared: Update for Incus packages
+   - Added rpmbootstrap source
+   - global: Update to current incus/shared
+   - Update openwrt-http.go for 23.05
+   - sources: Add NixOS
+   - Update openwrt-http.go for handling new 23.x release
+   - Bugfix in openwrt-http.go to handle 23.x ARM release
+   - Missing } in openwrt-http.go
+   - Update openwrt-http_test.go for new versions (untested)
+   - generator: Extract systemd generator from code
+   - Support dnf in rpmbootstrap
+   - main: Keep track of current subcommand
+   - main_validate: Set SinceErrors to true
+   - shared/osarch: Add x86_64 to Alpine architecture map
+   - Update gomod
+   - Update Vyos rolling update iso url
+  [/details]
+
+  ### Downloads
+
+   - Main release tarball: [distrobuilder-3.0.tar.gz](https://linuxcontainers.org/downloads/distrobuilder/distrobuilder-3.0.tar.gz)
+   - GPG signature: [distrobuilder-3.0.tar.gz.asc](https://linuxcontainers.org/downloads/distrobuilder/distrobuilder-3.0.tar.gz.asc)
