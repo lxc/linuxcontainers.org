@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+from bs4 import BeautifulSoup as BS
 import dateutil.parser
 import glob
 import json
@@ -55,6 +56,17 @@ origin: baz
 content: |-
   blah""")
         entry["content"] = dis_post["raw"]
+
+        soup = BS(dis_post["cooked"], features="html.parser")
+        for imgtag in soup.find_all('img'):
+            try:
+                img_hash = imgtag['data-base62-sha1']
+                img_src = imgtag['src']
+                entry["content"] = entry["content"].replace(
+                    "upload://%s.png" % img_hash, img_src)
+            except KeyError:
+                pass
+
         entry["title"] = dis_topic["title"]
         date = dateutil.parser.parse(dis_topic["created_at"])
         entry["date"] = date.strftime("%Y/%m/%d %H:%m")
@@ -107,6 +119,17 @@ origin: baz
 content: |-
   blah""")
     entry["content"] = dis_post["raw"]
+
+    soup = BS(dis_post["cooked"], features="html.parser")
+    for imgtag in soup.find_all('img'):
+        try:
+            img_hash = imgtag['data-base62-sha1']
+            img_src = imgtag['src']
+            entry["content"] = entry["content"].replace(
+                "upload://%s.png" % img_hash, img_src)
+        except KeyError:
+            pass
+
     entry["title"] = dis_topic["title"]
     date = dateutil.parser.parse(dis_topic["created_at"])
     entry["date"] = date.strftime("%Y/%m/%d %H:%m")
