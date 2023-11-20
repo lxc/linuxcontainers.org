@@ -69,12 +69,12 @@ Core API
   * [Project support](/incus/docs/main/projects) (as a way to compartmentalize sets of images and profiles)
 -->
 コア API
-: * [安全な設計](/incus/docs/main/security) （非特権コンテナ、リソース制限、認証などを通して）
-  * [直感的](/incus/docs/main/rest-api) （シンプルで明確な API、わかりやすいコマンドラインの使い心地）
-  * [スケーラブル](/incus/docs/main/clustering) （ラップトップから数千のコンピュートノードのクラスターまで）
-  * [イベントベース](/incus/docs/main/events) （ロギング、操作、ライフサイクルイベントの提供）
-  * [リモートからの使用](/incus/docs/main/remotes) （ローカルとネットワークアクセスで同じ API）
-  * [プロジェクト機能のサポート](/incus/docs/main/projects) （イメージとプロファイルの組を区分けする方法として）
+: * [安全な設計](https://incus-ja.readthedocs.io/ja/latest/security) （非特権コンテナ、リソース制限、認証などを通して）
+  * [直感的](https://incus-ja.readthedocs.io/ja/latest/rest-api) （シンプルで明確な API、わかりやすいコマンドラインの使い心地）
+  * [スケーラブル](https://incus-ja.readthedocs.io/ja/latest/clustering) （ラップトップから数千のコンピュートノードのクラスターまで）
+  * [イベントベース](https://incus-ja.readthedocs.io/ja/latest/events) （ロギング、操作、ライフサイクルイベントの提供）
+  * [リモートからの使用](https://incus-ja.readthedocs.io/ja/latest/remotes) （ローカルとネットワークアクセスで同じ API）
+  * [プロジェクト機能のサポート](https://incus-ja.readthedocs.io/ja/latest/projects) （イメージとプロファイルの組を区分けする方法として）
 
 <!--
 Instances and profiles
@@ -95,10 +95,10 @@ Backup and export
   * [Instance migration](/incus/docs/main/migration) (importing existing instances or transferring them between servers)
 -->
 バックアップとエクスポート
-: * [バックアップとリカバリー](/incus/docs/main/backup) （Incus が管理するすべてのオブジェクト）
-  * [スナップショット](/incus/docs/main/reference/instance_options/#snapshot-scheduling-and-configuration) （インスタンスの状態を保存し、復元するために）
-  * [コンテナとイメージの転送](/incus/docs/main/image-handling) （イメージを使用し、異なるホスト間で）
-  * [インスタンスのマイグレーション](/incus/docs/main/migration) （既存のインスタンスのインポート、サーバー間でのインスタンスの転送）
+: * [バックアップとリカバリー](https://incus-ja.readthedocs.io/ja/latest/backup) （Incus が管理するすべてのオブジェクト）
+  * [スナップショット](https://incus-ja.readthedocs.io/ja/latest/reference/instance_options/#snapshot-scheduling-and-configuration) （インスタンスの状態を保存し、復元するために）
+  * [コンテナとイメージの転送](https://incus-ja.readthedocs.io/ja/latest/image-handling) （イメージを使用し、異なるホスト間で）
+  * [インスタンスのマイグレーション](https://incus-ja.readthedocs.io/ja/latest/migration) （既存のインスタンスのインポート、サーバー間でのインスタンスの転送）
 
 <!--
 Configurability
@@ -108,10 +108,10 @@ Configurability
   * [Device passthrough](/incus/docs/main/reference/devices/) (USB, GPU, unix character and block devices, NICs, disks and paths)
 -->
 設定可能であること
-: * [複数のストレージバックエンド](/incus/docs/main/explanation/storage/) （設定可能なストレージプールとストレージボリューム）
-  * [ネットワークの管理](/incus/docs/main/explanation/networks/) （ブリッジの作成、設定、ホスト間のトンネルなど）
-  * [高度なリソース制御](/incus/docs/main/reference/instance_options/#resource-limits) （CPU、メモリー、ネットワーク I/O、ブロック I/O、ディスク使用率、カーネルリソース）
-  * [デバイスパススルー](/incus/docs/main/reference/devices/) （USB、GPU、UNIX キャラクターデバイス・ブロックデバイス、NIC、ディスク、パス）
+: * [複数のストレージバックエンド](https://incus-ja.readthedocs.io/ja/latest/explanation/storage/) （設定可能なストレージプールとストレージボリューム）
+  * [ネットワークの管理](https://incus-ja.readthedocs.io/ja/latest/explanation/networks/) （ブリッジの作成、設定、ホスト間のトンネルなど）
+  * [高度なリソース制御](https://incus-ja.readthedocs.io/ja/latest/reference/instance_options/#resource-limits) （CPU、メモリー、ネットワーク I/O、ブロック I/O、ディスク使用率、カーネルリソース）
+  * [デバイスパススルー](https://incus-ja.readthedocs.io/ja/latest/reference/devices/) （USB、GPU、UNIX キャラクターデバイス・ブロックデバイス、NIC、ディスク、パス）
 
 
 # 可用性 <!-- Availability -->
@@ -178,7 +178,7 @@ Incus のソースコードは [GitHub](https://github.com/lxc/incus) 上にあ�
 <!--
 There are no CLA or similar legal agreements required to contribute to Incus. However, we require commits be signed-off (following the DCO - Developer Certificate of Ownership). See the [Contribution guidelines](/incus/docs/main/contributing/) for more information.
 -->
-Incus に貢献するための CLA や、同様の法的同意はありません。ただし、コミットは Signed-off（the DCO - Developer Certificate of Ownership に従う）する必要があります。
+Incus に貢献するための CLA や、同様の法的同意はありません。ただし、コミットは Signed-off（the DCO - Developer Certificate of Ownership に従う）する必要があります。詳しくは[コントリビューションガイド](https://incus-ja.readthedocs.io/ja/latest/contributing/)をご覧ください。
 
 [<img src="/static/img/GitHub_Logo.png" alt="GitHub logo" style="display:block;float:none;margin-left:auto;margin-right:auto;padding:1em 0;max-height:120px"/>](https://github.com/lxc/incus)
 ******
