@@ -11,7 +11,7 @@ content: |-
 
   You can try it for yourself online: https://linuxcontainers.org/incus/try-it/
 
-  [![image|690x459](upload://1iuiSjHMudZrZezkNpQB0KO8DE8.png)](https://linuxcontainers.org/incus/try-it/)
+  [![image|690x459](https://discuss.linuxcontainers.org/uploads/default/original/2X/0/0919352af00b619ccc98fc674c2d80e1ac7d23f4.png)](https://linuxcontainers.org/incus/try-it/)
 
   # Changes
   With this initial release of Incus, we took the opportunity to remove a lot of unused or problematic features from LXD. Most of those changes are things we would have liked to do in LXD but couldn't due to having strong guarantees around backward compatibility.
