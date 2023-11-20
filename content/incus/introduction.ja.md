@@ -1,65 +1,184 @@
-# Incus の紹介 <!-- Introducing Incus -->
-<!--
-Date: 7th of August 2023
--->
-2023 年 8 月 7 日
+[TOC]
 
+# Incus とは? <!-- What is Incus? -->
 <!--
-The Linux Containers project is excited to announce its latest addition, Incus!
+Incus is a next generation system container and virtual machine manager. It offers a unified user experience around full Linux systems running inside containers or virtual machines.
 -->
-Linux Containers プロジェクトは、プロジェクトに Incus を加えるアナウンスができることをうれしく思います!
+Incus は、次世代のシステムコンテナと仮想マシンのマネージャーです。コンテナや仮想マシン内で動く、完全な Linux システムに対する統一したユーザー体験を提供します。
 
 <!--
-Incus isn’t a completely new project however, it’s a fork of LXD created by Aleksa Sarai.
-[Aleksa Sarai](https://github.com/cyphar) is most known for his work on runc, umoci and other OpenContainers projects as well as contributions to the Linux kernel.
+Incus is image based and provides images for a [wide number of Linux distributions](https://images.linuxcontainers.org). It provides flexibility and scalability for various use cases, with support for different storage backends and network types and the option to install on hardware ranging from an individual laptop or cloud instance to a full server rack.
 -->
-Incus は完全な新規プロジェクトではありません。 Aleksa Sarai が作成した LXD のフォークです。
-[Aleksa Sarai](https://github.com/cyphar) は runc、umoci や、その他の OpenContainers プロジェクトでの取り組みと、Linux カーネルへの貢献でもよく知られています。
+Incus はイメージベースであり、広い範囲の [Linux ディストリビューション](https://images.linuxcontainers.org)のイメージを提供します。さまざまなストレージバックエンドやネットワークタイプをサポートし、個人のラップトップやクラウドインスタンスからフルサーバーラックまで、さまざまなハードウェアにインストールできる選択肢により、さまざまなユースケースに対応する柔軟性と拡張性を提供します。
 
 <!--
-But in addition to all that, he’s also been the long time packager of LXD in OpenSUSE.
-Aleksa created the fork shortly after Canonical’s decision to take LXD away from Linux Containers with the name Incus being introduced immediately following the LXD 5.16 release. This fork was first intended as a personal project, but has since gathered quite a bit of interest both from the community as well as from former LXD contributors.
+When using Incus, you can manage your instances (containers and VMs) with a simple command line tool, directly through the REST API or by using third-party tools and integrations. Incus implements a single REST API for both local and remote access.
 -->
-それに加えて、彼は OpenSUSE での LXD のパッケージャーを長い間つとめてきました。
-Aleksa は、Canonical が LXD を Linux Containers から外す決定をしたあと、LXD 5.16 のリリースの直後に Incus という名前をつけてフォークを作成しました。このフォークは、最初個人プロジェクトとしてフォークされましたが、それ以来、コミュニティと元 LXD のコントリビューターの両方からかなりの関心を集めています。
+Incus を使用すると、インスタンスをシンプルなコマンドラインツールを使ったり、直接 REST API を使ったり、サードパーティーのツールやインテグレーションを通したりして、インスタンスを管理できます。Incus は、ローカルとリモートのアクセス両方に単一の REST API を実装しています。
 
 <!--
-After some discussion with Aleksa and a fair bit of encouragement from our community, we have made the decision to take Incus under the umbrella of Linux Containers and will commit to it the infrastructure which was previously made available to LXD.
+The Incus project was created by Aleksa Sarai as a community driven fork of Canonical's LXD. See here for the [announcement](/incus/announcement/).
 -->
-Aleksa との話し合いと、コミュニティからの励ましで、私たちは Incus を Linux Containers の傘下に置くことを決定し、以前 LXD で利用できたインフラを Incus に委ねることにしました。
+Incus プロジェクトは、Canonical の LXD のコミュニティー主導のフォークとして Aleksa Sarai によって作られました。[アナウンス](/ja/incus/announcement/)をご覧ください。
+
+## はじめてみよう <!-- Get started -->
+<!--
+To get a better idea of what Incus is and what it does, you can [try it online](/incus/try-it/)!
+-->
+Incus が何で、Incus が何をするのかについてをよく理解するために、[オンラインで試す](/ja/incus/try-it/)ことができます！
 
 <!--
-The goal of Incus is to provide a fully community led alternative to Canonical’s LXD as well as providing an opportunity to correct some mistakes that were made during LXD’s development which couldn’t be corrected without breaking backward compatibility.
+Then if you want to run it locally, take a look at our [getting started guide](/incus/docs/main/tutorial/first_steps/).
 -->
-Incus の目標は、Canonical の LXD に代わる、完全にコミュニティ主導の代替手段を提供することです。そして、LXD 開発中に発生した、下位互換性を壊さなければ修正できなかったいくつかのミスを修正する機会を提供します。
+ローカルで Incus を実行したい場合は、[スタートガイド](https://incus-ja.readthedocs.io/ja/latest/tutorial/first_steps/)をご覧ください。
+
+## コンテナと仮想マシン <!-- Containers and virtual machines -->
+<!--
+Incus provides support for system containers and virtual machines.
+-->
+Incus はシステムコンテナと仮想マシンへのサポートを提供します。
 
 <!--
-In addition to Aleksa, the initial set of maintainers for Incus will include [Christian Brauner](https://github.com/brauner), [Serge Hallyn](https://github.com/hallyn), [Stéphane Graber](https://github.com/stgraber) and [Tycho Andersen](https://github.com/tych0), effectively including the entire team that once created LXD.
+When running a system container, Incus simulates a virtual version of a full operating system. To do this, it uses the functionality provided by the kernel running on the host system.
 -->
-Aleksa に加えて、Incus の初期メンテナーには [Christian Brauner](https://github.com/brauner)、[Serge Hallyn](https://github.com/hallyn)、[Stéphane Graber](https://github.com/stgraber)、[Tycho Andersen](https://github.com/tych0) が含まれ、事実上、かつて LXD を作成したチーム全体が含まれます。
+システムコンテナを実行している場合、Incus は完全なオペレーティングシステムの仮想バージョンをシミュレートします。このため、Incus はホストシステム上で実行されているカーネルが提供する機能を使います。
 
 <!--
-There is no clearly defined roadmap at this point. Incus will be tracking changes happening in LXD and will likely in time diverge from it as different decisions get made.
-A stable release of Incus is likely at least a couple of months away so existing LXD users shouldn’t rush to find a way to migrate quite yet!
+When running a virtual machine, Incus uses the hardware of the host system, but the kernel is provided by the virtual machine. Therefore, virtual machines can be used to run, for example, a different operating system.
 -->
-現時点では明確に決定したロードマップはありません。Incus は LXD で起こっている変化を追跡しています。そして、異なる決定が行われ、ゆくゆくは LXD からは分岐するでしょう。
-Incus の stable リリースは、少なくとも 2 〜 3 ヶ月先になる可能性が高いため、既存の LXD ユーザーは移行方法を見つけることを急ぐ必要はありません。
+仮想マシンを実行する場合、Incus はホストシステムのハードウェアを使いますが、カーネルは仮想マシンが提供します。したがって、仮想マシンを使用して、たとえば、別のオペレーティングシステムを実行できます。
 
 <!--
-You can find more details or ask us your questions here:
+You can learn more about the differences between application containers, system containers and virtual machines in [our documentation](/incus/docs/main/explanation/containers_and_vms/).
 -->
-次で詳細を確認したり、質問したりできます。
+アプリケーションコンテナとシステムコンテナ、仮想マシンとの違いについては、[私たちのドキュメント](https://incus-ja.readthedocs.io/ja/latest/explanation/containers_and_vms/)で学べます。
 
-- Github: [https://github.com/lxc/incus](https://github.com/lxc/incus)
-- フォーラム <!-- Forum -->: [https://discuss.linuxcontainers.org](https://discuss.linuxcontainers.org)
-
-Sincerely,
+# 機能 <!-- Features -->
+<!--
+Some of the biggest features of Incus are:
+-->
+Incusの最大の特徴は次の通りです:
 
 <!--
-Aleksa Sarai and the Linux Containers team:
+Core API
+: * [Secure by design](/incus/docs/main/security) (through unprivileged containers, resource restrictions, authentication, ...)
+  * [Intuitive](/incus/docs/main/rest-api) (with a simple, clear API and crisp command line experience)
+  * [Scalable](/incus/docs/main/clustering) (from containers on your laptop to clusters of thousands of compute nodes)
+  * [Event based](/incus/docs/main/events) (providing logging, operation, and lifecycle events)
+  * [Remote usage](/incus/docs/main/remotes) (same API used for local and network access)
+  * [Project support](/incus/docs/main/projects) (as a way to compartmentalize sets of images and profiles)
 -->
-Aleksa Sarai と Linux Containers チーム
+コア API
+: * [安全な設計](/incus/docs/main/security) （非特権コンテナ、リソース制限、認証などを通して）
+  * [直感的](/incus/docs/main/rest-api) （シンプルで明確な API、わかりやすいコマンドラインの使い心地）
+  * [スケーラブル](/incus/docs/main/clustering) （ラップトップから数千のコンピュートノードのクラスターまで）
+  * [イベントベース](/incus/docs/main/events) （ロギング、操作、ライフサイクルイベントの提供）
+  * [リモートからの使用](/incus/docs/main/remotes) （ローカルとネットワークアクセスで同じ API）
+  * [プロジェクト機能のサポート](/incus/docs/main/projects) （イメージとプロファイルの組を区分けする方法として）
 
-&nbsp;&nbsp;  Christian Brauner
-&nbsp;&nbsp;  Serge Hallyn
-&nbsp;&nbsp;  Stéphane Graber
+<!--
+Instances and profiles
+: * [Image based](https://images.linuxcontainers.org) (with images for a wide variety of Linux distributions, published daily)
+  * [Instances](/incus/docs/main/instances) (containers and virtual-machines)
+  * [Configurable through profiles](/incus/docs/main/profiles) (applicable to both containers and virtual machines)
+-->
+インスタンスとプロファイル
+: * [イメージベース](https://images.linuxcontainers.org) （さまざまな Linux ディストリビューションのイメージを毎日公開）
+  * [インスタンス](/incus/docs/main/instances) （コンテナと仮想マシン）
+  * [プロファイルを通した設定](/incus/docs/main/profiles) （コンテナと仮想マシンの両方に適用可能）
+
+<!--
+Backup and export
+: * [Backup and recovery](/incus/docs/main/backup) (for all objects managed by Incus)
+  * [Snapshots](/incus/docs/main/reference/instance_options/#snapshot-scheduling-and-configuration) (to save and restore the state of an instance)
+  * [Container and image transfer](/incus/docs/main/image-handling) (between different hosts, using images)
+  * [Instance migration](/incus/docs/main/migration) (importing existing instances or transferring them between servers)
+-->
+バックアップとエクスポート
+: * [バックアップとリカバリー](/incus/docs/main/backup) （Incus が管理するすべてのオブジェクト）
+  * [スナップショット](/incus/docs/main/reference/instance_options/#snapshot-scheduling-and-configuration) （インスタンスの状態を保存し、復元するために）
+  * [コンテナとイメージの転送](/incus/docs/main/image-handling) （イメージを使用し、異なるホスト間で）
+  * [インスタンスのマイグレーション](/incus/docs/main/migration) （既存のインスタンスのインポート、サーバー間でのインスタンスの転送）
+
+<!--
+Configurability
+: * [Multiple storage backends](/incus/docs/main/explanation/storage/) (with configurable storage pools and storage volumes)
+  * [Network management](/incus/docs/main/explanation/networks/) (including bridge creation and configuration, cross-host tunnels, ...)
+  * [Advanced resource control](/incus/docs/main/reference/instance_options/#resource-limits) (CPU, memory, network I/O, block I/O, disk usage and kernel resources)
+  * [Device passthrough](/incus/docs/main/reference/devices/) (USB, GPU, unix character and block devices, NICs, disks and paths)
+-->
+設定可能であること
+: * [複数のストレージバックエンド](/incus/docs/main/explanation/storage/) （設定可能なストレージプールとストレージボリューム）
+  * [ネットワークの管理](/incus/docs/main/explanation/networks/) （ブリッジの作成、設定、ホスト間のトンネルなど）
+  * [高度なリソース制御](/incus/docs/main/reference/instance_options/#resource-limits) （CPU、メモリー、ネットワーク I/O、ブロック I/O、ディスク使用率、カーネルリソース）
+  * [デバイスパススルー](/incus/docs/main/reference/devices/) （USB、GPU、UNIX キャラクターデバイス・ブロックデバイス、NIC、ディスク、パス）
+
+
+# 可用性 <!-- Availability -->
+<!--
+Incus works on any recent Linux distribution.
+-->
+Incus は最近の Linux ディストリビューションで動きます。
+
+<!--
+Incus upstream doesn't directly provide packages, but packages are available in a number of distributions or can be found in 3rd party repositories.
+-->
+Incus の開発元は、直接パッケージを提供しません。しかし、パッケージは多くのディストリビューションで利用可能であり、またサードパーティーのリポジトリーから入手できます。
+
+<!--
+For Debian and Ubuntu users, we recommend the [packages provided by Zabbly](https://github.com/zabbly/incus).
+-->
+Debian と Ubuntu のユーザーは、[Zabbly が提供するパッケージ](https://github.com/zabbly/incus)をおすすめします。
+
+<!--
+In addition, the Incus client is available for Windows and macOS. You can use the client to connect to an Incus server running on a Linux machine.
+-->
+さらに、Incus クライアントは Windows と macOS で利用できます。クライアントを使い、Linux マシン上で動く Incus サーバーに接続できます。
+
+<!--
+More details can be found in our [installation guide](/incus/docs/main/reference/devices/).
+-->
+詳細は、[インストールガイド](https://incus-ja.readthedocs.io/ja/latest/installing/)をご覧ください。
+
+# サポート <!-- Support -->
+<!--
+Incus has two kind of releases:
+-->
+Incus には 2 種類のリリースがあります:
+
+ * LTS リリース <!-- LTS releases -->
+ * フィーチャーリリース <!-- Feature releases -->
+
+<!--
+At present, no LTS releases have been released.
+-->
+現時点では、LTS リリースはリリースされていません。
+
+<!--
+Feature releases are pushed out every month or so and contain new features as well as bugfixes. The normal support length for those releases is of about a month, or until the next release comes out. Some Linux distributions might offer longer support for particular feature releases that they decided to ship.
+-->
+フィーチャーリリースは、毎月リリースされ、新機能とバグ修正が含まれています。フィーチャーリリースに対する通常のサポート期間は約 1 ヶ月、もしくは次のリリースがリリースされるまでです。一部のディストリビューションでは、出荷を決定した特定のフィーチャーリリースに対して、より長いサポートが提供される場合もあります。
+
+<!--
+Commercial support for Incus can be obtained from [Zabbly](https://zabbly.com/incus).
+-->
+Incus の商用サポートは [Zabbly](https://zabbly.com/incus) から得られます。
+
+# 言語、ライセンス、貢献 <!-- Language, licensing and contributions -->
+<!--
+Incus is written in Go. It is free software and developed under the [Apache 2 license](https://www.apache.org/licenses/LICENSE-2.0).
+-->
+Incus は Go で書かれています。フリーソフトウェアであり、[Apache 2 ライセンス](https://www.apache.org/licenses/LICENSE-2.0)のもとで開発されています。
+
+<!--
+The Incus source code is available on [GitHub](https://github.com/lxc/incus).
+-->
+Incus のソースコードは [GitHub](https://github.com/lxc/incus) 上にあります。
+
+<!--
+There are no CLA or similar legal agreements required to contribute to Incus. However, we require commits be signed-off (following the DCO - Developer Certificate of Ownership). See the [Contribution guidelines](/incus/docs/main/contributing/) for more information.
+-->
+Incus に貢献するための CLA や、同様の法的同意はありません。ただし、コミットは Signed-off（the DCO - Developer Certificate of Ownership に従う）する必要があります。
+
+[<img src="/static/img/GitHub_Logo.png" alt="GitHub logo" style="display:block;float:none;margin-left:auto;margin-right:auto;padding:1em 0;max-height:120px"/>](https://github.com/lxc/incus)
+******

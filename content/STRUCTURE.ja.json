@@ -16,6 +16,12 @@
      "generator": "markdown",
      "meta": {"input": "incus/introduction.ja.md"}},
 
+    {"path": "/incus/announcement/",
+     "title": "Incus - アナウンス",
+     "menu": ["Incus", "アナウンス"],
+     "generator": "markdown",
+     "meta": {"input": "incus/announcement.ja.md"}},
+
     {"path": "/incus/try-it/",
      "title": "Incus - オンラインでの試用",
      "menu": ["Incus", "オンラインでの試用"],
@@ -25,7 +31,7 @@
     {"path": "/incus/docs/",
      "menu": ["Incus", "ドキュメント"],
      "generator": "link",
-     "meta": {"url": "https://linuxcontainers.org/incus/docs/main/"}},
+     "meta": {"url": "https://incus-ja.readthedocs.io/ja/latest/"}},
 
     {"path": "/incus/downloads/",
      "title": "Incus - ダウンロード",
