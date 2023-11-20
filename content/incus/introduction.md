@@ -61,7 +61,7 @@ For Debian and Ubuntu users, we recommend the [packages provided by Zabbly](http
 
 In addition, the Incus client is available for Windows and macOS. You can use the client to connect to an Incus server running on a Linux machine.
 
-More details can be found in our [installation guide](/incus/docs/main/reference/devices/).
+More details can be found in our [installation guide](/incus/docs/main/installing/).
 
 # Support
 Incus has two kind of releases:
