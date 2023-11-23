@@ -217,6 +217,8 @@ $(document).ready(function() {
                 $('#tryit_instance_username').text(data.username);
                 $('#tryit_instance_password').text(data.password);
 
+                $('.tryit_ui_url').attr("href", "https://" + data.id + "." + tryit_server);
+
                 initializeClock('tryit_console_panel', data.expiry);
 
                 $('#tryit_status_panel').css("display", "none");
@@ -312,6 +314,9 @@ $(document).ready(function() {
             $('#tryit_instance_fqdn').text(data.fqdn);
             $('#tryit_instance_username').text(data.username);
             $('#tryit_instance_password').text(data.password);
+
+            $('.tryit_ui_url').attr("href", "https://" + data.id + "." + tryit_server);
+
             initializeClock('tryit_console_panel', data.expiry);
 
             $('#tryit_status_panel').css("display", "none");
