@@ -414,7 +414,7 @@ content: |-
   Windows ユーザー向けのパッケージが Chocolatey 経由で間もなく利用できるようになる予定です。
 
   <!--
-  Until then, binaries can be found here: https://github.com/lxc/incus/releases/tag/incus-0.2
+  Until then, binaries can be found here: https://github.com/lxc/incus/releases/tag/v0.2.0
   -->
   それまでは、バイナリーがこちらから取得できます: https://github.com/lxc/incus/releases/tag/v0.2.0
 
