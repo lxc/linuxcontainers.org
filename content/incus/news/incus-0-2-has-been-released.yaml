@@ -352,7 +352,7 @@ content: |-
   ## Chocolatey package for the Incus client
   The client tool will soon be available through Chocolatey for Windows users.
 
-  Until then, binaries can be found here: https://github.com/lxc/incus/releases/tag/incus-0.2
+  Until then, binaries can be found here: https://github.com/lxc/incus/releases/tag/v0.2.0
 
   # Support
   At this early stage, each Incus release will only be supported up until the next release comes out. This will change in a few months as we are planning an LTS release to coincide with the LTS releases of LXC and LXCFS.
