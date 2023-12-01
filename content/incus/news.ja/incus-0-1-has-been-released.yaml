@@ -183,7 +183,7 @@ content: |-
   In general, we'll attempt to keep supporting building on the current and previous Go version.
   -->
   ソースから Incus をビルドする際の、必要な Go の最小バージョンは 1.20 になりました。
-  一般論としては、我々は、最新と以前の Go バージョンでのビルドをサポートし続けるように努めます。
+  一般論としては、我々は、最新とひとつ前の Go バージョンでのビルドをサポートし続けるように努めます。
 
   ## 機能の削除 <!-- Feature removal -->
   <!--
