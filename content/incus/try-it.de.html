@@ -1,0 +1,485 @@
+<script src="/static/js/jquery.min.js" type="text/javascript"></script>
+<script src="/static/js/xterm.js" type="text/javascript"></script>
+<script src="/static/js/xterm-addon-attach.js" type="text/javascript"></script>
+<script src="/static/js/xterm-addon-fit.js" type="text/javascript"></script>
+<script src="/static/js/bootstrap-rating.min.js" type="text/javascript"></script>
+<script src="/static/js/tryit.js" type="text/javascript"></script>
+
+<link href="/static/css/tryit.css" rel="stylesheet" />
+<link href="/static/css/xterm.css" rel="stylesheet" />
+
+<div class="p-strip is-shallow" id="tryit-instructions">
+  <div class="row">
+    <div class="col-12">
+      <noscript>
+        <div class="p-notification--negative">
+          <div class="p-card__content">
+            <span class="p-notification__status">JavaScript erforderlich: </span>
+            <p>Der Incus-Demo-Service-Client basiert vollständig auf JavaScript.</p>
+            <p>Es scheint, dass Ihr Webbrowser JavaScript nicht unterstützt oder dass Sie oder eine Browser-Erweiterung
+              JavaScript für diese Website deaktiviert haben.</p>
+            <p>Um diesen Service zu nutzen, müssen Sie die JavaScript-Unterstützung aktivieren und die Seite
+              aktualisieren.</p>
+          </div>
+        </div>
+      </noscript>
+
+      <div class="p-card" id="tryit_status_panel" style="display:none">
+        <div class="p-card__content">
+          <h2 class="p-heading--4">Serverstatus</h2>
+          <span class="p-notification__body" id="tryit_online_message" style="display:none">Sie sind verbunden über:
+            <span id="tryit_protocol"></span> (<span id="tryit_address"></span>)<br />Der Demo-Server läuft derzeit mit
+            <span id="tryit_count"></span> Benutzersitzungen von insgesamt <span id="tryit_max"></span>.</span>
+
+          <span class="p-notification__body" id="tryit_maintenance_message" style="display:none">Der Demo-Service ist
+            derzeit aufgrund von Wartungsarbeiten nicht verfügbar und sollte in wenigen Minuten wieder online
+            sein.</span>
+
+          <span class="p-notification__body" id="tryit_unreachable_message" style="display:none">Ihr Browser konnte den
+            Demo-Server nicht erreichen.<br />Dies liegt entweder (am wahrscheinlichsten) an einer Firewall- oder
+            Proxy-Problematik auf Ihrer Seite oder an einem Netzwerk-, Strom- oder anderen katastrophalen
+            Serverausfall.</span>
+        </div>
+      </div>
+
+      <div class="p-card" id="tryit_terms_panel" style="display:none">
+        <div class="p-card__content">
+          <h2 class="p-heading--4">Nutzungsbedingungen</h2>
+          <span id="tryit_terms"></span>
+        </div>
+      </div>
+
+      <div class="p-card" id="tryit_start_panel" style="display:none">
+        <div class="p-card__content">
+          <h2 class="p-heading--4">Start</h2>
+          <div id="tryit_accept_terms">
+            <input type="checkbox" value="" id="tryit_terms_checkbox" />
+            <label for="tryit_terms_checkbox">
+              Ich habe die Nutzungsbedingungen oben gelesen und akzeptiere sie.
+            </label>
+            <button type="submit" id="tryit_accept" class="p-button--positive" disabled="">Start</button>
+          </div>
+          <div id="tryit_progress" style="display:none;width:100%;text-align:center;">
+            <p class="p-heading--4"><span id="tryit_start_status">Neue Instanz erstellen</span> <i
+                class="p-icon--spinner u-animation--spin"></i></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="p-card" id="tryit_examples_panel" style="display:none">
+        <div class="p-card__content">
+          <span class="p-notification__status js-collapsable">Schritt-für-Schritt-Anleitung</span>
+
+          <ol id="tryit_navigation" style="display:none">
+            <li name="introduction">Einführung</li>
+            <li name="first-instances">Ihre ersten Instanzen</li>
+            <li name="inspect-instances">Instanzen inspizieren</li>
+            <li name="stop-delete">Instanzen stoppen und löschen</li>
+            <li name="instance-configuration">Instanzkonfiguration</li>
+            <li name="interact">Mit einer Instanz interagieren</li>
+            <li name="instance-files">Auf Dateien der Instanz zugreifen</li>
+            <li name="snapshots">Snapshots</li>
+            <li name="conclusion">Fazit</li>
+          </ol>
+
+          <div class="tab-content" id="introduction">
+            <div class="tryit_progress_bar"></div>
+            <h3></h3>
+            <p>Sie befinden sich nun in einer virtuellen Maschine von Incus, die auf einem entfernten Incus-Cluster
+              läuft.<br />
+              Diese virtuelle Maschine hat Incus bereits für Sie vorinstalliert und vorkonfiguriert.</p>
+            <p>Um loszulegen, folgen Sie diesem schrittweisen Tutorial, das Sie durch die wichtigsten Funktionen von
+              Incus führen wird.<br />
+              Oder erkunden Sie Incus einfach durch die Manpage und die Option <code>--help</code>!</p>
+            <div class="admonition note">
+              <p class="admonition-title">Tipp</p>
+              <p>Klicken Sie auf eine der Befehle im Tutorial, um ihn in das Terminal zu kopieren.</p>
+            </div>
+            <nav aria-label="...">
+              <ul class="p-inline-list u-align--center u-no-margin--bottom">
+                <li class="p-inline-list__item">
+                  <a class="p-button is-disabled u-no-margin--bottom" aria-disabled="true">Zurück</a>
+                </li>
+                <li class="p-inline-list__item">
+                  <a class="p-button js-tab-button tabNext u-no-margin--bottom tryit_goto">Weiter</a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+
+          <div class="tab-content" id="first-instances">
+            <div class="tryit_progress_bar"></div>
+            <h3></h3>
+            <p>Incus basiert auf Images und kann Images von verschiedenen Image-Servern laden. In diesem Tutorial
+              verwenden wir den <a href="https://images.linuxcontainers.org">images:</a>-Server.</p>
+            <p>Dieser Incus-Server ist derzeit leer. Sie können dies mit dem Befehl überprüfen:</p>
+            <pre>incus list</pre>
+            <p>Beginnen Sie, indem Sie einige Instanzen starten.
+            <ol>
+              <li>Starten Sie einen Container namens "first" mit dem Ubuntu 20.04-Image:
+                <pre>incus launch images:ubuntu/20.04 first</pre>
+                Beachten Sie, dass das Starten dieses Containers einige Sekunden dauert, da das Image zuerst
+                heruntergeladen und entpackt werden muss.
+              </li>
+              <li>Starten Sie einen Container namens "second" mit demselben Image:
+                <pre>incus launch images:ubuntu/20.04 second</pre>
+                Das Starten dieses Containers geht schneller als das Starten des ersten, da das Image bereits verfügbar
+                ist.
+              </li>
+              <li>Kopieren Sie den ersten Container in einen Container namens "third":
+                <pre>incus copy first third</pre>
+              </li>
+              <li>Starten Sie einen Container namens "alpine" mit dem Alpine Edge-Image:
+                <pre>incus launch images:alpine/edge alpine</pre>
+              </li>
+              <li>Starten Sie eine virtuelle Maschine namens "debian" mit dem Debian 12-Image:
+                <pre>incus launch images:debian/12 debian --vm</pre>
+              </li>
+            </ol>
+            </p>
+            <nav aria-label="...">
+              <ul class="p-inline-list u-align--center u-no-margin--bottom">
+                <li class="p-inline-list__item">
+                  <a class="p-button js-tab-button tabPrevious u-no-margin--bottom tryit_goto">Zurück</a>
+                </li>
+                <li class="p-inline-list__item">
+                  <a class="p-button js-tab-button tabNext u-no-margin--bottom tryit_goto">Weiter</a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+
+          <div class="tab-content" id="inspect-instances">
+            <div class="tryit_progress_bar"></div>
+            <h3></h3>
+            <p>Überprüfen Sie die Liste der gestarteten Instanzen:</p>
+            <pre>incus list</pre>
+            <p>Sie werden feststellen, dass alle außer der dritten Instanz laufen. Dies liegt daran, dass Sie die dritte
+              Instanz durch Kopieren der ersten erstellt haben, sie jedoch nicht gestartet haben.</p>
+            <p>Sie können die dritte Instanz mit dem folgenden Befehl starten:</p>
+            <pre>incus start third</pre>
+            <p>Sie können weitere Informationen zu jeder Instanz abfragen mit:</p>
+            <pre>incus info first
+    incus info second
+    incus info third
+    incus info alpine
+    incus info debian</pre>
+            <nav aria-label="...">
+              <ul class="p-inline-list u-align--center u-no-margin--bottom">
+                <li class="p-inline-list__item">
+                  <a class="p-button js-tab-button tabPrevious u-no-margin--bottom tryit_goto">Zurück</a>
+                </li>
+                <li class="p-inline-list__item">
+                  <a class="p-button js-tab-button tabNext u-no-margin--bottom tryit_goto">Weiter</a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+
+          <div class="tab-content" id="stop-delete">
+            <div class="tryit_progress_bar"></div>
+            <h3></h3>
+            <p>Wir benötigen nicht alle diese Instanzen für den Rest des Tutorials. Lassen Sie uns daher einige von
+              ihnen aufräumen.
+            <ol>
+              <li>Stoppen Sie die zweite Instanz:
+                <pre>incus stop second</pre>
+              </li>
+              <li>Löschen Sie die zweite Instanz:
+                <pre>incus delete second</pre>
+              </li>
+              <li>Löschen Sie die dritte Instanz:
+                <pre>incus delete third</pre>
+                Da diese Instanz läuft, erhalten Sie eine Fehlermeldung, dass Sie sie zuerst stoppen müssen. Alternativ
+                können Sie sie erzwingen löschen:
+                <pre>incus delete third --force</pre>
+              </li>
+            </ol>
+            </p>
+            <nav aria-label="...">
+              <ul class="p-inline-list u-align--center u-no-margin--bottom">
+                <li class="p-inline-list__item">
+                  <a class="p-button js-tab-button tabPrevious u-no-margin--bottom tryit_goto">Zurück</a>
+                </li>
+                <li class="p-inline-list__item">
+                  <a class="p-button js-tab-button tabNext u-no-margin--bottom tryit_goto">Weiter</a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+
+          <div class="tab-content" id="instance-configuration">
+            <div class="tryit_progress_bar"></div>
+            <h3></h3>
+            <p>Es gibt verschiedene Grenzen und Konfigurationsoptionen, die Sie für Ihre Instanzen festlegen können.
+              Siehe <a href="https://linuxcontainers.org/incus/docs/main/instances">Instanzkonfiguration</a> für einen
+              Überblick.</p>
+            <p>Erstellen wir eine weitere Instanz mit einigen Ressourcengrenzen.
+            <ol>
+              <li>Starten Sie einen Container und begrenzen Sie ihn auf eine vCPU und 192 MiB RAM:
+                <pre>incus launch images:ubuntu/20.04 limited -c limits.cpu=1 -c limits.memory=192MiB</pre>
+              </li>
+              <li>Überprüfen Sie die aktuelle Konfiguration und vergleichen Sie sie mit der Konfiguration der ersten
+                (unbegrenzten) Instanz:
+                <pre>incus config show limited
+            incus config show first</pre>
+              </li>
+              <li>Überprüfen Sie die Menge an freiem und genutztem Speicher im Elternsystem und in den beiden Instanzen:
+                <pre>free -m
+            incus exec first -- free -m
+            incus exec limited -- free -m</pre>
+                Beachten Sie, dass die Gesamtmenge an Speicher für das Elternsystem und die erste Instanz identisch ist,
+                da der Container standardmäßig die Ressourcen von seiner übergeordneten Umgebung erbt. Die begrenzte
+                Instanz hingegen hat nur 192 MiB zur Verfügung.
+              </li>
+              <li>Überprüfen Sie die Anzahl der verfügbaren CPUs im Elternsystem und in den beiden Instanzen:
+                <pre>nproc
+            incus exec first -- nproc
+            incus exec limited -- nproc</pre>
+                Auch hier ist zu beachten, dass die Anzahl für das Elternsystem und die erste Instanz identisch ist,
+                aber für die begrenzte Instanz reduziert wurde.
+              </li>
+            </ol>
+            </p>
+            <p>Sie können die Konfiguration auch aktualisieren, während Ihre Instanz läuft.
+            <ol>
+              <li>Konfigurieren Sie eine Speicherbegrenzung für Ihre Instanz:
+                <pre>incus config set limited limits.memory=128MiB</pre>
+              </li>
+              <li>Überprüfen Sie, ob die Konfiguration angewendet wurde:
+                <pre>incus config show limited</pre>
+              </li>
+              <li>Überprüfen Sie die Menge an Speicher, die der Instanz zur Verfügung steht:
+                <pre>incus exec limited -- free -m</pre>
+                Beachten Sie, dass sich die Zahl geändert hat.
+              </li>
+            </ol>
+            </p>
+            <nav aria-label="...">
+              <ul class="p-inline-list u-align--center u-no-margin--bottom">
+                <li class="p-inline-list__item">
+                  <a class="p-button js-tab-button tabPrevious u-no-margin--bottom tryit_goto">Zurück</a>
+                </li>
+                <li class="p-inline-list__item">
+                  <a class="p-button js-tab-button tabNext u-no-margin--bottom tryit_goto">Weiter</a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+
+          <div class="tab-content" id="interact">
+            <div class="tryit_progress_bar"></div>
+            <h3></h3>
+            <p>Interagieren wir mit Ihren Instanzen.
+            <ol>
+              <li>Starten Sie eine interaktive Shell in Ihrer Instanz:
+                <pre>incus exec first -- bash</pre>
+              </li>
+              <li>Geben Sie einige Befehle ein, zum Beispiel, um Informationen über das Betriebssystem anzuzeigen:
+                <pre>cat /etc/*release</pre>
+              </li>
+              <li>Verlassen Sie die interaktive Shell:
+                <pre>exit</pre>
+              </li>
+              <li>Wiederholen Sie die Schritte für Ihre Alpine-Instanz:
+                <pre>incus exec alpine -- ash
+        cat /etc/*release
+        exit</pre>
+              </li>
+              <li>Statt sich auf der Instanz anzumelden und dort Befehle auszuführen, können Sie Befehle direkt vom Host
+                ausführen. Zum Beispiel können Sie ein Kommandozeilen-Tool auf der Instanz installieren und ausführen:
+                <pre>incus exec first -- apt-get update
+        incus exec first -- apt-get install sl -y
+        incus exec first -- /usr/games/sl</pre>
+              </li>
+            </ol>
+            </p>
+            <nav aria-label="...">
+              <ul class="p-inline-list u-align--center u-no-margin--bottom">
+                <li class="p-inline-list__item">
+                  <a class="p-button js-tab-button tabPrevious u-no-margin--bottom tryit_goto">Zurück</a>
+                </li>
+                <li class="p-inline-list__item">
+                  <a class="p-button js-tab-button tabNext u-no-margin--bottom tryit_goto">Weiter</a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+
+
+          <div class="tab-content" id="instance-files">
+            <div class="tryit_progress_bar"></div>
+            <h3></h3>
+            <p>Sie können auf die Dateien von Ihrer Instanz aus zugreifen und mit ihnen interagieren.
+            <ol>
+              <li>Ziehen Sie eine Datei von der Instanz:
+                <pre>incus file pull first/etc/hosts .</pre>
+              </li>
+              <li>Fügen Sie einen Eintrag zur Datei hinzu:
+                <pre>echo "1.2.3.4 my-example" &gt;&gt; hosts</pre>
+              </li>
+              <li>Schieben Sie die Datei zurück zur Instanz:
+                <pre>incus file push hosts first/etc/hosts</pre>
+              </li>
+              <li>Verwenden Sie denselben Mechanismus, um auf Protokolldateien zuzugreifen:
+                <pre>incus file pull first/var/log/syslog - | less
+      q</pre>
+              </li>
+            </ol>
+            </p>
+            <nav aria-label="...">
+              <ul class="p-inline-list u-align--center u-no-margin--bottom">
+                <li class="p-inline-list__item">
+                  <a class="p-button js-tab-button tabPrevious u-no-margin--bottom tryit_goto">Zurück</a>
+                </li>
+                <li class="p-inline-list__item">
+                  <a class="p-button js-tab-button tabNext u-no-margin--bottom tryit_goto">Weiter</a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+
+          <div class="tab-content" id="snapshots">
+            <div class="tryit_progress_bar"></div>
+            <h3></h3>
+            <p>Incus unterstützt das Erstellen und Wiederherstellen von Instanz-Snapshots.
+            <ol>
+              <li>Erstellen Sie einen Snapshot namens "clean":
+                <pre>incus snapshot create first clean</pre>
+              </li>
+              <li>Bestätigen Sie, dass der Snapshot erstellt wurde:
+                <pre>incus snapshot list first</pre>
+              </li>
+              <li>Unterbrechen Sie die Instanz:
+                <pre>incus exec first -- rm -Rf /etc /usr</pre>
+              </li>
+              <li>Bestätigen Sie die Unterbrechung:
+                <pre>incus exec first -- bash</pre>
+                Beachten Sie, dass Sie keine Shell erhalten, da Sie den Befehl <code>bash</code> gelöscht haben.
+              </li>
+              <li>Stellen Sie die Instanz in den zuvor gesicherten Zustand wieder her:
+                <pre>incus snapshot restore first clean</pre>
+              </li>
+              <li>Bestätigen Sie, dass alles wieder normal ist:
+                <pre>incus exec first -- bash
+    exit</pre>
+              </li>
+              <li>Löschen Sie den Snapshot:
+                <pre>incus snapshot delete first clean</pre>
+              </li>
+            </ol>
+            </p>
+            <nav aria-label="...">
+              <ul class="p-inline-list u-align--center u-no-margin--bottom">
+                <li class="p-inline-list__item">
+                  <a class="p-button js-tab-button tabPrevious u-no-margin--bottom tryit_goto">Zurück</a>
+                </li>
+                <li class="p-inline-list__item">
+                  <a class="p-button js-tab-button tabNext u-no-margin--bottom tryit_goto">Weiter</a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+
+          <div class="tab-content" id="conclusion">
+            <div class="tryit_progress_bar"></div>
+            <h3></h3>
+            <p>Wir hoffen, dass dies eine gute Einführung in Incus, seine Fähigkeiten und die einfache Anwendung für Sie
+              war.</p>
+            <p>Sie können gerne den Demo-Service so lange verwenden, wie Sie möchten, um Incus auszuprobieren und mit
+              den neuesten Funktionen zu spielen.</p>
+            <p>Viel Spaß!</p>
+            <nav aria-label="...">
+              <ul class="p-inline-list u-align--center u-no-margin--bottom">
+                <li class="p-inline-list__item">
+                  <a class="p-button js-tab-button tabPrevious u-no-margin--bottom tryit_goto">Zurück</a>
+                </li>
+                <li class="p-inline-list__item">
+                  <a class="p-button is-disabled u-no-margin--bottom" aria-disabled="true">Weiter</a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="p-card" id="tryit_feedback" style="display:none">
+        <div class="p-card__content">
+          <span class="p-notification__status js-collapsable">Feedback</span>
+          <div class="panel-body">
+            <form class="p-form" id="tryit_feedback_submit">
+              <div class="p-form__group">
+                <label for="feedbackRating">Wie fanden sie Incus?</label>
+                <input type="hidden" class="rating rating-tooltip" id="feedbackRating" />
+              </div>
+              <div class="p-form__group">
+                <label for="feedbackEmail">E-Mail-Adresse (optional)</label>
+                <input type="email" class="form-control" id="feedbackEmail" placeholder="foo@bar.com" />
+                <small id="feedbackEmailHelp" class="form-text text-muted">Füllen Sie dies aus, um uns zu ermöglichen,
+                  Sie bezüglich Ihres Feedbacks zu kontaktieren.</small>
+                <div class="form-check">
+                  <label class="form-check-label">
+                    <input type="checkbox" class="form-check-input" id="feedbackEmailUse" />
+                    <label for="feedbackEmailUse">Ich bin daran interessiert, mehr über Incus zu erfahren</label>
+                  </label>
+                </div>
+              </div>
+              <div class="p-form__group">
+                <label for="feedbackText">Feedback (optional)</label>
+                <textarea class="form-control" id="feedbackText" rows="5"></textarea>
+              </div>
+              <button type="submit" class="p-button--positive">Feedback senden</button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <div class="p-notification--negative" id="tryit_error_panel" style="display:none">
+        <div class="p-notification__response">
+          <span class="p-notification__status" id="tryit_error_panel_create" style="display:none">Es konnte keine neue
+            Instanz erstellt werden</span>
+          <span class="p-notification__status" id="tryit_error_panel_access" style="display:none">Es konnte nicht auf
+            die Instanz zugegriffen werden</span>
+          <div class="panel-body" id="tryit_error_full" style="display:none">
+            <p>Der Server ist derzeit voll. Bitte versuchen Sie es in ein paar Minuten erneut.</p>
+            <p><button class="p-button tryit_goback" type="button">Neustart</button></p>
+          </div>
+          <div class="panel-body" id="tryit_error_quota" style="display:none">
+            <p>Sie haben die maximale Anzahl gleichzeitiger Sitzungen erreicht. Bitte warten Sie, bis einige abgelaufen
+              sind, bevor Sie weitere starten.</p>
+            <p><button class="p-button tryit_goback" type="button">Neustart</button></p>
+          </div>
+          <div class="panel-body" id="tryit_error_banned" style="display:none">
+            <p>Sie wurden von diesem Dienst gesperrt, weil Sie die Nutzungsbedingungen nicht eingehalten haben.</p>
+          </div>
+          <div class="panel-body" id="tryit_error_unknown" style="display:none">
+            <p>Ein unbekannter Fehler ist aufgetreten. Bitte versuchen Sie es in ein paar Minuten erneut.</p>
+            <p><button class="p-button tryit_goback" type="button">Neustart</button></p>
+          </div>
+          <div class="panel-body" id="tryit_error_missing" style="display:none">
+            <p>Die Instanz, zu der Sie eine Verbindung herstellen möchten, existiert nicht mehr.</p>
+            <p><button class="p-button tryit_goback" type="button">Neustart</button></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="tryit_console_row" style="display:none">
+  <div class="row">
+    <hr />
+    <div class="p-card" id="tryit_console_panel">
+      <div class="p-card__content">
+        <h2 class="p-heading--4">Terminal (Noch <span class="minutes"></span> Minuten und <span class="seconds"></span>
+          Sekunden
+          übrig)</h2>
+        <div style="overflow: auto; background-color: #000;">
+          <div id="tryit_console"></div>
+        </div>
+        <button class="p-button" id="tryit_console_reconnect" type="button" style="display:none">Verbindung
+          wiederherstellen</button>
+      </div>
+    </div>
+  </div>
+</div>
