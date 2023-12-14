@@ -15,7 +15,7 @@ Comes from the Humanity icon theme (browser-download.svg):
 > public domain.
 >
 > LibreOffice icons,libreoffice-\*.png, are LibreOffice icons and libreoffice-\*.svg
-> are modified from  LibreOffice icons, which are licenced under CC-by-SA,
+> are modified from  LibreOffice icons, which are licenced under CC-BY-SA,
 > LGPL 3+, MPL 1.1·
 >
 > The Debian packaging is Copyright Canonical Ltd, and is under the terms of the

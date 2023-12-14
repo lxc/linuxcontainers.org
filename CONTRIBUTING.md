@@ -17,7 +17,7 @@ Any contribution to the content must be made under the terms of this license.
 
 
 Unless otherwise mentioned in the header, all other files are also
-licensed under the terms of the CC BY NC SA 4.0 license.
+licensed under the terms of the CC BY-NC-SA 4.0 license.
 
 
 The author of a change remains the copyright holder of their code
