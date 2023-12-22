@@ -47,16 +47,14 @@ downloads/lxcfs/
 All steps for creating a sparse checkout
 
 ```
+#!/bin/bash
+
 git clone --filter=blob:none --no-checkout git@github.com:lxc/linuxcontainers.org.git
-cd linuxcontainers.org/
-git sparse-checkout set --cone
-echo -e '/*\n!downloads' >> .git/info/sparse-checkout
+cd linuxcontainers.org
+git sparse-checkout set --no-cone
+echo -e '/*\n!downloads' > .git/info/sparse-checkout
 git checkout main
-git pull
-mkdir -p downloads/cgmanager/
-mkdir -p downloads/distrobuilder/
-mkdir -p downloads/lxc/
-mkdir -p downloads/lxcfs/
+mkdir -p downloads/{incus,lxc,lxcfs,distrobuilder,cgmanager}
 ```
 
 ### Generating the website
