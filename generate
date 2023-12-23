@@ -328,6 +328,9 @@ def gen_page(entry, override, prefix, **variables):
             if not os.path.isfile("%s/%s" % (download_path, entry)):
                 continue
 
+            if os.path.islink("%s/%s" % (download_path, entry)):
+                continue
+
             if entry.startswith(".") or entry.endswith(".asc"):
                 continue
 
