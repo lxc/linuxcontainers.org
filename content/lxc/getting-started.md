@@ -123,15 +123,53 @@ And finally removing it with:
 
     lxc-destroy -n my-container
 
-# Creating unprivileged containers as root
+# Creating unprivileged containers as root with shared uid and gid ranges
 
-To run a system-wide unprivileged container (that is, an unprivileged container started by root) you'll need to follow only a subset of the steps above.
+To create and run system-wide unprivileged containers (that is, unprivileged containers created and started by root) you'll need to follow only a subset of the steps above.
 
-Specifically, you need to manually allocate a uid and gid range to root in /etc/subuid and /etc/subgid. And then set that range in /etc/lxc/default.conf using lxc.idmap entries similar to those above.
+Specifically, you need to manually allocate a uid and gid range to root in `/etc/subuid` and `/etc/subgid` and then set those ranges in `/etc/lxc/default.conf` using `lxc.idmap` entries similar to those above.
+
+For example, if you have not done anything on your host related to subordinate uid and gid ranges, the following commands may be all you need.
+
+    echo "root:100000:65536" >>/etc/subuid
+    echo "root:100000:65536" >>/etc/subgid
+    echo "lxc.idmap = u 0 100000 65536" >>/etc/lxc/default.conf
+    echo "lxc.idmap = g 0 100000 65536" >>/etc/lxc/default.conf
 
 And that's it. Root doesn't need network devices quota and uses the global configuration file so the other steps don't apply.
 
-Any container you create as root from that point on will be running unprivileged.
+Any container you create as root from that point on will be running unprivileged. For example,
+
+    lxc-create --name container1 --template download
+    lxc-create --name container2 --template download
+
+Note that all containers created using the modified default configuration in `/etc/lxc/default.conf` will share the same uid and gid ranges. This may not be as secure as each container having its own uid and gid ranges.
+
+# Creating unprivileged containers as root with separate uid and gid ranges
+
+By using separate uid and gid ranges for each container, a security breach in one container will not have access to other containers.
+
+Suppose we want to have two containers, we could do the following. (This assumes `/etc/lxc/default.conf` has not been modified as described above.)
+
+Configure and create the first container with its own uid and gid ranges.
+
+    echo "root:100000:65536" >>/etc/subuid
+    echo "root:100000:65536" >>/etc/subgid
+    cp /etc/lxc/default.conf /etc/lxc/container1.conf
+    echo "lxc.idmap = u 0 100000 65536" >>/etc/lxc/container1.conf
+    echo "lxc.idmap = g 0 100000 65536" >>/etc/lxc/container1.conf
+    lxc-create --config /etc/lxc/container1.conf --name container1 --template download
+
+Configure and create the second container with different uid and gid ranges.
+
+    echo "root:200000:65536" >>/etc/subuid
+    echo "root:200000:65536" >>/etc/subgid
+    cp /etc/lxc/default.conf /etc/lxc/container2.conf
+    echo "lxc.idmap = u 0 200000 65536" >>/etc/lxc/container2.conf
+    echo "lxc.idmap = g 0 200000 65536" >>/etc/lxc/container2.conf
+    lxc-create --config /etc/lxc/container2.conf --name container2 --template download
+
+After creating the containers, you can optionally delete the configuration files `/etc/lxc/container1.conf` and `/etc/lxc/container2.conf`.
 
 # Creating privileged containers
 
