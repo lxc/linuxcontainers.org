@@ -31,7 +31,6 @@ In most cases, you'll find recent versions of LXC available for your Linux distr
 
 For your first LXC experience, we recommend you use a recent supported release, such as a recent bugfix release of LXC 4.0.
 
-
 If using Ubuntu, we recommend you use Ubuntu 18.04 LTS as your container host. LXC bugfix releases are available directly in the distribution package repository shortly after release and those offer a clean (unpatched) upstream experience.
 
 Ubuntu is also one of the few (if not only) Linux distributions to come by default with everything that's needed for safe, unprivileged LXC containers.
@@ -46,108 +45,75 @@ Use the following command to check whether the Linux kernel has the required con
 
     lxc-checkconfig
 
-# Creating unprivileged containers as a user
+# Create Privileged Containers
 
-Unprivileged containers are the safest containers. Those use a map of uid and gid to allocate a range of uids and gids to a container. That means that uid 0 (root) in the container is actually something like uid 100000 outside the container. So should something go very wrong and an attacker manages to escape the container, they'll find themselves with about as many rights as a nobody user.
+Privileged containers are containers that are created by root and run as root.
 
-Unfortunately this also means that the following common operations aren't allowed:
+Depending on the host Linux distribution, privileged containers may be protected by some capability dropping, apparmor profiles, selinux context or seccomp policies but ultimately, the processes still run as root and so you should never give access to root inside a privileged container to an untrusted party.
 
-  * mounting of most filesystems
-  * creating device nodes
-  * any operation against a uid/gid outside of the mapped set
+Even knowing that privileged containers are less secure, if you still must create privileged containers, then creating them is quite simple. By default, LXC will create privileged containers.
 
-Because of that, most distribution templates simply won't work with those. Instead you should use the "download" template which will provide you with pre-built images of the distributions that are known to work in such an environment.
+Create a privileged container with the following command. You can choose any container name that will be memorable for you. LXC's download template will help you select a container image available from https://images.linuxcontainers.org/
 
-The following instructions assume the use of a recent Ubuntu system or an alternate Linux distribution offering a similar experience, i.e., a recent kernel and a recent version of shadow, as well as libpam-cgfs and default uid/gid allocation.
+    lxc-create --name mycontainer --template download 
 
-First of all, you need to make sure your user has a uid and gid map defined in /etc/subuid and /etc/subgid. On Ubuntu systems, a default allocation of 65536 uids and gids is given to every new user on the system, so you should already have one. If not, you'll have to use usermod to give yourself one.
+If you know the container image you want to use, you can specify the options to be sent to the download template. For example,
 
-Next up is /etc/lxc/lxc-usernet which is used to set network devices quota for unprivileged users. By default, your user isn't allowed to create any network device on the host, to change that, add:
+    lxc-create --name mycontainer --template download -- --dist alpine --release 3.19 --arch amd64
 
-    echo "$(id -un) veth lxcbr0 10" | sudo tee -a /etc/lxc/lxc-usernet
+After creating the container, you can start it.
 
-This means that "your-username" is allowed to create up to 10 veth devices connected to the lxcbr0 bridge.
+    lxc-start --name mycontainer
 
+You can see status information about the container.
 
-With that done, the last step is to create an LXC configuration file.
+    lxc-info --name mycontainer
 
- * Create the ~/.config/lxc directory if it doesn't exist.
- * Copy /etc/lxc/default.conf to ~/.config/lxc/default.conf
- * Append the following two lines to it:
-    * lxc.idmap = u 0 100000 65536
-    * lxc.idmap = g 0 100000 65536
+You can see status information about all containers.
 
-Those values should match those found in /etc/subuid and /etc/subgid, the values above are those expected for the first user on a standard Ubuntu system.
+    lxc-ls --fancy
 
-    mkdir -p ~/.config/lxc
-    cp /etc/lxc/default.conf ~/.config/lxc/default.conf
-    MS_UID="$(grep "$(id -un)" /etc/subuid  | cut -d : -f 2)"
-    ME_UID="$(grep "$(id -un)" /etc/subuid  | cut -d : -f 3)"
-    MS_GID="$(grep "$(id -un)" /etc/subgid  | cut -d : -f 2)"
-    ME_GID="$(grep "$(id -un)" /etc/subgid  | cut -d : -f 3)"
-    echo "lxc.idmap = u 0 $MS_UID $ME_UID" >> ~/.config/lxc/default.conf
-    echo "lxc.idmap = g 0 $MS_GID $ME_GID" >> ~/.config/lxc/default.conf
+You can start a container shell, explore, install packages, run jobs, etc. You can exit the container with `exit`.
 
-The current Ubuntu LTS 20.04 requires this extra step:
+    lxc-attach --name mycontainer
 
-    export DOWNLOAD_KEYSERVER="hkp://keyserver.ubuntu.com"
+You can stop the container.
 
-And now, create your first container with:
+    lxc-stop --name mycontainer
 
-    systemd-run --unit=my-unit --user --scope -p "Delegate=yes" -- lxc-create -t download -n my-container
+If you will never need the container again, then you can permanently destroy it.
 
-The download template will show you a list of distributions, versions and architectures to choose from. A good example would be "ubuntu", "focal" (20.04 LTS) and "amd64".
+    lxc-destroy --name mycontainer
 
-To run unprivileged containers as an unprivileged user, the user must be allocated an empty delegated cgroup (this is required because of the leaf-node and delegation model of cgroup2, not because of liblxc). See [cgroups: Full cgroup2 support](/lxc/news/2020_03_25_13_03.html#cgroups-full-cgroup2-support) for more information.
+# Create Unprivileged Containers as Root with Shared UID and GID Ranges
 
-It is not possible to simply start a container from a shell as a user and automatically delegate a cgroup. Therefore, you need to wrap each call to any of the `lxc-*` commands in a `systemd-run` command. For example, to start a container, use the following command instead of just `lxc-start my-container`:
+Creating system-wide unprivileged containers (that is, unprivileged containers created and started by root) requires only a few extra steps to organize subordinate user IDs (uid) and subordinate group IDs (gid).
 
-    systemd-run --unit=my-unit --user --scope -p "Delegate=yes" -- lxc-start my-container
+Specifically, you need to manually allocate the subordinate uid and gid ranges to root in `/etc/subuid` and `/etc/subgid` and then set those ranges in `/etc/lxc/default.conf` using `lxc.idmap` entries.
 
-NOTE: If libpam-cgfs was not installed on the host machine prior to installing LXC, you need to ensure your user belongs to the right cgroups before creating your first container. You can accomplish this by logging out and logging back in, or by rebooting the host machine.
-
-You can then confirm its status with either of:
-
-    lxc-info -n my-container
-    lxc-ls -f
-
-And get a shell inside it with:
-
-    lxc-attach -n my-container
-
-Stopping it can be done with:
-
-    lxc-stop -n my-container
-
-And finally removing it with:
-
-    lxc-destroy -n my-container
-
-# Creating unprivileged containers as root with shared uid and gid ranges
-
-To create and run system-wide unprivileged containers (that is, unprivileged containers created and started by root) you'll need to follow only a subset of the steps above.
-
-Specifically, you need to manually allocate a uid and gid range to root in `/etc/subuid` and `/etc/subgid` and then set those ranges in `/etc/lxc/default.conf` using `lxc.idmap` entries similar to those above.
-
-For example, if you have not done anything on your host related to subordinate uid and gid ranges, the following commands may be all you need.
+For example, if you have not done anything on your host related to subordinate uid and gid ranges, the following commands may be all you need. Before doing the following, take a look in `/etc/subuid` and `/etc/subgid` to see that the range 100000:65536 is not already in use on your host. If the range is in use, you can use another range.
 
     echo "root:100000:65536" >>/etc/subuid
     echo "root:100000:65536" >>/etc/subgid
     echo "lxc.idmap = u 0 100000 65536" >>/etc/lxc/default.conf
     echo "lxc.idmap = g 0 100000 65536" >>/etc/lxc/default.conf
 
-And that's it. Root doesn't need network devices quota and uses the global configuration file so the other steps don't apply.
-
-Any container you create as root from that point on will be running unprivileged. For example,
+That's it! Any container you create as root from now on will be running unprivileged. For example,
 
     lxc-create --name container1 --template download
     lxc-create --name container2 --template download
 
-Note that all containers created using the modified default configuration in `/etc/lxc/default.conf` will share the same uid and gid ranges. This may not be as secure as each container having its own uid and gid ranges.
+Note that all containers created using the modified default configuration in `/etc/lxc/default.conf` will share the same subordinate uid and gid ranges. This may not be as secure as each container having its own subordinate uid and gid ranges.
 
-# Creating unprivileged containers as root with separate uid and gid ranges
+If you start a container, you can explore the uid range in use as seen from the host side compared to the uid range as seen from the container side.
 
-By using separate uid and gid ranges for each container, a security breach in one container will not have access to other containers.
+    lxc-start --name container1
+    ps aux
+    lxc-attach --name container1 -- ps aux
+
+# Create Unprivileged Containers as Root with Separate UID and GID Ranges
+
+By using separate subordinate uid and gid ranges for each container, a security breach in one container will not have access to other containers.
 
 Suppose we want to have two containers, we could do the following. (This assumes `/etc/lxc/default.conf` has not been modified as described above.)
 
@@ -171,24 +137,83 @@ Configure and create the second container with different uid and gid ranges.
 
 After creating the containers, you can optionally delete the configuration files `/etc/lxc/container1.conf` and `/etc/lxc/container2.conf`.
 
-# Creating privileged containers
+# Create Unprivileged Containers as a User
 
-Privileged containers are containers created by root and running as root.
+Unprivileged containers are the safest containers. Those use a map of uid and gid to allocate a range of uids and gids to a container. That means that uid 0 (root) in the container is actually something like uid 100000 outside the container. So should something go very wrong and an attacker manages to escape the container, they'll find themselves with about as many rights as a nobody user.
 
-Depending on the Linux distribution, they may be protected by some capability dropping, apparmor profiles, selinux context or seccomp policies but ultimately, the processes still run as root and so you should never give access to root inside a privileged container to an untrusted party.
+Unfortunately this also means that the following common operations aren't allowed:
 
+  * mounting of most filesystems
+  * creating device nodes
+  * any operation against a uid/gid outside of the mapped set
 
+Because of that, most distribution templates simply won't work with those. Instead you should use the "download" template which will provide you with pre-built images of the distributions that are known to work in such an environment.
 
-If you still have to create privileged containers, it's quite simple. Simply don't do any of the configuration described above and LXC will create privileged containers.
+The following instructions assume the use of a recent Ubuntu system or an alternate Linux distribution offering a similar experience, i.e., a recent kernel and a recent version of shadow, as well as libpam-cgfs and default uid/gid allocation.
 
-So:
+First of all, you need to make sure your user has a uid and gid map defined in `/etc/subuid` and `/etc/subgid`. On Ubuntu systems, a default allocation of 65536 uids and gids is given to every new user on the system, so you should already have one. If not, you'll have to use `usermod` to give yourself one.
 
-    sudo lxc-create -t download -n privileged-container
+Next up is `/etc/lxc/lxc-usernet` which is used to set network devices quota for unprivileged users. By default, your user isn't allowed to create any network device on the host, to change that, add:
 
-Will create a new "privileged-container" privileged container on your system using an image from the download template.
+    echo "$(id -un) veth lxcbr0 10" | sudo tee -a /etc/lxc/lxc-usernet
 
+This means that "your-username" is allowed to create up to 10 veth devices connected to the lxcbr0 bridge.
 
-# Distribution LXC documentation
+With that done, the last step is to create an LXC configuration file.
+
+* Create the `~/.config/lxc` directory if it doesn't exist.
+* Copy `/etc/lxc/default.conf` to `~/.config/lxc/default.conf`
+* Append the following two lines to it:
+    * `lxc.idmap = u 0 100000 65536`
+    * `lxc.idmap = g 0 100000 65536`
+
+Those values should match those found in `/etc/subuid` and `/etc/subgid`, the values above are those expected for the first user on a standard Ubuntu system.
+
+    mkdir -p ~/.config/lxc
+    cp /etc/lxc/default.conf ~/.config/lxc/default.conf
+    MS_UID="$(grep "$(id -un)" /etc/subuid  | cut -d : -f 2)"
+    ME_UID="$(grep "$(id -un)" /etc/subuid  | cut -d : -f 3)"
+    MS_GID="$(grep "$(id -un)" /etc/subgid  | cut -d : -f 2)"
+    ME_GID="$(grep "$(id -un)" /etc/subgid  | cut -d : -f 3)"
+    echo "lxc.idmap = u 0 $MS_UID $ME_UID" >> ~/.config/lxc/default.conf
+    echo "lxc.idmap = g 0 $MS_GID $ME_GID" >> ~/.config/lxc/default.conf
+
+The current Ubuntu LTS 20.04 requires this extra step:
+
+    export DOWNLOAD_KEYSERVER="hkp://keyserver.ubuntu.com"
+
+And now, create your first container with:
+
+    systemd-run --unit=my-unit --user --scope -p "Delegate=yes" -- lxc-create --name mycontainer --template download
+
+The download template will show you a list of distributions, versions, and architectures to choose from. A good example would be "ubuntu", "focal" (20.04 LTS), and "amd64". Another good example would be "alpine", "3.19", and "amd64".
+
+To run unprivileged containers as an unprivileged user, the user must be allocated an empty delegated cgroup (this is required because of the leaf-node and delegation model of cgroup2, not because of liblxc). See [cgroups: Full cgroup2 support](/lxc/news/2020_03_25_13_03.html#cgroups-full-cgroup2-support) for more information.
+
+It is not possible to simply start a container from a shell as a user and automatically delegate a cgroup. Therefore, you need to wrap each call to any of the `lxc-*` commands in a `systemd-run` command. For example, to start a container, use the following command instead of just `lxc-start mycontainer`:
+
+    systemd-run --unit=my-unit --user --scope -p "Delegate=yes" -- lxc-start --name mycontainer
+
+NOTE: If libpam-cgfs was not installed on the host machine prior to installing LXC, you need to ensure your user belongs to the right cgroups before creating your first container. You can accomplish this by logging out and logging back in, or by rebooting the host machine.
+
+You can then confirm its status with either of:
+
+    lxc-info --name mycontainer
+    lxc-ls --fancy
+
+And get a shell inside it with:
+
+    lxc-attach --name mycontainer
+
+Stopping it can be done with:
+
+    lxc-stop --name mycontainer
+
+And finally removing it with:
+
+    lxc-destroy --name mycontainer
+
+# Distribution LXC Documentation
 - [Ubuntu](https://ubuntu.com/server/docs/containers-lxc)
 - [Debian](https://wiki.debian.org/LXC/CGroupV2#LXC_containers_started_by_non-root)
 - [Arch Linux](https://wiki.archlinux.org/title/Linux_Containers#Enable_support_to_run_unprivileged_containers_(optional))
