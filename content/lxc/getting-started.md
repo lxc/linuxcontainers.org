@@ -85,6 +85,61 @@ If you will never need the container again, then you can permanently destroy it.
 
     lxc-destroy --name mycontainer
 
+# Add a Volume Mount
+
+A container's file system activity is restricted to `/var/lib/lxc/<container-name>/rootfs`. When a container is destroyed all of `/var/lib/lxc/<container-name>` is also destroyed. You may have multiple containers and would like to share some file system space between them. You may have disposable containers and would like some file system space to outlive the container. In cases like these, you can create a host volume outside the container's `rootfs` and then mount that volume inside the container.
+
+Suppose we have already created a container named `mycontainer` as described above.
+
+Create the host volume.
+
+    root@host:~# mkdir -p /host/path/to/volume
+
+Create the container mount point.
+
+    root@host:~# lxc-attach --name mycontainer -- mkdir -p /container/mount/point
+
+Stop the container so that we can reconfigure it with the volume mount.
+
+    root@host:~# lxc-stop --name mycontainer
+
+Add the volume mount to the container's configuration. (Note that the container mount point path is relative. It does not have a leading `/` character.)
+
+    root@host:~# echo "lxc.mount.entry = /host/path/to/volume container/mount/point none bind 0 0" >>/var/lib/lxc/mycontainer/config
+
+Restart the container so the new configuration is used.
+
+    root@host:~# lxc-start --name mycontainer
+
+Now that we have created the volume and mounted it in the container, we can test it works.
+
+On the host, add a text file to the volume.
+
+    root@host:~# echo "host message" >/host/path/to/volume/messages.txt
+
+Start a container shell.
+
+    root@host:~# lxc-attach --name mycontainer
+
+The container can see the text file and its content.
+
+    root@mycontainer:~# cat /container/mount/point/messages.txt
+    host message
+
+The container can add text to the text file.
+
+    root@mycontainer:~# echo "mycontainer message" >>/container/mount/point/messages.txt
+
+Exit the container.
+
+    root@mycontainer:~# exit
+
+The host can see the container's message.
+    
+    root@host:~# cat /host/path/to/volume/messages.txt 
+    host message
+    mycontainer message
+
 # Create Unprivileged Containers as Root with Shared UID and GID Ranges
 
 Creating system-wide unprivileged containers (that is, unprivileged containers created and started by root) requires only a few extra steps to organize subordinate user IDs (uid) and subordinate group IDs (gid).
