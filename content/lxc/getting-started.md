@@ -128,8 +128,8 @@ By default, containers do not start automatically when the host restarts. We may
 Suppose we have already created and started a container named `mycontainer` as described above.
 
     root@host:~# lxc-ls --fancy
-    NAME                 STATE   AUTOSTART GROUPS IPV4       IPV6 UNPRIVILEGED 
-    mycontainer          RUNNING 0         -      10.0.3.30  -    false        
+    NAME        STATE   AUTOSTART GROUPS IPV4       IPV6 UNPRIVILEGED 
+    mycontainer RUNNING 0         -      10.0.3.30  -    false        
 
 We can reconfigure the container to autostart by added a line to the container's configuration.
 
@@ -142,8 +142,8 @@ After configuring the container, we can reboot the host to test that the contain
 After allowing the host some time to reboot and signing back into the host's shell, we see that the container is running and has the autostart property set to 1.
 
     root@host:~# lxc-ls --fancy
-    NAME                 STATE   AUTOSTART GROUPS IPV4       IPV6 UNPRIVILEGED 
-    mycontainer          RUNNING 1         -      10.0.3.30  -    false
+    NAME        STATE   AUTOSTART GROUPS IPV4       IPV6 UNPRIVILEGED 
+    mycontainer RUNNING 1         -      10.0.3.30  -    false
 
 It works!
 
@@ -168,6 +168,88 @@ Now modify the default configuration.
 All containers we create from now on will have autostart. For example,
 
      root@host:~# lxc-create --name containerb --template download -- --dist alpine --release 3.19 --arch amd64
+
+# IP Address
+
+Above, the output of `lxc-info --name mycontainer` and `lxc-ls --fancy` have shown us that `mycontainer` has an IP address on the host's local network.
+
+If we start a container and check the output of `lxc-ls` immediately, we will see that the container does not yet have an IP address.
+
+    root@host:~# lxc-stop --name mycontainer
+
+    root@host:~# lxc-start --name mycontainer && lxc-ls --fancy
+    NAME        STATE   AUTOSTART GROUPS IPV4 IPV6 UNPRIVILEGED
+    mycontainer RUNNING 1         -      -    -    false
+
+If we wait about 5 seconds and check again, then the container does have an IP address.
+
+    root@host:~# lxc-ls --fancy
+    NAME        STATE   AUTOSTART GROUPS IPV4       IPV6 UNPRIVILEGED
+    mycontainer RUNNING 1         -      10.0.3.152 -    false
+
+If we are going to do something in the container that requires access to the Internet, we need to wait until the container has an IP address. One possibilty is to poll the output of `lxc-info` until it includes an IP address.
+
+    root@host:~# lxc-start --name mycontainer
+
+    root@host:~# while ! lxc-info -n mycontainer | grep -Eq "^IP:\s*[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}\s*$"; do sleep 1; done; echo "Container connected!"
+    Container connected!
+
+Notice that the IP address `10.0.3.152` is not the same as the IP address `10.0.3.30` that we saw earlier. This is because the IP address is dynamicially assigned by the host to the container when the container joins the network.
+
+We can see the current list of leases with the following.
+
+    root@host:~# cat /var/lib/misc/dnsmasq.lxcbr0.leases 
+    1705896165 8e:e0:fc:72:79:65 10.0.3.152 mycontainer 01:8e:e0:fc:72:79:65
+
+Stopping the container removes the lease.
+
+    root@host:~# lxc-stop --name mycontainer;
+
+    root@host:~# cat /var/lib/misc/dnsmasq.lxcbr0.leases
+
+Restarting the container creates a new lease possibly with a different IP address.
+
+    root@host:~# lxc-start --name mycontainer
+
+    root@host:~# cat /var/lib/misc/dnsmasq.lxcbr0.leases
+    1705896699 26:61:b7:e3:53:73 10.0.3.110 mycontainer 01:26:61:b7:e3:53:73
+
+Don't try this at home but force destroying a container does not clear the container's lease. Be kind. Always stop a container before destroying it.
+
+    root@host:~# lxc-destroy --force --name mycontainer
+
+    root@host:~# cat /var/lib/misc/dnsmasq.lxcbr0.leases
+    1705896699 26:61:b7:e3:53:73 10.0.3.110 mycontainer 01:26:61:b7:e3:53:73
+
+## DHCP Reservation
+
+We may need a predictable IP address for the container. We can make a DHCP reservation on the host so the container is assigned the same IP address each time the container joins the local network.
+
+To enable DCHP reservations, we uncomment the `LXC_DHCP_CONFILE` line in `/etc/default/lxc-net`.
+
+    root@host:~# sed -i 's|^#LXC_DHCP_CONFILE=.*$|LXC_DHCP_CONFILE=/etc/lxc/dnsmasq.conf|' /etc/default/lxc-net
+
+Add the DHCP reservation.
+
+    root@host:~# echo "dhcp-host=mycontainer,10.0.3.100" >>/etc/lxc/dnsmasq.conf
+
+Restart the `lxc-net` service so the DHCP reservation is enabled.
+
+    root@host:~# service lxc-net restart
+
+Restart the container. (You may need to recreated the container if you destroyed it somewhere along the way.)
+
+    root@host:~# lxc-stop --name mycontainer
+
+    root@host:~# lxc-start --name mycontainer
+
+Wait a few seconds and then check the container's IP address.
+
+    root@host:~# lxc-ls --fancy
+    NAME        STATE   AUTOSTART GROUPS IPV4       IPV6 UNPRIVILEGED 
+    mycontainer RUNNING 0         -      10.0.3.100 -    false        
+
+Yay! Now we can depend on the container always having the same IP address.
 
 # Add a Volume Mount
 
