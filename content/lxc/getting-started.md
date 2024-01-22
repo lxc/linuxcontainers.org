@@ -49,41 +49,125 @@ Use the following command to check whether the Linux kernel has the required con
 
 Privileged containers are containers that are created by root and run as root.
 
-Depending on the host Linux distribution, privileged containers may be protected by some capability dropping, apparmor profiles, selinux context or seccomp policies but ultimately, the processes still run as root and so you should never give access to root inside a privileged container to an untrusted party.
+Privilaged containers are the easiest way to get started learning about and experimenting with LXC but may not be appropriate for production use. Depending on the host Linux distribution, privileged containers may be protected by some capability dropping, apparmor profiles, selinux context or seccomp policies but ultimately, the processes still run as root and so you should never give access to root inside a privileged container to an untrusted party. Even knowing that privileged containers are less secure, if you still must create privileged containers or they are specifically required for your use case, then creating them is quite simple. By default, LXC will create privileged containers.
 
-Even knowing that privileged containers are less secure, if you still must create privileged containers, then creating them is quite simple. By default, LXC will create privileged containers.
+Note that the terminal prompts we use here may be different than you see on your computer. The terminal prompts we use here emphasize if we are currently in a host shell or container shell and which user we are.
 
 Create a privileged container with the following command. You can choose any container name that will be memorable for you. LXC's download template will help you select a container image available from https://images.linuxcontainers.org/
 
-    lxc-create --name mycontainer --template download 
+    root@host:~# lxc-create --name mycontainer --template download 
 
 If you know the container image you want to use, you can specify the options to be sent to the download template. For example,
 
-    lxc-create --name mycontainer --template download -- --dist alpine --release 3.19 --arch amd64
+    root@host:~# lxc-create --name mycontainer --template download -- --dist alpine --release 3.19 --arch amd64
 
 After creating the container, you can start it.
 
-    lxc-start --name mycontainer
+    root@host:~# lxc-start --name mycontainer
 
 You can see status information about the container.
 
-    lxc-info --name mycontainer
+    root@host:~# lxc-info --name mycontainer
+    Name:           mycontainer
+    State:          RUNNING
+    PID:            3250
+    IP:             10.0.3.224
+    Link:           vethgmeH9z
+     TX bytes:      1.51 KiB
+     RX bytes:      2.15 KiB
+     Total bytes:   3.66 KiB
 
 You can see status information about all containers.
 
-    lxc-ls --fancy
+    root@host:~# lxc-ls --fancy
+    NAME                 STATE   AUTOSTART GROUPS IPV4       IPV6 UNPRIVILEGED 
+    mycontainer          RUNNING 0         -      10.0.3.224 -    false        
 
-You can start a container shell, explore, install packages, run jobs, etc. You can exit the container with `exit`.
+Start a container shell.
 
-    lxc-attach --name mycontainer
+    root@host:~# lxc-attach --name mycontainer
+
+Inside the container is where we really get a feeling for what a system container is and how it is like a lightweight virtual machine in many ways. The changes we make inside the container persist. If we later stop the container and restart it, our changes will still be there.
+
+Explore the container.
+
+    root@mycontainer:~# cat /etc/os-release
+    NAME="Alpine Linux"
+    ID=alpine
+    VERSION_ID=3.19.0
+    PRETTY_NAME="Alpine Linux v3.19"
+    HOME_URL="https://alpinelinux.org/"
+    BUG_REPORT_URL="https://gitlab.alpinelinux.org/alpine/aports/-/issues"
+
+Update the package index, upgraded installed packages, and install more packages you would like available.
+
+    root@mycontainer:~# apk update
+
+    root@mycontainer:~# apk add --upgrade apk-tools
+
+    root@mycontainer:~# apk upgrade --available
+
+    root@mycontainer:~# apk add vim python3
+
+Exit the container shell.
+
+    root@mycontainer:~# exit
 
 You can stop the container.
 
-    lxc-stop --name mycontainer
+    root@host:~# lxc-stop --name mycontainer
 
 If you will never need the container again, then you can permanently destroy it.
 
-    lxc-destroy --name mycontainer
+    root@host:~# lxc-destroy --name mycontainer
+
+# Autostart
+
+By default, containers do not start automatically when the host restarts. We may have a service like a web app in the container that should always be up and running. We would like the container to start when the host starts.
+
+Suppose we have already created and started a container named `mycontainer` as described above.
+
+    root@host:~# lxc-ls --fancy
+    NAME                 STATE   AUTOSTART GROUPS IPV4       IPV6 UNPRIVILEGED 
+    mycontainer          RUNNING 0         -      10.0.3.30  -    false        
+
+We can reconfigure the container to autostart by added a line to the container's configuration.
+
+    root@host:~# echo "lxc.start.auto = 1" >>/var/lib/lxc/mycontainer/config
+
+After configuring the container, we can reboot the host to test that the container does, in fact, autostart.
+
+    root@host:~# reboot
+
+After allowing the host some time to reboot and signing back into the host's shell, we see that the container is running and has the autostart property set to 1.
+
+    root@host:~# lxc-ls --fancy
+    NAME                 STATE   AUTOSTART GROUPS IPV4       IPV6 UNPRIVILEGED 
+    mycontainer          RUNNING 1         -      10.0.3.30  -    false
+
+It works!
+
+If we want several of the containers we create to have autostart, then we might prefer to create a new configuration file to use with `lxc-create`.
+
+    root@host:~# cp /etc/lxc/default.conf /etc/lxc/autostart.conf
+
+    root@host:~# echo "lxc.start.auto = 1" >>/etc/lxc/autostart.conf
+
+    root@host:~# lxc-create --name containera --config /etc/lxc/autostart.conf --template download -- --dist alpine --release 3.19 --arch amd64
+
+As yet another option, if we want *all* of our containers to autostart, then we can modify the default LXC configuration directly.
+
+For safe keeping, create a backup of the original LXC `default.conf` file.
+
+    root@host:~# cp /etc/lxc/default.conf /etc/lxc/default.conf.original
+
+Now modify the default configuration.
+
+    root@host:~# echo "lxc.start.auto = 1" >>/etc/lxc/default.conf
+
+All containers we create from now on will have autostart. For example,
+
+     root@host:~# lxc-create --name containerb --template download -- --dist alpine --release 3.19 --arch amd64
 
 # Add a Volume Mount
 
