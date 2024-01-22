@@ -80,8 +80,8 @@ You can see status information about the container.
 You can see status information about all containers.
 
     root@host:~# lxc-ls --fancy
-    NAME                 STATE   AUTOSTART GROUPS IPV4       IPV6 UNPRIVILEGED 
-    mycontainer          RUNNING 0         -      10.0.3.224 -    false        
+    NAME        STATE   AUTOSTART GROUPS IPV4       IPV6 UNPRIVILEGED 
+    mycontainer RUNNING 0         -      10.0.3.224 -    false        
 
 Start a container shell.
 
@@ -165,7 +165,7 @@ Now modify the default configuration.
 
     root@host:~# echo "lxc.start.auto = 1" >>/etc/lxc/default.conf
 
-All containers we create from now on will have autostart. For example,
+All containers we create from now using the default configuration file on will have autostart. For example,
 
      root@host:~# lxc-create --name containerb --template download -- --dist alpine --release 3.19 --arch amd64
 
@@ -191,10 +191,10 @@ If we are going to do something in the container that requires access to the Int
 
     root@host:~# lxc-start --name mycontainer
 
-    root@host:~# while ! lxc-info -n mycontainer | grep -Eq "^IP:\s*[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}\s*$"; do sleep 1; done; echo "Container connected!"
+    root@host:~# while ! lxc-info -n mycontainer | grep -Eq "^IP:\s*[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\s*$"; do sleep 1; done; echo "Container connected!"
     Container connected!
 
-Notice that the IP address `10.0.3.152` is not the same as the IP address `10.0.3.30` that we saw earlier. This is because the IP address is dynamicially assigned by the host to the container when the container joins the network.
+Notice that the IP address `10.0.3.152` is not the same as the IP address `10.0.3.30` that we saw earlier. This is because the IP address is dynamically assigned by the host to the container when the container joins the network.
 
 We can see the current list of leases with the following.
 
@@ -247,7 +247,7 @@ Wait a few seconds and then check the container's IP address.
 
     root@host:~# lxc-ls --fancy
     NAME        STATE   AUTOSTART GROUPS IPV4       IPV6 UNPRIVILEGED 
-    mycontainer RUNNING 0         -      10.0.3.100 -    false        
+    mycontainer RUNNING 1         -      10.0.3.100 -    false        
 
 Yay! Now we can depend on the container always having the same IP address.
 
@@ -283,7 +283,7 @@ After configuring the container, restart it so the new configuration is used.
 
 Now that we have created the volume and mounted it in the container, we can test that it works.
 
-On the host, add a text file to the volume.
+On the host, add a text file in the volume.
 
     root@host:~# echo "host message" >/host/path/to/volume/messages.txt
 
