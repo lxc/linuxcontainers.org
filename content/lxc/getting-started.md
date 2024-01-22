@@ -85,6 +85,54 @@ If you will never need the container again, then you can permanently destroy it.
 
     lxc-destroy --name mycontainer
 
+# Autostart
+
+By default, containers do not start automatically when the host restarts. We may have a service like a web app in the container that should always be up and running. We would like the container to start when the host starts.
+
+Suppose we have already created and started a container named `mycontainer` as described above.
+
+    root@host:~# lxc-ls --fancy
+    NAME                 STATE   AUTOSTART GROUPS IPV4       IPV6 UNPRIVILEGED 
+    mycontainer          RUNNING 0         -      10.0.3.30  -    false        
+
+We can reconfigure the container to autostart by added a line to the container's configuration.
+
+    root@host:~# echo "lxc.start.auto = 1" >>/var/lib/lxc/mycontainer/config
+
+After configuring the container, we can reboot the host to test that the container does, in fact, autostart.
+
+    root@host:~# reboot
+
+After allowing the host some time to reboot and signing back into the host's shell, we see that the container is running and has the autostart property set to 1.
+
+    root@host:~# lxc-ls --fancy
+    NAME                 STATE   AUTOSTART GROUPS IPV4       IPV6 UNPRIVILEGED 
+    mycontainer          RUNNING 1         -      10.0.3.30  -    false
+
+It works!
+
+If we want several of the containers we create to have autostart, then we might prefer to create a new configuration file to use with `lxc-create`.
+
+    root@host:~# cp /etc/lxc/default.conf /etc/lxc/autostart.conf
+
+    root@host:~# echo "lxc.start.auto = 1" >>/etc/lxc/autostart.conf
+
+    root@host:~# lxc-create --name containera --config /etc/lxc/autostart.conf --template download -- --dist alpine --release 3.19 --arch amd64
+
+As yet another option, if we want *all* of our containers to autostart, then we can modify the default LXC configuration directly.
+
+For safe keeping, create a backup of the original LXC `default.conf` file.
+
+    root@host:~# cp /etc/lxc/default.conf /etc/lxc/default.conf.original
+
+Now modify the default configuration.
+
+    root@host:~# echo "lxc.start.auto = 1" >>/etc/lxc/default.conf
+
+All containers we create from now on will have autostart. For example,
+
+     root@host:~# lxc-create --name containerb --template download -- --dist alpine --release 3.19 --arch amd64
+
 # Add a Volume Mount
 
 A container's file system activity is restricted to `/var/lib/lxc/<container-name>/rootfs`. When a container is destroyed all of `/var/lib/lxc/<container-name>` is also destroyed. You may have multiple containers and would like to share some file system space between them. You may have disposable containers and would like some file system space to outlive the container. In cases like these, you can create a host volume outside the container's `rootfs` and then mount that volume inside the container.
