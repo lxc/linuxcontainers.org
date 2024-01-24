@@ -60,11 +60,9 @@ Incus works on any recent Linux distribution.
 
 Incus upstream doesn't directly provide packages, but packages are available in a number of distributions or can be found in 3rd party repositories.
 
-For Debian and Ubuntu users, we recommend the [packages provided by Zabbly](https://github.com/zabbly/incus).
-
 In addition, the Incus client is available for Windows and macOS. You can use the client to connect to an Incus server running on a Linux machine.
 
-More details can be found in our [installation guide](/incus/docs/main/installing/).
+Current installation instructions can be found in our [installation guide](/incus/docs/main/installing/).
 
 # Support
 Incus has two kind of releases:
