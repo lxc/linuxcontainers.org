@@ -285,7 +285,7 @@
      "title": "distrobuilder - Contribute",
      "menu": ["distrobuilder", "Contribute"],
      "generator": "markdown",
-     "meta": {"input": "distrobuilder/contribute.md"}},
+     "meta": {"input": "distrobuilder/contribute.de.md"}},
 
     {"path": "/distrobuilder/downloads/",
      "title": "distrobuilder - Downloads",
