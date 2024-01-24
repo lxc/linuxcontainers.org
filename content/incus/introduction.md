@@ -1,13 +1,16 @@
 [TOC]
 
 # What is Incus?
-Incus is a next generation system container and virtual machine manager. It offers a unified user experience around full Linux systems running inside containers or virtual machines.
+Incus is a next generation system container and virtual machine manager.
+
+It providdes a user experience similar to that of a public cloud. With it, you can easily mix and match both containers and virtual machines, sharing the same underlying storage and network.
 
 Incus is image based and provides images for a [wide number of Linux distributions](https://images.linuxcontainers.org). It provides flexibility and scalability for various use cases, with support for different storage backends and network types and the option to install on hardware ranging from an individual laptop or cloud instance to a full server rack.
 
 When using Incus, you can manage your instances (containers and VMs) with a simple command line tool, directly through the REST API or by using third-party tools and integrations. Incus implements a single REST API for both local and remote access.
 
-The Incus project was created by Aleksa Sarai as a community driven fork of Canonical's LXD. See here for the [announcement](/incus/announcement/).
+The Incus project [was created](/incus/announcement/) by Aleksa Sarai as a community driven alternative to Canonical's LXD.
+Today, it's led and maintained by much of the same people that once created LXD.
 
 ## Get started
 To get a better idea of what Incus is and what it does, you can [try it online](/incus/try-it/)!
@@ -57,11 +60,9 @@ Incus works on any recent Linux distribution.
 
 Incus upstream doesn't directly provide packages, but packages are available in a number of distributions or can be found in 3rd party repositories.
 
-For Debian and Ubuntu users, we recommend the [packages provided by Zabbly](https://github.com/zabbly/incus).
-
 In addition, the Incus client is available for Windows and macOS. You can use the client to connect to an Incus server running on a Linux machine.
 
-More details can be found in our [installation guide](/incus/docs/main/installing/).
+Current installation instructions can be found in our [installation guide](/incus/docs/main/installing/).
 
 # Support
 Incus has two kind of releases:
