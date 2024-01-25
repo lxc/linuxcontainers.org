@@ -285,14 +285,14 @@
      "title": "distrobuilder - Contribute",
      "menu": ["distrobuilder", "Contribute"],
      "generator": "markdown",
-     "meta": {"input": "distrobuilder/contribute.md"}},
+     "meta": {"input": "distrobuilder/contribute.de.md"}},
 
     {"path": "/distrobuilder/downloads/",
      "title": "distrobuilder - Downloads",
      "menu": ["distrobuilder", "Downloads"],
      "generator": "downloads",
      "meta": {"dir": "/downloads/distrobuilder",
-              "input": "distrobuilder/downloads.md"}},
+              "input": "distrobuilder/downloads.de.md"}},
 
     {"path": "/distrobuilder/external-resources/",
      "menu": ["distrobuilder", "External resources"]},
