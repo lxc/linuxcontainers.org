@@ -1,0 +1,84 @@
+title: LXC 2.1.1 リリースのお知らせ
+date: 2017/10/19 00:00
+content: |-
+  <!--
+  This is the first bugfix release for LXC 2.1.
+  -->
+  このリリースは LXC 2.1 のはじめてのバグフィックスリリースです。
+  
+  バグフィックス<!-- Bugfixes -->:
+  
+   * apparmor: apparmor の不要な deny を削除しました <!-- Drop useless apparmor denies -->
+   * cgfsng: 設定を持っているかどうかをチェックするようになりました <!-- Check whether we have a conf -->
+   * cgfsng: 制限の適用に失敗したときにはエラーになるようにしました <!-- Fail when limits fail to apply -->
+   * conf: 多数のマッピングをしようとした際にエラーになるようにしました <!-- Error out on too many mappings -->
+   * conf: lxc.kmsg と lxc.pivotdir を無視するようになりました <!-- Ignore lxc.kmsg and lxc.pivotdir -->
+   * conf: 環境変数が設定されているときのみ、ワーニングを出力するようにしました <!-- Make update warning opt-in -->
+   * conf: 設定ファイル中の改行を保存するようにしました <!-- Preserve newlines in configuration file -->
+   * conf: parse\_idmaps() 中の不要な割り当てを削除しました <!-- Remove dead assignments in parse\_idmaps() -->
+   * conf: 不要な NULL による初期化を削除しました <!-- Remove unnecessary zeroing -->
+   * conf: x32 でのビルドの失敗を修正するため、適切な型として rlim\_t を使うようにしました <!-- Use the proper type for rlim\_t, fixing build failure on x32. -->
+   * console: ピアが exit した際には tty の状態をクリアし、0 を返すようにしました <!-- Clean tty state + return 0 on peer exit -->
+   * console: 不要な変数割り当てを削除しました <!-- Remove dead assignments -->
+   * core: userns\_exec\_full() 関数を追加し、それを使用するようにしました <!-- Introduce userns\_exec\_full() and port the codebase to it -->
+   * criu: 初期化のチェックの際、正しいチェックを行うようにしました <!-- Use correct check initialization check -->
+   * doc: lxc.cgroup.dir の説明を日本語の lxc.container.conf(5) に追加しました <!-- Add lxc.cgroup.dir to Japanese lxc.container.conf(5) -->
+   * doc: lxc-update-config の manpage を追加しました <!-- Add lxc-update-config manpage -->
+   * doc: 環境変数の説明を追加しました <!-- Document missing env variables -->
+   * doc: lxc-monitor(1) にあった正規表現の typo を修正しました <!-- Fix regex-typo in Japanese and Korean lxc\-monitor(1) -->
+  <!-- * doc: Fix regex-typo in lxc-monitor.sgml.in -->
+   * doc: 日本語の lxc(7) を更新しました <!-- Translate lxc(7) into Japanese -->
+   * doc: 日本語の lxc-update-config(1) を追加しました <!-- Translate lxc\-update\-config(1) into Japanese -->
+   * execute: コンソールと標準の /dev のシンボリックリンクを有効にしました <!-- Enable console & standard /dev symlinks -->
+   * init: セッションリーダーになるようにしました <!-- Become session leader -->
+   * log: x32 でエラーになっていたフォーマット文字列を修正しました <!-- Fix a format string build failure on x32. -->
+   * log: スタック破壊が起こらないようにしました <!-- Prevent stack smashing -->
+   * monitor: 不要な変数割り当てを削除しました <!-- Remove dead assignment -->
+   * network: 空のリンクのチェックを行うようにしました <!-- Add missing checks for empty links -->
+   * network: インターフェースの index をクリアするようにしました <!-- Clear ifindeces -->
+   * network: 機能と関係ない変更を行いました <!-- Non-functional changes -->
+   * network: 不要な変数割り当てを削除しました <!-- Remove dead assignments -->
+   * network: ネットワークの削除の際は単一のヘルパを使うようにしました <!-- Use single helper to delete networks -->
+   * start: 継承した名前空間の fd はクローズしないようにしました <!-- Don't close inherited namespace fds -->
+   * start: 環境変数のセットアップをコンテナのセットアップの前に移動しました <!-- Move env setup before container setup -->
+   * start: LXC\_LOG\_LEVEL 環境変数をフックに与えるようにしました <!-- Pass LXC\_LOG\_LEVEL to hooks -->
+   * start: 使われていない変数を削除しました <!-- Remove dead variable -->
+   * start: 環境変数を正しく設定するようにしました <!-- Set environment variables correctly -->
+   * start: 非特権の ID へのスイッチを特権が必要な処理が終わった最後の瞬間に行うようにしました <!-- Switch ids at last possible instance -->
+   * storage: lxc.rootfs.path がない場合の segfault を防止しました <!-- Avoid segfault on missing lxc.rootfs.path -->
+   * storage: エラーメッセージ中の typo を修正しました <!-- Fix typo in error message -->
+   * storage/lvm: 論理ボリュームが Thinpool であるときの処理を修正しました <!-- Fix thinpool logical volumes -->
+   * storage/overlay: 正しくないメモリ操作を修正しました <!-- Do not write to invalid memory -->
+   * storage/overlay: use after free を修正しました <!-- Fix use after free() -->
+   * storage/zfs: zfs の作成に失敗した場合は直接エラーを返すようにしました <!-- Return error directly when zfs creation fails -->
+   * template/alpine: ファイルの存在チェック時にサイズが 0 でないこともチェックするようにしました <!-- Change file check to also check file size -->(`-f` => `-s`)
+   * template/archlinux: ロケールを "en-US.UTF-8" から "en\_US.UTF-8" に変更しました <!-- Change locale "en-US.UTF-8" to "en\_US.UTF-8" -->
+   * template/debian: getty@ の設定を強制しなくなりました <!-- Don't force getty@ configuration -->
+   * template/plamo: コンテナのシャットダウン時の不要な処理を削除しました <!-- Delete unnecessary process during container shutdown -->
+   * tests: NULL ポインタへの参照を防ぎました <!-- Avoid NULL pointer dereference -->
+   * tests: 不要な変数割り当てを削除しました <!-- Remove dead assignments -->
+   * tests: systemd のハイブリッドな cgroup をサポートしました <!-- Support systemd hybrid cgroups -->
+   * tools: LXC\_DEVEL が true の場合は "-devel" を表示するようにしました (訳注: バージョン番号の話)<!-- Print "-devel" when LXC\_DEVEL is true -->
+   * tools/lxc-unshare: NULL ポインタを与えないようにしました <!-- Do not pass NULL pointer -->
+   * tools/lxc-update-config: lxc.pivotdir と lxc.kmsg のエントリを削除するようにしました <!-- Remove lxc.pivotdir and lxc.kmsg entries -->
+   * tools/lxc-update-config: lxc.rootfs.backend 行を削除し、IPv4 アドレスを正しく扱えるようにしました <!-- Strip lxc.rootfs.backend and properly handle IPv4 addresses -->
+   * tools/lxc-user-nic: 二重の初期化を削除しました <!-- Remove double initialization -->
+   * tools/lxc-usernsexec: 不要な変数割り当てを削除しました <!-- Remove dead assignments -->
+   * utils: サイズ 0 のバッファへ書き込まないようにしました <!-- Do not write to 0 sized buffer -->
+   * utils: lxc\_popen() 内で stderr を複製するようにしました <!-- Duplicate stderr as well in lxc\_popen() -->
+   * utils: <!-- Fix -->lxc\_popen()/lxc\_pclose() を修正しました
+   * utils: lxc\_popen() 内の不要な変数割り当てを削除しました <!-- Remove dead assignments in lxc\_popen() -->
+  
+  ### ダウンロード <!-- Downloads -->
+  <!--
+  The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
+  will very soon ship a packaged version of LXC 2.1.1.
+  -->
+  このリリースの tarball は [ダウンロードページ](/lxc/downloads/) から取得できます。そして、各ディストリビューションがすぐに LXC 2.1.1 のパッケージをリリースするでしょう。
+  
+  <!--
+  Should you be interested in individual changes or just looking at the detailed development history,
+  our stable branch is on [GitHub](https://github.com/lxc/lxc/tree/stable-2.1).
+  -->
+  個々の変更点に興味がある場合、そして開発の履歴を見たい場合、stable ブランチが [GitHub](https://github.com/lxc/lxc/tree/stable-2.1) にあります。
+  

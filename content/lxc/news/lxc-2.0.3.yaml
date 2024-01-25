@@ -1,0 +1,20 @@
+title: LXC 2.0.3 release announcement
+date: 2016/06/28 00:00
+content: |-
+  This is the third bugfix release for LXC 2.0.
+  
+  LXC 2.0.3 was released just minutes after LXC 2.0.2 as we spotted an incorrect
+  AppArmor profile included in the LXC 2.0.2 release tarball.
+  
+  The main bugfixes in this release are:
+  
+   * apparmor: Refresh generated file
+  
+  ### Downloads
+  The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
+  will very soon ship a packaged version of LXC 2.0.3.
+  
+  Should you be interested in individual changes or just looking at the detailed development history,
+  our stable branch is on [GitHub](https://github.com/lxc/lxc/tree/stable-2.0).
+  
+  

@@ -1,0 +1,122 @@
+title: LXC 1.0.0 リリースのお知らせ
+date: 2014/02/20 00:00
+content: |-
+  
+  ### <!-- Introduction -->はじめに
+  <!-- It's with great pleasure that the LXC team is announcing the
+          release of LXC 1.0! -->
+    LXC チームが LXC 1.0 のリリースをアナウンスできるのは大きな喜びです!
+  
+  
+  <!-- This release is a significant milestone for us as it marks the first
+          release we consider to be production ready.  It features a
+          wide variety of improvements to container security, a
+          consistent set of tools, updated documentation and an API
+          with multiple bindings. -->
+    このリリースは、最初の安定版リリースとして位置づけられる重要な節目となるリリースです。コンテナのセキュリティ、ツールの一貫性、ドキュメントの更新、複数の言語に対するバインディングなど、広範囲に渡る改良を提供しています。
+  
+  
+  <!-- Over 60 people contributed their time to this release, making
+          it the best LXC release yet!  The result of all that work can
+          be seen used in areas as diverse as individual laptops,
+          cellphones and cloud instances.  And we are confident that
+          with LXC 1.0, we will see LXC's usage expand even more and be used
+          for a lot of new and exciting projects. -->
+    60 名を超える人が貢献した、最高の LXC のリリースとなります! この成果は個人のラップトップから、携帯電話、クラウドインスタンスまで多様な分野で目にすることができるでしょう。そして、LXC 1.0 のリリースにより、LXC の利用が更に拡大し、多数の新しいエキサイティングなプロジェクトで利用される事を確信しています。
+  
+  
+  <!-- Should you be interested in individual changes or just
+          looking at the detailed development history, our main repository is
+          on <a href="https://github.com/lxc/lxc">GitHub</a>. -->
+    どのような変更がされ、開発がどのように進んだのかをご覧になりたい場合は、メインリポジトリが <a href="https://github.com/lxc/lxc">GitHub</a> にあります。
+  
+  
+  ### <!-- New features -->新機能について
+  <!-- LXC 1.0 is the result of 10 months of development and over a
+          thousand commits, including a major rework of the way LXC is
+          structured.  It's therefore near impossible to come up with a
+          comprehensive list of changes in this release, however here are
+          some highlights: -->
+    LXC 1.0 は 10 ヶ月に及ぶ開発と、1000 を超えるコミットからなり、LXC の構造を広範囲に変更する作業を含みますので、このリリースの変更をまとめるのはほとんど不可能に近いですが、以下にハイライトをいくつかあげます:
+  
+  
+  
+  * <!-- Support for fully unprivileged containers -->完全な非特権コンテナのサポート
+  * <!-- Public stable API (liblxc1) -->公開された stable な API (liblxc1)
+  * <!-- Official API bindings for lua and python3 (in tree) -->lua と python3 に対する公式の API バインディング (ツリーに含まれます)
+  * <!-- Official API bindings for
+             <a href="https://github.com/lxc/go-lxc">Go</a> and
+             <a href="https://github.com/lxc/ruby-lxc">ruby</a>
+             (out of tree) -->
+      <a href="https://github.com/lxc/go-lxc">Go</a>
+      と
+      <a href="https://github.com/lxc/ruby-lxc">ruby</a>
+      に対する公式 API バインディング (ソースツリー外)
+      　
+  * <!-- Flexible backingstore system with support for: -->以下をサポートする柔軟なバッキングストアシステム:
+      * standard directories (default)
+      * btrfs
+      * zfs
+      * lvm
+      * loop devices
+      * aufs
+      * overlayfs
+  * <!-- Support for cloning and snapshotting containers -->コンテナのクローンとスナップショットのサポート
+  * <!-- A reduced but more complete set of command line tools -->不要なコマンドを整理しつつ、より充実したコマンドラインツール
+  * <!-- Updated, more complete documentation -->更新され、より充実したドキュメント
+  * <!-- A new way of creating containers based on centrally
+             generated images -->あらかじめ生成されたイメージを元にしたコンテナの新しい作成方法
+  * <!-- Templates letting you create containers running most
+             popular distributions -->人気のあるディストリビューションが動作するコンテナを作成できるテンプレート
+  
+  
+  <!-- A series of blog posts introducing you to LXC and highlighting
+          some of LXC 1.0's new features may be found
+          <a href="https://www.stgraber.org/2013/12/20/lxc-1-0-blog-post-series/">here</a>. -->
+    LXC の紹介と、1.0 の新機能のいくつかにハイライトを当てたブログ記事のシリーズが <a href="https://www.stgraber.org/2013/12/20/lxc-1-0-blog-post-series/">こちら</a> で公開されています。
+  
+  
+  
+  ### <!-- LXC 1.0 moving forward -->
+  <!-- LXC 1.0 is the first production ready release of LXC and it
+          comes with a commitment from upstream to maintain it until at
+          least Ubuntu 14.04 LTS reaches end of life in April 2019.
+          That's slightly over 5 years of support! -->
+    LXC 1.0 は最初の安定版リリースであり、少なくとも Ubuntu 14.04LTS が EOL(end of life) に達する 2019 年 4 月までのメンテナンスが約束されます。5 年を少し超えるサポートですよ!
+  
+  
+  <!-- We will be maintaining a separate stable branch and will
+          cherry-pick and backport fixes as appropriate.  It's expected
+          that we will have frequent bugfix releases of 1.0 so
+          distributions can simply use those and save themselves the
+          trouble of having to manually follow our stable branch. -->
+    stable ブランチは別に管理され、必要に応じてバックポートされます。頻繁に 1.0 のバグフィックス版を出す予定なので、各ディストリビューションは単純にそれを使用すれば良く、stable ブランチを自身でフォローする手間を省くことができます。
+  
+  
+  ### <!-- Bug reports and contact information -->バグレポートと連絡先
+  <!-- Bug reports should be filed on
+          <a href="https://github.com/lxc/lxc/issues">GitHub</a>
+          or if you do not wish to create an account, by e-mail to the
+          appropriate
+          <a href="https://lists.linuxcontainers.org"> mailing-list</a>.
+          The same goes for your patches. We tend to prefer patches
+          sent to lxc-devel but we also accept pull request directly on
+          GitHub. -->
+    バグレポートは <a href="https://github.com/lxc/lxc/issues">GitHub</a> に提出するようにおねがいします。GitHub のアカウントを作成したくない場合は、メールで適切な <a href="https://lists.linuxcontainers.org">メーリングリスト</a> に送ってください。
+    パッチについても同様です。どちらかというと lxc-devel メーリングリストに直接パッチを送ってもらえる方がうれしいですが、GitHub に直接 pull request を送ってもらっても受け付けます。
+  
+  
+  <!-- LXC 1.0 is also the first release after the change of project
+          maintainers which occurred in September 2013. We'd like to thank
+          Daniel Lezcano for all the great work and efforts he's put in
+          LXC over the years and wish him the best of luck in his new
+          projects! -->
+    LXC 1.0 は、2013 年 9 月にプロジェクトのメンテナが変わってから最初のリリースでもあります。我々は Daniel Lezcano 氏の偉大な業績と、LXC に対する長年に渡る取り組みに感謝の意を表したいと思います。そして彼の新しいプロジェクトの成功を祈ります!
+  
+  
+  <!-- The current projects maintainers are
+          <a href="https://s3hh.wordpress.com">Serge Hallyn</a>
+          and <a href="https://www.stgraber.org">St&eacute;phane Graber</a>. -->
+    現在のプロジェクトメンテナは <a href="https://s3hh.wordpress.com">Serge Hallyn</a>
+    と <a href="https://www.stgraber.org">St&eacute;phane Graber</a> です。
+  

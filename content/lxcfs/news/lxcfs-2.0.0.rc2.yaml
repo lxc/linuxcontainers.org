@@ -1,0 +1,8 @@
+title: LXCFS 2.0.0.rc2 release announcement
+date: 2016/02/24 00:00
+content: |-
+
+  
+   * This is the second release candidate for 2.0.0
+   * This adds the previously missing config/ directory to the release tarball.
+  

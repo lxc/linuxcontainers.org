@@ -1,0 +1,24 @@
+title: LXCFS 2.0.7 release announcement
+date: 2017/05/11 00:00
+content: |-
+
+  
+  This is the seventh bugfix release for LXCFS 2.0.
+  
+  This includes the following bugfixes:
+  
+   * Remove unused variable
+   * Also check next variable for NULL on cg\_rmdir
+   * virtualize the 'btime' field of /proc/stat
+   * cleanup: return false instead of NULL as bool
+   * Limit memswlimit by TotalSwap
+   * pam\_cgfs: remove dead assignment
+   * pam\_cgfs: return created directly
+   * pam\_cgfs: make sure that \*\*p is not NULL
+   * bindings: Want space for ints? Call sizeof(int)!
+   * pam\_cgfs: make trim() safer
+   * pam\_cgfs: error out on failure in cgv2\_init()
+   * pam\_cgfs: remove dead assignment
+   * bindings: implement guest nice
+   * bindings: increase reserved buffer size a little
+  

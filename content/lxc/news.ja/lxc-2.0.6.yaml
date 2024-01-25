@@ -1,0 +1,135 @@
+title: LXC 2.0.6 リリースのお知らせ
+date: 2016/11/23 00:00
+content: |-
+  <!--
+  This is the sixth bugfix release for LXC 2.0.
+  -->
+  このリリースは LXC 2.0 の 6 回目のバグフィックスリリースです。
+  
+  重要な変更<!-- Important -->:
+  
+   * セキュリティホール CVE-2016-8649 の修正 <!-- Security fix for CVE-2016-8649 -->
+  
+  バグ修正 <!-- Bugfixes -->:
+  
+   * utils: detect\_ramfs\_rootfs() の返り値を bool にしました <!-- make detect\_ramfs\_rootfs() return bool -->
+   * tests: detect\_ramfs\_rootfs() に対するテストを追加しました <!-- add test for detect\_ramfs\_rootfs() -->
+   * (訳注: systemd の) lxc と lxc@ ユニットに対する "Documentation" オプションを追加しました <!-- add Documentation entries to lxc and lxc@ units -->
+   * python のサンプルに utf-8 エンコーディングであることを明記しました <!-- mark the python examples as having utf-8 encoding -->
+   * log: snprintf() の返り値の sanity チェックを行うようにしました <!-- sanity check the returned value from snprintf() -->
+   * lxc-alpine: /dev/shm を tmpfs としてマウントするエントリを追加しました <!-- mount /dev/shm as tmpfs -->
+   * archlinux: eth0 上で DHCP を実行するようにしました <!-- Do DHCP on eth0 -->
+   * archlinux: 名前解決の修正を行いました <!-- Fix resolving -->
+   * lxc\_strerror() への参照を削除しました (訳注: 昔存在した関数の宣言が残っていたので削除) Drop leftover references to lxc\_strerror()
+   * tests: s390x でのイメージダウンロードを修正しました <!-- fix image download for s390x -->
+   * tools: lxc\_attach 内でコーディングスタイルを修正しました <!-- fix coding style in lxc\_attach -->
+   * tools: overlay を有効なバックエンドにしました <!-- make overlay valid backend -->
+   * tools: lxc-start のエラーレポートを改良しました <!-- better error reporting for lxc-start -->
+   * alpine: extra パッケージのインストールを修正しました <!-- Fix installing extra packages -->
+   * lxc-alpine: setfcap を drop しないようにしました <!-- do not drop setfcap -->
+   * s390x: personality の seccomp の扱いを修正しました <!-- Fix seccomp handling of personalities -->
+   * tools: lxc\_copy の引数の typo を修正しました <!-- correct the argument typo in lxc\_copy -->
+   * liblxc.so に対して libtool を使うようにしました <!-- Use libtool for liblxc.so -->
+   * c/r: --veth-pair の代わりに --external を使うようにしました <!-- use \-\-external instead of \-\-veth-pair -->
+   * c/r: 設定で名前が指定されていないインターフェースで使う数値をきちんとインクリメントするようになりました <!-- remember to increment netnr -->
+   * c/r: macvlan インターフェースの checkpoint/restore をサポートしました <!-- add checkpoint/restore support for macvlan interfaces -->
+   * ubuntu: パッケージの更新に proc ファイルシステムが必要だったので修正しました <!-- Fix package upgrades requiring proc -->
+   * c/r: macvlan の処理で重複する部分を削除しました <!-- drop duplicate hunk from macvlan case -->
+   * c/r: デバイス名の生成に snprintf を使うようにしました <!-- use snprintf to compute device name -->
+   * Android で動作するように libtool の扱いを調整しました <!-- Tweak libtool handling to work with Android -->
+   * tests: lxc\_error() と lxc\_debug() を追加しました <!-- add lxc\_error() and lxc\_debug() -->
+   * container start: すぐに cgroup 名前空間を生成するようにしました <!-- clone newcgroup immediately -->
+   * (訳注: spec ファイルの) python コードの include に python3\_sitearch を使うようにしました <!-- use python3\_sitearch for including the python code -->
+   * すべてのビルドされたファイルが一度だけ含まれるように rpm のビルドを修正しました <!-- fix rpm build, include all built files, but only once -->
+   * cgfs: 不正な free() を修正しました <!-- fix invalid free() -->
+   * OpenSUSE の build で obs-build も見つけるようにしました <!-- find OpenSUSE's build also as obs-build -->
+   * --fancy と --fancy-format のヘルプをわかりやすくしました <!-- improve help text for \-\-fancy and \-\-fancy-format -->
+   * lxc-ls の man ページの単語を修正しました <!-- improve wording of the help page for lxc-ls -->
+   * cgfs: print\_cgfs\_init\_debuginfo() を追加しました <!-- add print\_cgfs\_init\_debuginfo() -->
+   * cgfs: /proc/self/cgroup 内の空行をスキップするようにしました <!-- skip empty entries under /proc/self/cgroup -->
+   * cgfs: NULL を明確にチェックするようにしました <!-- explicitly check for NULL -->
+   * tools: lxc-stop で正しい終了コードを使うようにしました <!-- use correct exit code for lxc-stop -->
+   * c/r: 明示的に criu 引数として bind マウントを発行するようにしました <!-- explicitly emit bind mounts as criu arguments -->
+   * log:  LXC\_LOG\_BUFFER\_SIZE を 4096 に増やしました <!-- bump LXC\_LOG\_BUFFER\_SIZE to 4096 -->
+   * conf: シャットダウン時のネットワーク名前空間の移動とリネームをマージしました (訳注: シャットダウン時に物理NICをホストの名前空間に戻すときの移動とリネーム処理を単一ステップで行うようにしました) <!-- merge network namespace move & rename on shutdown -->
+   * c/r: dump 中の criu の標準出力への出力も保存するようになりました <!-- save criu's stdout during dump too -->
+   * c/r: ログ出力の文字列にある不要な行末の改行を削除しました <!-- remove extra \ns from logs -->
+   * c/r: off-by-one エラーの修正を行いました <!-- fix off-by-one error -->
+   * c/r: checkpoint/restore を実行する前に状態をチェックするようになりました <!-- check state before doing a checkpoint/restore -->
+   * start: cgroup のセットアップが終了したあとに CLONE\_NEWCGROUP を実行するようにしました <!-- CLONE\_NEWCGROUP after we have setup cgroups -->
+   * (訳注: /run を指す) シンボリックリンク /var/run を作成するようにしました <!-- create symlink for /var/run -->
+   * utils: lxc\_append\_string() を追加しました <!-- add lxc\_append\_string() -->
+   * cgroups: cpuset.cpus から隔離された CPU を削除しました (訳注: isolcpus オプション付きでシステムが起動した場合)<!-- remove isolated cpus from cpuset.cpus -->
+   * Update Ubuntu release name: zesty を追加し、wily を削除しました <!-- add zesty and remove wily -->
+   * templates: lxc-ubuntu-cloud.in に squashfs サポートを追加しました <!-- add squashfs support to lxc-ubuntu-cloud.in -->
+   * cgroups: v2 階層構造のエントリをスキップするようにしました (訳注: コントローラを/proc/self/cgroupから検索する際の話。v2にはコントローラのエントリはないため)<!-- skip v2 hierarchy entry -->
+   * runlevel 0 と 6 で lxc-net を停止するようにしました <!-- also stop lxc-net in runlevels 0 and 6 -->
+   * gitignore に lxc.egg-info を追加しました <!-- add lxc.egg-info to gitignore -->
+   * pkg-config が示す場所に bash completion をインストールするようになりました <!-- install bash completion where pkg-config tells us to -->
+   * conf: %m フォーマット指示子を使わないようにしました <!-- do not use %m format specifier -->
+   * debian: libui-dialog-perl に依存しなくなりました <!-- Don't depend on libui-dialog-perl -->
+   * cgroups: size\_t を表示する場合は %zu フォーマット指示子を使うようにしました <!-- use %zu format specifier to print size\_t -->
+   * lxc-checkpoint: (訳注: criu のバージョンに応じて) 自動的に --external か --veth-pair のどちらかを選択するようになりました <!-- automatically detect if \-\-external or \-\-veth-pair -->
+   * cgroups: cgfsng で segfault しないようにしました <!-- prevent segfault in cgfsng -->
+   * utils: lxc\_preserve\_ns() を追加しました (訳注: 名前空間を示すファイルを取得する)<!-- add lxc\_preserve\_ns() -->
+   * start: lxc\_handler に netnsfd を追加しました <!-- add netnsfd to lxc\_handler -->
+   * conf: lxc\_preserve\_ns() を使うようにしました <!-- use lxc\_preserve\_ns() -->
+   * attach: lxc\_preserve\_ns() を使うようにしました <!-- use lxc\_preserve\_ns() -->
+   * lxc\_user\_nic: lxc\_preserve\_ns() を使うようにしました <!-- use lxc\_preserve\_ns() -->
+   * conf, start: ログ出力を改良しました <!-- improve log output -->
+   * conf: ホストから明確に veth デバイスを削除するようにしました <!-- explicitly remove veth device from host -->
+   * conf, start: ネットワークの削除をよりスマートにしました <!-- be smarter when deleting networks -->
+   * start, utils: preserve\_ns() を改良しました <!-- improve preserve\_ns() -->
+   * start, error: ログの改良を行いました <!-- improve log + non-functional changes -->
+   * start, namespace: ns\_info を namespace.{c,h} へ移動しました <!-- move ns\_info to namespace.{c,h} -->
+   * attach, utils: バグ修正を行いました <!-- bugfixes -->
+   * attach: ns\_info[LXC\_NS\_MAX] 構造体を使うようにしました <!-- use ns\_info[LXC\_NS\_MAX] struct -->
+   * namespace: 常にユーザ名前空間へ最初にアタッチするようになりました <!-- always attach to user namespace first -->
+   * cgroup: isolcpus の処理を改良しました <!-- improve isolcpus handling -->
+   * cgroups: isolcpus ファイルが存在しない場合の処理を追加しました <!-- handle non-existent isolcpus file -->
+   * utils: lxc\_safe\_uint() を追加しました <!-- add lxc\_safe\_uint() -->
+   * tests: lxc\_safe\_uint() のためのユニットテストを追加しました <!-- add unit tests for lxc\_safe\_uint() -->
+   * utils: lxc\_safe\_int() を追加しました <!-- add lxc\_safe\_int() -->
+   * tests: lxc\_safe\_int() のためのユニットテストを追加しました <!-- add unit tests for lxc\_safe\_int() -->
+   * conf/ile: lxc\_safe\_uint() 経由で ip アドレスのプレフィックスを取得するようにしました <!-- get ip prefix via lxc\_safe\_uint() -->
+   * confile: config\_init\_{u,g}id で lxc\_safe\_u/int を使うようにしました <!-- use lxc\_safe\_u/int in config\_init\_{u,g}id -->
+   * conf/ile: config\_pts() で lxc\_safe\_uint を使うようにしました <!-- use lxc\_safe\_uint() in config\_pts() -->
+   * conf/ile: config\_start() で lxc\_safe\_u/int を使うようにしました <!-- use lxc\_safe\_u/int() in config\_start() -->
+   * conf/ile: config\_monitor() で lxc\_safe\_uint を使うようにしました <!-- use lxc\_safe\_uint() in config\_monitor() -->
+   * conf/ile: config\_tty() で lxc\_safe\_uint を使うようにしました <!-- use lxc\_safe\_uint() in config\_tty() -->
+   * conf/ile: config\_kmsg() で lxc\_safe\_uint を使うようにしました <!-- use lxc\_safe\_uint() in config\_kmsg() -->
+   * conf/ile: config\_lsm\_aa\_incomplete() で atoi の使用を止めました <!-- avoid atoi in config\_lsm\_aa\_incomplete() -->
+   * conf/ile: config\_autodev() で lxc\_safe\_uint() を使うようにしました <!-- use lxc\_safe\_uint() in config\_autodev() -->
+   * conf/ile: config\_ephemeral() で atoi() の使用を止めました <!-- avoid atoi() in config\_ephemeral() -->
+   * utils: lxc\_safe\_int() を使うようにしました <!-- use lxc\_safe\_int() -->
+   * lxc\_monitord: lxc\_safe\_int() と exit() を使うようにしました <!-- use lxc\_safe\_int() && use exit() -->
+   * start: lxc\_safe\_int() を使うようにしました <!-- use lxc\_safe\_int() -->
+   * conf: lxc\_safe\_{u}int() を使うようにしました <!-- use lxc\_safe\_{u}int() -->
+   * tools/lxc\_execute: lxc\_safe\_uint() を使うようにしました <!-- use lxc\_safe\_uint() -->
+   * tools/lxc\_stop: lxc\_safe\_uint() を使うようにしました <!-- use lxc\_safe\_uint() -->
+   * utils: lxc\_safe\_long() を追加しました <!-- add lxc\_safe\_long() -->
+   * tests: lxc\_safe\_long() のためのユニットテストを追加しました <!-- add unit tests for lxc\_safe\_long() -->
+   * tools/lxc\_stop: lxc\_safe\_long() を使うようにしました <!-- use lxc\_safe\_long() -->
+   * tools/lxc\_top: lxc\_safe\_int() を使うようにしました <!-- use lxc\_safe\_int() -->
+   * tools/lxc\_ls: lxc\_safe\_uint() を使うようにしました <!-- use lxc\_safe\_uint() -->
+   * tools/lxc\_autostart: lxc\_safe\_{int,long}() を使うようにしました <!-- use lxc\_safe\_{int,long}() -->
+   * tools/lxc\_console: lxc\_safe\_uint() を使うようにしました <!-- use lxc\_safe\_uint() -->
+   * tools: 標準でない名前空間の識別子を置換するようにしました <!-- replace non-standard namespace identifiers -->
+   * LXC ブリッジで static な MAC アドレスを設定するようになりました <!-- Configure a static MAC address on the LXC bridge -->
+   * tests: overflow のテストを削除しました <!-- remove overflow tests -->
+   * attach: attach するプロセスに procfd を送らないようにしました <!-- do not send procfd to attached process -->
+  
+  ### ダウンロード <!-- Downloads -->
+  <!--
+  The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
+  will very soon ship a packaged version of LXC 2.0.6.
+  -->
+  このリリースの tarball は [ダウンロードページ](/lxc/downloads/) から取得できます。そして、各ディストリビューションがすぐに LXC 2.0.6 のパッケージをリリースするでしょう。
+  
+  <!--
+  Should you be interested in individual changes or just looking at the detailed development history,
+  our stable branch is on [GitHub](https://github.com/lxc/lxc/tree/stable-2.0).
+  -->
+  個々の変更点に興味がある場合、そして開発の履歴を見たい場合、stable-2.0 ブランチが [GitHub](https://github.com/lxc/lxc/tree/stable-2.0) にあります。
+  
+  

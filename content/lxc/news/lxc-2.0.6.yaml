@@ -1,0 +1,126 @@
+title: LXC 2.0.6 release announcement
+date: 2016/11/23 00:00
+content: |-
+  This is the sixth bugfix release for LXC 2.0.
+  
+  Important:
+  
+   * Security fix for CVE-2016-8649
+  
+  Bugfixes:
+  
+   * utils: make detect\_ramfs\_rootfs() return bool
+   * tests: add test for detect\_ramfs\_rootfs()
+   * add Documentation entries to lxc and lxc@ units
+   * mark the python examples as having utf-8 encoding
+   * log: sanity check the returned value from snprintf()
+   * lxc-alpine: mount /dev/shm as tmpfs
+   * archlinux: Do DHCP on eth0
+   * archlinux: Fix resolving
+   * Drop leftover references to lxc\_strerror()
+   * tests: fix image download for s390x
+   * tools: fix coding style in lxc\_attach
+   * tools: make overlay valid backend
+   * tools: better error reporting for lxc-start
+   * alpine: Fix installing extra packages
+   * lxc-alpine: do not drop setfcap
+   * s390x: Fix seccomp handling of personalities
+   * tools: correct the argument typo in lxc\_copy
+   * Use libtool for liblxc.so
+   * c/r: use --external instead of --veth-pair
+   * c/r: remember to increment netnr
+   * c/r: add checkpoint/restore support for macvlan interfaces
+   * ubuntu: Fix package upgrades requiring proc
+   * c/r: drop duplicate hunk from macvlan case
+   * c/r: use snprintf to compute device name
+   * Tweak libtool handling to work with Android
+   * tests: add lxc\_error() and lxc\_debug()
+   * container start: clone newcgroup immediately
+   * use python3\_sitearch for including the python code
+   * fix rpm build, include all built files, but only once
+   * cgfs: fix invalid free()
+   * find OpenSUSE's build also as obs-build
+   * improve help text for --fancy and --fancy-format
+   * improve wording of the help page for lxc-ls
+   * cgfs: add print\_cgfs\_init\_debuginfo()
+   * cgfs: skip empty entries under /proc/self/cgroup
+   * cgfs: explicitly check for NULL
+   * tools: use correct exit code for lxc-stop
+   * c/r: explicitly emit bind mounts as criu arguments
+   * log: bump LXC\_LOG\_BUFFER\_SIZE to 4096
+   * conf: merge network namespace move & rename on shutdown
+   * c/r: save criu's stdout during dump too
+   * c/r: remove extra \ns from logs
+   * c/r: fix off-by-one error
+   * c/r: check state before doing a checkpoint/restore
+   * start: CLONE\_NEWCGROUP after we have setup cgroups
+   * create symlink for /var/run
+   * utils: add lxc\_append\_string()
+   * cgroups: remove isolated cpus from cpuset.cpus
+   * Update Ubuntu release name: add zesty and remove wily
+   * templates: add squashfs support to lxc-ubuntu-cloud.in
+   * cgroups: skip v2 hierarchy entry
+   * also stop lxc-net in runlevels 0 and 6
+   * add lxc.egg-info to gitignore
+   * install bash completion where pkg-config tells us to
+   * conf: do not use %m format specifier
+   * debian: Don't depend on libui-dialog-perl
+   * cgroups: use %zu format specifier to print size\_t
+   * lxc-checkpoint: automatically detect if --external or --veth-pair
+   * cgroups: prevent segfault in cgfsng
+   * utils: add lxc\_preserve\_ns()
+   * start: add netnsfd to lxc\_handler
+   * conf: use lxc\_preserve\_ns()
+   * attach: use lxc\_preserve\_ns()
+   * lxc\_user\_nic: use lxc\_preserve\_ns()
+   * conf, start: improve log output
+   * conf: explicitly remove veth device from host
+   * conf, start: be smarter when deleting networks
+   * start, utils: improve preserve\_ns()
+   * start, error: improve log + non-functional changes
+   * start, namespace: move ns\_info to namespace.{c,h}
+   * attach, utils: bugfixes
+   * attach: use ns\_info[LXC\_NS\_MAX] struct
+   * namespace: always attach to user namespace first
+   * cgroup: improve isolcpus handling
+   * cgroups: handle non-existent isolcpus file
+   * utils: add lxc\_safe\_uint()
+   * tests: add unit tests for lxc\_safe\_uint()
+   * utils: add lxc\_safe\_int()
+   * tests: add unit tests for lxc\_safe\_int()
+   * conf/ile: get ip prefix via lxc\_safe\_uint()
+   * confile: use lxc\_safe\_u/int in config\_init\_{u,g}id
+   * conf/ile: use lxc\_safe\_uint() in config\_pts()
+   * conf/ile: use lxc\_safe\_u/int() in config\_start()
+   * conf/ile: use lxc\_safe\_uint() in config\_monitor()
+   * conf/ile: use lxc\_safe\_uint() in config\_tty()
+   * conf/ile: use lxc\_safe\_uint() in config\_kmsg()
+   * conf/ile: avoid atoi in config\_lsm\_aa\_incomplete()
+   * conf/ile: use lxc\_safe\_uint() in config\_autodev()
+   * conf/ile: avoid atoi() in config\_ephemeral()
+   * utils: use lxc\_safe\_int()
+   * lxc\_monitord: use lxc\_safe\_int() && use exit()
+   * start: use lxc\_safe\_int()
+   * conf: use lxc\_safe\_{u}int()
+   * tools/lxc\_execute: use lxc\_safe\_uint()
+   * tools/lxc\_stop: use lxc\_safe\_uint()
+   * utils: add lxc\_safe\_long()
+   * tests: add unit tests for lxc\_safe\_long()
+   * tools/lxc\_stop: use lxc\_safe\_long()
+   * tools/lxc\_top: use lxc\_safe\_int()
+   * tools/lxc\_ls: use lxc\_safe\_uint()
+   * tools/lxc\_autostart: use lxc\_safe\_{int,long}()
+   * tools/lxc\_console: use lxc\_safe\_uint()
+   * tools: replace non-standard namespace identifiers
+   * Configure a static MAC address on the LXC bridge
+   * tests: remove overflow tests
+   * attach: do not send procfd to attached process
+  
+  ### Downloads
+  The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
+  will very soon ship a packaged version of LXC 2.0.6.
+  
+  Should you be interested in individual changes or just looking at the detailed development history,
+  our stable branch is on [GitHub](https://github.com/lxc/lxc/tree/stable-2.0).
+  
+  

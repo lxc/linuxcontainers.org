@@ -1,0 +1,142 @@
+#!/usr/bin/python3
+from bs4 import BeautifulSoup as BS
+import dateutil.parser
+import glob
+import json
+import os
+from urllib.request import urlopen, Request
+import ruamel.yaml
+import time
+
+API_URL = "https://discuss.linuxcontainers.org"
+API_USERNAME = "system"
+API_KEY = os.environ["API_KEY"]
+
+PROJECTS = ("incus", "lxc", "lxcfs", "distrobuilder")
+
+
+def load_json(url):
+    time.sleep(1)
+    url = url.split(API_URL)[-1]
+    url = "%s/%s.json" % (API_URL, url)
+
+    headers = {}
+    headers["Api-Key"] = API_KEY
+    headers["Api-Username"] = API_USERNAME
+    headers["Content-Type"] = "application/json"
+
+    req = Request(url, headers=headers)
+    return json.loads(urlopen(req).read().decode())
+
+
+# Update all existing posts
+updated = []
+for project in PROJECTS:
+    for post in glob.glob("content/%s/news/*.yaml" % project):
+        yaml = ruamel.yaml.YAML()
+
+        with open(post, "r") as fd:
+            old_entry = yaml.load(fd)
+
+        if "origin" not in old_entry:
+            continue
+
+        try:
+            dis_topic = load_json(old_entry["origin"])
+            dis_post = load_json("/posts/%s" %
+                                 dis_topic["post_stream"]["posts"][0]["id"])
+        except Exception:
+            print("Failed to load: %s" % old_entry["origin"])
+            continue
+
+        entry = yaml.load("""
+title: foo
+date: bar
+origin: baz
+content: |-
+  blah""")
+        entry["content"] = dis_post["raw"]
+
+        soup = BS(dis_post["cooked"], features="html.parser")
+        for imgtag in soup.find_all('img'):
+            try:
+                img_hash = imgtag['data-base62-sha1']
+                img_src = imgtag['src']
+                entry["content"] = entry["content"].replace(
+                    "upload://%s.png" % img_hash, img_src)
+            except KeyError:
+                pass
+
+        entry["title"] = dis_topic["title"]
+        date = dateutil.parser.parse(dis_topic["created_at"])
+        entry["date"] = date.strftime("%Y/%m/%d %H:%m")
+        entry["origin"] = "%s/t/%s/%s" % (API_URL, dis_topic["slug"],
+                                          dis_topic["id"])
+
+        if entry != old_entry:
+            with open(post, "w+") as fd:
+                yaml.dump(entry, fd)
+            print("%s => updated" % dis_topic["title"])
+        else:
+            print("%s => skipping (up to date)" % dis_topic["title"])
+
+        updated.append(dis_topic["id"])
+
+# Import new posts
+news = load_json("/c/news")
+for topic in news["topic_list"]["topics"]:
+    if topic["id"] in updated:
+        print("%s => skipping (already exists)" % topic["title"])
+        continue
+
+    try:
+        dis_topic = load_json("/t/%s" % topic["id"])
+        dis_post = load_json("/posts/%s" %
+                             dis_topic["post_stream"]["posts"][0]["id"])
+    except Exception:
+        print("Failed to load: %s" % topic["id"])
+        continue
+
+    if "release" not in dis_topic["tags"]:
+        continue
+
+    for project in PROJECTS:
+        if project not in dis_topic["tags"]:
+            continue
+
+        path = "content/%s/news/%s.yaml" % (project, dis_topic["slug"])
+        break
+    else:
+        print("%s => skipping (unknown project: %s)" % (dis_topic["title"],
+                                                        dis_topic["tags"]))
+        continue
+
+    yaml = ruamel.yaml.YAML()
+    entry = yaml.load("""
+title: foo
+date: bar
+origin: baz
+content: |-
+  blah""")
+    entry["content"] = dis_post["raw"]
+
+    soup = BS(dis_post["cooked"], features="html.parser")
+    for imgtag in soup.find_all('img'):
+        try:
+            img_hash = imgtag['data-base62-sha1']
+            img_src = imgtag['src']
+            entry["content"] = entry["content"].replace(
+                "upload://%s.png" % img_hash, img_src)
+        except KeyError:
+            pass
+
+    entry["title"] = dis_topic["title"]
+    date = dateutil.parser.parse(dis_topic["created_at"])
+    entry["date"] = date.strftime("%Y/%m/%d %H:%m")
+    entry["origin"] = "%s/t/%s/%s" % (API_URL, dis_topic["slug"],
+                                      dis_topic["id"])
+
+    with open(path, "w+") as fd:
+        yaml.dump(entry, fd)
+
+    print("%s => imported" % dis_topic["title"])

@@ -1,0 +1,82 @@
+title: LXC 1.0.3 リリースのお知らせ
+date: 2014/04/08 00:00
+content: |-
+  
+  <!-- This is the third bugfix release for the LXC 1.0 series. -->このリリースは LXC 1.0 シリーズの 3 回目のバグフィックスとなるリリースです。
+  
+  ### <!-- Changes -->変更点
+  
+  
+  * <!-- core: Always initialize netpipe in lxc_spawn. -->core: lxc_spawn 中で常に netpipe を初期化するようにしました (訳注: 非特権コンテナのリブート時に存在しないパイプに対してメッセージを送ることのないように lxc_spawn 中でパイプを初期化するように修正されています)
+  * <!-- core: Move lxc-monitord.log to LOGPATH instead of LXCPATH. -->core: lxc-monitord.log が LXCPATH でなく LOGPATH に出力されるようになりました
+  * <!-- core: Make monitord more resilient to unexpected
+               termination. -->core: monitord の予期しない終了に対してより適切に対応するようにしました
+  * <!-- core: Move lxc-init to /sbin/init.lxc instead of the
+               architecture/distro specific multiarch path. Use path
+               lookup to find it in the container rather than using an
+               hardcoded path. -->core: lxc-init をアーキテクチャやディストリビューション依存のパスから /sbin/init.lxc へ移動しました。
+        init.lxc をコンテナ内で見つけるときは、ハードコードされたパスではなく、$PATH を使って見つけます。
+  * <!-- core: Set macvlan default mode to private. -->core: macvlan のデフォルトモードを private にしました
+  * <!-- core: Check whether rootfs is shared before running the
+               pre-mount hooks. -->core: pre-mount hook を走らせる前に rootfs が shared でマウントされているかを確認するようにしました
+  * <!-- apparmor: Update the profiles for current upstream
+               apparmor. This includes tweak to the pivot_root targets
+               and the addition of the ptrace and signal stanzas. Users
+               of older apparmor versions may want to comment the dbus,
+               ptrace and signal stanzas if the parser fails to parse
+               the profile. -->apparmor: 現時点の upstream の apparmor に対応したプロファイルに更新しました。
+        古い apparmor のユーザは、パーサーがプロファイルのパースに失敗した場合、dbus, ptrace, signal の stanza をコメントにしても問題ありません
+  * <!-- apparmor: Use an intermediary profile which allows for
+               easier generation of complex rules. This discovered a
+               few problems with the existing profile which has now
+               been fixed. Most of /proc/sys is now properly blocked
+               with exceptions for kernel/shm/*, net/*,
+               kernel/domainname and kernel/hostname. -->apparmor: 複雑なルールをより簡単に生成できるように中間プロファイルを使うようにしました。
+        これにより既存のプロファイルにいくつか問題が見つかり、それを修正しました。
+        /proc/sys のほとんどは kernel/shm/, net/, kernel/domainname, kernel/hostname に対する例外で適切にブロックされるようになりました。
+  * <!-- apparmor: block cgroupfs by default in the with-nesting
+               profile, users should now be using cgmanager which
+               doesn't required this. -->apparmor: ネスティング時のプロファイルでデフォルトでは cgroupfs をブロックするようにしました。
+        ユーザは今後 cgroupfs のマウントが不要な cgmanager を使用するべきです
+  * <!-- cgmanager: Fix a small cgm_get bug when len == 0. -->cgmanager: len == 0 の時発生する cgm_get のバグを修正しました
+  * <!-- lxc-info: Don't print duplicate lines. -->lxc-info: 重複する行を表示しないようにしました
+  * <!-- sysvinit script: Fix wait_for_bridge to better parse
+               default.conf -->sysvinit script: より適切に default.conf をパースするように wait_for_bridge を修正しました
+  * <!-- tools: Don't exit -1, instead use more conventional and
+               consistent exit codes 0 on success, 1 on failure with
+               some (now documented) exceptions for lxc-start. -->tools: -1 での exit をやめ、一部例外を除き (ドキュメント化されています)、より一般的かつ一貫した exit code の 0 （成功時）と 1（失敗時）を利用するよう変更しました (訳注: 原文では "for lxc-start" とあり、lxc-start に対して一般的で一貫した exit code を採用した事になっていますが、別に lxc-start 以外の lxc-* にも同様の修正が加えられており、例外は lxc-stop に存在するので、上記のような訳としました)
+  * <!-- archlinux template: Add debugging info for missing
+               network link. -->archlinux template: network link が存在しない場合のデバッグ情報を追加しました
+  * <!-- archlinux template: Various fixes and cleanups. -->archlinux template: 色々な修正とクリーンアップを行いました
+  * <!-- centos template: Properly set lxc.arch. -->centos template: lxc.arch を適切に設定するようにしました
+  * <!-- download template: Make it a bit more resilient to
+               download failures. -->download template: ダウンロードの失敗を少し適切に処理するようにしました (訳注: ダウンロードに使う wget のタイムアウト値を 30 秒に設定しています)
+  * <!-- fedora template: Properly set lxc.arch. -->fedora template: lxc.arch を適切に設定するようにしました
+  * <!-- gentoo template: Make sure sshd is started. -->gentoo template: sshd が起動したのを確認するようにしました
+  * <!-- gentoo template: Fix lack of generated locales. -->gentoo template: locale が生成されるようにしました
+  * <!-- gentoo template: Fix lxc-console by setting up a tty. -->gentoo template: lxc-console がきちんと動作するように tty の設定を行うようにしました
+  * <!-- oracle template: Fix upgrade problems by introducing a
+               patch script that's run on upgrade. -->oracle template: upgrade時に実行されるパッチスクリプトを追加する事によりupdate時の問題を修正しました
+  * <!-- tests: Add a test for the apparmor profiles. -->tests: apparmorプロファイルのテストを追加しました
+  * <!-- tests: Bump timeouts to fix occasional failures on slow
+               ARM builders. -->tests: 遅い ARM での失敗のケースの修正としてタイムアウト値を増やしました
+  * <!-- tests: Always propagate http_proxy and https_proxy. -->tests: 常に http_proxy と https_proxy の値を使用するようにしました
+  
+  
+  
+  ### <!-- Downloads -->ダウンロード
+  <!-- The release tarballs may be found on our
+          [download page</a> and we expect most
+          distributions will very soon ship a packaged version of LXC 1.0.3. -->
+    このリリースの tarball は [ダウンロードページ](/lxc/downloads/) から取得できます。
+    そして、各ディストリビューションがすぐに LXC 1.0.3 のパッケージをリリースするでしょう。
+  
+  
+  <!-- Should you be interested in individual changes or just
+          looking at the detailed development history, our stable branch is
+          on <a href="https://github.com/lxc/lxc/tree/stable-1.0">GitHub</a>. -->
+    個々の変更点に興味がある場合、そして開発の履歴を見たい場合、stable ブランチは <a href="https://github.com/lxc/lxc/tree/stable-1.0">GitHub</a> にあります。
+  
+  
+  
+  

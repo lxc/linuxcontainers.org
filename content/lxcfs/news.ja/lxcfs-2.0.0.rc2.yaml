@@ -1,0 +1,8 @@
+title: LXCFS 2.0.0.rc2 リリースのお知らせ
+date: 2016/02/24 00:00
+content: |-
+
+  
+   * このリリースは 2.0.0 に対する第 2 のリリース候補版です <!-- This is the second release candidate for 2.0.0 -->
+   * 前のリリースでリリース tarball に欠けていた config/ ディレクトリを追加しました <!-- This adds the previously missing config/ directory to the release tarball. -->
+  

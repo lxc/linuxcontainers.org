@@ -1,0 +1,454 @@
+title: Incus 0.4 リリースのお知らせ
+date: 2023/12/21 18:12
+origin: https://discuss.linuxcontainers.org/t/incus-0-4-has-been-released/18512
+content: |-
+  # はじめに <!-- Introduction -->
+  <!--
+  The Incus team is pleased to announce the release of Incus 0.4!
+  -->
+  Incus チームは、Incus 0.4 のリリースのアナウンスができてうれしいです！
+
+  <!--
+  This is going to be the last release of Incus to feature changes coming from LXD as Incus has now been forced into being fully independent.
+  -->
+  Incus は、完全に独立することを余儀なくされているので、このリリースは LXD からの変更を取り入れた Incus の最後のリリースとなります。
+
+  <!--
+  Incus 0.4 comes with some exciting new features, like the built-in keep-alive mode in the client tool, improvements to certificate/trust store management, new OVN configuration keys and the ability to directly create CephFS filesystems.
+  -->
+  Incus 0.4 には、いくつか魅力的な新機能が搭載されています。クライアントツール組み込みのキープアライブモード、証明書・トラストストア管理の改善、新しい OVN 設定キー、CephFS ファイルシステムを直接作成する機能などです。
+
+  <!--
+  It also comes with significant improvements to both the OpenFGA and OVN handling, putting infrastructure in place for upcoming new features!
+  -->
+  さらに、OpenFGA と OVN の両方で大幅な改善がなされ、今後の新機能に備えるインフラが整備されました。
+
+  [![image|690x459](https://discuss.linuxcontainers.org/uploads/default/original/2X/6/68caa16193e981e7957e0318895c8cb581640f73.png)](https://linuxcontainers.org/incus/try-it/)
+
+  <!--
+  You can try it for yourself online: https://linuxcontainers.org/incus/try-it/
+  -->
+  オンラインでご自身で試せます: https://linuxcontainers.org/incus/try-it/
+
+  <!--
+  The Incus team wishes you happy holidays and a happy new year, see you in 2024!
+  -->
+  Incus チームは、あなたが楽しい休暇を過ごし、良い新年を迎えることを願っています。2024 年にお会いしましょう！
+
+  Enjoy!
+
+  # お知らせ <!-- Notices -->
+  ## Canonical LXD プロジェクトのライセンス変更とコントリビューター契約について<!-- Re-licensing and contributor agreement on the Canonical LXD project -->
+  <!--
+  Canonical has made the decision to re-license Canonical LXD under the AGPLv3 license as well as require all new contributions to come from individuals or organizations that have signed the Canonical Contributor License Agreement (CLA).
+  -->
+  Canonical は、Canonical LXD を AGPLv3 ライセンスのもとに再ライセンスし、新しい貢献はすべて、Canonical コントリビューターライセンス契約（CLA）に署名した個人と組織からのものであることを要求するようになりました。
+
+  <!--
+  Incus will remain under the Apache 2.0 license and as a result will no longer import any changes from LXD. This also means that as Incus changes are not under the AGPLv3 license and are generally not from individuals or organizations that have signed Canonical's legal agreement, those changes no longer qualify for inclusion into LXD.
+  -->
+  Incus は Apache 2.0 ライセンスのまま継続しますので、その結果、LXD からのいかなる変更もインポートしません。これは、Incus は AGPLv3 ライセンスのもとで変更されるわけではなく、また、Canonical の法的合意に署名した個人や組織からによる変更でもないため、Incus の変更は LXD に含める資格がなくなります。
+
+  <!--
+  You'll find more details on this here: https://discuss.linuxcontainers.org/t/lxd-has-been-re-licensed-and-is-now-under-a-cla/18454
+  -->
+  詳細はこちらをご覧ください： https://discuss.linuxcontainers.org/t/lxd-has-been-re-licensed-and-is-now-under-a-cla/18454
+
+  ## LXD ユーザーのイメージサーバへのアクセスを段階的に停止 <!-- Phasing out of image server access for LXD users -->
+  <!--
+  Related to the change above as well as Canonical's decision to no longer put any resources into assisting with day to day operations of our image builds, access to the community image server (`images:` remote) is going to be phased out for LXD users.
+  -->
+  前述の変更と、イメージビルドの日常業務への支援へリソースを一切投入しないという Canonical の決定に関連して、コミュニティーのイメージサーバ（`images:` remote）へのアクセスを段階的に停止します。
+
+  <!--
+  This will occur over a period of around 5 months. We strongly recommend anyone using LXD to run non-Ubuntu images to start planning their migration to Incus.
+  -->
+  これは約 5 ヶ月に渡って行われます。LXD を使って Ubuntu ではないイメージを実行しているユーザーは、Incus への移行計画を開始することを強くおすすめします。
+
+  <!--
+  You'll find more details on this here: https://discuss.linuxcontainers.org/t/important-notice-for-lxd-users-image-server/18479
+  -->
+  詳細はこちらをご覧ください： https://discuss.linuxcontainers.org/t/important-notice-for-lxd-users-image-server/18479
+
+  # 新機能とハイライト <!-- New features and highlights -->
+  ## CLI でのキープアライブサポート <!-- Keep-alive support in CLI client -->
+  <!--
+  A new `keepalive` configuration key can be directly set on a remote in `~/.config/incus/config.yml`.
+  This key, to be set to an integer number of seconds, defines how long to keep a background connection with the Incus server (time since last use).
+  -->
+  `~/.config/incus/config.yml` に直接、リモートに対する新しいキープアライブに関する設定を行えます。
+  このキーは、整数秒に設定され、Incus サーバとのバックグラウンドでの接続を維持する時間を定義します（最後に使用してからの時間）。
+
+  <!--
+  The way this works is that the command line tool will automatically spawn a background process (`incus remote proxy`) which will connect to the target server, handle authentication and do some minimal caching, then provide a unix socket to communicate with the remote server.
+  -->
+  この機能は、コマンドラインツールが自動的にバックグラウンドプロセスを起動し（`incus remote proxy`）、ターゲットサーバに接続し、認証を処理し、最小限のキャッシュを行い、リモートサーバとの通信を行うための UNIX ソケットを提供するという方法で動作します。
+
+  <!--
+  Any new instance of the command line tool will then automatically detect and use that unix socket, bypassing all of the connection and authentication steps, leading to significantly lowered latency. We've measured this to provide up to 30% performance improvement for use cases that spawn a lot of `incus` commands like Ansible.
+  -->
+  コマンドラインツールの新しいインスタンスは、自動的に UNIX ソケットを検出して使用し、すべての接続と認証ステップをバイパスし、レイテンシを大幅に削減します。Ansible のような多数の `incus` コマンドを起動するようなユースケースで、30% のパフォーマンス向上をもたらすことが計測されています。
+
+  ## 証明書エントリの Description フィールド <!-- Description field for certificate entries -->
+  <!--
+  The certificate entries (`/1.0/certificates`) now have a `Description` field, aligning them with the vast majority of other Incus objects.
+  -->
+  証明書エントリ（`/1.0/certificates`）に `Description` フィールドが追加され、他の Incus オブジェクトの大部分と同じになりました。
+
+  ## `incus config trust list` の作り直し <!-- Reworked `incus config trust list` -->
+  <!--
+  `incus config trust list` has been reworked to show more useful columns by default, including the aforementioned description column. Those columns are also now configurable similar to a number of similar `list` commands in the Incus client.
+  -->
+  `incus config trust list` は、前述の Description カラムを含む、より役に立つカラムをデフォルトで表示するように作り直されました。これらのカラムは、Incus クライアントの他の `list` コマンドと同様に、表示する情報を設定できるようになりました。
+
+
+      stgraber@chulak:~$ incus config trust list
+      +--------------------+---------+----------------------------------------------+--------------+-------------------------------+
+      |        NAME        |  TYPE   |                 DESCRIPTION                  | FINGERPRINT  |          EXPIRY DATE          |
+      +--------------------+---------+----------------------------------------------+--------------+-------------------------------+
+      | ansible            | client  | Ansible access to all instances              | 58ea2754fe55 | Dec 14, 2030 at 3:07am (UTC)  |
+      +--------------------+---------+----------------------------------------------+--------------+-------------------------------+
+      | athos              | server  |                                              | fad46455a46b | Aug 13, 2033 at 11:11pm (UTC) |
+      +--------------------+---------+----------------------------------------------+--------------+-------------------------------+
+      | celestis           | server  |                                              | 903d3e69de2c | Aug 16, 2033 at 12:24am (UTC) |
+      +--------------------+---------+----------------------------------------------+--------------+-------------------------------+
+      | chulak             | server  |                                              | ab805a2bc6af | Aug 6, 2033 at 5:48am (UTC)   |
+      +--------------------+---------+----------------------------------------------+--------------+-------------------------------+
+      | delmak             | server  |                                              | 1f6be459e591 | Aug 14, 2033 at 10:39pm (UTC) |
+      +--------------------+---------+----------------------------------------------+--------------+-------------------------------+
+      | gh-actions-manager | client  | Github self-hosted test runners              | e5bc1b5df649 | Aug 11, 2033 at 8:47pm (UTC)  |
+      +--------------------+---------+----------------------------------------------+--------------+-------------------------------+
+      | maas-region01      | client  | MAAS controller access to lab VMs            | 9be434462768 | Dec 26, 2031 at 5:10pm (UTC)  |
+      +--------------------+---------+----------------------------------------------+--------------+-------------------------------+
+      | prometheus01       | metrics | Metrics gathering                            | ede97eae54df | Oct 30, 2031 at 8:57pm (UTC)  |
+      +--------------------+---------+----------------------------------------------+--------------+-------------------------------+
+      | try-it             | client  | incus-demo-server access to try-it instances | fff8465939e4 | Sep 16, 2033 at 4:54am (UTC)  |
+      +--------------------+---------+----------------------------------------------+--------------+-------------------------------+
+
+  ## サーバー設定の OVN SSL 設定キー <!-- OVN SSL keys as server configuration -->
+  <!--
+  A set of new configuration keys have been added to allow specifying the SSL certificates and keys to access OVN. When set, those take precedence over any keys found in /etc/ovn/.
+  -->
+  OVN にアクセスするための SSL 証明書と鍵を指定できるように、新しい設定キーが追加されました。これらを設定すると、`/etc/ovn/` にある、あらゆるキーより優先されます。
+
+   - `network.ovn.ca_cert`
+   - `network.ovn.client_cert`
+   - `network.ovn.client_key`
+
+  ## CephFS ファイルシステムが直接作成可能に <!-- CephFS filesystems can now be directly created -->
+  <!--
+  Until now, creating a `cephfs` storage pool required the particular filesystem instance defined through the `source` key to already exist in Ceph.
+  -->
+  これまで、`cephfs` ストレージプールを作成するには、`source` キーで定義された特定のファイルシステムが、事前に Ceph に存在している必要がありました。
+
+  <!--
+  But now, the `cephfs.create_missing` config key can be set to `true` along with setting `cephfs.data_pool` and `cephfs.meta_pool` to indicate what OSD pool to consume which will result in Incus creating a new cephfs filesystem.
+  -->
+  しかし、`cephfs.create_missing` を `true` に設定し、使用する OSD プールを指示するために `cephfs.data_pool` と `cephfs.meta_pool` を設定すると、Incus が新しい cephfs ファイルシステムを作成するようになりました。
+
+  ドキュメント <!-- Documentation -->: https://linuxcontainers.org/incus/docs/main/reference/storage_cephfs/
+
+  <!--
+  *This feature was first introduced in LXD.*
+  -->
+  *この機能は LXD に初めて導入された機能です。*
+
+  ### すべての変更点 <!-- Complete changelog -->
+  <!--
+  Here is a complete list of all changes in this release:
+  -->
+  このリリースのすべての変更のリストは次のとおりです（翻訳なし）：
+
+  [details="すべてのChangeLogを見る"]
+   - lxd-to-incus: Allow bypassing version check
+   - lxd-to-incus: Record PID in backup and log
+   - [lxd-import] lxd/instance/drivers: Add comments for lxd-agent udev rules, systemd unit, and serial devices
+   - [lxd-import] lxd/instance/drivers/qemu: consistently rely on $PATH to find binaries
+   - [lxd-import] lxd/instance/drivers/qemu: mount the config drive as readonly
+   - [lxd-import] lxd/instance/drivers/qemu: reduce the size of /run/incus_agent tmpfs and set nodev,nosuid,noatime
+   - [lxd-import] lxd/instance/drivers/qemu: do not preserve the ownership during the cp to avoid chown
+   - [lxd-import] lxd/instance/drivers: Cleanup old incus-agent symlink in install script
+   - [lxd-import] lxc/move: Prevent pool migration to block project migration
+   - [lxd-import] lxd/instance_post: Determine root device from profiles in target project
+   - [lxd-import] lxc/move: Throw an error when unsupported move flags are used
+   - i18n: Update translation templates
+   - incusd/auth/openfga: Use chunking
+   - docs: update iso import in instances_create
+   - lxd-to-incus: Unmount any leftover mounts
+   - lxd-to-incus: Support LXD COPR
+   - [lxd-import] lxd/storage/drivers: Add new cephfs create keys
+   - [lxd-import] lxd/storage/drivers: Update cephfs entity helpers
+   - [lxd-import] lxd/storage/drivers: Add DefaultVMBlockFilesystemSize to driver Info struct
+   - [lxd-import] lxd/storage/drivers/btrfs: Set drivers DefaultVMBlockFilesystemSize
+   - [lxd-import] lxd/storage/drivers/ceph: Set drivers DefaultVMBlockFilesystemSize
+   - [lxd-import] lxd/storage/drivers/cephfs: Set drivers DefaultVMBlockFilesystemSize
+   - [lxd-import] lxd/storage/drivers/dir: Set drivers DefaultVMBlockFilesystemSize
+   - [lxd-import] lxd/storage/drivers/lvm: Set drivers DefaultVMBlockFilesystemSize
+   - [lxd-import] lxd/storage/drivers/mock: Set drivers DefaultVMBlockFilesystemSize
+   - [lxd-import] lxd/storage/drivers/zfs: Set drivers DefaultVMBlockFilesystemSize
+   - [lxd-import] lxd/storage/backend: Use drivers default VM block volume size for config filesystem
+   - [lxd-import] lxd/storage/drivers/volume: Use drivers default VM block size for filesystem volume
+   - [lxd-import] lxd/project: Fix typo in comment
+   - [lxd-import] lxd/instance/drivers: Use the pools default VM block filesystem size
+   - [lxd-import] lxd/storage: Use the pools default VM block filesystem size
+   - [lxd-import] lxd/project: Add TODO for instance limits accounting
+   - [lxd-import] lxd/instance: Use stable random generator for temporary instance name
+   - [lxd-import] lxd/instance: Improve error message
+   - [lxd-import] lxd/instance/drivers/qemu: Run specific remote config only for Ceph backends
+   - [lxd-import] lxd/storage/drivers: Create cephfs entities if keys specified
+   - [lxd-import] lxd/storage/drivers: Revert osd/fs creation
+   - [lxd-import] doc/reference: Add doc reference for new config keys
+   - [lxd-import] shared/version: Add storage_cephfs_create_missing extension
+   - [lxd-import] lxd/storage/drivers: Collect subvolumes via filepath traversal if in nested container.
+   - [lxd-import] doc/howto: Make pool name consistent in iso tutorial.
+   - [lxd-import] test/suites: Add cephfs create_missing test
+   - incusd/auth/openfga: Bump timeouts to 10s
+   - incusd/auth/openfga: Return correct error
+   - doc/userns-idmap.md: add a target/label for this file
+   - internal/server/db: Remove function `doDbScan`
+   - internal/server: Use `Retry` function
+   - internal/server/db: Unwrap dbQueryRowScan function
+   - internal/server/db: Unwrap queryScan function
+   - internal/server/db: Remove exec function
+   - doc/installing.md: add installation steps for Gentoo
+   - doc: Add build instruction on AlpineLinux
+   - incusd/apparmor/rsync: Fix in nested containers
+   - doc/installing: Use tabs for package instructions
+   - doc/installing: Fix typo
+   - doc/installing: Move source instructions to tab layout
+   - incusd/metrics: Remove maps from internal API
+   - internal/server/instance: Update for new internal metrics API
+   - lxd-agent: Update to new internal metrics API
+   - doc/authentication: Update reference to command to match split of `config trust add` and `config trust add-certificate`
+   - incusd/state: Add new ServerClustered field
+   - incusd: Use ServerClustered
+   - incusd/auth/openfga: Only sync resources on the leader
+   - incusd/auth: Make volumes location specific
+   - incusd/auth: Make buckets location specific
+   - incusd/auth: Allow variable identifiers
+   - incusd/db/cluster: Add location support to URLToEntityType
+   - incusd/project: Pass location data
+   - incusd/storage: Pass location data
+   - incusd: Update for URLToEntityType
+   - incusd: Remove duplicate permission check on bucket delete
+   - incusd: Update OpenFGA resources for location
+   - incusd: Update permission checks for buckets
+   - incusd: Update permission checks for volumes
+   - incusd/auth: Add location support in ObjectFromRequest
+   - doc/lxd-to-incus: Add mention of group changes
+   - build(deps): bump actions/labeler from 4 to 5
+   - doc: Add NixOS to wordlist
+   - doc/installing: init NixOS instructions
+   - github: Pin OpenFGA to v1.3.7
+   - github: Update for new labeler
+   - incusd/project: Add ImageProjectFromRecord
+   - incusd/auth/openfga: Fix diff logic to compare the correct objects
+   - incusd/images: Perform access control after fingerprint expansion
+   - incusd: Add expansion of image and certificate fingerprints
+   - incusd: Add expansion of project names for inheritance
+   - incusd/images: Record downloaded images with authorizer
+   - incusd/images: Don't use request context in authorizer for background operations
+   - incusd/projects: Don't use request context in authorizer for background operations
+   - incusd/storage/drivers: Add singular helper for volume types
+   - incusd/storage: Update authorizer for all operations
+   - incusd/auth/openfga: Handle offline servers
+   - incusd/auth/openfga: Allow for later resources refresh
+   - incusd/auth/openfga: Re-sync resources hourly
+   - incusd/auth/openfga: Fix handling of cluster members
+   - incusd: Use expanded cert fingerprint in authorizer check
+   - Revert "github: Pin OpenFGA to v1.3.7"
+   - [lxd-import] doc/instances: change pool name to be consistent
+   - [lxd-import] lxd/instance_post: Retain root disk device if not explicitly changed
+   - [lxd-import] test: Add tests for server-side instance move
+   - [lxd-import] lxd/instance/drivers/qemu_cmd: Return clean EOF error
+   - [lxd-import] github: have curl fail instead of feeding bogus data on download error
+   - [lxd-import] api: Add API extension for improved server-side move
+   - [lxd-import] .github/workflows: remove shiftfs
+   - [lxd-import] lxd/metadata: remove shiftfs
+   - [lxd-import] lxd/instance/drivers: Set correct RBD content type for qemu drives
+   - [lxd-import] lxd/db/instances: Fix instance names from project not retrieved
+   - [lxd-import] lxd/cluster/config: Add missing description default values
+   - [lxd-import] lxd/node: Add missing description default values
+   - [lxd-import] Update metadata
+   - [lxd-import] doc: remove shiftfs
+   - tests: Re-introduce storage shifting test
+   - [lxd-import] shared/api/instance: Expand InstancePost structure
+   - [lxd-import] lxc/move: Respect all flags on server-side move
+   - [lxd-import] lxd/instance_post: Respect provided config, device and profile overwrites on move
+   - [lxd-import] tests: Add server-side move tests
+   - [lxd-import] doc: Update API
+   - [lxd-import] i18n: Update translations
+   - [lxd-import] lxc/move: Overwrite profiles only if explicitly provided by the user
+   - [lxd-import] lxd/instance_post: Retain previous profiles on instance move
+   - [lxd-import] tests: Improve tests for instance move
+   - [lxd-import] lxd/cluster: Retry cluster join if cluster is busy
+   - doc: Fix url to documentation
+   - doc/cloud-init: Fix spellcheck error
+   - shared: remove shiftfs
+   - api: ovn_ssl_config
+   - incusd/cluster/config: Add OVN SSL config keys
+   - doc: Update configs
+   - incusd/network/openvswitch: Support OVN SSL config keys
+   - internal/linux: Implement CreateMemfd
+   - incusd/network/openvswitch: Port to memfd
+   - internal/server/response: Don't re-send headers when streaming
+   - incusd/operations: Use ManualResponse to send headers early
+   - incus: Fix typo in comment
+   - [lxd-import] lxd/storage/s3/miniod: Discover port using IPv4 address family
+   - [lxd-import] lxd-agent: Prevent panic when dev-incus server is stopped
+   - [lxd-import] lxd/storage/drivers: Always copy Ceph VMs filesystem volume
+   - [lxd-import] doc/cloud-init: overwrite link text to make spell checker happy
+   - incusd/storage: Use Shutdown context for import from backup
+   - incusd/storage: Fix size check for ISO volumes
+   - [lxd-import] client: Always use event listener for operations.
+   - [lxd-import] lxd/instance/drivers/qemu: Load storage pool before accessing it
+   - lxd-to-incus: Add security.devlxd to deprecated keys
+   - lxd-to-incus: Delete old OVN bridges
+   - lxd-to-incus: Mangle project and profile descriptions
+   - Revert "[lxd-import] client: Always use event listener for operations."
+   - lxd-to-incus: Don't spam the output with command failures
+   - incusd/instance/qemu: Properly set cdrom type
+   - incus/remote: Add remote proxy command
+   - i18n: Update translations template
+   - shared/cliconfig: Add keepalive config field
+   - incus/remote: Clear Keepalive field for proxied connections
+   - shared/cliconfig: Add keepalive proxy support
+   - incusd/endpoints: Also hide read errors from proxies
+   - build(deps): bump actions/setup-go from 4 to 5
+   - internal/server/db: Add description field to certificate
+   - incusd/certificates: Add support for description field
+   - shared/api/certificate: Add description field
+   - api: certificate_description
+   - doc/rest-api: Refresh swagger YAML
+   - incus: Variable certificate store columns
+   - i18n: Update translation templates
+   - tests: Update for incus config trust list changes
+   - Makefile: Make sure we never import the AGPL version of LXD
+   - gomod: Update dependencies
+   - [lxd-import] golangci: Updates the metalinter configuration.
+   - [lxd-import] lxd/firewall/drivers: Removes unnecessary break statements from switch.
+   - [lxd-import] test/lint: Add script to invoke golangci-lint with '--new'.
+   - [lxd-import] Makefile: Remove invocation of golangci-lint from Makefile.
+   - [lxd-import] client/lxd/instances: Treat nil args as empty InstanceExecArgs in ExecInstance
+   - [lxd-import] client/lxd/instances: Always consume pings from control socket if established in ExecInstance
+   - [lxd-import] client/lxd/instances: Discard non-interactive stdout/stderr output if writer(s) not supplied in ExecInstance
+   - [lxd-import] client/lxd/instances: Remove unnecessary args nil check
+   - [lxd-import] doc/storage/cephfs: specify that you can automatically create pools
+   - lxd-to-incus: Update for LXD 5.20
+   - incusd/instance: Properly revert OpenFGA on failure
+   - incus/move: Only use server-side move when dealing with a single server
+   - incus/instance/qemu: Remove legacy udev rule
+   - internal/cgo: Move to shared/cgo
+   - global: Update for shared/cgo
+   - internal/idmap: Move to shared/idmap
+   - global: Update for shared/idmap
+   - shared/idmap: Don't depend on internal packages
+   - test/lint/golangci: Add missing trailing new line
+   - test/golangci: Handle some common upstream branch names
+   - test/README: Fix bad binary names
+   - github/ISSUE_TEMPLATE: Fix bad binary names
+   - test/golangci: Better handle Github refs
+   - test/golangci: Fetch GITHUB_BEFORE reference
+   - doc: Fixed typos
+   - lxd-to-incus: Add shiftfs check
+   - incusd/firewall/iptables: Make sure to always use locking
+   - doc/installing: Remove redundant instructions
+   - README: Tweak section about Incus creation
+   - doc/migrate: Add link to installing page
+   - build(deps): bump actions/upload-artifact from 3 to 4
+   - Makefile: Bump to OpenFGA 0.3.1-go1.20
+   - gomod: Update dependencies
+   - incusd/auth/openfga: Update for OpenFGA 0.3.1
+   - mini-oidc: Implement user store
+   - incusd/auth/openfga: Handle small model differences
+   - shared: Fix comments typo
+   - Makefile: Add update-ovsdb
+   - gomod: Add libovsdb
+   - incusd/network/openvswitch: Add OVS and OVN schemas
+   - incusd/network/openvswitch: Remove unused functions
+   - incusd/network/openvswitch: Remove useless code
+   - incusd/network/openvswitch: Split OVN logic
+   - incusd/network/openvswitch: Add OVN database types
+   - incusd/network/openvswitch: Add native ovsdb client
+   - incusd/network/openvswitch: Simplify logic
+   - golangci: Don't complain about unused receivers
+   - incusd/network/openvswitch: Use pointer receiver for LogicalRouterDelete
+   - incusd/network/openvswitch: Port ChassisGroupChassisAdd to ovsdb
+   - incusd/server/network: Move ovn to separate package
+   - Makefile: Update for new OVN package
+   - incusd/network/openvswitch: Update for separate ovn package
+   - incusd/network/openvswitch: Move TCP flags to ovn package
+   - incusd: Update for network/ovn
+   - incusd/network/openvswitch: Rename to ovs
+   - Makefile: Update for OVS package
+   - incusd: Update for OVS package rename
+   - incusd: Fix import shadowing
+   - tests: Skip lint on OVSDB schemas
+   - incusd/network/ovs: Re-organize the package
+   - incusd/network/ovs: Rename OVS struct to VSwitch
+   - incusd: Update for NewVSwitch
+   - incusd/network/ovn: Re-organize the package
+   - incusd/network/ovn: Add new Southbound client
+   - incusd/network/ovn: Move GetLogicalRouterPortActiveChassisHostname to SB
+   - incusd/network: Update for GetLogicalRouterPortActiveChassisHostname
+   - incusd/network/ovn: Replace OVN struct with NB
+   - incusd: Update for OVN NB struct
+   - incusd/network/ovn: Port PortGroupInfo to OVSDB
+   - incusd/network/ovn: Port LogicalSwitchPortDynamicIPs to OVSDB
+   - incusd/network/ovs: Add OVSDB client
+   - incusd: Update for NewVSwitch changes
+   - incusd/network/ovs: Port BridgeExists to OVSDB
+   - incusd/network/ovs: Port ChassisID to OVSDB
+   - incusd/network/ovs: Port OVNBridgeMappings to OVSDB
+   - Makefile: Set min OVN version to 22.03.0
+   - incusd/network/ovn: Update schemas
+   - incusd/network/ovs: Fix empty OVNBridgeMappings
+   - incusd/network/ovn: Wait for port to appear
+  [/details]
+
+  # ドキュメント <!-- Documentation -->
+  <!--
+  The Incus documentation can be found at:
+  -->
+  Incus のドキュメントはこちらです: 
+  https://linuxcontainers.org/incus/docs/main/
+
+  （訳注：ドキュメントの日本語訳はこちら： https://incus-ja.readthedocs.io/ja/latest/ ）
+
+  # パッケージ <!-- Packages -->
+  <!--
+  There are no official Incus packages as Incus upstream only releases regular release tarballs. Below are some available options to get Incus up and running.
+  -->
+  Incus の開発元は通常のリリース tarball をリリースするだけですので、公式の Incus パッケージはありません。以下は Incus を起動して実行するために利用可能なオプションです。
+
+  ## Debian と Ubuntu 向け Zabbly パッケージ <!-- Zabbly packages for Debian and Ubuntu -->
+  <!--
+  Zabbly provides both daily and stable builds of Incus to Debian and Ubuntu users:
+  -->
+  Zabbly がデイリーと安定版の両方の Incus のビルドを Debian と Ubuntu のユーザー向けに提供します:
+  https://github.com/zabbly/incus
+
+  ## Incus クライアントの Homebrew パッケージ <!-- Homebrew package for the Incus client -->
+  <!--
+  The client tool is available through HomeBrew for both Linux and MacOS.
+  -->
+  Linux と macOS の両方向けのパッケージが Homebrew 経由で利用できます。
+
+  https://formulae.brew.sh/formula/incus
+
+  ## Incus クライアントの Chocolatey パッケージ <!-- Chocolatey package for the Incus client -->
+  <!--
+  The client tool is available through Chocolatey for Windows users.
+  -->
+  Windows ユーザーには Chocolatey 経由でクライアントツールが利用できます。
+
+  https://community.chocolatey.org/packages/incus/0.4
+
+  # サポート <!-- Support -->
+  <!--
+  At this early stage, each Incus release will only be supported up until the next release comes out. This will change in a few months as we are planning an LTS release to coincide with the LTS releases of LXC and LXCFS.
+  -->
+  現在は初期段階ですので、Incus の各リリースは、次のリリースが出るまでしかサポートされません。LXC と LXCFS のリリースと合わせて LTS リリースを計画していますので、この状況はここ数ヶ月で変わるでしょう。
+
+  コミュニティサポートはこちらから<!-- Community support is provided at -->: https://discuss.linuxcontainers.org
+  バグはこちらから報告できます<!-- Bugs can be reported at -->: https://github.com/lxc/incus/issues

@@ -1,0 +1,383 @@
+[
+    {"path": "/",
+     "title": "",
+     "menu": ["ホーム"],
+     "generator": "html",
+     "meta": {"input": "index.ja.html"}},
+
+
+    {"path": "/incus/",
+     "generator": "alias",
+     "meta": {"target": "/incus/introduction/"}},
+
+    {"path": "/incus/introduction/",
+     "title": "Incus - イントロダクション",
+     "menu": ["Incus", "イントロダクション"],
+     "generator": "markdown",
+     "meta": {"input": "incus/introduction.ja.md"}},
+
+    {"path": "/incus/announcement/",
+     "title": "Incus - アナウンス",
+     "menu": ["Incus", "アナウンス"],
+     "generator": "markdown",
+     "meta": {"input": "incus/announcement.ja.md"}},
+
+    {"path": "/incus/try-it/",
+     "title": "Incus - オンラインでの試用",
+     "menu": ["Incus", "オンラインでの試用"],
+     "generator": "html",
+     "meta": {"input": "incus/try-it.ja.html"}},
+
+    {"path": "/incus/news/",
+     "title": "Incus - ニュース",
+     "menu": ["Incus", "ニュース"],
+     "generator": "news",
+     "meta": {"dir": "/content/incus/news.ja/",
+              "input": "incus/news.ja.md",
+              "toc_depth": "2-2",
+              "str_older": "Older news",
+              "str_back": "Back to the news overview"}},
+
+    {"path": "/incus/docs/",
+     "menu": ["Incus", "ドキュメント"],
+     "generator": "link",
+     "meta": {"url": "https://incus-ja.readthedocs.io/ja/latest/"}},
+
+    {"path": "/incus/downloads/",
+     "title": "Incus - ダウンロード",
+     "menu": ["Incus", "ダウンロード"],
+     "generator": "downloads",
+     "meta": {"dir": "/downloads/incus",
+              "input": "incus/downloads.ja.md"}},
+
+    {"path": "/incus/github/",
+     "menu": ["Incus", "GitHub"],
+     "generator": "link",
+     "meta": {"url": "https://github.com/lxc/incus"}},
+
+    {"path": "/incus/forum/",
+     "menu": ["Incus", "フォーラム"],
+     "generator": "link",
+     "meta": {"url": "https://discuss.linuxcontainers.org"}},
+
+    {"path": "/incus/irc/",
+     "menu": ["Incus", "IRC"],
+     "generator": "link",
+     "meta": {"url": "https://web.libera.chat/#lxc"}},
+
+    {"path": "/incus/mailing-lists/",
+     "menu": ["Incus", "メーリングリスト"],
+     "generator": "link",
+     "meta": {"url": "https://lists.linuxcontainers.org"}},
+
+
+    {"path": "/lxd/",
+     "title": "LXD - Has been moved to Canonical",
+     "generator": "markdown",
+     "meta": {"input": "lxd/moved-to-canonical.ja.md"}},
+
+
+    {"path": "/lxc/",
+     "generator": "alias",
+     "meta": {"target": "/lxc/introduction/"}},
+
+    {"path": "/lxc/introduction/",
+     "title": "LXC - イントロダクション",
+     "menu": ["LXC", "イントロダクション"],
+     "generator": "markdown",
+     "meta": {"input": "lxc/introduction.ja.md"}},
+
+    {"path": "/lxc/news/",
+     "title": "LXC - ニュース",
+     "menu": ["LXC", "ニュース"],
+     "generator": "news",
+     "meta": {"dir": "/content/lxc/news.ja/",
+              "input": "lxc/news.md",
+              "toc_depth": "2-2",
+              "str_older": "Older news",
+              "str_back": "Back to the news overview"}},
+
+    {"path": "/lxc/getting-started/",
+     "title": "LXC - はじめに",
+     "menu": ["LXC", "はじめに"],
+     "generator": "markdown",
+     "meta": {"input": "lxc/getting-started.ja.md"}},
+
+    {"path": "/lxc/documentation/",
+     "title": "LXC - ドキュメント",
+     "menu": ["LXC", "ドキュメント"],
+     "generator": "markdown",
+     "meta": {"input": "lxc/documentation.ja.md"}},
+
+    {"path": "/lxc/apidoc/",
+     "generator": "directory",
+     "meta": {"input": "lxc/apidoc"}},
+
+    {"path": "/lxc/manpages/",
+     "title": "LXC - Man ページ",
+     "menu": ["LXC", "Man ページ"],
+     "generator": "manpages",
+     "meta": {"dir": "/manpages/lxc/ja"}},
+
+    {"path": "/lxc/contribute/",
+     "title": "LXC - コントリビュート",
+     "menu": ["LXC", "コントリビュート"],
+     "generator": "markdown",
+     "meta": {"input": "lxc/contribute.ja.md"}},
+
+    {"path": "/lxc/security/",
+     "title": "LXC - セキュリティ",
+     "menu": ["LXC", "セキュリティ"],
+     "generator": "markdown",
+     "meta": {"input": "lxc/security.ja.md"}},
+
+    {"path": "/lxc/downloads/",
+     "title": "LXC - ダウンロード",
+     "menu": ["LXC", "ダウンロード"],
+     "meta": {"dir": "/downloads/lxc",
+              "input": "lxc/downloads.ja.md"}},
+
+    {"path": "/lxc/external-resources/",
+     "menu": ["LXC", "外部リソース"]},
+
+    {"path": "/lxc/articles/",
+     "title": "LXC - 記事",
+     "menu": ["LXC", "記事"],
+     "generator": "markdown",
+     "meta": {"input": "lxc/articles.ja.md"}},
+
+    {"path": "/lxc/forum/",
+     "menu": ["LXC", "フォーラム"],
+     "generator": "link",
+     "meta": {"url": "https://discuss.linuxcontainers.org"}},
+
+    {"path": "/lxc/mailing-lists/",
+     "menu": ["LXC", "メーリングリスト"],
+     "generator": "link",
+     "meta": {"url": "https://lists.linuxcontainers.org"}},
+
+    {"path": "/lxc/irc/",
+     "menu": ["LXC", "IRC"],
+     "generator": "link",
+     "meta": {"url": "https://web.libera.chat/#lxc"}},
+
+    {"path": "/lxc/github/",
+     "menu": ["LXC", "GitHub"],
+     "generator": "link",
+     "meta": {"url": "https://github.com/lxc/lxc"}},
+
+    {"path": "/lxc/github-actions/",
+     "menu": ["LXC", "GitHub Actions"],
+     "generator": "link",
+     "meta": {"url": "https://github.com/lxc/lxc/actions"}},
+
+    {"path": "/lxc/jenkins-ci/",
+     "menu": ["LXC", "Jenkins CI"],
+     "generator": "link",
+     "meta": {"url": "https://jenkins.linuxcontainers.org/view/LXC/"}},
+
+
+    {"path": "/lxcfs/",
+     "generator": "alias",
+     "meta": {"target": "/lxcfs/introduction/"}},
+
+    {"path": "/lxcfs/introduction/",
+     "title": "LXCFS - イントロダクション",
+     "menu": ["LXCFS", "イントロダクション"],
+     "generator": "markdown",
+     "meta": {"input": "lxcfs/introduction.ja.md"}},
+
+    {"path": "/lxcfs/news/",
+     "title": "LXCFS - ニュース",
+     "menu": ["LXCFS", "ニュース"],
+     "generator": "news",
+     "meta": {"dir": "/content/lxcfs/news.ja/",
+              "input": "lxcfs/news.md",
+              "toc_depth": "2-2",
+              "str_older": "Older news",
+              "str_back": "Back to the news overview"}},
+
+    {"path": "/lxcfs/getting-started/",
+     "title": "LXCFS - はじめに",
+     "menu": ["LXCFS", "はじめに"],
+     "generator": "markdown",
+     "meta": {"input": "lxcfs/getting-started.ja.md"}},
+
+    {"path": "/lxcfs/manpages/",
+     "title": "LXCFS - Man ページ",
+     "menu": ["LXCFS", "Man ページ"],
+     "generator": "manpages",
+     "meta": {"dir": "/manpages/lxcfs"}},
+
+    {"path": "/lxcfs/contribute/",
+     "title": "LXCFS - コントリビュート",
+     "menu": ["LXCFS", "コントリビュート"],
+     "generator": "markdown",
+     "meta": {"input": "lxcfs/contribute.ja.md"}},
+
+    {"path": "/lxcfs/downloads/",
+     "title": "LXCFS - ダウンロード",
+     "menu": ["LXCFS", "ダウンロード"],
+     "generator": "downloads",
+     "meta": {"dir": "/downloads/lxcfs",
+              "input": "lxcfs/downloads.ja.md"}},
+
+    {"path": "/lxcfs/external-resources/",
+     "menu": ["LXCFS", "外部リソース"]},
+
+    {"path": "/lxcfs/forum/",
+     "menu": ["LXCFS", "フォーラム"],
+     "generator": "link",
+     "meta": {"url": "https://discuss.linuxcontainers.org"}},
+
+    {"path": "/lxcfs/mailing-lists/",
+     "menu": ["LXCFS", "メーリングリスト"],
+     "generator": "link",
+     "meta": {"url": "https://lists.linuxcontainers.org"}},
+
+    {"path": "/lxcfs/irc/",
+     "menu": ["LXCFS", "IRC"],
+     "generator": "link",
+     "meta": {"url": "https://web.libera.chat/#lxc"}},
+
+    {"path": "/lxcfs/github/",
+     "menu": ["LXCFS", "GitHub"],
+     "generator": "link",
+     "meta": {"url": "https://github.com/lxc/lxcfs"}},
+
+    {"path": "/lxcfs/github-actions/",
+     "menu": ["LXCFS", "GitHub Actions"],
+     "generator": "link",
+     "meta": {"url": "https://github.com/lxc/lxcfs/actions"}},
+
+
+
+    {"path": "/distrobuilder/",
+     "generator": "alias",
+     "meta": {"target": "/distrobuilder/introduction/"}},
+
+    {"path": "/distrobuilder/introduction/",
+     "title": "distrobuilder - イントロダクション",
+     "menu": ["distrobuilder", "イントロダクション"],
+     "generator": "markdown",
+     "meta": {"input": "distrobuilder/introduction.ja.md"}},
+
+    {"path": "/distrobuilder/news/",
+     "title": "distrobuilder - ニュース",
+     "menu": ["distrobuilder", "ニュース"],
+     "generator": "news",
+     "meta": {"dir": "/content/distrobuilder/news/",
+              "input": "distrobuilder/news.md",
+              "toc_depth": "2-2",
+              "str_older": "Older news",
+              "str_back": "Back to the news overview"}},
+
+    {"path": "/distrobuilder/documentation",
+     "menu": ["distrobuilder", "ドキュメント"],
+     "generator": "link",
+     "meta": {"url": "/distrobuilder/docs/latest/"}},
+
+    {"path": "/distrobuilder/contribute/",
+     "title": "distrobuilder - コントリビュート",
+     "menu": ["distrobuilder", "コントリビュート"],
+     "generator": "markdown",
+     "meta": {"input": "distrobuilder/contribute.ja.md"}},
+
+    {"path": "/distrobuilder/downloads/",
+     "title": "distrobuilder - ダウンロード",
+     "menu": ["distrobuilder", "ダウンロード"],
+     "generator": "downloads",
+     "meta": {"dir": "/downloads/distrobuilder",
+              "input": "distrobuilder/downloads.ja.md"}},
+
+    {"path": "/distrobuilder/external-resources/",
+     "menu": ["distrobuilder", "外部リソース"]},
+
+    {"path": "/distrobuilder/forum/",
+     "menu": ["distrobuilder", "フォーラム"],
+     "generator": "link",
+     "meta": {"url": "https://discuss.linuxcontainers.org"}},
+
+    {"path": "/distrobuilder/mailing-lists/",
+     "menu": ["distrobuilder", "メーリングリスト"],
+     "generator": "link",
+     "meta": {"url": "https://lists.linuxcontainers.org"}},
+
+    {"path": "/distrobuilder/irc/",
+     "menu": ["distrobuilder", "IRC"],
+     "generator": "link",
+     "meta": {"url": "https://web.libera.chat/#lxc"}},
+
+    {"path": "/distrobuilder/github/",
+     "menu": ["distrobuilder", "GitHub"],
+     "generator": "link",
+     "meta": {"url": "https://github.com/lxc/distrobuilder"}},
+
+     {"path": "/distrobuilder/github-actions/",
+     "menu": ["distrobuilder", "GitHub Actions"],
+     "generator": "link",
+     "meta": {"url": "https://github.com/lxc/distrobuilder/actions"}},
+
+
+
+    {"path": "/cgmanager/introduction/",
+     "title": "CGManager - イントロダクション",
+     "menu": ["CGManager", "イントロダクション"],
+     "generator": "markdown",
+     "meta": {"input": "cgmanager/introduction.ja.md"}},
+
+    {"path": "/cgmanager/news/",
+     "title": "CGManager - ニュース",
+     "menu": ["CGManager", "ニュース"],
+     "generator": "markdown",
+     "meta": {"input": "cgmanager/news.ja.md",
+              "toc_depth": "2-2"}},
+
+    {"path": "/cgmanager/getting-started/",
+     "title": "CGManager - はじめに",
+     "menu": ["CGManager", "はじめに"],
+     "generator": "markdown",
+     "meta": {"input": "cgmanager/getting-started.ja.md"}},
+
+    {"path": "/cgmanager/dbus-api/",
+     "title": "CGManager - D-Bus API",
+     "menu": ["CGManager", "D-Bus API"],
+     "generator": "markdown",
+     "meta": {"input": "cgmanager/dbus-api.ja.md"}},
+
+    {"path": "/cgmanager/manpages/",
+     "title": "CGManager - Man ページ",
+     "menu": ["CGManager", "Man ページ"],
+     "generator": "manpages",
+     "meta": {"dir": "/manpages/cgmanager"}},
+
+    {"path": "/cgmanager/contribute/",
+     "title": "CGManager - コントリビュート",
+     "menu": ["CGManager", "コントリビュート"],
+     "generator": "markdown",
+     "meta": {"input": "cgmanager/contribute.ja.md"}},
+
+    {"path": "/cgmanager/downloads/",
+     "title": "CGManager - ダウンロード",
+     "menu": ["CGManager", "ダウンロード"],
+     "meta": {"dir": "/downloads/cgmanager",
+              "input": "cgmanager/downloads.ja.md"}},
+
+    {"path": "/cgmanager/external-resources/",
+     "menu": ["CGManager", "外部リソース"]},
+
+    {"path": "/cgmanager/articles/",
+     "title": "CGManager - 記事",
+     "menu": ["CGManager", "記事"],
+     "generator": "markdown",
+     "meta": {"input": "cgmanager/articles.ja.md"}},
+
+    {"path": "/cgmanager/mailing-lists/",
+     "menu": ["CGManager", "メーリングリスト"]},
+
+    {"path": "/cgmanager/irc/",
+     "menu": ["CGManager", "IRC"]},
+
+    {"path": "/cgmanager/github/",
+     "menu": ["CGManager", "GitHub"]}
+]

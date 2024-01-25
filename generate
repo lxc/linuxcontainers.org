@@ -1,0 +1,582 @@
+#!/usr/bin/env python3
+
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License version 2, as
+# published by the Free Software Foundation.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License along
+# with this program; if not, write to the Free Software Foundation, Inc.,
+# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+
+# Required imports
+import bs4
+import datetime
+import jinja2
+import json
+import markdown
+import markdown.extensions.codehilite
+import markdown.extensions.toc
+import markdown.extensions.extra
+import markdown.extensions.tables
+import markdown.extensions.footnotes
+import markdown.extensions.admonition
+import markdown.extensions.wikilinks
+import markdown.extensions.attr_list
+import markdown.extensions.def_list
+import markdown.extensions.fenced_code
+import pygments.formatters
+import os
+import re
+import shutil
+import subprocess
+import yaml
+from extensions.include_toc import IncludeToCExtension
+from extensions.format_details import FormatDetailsExtension
+
+# Variables
+CONTENT_PATH = "content"
+TARGET_PATH = "output"
+
+
+def content_path(filename):
+    """
+        Returns the path to a file from the content directory
+    """
+    return os.path.join(CONTENT_PATH, filename)
+
+
+def load_json(filename):
+    """
+        Load the provided JSON file from the content directory.
+    """
+
+    with open(content_path(filename), "r") as fd:
+        return json.load(fd)
+
+
+def gen_menu(structure, override, prefix):
+    """
+        Generate a list representing the menu.
+        If there are sub-menus, the content of the entry will be a
+        nested list.
+
+        The function takes the structure list and an optional override
+        dict used to handle translations.
+
+        When all internal links must be prefixed, prefix should be set.
+    """
+
+    menu = []
+    sub_menu = None
+    sub_menu_title = None
+
+    for entry in structure:
+        item = dict(entry)
+
+        # Apply the override (if any)
+        item.update(override.get(entry['path'], {}))
+
+        if prefix:
+            # Prepend the prefix to all internal links
+            item['path'] = "%s%s" % (prefix, item['path'])
+
+        if "generator" not in item:
+            # Menu splitter
+            item['path'] = ""
+        elif item['generator'] == "link":
+            # External link
+            item['path'] = item['meta']['url']
+
+        if "menu" not in item:
+            continue
+
+        if len(item['menu']) == 1:
+            # Simple menu entry
+            menu.append((item['path'], item['menu'][0],
+                         item.get("generator", "") == "link"))
+        else:
+            # Drop-down menu
+            if sub_menu_title != item['menu'][0]:
+                if sub_menu:
+                    menu.append((sub_menu, sub_menu_title, False))
+                sub_menu = []
+                sub_menu_title = item['menu'][0]
+
+            # Simple menu entry
+            sub_menu.append((item['path'], item['menu'][-1],
+                             item.get("generator", "") == "link"))
+
+    # Process the last drop-down menu
+    if structure and sub_menu_title:
+        if sub_menu:
+            menu.append((sub_menu, sub_menu_title,
+                         item.get("generator", "") == "link"))
+
+    return menu
+
+
+def md2html(content, meta):
+    """
+        Given path to Markdown file, return rendered HTML content.
+    """
+    codehilite = markdown.extensions.codehilite.CodeHiliteExtension(
+        linenums=False,
+        guess_lang=False,
+        noclasses=False)
+
+    # Using toc extension to generate HTML anchors for paragraphs
+    anchors = markdown.extensions.toc.TocExtension(
+        permalink=True,
+        toc_depth=meta.get("toc_depth", '1-3'),
+        title="Contents")
+
+    # adds tables
+    tables = markdown.extensions.tables.TableExtension(
+     )
+
+    # adds wiki-style footnotes
+    footnotes = markdown.extensions.footnotes.FootnoteExtension(
+     )
+
+    # adds special note/warning boxes
+    admonition = markdown.extensions.admonition.AdmonitionExtension(
+     )
+
+    # will convert any [[bracketed]] word to a link
+    # links will go to the LXD documentation
+    wikilinks = markdown.extensions.wikilinks.WikiLinkExtension(
+        base_url='/lxd/docs/master/',
+        # base_url='https://linuxcontainers.org/lxd/docs/master/',
+        end_url='.html')
+
+    attr_list = markdown.extensions.attr_list.AttrListExtension(
+     )
+
+    fenced_code = markdown.extensions.fenced_code.FencedCodeExtension(
+     )
+
+    include_toc = IncludeToCExtension()
+
+    format_details = FormatDetailsExtension()
+
+    return markdown.markdown(content, extensions=[codehilite, anchors,
+                                                  tables, footnotes,
+                                                  admonition, wikilinks,
+                                                  attr_list, fenced_code,
+                                                  'def_list', 'md_in_html',
+                                                  include_toc, format_details,
+                                                  'pymdownx.magiclink',
+                                                  'pymdownx.tabbed',
+                                                  'pymdownx.details',
+                                                  'nl2br'])
+
+
+def download_sort_key(download_name):
+    """
+        Given a download target filename, return its relative sort order.
+        Sorting alphabetically will mix up version numbers.  This assumes
+        all downloads in the same list have a similar delimiter structure;
+        otherwise the ordering may be wrong for some other reason.
+    """
+
+    # Sort integer-y tokens in numeric order, everything else alphabetically.
+    # Additionally, sort alphabetic tokens before numeric ones to handle
+    # differing numbers of version components (even though this may not be
+    # necessary so far).
+    def token_key(token):
+        if re.match(r'\A\d+\Z', token):
+            return (1, int(token))
+        else:
+            return (0, token)
+
+    # Treat the entire filename as tokens delimited by dash or dot.
+    return [token_key(token) for token in re.split(r'[-.]', download_name)]
+
+
+def is_translated_outdated(prefix, page_raw_path):
+    prefix = prefix[1:]
+
+    main_structure = load_json("STRUCTURE.json")
+    try:
+        translated_structure = load_json("STRUCTURE.{}.json".format(prefix))
+    except FileNotFoundError:
+        return False
+
+    # find the entry in both structures through the page's raw path
+    main = list(filter(lambda entry: entry["path"] == page_raw_path,
+                       main_structure))
+    translated = list(filter(lambda entry: entry["path"] == page_raw_path,
+                             translated_structure))
+
+    # ensure filtered lists are not empty
+    if main and translated:
+        main_entry = main[0]
+        translated_entry = translated[0]
+
+        if "meta" in main_entry and "meta" in translated_entry:
+            # compare markdown file path mtimes
+            source_path = content_path(main_entry["meta"]["input"])
+            translated_path = content_path(translated_entry["meta"]["input"])
+            DAY = 86400
+            BUFFER = 7 * DAY
+            if (os.path.getmtime(source_path) -
+                    os.path.getmtime(translated_path)) > BUFFER:
+                return True
+
+    return False
+
+
+def add_html_translation_warning(content, page_raw_path, prefix):
+    language = prefix[1:]
+    try:
+        warnings = load_json("WARNINGS.{}.json".format(language))
+    except FileNotFoundError:
+        warnings = load_json("WARNINGS.json")
+
+    translation_warning = warnings["outdated-translation"]
+
+    # text of the warning with a link to the english version
+    warning = """{translation_warning}
+              <a href=\"{page_raw_path}\">
+              [English Version] </a>
+              """.format(translation_warning=translation_warning,
+                         page_raw_path=page_raw_path)
+
+    # html for notification box
+    html = """<div class=\"p-notification--caution\">
+            <p class=\"p-notification__response\" role=\"status\">
+            <span class=\"p-notification__status\"> Note: </span>
+            {warning}
+            </p>
+            </div>""".format(warning=warning)
+    return html + content
+
+
+def gen_page(entry, override, prefix, **variables):
+    item = dict(entry)
+
+    # Apply the override (if any)
+    item.update(override.get(entry['path'], {}))
+
+    # Store the original path (required for translations)
+    page_raw_path = item['path']
+
+    if prefix:
+        # Prepend the prefix to all internal links
+        item['path'] = "%s%s" % (prefix, item['path'])
+
+    if "generator" not in item or item['generator'] == "link":
+        # Skip the virtual entries (external links, splitters)
+        return
+
+    # Generate the target path and create any missing directory
+    output_path = "%s%s/index.html" % (TARGET_PATH, item['path'])
+    if not os.path.exists(os.path.dirname(output_path)):
+        os.makedirs(os.path.dirname(output_path))
+
+    # Process directories and aliases and return
+    if item['generator'] == "directory":
+        os.rmdir("%s/%s" % (TARGET_PATH, item['path']))
+        shutil.copytree(content_path(item['meta']['input']),
+                        "%s/%s" % (TARGET_PATH, item['path']))
+        return
+    elif item['generator'] == "alias":
+        os.symlink("../%s/index.html" % (item['meta']['target']
+                                         .lstrip("/")),
+                   "%s/%s/index.html" % (TARGET_PATH, item['path']))
+        return
+
+    # Generate the page content
+    content = ""
+    template = "page.tpl.html"
+
+    if item['generator'] == "html":
+        template = "html.tpl.html"
+        with open(content_path(item['meta']['input']), "r") as fd:
+            content = fd.read()
+    elif item['generator'] == "markdown":
+        template = "markdown-page.tpl.html"
+        md_path = content_path(item['meta']['input'])
+        with open(md_path, "r") as fd:
+            md_content = fd.read()
+            content = md2html(md_content, item['meta'])
+            if (prefix and is_translated_outdated(prefix, page_raw_path)):
+                content = add_html_translation_warning(content, page_raw_path,
+                                                       prefix)
+
+    elif item['generator'] == "downloads":
+        # Support a markdown description before the download table
+        if "input" in item['meta']:
+            md_path = content_path(item['meta']['input'])
+            with open(md_path, "r") as fd:
+                md_content = fd.read()
+                content = md2html(md_content, item['meta'])
+                if (prefix and is_translated_outdated(prefix, page_raw_path)):
+                    content = add_html_translation_warning(content,
+                                                           page_raw_path,
+                                                           prefix)
+
+        downloads = []
+        download_path = item['meta']['dir'].lstrip("/")
+        for entry in sorted(os.listdir(download_path),
+                            key=download_sort_key, reverse=True):
+            if not os.path.isfile("%s/%s" % (download_path, entry)):
+                continue
+
+            if os.path.islink("%s/%s" % (download_path, entry)):
+                continue
+
+            if entry.startswith(".") or entry.endswith(".asc"):
+                continue
+
+            if "filter" in item['meta']:
+                if item['meta']['filter'] not in entry:
+                    continue
+
+            fs_path = "%s/%s" % (download_path, entry)
+
+            download = {}
+            download['filename'] = entry
+            download['path'] = "%s/%s" % (item['meta']['dir'], entry)
+            download['signame'] = None
+            download['sigpath'] = None
+            if os.path.exists("%s.asc" % fs_path):
+                download['signame'] = "%s.asc" % download['filename']
+                download['sigpath'] = "%s.asc" % download['path']
+            download['size'] = "%sK" % \
+                (round(os.stat(fs_path).st_size / 1024, 2))
+
+            downloads.append(download)
+
+        variables['downloads'] = downloads
+        template = "downloads.tpl.html"
+    elif item['generator'] == "manpages":
+        man_path = item['meta']['dir'].lstrip("/")
+
+        for entry in sorted(os.listdir(man_path)):
+            if not os.path.isfile("%s/%s" % (man_path, entry)):
+                continue
+
+            if entry.startswith("."):
+                continue
+
+            section = entry.split(".")[-1]
+
+            output_man_path = "%s%s/man%s/%s.html" % (TARGET_PATH,
+                                                      item['path'],
+                                                      section, entry)
+
+            if not os.path.exists(os.path.dirname(output_man_path)):
+                os.makedirs(os.path.dirname(output_man_path))
+
+            man2html = subprocess.Popen(["man2html", "-r",
+                                         "%s/%s" % (man_path, entry)],
+                                        stdout=subprocess.PIPE,
+                                        universal_newlines=True)
+
+            soup = bs4.BeautifulSoup(man2html.stdout.read(), "lxml")
+            man2html.wait()
+
+            # Remove all broken links
+            for link in soup.findAll("a"):
+                if not link.get("href", None):
+                    continue
+
+                if link['href'] in ("../index.html",):
+                    continue
+
+                if link['href'].startswith("mailto"):
+                    continue
+
+                if link['href'].startswith("#"):
+                    continue
+
+                filename = link['href'].split("/")[-1].split(".html")[0]
+                if filename in os.listdir(man_path):
+                    continue
+
+                link.replace_with_children()
+
+            contents = soup.findAll("body")[0].contents
+            content = "".join([str(entry)
+                               for entry in contents[1:]])
+
+            content = "<div class='manpage'>%s</div>" % content
+
+            entry_link = "/%s/man%s/%s.html" % (
+                item['path'].lstrip("/"), section, entry)
+
+            template = env.get_template(template)
+            with open(output_man_path, "w+") as fd:
+                fd.write(
+                    template.render(page_path=entry_link,
+                                    page_raw_path="%s/man%s/%s.html" % (
+                                        page_raw_path, section, entry),
+                                    page_title="%s - %s" % (item['title'],
+                                                            entry),
+                                    page_menu=item['menu'] + [entry],
+                                    content=content,
+                                    **variables))
+
+        content = "<ul>"
+        for entry in sorted(os.listdir(man_path)):
+            if not os.path.isfile("%s/%s" % (man_path, entry)):
+                continue
+
+            if entry.startswith("."):
+                continue
+
+            section = entry.split(".")[-1]
+            entry_link = "/%s/man%s/%s.html" % (
+                item['path'].lstrip("/"), section, entry)
+
+            content += "<li><a href=\"%s\">%s</a></li>" % (entry_link,
+                                                           entry)
+        content += "</ul>"
+    elif item["generator"] == "news":
+        # Get the prefix
+        with open(content_path(item['meta']['input']), "r") as fd:
+            full_content = fd.read()
+
+        # Load all articles
+        articles = []
+        news_path = item["meta"]["dir"].lstrip("/")
+        for entry in os.listdir(news_path):
+            with open(os.path.join(news_path, entry), "r") as fd:
+                article = yaml.safe_load(fd)
+                if not article:
+                    raise Exception("Bad news article: %s", entry)
+
+                articles.append(article)
+
+        # Sort the articles
+        articles = sorted(articles, key=lambda article: article["date"],
+                          reverse=True)
+
+        # Determine the news output directory
+        news_out_path = os.path.dirname(output_path).lstrip("/")
+
+        # Keep count of the articles on the index page
+        article_count = 0
+
+        # Generate the page
+        for article in articles:
+
+            article_count += 1
+
+            date = datetime.datetime.strptime(article["date"],
+                                              "%Y/%m/%d %H:%M")
+
+            if 4 <= date.day <= 20 or 24 <= date.day <= 30:
+                suffix = "th"
+            else:
+                suffix = ["st", "nd", "rd"][date.day % 10 - 1]
+
+            article_date = date.strftime("%%-d%s of %%B %%Y" % suffix)
+
+            # Compose the title
+            title = article["title"]
+            if "origin" in article:
+                title = "<a href=\"%s\">%s</a>" % (article["origin"], title)
+
+            article_title = "\n\n\n## %s \n" \
+                "<span class=\"text-muted\">%s</span>\n" % \
+                (title, article_date)
+
+            # Compose the content
+            article_content = "[TOC]\n" + article_title + article["content"]
+
+            # Get the file name and path
+            article_filename = date.strftime("%Y_%m_%d_%H_%M")+".html"
+            article_path = "%s/%s" % (news_out_path, article_filename)
+
+            # Generate an output file for every news article
+            template = env.get_template(template)
+            with open(article_path, "w+") as fd:
+                fd.write(
+                    template.render(page_path=item['path'],
+                                    page_raw_path=page_raw_path,
+                                    page_title=item['title'],
+                                    page_menu=item['menu'] if "menu" in item
+                                    else None,
+                                    content=md2html(
+                                        "[%s](index.html)\n\n%s" %
+                                        (item['meta']['str_back'],
+                                         article_content),
+                                        item['meta']),
+                                    **variables))
+
+            # Collect the first five articles on the index page and add
+            # links to the rest
+            if article_count <= 5:
+                full_content += article_content
+                full_content += "\n"
+            elif article_count == 6:
+                full_content += "\n\n\n## %s \n" % item['meta']['str_older']
+                full_content += "- [%s](%s)\n" % (article_date,
+                                                  article_filename)
+            else:
+                full_content += "- [%s](%s)\n" % (article_date,
+                                                  article_filename)
+
+        content = md2html(full_content, item['meta'])
+    else:
+        raise Exception("Unknown generator: %s" % item["generator"])
+
+    # Pass all the variables to the template and generate the html
+    template = env.get_template(template)
+    with open(output_path, "w+") as fd:
+        fd.write(
+            template.render(page_path=item['path'],
+                            page_raw_path=page_raw_path,
+                            page_title=item['title'],
+                            page_menu=item['menu'] if "menu" in item else None,
+                            content=content,
+                            **variables))
+
+
+# Load the configuration and structure
+env = jinja2.Environment(loader=jinja2.FileSystemLoader('templates/'))
+config = load_json("CONFIG.json")
+structure = load_json("STRUCTURE.json")
+
+# Wipe the output directory clean
+if os.path.exists(TARGET_PATH):
+    shutil.rmtree(TARGET_PATH)
+os.mkdir(TARGET_PATH)
+shutil.copytree("downloads", "%s/downloads" % TARGET_PATH)
+shutil.copytree("static", "%s/static" % TARGET_PATH)
+os.symlink("static/img/favicon.ico", "%s/favicon.ico" % TARGET_PATH)
+os.symlink("static/robots.txt", "%s/robots.txt" % TARGET_PATH)
+
+with open("%s/static/css/pygments.css" % TARGET_PATH, "w+") as fd:
+    fd.write(pygments.formatters.HtmlFormatter().get_style_defs())
+
+# Start generating the website
+for language in config['languages']:
+    # Load a translation override
+    override = {}
+    try:
+        override = {entry['path']: entry
+                    for entry in load_json("STRUCTURE.%s.json" % language[0])}
+    except FileNotFoundError:
+        pass
+
+    # Figure out the translation prefix
+    lang_prefix = ""
+    if language[0]:
+        lang_prefix = "/%s" % language[0]
+
+    # Generate the menu
+    menu = gen_menu(structure, override, lang_prefix)
+
+    # Generate all the pages
+    for entry in structure:
+        gen_page(entry, override, lang_prefix,
+                 menu=menu, page_language=language,
+                 languages=config['languages'])

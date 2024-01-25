@@ -1,0 +1,53 @@
+title: LXC 2.0.4 release announcement
+date: 2016/08/15 00:00
+content: |-
+  This is the fourth bugfix release for LXC 2.0.
+  
+  The main bugfixes in this release are:
+  
+   * core: Add a prefix to the lxc.pc
+   * core: Add flag in mount\_entry to skip NODEV in case of a persistent dev entry
+   * core: Add missing cgroup namespace to ns\_info struct
+   * core: attach: setns instead of unshare in lxc-attach
+   * core: bdev: Add subdirectories to search path
+   * core: bdev: Be smarter about btrfs subvolume detection
+   * core: cgfsng: Don't pre-calculate path
+   * core: cgfsng: Fix is\_lxcfs() and is\_cgroupfs()
+   * core: cgroups: Move cgroup files to common subfolder
+   * core: conf: Set pty\_info to NULL after free
+   * core: Detect if we should send SIGRTMIN+3
+   * core: Replace readdir\_r() with readdir()
+   * core: Set up MTU for vlan-type interfaces.
+   * core: tools, tests: Reorganize repo
+   * c/r: Add support for CRIU's --action-script
+   * c/r: Add support for ghost-limit in CRIU
+   * c/r: Drop in-flight connections during CRIU dump
+   * c/r: Initialize migrate\_opts properly
+   * c/r: Make local function static
+   * c/r: Replace tmpnam() with mkstemp()
+   * c/r: Store criu version
+   * c/r: Use PRIu64 format specifier
+   * doc: Fix typo found by lintian
+   * doc: Update Japanese lxc-attach(1)
+   * doc: Update lxc-attach(1)
+   * lxc-attach: Add -f option (rcfile)
+   * lxc-attach: Cleanup whitespaces
+   * lxc-create: Add missing newline in output
+   * lxc-ls: Use correct runtime path
+   * templates: alpine: Add support for new arch
+   * templates: alpine: Mount tmpfs under /run
+   * templates: debian: Add more quotes to variables (at least $rootfs should now be covered)
+   * templates: debian: Avoid noisy perl warnings caused by missing locales
+   * templates: debian: fix regression when creating wheezy containers
+   * templates: debian: Make shellcheck (Ubuntu: 0.3.7-5 amd64) most possible happy
+   * tests: Add unit tests for lxc\_string\_in\_array()
+   * tests: Add unit tests for lxc\_string\_replace()
+  
+  ### Downloads
+  The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
+  will very soon ship a packaged version of LXC 2.0.4.
+  
+  Should you be interested in individual changes or just looking at the detailed development history,
+  our stable branch is on [GitHub](https://github.com/lxc/lxc/tree/stable-2.0).
+  
+  

@@ -1,0 +1,14 @@
+title: LXCFS 0.14 release announcement
+date: 2016/01/07 00:00
+content: |-
+
+  ### Changes
+   * Listen to hint from lxc regarding cgroup namespaces.
+   * Several important bugfixes in code introduced during the switch from libnih.
+   * Fix to swap usage reporting.
+   * Fix overly strict visibility checks for tasks in root cgroup.
+   * Many fixes to the tests.
+  
+  ### Downloads
+  The release tarballs can be found on our [download page](/lxcfs/downloads).
+  

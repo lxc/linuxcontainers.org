@@ -1,0 +1,86 @@
+title: LXCFS 4.0.1 LTS リリースのお知らせ
+date: 2020/03/19 14:03
+origin: https://discuss.linuxcontainers.org/t/lxcfs-4-0-1-lts-has-been-released/7130
+content: |-
+  ### はじめに <!-- Introduction -->
+  <!--
+  The LXCFS team is pleased to announce the release of LXCFS 4.0.1!
+  -->
+  LXCFS チームは LXCFS 4.0.1 のリリースをお知らせできることをうれしく思います!
+
+  <!--
+  This is the first bugfix release for LXCFS 4.0 which is supported until June 2025.
+  -->
+  これは 2025 年 6 月までサポートされる LXCFS 4.0 の最初のバグフィックスリリースです。
+
+  ### バグ修正 <!-- Bugfixes -->
+  <!--
+  This release fixes a number of issues that were reported shortly following the [original 4.0.0 release](https://discuss.linuxcontainers.org/t/lxcfs-4-0-lts-has-been-released/7031). Some of the highlights include:
+  -->
+  このリリースでは [4.0.0 リリース](https://linuxcontainers.org/ja/lxcfs/news/#lxcfs-40-lts) 直後に報告された多数の問題が修正されています。修正のハイライトは次の通りです:
+
+   - cgroup v2 システムでの CPU ビュー（CFS）<!-- CPU view (CFS) on CgroupV2 systems -->
+   - cgroup v2 での正しくない meminfo <!-- Incorrect meminfo on CgroupV2 systems -->
+   - いくつかの Linux ディストリビューションでビルドが失敗する <!-- Build failures on some Linux distributions -->
+   - CWD に到達できない場合のアップグレードのクラッシュ <!-- Crash on upgrade when CWD is no longer reachable -->
+   - ホストの値を表示するフォールバックメカニズムを含む、アップグレードロジックの堅牢化 <!-- Harden upgrade logic, including a fall-back mechanism showing host values -->
+   - 32bit システムでの正しくない meminfo <!-- Incorrect meminfo values on 32bit systems -->
+   - いくつかの仮想 cgroupfs ファイルにアクセスする際のクラッシュ <!-- Crash when accessing some virtual cgroupfs files -->
+   - テストの改良 <!-- Improvements to tests -->
+
+  <!--
+  The full list of commits is available below:
+  -->
+  コミットの完全なリストは次の通りです（翻訳なし）:
+
+   - proc_cpuview: add minimal support for unified cgroup layout
+   - proc_fuse: fix meminfo with unified cgroup layout
+   - configure: add -Wvla and -std=gnu11
+   - tree-wide: add missing O_CLOEXEC
+   - bindings: handle current working directory on upgrade
+   - tree-wide: mark lxcfs fuse ops
+   - bindings: make constructor failures non-fatal
+   - liblxcfs: handle broken upgrade gracefully
+   - usage: Fix cfs help
+   - usage: Fix lxcfs description
+   - proc_fuse: port to uint64_t
+   - tree-wide: use {u}int64_t types
+   - bindings: allow users to switch between virtualization and non-virtualization mode
+   - test_proc: add SIGUSR2 virtualization switch tests
+   - proc_fuse: remove unused variable
+   - test_sigusr2: improve tests
+   - bindings: introduce set_signal_handler
+   - cgroup_fuse: fix cgroupfs virtualization needed on non-cgns systems
+   - tree-wide: memory utils improvements
+   - tree-wide: fix dot_or_empty()
+   - cgroups: remove unused function
+   - utils: shut up compiler
+   - proc_loadvg: fixes
+   - proc_cpuview: fix compiler warning
+   - tree-wide: add and use must_make_path_relative()
+   - tree-wide: remove is_relative() and use must_make_path_relative()
+   - cgroup_fuse: rework is_child_cgroup()
+   - cgroup_fuse: rework cgfs_get_key()
+   - cgroup_fuse: rework cgfs_create()
+   - cgroup_fuse: rework cgfs_remove()
+   - cgroup_fuse: rework cgfs_chmod_file()
+   - cgroup_fuse: rework cgfs_chown_file()
+   - cgroup_fuse: rework open_pids_file()
+   - cgroup_fuse: rework cgfs_set_value()
+   - cgroup_fuse: rework cgfs_iterate_cgroup()
+   - cgroup_utils: remove dot_or_empty()
+   - tests: Silence build output
+   - cgroup_fuse: actually make asz check mean something
+
+  ### サポートとアップグレード <!-- Support and upgrade -->
+  <!--
+  The LXCFS 4.0 branch is supported until June 2025.
+  Only bugfixes and securitiy issues get included into the stable bugfix releases, so it's always safe and recommended to keep up and run the latest bugfix release.
+  -->
+  LXCFS 4.0 ブランチは 2025 年 6 月までサポートされます。
+  stable に対するバグ修正リリースにはバグ修正とセキュリティ問題の修正のみが含まれ常に安全ですので、最新のバグ修正リリースを維持し、実行することをおすすめします。
+
+  ### ダウンロード <!-- Downloads -->
+
+   - リリース tarball <!-- Main release tarball -->: [lxcfs-4.0.1.tar.gz](https://linuxcontainers.org/downloads/lxcfs/lxcfs-4.0.1.tar.gz)
+   - GPG シグネチャ <!-- GPG signature -->: [lxcfs-4.0.1.tar.gz.asc](https://linuxcontainers.org/downloads/lxcfs/lxcfs-4.0.1.tar.gz.asc)

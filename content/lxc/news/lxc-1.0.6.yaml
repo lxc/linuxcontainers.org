@@ -1,0 +1,117 @@
+title: LXC 1.0.6 release announcement
+date: 2014/09/24 00:00
+content: |-
+  This is the sixth bugfix release for the LXC 1.0 series.
+  
+  To make supporting both LXC 1.0 and the future LXC 1.1 easier, this version introduces the -F argument to lxc-start.
+  This argument is a no-op as lxc-start is already running in the foreground by default, but as that behavior will change in LXC 1.1,
+  introducing -F in 1.0 too allows for writing script which will work consistently on upgrades.
+  
+  ### Changes
+  Core:
+  
+   * rootfs\_is\_blockdev: don't run if no rootfs is specified
+   * confile: sanity-check netdev-&#62;type before setting netdev-&#62;priv elements
+   * Fix typo in previous patch
+   * Remove mention of mountcgroups in ubuntu.common config
+   * remove mountcgroup hook entirely
+   * Add SIGPWR support to lxc\_init
+   * Sysvinit script fixes
+   * unprivileged containers: use next available nic name if unspecified
+   * fix typo in btrfs error msg
+   * apparmor: Allow slave bind mounts
+   * provide an example SELinux policy for older releases
+   * print a helpful message if creating unpriv container with no idmap
+   * use non-thread-safe getpwuid and getpwgid for android
+   * btrfs: support recursive subvolume deletion (v2)
+   * fix '--log-priority' --&#62; '--logpriority' in main
+   * Fix a file descriptor leak in the daemonization
+   * Fix a file descriptor leak in the monitord spawn
+   * Ensure /dev/pts directory exists on pts setup
+   * Do not allow snapshots of LVM backed containers
+   * add lxc.console.logpath
+   * coverity: don't use newname after null check
+   * coverity: malloc the right size for btrs\_node tree
+   * introduce --with-distro=raspbian
+   * cgmanager get/set: clean up child (v2)
+   * Add extra debugging
+   * Fix typo in the previous commit...
+   * do\_mount\_entry: add nexec, nosuid, nodev, rdonly flags if needed at remount
+   * command socket: use hash if needed
+   * monitor: fix sockname calculation for long lxcpaths
+   * show additional info if btrfs subvolume deletion fails (issue #315)
+   * ignore SIGKILL (CTRL-C) and SIGQUIT (CTRL-\) - issue #313
+   * chmod container dir to 0770 (v2)
+   * build: Fix support for split build and source dirs
+   * mount\_entry: use statvfs
+   * lxc\_mount\_auto\_mounts: honor existing nodev etc at remounts
+   * statvfs: do nothing if statvfs does not exist (android/bionic)
+   * Prevent compiler warning by initializing ifindex
+   * build: don't remove configuration template on clean
+   * build: Make setup.py run from srcdir to avoid distutils errors
+   * handle hashed command socket names (v2)
+   * lxc-cgm: fix issue with nested chowning
+   * Report container exit status to monitord
+   * support use of 'all' containers when cgmanager supports it
+   * log: fix quiet mode
+   * Fix build error(ISO C90 specs violation) in lxc.c
+   * lxc\_map\_ids: don't do bogus check for newgidmap
+   * lxc\_map\_ids: add a comment
+   * clean autodev dir on container exit
+   * As discussed on ML, do not clean autodev dir on reboot
+   * Fix build failure due to slightly different rmdir
+   * Fix presentation of IPv6 addresses and gateway
+  
+  Commands:
+  
+   * lxc-start: Add -F (foreground) option
+  
+  Templates:
+  
+   * all: Discontinue the use of in-line comments (stable)
+   * all: Include hostname in DHCP requests
+   * all: Switch from arch command to uname -m
+   * altlinux: bugfixes
+   * archlinux: Properly set default locale in /etc/locale.conf
+   * centos template: prevent mingetty from calling vhangup(2)
+   * download: Have wget retry 3 times
+   * download: Make --keyserver actually work
+   * gentoo: keep original uid/gid of files/dirs when installing
+   * gentoo: Use portageq to determine portage distdir
+   * plamo: keep original uid/gid of files/dirs when installing
+   * plamo: bugfix template
+   * ssh: send hostname to dhcp server
+   * ubuntu: don't check for $rootfs/run/shm
+   * ubuntu: add help string
+  
+  Tests:
+  
+   * lxc-test-{unpriv,usernic.in}: make sure to chgrp as well
+   * lxc-test-unpriv: test lxc-clone -s
+   * tests: Call sync before testing a shutdown
+   * tests: Copy the download cache when available [v2]
+   * Fix the unprivileged tests cgroup management
+  
+  Documentation:
+  
+   * doc: Mention that veth.pair is ignored for unpriv
+   * doc: Add mention that veth.pair is ignored for unpriv in Japanese man
+   * doc: Add -F option to Japanese lxc-start(1)
+   * doc: Update the description of SELinux in Japanese lxc.container.conf(5)
+   * doc: Add 'zfs' to the parameter of -B option in lxc-create(1)
+   * doc: add lxc.console.logpath to Japanese lxc.container.conf(5)
+   * doc: language correction
+   * doc: Fix Japanese translation of lxc.container.conf(5)
+   * doc: Add destroy option to lxc-snapshot(1)
+   * doc: Add description about ignoring lxc.cgroup.use when using cgmanager
+  
+  Those stable fixes were brought to you by 24 individual contributors.
+  
+  ### Downloads
+  The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
+  will very soon ship a packaged version of LXC 1.0.6.
+  
+  Should you be interested in individual changes or just looking at the detailed development history,
+  our stable branch is on [GitHub](https://github.com/lxc/lxc/tree/stable-1.0).
+  
+  

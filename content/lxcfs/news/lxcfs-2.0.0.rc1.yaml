@@ -1,0 +1,8 @@
+title: LXCFS 2.0.0.rc1 release announcement
+date: 2016/02/24 00:00
+content: |-
+
+  
+   * This is the first release candidate for 2.0.0
+   * This adds sysvinit, upstart and systemd jobs.
+  

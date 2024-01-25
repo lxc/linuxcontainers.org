@@ -1,0 +1,9 @@
+title: LXCFS 2.0.0.beta2 release announcement
+date: 2016/02/19 00:00
+content: |-
+
+  
+   * Fix a bug causing PAM module to hang if there are unmounted controllers
+   * Avoid a rare but not impossible bug due to a faulty glibc assert when
+     forking a pid after setns.
+  

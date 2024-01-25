@@ -1,0 +1,86 @@
+title: LXC 4.0.5 LTS has been released
+date: 2020/10/22 17:10
+origin: https://discuss.linuxcontainers.org/t/lxc-4-0-5-lts-has-been-released/9269
+content: |-
+  ### はじめに <!-- Introduction -->
+  <!--
+  The LXC team is pleased to announce the release of LXC 4.0.5!
+  -->
+  LXC チームが LXC 4.0.5 のリリースをお知らせします!
+
+  <!--
+  This is the fifth bugfix release for LXC 4.0 which is supported until June 2025.
+  -->
+  このリリースは 2025 年 6 月までサポートされる LXC 4.0 に対する 5 回目のバグフィックスリリースです。
+
+  ### バグ修正（とハイライト）<!-- Bugfixes -->
+  <!--
+  Some of the highlights for this release are:
+  -->
+
+   - コンテナ内からの PTS デバイスの割り当てができるようになりました <!-- Support allocating PTS devices from within the container -->
+   - パス・マウント処理のロジックをより堅牢にしました <!-- Harden more path/mount handling logics -->
+   - イニシャライザーの使用を制限するために LSM ロジックを変更しました <!-- Rework LSM logic to limit initializer use -->
+
+  <!--
+  The full list of commits is available below:
+  -->
+  コミットの全リストは次のとおりです（翻訳なし）:
+
+   - terminal: safely allocate pts devices from inside the container
+   - macro: define TIOCGPTPEER if missing
+   - conf: use openat() instead of open_tree()
+   - seccomp: don't close the mainloop, simply remove the handler
+   - seccomp: add seccomp_notify_fd_active api extension
+   - seccomp: send notify fd as part of the message
+   - api-extension: add missing seccomp_proxy_send_notify_fd extension
+   - Revert "templates/lxc-download.in: use GPG option --receive-keys instead of --recv-keys"
+   - lxc-download: Fix retry loop
+   - syscalls: add openat2()
+   - utils: add safe_mount_beneath() based on openat2()
+   - conf: switch mount_autodev() to new safe_mount_beneath() helper
+   - cgfsng: use safe_mount_beneath()
+   - utils: introduce safe_mount_beneath_at()
+   - conf: stash file descriptor to root mountpoint in struct lxc_rootfs
+   - conf: make use of stashed container mountpoint fd in mount_autodev()
+   - file_utils: add exists_dir_at()
+   - conf: harden lxc_fill_autodev() via save_mount_beneath_at()
+   - conf: move /dev setup to be file descriptor based
+   - terminal: harden terminal allocation
+   - lsm: rework lsm handling
+   - lsm: use atomic in ase we're used multi-threaded
+   - lsm: remove the need for atomic operations
+   -  Updated documentation to reflect lack of support for pure cgroupv2
+   - cgfsng: fix cgroup attach cgroup creation
+   - remove deprecated options in lxc.service fixes #3527
+   - Check only rootfs as filesystem type
+   - cgroups: fix armhf builds
+   - remove useless parameters
+   - avoid a NULL pointer dereference in lxc-attach
+   - terminal: introduce lxc_terminal_signal_sigmask_safe_blocked()
+   - attach: use lxc_terminal_signal_sigmask_safe_blocked()
+   - commands: don't fail if unfreeze fails
+   - lxc-usernsexec: setgroups() similar to other places shouldn't fail on EPERM
+   - Remove obsolete setting regarding the Standard Output
+   - seccomp: Check if syscall is supported on compat architecture.
+   - seccomp: log invalid seccomp notify ids
+   - seccomp: improve default notification sending
+   - seccomp: fix compilation on powerpc
+   - sync: switch to new error helpers
+   - sync: log synchronization states
+   - start: improve devpts fd sending
+   - conf: always send response to parent waiting for devptfs_fd
+   - conf: account for early return when sending devpts fd
+
+  ### サポートとアップグレード <!-- Support and upgrade -->
+  <!--
+  The LXC 4.0 branch is supported until June 2025.
+  Only bugfixes and securitiy issues get included into the stable bugfix releases, so it's always safe and recommended to keep up and run the latest bugfix release.
+  -->
+  LXC 4.0 ブランチは 2025 年 6 月までサポートされます。
+  stable のバグフィックスリリースでは、バグとセキュリティに関する問題に対する修正のみが行われますので、常に安全です。最新のバグフィックスリリースの状態を維持し、実行することをおすすめします。
+
+  ### ダウンロード <!-- Downloads -->
+
+   - リリース tarball <!-- Main release tarball -->: [lxc-4.0.5.tar.gz](https://linuxcontainers.org/downloads/lxc/lxc-4.0.5.tar.gz)
+   - GPG シグネチャー <!-- GPG signature -->: [lxc-4.0.5.tar.gz.asc](https://linuxcontainers.org/downloads/lxc/lxc-4.0.5.tar.gz.asc)

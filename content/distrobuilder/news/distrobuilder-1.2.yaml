@@ -1,0 +1,78 @@
+title: Distrobuilder 1.2 has been released
+date: 2021/03/23 15:03
+origin: https://discuss.linuxcontainers.org/t/distrobuilder-1-2-has-been-released/10592
+content: |-
+  ### Introduction
+  The distrobuilder team is proud to announce its initial release, distrobuilder 1.2!
+
+  This release's highlight is the introduction of Windows image repacking.
+
+  LXD is able to run Windows VMs; for that it needs a Windows ISO and a bunch of specific drivers from a separate ISO which need to be loaded during the Windows installation.
+
+  To make things easier, `distrobuilder` has added the `repack-windows` command which takes both a Windows ISO and an ISO containing the specific drivers, and bundles them together. With the resulting ISO, Windows can be installed easily.
+
+  With this release also come support for Go modules, and basic context logging. For a more detailed log output, the `--debug` flag can be used. 
+
+  The full list of commits is available below:
+
+  [details="Detailed changelog"]
+   - sources: Fix Plamo 7.x
+   - Cosmetic update to the README.me (index.md)
+   - Updated instructions
+   - sources: Fix CentOS 8-Stream rootfs
+   - luet: Fix gofmt
+   - Remove out-of-place statement
+   - generators: Add virtio-fs to lxd-agent init scripts
+   - generators: Add copy generator
+   - generators: update doc
+   - Added missing definitions in generators hosts, hostname
+   - generators: Fix lxd-agent openRC scripts
+   - sources/openwrt: Use fallback image if necessary
+   - sources/docker: Permit to use private docker registry with credentials
+   - distrobuilder: Add repack-windows command
+   - distrobuilder: Call Sync() before unmounting overlay
+   - windows: Add balloon driver
+   - windows: Add netkvm driver
+   - windows: Add vioinput driver
+   - windows: Add viorng driver
+   - windows: Add vioscsi driver
+   - windows: Add vioserial driver
+   - windows: Add viofs driver
+   - Add Github Actions
+   - Remove Travis integration
+   - README: Point build status to GitHub Actions
+   - github: Align workflow with LXD
+   - generators: Refresh lxd-agent systemd units
+   - repack-windows: Check for genisoimage
+   - generators/lxd-agent: Fix systemd path
+   - generators/lxd-agent: Fix path in unit file
+   - windows: Add support for Windows Server 2016
+   - windows: Determine correct Windows paths
+   - support changing interpreter with shebang
+   - sources/voidlinux: Fix checksum file names
+   - Fix bad calls to RunScript
+   - oracle: Symlink /bin to /usr/bin if missing
+   - sources/plamo: Don't override PATH in scripts
+   - windows: Optimize registry editing
+   - shared/logger: Add logger
+   - main: Add --debug flag
+   - main: Add basic logging
+   - Support go modules
+   - Makefile: Move go get to update-gomod target
+   - .github/workflows: Remove go dependency section
+   - .github/workflows: Update Go modules before testing
+   - main: Always unmount WIM file
+   - main: Cleanup on unsuccessful mount
+   - main: Fix NPE
+   - windows: Change flag s/version/windows-version/
+   - doc: Add Windows section
+   - doc/building: Mention --vm flag
+   - doc/packages: Clarify `url` key in `packages`
+   - doc: Add filtering
+   - Update gomod
+  [/details]
+
+  ### Downloads
+
+   - Main release tarball: [distrobuilder-1.2.tar.gz](https://linuxcontainers.org/downloads/distrobuilder/distrobuilder-1.2.tar.gz)
+   - GPG signature: [distrobuilder-1.2.tar.gz.asc](https://linuxcontainers.org/downloads/distrobuilder/distrobuilder-1.2.tar.gz.asc)

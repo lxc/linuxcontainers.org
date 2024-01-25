@@ -1,0 +1,54 @@
+title: LXCFS 4.0.11 has been released
+date: 2021/10/19 21:10
+origin: https://discuss.linuxcontainers.org/t/lxcfs-4-0-11-has-been-released/12426
+content: |-
+  ### Introduction
+  The LXCFS team is pleased to announce the release of LXCFS 4.0.11!
+
+  This is the eleventh bugfix release for LXCFS 4.0 which is supported until June 2025.
+
+  NOTE: This was originally released as LXCFS 4.0.10 but a bug caused the published release tarball to be missing a file. LXCFS 4.0.11 includes that fix.
+
+  ### Bugfixes
+  Some of the highlights for this release are:
+
+   - Fixed a potential deadlock in the cpuinfo handler
+   - Reduced daemon verbosity
+
+  The full list of commits is available below:
+
+  [details="Detailed changelog"]
+   - proc_cpuview: unlock mutex in all error paths
+   - src: rely on config.h for fuse version
+   - tree-wide: include own header file first
+   - tree-wide: fix fuse header inclusion
+   - tree-wide: fix prototypes
+   - tree-wide: fix some ifdef checks
+   - macro: fix bracket warnings in non-debug mode
+   - proc_cpuview: fix unused variable warning
+   - tests: rely on config.h only for fuse versioning
+   - tests: fix build warnings
+   - README: Fix package name
+   - lxcfs: fix lxcfs CLI -v and no arg output
+   - lxcfs: fix version and usage handling
+   - Fix padding for Slab entry in /proc/meminfo
+   - cpuview: log non-fatal error in verbose mode only
+   - tree-wide: fix type comparisons
+   - tree-wide: fix fuse version detection
+   - tree-wide: fix HAVE_FUSE3 checks
+   - tree-wide: use a single fuse header
+   - github: Drop 16.04
+   - doc: guide for reload share libary file
+   - macro: cast to correct integer types
+   - tree-wide: set _GNU_SOURCE configure.ac
+   - build: fix lxcfs_fuse.h in release tarball
+  [/details]
+
+  ### Support and upgrade
+  The LXCFS 4.0 branch is supported until June 2025.
+  Only bugfixes and securitiy issues get included into the stable bugfix releases, so it's always safe and recommended to keep up and run the latest bugfix release.
+
+  ### Downloads
+
+   - Main release tarball: [lxcfs-4.0.11.tar.gz](https://linuxcontainers.org/downloads/lxcfs/lxcfs-4.0.11.tar.gz)
+   - GPG signature: [lxcfs-4.0.11.tar.gz.asc](https://linuxcontainers.org/downloads/lxcfs/lxcfs-4.0.11.tar.gz.asc)

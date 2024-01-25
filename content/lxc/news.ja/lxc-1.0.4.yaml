@@ -1,0 +1,125 @@
+title: LXC 1.0.4 リリースのお知らせ
+date: 2014/06/13 00:00
+content: |-
+  
+  <!-- This is the fourth bugfix release for the LXC 1.0 series. -->このリリースは LXC 1.0 シリーズの 4 回目のバグフィックスとなるリリースです。
+  
+  ### <!-- Changes -->変更点
+  
+  
+  * <!-- core: Don't call nih_dbus_setup for cgmanager as it's
+               only relevant when using a nih main loop, which we're not. -->core: cgmanager に対して nih_dbus_setup を呼ばないようにしました。これはnihのメインループを使うときだけ使うのが適切なものでしたが、lxc では使っていないためです。
+  * <!-- core: Fix uncheck realloc in lxc_info. (found by cppcheck) -->core: lxc_infoでreallocのチェックをしていなかったのを修正しました。(cppcheckで発見)
+  * <!-- core: At startup, manually mark every shared mount entry
+               as slave. -->core: スタートアップ時、全ての shared mount のエントリごとに slave のマークをつけるようにしました。
+  * <!-- core: Check for pre-existing /dev symlinks before
+               attempting to create them. -->core: /devに作成するシンボリックリンクについて、作成前にすでに存在しているかどうかをチェックするようにしました。
+  * <!-- core: Fix fd leak. (found by coverity). -->core: fdのリークを修正しました。(coverityで発見)
+  * <!-- core: Allow all iX86 strings for lxc.arch. -->core: lxc.archに設定する、文字列として全てのiX86が使用できるようになりました。(訳注: 'linux32', 'i386', 'i486', 'i586', 'athlon', 'linux64' が認識されるようになっています)
+  * <!-- core: Fix building using clang 3.4. -->core: clang 3.4を使ってビルドするときの問題を修正しました。
+  * <!-- core: Fix minor typo in .gitignore. -->core: 小さな .gitignore の typo を修正しました。
+  * <!-- core: Add missing MAX_STACK_DEPTH define on
+               MUTEX_DEBUGGING builds. -->core: MUTEX_DEBUGGING時のビルドでのMAX_STACK_DEPTHの定義が抜けていたので追加しました。
+  * <!-- core: Don't mount /sys/fs/cgroup readonly as this breaks
+               at least mountall. -->core: mountall コマンドで問題が生じるので /sys/fs/cgroup を読み込み専用でマウントするのをやめました。
+  * <!-- core: Factor out capability parsing logic. -->core: ケーパビリティをパースするロジックの共通部分を抜き出して一つの共通関数にしました。
+  * <!-- core: Tweak the default values of lxc.mount.auto for the
+               cgroup and cgroup-full keys to adapt themselves
+               depending on whether CAP_SYS_ADMIN has been dropped or
+               not. -->core: lxc.mount.auto の cgroup と cgroup-full を指定した場合のデフォルト値を調整しました。これは CAP_SYS_ADMIN を保持しているかそうでないかによって選択されます。
+  * <!-- core: Support unprivileged create, clone and destroy
+               with btrfs. -->core: btrfs を使っている時の、非特権でのコンテナの作成、クローン、消去をサポートしました。
+  * <!-- core: Support named subsystems with cgmanager. -->core: cgmanager で名前付きのサブシステムをサポートしました。
+  * <!-- core: Use absolute cgroup paths to switch cgroups at
+               attach with cgmanager. This allows for unprivileged
+               lxc-attach across user sessions of the same user. -->core: cgmanager に接続した際、cgroup の絶対パスを使用し cgroups を変更するようにしました。これにより同じユーザーのユーザーセッションをまたいだ非特権 lxc-attach が可能になります。(訳注: lxc-cgroup コマンドも同様です)
+  * <!-- core: Detect whether cgmanager supports name= subsystems. -->core: cgmanager が name= 指定のサブシステムをサポートしているかどうかを検出するようになりました。
+  * <!-- core: Use the same ifndef/define format for all headers. -->core: 全てのヘッダファイルでの ifndef/define のフォーマットを統一しました。
+  * <!-- core: Fix bashism in lxc-devsetup. -->core: lxc-devsetup での bashism (bash特有の機能) を修正しました。
+  * <!-- core: Fix a null check after dereference (identified by
+               coverity). -->ポインタの値を参照した後の null チェックの修正を行いました (coverity で検出)
+  * <!-- core: Export bdev_specs so that API users can actually use the
+               functions taking it as an argument. -->core: bdev_specs 構造体を export しました。これにより API を使う場合に引数として関数で使うことができるようになりました。
+  * <!-- core: Don't destroy the container until we've made sure
+               the requested snapshot actually exists. -->core: 要求されたスナップショットが実際に存在することを確認するまでは、コンテナを消去しないようにしました。(訳注: lxc-snapshot でスナップショットからコンテナをリストアするとき、リストアするコンテナ名を指定しないとスナップショット元のコンテナを破壊してからリストアを行っていましたが、存在しないスナップショット名を指定してもチェックなしに元のコンテナを破壊してしまっていたので、それを修正しました)
+  * <!-- core: Retrieve the container personality over the
+               command interface rather than through /proc. This is
+               required for unprivileged containers attach on the 3.15 kernel
+               and higher as access to /proc/$$/personality is now
+               restricted to root. -->core: コンテナの personality を /proc 以下からでなく、コマンドインターフェース (訳注: lxc内部の関数によるインターフェースです) から取得するようにしました。これは 3.15 以上のカーネルで /proc/$$/personality へのアクセスが root に制限されたため、非特権コンテナへの attach に必要になりました。
+  * <!-- core: Fix invalid signal number comparison. -->core: シグナル番号の不適切な比較を修正しました。
+  * <!-- core: Don't let -lcgmanager end up in LIBS. -->core: -lcgmanger が LIBS 変数に入らないようにしました。(訳注: configure.ac の変更。cgmanager 内の関数の有無をチェックしたいだけなのに LIBS の中に -lcgmanager が入ってしまい、不要なリンクがされてしまうのを防いでいます。)
+  * <!-- core: Correct invalid log message when keeping
+               capabilities. -->core: ケーパビリティを保持している時の誤ったログメッセージを修正しました。
+  * <!-- core: Fix a crash when attempting to snapshot an invalid
+               container. -->core: 不正なコンテナのスナップショットを取得しようとした際にクラッシュしないよう修正しました。
+  * <!-- core: Make it possible for unprivileged containers
+               started by root to mount block devices. -->core: root により開始された非特権コンテナに、ブロックデバイスを mount 可能にしました。
+  * <!-- core: Improve startup failure mode to hide irrelevant
+               error messages and suggest how to debug the failure. -->core: コンテナの開始に失敗した際の不適切なエラーメッセージを隠し、失敗をデバッグする方法を提案するようにしました。
+  * <!-- core: Validate start hooks path before startup. -->core: コンテナの開始前に start hooks (訳注: lxc.hook.start) で指定されたプログラムの path を検証するようにしました。
+  * <!-- core: Log the whole cgroup path on failure. -->core: failure 時に cgroup パス全体をログするようにしました。
+  * <!-- apparmor: Allow writes to sem* and msg*. sysctls -->apparmor: sem* と msg* sysctls への書き込みを許可するよう変更しました。
+  * <!-- doc: Fix typo in lxc-clone man page. -->doc: lxc-clone man ページ中の typo を修正しました。
+  * <!-- doc: Fix puncation marks in Japanese man pages. -->doc: 日本語 man ページの句読点を変更しました。(訳注: 'fix' というわけではありません。今までは句読点は「，．」(マルチバイトのカンマ、ピリオド) を使っていましたが、一般的な「、。」に変更しました。)
+  * <!-- doc: Fix typo in lxc-ls manpage. -->doc: lxc-ls man ページの typo を修正しました。
+  * <!-- doc: Correct license on some files and fix FSF address. -->doc: いくつかのファイルでライセンスを訂正し、FSF のアドレスを修正しました。
+  * <!-- doc: Document lxc.mount.entry relative target. -->doc: lxc.mount.entry での相対パスでの記述に関する説明を載せました。
+  * <!-- doc: Remove TODO file with old items. -->doc: 古い項目が含まれていた TODO ファイルを削除しました。
+  * <!-- doc: Fix reference to renamed manpage. -->doc: リネームされた man ページへの参照を修正しました。
+  * <!-- doc: Update japanese documentation to be in sync with
+               the english one. -->doc: 英語 man ページと同期が取れていなかった部分を更新しました。
+  * lxc-autostart: (訳注: master branch でなされた) autoboot/autostart の変更をバックポートしました。 <br/>
+        これは少なくとも systemd システムにて autostart 問題を解決するために必要となります。 この変更により、-g オプションにおける NULL group サポートが追加されました。（group name がない場合にコンマとして認識されます） 新しい特別な "onboot" group を追加し、init scripts (sysvinit, systemd と upstart) が NULL と onboot group 両方を開始するようにセットしました。<br/>
+        これは boot 時に自動的に開始されない "onboot" group を既に利用していない限り、既存のユーザーに見える変更はありません。
+  * <!-- lxc-create: Make "none" bdev type work as documented. -->lxc-create: "none" bdev type がドキュメント通りに動作するようにしました。
+  * <!-- lxc-execute: Fix a memory leak on the exit path. -->lxc-execute: exit する際のメモリリークを修正しました。
+  * <!-- lxc-ls: Fix running against nested containers without
+               python support. -->lxc-ls: ネストされたコンテナーに対して python のサポートがなくても動作するように修正しました。
+  * <!-- lxc-user-nic: Don't crash on missing bridge. -->lxc-user-nic: ブリッジが無くてもクラッシュしないようにしました。
+  * <!-- alpine template: Set correct lxc_arch for x86. -->alpine template: x86 に対して正しい lxc_arch を設定するようにしました。
+  * <!-- archlinux template: Add sigpwr handler. -->archlinux template: sigpwr ハンドラーを追加しました。
+  * <!-- archlinux template: Fix lxc.root for btrfs backend. -->archlinux template: lxc.root を btrfs backend のために修正しました。
+  * <!-- download template: Retry the GPG setup step 3 times. -->download template: GPG セットアップを３回再試行するようにしました。
+  * <!-- fedora template: Correct some systemd target setups. -->fedora template: systemd target のセットアップをいくつか修正しました。
+  * <!-- oracle template: Use db_load from inside the container. -->oracle template: コンテナ内から db_load を使用するようにしました。
+  * <!-- oracle template: Fix warnings/errors from some rpm
+               scriptlets. -->oracle template: いくつかの rpm scriptlets の warnings/errors を修正しました。
+  * <!-- oracle template: Fix lxc-patch.py to be 644 (fixes
+               rpmlint warning). -->oracle template: lxc-patch.py を 644 に変更しました。（rpmlintの警告が修正されます）
+  * <!-- oracle template: Add pts/[1-4] to securetty for
+               libvirt-lxc. -->oracle template: libvirt-lxc 用に securetty に pts/[1-4] を追加するようにしました。
+  * <!-- oracle template: Set the hostname on systemd systems. -->oracle template: systemd システムで hostname をセットするようにしました。
+  * <!-- oracle template: Fix ssh login under libvirt-lxc. -->oracle template: libvirt-lxc 環境での ssh ログインに失敗するのを修正しました。
+  * <!-- plamo template: Don't attempt to configure wireless
+               interfaces. -->plamo template: ワイヤレスインターフェースを設定しようとしないように変更しました。
+  * <!-- sshd template: Use correct lxc-init path. -->sshd template: 正しい lxc-init パスを使用するようにしました。
+  * <!-- python3: Slight tweaks to the .py files to work with the
+               unofficial python2.7 binding. -->python3: 非公式の python2.7 binding でも動作するよう、.py ファイルに若干の変更を加えました。
+  * <!-- python3: Don't fail network test if hwaddr isn't set by
+               the template. -->python3: hwaddr がテンプレートでセットされなくてもネットワークテストが失敗しないようにしました。
+  * <!-- python3: Don't require a template name be passed to
+               create(). -->python3: create() に template name が渡されることを必須としないようにしました。
+  * <!-- python3: Don't crash on invalid global config keys. -->python3: 不正な global 設定キーでクラッシュしないように修正しました。
+  * <!-- python3: Fix crash in snapshot(). -->python3: snapshot() でクラッシュしないように修正しました。
+  * <!-- tests: Make sure we join all the right cgroups. -->tests: 全ての正しい cgroups に join する事を確認するようにしました。
+  * <!-- tests: Workaround race condition in lxc-test-autostart. -->tests: lxc-test-autostart 中の競合発生をワークアラウンドしました。
+  
+  <!-- Those stable fixes were brought to you by 14 individual
+          contributors. -->これらの stable の修正は 14 名のコントリビュータによってなされました。
+  
+  ### <!-- Downloads -->ダウンロード
+  <!-- The release tarballs may be found on our
+          [download page</a> and we expect most
+          distributions will very soon ship a packaged version of LXC 1.0.4. -->
+    このリリースの tarball は [ダウンロードページ](/lxc/downloads/) から取得できます。
+    そして、各ディストリビューションがすぐに LXC 1.0.4 のパッケージをリリースするでしょう。
+  
+  
+  <!-- Should you be interested in individual changes or just
+          looking at the detailed development history, our stable branch is
+          on <a href="https://github.com/lxc/lxc/tree/stable-1.0">GitHub</a>. -->
+    個々の変更点に興味がある場合、そして開発の履歴を見たい場合、stable ブランチは <a href="https://github.com/lxc/lxc/tree/stable-1.0">GitHub</a> にあります。
+  
+  
+  

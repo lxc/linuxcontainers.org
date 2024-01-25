@@ -1,0 +1,826 @@
+title: LXC 4.0.9 LTS has been released
+date: 2021/05/06 17:05
+origin: https://discuss.linuxcontainers.org/t/lxc-4-0-9-lts-has-been-released/10999
+content: |-
+  ### Introduction
+  The LXC team is pleased to announce the release of LXC 4.0.9!
+
+  This is the ninth bugfix release for LXC 4.0 which is supported until June 2025.
+
+  You may have noticed the sudden jump from 4.0.6 to 4.0.9, that's because 4.0.7 and 4.0.8 both included regressions that were reported by early users and were considered bad enough to require a new release.
+
+  The changelog below covers 4.0.6 to 4.0.9.
+
+  ### Bugfixes
+  As usual this bugfix releases focus on stability and hardening. Some of the highlights for this release are:
+
+   - Testing improvements including fixes from oss-fuzz
+   - Rework of the attach codepath
+   - Cgroup handling rework
+
+  The full list of commits is available below:
+
+  [details="Detailed changelog"]
+   - commands: fix check for seccomp notify support
+   - configure: skip libseccomp tests if it is disabled
+   - conf: fix containers retaining CAP_NET_ADMIN
+   - cgroups: fix cgroup mounting
+   - lsm: remove obsolute comment about constructor
+   - lxc_attach: include rexec conditionally
+   - tree-wide: fix some header inclusions
+   - initutils: fix missing includes
+   - configure: support static binaries
+   - autotools: enable static builds for tools
+   - autotools: enable static builds for commands
+   - tree-wide: fix compilation with-Wstrict-prototypes -Wold-style-definition
+   - config: update ax_pthread.m4
+   - configure: add AC_SYS_LARGEFILE checking
+   - autotools: update build
+   - file_utils: introduce read_file_at()
+   - string_utils: add must_make_path_relative()
+   - cgroups: coding style fixes
+   - cgroups: rework cg_unified_init()
+   - cgroups: detect and record cgroup2 freezer support
+   - criu: handle cgroup2 freezer
+   - mkdir -p /proc /sys on container startup
+   - conf: fix coding style
+   - conf: coding style fixes
+   - conf: move proc and sys mountpoint creation int lxc_mount_auto_mounts()
+   - attach: invert child/parent handling
+   - attach: use __do_free cleanup macro for cwd
+   - attach: tweak logging
+   - attach: use __do_close for labelfd
+   - attach: coding style fixes
+   - attach: use free_disarm()
+   - attach: s/attach_child_main/do_attach/g
+   - attach: mark do_attach() as __noreturn
+   - attach: make do_attach() void
+   - attach: use close_prot_errno_disarm()
+   - attach: add some DEBUG() logging to stdfd dpulication
+   - cgroups: fix cgroup mounting
+   - Merge pull request #3653 from brauner/2021-02-04/lxc-4.0.6-cgroup-mount-fix
+   - utils: fix mount_at()
+   - configure: fix static builds with clang-12 and LTO
+   - cgroups: bpf fixes
+   - croups: improve __do_bpf_program_free
+   - cgroups: coding style fixes
+   - cgroups: don't initiliaze NULL log
+   - cgroups: ensure all memory is zeroed
+   - cgroups: use zalloc
+   - cgroups: tweak cgroup initialization
+   - log: remove pointless inline
+   - log: add lxc_log_get_fd()
+   - seccomp: use lxc_log_get_fd()
+   - log: rework lxc_log_get_level()
+   - seccomp: use lxc_log_get_level()
+   - cgroups: use bpf log when logging at trace level
+   - log: add lxc_log_trace() helper
+   - cgroups: use PTR_TO_U64()
+   - cgroups: align methods
+   - utils: use SYSTRACE() when logging stdio permission fixup failures
+   - attach: log failues to dup2() with SYSDEBUG()
+   - attach: fix logging for stdfd replacement
+   - attach: fix error checking for dup2()
+   - cgroups: initialize variable
+   - commands_utils: don't leak memory
+   - conf: use lxc_log_trace()
+   - confile_utils: use lxc_log_trace()
+   - rexec: check lseek() return value
+   - attach: coding style fixes
+   - attach: order variables correctly
+   - lxc-attach: Enable setting the SELinux context
+   - attach: require that LXC_ATTACH_LSM_LABEL is specified
+   - attach: move lxc_proc_context_info to file local scope
+   - attach: s/lxc_proc_context_info/attach_context/g
+   - attach: rename attach_context helpers
+   - attach: s/calloc/zalloc/g
+   - attach: split attach_context into allocation and initialization
+   - attach: move lxc_cmd_get_init_pid() int get_attach_context()
+   - attach: move get_personality() into get_attach_context()
+   - attach: move config init into get_attach_context()
+   - attach: add get_attach_context_nsfds()
+   - attach: s/lxc_proc_close_ns_fd/close_nsfds/g
+   - attach: s/lxc_attach_drop_privs/drop_capabilities/g
+   - lsm: s/lsm_init/lsm_init_static/g
+   - attach: fix personality handling
+   - attach: remove obsolete namespace check
+   - attach: move getcwd() into tighter scope
+   - attach: s/close/close_prot_errno_disarm/g
+   - attach: move attach_clone_payload into tighter scope
+   - attach: rename attach_clone_payload to attach_payload
+   - attach: coding style fixes
+   - sync: export sync_wait() and sync_wake()
+   - sync: rename startup synchronization macros
+   - attach: use sync_wait()/sync_wake() where applicable
+   - attach: introduce sync_wait_pid() and sync_wake_pid()
+   - sync: make all sync helpers return bool
+   - attach: introduce sync_wait_fd() and sync_wake_fd()
+   - attach: use dummy macros to make it easier to follow sync logic
+   - attach: move new_cwd into tighter scope
+   - attach: use STDIN_FILENO instead of hard-coding 0
+   - attach: remove unneeded assignment
+   - attach: rework attaching to namespace fds
+   - attach: move to file descriptor-only interactions
+   - attach: move to file descriptor only namespace interactions
+   - attach: init file descriptors to -EBADF
+   - cgroups: vet parameters more strictly
+   - cgroups: use cleanup macro for consistency
+   - attach: don't needless check for NULL
+   - attach: file descriptors based LSM handling
+   - attach: hardening through use of pidfds
+   - lsm/apparmor: cleanup apparmor_process_label_set()
+   - file_utils: add fdopenat()
+   - attach: unifiy /proc/<init-pid>/status parsing
+   - attach: initialize init_pid field to -ESRCH
+   - attach: move uid and gid handling to get_attach_context()
+   - attach: simplify opening of /proc/self
+   - attach: document attach_context
+   - attach: stash host uid and host gid in attach_context
+   - cgroups: remove pointless NULL checks
+   - file_utils: add open_at()
+   - syscall_wrappers: add PROTECT_LOOKUP, PROTECT_OPEN, PROTECT_LOOKUP_WITH_SYMLINKS, PROTECT_OPEN_WITH_TRAILING_SYMLINKS
+   - attach: harden open calls
+   - tree-wide: extend read_file_at()
+   - lsm: harden read_file_at()
+   - file_utils: remove O_NOFOLLOW from open_at() defaults
+   - attach: file descriptor based fdinfo handling
+   - attach: prevent UAF
+   - attach: use correct put method
+   - attach: stricter lookup semantics for fdopen_at() calls
+   - attach: move file descriptor closing into attach_context_container()
+   - attach: move loading seccomp as late as possible
+   - memory_utils: add close_prot_errno_mov()
+   - file_utils: harden lxc_open_dirfd()
+   - file_utils: harden lxc_writeat()
+   - cgroups: add unified_cgroup_fd() helper
+   - cgroups: switch controller delegation to fd-only operations
+   - macro: abuse ENOMEDIUM as ENOCGROUP2
+   - file_utils: add lxc_read_try_buf_at()
+   - cgroups: add cgroup_get()
+   - lxccontainer: use cgroup_get()
+   - cgroups: reorder cgroup_get() arguments
+   - cgroups: add croup_set()
+   - lxccontainer: use correct variable ordering
+   - lxccontainer: use cgroup_set()
+   - cgroups: move functions after methods
+   - cgroups: annotate cgroup_get()/cgroup_set()
+   - commands_utils: add lcx_cmd_notify_state_listeners()
+   - freezer: use lxc_cmd_notify_state_listeners()
+   - cgroups: add cgroup_freeze() and cgroup_unfreeze()
+   - freezer: make methods return bool
+   - lxccontainer: use cgroup_freeze() and cgroup_unfreeze()
+   - cgroups: rewind() file before polling again
+   - cgroups: remove unused conf argument
+   - cgroups: vet parameters
+   - lxccontainer: use correct error checks
+   - cgroups: move down cgroup_attach()
+   - cgroups: stricter argument vetting for cgroup_attach()
+   - cgroups: return ENOCGROUP2 from cgroup_attach()
+   - attach: check for ENOCGROUP2 explicitly
+   - cgroups: switch back to returning ints
+   - attach: explicitly close seccomp notifier fd
+   - cgpath: add logging
+   - commands: add missing lxc_cmd_get_limiting_cgroup2_fd() implementation
+   - cgroups: use lxc_cmd_get_limiting_cgroup2_fd()
+   - cgroups: export __cgroup_unfreeze() for use in commands
+   - commands: use __cgroup_unfreeze() directly
+   - freezer: remove lxc_cmd_freeze() and lxc_cmd_unfreeze() calls
+   - test: add logging to device_add_remove
+   - tests: support pure unified cgroup layouts in cgpath test
+   - cgroups: improve parameter vetting
+   - tests: check for NULL in device_add_remove
+   - syscalls: add close_range()
+   - rexec: mark all fds as close-on-exec if possible
+   - conf: remove unnecessary syscall
+   - conf: restrict open of dev/
+   - conf: harden open in lxc_fill_autodev()
+   - conf: fd-only operations in lxc_setup_dev_symlinks()
+   - conf: restrict open for lxc_mount_rootfs()
+   - conf: fd-only pivot root
+   - conf: fd-only devtps setup
+   - attach: attach to namespaces via pidfds
+   - conf: coding style
+   - conf: make lxc_create_tmp_proc_mount() static
+   - conf: restrict open call in lxc_mount_rootfs()
+   - conf: refactor transient procfs mounting
+   - utils: harden __safe_mount_beneath_at()
+   - cgroups: restricted fd-only controller mountpoint creation
+   - cgroups: switch to fd-based cgroup mounting
+   - attach: fix fallback logic when attaching to cgroups
+   - cgroups: fix argument vetting in cgroup_attach()
+   - cgroups: improve error handling and logging in cgroup_attach_leaf()
+   - cgroups: restrict open calls in cgroup_attach_create_leaf()
+   - utils: add mount_from_at()
+   - conf: fix lxc_setup_dev_console()
+   - conf: start stashing dfd to host's / during container setup
+   - conf: restricted fd-only lxc_fill_autodev()
+   - syscall_wrappers: fix PROTECT_OPEN_W macro
+   - tree-wide: s/dev_mntpt_fd/dfd_dev/g
+   - tree-wide: s/mntpt_fd/dfd_mnt/g
+   - tree-wide: s/dfd_root_host/dfd_host/g
+   - cgroups: check for correct error in __cg_unified_attach() from cgroup_attach()
+   - attach: improve logging and terminology
+   - utils: check for snprintf() error
+   - utils: add lxc_drop_groups()
+   - tree-wide: use lxc_drop_groups() instead of lxc_setgroups(0, NULL)
+   - utils: rework lxc_setgroups()
+   - confile: add lxc.init.groups to keep additional groups
+   - attach: Add groups option to keep additional group IDs.
+   - attach_options: initialize .groups
+   - attach_options: use standard C pointer syntax
+   - attach: use brackets around flag check
+   - attach_options: use size_t for lxc_groups_t
+   - conf: use lxc_groups_t directly
+   - confile: handle appending init groups
+   - mount_utils: move mount_at() and mount_from_at() over from utils.{c,h}
+   - mount_utils: add extended helpers for new mount api
+   - conf: switch mount_autodev() to new mount api
+   - cgroups: switch tmpfs mounting to new mount api
+   - cgroups: switch __cg_mount_direct() to use the new mount api
+   - mount_utils: kill mount_at()
+   - mount_utils: add support for bind-mounts through the new mount api
+   - conf: use fd_bind_mount() in lxc_fill_autodev()
+   - mount_utils: kill mount_from_at()
+   - mount_utils: detect new mount api support
+   - tree-wide: make use of new_mount_api() where it makes sense
+   - mount_utils: initialize fd
+   - attach: switch to simple mount()
+   - mount_utils: kill mount_filesystem()
+   - mount_utils: add locked flag helpers
+   - conf: s/setup_mount()/setup_mount_fstab()/g
+   - conf: kill PATH_MAX bytes
+   - conf: don't pass struct lxc_conf
+   - conf: kill PATH_MAX bytes
+   - conf: kill PAT_MAX bytes
+   - network: Add error message if iw couldn't be found
+   - conf: rework rootfs pinning
+   - mount_utils: s/OPEN_TREE_CLONE | OPEN_TREE_CLONE/OPEN_TREE_CLONE | OPEN_TREE_CLOEXEC/g
+   - conf: fd-only tty setup
+   - tests: add logging to lxc-test-unpriv
+   - conf: kill PATH_MAX bytes
+   - conf: kill PATH_MAX bytes
+   - conf: fix memory leak
+   - criu: mark cgroups methods specific to criu
+   - criu: massage exec_criu()
+   - criu: move logging under lxc_log_trace()
+   - criu: use cleanup macro
+   - criu: use cleanup macro when parsing mount data
+   - criu: rework init pid retrieval
+   - criu: warn about cgroup hierarchies without controllers
+   - criu: lxc_init() already initializes cgroups
+   - criu: handle new cgroup layout
+   - cgroups: use brackets to have clear semantics for flags checking
+   - cgroups: do not return early when entering monitor cgroups
+   - cgroups: log monitor and transient process entering
+   - cgroups: log container process entering
+   - string_utils: add wrapper for snprintf()
+   - cgroups: convert to strnprintf()
+   - attach: convert to strnprintf()
+   - commands_utils: convert to strnprintf()
+   - conf: convert to strnprintf()
+   - confile: convert to strnprintf()
+   - confile_utils: convert to strnprintf()
+   - criu: convert to strnprintf()
+   - file_utils: convert to strnprintf()
+   - log: convert to strnprintf()
+   - lxccontainer: convert to strnprintf()
+   - lxclock: convert to strnprintf()
+   - monitor: convert to strnprintf()
+   - mount_utils: convert to strnprintf()
+   - network: convert to strnprintf()
+   - rexec: convert to strnprintf()
+   - seccomp: convert to strnprintf()
+   - start: convert to strnprintf()
+   - terminal: convert to strnprintf()
+   - string_utils: convert to strnprintf()
+   - utils: convert to strnprintf()
+   - memory_utils: add close_move_fd()
+   - string_utils: add proc_self_fd()
+   - string_utils: add fdstr()
+   - file_utils: add same_file_lax()
+   - macro: add LXC_PROC_SELF_FD_LEN
+   - conf: introduce lxc_bind_mount_console()
+   - tree-wide: rework mount api support checks
+   - attach: convert to strequal()
+   - cgroups: convert to strequal()
+   - conf: convert to strequal()
+   - confile: convert to strequal()
+   - confile_utils: convert to strequal()
+   - criu: convert to strequal()
+   - initutils: convert to strequal()
+   - log: convert to strequal()
+   - lsm: convert to strequal()
+   - lxccontainer: convert to strequal()
+   - network: convert to strequal()
+   - seccomp: convert to strequal()
+   - namespace: convert to strequal()
+   - start: convert to strequal()
+   - state: convert to strequal()
+   - string_utils: convert to strequal()
+   - terminal: convert to strequal()
+   - utils: convert to strequal()
+   - attach: convert to strequal()
+   - cgroups: convert to strequal()
+   - conf: convert to strequal()
+   - confile: convert to strequal()
+   - confile_utils: convert to strequal()
+   - file_utils: convert to strequal()
+   - freezer: convert to strequal()
+   - lsm: convert to strequal()
+   - lxccontainer: convert to strequal()
+   - seccomp: convert to strequal()
+   - utils: convert to strequal()
+   - start: rework namespace preservation and path creation for hooks
+   - network: expose namespace fd paths to network hooks
+   - start: fix error handling and improve comment
+   - start: improve namespace preservation
+   - start: improve comments
+   - start: improve comment in lxc_spawn()
+   - cgroups: move cgns_supported() to cgroup utilities
+   - conf: don't pass conf separately to lxc_mount_auto_mounts()
+   - cgroups: pass handler to cgroup mount() method
+   - cgroups: verify that we are actually running in cgroup namespace
+   - cgroups: improve cgroup mounting
+   - utils: add development helper to quickly dump a directories contents
+   - cgroups: make clear that a flag argument is passed to cgroup mount functions
+   - cgroups: don't strip LXC_AUTO_CGROUP_FORCE
+   - cgroups: switch to flag-based checking
+   - conf: remove wrong comment
+   - cgroups: s/cg_mount_in_cgroup_namespace()/cgroupfs_mount()/g
+   - cgroups: s/cg_mount_cgroup_full()/cgroupfs_bind_mount()/g
+   - cgroups: fix flag checking in legacy mount paths
+   - cgroups: strip LXC_AUTO_CGROUP_MIXED and LXC_AUTO_CGROUP_FULL_MIXED when cgroup namespaces are supported and used
+   - cgroups: s/__cg_mount_direct()/__cgroupfs_mount()/g
+   - cgroups: log early return
+   - cgroupfs: rework cgroup2 mounting
+   - confile: use set_config_path_item() for most cgroup layout modifiers
+   - confile_utils: normalize paths in config items
+   - confile: forbid walking upwards for confile items that modify cgroup layout
+   - cgroups: s/cg_init()/__cgroup_init()/g
+   - cgroups: stash host's cgroupfs file descriptor
+   - cgroups: better document stashed file descriptors
+   - cgroups: rework add_hierarchy()
+   - cgroups: rework base cgroup parsing
+   - confile: forbid absolute paths in config items that modify the cgroup layout
+   - cgroups: fail when no cgroup hierarchies are found
+   - cgroups: stash fds for the controller mountpoint and base cgroup path
+   - cgroups: fd-based only cgroup creation
+   - cgroups: rework legacy cpuset handling
+   - cgroups: improve logging
+   - string_utils: handle empty strings in must_make_path()
+   - cgroups: allow "" base cgroup paths
+   - cgroups: fix fd leaks
+   - cgroups: rework how hierarchies are added
+   - namespace: add missing \0 terminator
+   - cgroups: prevent double-close
+   - file_utils: move dup_cloexec() to header
+   - cgroups: fd-only cgroup tree pruning
+   - cgroups: remove obsolote cgroup_tree handling
+   - cgroups: s/openat()/open_at()/g
+   - cgroups: check correct variable
+   - cgroups: rework unified controller delegation
+   - start: delegate than move into the target cgroup
+   - cgroups: reorder function arguments
+   - cgroups: remove obsolote check
+   - cgroups: rework cgroup tree removal on creation failure
+   - cgroups: ensure leaf cgroup is correctly pruned on creation failure
+   - cgroups: rework cgroup tree creation
+   - cgroups: be stricter when creating payloads
+   - cgroups: don't rely on absolute path
+   - cgroups: don't move pivot cgroup under the monitor's cgroup
+   - cgroups: ensure we don't remove cgroups we didn't create
+   - cgroups: ensure we prune the limit dir
+   - cgroups: simplify mount opening
+   - cgroups: prevent NULL pointer deref
+   - cgroups: log intermediate cleanup
+   - cgroups: distinguish between tmpfs and unified based cgroup layouts file descriptors
+   - cgroups: ensure that cgroup_root is initialized in legacy codepaths
+   - cgroups: prevent cgroup mount type overwrite
+   - cgroups: validate that only a single cgroup mount type is set
+   - conf: use brackets to clarify check semantics
+   - cgroups: use non-flag based checking now that we switched all codepaths over
+   - cgroups: create controller directories if missing
+   - cgroups: make it extremely obvious that we're transitioning from a flag to a type
+   - cgroups: don't overwrite type
+   - cgroups: fix error values
+   - utils: fix print_r() debugging helper
+   - cgroups: free correct path
+   - cgroups: kill monitor_full_path
+   - bpf: use cgroup fd directly instead of paths
+   - conf: introduce lxc_bpf_devices_rule_t type
+   - bpf: use return macros
+   - bpf: align struct initialization
+   - bpf: enable helpers to let caller replace existing bpf programs
+   - cgroups: make device cgroups semantics clearer
+   - cgroups: improve bpf device program handling
+   - bpf: add helpers for better bpf device program management
+   - cgroups: improve bpf device program management
+   - commands: improve bpf device program management
+   - commands: replace bpf program on update
+   - macro: add swap helper
+   - bpf: use __u32 not uint32_t
+   - bpf: don't close invalid fd, simply swap
+   - commands: rework bpf devices BPF_F_REPLACE codepath
+   - bpf: rework bpf_program_cgroup_detach()
+   - bpf: handling missing defines
+   - bpf: vendor bpf headers
+   - cgroups: remove compile-time bpf support detection
+   - bpf: add and use bpf_cgroup_devices_attach() helper
+   - bpf: let bpf_list_add_device() take the device list directly
+   - bpf: fix return values in bpf_program_cgroup_attach()
+   - compiler: fix fallthrough attribute
+   - bpf: rework live device cgroup update
+   - lxccontainer: fix reboot logging
+   - memory_utils: add close_equal() and free_equal()
+   - cgroups: use close_equal() and free_equal()
+   - bpf: prevent double-close
+   - bpf: make bpf_program_cgroup_attach() static
+   - bpf: simplify bpf (device) program freeing
+   - conf: use saner mode for console
+   - start: fix non-daemonized and application containers
+   - conf: don't log garbage
+   - apparmor: clean up apparmor_process_label_get
+   - apparmor: prefer /proc/.../attr/apparmor/current over legacy interface
+   - file_utils: allow fd_to_buf() to fail for real
+   - lsm: twek apparmor_process_label_get()
+   - cgroups: ensure no garbage is returned
+   - cgroups: make device cgroup handling smarter and simpler
+   - commands: only update bpf device program if really needed
+   - bpf: comment bpf_cgroup_devices_update()
+   - bpf: fix typos
+   - conf: improve lxc_clear_cgroups()
+   - conf: expose lxc_clear_cgroup2_devices()
+   - cgroups: tweak bpf_device_cgroup_prepare()
+   - bpf: update device cgroup semantics
+   - doc: add missing ".[controller file] suffix to lxc.cgroup{2}. key explanations
+   - doc: epxlain eBPF-based device controller semantics
+   - doc: tweak cgroup headline
+   - string_utils: move lxc_iterate_parts()
+   - cgroups: fix prune_init_scope()
+   - cgroups: avoid additional variable for single access
+   - cgroups: s/must_copy_string()/strdup()/g
+   - cgroups: tweak lxc.cgroup.use handling in __cgroup_init()
+   - cgroups: tweak return values
+   - cgroups: simplify current cgroup retrieval on pure unified cgroup layouts
+   - cgroups: s/basecginfo/cgroup_info/g
+   - compiler: add likely() and unlikely() support
+   - macro: add pointer error encoding support
+   - memory_utils: adapt to new pointer error macros
+   - cgroups: split out unified cgroup helpers
+   - cgroups: rework cgroup initialization
+   - cgroups: simplify string list handling
+   - cgroups: split delegation checks into separate helpers
+   - cgroups: s/add_hierarchy()/cgroup_hierarchy_add()/g
+   - cgroups: remove unused helpers
+   - cgroups: introduce cgroup hierarchy type
+   - cgroups: simplify and fix mounting on non-cgroup namespace aware kernels
+   - cgroups: rename cgroupfs mount fd
+   - cgroups: s/container_base_path/at_base/g
+   - cgroups: s/mountpoint/at_mnt/g
+   - cgroups: s/cgfd_con/dfd_con/g
+   - cgroups: s/cgfd_mon/dfd_mon/g
+   - cgroups: s/cgfd_limit/dfd_lim/g
+   - cgroups: s/container_full_path/path_con/g
+   - cgroups: s/container_limit_path/path_lim/g
+   - cgroups: move cgroup2 parameters into substruct
+   - cgroups: s/cgroup2_chown/delegate/g
+   - cgroups: improve utility controller handling
+   - file_utils: tweak lxc_write_openat()
+   - cgroups: fix cg_legacy_freeze() return type
+   - cgroups: handle lxc.cgroup.use global parameter
+   - memory_utils: fix close_equal()
+   - cgroups: skip and warn about invalid file descriptors
+   - cgroups: start stashing all fds
+   - cgroups: close dfd_mon but keep dfd_con and dfd_lim open for all cgroup hierarchies
+   - commands: explicitly number enums
+   - commands: tweak validate_string_request()
+   - af_unix: improve SCM_RIGHTS file descriptor retrieval
+   - cgroups: add cgroup_fds() helper
+   - state: _never_ return NULL from lxc_state2str()
+   - commands: be more explicit during command processing
+   - commands: introduce lxc_cmd_rsp_send_reap()
+   - commands: introduce rsp_one_fd()
+   - commands: introduce rsp_many_fds()
+   - commands: add LXC_CMD_GET_CGROUP_FD
+   - cgroups: allow cgroup fd batch retrieval
+   - macro: add min() macro
+   - utils: add copy_struct_from_client()
+   - log: add syswarn_set()
+   - utils: add copy_struct_to_client()
+   - commands: introduce LXC_CMD_GET_CGROUP_CTX
+   - cgroups: introduce fd-only cgroup attach
+   - commands: send ENOSYS response
+   - commands: handle older clients elegantly
+   - commands: lxc_cmd_add_state_client_callback()
+   - attach: fix unsupported namespaces
+   - af_unix: add comment about cast
+   - attach: remove additional newline
+   - commands: handle older clients gracefully
+   - commands: verify expected file descriptors were sent
+   - attach: fix namespace preservation
+   - terminal: dumb logging down
+   - attach: make fd sending more uniform
+   - attach: handle new and old clients
+   - commands: handle old clients for LXC_CMD_GET_CGROUP_CTX
+   - commands: only deref once
+   - af_unix: prevent oob writes
+   - cgroups: fix error checking
+   - commands: remove faulty use of access attribute
+   - cgroups: fix braino during controller list creation
+   - attach: be paranoid about file descriptors
+   - cgroups: simple variable reordering
+   - error_utils: move error helper to separate header
+   - commands: tweak return values
+   - error_utils: copy over Lennart's IN_SET()
+   - cgroups: make use of ERRNO_IS_NOT_SUPPORTED()
+   - cgroups: handle fallback gracefully
+   - commands: fix alignment for lxc_cmd_get_cgroup_ctx()
+   - commands: simplify lxc_cmd_get_cgroup_ctx()
+   - commands: s/_LIMITING_/_LIMIT_/g and s/_limiting_/_limit_/g
+   - commands: add LXC_CMD_GET_CGROUP_FD and LXC_CMD_GET_LIMIT_CGROUP_FD
+   - cgroups: s/cgroup_layout/layout/g
+   - commands: set rsp.ret to 0 for lxc_cmd_get_cgroup_ctx_callback()
+   - file_utils: actually open the file for reading
+   - commands: extend rsp_one_fd() to also handle additional data
+   - commands: add LXC_CMD_GET_CGROUP_FD and LXC_CMD_GET_LIMIT_CGROUP_FD
+   - commands: s/LXC_CMD_CONSOLE/LXC_CMD_GET_TTY_FD/g
+   - commands: annotate array argument
+   - commands: ensure that non-NULL and MAX_STATE is always passed
+   - commands: use IN_SET() in lxc_cmd()
+   - commands: switch to bool
+   - commands: s/lxc_cmd_init()/lxc_server_init()/g
+   - commands: add lxc_cmd_init() and lxc_cmd_data()
+   - commands: port lxc_try_cmd() to new helpers
+   - commands: port lxc_cmd_get_init_pid() to new helpers
+   - commands: port lxc_cmd_get_init_pidfd() to new helpers
+   - commands: port lxc_cmd_get_devpts_fd() to new helpers
+   - commands: port lxc_cmd_get_seccomp_notify_fd() to new helpers
+   - commands: port lxc_cmd_get_cgroup_ctx() to new helpers
+   - commands: port lxc_cmd_get_clone_flags() to new helpers
+   - commands: portlxc_cmd_get_cgroup_path_do() to new helpers
+   - commands: port lxc_cmd_get_config_item() to new helpers
+   - commands: port lxc_cmd_get_state() to new helpers
+   - commands: port lxc_cmd_stop() to new helpers
+   - commands: port lxc_get_tty_fd() to new helpers
+   - commands: port lxc_cmd_get_name() to new helpers
+   - commands: port lxc_cmd_get_lxcpath() to new helpers
+   - commands: port lxc_cmd_add_state_client() to new helpers
+   - commands: port lxc_cmd_add_bpf_device_cgropu() to new helpers
+   - commands: port lxc_cmd_console_log() to new helpers
+   - commands: port lxc_cmd_serve_state_clients() to new helpers
+   - commands: port lxc_cmd_seccomp_notify_add_listener() to new helpers
+   - commands: port lxc_cmd_freeze() to new helpers
+   - commands: port lxc_cmd_unfreeze() to new helpers
+   - commands: port lxc_cmd_get_cgroup_fd() to new helpers
+   - commands: port lxc_cmd_get_limit_cgroup_fd() to new helpers
+   - commands: port lxc_cmd_get_cgroup2_fd() to new helpers
+   - commands: port lxc_cmd_get_limit_cgroup2_fd() to new helpers
+   - commands: let lxc_cmd() return ssize_t to indicate that it returns not just 0 on success
+   - macro: add hweight*() helpers
+   - af_unix: allow caller and callee to negotiate expectations and reality
+   - commands: rework lxc_cmd_rsp_recv() to make it more obvious
+   - commands: improve lxc_cmd_get_tty_fd()
+   - tests: add logging to lxc-test-lxc-attach
+   - log: add some more log and return helpers
+   - commands: use debug logging
+   - commands: port misnamed functions to general style
+   - commands: send ENOSYS response
+   - commands: s/_LIMITING_/_LIMIT_/g and s/_limiting_/_limit_/g
+   - commands: cleanup error handling and variable naming
+   - commands: rsp_one_fd_{reap,keep}() and rsp_many_fds_reap()
+   - commands: fix indentation
+   - commands: unify fd retrieval commands
+   - tree-wide: s/syerrno_set()/syserror_set()/g
+   - tree-wide: start replacing instances of syserrno() with syserror()
+   - tree-wide: replace remaining instances of syserrno() with syserror_ret()
+   - log: mark logging helpers to use
+   - tree-wide: use new logging helpers
+   - tree-wide: replace old systrace logging helpers
+   - tree-wide: replace old-style sysinfo logging return helper
+   - network: make callback naming consistent and understandable
+   - network: fix coding style in lxc_create_network_unpriv_exec()
+   - confile_utils: ensure memory is zeroed
+   - network: fix grammar
+   - network: add lxc_network_info struct
+   - network: handle name collisions when renaming network devices
+   - network: use two passes through networks
+   - conf: ease backports by carrying unused structs
+   - network: carry some structs to ease backports
+   - confile: initialize network struct
+   - af_unix: vet all parameters
+   - cgroup: do not fail if there are no writable heirarchies
+   - attach_options: explicitly number enums
+   - attach_options: fix whitespace error in LXC_ATTACH_NO_NEW_PRIVS
+   - attach_options: add explicit defines for all enums
+   - start: handle CLONE_PIDFD on arm64
+   - conf: tweak comment about transient procfs mount
+   - conf: simplify dependent mount logic
+   - conf: ensure that procfs and sysfs are unmounted
+   - conf: cleanup automounting
+   - conf: simplify logging in lxc_mount_auto_mounts()
+   - conf: add missing newline in lxc_mount_auto_mounts()
+   - cgroups: ignore unused controllers
+   - macro: define __aligned_u64 to handle kernels without such support
+   - Switch to Github actions
+   - github: Fix invalid syntax for coverity
+   - rexec: don't close stderr
+   - string_utils: provide a version of strchrnul() in case it's not available
+   - include: fix typo
+   - configure: fix strchrnul conditiona compilation
+   - strchrnul: ignore increased required alignment warning
+   - strchrnul: fix copy-paste braino
+   - confile_utils: don't free netdev twice
+   - conf: fix a memory leak
+   - ci: turn on CIFuzz
+   - confile: fix set_config_sysctl()
+   - conf: reinitialize sysctl list after clearing it
+   - confile_utils: delete netdev from list
+   - list: add lxc_list_new() helper
+   - confile: use lxc_list_new() everywhere
+   - conf: use lxc_list_new() everywhere
+   - oss-fuzz: make it possible to build the fuzzer without docker
+   - network: handle name collisions when returning physical interfaces to host
+   - fuzz: create tmpfiles in /tmp
+   - README: add OSS-Fuzz/CIFuzz badges
+   - fuzz: generate all the config keys and add them to the seed corpus
+   - log: dont create log file for fuzz builds
+   - log: don't create directories for fuzz builds
+   - log: handle empty log name
+   - confile: be stricter in config helpers
+   - confile: don't leak memory when overwriting lxc.rootfs.options
+   - confile_utils: fix real-time signal parsing
+   - conf: prevent UAF in lxc_clear_limits()
+   - confile_utils: improve network parser
+   - string_utils: fix parse_byte_size_string()
+   - log: avoid regressions for relative log paths
+   - conf: don't leak list
+   - confile: fix setting prlimits
+   - string_utils: always memset buf in lxc_safe_int64_residual()
+   - conf: reinitialize lists
+   - confile_utils: free network list items
+   - conf: coding style cleanups
+   - confile: make string calculations in get_network_config_ops() more obvious
+   - confile: use correct check for too large network lists
+   - confile: improve network vetting
+   - confile: fix a memory leak in set_config_net_hwaddr
+   - confile: prevent recursion when parsing networks
+   - ci: turn on ASan on CIFuzz
+   - confile_utils: free list during lxc_remove_nic_by_idx()
+   - confile: add missing prefix validation
+   - confile: don't leak memory in case multiple shmounts are set
+   - confile_utils: fix a signed integer overflow
+   - oss-fuzz.sh: take SANITIZER into account
+   - cifuzz: turn on UBsan
+   - string_utils: handle overflow correct in parse_byte_size_string()
+   - cifuzz: turn on MSan
+   - string_utils: work around an MSan false positive
+   - confile: safely clean previous value in set_config_net_ipv6_gateway()
+   - confile: safely clean previous value in set_config_net_ipv4_gateway()
+   - confile: vet keys more aggressively
+   - confile: clear netdev on network type change
+   - confile: cleanup set_config_net_hwaddr()
+   - confile: cleanup set_config_net_mtu()
+   - confile: cleanup set_config_net_script_up()
+   - confile: cleanup set_config_net_script_down()
+   - tests: fix two false negatives in parse_config_file()
+   - tests: add another test for garbage config key
+   - conf: fix thread_local support detection
+   - lxccontainer: ensure second parameter to bsearch is never NULL
+   - compiler: fix thread_local detection
+   - oss-fuzz.sh: put the "lxc.net" keys in the seed corpus as well
+   - autotools: remove --enable-{asan,ubsan} in favor of --enable-sanitizers
+   - README: remove Travis and add Github actions badge
+   - doc: Documented that net type field must come before other options on the net device
+   - ci: stop passing --enable-ubsan
+   - oss-fuzz.sh: get rid of the sed "no-undefined" kludge
+   - ci: also build with ASan/UBsan
+   - ci: enable PAM
+   - build-system: make it compatible with ASan/UBsan/MSan
+   - oss-fuzz: reject giant configs early
+   - confile: don't jump into the global table twice
+   - string_utils: switch to path_simplify()
+   - confile: cap to last bit in set_config_net_ipv4_address()
+   - lxc_user_nic: cleanup append_alloted()
+   - lxc_user_nic: cleanup get_alloted()
+   - string_utils: move to lxc-copy() sources
+   - string_utils: ensure that errno is set on return
+   - string_utils: use restrict for lxc_safe_int64_residual()
+   - confile: simplify get_network_config_ops()
+   - confile: fix lxc.namespace.share.[identifier]
+   - confile: complain when LXC is built without selinux support
+   - confile: complain when LXC is built without AppArmor support
+   - conf: fix setups where /dev is outside of LXC's control
+   - log: ensure we always return negative errno
+   - templates/*.in: fixed PATH handling with spaces
+   - oss-fuzz: fuzz lxc_config_define_add and lxc_config_define_load
+   - confile: fix a memory leak lxc_config_define_add
+   - cifuzz: fuzz longer
+   - macro: ensure ret_errno() always returns negative
+   - log: add error_ret()
+   - confile: enforce maximum subkey length
+   - github: Try to fix action naming
+   - confile: make lxc_get_config() and lxc_get_config_net() always return non-NULL
+   - conf: simplify idmaptool_on_path_and_privileged()
+   - conf: don't report success when idmaptools lack all privilege
+   - attach: don't return early when calculating namespaces via pidfd
+   - Revert "rexec: mark all fds as close-on-exec if possible"
+   - confile: make lxc_get_config() and lxc_get_config_net() always return non-NULL
+   - tests: fix a memory leak in cgpath
+   - tests: fix a memory leak in lxcpath
+   - Revert "confile: make lxc_get_config() and lxc_get_config_net() always return non-NULL"
+   - tests: fix a memory leak in cgpath
+   - tests: fix a memory leak in attach
+   - lxccontainer: fix container creation error paths
+   - tests: switch to the "busybox" template in lxc-test-checkpoint-restore
+   - tests: stop cutting off right square brackets in share_ns
+   - tests: pass on ASAN/UBSAN options to several tests
+   - error_utils: add missing macro.h include
+   - configure: fix sanitizer compilation
+   - process_utils: free stack after return
+   - commands: don't needlessly allocate
+   - apparmor: turn bytes into null-terminated strings before calling strcspn
+   - ci: an attempt to run the tests under ASan/UBsan
+   - ci: link lib[au]san with init.lxc.static statically
+   - ci: switch to lxc-exercise from the lxc-ci repository
+   - ci: get around https://github.com/lxc/lxc/issues/3798
+   - ci: get around https://github.com/lxc/lxc/issues/3788
+   - ci: prevent lxc-exercise from running indefinitely
+   - ci: get around https://github.com/lxc/lxc/issues/3796
+   - ci: turn on strict_string_checks
+   - ci: build with -Wall -Werror
+   - Revert "ci: get around https://github.com/lxc/lxc/issues/3796"
+   - tests: free the buffer filled by lxc_cmd_rsp_recv
+   - ci: make use of --enable-sanitizers instead of CFLAGS
+   - autoconf: add AC_LANG_SOURCE to CC_CHECK_LDFLAGS
+   - build-system: stop building init.lxc.static with sanitizers
+   - ci: get rid of the -static-libasan stopgap
+   - autoconf: stop passing -fsanitize=address via AM_LDFLAGS
+   - seccomp: init and destroy notifier.cookie
+   - conf: rework lxc specific mount option parsing
+   - conf: add first, trivial support for idmapped mounts
+   - confile: parse idmap=<path> mount option for rootfs
+   - mount_utils: add support for mount_setattr() syscall
+   - storage: keep a reference to lxc_rootfs in lxc_storage
+   - mount_utils: add helper to determine whether new mount api supports bind mounts
+   - conf: support idmapping directories
+   - mount_utils: add two detached mount helpers
+   - start: documented idmapped mounts
+   - conf: verify that the rootfs can support idmapped mounts
+   - attach: visually separate pids from fds during initalization
+   - attach: use correct lxc_namespace_t type
+   - apparmor:  handle on-exec
+   - conf: tweak parse_lxc_mntopts()
+   - conf: don't allow idmapped lxc.mount.{entry,fstab} just yet
+   - strchrnul: include header
+   - conf: include strchrnul for platforms that don't support it
+   - Makefile: fix strchrnul() inclusion
+   - getsubopt: use correct include
+   - conf: better naming
+   - conf: don't overrun dest buffer in parse_lxc_mntopts()
+   - dir: fix rootfs mounting
+   - configure: fix function detection
+   - conf: stash lxc_storage into lxc_rootfs and bind to its lifetime
+   - conf: move all mount options into struct lxc_mount_options
+   - conf: s/lxc_rootfs_prepare/lxc_rootfs_init/g
+   - conf: improve idmapped mounts support
+   - build-system: add --enable-fuzzers
+   - ci: switch to --enable-fuzzers
+   - log: create log files in "fuzzing" mode if it's called outside fuzz targets
+   - tests: run the fuzzers along with the other tests
+   - build-system: turn off lto=thin when building the fuzzers
+   - dir: use mnt_opts->data instead of mntdata
+   - storage/dir: bdev->dest can't be empty
+   - storage/dir: use clear error messages
+   - storage/dir: retrieve proper source path later
+   - storage/dir: use "source" and "target" as terms
+   - storage/dir: source can't be empty
+   - storage/dir: remove error handling down
+   - storage/dir: cleanup mount code
+   - api-extensions: add entry for idmapped_mounts
+   - storage: fix dup_cloexec() call
+   - cgroups: fix fallback attach codepath
+   - oss-fuzz: always turn off logging on OSS-Fuzz
+   - conf: fix console chmod error log messages
+   - github: Run apt-get update in sanitizer test
+   - github: remove the dh-* packages
+   - github: also pass the j option to make
+   - string_utils: get around GCC-11 false positives
+   - confile: make per_name struct static
+   - commands: log at debug not info level when receiving file descriptors
+   - syscalls: wrap personality syscall if undefined
+   - tree-wide: make personality codepaths unconditional
+   - conf: tweak setup_personality()
+   - conf: rework lxc_config_parse_arch()
+   - attach_options: unbreak header
+   - conf: add personality_t
+   - attach: introduce explicit personality macro
+  [/details]
+
+  ### Support and upgrade
+  The LXC 4.0 branch is supported until June 2025.
+  Only bugfixes and securitiy issues get included into the stable bugfix releases, so it's always safe and recommended to keep up and run the latest bugfix release.
+
+  ### Downloads
+
+   - Main release tarball: [lxc-4.0.9.tar.gz](https://linuxcontainers.org/downloads/lxc/lxc-4.0.9.tar.gz)
+   - GPG signature: [lxc-4.0.9.tar.gz.asc](https://linuxcontainers.org/downloads/lxc/lxc-4.0.9.tar.gz.asc)

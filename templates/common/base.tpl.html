@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  {% block head %}
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="icon" href="/static/img/favicon.ico"/>
+
+  {% if page_title %}
+  <title>Linux Containers - {{ page_title }}</title>
+  <meta name="title" content="Linux Containers - {{ page_title }}"/>
+  <meta property="og:title" content="Linux Containers - {{ page_title }}"/>
+  <meta property="twitter:title" content="Linux Containers - {{ page_title }}"/>
+  {% else %}
+  <title>Linux Containers</title>
+  <meta name="title" content="Linux Containers"/>
+  <meta property="og:title" content="Linux Containers"/>
+  <meta property="twitter:title" content="Linux Containers"/>
+  {% endif %}
+  <meta name="description" content="The umbrella project behind Incus, LXC, LXCFS, Distrobuilder and more."/>
+  <meta property="og:type" content="website"/>
+  <meta property="og:url" content="https://linuxcontainers.org/"/>
+  <meta property="og:description" content="The umbrella project behind Incus, LXC, LXCFS, Distrobuilder and more."/>
+  <meta property="og:image" content="https://linuxcontainers.org/static/img/containers.png"/>
+  <meta property="twitter:card" content="summary_large_image"/>
+  <meta property="twitter:url" content="https://linuxcontainers.org/"/>
+  <meta property="twitter:title" content="Linux Containers"/>
+  <meta property="twitter:description" content="The umbrella project behind Incus, LXC, LXCFS, Distrobuilder and more."/>
+  <meta property="twitter:image" content="https://linuxcontainers.org/static/img/containers.png"/>
+  <link rel="preconnect" href="https://rsms.me/" />
+  <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
+  <link rel="stylesheet" href="https://assets.ubuntu.com/v1/vanilla-framework-version-4.1.0.min.css" />
+  <link rel="stylesheet" href="/static/css/local.css" />
+  <link rel="stylesheet" href="/static/css/pygments.css" />
+  {% endblock %}
+</head>
+
+<body role="document">
+  {% include "common/header.tpl.html" %}
+
+  <section class="p-strip--light is-x-shallow">
+    <div class="row">
+      <ul class="p-breadcrumbs__items">
+        {% if page_menu %}
+          {% for entry in page_menu %}
+          <li class="p-breadcrumbs__item">{{ entry }}</li>
+          {% endfor %}
+        {% endif %}
+      </ul>
+    </div>
+  </section>
+
+  <div class="wrapper u-no-margin--top">
+    <div class="inner-wrapper" id="main-content">
+      {% block content %}{% endblock %}
+    </div>
+  </div>
+
+  {% include ["common/footer." + page_language[0] + ".tpl.html", "common/footer.tpl.html"] %}
+
+  <script src="/static/js/jquery.min.js"></script>
+  <script src="/static/js/bootstrap-rating.min.js"></script>
+  <script src="/static/js/navigation-2.js"></script>
+</div>
+</body>
+</html>

@@ -1,0 +1,143 @@
+<div class="p-strip--light" style="padding-bottom:0; padding-top:0;">
+  <div class="row">
+    <div class="col-12">
+      <div class="p-notification--information">
+        <div class="p-notification__content">
+          <h5 class="p-notification__title">Incus has joined LinuxContainers</h5>
+          <p class="p-notification__message">Read the <a href="/incus/">project announcement here</a>.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="p-strip">
+  <div class="row">
+    <div class="col-8 suffix-1">
+      <h1 id="startpage-heading">Container and virtualization tools</h1>
+      <p>linuxcontainers.org is the umbrella project behind Incus, LXC,
+         LXCFS, Distrobuilder and more.</p>
+
+      <p>The goal is to offer a distro and vendor neutral environment
+        for the development of Linux container technologies.</p>
+
+      <p>Our focus is providing containers and virtual machines that run
+        full Linux systems. While VMs supply a complete environment,
+        system containers offer an environment as close as possible to
+        the one you'd get from a VM, but without the overhead that comes
+        with running a separate kernel and simulating all the hardware.</p>
+    </div>
+    <div class="col-4">
+      <img src="/static/img/containers.png" alt="" />
+    </div>
+  </div>
+</div>
+
+<div class="p-strip--light">
+  <div class="row">
+    <div class="col-12">
+      <h2>Active projects</h2>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="p-card col-6">
+      <h3>LXC</h3>
+      <p>LXC is a well-known Linux container runtime that consists of
+        tools, templates, and library and language bindings. It's pretty
+        low level, very flexible and covers just about every containment
+        feature supported by the upstream kernel.</p>
+
+      <p><a class="p-button" href="/lxc/introduction/" role="button">Learn more</a></p>
+    </div>
+
+    <div class="p-card col-6">
+      <h3>Incus</h3>
+      <p>Incus is a container and virtual-machine manager.<br />
+        Based on LXC for containers and QEMU for virtual machines, it offers a
+        seamless cloud-like experience scaling from a developer's laptop to a
+        full cluster of up to 50 servers.<br />
+        In addition to managing containers and VMs, Incus also provides
+        a variety of options to manage storage and network.</p>
+
+      <p>
+        <a class="p-button" href="/incus/introduction/" role="button">Learn more</a>
+        <a class="p-button" href="/incus/try-it/" role="button">Try it online</a>
+      </p>
+    </div>
+  </div>
+
+  <div class="row u-equal-height">
+    <div class="p-card col-6">
+      <h3>LXCFS</h3>
+      <p>LXCFS is a userspace (FUSE) filesystem which offers:
+        <ul>
+          <li>Overlay files for cpuinfo, meminfo, stat and uptime.</li>
+          <li>A cgroupfs compatible tree allowing unprivileged writes.</li>
+        </ul>
+      </p>
+
+      <p>It's designed to work around the shortcomings of procfs, sysfs
+        and cgroupfs by exporting files that match what a system
+        container user would expect.</p>
+
+      <p><a class="p-button" href="/lxcfs/introduction/" role="button">Learn more</a></p>
+    </div>
+
+    <div class="p-card col-6">
+      <h3>distrobuilder</h3>
+      <p>distrobuilder is an image building tool for containers and virtual machines:
+        <ul>
+          <li>Complex image definition as a simple YAML document.</li>
+          <li>Multiple output formats (chroot, LXD, LXC).</li>
+          <li>Support for a lot of distributions and architectures.</li>
+        </ul>
+      </p>
+
+      <p>distrobuilder's modern design utilises pre-built official images whenever available,
+        uses a declarative image definition (YAML) and supports a variety of
+        modifications on the base image.</p>
+
+      <p><a class="p-button" href="/distrobuilder/introduction/" role="button">Learn more</a></p>
+    </div>
+  </div>
+
+  <div class="row u-equal-height">
+    <div class="p-card col-6">
+      <h3>libresource</h3>
+      <p>library of interfaces through which we can get system resource
+         information like memory, CPU, stat, networking, device etc. Currently
+         most of such information is read from /proc and /sys.</p>
+
+      <p><a class="p-button" href="https://github.com/lxc/libresource/" role="button">Learn more</a></p>
+    </div>
+
+    <div class="p-card col-6">
+      <h3>lxcri</h3>
+      <p>lxcri is a wrapper around LXC which can be used as a drop-in
+         container runtime replacement for use by CRI-O.</p>
+
+      <p><a class="p-button" href="https://github.com/lxc/lxcri/" role="button">Learn more</a></p>
+    </div>
+  </div>
+</div>
+
+<div class="p-strip--light">
+  <div class="row">
+    <div class="col-12">
+      <h2>Deprecated projects</h2>
+    </div>
+  </div>
+
+  <div class="row u-equal-height">
+    <div class="p-card col-6">
+      <h3>CGManager</h3>
+      <p>CGManager is a cgroup manager daemon
+        designed to allow nested unprivileged containers
+        to be able to create and manage their
+        cgroups through a DBus API.</p>
+
+      <p><a class="p-button" href="/cgmanager/introduction/" role="button">Learn more&nbsp;&rsaquo;</a></p>
+    </div>
+  </div>
+</div>

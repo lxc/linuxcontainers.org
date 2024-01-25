@@ -1,0 +1,313 @@
+title: LXC 4.0.11 has been released
+date: 2021/10/19 21:10
+origin: https://discuss.linuxcontainers.org/t/lxc-4-0-11-has-been-released/12427
+content: |-
+  ### Introduction
+  The LXC team is pleased to announce the release of LXC 4.0.11!
+
+  This is the eleventh bugfix release for LXC 4.0 which is supported until June 2025.
+
+  ### Bugfixes
+  As usual this bugfix releases focus on stability and hardening. Some of the highlights for this release are:
+
+   - Core scheduling support (`lxc.sched.core`)
+   - `riscv64` support in `lxc.arch`
+   - Significantly improved bash completion profile
+   - Greater use of the new VFS mount API (when supported by the kernel)
+   - Fix containers with empty network namespaces
+   - Handle kernels that lack TIOCGPTPEER
+   - Improve CPU bitmask/id handling (handle skipped CPU numbers)
+   - Reworked the tests to run offline
+
+  The full list of commits is available below:
+
+  [details="Detailed changelog"]
+   - cgroups: populate hierarchy for device cgroup
+   - cgroups: remove unneeded variables from cgroup_tree_create
+   - lxc_setup_ttys: Handle existing ttyN file without underlying device
+   - bpf: bpf_devices_cgroup_supported() should check if bpf() is available
+   - conf: use new mount api for devpts setup
+   - terminal: ttyname_r() returns an error number on failure
+   - conf: ensure devpts_fd is set to -EBADF
+   - Fix typos
+   - conf: surface failures to setup console
+   - conf: set source property for devpts
+   - conf: attach devpts mount directly when new mount api can be used
+   - conf: s/lxc_setup_devpts_parent/lxc_recv_devpts_from_child/g
+   - conf: use a relative path in symlinkat()
+   - conf: update comment
+   - conf: add and use mount_beneath_fd()
+   - terminal: don't use ttyname_r() for native terminal allocation
+   - conf: merge devpts setup and move before pivot root
+   - string_utils: cast __s64 to long long signed int
+   - terminal: split out lxc_devpts_terminal() helper
+   - conf: move lxc_create_ttys() before pivot root
+   - conf: stash pty_nr in struct lxc_terminal
+   - mount_utils: add mount_fd()
+   - conf: use mount_fd() helper when mounting ttys
+   - conf: use mount_fd() in lxc_setup_dev_console()
+   - conf: use mount_fd() during console mounting
+   - file_utils: add open_at_same()
+   - conf: rework console setup
+   - terminal: remove unused argument from lxc_devpts_terminal()
+   - start: allow containers to use a native console
+   - conf: handle kernels without TIOCGPTPEER
+   - terminal: move native terminal allocation from error logging to info
+   - terminal: fail on unknown error during TIOCGPTPEER
+   - mount_utils: introduce mount_at()
+   - conf: fix logging in lxc_idmapped_mounts_child()
+   - conf: refactor lxc_recv_ttys_from_child()
+   - conf: log failure to create tty mountpoint
+   - conf: let parse_vfs_attr() handle legacy mount flags as well
+   - mount_utils: make some mount helpers static inline
+   - conf: allow mount options for rootfs when using new mount api
+   - tests: add test for rootfs mount options
+   - network: fix container with empty network namespaces
+   - lsm/apparmor: log failure to write AppArmor profile
+   - lsm/apparmor: use cleanup macro
+   - doc/api-extensions: Grammar fix
+   - tests: fix config file tests
+   - Fix typo on documentation for `lxc-autostart`.
+   - Fix typo on documentation for `lxc-{attach,execute}`.
+   - Create rules to add/remove symlinks for bash completion.
+   - Improve bash completion.
+   - cgroups: log at warning instead of error level
+   - conf: log session keyring failure on WARN level
+   - tree-wide: s/lxc_epoll_descr/lxc_async_descr/g
+   - doc: Adds mention of ability to specify manual IPv4 broadcast address
+   - mainloop: add io_uring support
+   - lxc-download: add LXC version/compat level to user-agent
+   - mainloop: s,sys/poll,poll
+   - mainloop: minor fixes
+   - mainloop: remove CANCEL_RAISE flag
+   - mainloop: fix io_uring cleanup handling
+   - memory_utils: make cleanup handler as unused
+   - mainloop: move variables into tighter scope
+   - mainloop: s/handler_name/name/g
+   - mainloop: add comments about multishot and oneshot cleanup
+   - mainloop: disable IORING_SETUP_SQPOLL for now
+   - cgroups: fix cpu bitmasks
+   - cgroups: s/calloc/zalloc/g
+   - Revert "cgroups: fix cpu bitmasks"
+   - cgroups: fix comments in cpuset1_initialize()
+   - cgroups: fix cpumask handling
+   - cgroups: use semantically clean check in cpuset1_cpus_initialize()
+   - cgroups: simplify offline and isolated cpu handling
+   - tests: set lxc-test-automount/createconfig/snapdeps as executable
+   - file_utils: add same_device() helper
+   - terminal: use /dev/ptmx when allocating pty devices from devpts instances we didn't mount ourselves
+   - busybox: mount sys:ro
+   - busybox: simplify
+   - conf: allow for tty allocation even when container did not request separate devpts instance
+   - tests: fix order in sys_mixed
+   - test: use busybox in lxc-test-apparmor-generated
+   - test: use busybox in lxc-test-apparmor-mount
+   - test: use busybox in lxc-test-autostart
+   - tests: use busybox in lxc-test-no-new-privs
+   - tests: use busybox in lxc-test-unpriv
+   - tests: use busybox in lxc-test-usernic.in
+   - seccomp: fix complication when !HAVE_DECL_SECCOMP_NOTIFY_FD
+   - config: enable seccomp profile only when compiled with libseccomp
+   - confile: return negative errno everywhere
+   - attach: allow LSM attach without new mnt namespace
+   - tools: fix variable declarations in lxc-attach
+   - tools: align struct initialization
+   - attach_options: add LXC_ATTACH_LSM_LABEL to LXC_ATTACH_LSM flags
+   - confile: rework lxc_fill_elevated_privileges()
+   - tools: fix elevated privilege handler in lxc-attach
+   - list: add new kernel-based list implementation
+   - tree-wide: port network handling to new list type
+   - cgroups: port bpf devices to new list type
+   - mainloop: port handlers to new list type
+   - conf: port state_clients to new list type
+   - conf: port rlimits to new list type
+   - conf: port sysctls to new list type
+   - conf: port procs to new list type
+   - conf: port cgroup settings to new list type
+   - conf: port id_map to new list type
+   - conf: remove unused mountflags nember
+   - rootfs: remove "options" member
+   - conf: rework recursive mount option handling
+   - conf: support recursive propagation options properly
+   - conf: switch to parse_mount_attrs() even for legacy mount()
+   - conf: remove unused variables
+   - conf: port environment to new list type
+   - terminal: remove unused struct member
+   - cgroup: remove unneeded forward declaration
+   - conf: simplify and port caps to new list type
+   - network: port ipv4 to new list type
+   - network: port ipv6 addresses to new list type
+   - tree-wide: s/ipv{4,6}_list/ipv{4,6}_addresses/g
+   - lxccontainer: align initialization
+   - cgroups: fix cgroup settings sorting
+   - network: port ipv4 routes to new list type
+   - network: port ipv6 routes to new list type
+   - cgroups: fix bpf device list
+   - conf: port mounts to new list type
+   - conf: port apparmor to new list type
+   - conf: port hooks to new list type
+   - conf: port groups to new list type
+   - lxccontainer: improve add_to_array()
+   - lxccontainer: improve add_to_clist()
+   - lxccontainer: tweak some array handling helpers
+   - attach: Fix -c command
+   - tree-wide: fix list_entry()
+   - lxc-usernsexec: small tweaks
+   - lxccontainer: use free_disarm() in list_all_containers()
+   - lxccontainer: remove useless {}
+   - lxccontainer: fail when container can't be loaded
+   - lxccontainer: don't pass NULL pointer
+   - configure: add sanitizer flags to LDFLAGS as well
+   - include: make all functions __hidden
+   - tree-wide: fix build
+   - build: add src/include to build and simplify header inclusions
+   - syscall_wrapper: fix pivot_root() declaration
+   - cgroups: fix integer comparisons
+   - confile: fix integer comparisons
+   - storage: fix integer comparisons
+   - attach: fix helper declarations
+   - lsm: fix integer comparisons
+   - conf: fix integer comparisons
+   - string_utils: fix integer comparisons
+   - conf: fix struct mount_attr initalization
+   - conf: fix array initalization
+   - tree-wide: fix attach header inclusion
+   - confile_utils: fix integer comparisons
+   - criu: fix integer comparisons
+   - commands: fix integer comparisons
+   - tree-wide: fix public lxc header inclusions
+   - network: fix integer comparisons
+   - lxccontainer: fix integer comparisons
+   - terminal: fix integer comparisons
+   - utils: fix integer comparisons
+   - start: fix integer comparisons
+   - netns_ifaddrs: fix integer comparisons
+   - lxcmntent: fix fallthrough
+   - seccomp: fix integer comparisons
+   - uuid: fix integer comparisons
+   - nl: fix integer comparisons
+   - monitor: fix integer comparisons
+   - file_utils: fix integer comparisons
+   - commands_utils: fix integer comparisons
+   - arguments: fix includes
+   - string_utils: fix includes
+   - conf: fix includes
+   - initutils: fix includes
+   - log: fix includes
+   - initutils: fix includes
+   - arguments: fix includes
+   - tools/lxc_start: fix includes
+   - caps: fix includes
+   - tree-wide: fix lxc header inclusion
+   - tools: fix build warnings
+   - tree-wide: fix config.h inclusion
+   - tests: include "version.h"
+   - lxc: remove "version.h" inclusion
+   - build: make sure _GNU_SOURCE is set
+   - build: add meson skeleton
+   - build: add tools to meson
+   - Fill missing commands on name completion.
+   - Use `--running` instead of `--active`.
+   - Add `compopt` call to `__lxc_piped_args`.
+   - Improve name completion handling.
+   - Add completion output for `lxc-ls --fancy-format`.
+   - Add support for container composed names.
+   - Use more bash-like syntax.
+   - Fix `lxc-snapshot` completion.
+   - Refactor `__lxc_piped_args`.
+   - Add support for comma as a completion word.
+   - Fix `lxc-create` completion.
+   - Another round of more bash-like syntax.
+   - Refactor `__lxc_groups()` to `__lxc_get_groups()`.
+   - Add `__lxc_get_selinux_contexts()`.
+   - Add completion for `lxc-copy` param `--fssize`.
+   - Update `_lxc_usernsexec`.
+   - Add `__lxc_cgroup_state_object()`.
+   - Check completion for prefixes names.
+   - Refactor ` __lxc_check_name_present()`.
+   - Fix `lxc-cgroup` smart completion.
+   - build: set pie in default_options
+   - build: set as-needed in default_options
+   - build: use dependency() where possible
+   - build: -fPIC and -shared are handled automatically
+   - build: set find_library('libcap', require : false)
+   - build: libdir and bindir are the default for shared libraries and executables
+   - build: use common dependencies variable
+   - build: remove unneeded variables
+   - build: add single option directly to static library
+   - build: set diagnostic colours directly in default_options
+   - build: add more global config variables
+   - build: set more variables and print summary
+   - log: fix cross-compilation with %m modifier
+   - tests: fix config file tests
+   - build: remove pointless prefixdir validation
+   - build: use correct minimal meson version requirement
+   - build: record meson version
+   - build: show more detailed information
+   - build: ensure all relevant calls are checked for availability at build time
+   - network: fix integer comparisons
+   - cgroups: fix declarations and headers
+   - build: support lto
+   - tools: use correct include for Android
+   - Don't include internal headers in external library headers
+   - build: fix hook program build
+   - build: fix tools build
+   - hooks: use cloexec everywhere
+   - build: split netns_ifaddrs into separate sources
+   - build: add commands
+   - build: expand default_options
+   - build: use dummy config data
+   - build: improve meson build
+   - build: build hooks directly in their folder
+   - build: add hooks
+   - build: add cmd builds
+   - lxc-monitord: use {} around ;
+   - cmds: fix integer conversions
+   - cmds: fix includes
+   - tree-wide: fix HAVE_* checks
+   - build: fix remaining HAVE_* generations
+   - build: add templates
+   - templates: don't double quote
+   - hooks: fix quoting
+   - build: check whether compiler supports nonnull and returns_nonnull attributes
+   - github: Drop 16.04 tests
+   - build: compiler attribute improvements
+   - initutils: add missing prctl include
+   - lxc: add lxc.sched.core
+   - attach: handle core scheduling
+   - tree-wide: cast to core scheduling cookie to llu
+   - syscall_wrappers: fix core scheduling creation helper naming
+   - start: don't fail when core scheduling isn't supported
+   - start: use core scheduling error helper
+   - start: make failure to apply core scheduling fatal
+   - log: improve %m handling on musl
+   - terminal: log at warning message
+   - conf: fix lxc.cap.keep behavior
+   - tests: add test for lxc.cap.keep
+   - conf: improve capability handling
+   - cgroups: use __u32 for cpumasks
+   - tree-wide: use __u32 for capabilities
+   - tests: expand capability tests
+   - attach: improve error logging for drop_capabilities()
+   - test: fix nested capability tests
+   - lxc-monitord: fix integer comparisions
+   - tests: remove trailing endifs
+   - criu: fix error message
+   - af_unix: replace log_error_errno()
+   - attach: improve error logging
+   - caps: ensure \0-termination
+   - conf: fix coding style
+   - conf: don't fail umount2()
+   - Add riscv64 to --arch parameter values
+   - README.md: mention RISC-V architecture
+   - conf: verify that rootfs is stable after setting up mounts
+  [/details]
+
+  ### Support and upgrade
+  The LXC 4.0 branch is supported until June 2025.
+  Only bugfixes and securitiy issues get included into the stable bugfix releases, so it's always safe and recommended to keep up and run the latest bugfix release.
+
+  ### Downloads
+
+   - Main release tarball: [lxc-4.0.11.tar.gz](https://linuxcontainers.org/downloads/lxc/lxc-4.0.11.tar.gz)
+   - GPG signature: [lxc-4.0.11.tar.gz.asc](https://linuxcontainers.org/downloads/lxc/lxc-4.0.11.tar.gz.asc)

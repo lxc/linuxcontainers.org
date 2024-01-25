@@ -1,0 +1,8 @@
+title: LXCFS 2.0.0.rc8 リリースのお知らせ
+date: 2016/03/21 00:00
+content: |-
+
+  
+   * このリリースは 2.0.0 に対する第 8 のリリース候補版です <!-- This is the eight release candidate for 2.0.0 -->
+   * lxcfs cgfsng ドライバで使う access(2) を実装しました <!-- This implements access(2) which is required by the lxcfs cgfsng driver. -->
+  

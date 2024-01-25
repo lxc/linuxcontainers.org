@@ -1,0 +1,15 @@
+title: LXCFS 0.1 release announcement
+date: 2015/01/09 00:00
+content: |-
+
+  This is the initial LXCFS release.
+  
+  It offers a basic cgroupfs-like interface which writes through CGManager as well as
+  cgroup-ified versions of the cpuinfo, meminfo, stat and uptime proc files.
+  
+  
+  Note that as the first release of LXCFS, things can still be very rough and we would advice
+  against using this in production.
+  
+  ### Downloads
+  The release tarballs can be found on our [download page](/lxcfs/downloads/).

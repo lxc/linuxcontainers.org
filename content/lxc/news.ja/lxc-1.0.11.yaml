@@ -1,0 +1,84 @@
+title: LXC 1.0.11 リリースのお知らせ
+date: 2017/10/19 00:00
+content: |-
+  <!--
+  This is the eleventh bugfix release for LXC 1.0.
+  -->
+  このリリースは LXC 1.0 の 11 回目のバグフィックスリリースです。
+  
+  バグ修正 <!-- Bugfixes -->:
+  
+   * apparmor: コンテナが AppArmor namespace 内で起動できるようになりました <!-- Allow containers to start in AppArmor namespaces -->
+   * apparmor: apparmor の不要な deny を削除しました <!-- Drop useless apparmor denies -->
+   * conf: libcap がない場合のビルドの問題を修正しました <!-- Fix building without libcap -->
+   * conf: netdev-\>downscript 変数を free するようにしました <!-- Free netdev-\>downscript -->
+   * conf: write\_id\_mapping() 関数を改良しました <!-- Improve write\_id\_mapping() -->
+   * conf: 機能と関係ない変更を行いました <!-- Non-functional changes -->
+   * conf: 設定をパースする関数を全体的にリファクタリングしました <!-- Refactor most of the parsing functions -->
+   * console: 機能と関係ない変更を行いました <!-- Non-functional change -->
+   * core: `__func__` マクロを削除しました <!-- Remove the `__func__` macro -->
+   * core: ログのフォーマット文字列として `%m` の代わりに `strerror(errno)` を使うようにしました <!-- Use strerror(errno) instead of %m -->
+   * doc: README に CII Best Practices のバッヂを追加しました <!-- Add CII Best Practices badge to README -->
+   * doc: コマンドに対する足りていなかった変換を追加しました <!-- Add missing translations for commands -->
+   * doc: typo を修正しました <!-- Fix a typo -->
+   * doc: lxc-monitor(1) にあった正規表現の typo を修正しました <!-- Fix regex-typo in Japanese and Korean lxc-monitor(1) -->
+  <!-- * doc: Fix regex-typo in lxc-monitor.sgml.in -->
+   * doc: 非特権の場合の idmap の制限に関する説明を書き換えました <!-- Reword idmap restrictions when unpriv -->
+   * doc: get\_config\_item の API を更新しました <!-- Update API for get\_config\_item -->
+   * doc: README を更新しました <!-- Update README -->
+   * init: 32 と 33 のシグナルに対するコメントを更新しました <!-- Add comment for exclude 32 and 33 signals -->
+   * liblxc: snprintf() を使うようにしました <!-- Use snprintf() -->
+   * lock: 機能と関係ない変更を行いました <!-- Non-functional changes -->
+   * lock: ロックファイルのオープンに失敗した場合は正しいエラーを返すようにしました <!-- Return the right error when open lock file failed -->
+   * monitor: af\_unix の unlink 操作を削除しました <!-- Remove unlink operation in af\_unix -->
+   * network: mtu を無視した場合の警告を追加しました <!-- Adding warning for mtu ignoring -->
+   * network: 機能と関係ない変更を行いました <!-- Non-functional changes -->
+   * seccomp: log にアクション名を表示するようにしました <!-- Print action name in log -->
+   * seccomp: s/n-new-privs/no-new-privs/g
+   * seccomp: `parse_config` 関数のコメントを更新しました <!-- Update comment for function `parse_config` -->
+   * state: lxc\_rmstate の宣言を削除しました <!-- Remove lxc\_rmstate declaration -->
+   * storage: gcc7 でビルドできるようにしました <!-- Enable building with gcc7 -->
+   * template/archlinux: ロケールを "en-US.UTF-8" から "en\_US.UTF-8" に変更しました <!-- Change locale "en-US.UTF-8" to "en\_US.UTF-8" -->
+   * template/centos: パッケージリストに cronie を追加しました <!-- Add cronie to the pkg list -->
+   * template/centos: i386 と x86\_64 以外のアーキの CentOS では AltArch ミラーを使うようになりました <!-- Use altarch mirror for CentOS on arches other than i386 and x86\_64 -->
+   * template/debian: aarch64 -> arm64 のマッピングを追加しました <!-- Add aarch64 -> arm64 mapping -->
+   * template/debian: buster を有効なリリースとして追加しました <!-- Add buster as a valid release -->
+   * template/debian: デフォルトの Debian ミラーとして deb.debian.org を使うようになりました <!-- Use deb.debian.org as the default Debian mirror -->
+   * template/opensuse: getty.target.wants が存在しない場合の処理を追加しました <!-- getty.target.wants does not always exists -->
+   * template/ubuntu: upstart の ssh ジョブは現在オプショナルなので、条件付きで mv するようにしました。<!-- Conditionally move upstart ssh job, as it is now optional. -->
+   * template: キャッシュされた rootfs をコピーする際に "rsync -SHaAX" を使うようにしました <!-- Use "rsync -SHaAX" to copy the cached rootfs into place -->
+   * tests: NULL ポインタへの参照を防ぎました <!-- Avoid NULL pointer dereference -->
+   * tests: attach のテストケースからテンポラリの lxcpath を削除しました <!-- Remove temp lxcpath for attach testcase -->
+   * tools/usernsexec: 不要な割り当てを削除しました <!-- Remove dead assignments -->
+   * tools: "which" を使うようにしました <!-- Use "which" -->
+   * travis: ビルドの修正を行いました <!-- Fix builds -->
+   * utils: fork 後の子プロセス内で親の fd をクローズするようにしました <!-- Close parent end in child process after fork -->
+   * utils: lxc\_popen() 内で stderr を複製するようにしました <!-- Duplicate stderr as well in lxc\_popen() -->
+   * utils: <!-- Fix -->lxc\_popen()/lxc\_pclose() を修正しました
+   * utils: realpath のメモリリークを修正しました <!-- Fix mem leak with realpath -->
+   * utils: cppcheck の警告をいくつか修正しました <!-- Fix some cppcheck warnings -->
+   * utils: 'stdoutfd' を代入していない 'ts-\>stdoutfd' のバグを修正しました <!-- Fix the bug of 'ts-\>stdoutfd' did not fill with parameters 'stdoutfd' -->
+   * utils: lxc\_popen() 内の不要な割り当てを削除しました <!-- Remove dead assignments in lxc\_popen() -->
+  
+  ### ダウンロード <!-- Downloads -->
+  <!--
+  The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
+  will very soon ship a packaged version of LXC 1.0.11.
+  -->
+  このリリースの tarball は [ダウンロードページ](/lxc/downloads/) から取得できます。そして、各ディストリビューションがすぐに LXC 1.0.11 のパッケージをリリースするでしょう。
+  
+  <!--
+  Please note that LXC upstream strongly recommends 1.0 users to upgrade to the 2.0 LTS release.
+  The 1.0 branch will keep being supported until June 2019, but at this point,
+  only critical bugfixes and security updates will be backported.
+  -->
+  LXC 開発元として、1.0 ユーザには 2.0 LTS リリースへのアップグレードを強くおすすめします。
+  1.0 ブランチは 2019 年 6 月までサポートが続きます。しかし現時点では、重大なバグフィックスとセキュリティホール対策のみがバックポートされます。
+  
+  <!--
+  Should you be interested in individual changes or just looking at the detailed development history,
+  our stable branch is on [GitHub](https://github.com/lxc/lxc/tree/stable-1.0).
+  -->
+  個々の変更点に興味がある場合、そして開発の履歴を見たい場合、stable-1.0 ブランチが [GitHub](https://github.com/lxc/lxc/tree/stable-1.0) にあります。
+  
+  

@@ -1,0 +1,17 @@
+title: LXCFS 0.16 リリースのお知らせ
+date: 2016/01/08 00:00
+content: |-
+
+  <!--
+  Bugfix release.
+  -->
+  バグフィックスのためのリリースです。
+  
+   * 先の 2 つのリリースにあるメモリアロケーションに関するバグの修正のためのリリースです <!-- This provides a fix for the memory allocation bugs in the last two releases. -->
+  
+  ### ダウンロード <!-- Downloads -->
+  <!--
+  The release tarballs can be found on our [download page](/lxcfs/downloads).
+  -->
+  このリリースの tarball は [ダウンロードページ](/lxcfs/downloads) から取得できます。
+  

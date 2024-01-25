@@ -1,0 +1,14 @@
+title: LXCFS 0.17 release announcement
+date: 2016/01/26 00:00
+content: |-
+
+  ### Changes
+   * Add a PAM module
+   * Allow users to see all cgroup directories under their init's.
+   * Use a task's init process' cgroup usage+limits to virtualize procfiles,
+     rather than the task's own limits.
+   * Improve swap accounting
+  
+  ### Downloads
+  The release tarballs can be found on our [download page](/lxcfs/downloads).
+  

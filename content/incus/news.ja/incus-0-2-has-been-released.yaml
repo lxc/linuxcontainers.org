@@ -1,0 +1,428 @@
+title: Incus 0.2 リリースのお知らせ
+date: 2023/10/28 23:10
+origin: https://discuss.linuxcontainers.org/t/incus-0-2-has-been-released/18185
+content: |-
+  # はじめに <!-- Introduction -->
+  <!--
+  The Incus team is pleased to announce the release of Incus 0.2!
+  -->
+  Incus チームは、Incus 0.2 のリリースのアナウンスができることをうれしく思います!
+
+  <!--
+  This version incorporates most changes that went into LXD 5.19 as well as introduce a few additional features and improvements.
+  -->
+  このバージョンは、LXD 5.19 で加えられたほとんどの変更を含んでいるだけでなく、いくつかの追加の機能や改良が導入されています。
+
+  [![Screenshot from 2023-10-28 19-01-17|690x459](https://discuss.linuxcontainers.org/uploads/default/original/2X/2/23c8308cca358781f050ee67589cc91ad47dcf51.png)](https://linuxcontainers.org/incus/try-it/)
+
+  <!--
+  You can try it for yourself online: https://linuxcontainers.org/incus/try-it/
+  -->
+  オンラインでご自身で試せます: https://linuxcontainers.org/incus/try-it/
+
+  Enjoy!
+
+  # 新機能とハイライト <!-- New features and highlights -->
+  ## 仮想マシンでの NVME ストレージのサポート <!-- NVME storage support in virtual machines -->
+  <!--
+  A new `io.bus` configuration key was added to `disk` type devices of virtual-machines.
+  -->
+  仮想マシンの `disk` タイプのデバイスに `io.bus` 設定キーが新たに追加されました。
+
+  <!--
+  This defaults to `virtio-scsi` but can also now be set to `nvme` in order to have the disk appear as an NVME SSD inside the virtual machine.
+  -->
+  この設定キーは、デフォルトでは `virtio-scsi` に設定されています。しかし、仮想マシン内部で NVME SSD として出現させたい場合、`nvme` という値も設定できるようになりました。
+
+  ## LXD からの移行のクラスターサポート <!-- Cluster support for migration from LXD -->
+  <!--
+  The `lxd-to-incus` migration tool now supports clustered environments.
+  Additionally, it's also been updated to support LXD 5.19 as a source release.
+  -->
+  移行ツールである `lxd-to-incus` がクラスター環境もサポートするようになりました。
+  加えて、移行元のリリースとして LXD 5.19 もサポートするように更新されました。
+
+  <!--
+  This means that anyone on LXD version 4.0 and higher (up until 5.19) can now easily move over to Incus by installing Incus and running `lxd-to-incus`!
+  -->
+  つまり、LXD 4.0 以上（5.19 まで）を使っているユーザーは、Incus をインストールし、`lxd-to-incus` を実行すると、簡単に移行できます。
+
+  https://media.hachyderm.io/media_attachments/files/111/299/784/894/279/245/original/980eafd9c3450216.mp4
+
+  ## 非特権コンテナに対する新しいイメージ要件 <!-- New image requirement for unprivileged containers -->
+  <!--
+  When adding support for NixOS as a container image, it came out that this particular image cannot currently work inside of a privileged container.
+  -->
+  コンテナイメージとして NixOS のサポートを追加したとき、現時点では、この特定のイメージは特権コンテナ内部では動作しないことがわかりました。
+
+  <!--
+  Rather than just let it silently fail for those users, a new image requirement was added.
+  `requirements.privileged` can be set to `false` in order to prevent the image from being used with a privileged container.
+  -->
+  このようなユーザーに対して、だまって失敗するのではなく、新たにイメージの要件を追加しました。
+  特権コンテナでイメージが使われることを防ぐために、`requirements.privileged` を `false` に設定できます。
+
+      stgraber@dakara:~$ incus launch images:nixos nixos-priv -c security.privileged=true
+      Creating nixos-priv
+      Starting nixos-priv
+      Error: The image used by this instance is incompatible with privileged containers. Please unset security.privileged on the instance
+      Try `incus info --show-log local:nixos-priv` for more info
+      stgraber@dakara:~$ 
+
+  ## サーバーサイドカスタムボリュームコピー <!-- Server-side custom volume copy -->
+  <!--
+  Incus now supports server-side copies of custom volumes. This significantly speeds up copies of custom volumes by eliminating the need for the client to act as a relay.
+  -->
+  Incus は、カスタムボリュームのサーバーサイドコピーをサポートするようになりました。これにより、クライアントがリレーとして働く必要はなくなり、カスタムボリュームのコピーが大幅にスピードアップします。
+
+  <!--
+  The command line tool automatically detects support for this and uses it when available.
+  -->
+  コマンドラインツールは、自動的にこの機能のサポートを検出し、使える場合は使います。
+
+  <!--
+  *This feature was first introduced in LXD.*
+  -->
+  *この機能は LXD で最初に導入されました。*
+
+  ## 64 ビット Arm のスタティックバイナリーが利用可能に <!-- Static binaries now available for 64-bit Arm -->
+  <!--
+  All static binaries provided as part of our releases and tests are now provided for both Intel 64-bit as well as Arm 64-bit.
+  -->
+  リリースやテストの一部として提供されるスタティックバイナリーのすべてが、Intel 64 ビットと Arm 64 ビットで提供されるようになりました。
+
+  ### すべての変更点 <!-- Complete changelog -->
+  <!--
+  Here is a complete list of all changes in this release:
+  -->
+  このリリースのすべての変更のリストは以下です:
+
+  [details="すべてのChangeLogを見る"]
+   - doc: change Incus_DIR to upper case INCUS_DIR
+   - README: Fix link to getting started
+   - doc: Add start-after to include CONTRIBUTING.md from contributing.md
+   - Makefile: Build doc in production mode
+   - doc: Fix logic to find incus
+   - lxd-to-incus: Port to current Incus
+   - gomod: Update dependencies
+   - doc: Add "Then run the following command:"
+   - incus-user: Fix bad path
+   - doc: Remove direct from reference/network_external/
+   - doc: Remove "Configure a network section" in howto/network_create
+   - doc: Align output of IPAM table
+   - doc: Make Incus_INSECURE_TLS uppercase
+   - doc: Remove all mentions of trust passwords
+   - doc: Update Grafana screenshots
+   - build(deps): bump redhat-plumbers-in-action/differential-shellcheck
+   - github: Build static binaries for x86_64 and aarch64
+   - cmd/incus/admin_cluster: Fix re-exec logic
+   - [lxd-import] client: Remove project from format string API path.
+   - [lxd-import] client: Adds a flag to operations to skip event listener setup.
+   - [lxd-import] client: Pass useEventListener flag into queryOperation.
+   - [lxd-import] client/certificates: Update calls to queryOperation.
+   - [lxd-import] client/cluster: Update calls to queryOperation.
+   - [lxd-import] client/images: Update calls to queryOperation.
+   - [lxd-import] client/instances: Update calls to queryOperation.
+   - [lxd-import] client/projects: Update calls to queryOperation.
+   - [lxd-import] client/storage_volumes: Update calls to queryOperation.
+   - cmd/incusd: Properly forward rebuild requests
+   - tests: Fix storage volume recovery test
+   - tests: Fix syslog test
+   - doc: Remove UI tabs
+   - tests: Add incus-user test
+   - gomod: Update dependencies
+   - github: Prevent interactions with image server
+   - internal/server/seccomp: Fix clang build
+   - [lxd-import] scripts/bash: add missing `incus config trust` subcommands
+   - [lxd-import] lxd/storage: Prevent duplicate usedBy profile device entries
+   - [lxd-import] doc/projects: fix typo "profiles" instead of "projects"
+   - instance/qemu: Tweak systemd/udev units of incus-agent
+   - github: Re-try golang-tip for up to 10min
+   - [lxd-import] doc/projects: point out that new projects don't have a profile
+   - [lxd-import] lxd-agent: Adds an operation wait endpoint.
+   - [lxd-import] lxd: Move certificate type to certificate package.
+   - [lxd-import] lxd/certificate: Adds a thread-safe certificate cache.
+   - [lxd-import] lxd: Use certificate.Cache in the daemon.
+   - [lxd-import] lxd/resources: if `SCSI_IDENT_SERIAL` is available, use it as serial nr before `ID_SERIAL_SHORT`
+   - [lxd-import] doc/doc-lint: fix the linting script for new version of mdl
+   - internal/server/storage: Remove leftover LXD references
+   - internal/server/config: Remove leftover LXD references
+   - doc: Remove mention of containers/virtual-machines API
+   - doc: Remove mention of LXD versions
+   - lxd-to-incus: Report source name
+   - lxd-to-incus: Add manual source
+   - shared/osarch: Add loongarch64
+   - [lxd-import] tests: Fix storage volume recovery test
+   - [lxd-import] github: improve ceph test reliability
+   - [lxd-import] github: reorder microceph setup steps to remove a sleep
+   - [lxd-import] github: tune ext4 for speed and reclaim some space
+   - [lxd-import] shared/version: Adds API extension.
+   - [lxd-import] client: Check for operation wait extension and conditionally revert to events API.
+   - [lxd-import] lxd/locking/lock: Return error if context got cancelled
+   - [lxd-import] lxd/api: Handle error from lock
+   - [lxd-import] lxd/daemon: Handle error from lock
+   - [lxd-import] lxd/images: Handle error from lock
+   - [lxd-import] lxd/instance: Handle error from lock
+   - [lxd-import] lxd/instance/drivers: Handle error from lock
+   - [lxd-import] lxd/storage/drivers: Handle error from lock
+   - [lxd-import] lxd/network/driver/ovn: Handle error from lock
+   - [lxd-import] lxd/storage/backend: Handle error from lock
+   - [lxd-import] lxd/storage/s3/miniod: Handle error from lock
+   - [lxd-import] shared/ws/mirror: Log as soon as io.Copy has finished in MirrorRead
+   - [lxd-import] shared/ws/mirror: Removes unused context argument from Mirror*()
+   - [lxd-import] client: ws.Mirror*() usage
+   - [lxd-import] lxc-to-lxd: ws.Mirror*() usage
+   - [lxd-import] lxd-agent: ws.Mirror*() usage
+   - [lxd-import] lxd-migrate: ws.Mirror*() usage
+   - [lxd-import] lxd: ws.Mirror*() usage
+   - [lxd-import] shared/util/linux: Partially reverts 54e3da881103c42d6b4813e8930bde1b10edb236 and reintroduces GetPollRevents
+   - [lxd-import] shared/util/linux: Adds execWrapper for use with ws.MirrorRead() and ws.Mirror()
+   - [lxd-import] lxd/instance/exec: Use context.WithCancel rather than cancel
+   - [lxd-import] lxd/instance/exec: Use shared.NewExecWrapper
+   - [lxd-import] lxd-agent/exec: Use shared.NewExecWrapper and bring into line with container exec
+   - [lxd-import] patches: Fix patch regarding unsetting zfs block settings
+   - gomod: Update dependencies
+   - cmd/lxd-to-incus: Handle backups/images volumes
+   - Makefile: Generate vendor tree for lxd-to-incus
+   - Makefile: Use tar.xz for smaller tarballs
+   - gitignore: Update for .tar.xz
+   - doc: Add packaging instructions
+   - [lxd-import] lxd/storage/backend: Allow generating backup configuration w/o volume snapshots
+   - [lxd-import] lxd/instance/drivers: Update func call
+   - [lxd-import] client: Unset response header timeout when waiting for operations.
+   - [lxd-import] test/suites/backup: Test instance export with instance-only flag
+   - [lxd-import] test/main: Add invocation of instance export test
+   - [lxd-import] github: use ppa:ubuntu-lxc/daily instead of ppa:ubuntu-lxc/lxc-git-master
+   - [lxd-import] lxd-agent: Fixes vsock listener restart on boot due to vsock module not being fully initialised
+   - [lxd-import] lxd/vsock/vsock: Removes unused ContextID function
+   - [lxd-import] lxd-agent: Fixes intermittent exec EOF closure when vsock listener is restarted just after boot
+   - [lxd-import] shared/api/url: Fix double path encoding issue
+   - [lxd-import] lxc: avoid returning early when multiple ephemeral instances are to be deleted
+   - [lxd-import] test: test multiple ephemeral delete
+   - [lxd-import] lxc/storage/volume: Move volume if a destination cluster member name is set
+   - [lxd-import] test: Rename storage volumes in a cluster
+   - [lxd-import] lxd/network/driver/bridge: Don't consider an IP parse failure of a proxy listen address an error
+   - [lxd-import] github: Run push actions on main and release branches only
+   - [lxd-import] lxd/daemon: Initialise server name and global config before patches
+   - [lxd-import] lxd/patches: Only update volumes that need updating in patchStorageZfsUnsetInvalidBlockSettingsV2
+   - [lxd-import] lxd/patches: Only update volumes that need updating in patchStorageZfsUnsetInvalidBlockSettings
+   - doc/images: Fix type of requirements.secureboot
+   - api: Add image_restriction_privileged
+   - doc/images: Introduce requirements.privileged
+   - doc/images: Sort image requirements
+   - internal/server/instance/lxc: Add support for image.requirements.privileged
+   - shared/cliconfig: Nicer error on missing socket
+   - instance/lxc: Fix swap limit handling
+   - [lxd-import] doc: add a note about go-incus build issue when INC_DEVEL=1
+   - [lxd-import] lxd/firewall: Fix nftables ACL template
+   - [lxd-import] lxd/api: replace numeric literal 301 by http.StatusMovedPermanently
+   - [lxd-import] lxd/auth/oidc: replace numeric literal 301 by http.StatusMovedPermanently
+   - [lxd-import] lxd/dev_incus: replace numeric literal 401 by http.StatusUnauthorized
+   - [lxd-import] lxd: Update certificate cache again after cluster join.
+   - [lxd-import] lxd/patches: Add cluster check for patches fixing volumes
+   - [lxd-import] lxd/storage_pools: Fix etag when retrieving storage pool
+   - [lxd-import] Makefile: add staticcheck target
+   - [lxd-import] Add staticcheck config
+   - [lxd-import] golangci: sort linters list
+   - [lxd-import] doc/instances: clarify initial volume configuration
+   - [lxd-import] lxd/instance/drivers: Check running status with `InitPID` for cgroups
+   - [lxd-import] lxd/instance/drivers: Extend error message in deviceAddCgroupRules
+   - [lxd-import] doc/networking/firewall: add more restrictive UFW rules
+   - [lxd-import] loki: enable TLS verification if a CA cert is provided
+   - [lxd-import] test/container_devices_unix: Make unix device checks less flaky
+   - [lxd-import] api: Add cluster_internal_custom_volume_copy
+   - [lxd-import] shared/api: Add Location to StorageVolumeSource
+   - [lxd-import] shared/api: Add Source to StorageVolumePost
+   - [lxd-import] lxd/db: Add function to update storage volume node
+   - [lxd-import] lxd: Handle copying storage volumes with a single API call
+   - [lxd-import] lxd: Support single API custom volume rename
+   - [lxd-import] client: Set Source.Location if supported
+   - [lxd-import] doc: Update API
+   - [lxd-import] lxd/instance/exec: Use linux.NewExecWrapper for MirrorRead in non-interactive exec
+   - [lxd-import] shared/ws/mirror: Updare Mirror*() to return error channels
+   - [lxd-import] client: shared.Mirror*() usage
+   - [lxd-import] lxd/instance/exec: Log error from ws.Mirror*() in execWs
+   - [lxd-import] lxc/copy: Require destination name to be provided
+   - [lxd-import] po: Update translations
+   - [lxd-import] shared/api: Add authentication method constants.
+   - gitignore: Remove macaroon-identity
+   - [lxd-import] client: Replaces 'oidc' string with constant.
+   - [lxd-import] lxc/config: Replaces 'oidc' string with constant.
+   - [lxd-import] lxc: Replaces 'oidc' string with constant.
+   - [lxd-import] lxd: Replaces 'oidc' string with constant.
+   - [lxd-import] client: Replaces 'tls' string with constant.
+   - [lxd-import] lxc/config: Replaces 'tls' string with constant.
+   - [lxd-import] lxc: Replaces 'tls' string with constant.
+   - [lxd-import] lxd: Replaces 'tls' string with constant.
+   - [lxd-import] lxd-agent: Replaces 'tls' string with constant.
+   - [lxd-import] lxd-migrate: Replaces 'tls' string with constant.
+   - [lxd-import] shared/network: remove unused args of GetTLSConfig()
+   - [lxd-import] lxd/migration_connection: drop unused args for localtls.GetTLSConfig()
+   - [lxd-import] lxd/storage_volumes: drop unused args for localtls.GetTLSConfig()
+   - [lxd-import] lxd/util/http: drop unused args for localtls.GetTLSConfig()
+   - [lxd-import] shared/cert: drop unused args for GetTLSConfig()
+   - [lxd-import] lxd/instance/driver/qemu: replace sha1 by sha256 in blockNodeName()
+   - [lxd-import] shared/api: Adds constant for default project name.
+   - [lxd-import] lxd/cluster: Updates project.Default to api.ProjectDefaultName.
+   - [lxd-import] lxd/db: Updates project.Default to api.ProjectDefaultName.
+   - [lxd-import] lxd/device: Updates project.Default to api.ProjectDefaultName.
+   - [lxd-import] lxd/instance/drivers: Updates project.Default to api.ProjectDefaultName.
+   - [lxd-import] lxd/instance: Updates project.Default to api.ProjectDefaultName.
+   - [lxd-import] lxd/network/acl: Updates project.Default to api.ProjectDefaultName.
+   - [lxd-import] lxd/network: Updates project.Default to api.ProjectDefaultName.
+   - [lxd-import] lxd/project: Updates project.Default to api.ProjectDefaultName.
+   - [lxd-import] lxd/storage: Updates project.Default to api.ProjectDefaultName.
+   - [lxd-import] lxd: Updates project.Default to api.ProjectDefaultName.
+   - client: Use api.ProjectDefaultName
+   - cmd/incus: Use api.ProjectDefaultName
+   - cmd/incus-benchmark: Use api.ProjectDefaultName
+   - cmd/incus-migrate: Use api.ProjectDefaultName
+   - [lxd-import] lxd/project: Removes project.Default.
+   - [lxd-import] lxd/request: Exports query parameter methods and moves to `lxd/request`.
+   - [lxd-import] lxd: Updates calls to projectParam and queryParam.
+   - [lxd-import] shared/util/linux: Update NewExecWrapper.Read to be time based when waiting for output from a process after it has exited
+   - [lxd-import] lxd/auth: Adds entitlement, object, and permission types and constants.
+   - [lxd-import] lxd/auth: Adds functions for creating auth objects.
+   - [lxd-import] lxd/auth: Adds tests for authorization objects.
+   - [lxd-import] lxd/auth: Extends the authorizer interface.
+   - [lxd-import] lxd/auth: Update common authorizer for Authorizer interface extension.
+   - [lxd-import] lxd/auth: Implement Authorizer for TLS driver.
+   - [lxd-import] lxd: Do not set user access data in request context.
+   - [lxd-import] lxd: Update calls to auth package.
+   - [lxd-import] lxd: Only allow missing access handler when AllowUntrusted is true.
+   - [lxd-import] lxd: Update allowPermission function.
+   - [lxd-import] lxd: Updates allowAuthenticated function.
+   - [lxd-import] lxd/db/operationtype: Updates Permission method.
+   - [lxd-import] lxd/operations: Updates operation permissions.
+   - [lxd-import] lxd/db/cluster: Renames constants.go file.
+   - [lxd-import] lxd/db/cluster: Add storage bucket entity type.
+   - [lxd-import] lxd/db/cluster: Adds URLToEntityType function.
+   - [lxd-import] lxd/db/cluster: Adds a unit test for the URLToEntityType function.
+   - [lxd-import] lxd/project: Updates permission handling for projects.
+   - [lxd-import] lxd/project: Updates permissions tests.
+   - [lxd-import] lxd/events: Pass an auth.PermissionChecker into the event listener.
+   - [lxd-import] lxd-agent: Update call to AddListener for the Incus Agent.
+   - [lxd-import] lxd: Update authorization for the /1.0 endpoint.
+   - [lxd-import] lxd: Update authorization for cluster endpoints.
+   - [lxd-import] lxd: Update authorization for internal endpoints.
+   - [lxd-import] lxd/metrics: Adds method to filter metrics with a permission checker.
+   - [lxd-import] lxd: Update authorization for metrics.
+   - [lxd-import] lxd: Update authorization for projects API.
+   - [lxd-import] lxd: Updates authorization for certificates API.
+   - [lxd-import] lxd: Updates authorization for events API.
+   - [lxd-import] lxd: Updates authorization for image API.
+   - [lxd-import] lxd: Add/remove images and image aliases from authorizer.
+   - [lxd-import] lxd: Update authorization for instances.
+   - [lxd-import] lxd/instance/drivers: Add/remove/rename instances in authorizer.
+   - [lxd-import] lxd: Update authorization for network ACL API.
+   - [lxd-import] lxd: Update network ACLs in the authorizer.
+   - [lxd-import] lxd: Update authorization for network allocations.
+   - [lxd-import] lxd: Update authorization for network forwards.
+   - [lxd-import] lxd: Update authorization for network load balancers.
+   - [lxd-import] lxd: Update authorization for network peers.
+   - [lxd-import] lxd: Update authorization for network zones.
+   - [lxd-import] lxd: Update network zones in the authorizer.
+   - [lxd-import] lxd: Update authorization for the networks API.
+   - [lxd-import] lxd: Update networks in the authorizer.
+   - [lxd-import] lxd: Update authorization for operations.
+   - [lxd-import] lxd: Update authorization for profiles.
+   - [lxd-import] lxd: Update profiles in authorizer.
+   - [lxd-import] lxd: Update authorization for resources.
+   - [lxd-import] lxd: Update authorization for storage buckets.
+   - [lxd-import] lxd: Update storage buckets in authorizer.
+   - [lxd-import] lxd: Update authorization for storage pools.
+   - [lxd-import] lxd: Update storage pools in authorizer.
+   - [lxd-import] lxd: Update authorization for storage volumes.
+   - [lxd-import] lxd/storage: Add/Remove/Rename storage volumes in authorizer.
+   - [lxd-import] lxd: Update authorization for warnings.
+   - [lxd-import] lxd/cluster/config: Add missing bool default values
+   - cmd/lxd-to-incus: Bump max version to 5.19
+   - cmd/lxd-to-incus: Remove line break
+   - cmd/lxd-to-incus: Validate storage tools are present
+   - cmd/lxd-to-incus: Fix SQL update for multiple pools
+   - cmd/lxd-to-incus: Initial cluster handling
+   - api: disk_io_bus
+   - doc: Add io.bus to disk devices
+   - doc: Reformat disk option table
+   - incusd/device/disk: Add io.bus
+   - incusd/instance/qemu: Add NVME disk support
+   - [lxd-import] gomod: Remove github.com/pborman/uuid dependency
+   - [lxd-import] lxd/storage/drivers: Generate and parse UUID using github.com/google/uuid
+   - [lxd-import] lxd/instance/drivers: Generate and parse UUID using github.com/google/uuid
+   - [lxd-import] lxd/instance: Generate UUID using github.com/google/uuid
+   - [lxd-import] lxc-to-lxd: Generate UUID using github.com/google/uuid
+   - [lxd-import] lxd-migrate: Generate UUID using github.com/google/uuid
+   - [lxd-import] lxd/apparmor: Generate UUID using github.com/google/uuid
+   - [lxd-import] lxd/bgp: Generate UUID using github.com/google/uuid
+   - [lxd-import] lxd/db: Generate UUID using github.com/google/uuid
+   - [lxd-import] lxd/device: Generate UUID using github.com/google/uuid
+   - [lxd-import] lxd/events: Generate UUID using github.com/google/uuid
+   - [lxd-import] lxd/firewall/drivers: Generate UUID using github.com/google/uuid
+   - [lxd-import] lxd/operations: Generate UUID using github.com/google/uuid
+   - [lxd-import] lxd/rsync: Generate UUID using github.com/google/uuid
+   - [lxd-import] lxd/storage/s3/miniod: Generate UUID using github.com/google/uuid
+   - [lxd-import] shared/validate: Parse UUID using github.com/google/uuid
+   - [lxd-import] lxd/auth/oidc: Generate UUID using github.com/google/uuid
+   - [lxd-import] lxd: Handler error from oidc.NewVerifier
+   - incusd/apparmor: Generate UUID using github.com/google/uuid
+   - gomod: Update dependencies
+   - incusd/seccomp: Switch to path/filepath
+   - incusd/seccomp: Pass correct path and fstype to IdmappedStorage
+   - incusd/forksyscall: Fix idmapped mount code path
+   - lxd-to-incus: Fix bad check
+   - doc: Add migration doc
+   - README: Update for lxd-to-incus
+   - incusd/devices/disk: Always apply the disk options
+   - Release Incus 0.2
+  [/details]
+
+
+  # ドキュメント <!-- Documentation -->
+  <!--
+  The Incus documentation can be found at:
+  -->
+  Incus のドキュメントはこちらです: 
+  https://linuxcontainers.org/incus/docs/main/
+
+  （日本語訳: https://incus-ja.readthedocs.io/ja/latest/）
+
+  # パッケージ <!-- Packages -->
+  <!--
+  There are no official Incus packages as Incus upstream only releases regular release tarballs. Below are some available options to get Incus up and running.
+  -->
+  Incus の開発元は通常のリリース tarball をリリースするだけですので、公式の Incus パッケージはありません。以下は Incus を起動して実行するために利用可能なオプションです。
+
+  ## Debian と Ubuntu 向け Zabbly パッケージ <!-- Zabbly packages for Debian and Ubuntu -->
+  <!--
+  Zabbly provides both daily and stable builds of Incus to Debian and Ubuntu users:
+  -->
+  Zabbly がデイリーと安定版の両方の Incus のビルドを Debian と Ubuntu のユーザー向けに提供します:
+  https://github.com/zabbly/incus
+
+  ## Incus クライアントの Homebrew パッケージ <!-- Homebrew package for the Incus client -->
+  <!--
+  The client tool is available through HomeBrew for both Linux and MacOS.
+  -->
+  Linux と macOS の両方向けのパッケージが Homebrew 経由で利用できます。
+
+  https://formulae.brew.sh/formula/incus
+
+  ## Incus クライアントの Chocolatey パッケージ <!-- Chocolatey package for the Incus client -->
+  <!--
+  The client tool will soon be available through Chocolatey for Windows users.
+  -->
+  Windows ユーザー向けのパッケージが Chocolatey 経由で間もなく利用できるようになる予定です。
+
+  <!--
+  Until then, binaries can be found here: https://github.com/lxc/incus/releases/tag/v0.2.0
+  -->
+  それまでは、バイナリーがこちらから取得できます: https://github.com/lxc/incus/releases/tag/v0.2.0
+
+  # サポート <!-- Support -->
+  <!--
+  At this early stage, each Incus release will only be supported up until the next release comes out. This will change in a few months as we are planning an LTS release to coincide with the LTS releases of LXC and LXCFS.
+  -->
+  現在は初期段階ですので、Incus の各リリースは、次のリリースが出るまでしかサポートされません。LXC と LXCFS のリリースと合わせて LTS リリースを計画していますので、この状況はここ数ヶ月で変わるでしょう。
+
+  コミュニティサポートはこちらから<!-- Community support is provided at -->: https://discuss.linuxcontainers.org
+  バグはこちらから報告できます<!-- Bugs can be reported at -->: https://github.com/lxc/incus/issues

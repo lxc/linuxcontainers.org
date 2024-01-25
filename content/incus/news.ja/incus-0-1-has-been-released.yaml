@@ -1,0 +1,432 @@
+title: Incus 0.1 リリースのお知らせ
+date: 2023/10/07 06:10
+origin: https://discuss.linuxcontainers.org/t/incus-0-1-has-been-released/18036
+content: |-
+  # はじめに <!-- Introduction -->
+  <!--
+  The Linux Containers team is very excited to announce the initial release of Incus!
+  -->
+  Linux Containers チームは、Incus の最初のリリースアナウンスができて、とてもうれしいです!
+
+  <!--
+  Incus is a community fork of Canonical LXD, created by @cyphar and now part of the Linux Containers project.
+  -->
+  Incus は @cyphar による Canonical LXD のコミュニティーフォークで、今では Linux Containers プロジェクトの一部です。
+
+  <!--
+  This initial release is roughly equivalent to LXD 5.18 but with a number of breaking changes on top of the obvious rename.
+  -->
+  この初期リリースは LXD 5.18 とほぼ同じです。しかし、明確な名前の変更に加えて、いくつか大きな変更があります。
+
+  <!--
+  You can try it for yourself online: https://linuxcontainers.org/incus/try-it/
+  -->
+  オンラインでご自身で試せます: https://linuxcontainers.org/incus/try-it/
+
+  [![image|690x459](https://discuss.linuxcontainers.org/uploads/default/original/2X/0/0919352af00b619ccc98fc674c2d80e1ac7d23f4.png)](https://linuxcontainers.org/incus/try-it/)
+
+  # 変更点 <!-- Changes -->
+  <!--
+  With this initial release of Incus, we took the opportunity to remove a lot of unused or problematic features from LXD. Most of those changes are things we would have liked to do in LXD but couldn't due to having strong guarantees around backward compatibility.
+  -->
+  Incus の初期リリースでは、LXD から、多数の使っていない機能や、問題のある機能を削除する機会を得ました。これらの変更のほとんどは、LXD でやりたかったことですが、下位互換性の維持のためにできませんでした。
+
+  <!--
+  Incus will be similarly strict with backward compatibility in the future, but as this is the first release of the fork, it was our one big opportunity to change things.
+  -->
+  Incus は、将来的には同様に下位互換性を厳格にする予定です。しかし、この fork の最初のリリースですので、それを実行する絶好の機会でした。
+
+  <!--
+  That said, the API and CLI are still extremely close to what LXD has, making it trivial if not completely seamless to port from LXD to Incus.
+  -->
+  とはいえ、API と CLI は依然として非常に LXD と近いので、LXD から Incus への移行は完全にシームレスではないにせよ簡単です。
+
+  ## API
+  ### `/1.0/containers` と `/1.0/virtual-machines` の削除 <!-- Removal of `/1.0/containers` and `/1.0/virtual-machines` -->
+  <!--
+  LXD started as a container-only project and therefore its REST API used `/1.0/containers`.
+  -->
+  LXD はコンテナ向けのプロジェクトとして開始しました。そのため、REST API は `/1.0/containers` を使いました。
+
+  <!--
+  When virtual-machines were then introduced, a new `/1.0/instances` endpoint took over for all operations across both containers and virtual-machines, but `/1.0/containers` was kept around for legacy clients. On top of that, a convenience `/1.0/virtual-machines` endpoint was also added, though never used.
+  -->
+  仮想マシンが使えるようになったとき、新たに `/1.0/instances` エンドポイントが、コンテナと仮想マシンの両方のすべての操作を引き継ぎました。しかし、`/1.0/containers` はレガシーなクライアントのために維持されました。さらに、利便性のために `/1.0/virtual-machines` エンドポイントも追加されましたが、使われることはありませんでした。
+
+  <!--
+  With Incus, those two legacy endpoints are now removed and the only supported way to interact with instances is through `/1.0/instances`.
+  -->
+  Incus では、これら2つのレガシーなエンドポイントが削除されました。そして、インスタンスとやりとりするための唯一の方法は、`/1.0/instances` を使うことです。
+
+  ### /dev/lxd の /dev/incus への変更 <!-- Replacement of /dev/lxd with /dev/incus -->
+  <!--
+  As part of the renaming of everything from LXD to Incus, the guest API was also renamed from /dev/lxd to /dev/incus.
+  -->
+  LXD から Incus への名称変更の一部として、ゲスト API も `/dev/lxd` から `/dev/incus` へ変更されました。
+
+  <!--
+  Convenience symlinks are currently provided so existing workloads will keep working after a migration from LXD.
+  -->
+  現在は、利便性のためシンボリックリンクが提供されています。ですので、既存のワークロードは LXD からマイグレーションしたあとも、動作しつづけるでしょう。
+
+  ### サーバー設定の型の変更 <!-- Type change for the server configuration -->
+  <!--
+  The LXD server configuration has always been a bit oddly typed as `map[string]any` rather than our usual `map[string]string`. The reason for that one inconsistency was because of `core.trust_password`, the legacy authentication method used by LXD in the early days.
+  -->
+  LXD サーバーの設定は、通常使われる `map[string]string` ではなく、`map[string]any` という、少し変わった型付けがされています。この不一致の理由は、初期の LXD が使っていたレガシーな認証方法で使われていた `core.trust_password` が原因でした。
+
+  <!--
+  That's because LXD never stored the password in clear text but instead would hash it and store the hash instead. This made it impossible to return the full configuration to the user. Instead when a password would be set, a `true` boolean would be returned rather than a string.
+  -->
+  これは、LXD がパスワードをクリアテキストで保存せず、代わりにハッシュ化して、ハッシュで保存するためです。これにより、完全な設定をユーザーに返すことができなくなりました。代わりに、パスワードが設定されると、文字列のかわりに true という真偽値が返されます。
+
+  <!--
+  Now as mentioned, `core.trust_password` is a legacy way to handle authentication and should be replaced by either token based authentication, TLS certificate trust or external authentication.
+  -->
+  前述のように、`core.trust_password` は認証を扱う古い方法であり、トークンベースの認証、TLS 証明書の信頼、外部の認証に置き換えるべきです。
+
+  <!--
+  Incus has removed support for `core.trust_password` completely (see below) and so all server config keys can now fit in a standard `map[string]string`.
+  -->
+  Incus は `core.trust_password` のサポートを削除しました。そのため、すべてのサーバーの設定は、標準的な `map[string]string` に合致するようになりました。
+
+  ### Go API からのレガシーな `Container` 関数の削除 <!-- Removal of legacy `Container` functions from the Go API -->
+  <!--
+  Following the above change of removing `/1.0/containers` and `/1.0/virtual-machines`, the matching functions in the Go client package are also all gone now.
+  -->
+  先に述べたように、`/1.0/containers` と `/1.0/virtual-machines` が削除されたため、それに続いて、Go クライアントパッケージ内の一致する関数も削除されました。
+
+  <!--
+  Instead the `Instance` equivalents of those `Container` functions should be used.
+  (e.g. `CreateInstance` instead of `CreateContainer`)
+  -->
+  これらの Container 関数と同等の Instance を使う必要があります（例: `CreateContainer` の代わりに `CreateInstance`）。
+
+  ## CLI
+  ### `incus snapshot` サブコマンドの導入 <!-- Introduction of `incus snapshot` sub-command -->
+  <!--
+  A long term annoyance and inconsistency in the LXD CLI has been around snapshot management. While most other operations get their own sub-command (`file`, `config`, ...), snapshots were kept at the top-level with `snapshot` and `restore`.
+  -->
+  LXD の CLI では、長い間スナップショットの管理に悩まされおり、一貫性がありませんでした。他のほとんどの操作には、専用のサブコマンド（`file`、`config` など）が用意されていますが、スナップショットは `snapshot` と `restore` というトップレベルが維持されてきました。
+
+  <!--
+  This was then forcing us to handle things like renaming or deleting snapshots through the `lxc rename` and `lxc delete` functions. Instead having an `lxc snapshot` sub-command with `lxc snapshot create` would have made a lot more sense but couldn't be done without breaking all scripts using `lxc snapshot`.
+  -->
+  このため、`lxc rename` や `lxc delete` を使ってスナップショットのリネームや削除などの処理を行う必要がありました。代わりに、`lxc snapshot` サブコマンドで `lxc snapshot create` とするほうがはるかに合理的です。しかし、`lxc snapshot` を使用するすべてのスクリプトを壊すことなしに、そのようなことは行えませんでした。
+
+  <!--
+  Now is time to fix this, so `incus snapshot` is now a sub-command, featuring:
+  -->
+  今こそ、それを直すときです。`incus snapshot` はサブコマンドになりました。次のように使います:
+
+   - `incus snapshot create`
+   - `incus snapshot delete`
+   - `incus snapshot list`
+   - `incus snapshot rename`
+   - `incus snapshot restore`
+
+  ### `incus config trust add` と `incus cluster add` の扱い<!-- Handling of `incus config trust add` and `incus cluster add` -->
+  <!--
+  With Incus doing away with password based authentication and focusing a lot more on tokens, it was important to make the experience of issuing tokens be easy and consistent.
+  -->
+  Incus では、パスワードベースの認証を廃止し、トークンに重点を置いているため、トークンの発行の使い勝手を簡単で一貫性のあるものにすることが重要でした。
+
+  <!--
+  As a result, both `incus config trust add` and `incus cluster add` now simply take a name as argument and return a valid token.
+  -->
+  その結果、`incus config trust add` と `incus cluster add` はどちらも、単に引数として名前を受け取り、トークンを返すようになりました。
+
+  <!--
+  The certificate handling aspect of `incus config trust add` has now been moved to `incus config trust add-certificate` instead.
+  -->
+  `incus config trust add` の証明書を扱う機能は、代わりに `incus config trust add-certificate` に移されました。
+
+  ### `incus admin` サブコマンドの導入 <!-- Introduction of `incus admin` sub-command -->
+  <!--
+  Another long time annoyance in the LXD world was the fact that both `lxc` and `lxd` had to be used to set up a server. With incus, the `incusd` binary can be safely hidden away as nobody should ever have to directly interact with it.
+  -->
+  LXD の世界におけるもう 1 つの長年の悩みは、サーバーをセットアップするために `lxc` と `lxd` の両方を使用する必要があるという事実でした。Incus では、`incusd` を直接使う必要はないため、安全に `incusd` を隠せます。
+
+  <!--
+  Instead, we now have the `incus admin` sub-command:
+  -->
+  代わりに、`incus admin` サブコマンドがあります:
+
+   - `incus admin cluster`
+   - `incus admin init`
+   - `incus admin recover`
+   - `incus admin shutdown`
+   - `incus admin waitready`
+
+  ## 依存関係 <!-- Dependencies -->
+  ### Cowsql への移行 <!-- Transition to Cowsql -->
+  https://github.com/cowsql/cowsql
+
+  <!--
+  Shortly after @cyphar forked LXD as Incus, @freeekanayaka, the original author of Dqlite, also decided to fork Dqlite as Cowsql. Given that @freeekanayaka is also a maintainer on Incus, it made sense to port incus over to Cowsql.
+  -->
+  @cyphar が LXD を Incus にフォークした後、Dqlite のオリジナル作者である @freeekanayaka も、Dqlite を Cowsql としてフォークすることにしました。@freeekanayaka も Incus のメンテナーであることを考えると、Incus では Cowsql に移行することは理にかなっています。
+
+  <!--
+  Similarly to Incus itself, Cowsql is a community fork of Canonical Dqlite, largely compatible with Dqlite, allowing Incus to easily import existing data during the migration stage.
+  -->
+  Incus と同様に、Cowsql は Canonical Dqlite のコミュニティーフォークであり、Dqlite とほぼ互換性があります。Incus は、移行段階で既存データを簡単にインポートできます。
+
+  <!--
+  Focus on Cowsql so far has been on dramatically improving performance testing and making a number of changes across the Raft and Cowsql layers to make it as performant as possible for Incus' usage pattern.
+  -->
+  これまでのところ Cowsql は、劇的にパフォーマンステストを改善し、Raft 層と Cowsql 層全体に多くの変更を加え、Incus の使用パターンに合わせて、可能な限りパフォーマンスを向上させることに重点を置いています。
+
+  ### Go の最小バージョン <!-- Minimum Go version -->
+  <!--
+  For those building Incus from source, the minimum Go version required is now Go 1.20.
+  In general, we'll attempt to keep supporting building on the current and previous Go version.
+  -->
+  ソースから Incus をビルドする際の、必要な Go の最小バージョンは 1.20 になりました。
+  一般論としては、我々は、最新とひとつ前の Go バージョンでのビルドをサポートし続けるように努めます。
+
+  ## 機能の削除 <!-- Feature removal -->
+  <!--
+  A number of LXD features have been removed from Incus.
+  Those primarily focus around features that were added because of ecosystem reasons and/or depend on now deprecated or poorly maintained software.
+  -->
+  多くの LXD が持っていた機能が Incus から削除されました。
+  これらは、主にエコシステムの理由で追加された機能や、現在は非推奨になっている機能、メンテナンスが不十分なソフトウェアに依存する機能に焦点を当てています。
+
+  ### Ubuntu Fan ブリッジの削除 <!-- Removal of Ubuntu Fan bridges -->
+  <!--
+  The Ubuntu Fan bridges depend on custom Ubuntu-only kernel patches and user-space changes to iproute2. While this feature is still maintained in the Ubuntu kernel, it can't be found in the mainline kernel nor in any other distro's kernel.
+  -->
+  Ubuntu ファンブリッジは、カスタムの Ubuntu 専用カーネルパッチと、iproute2 に対するユーザー空間の変更に依存しています。この機能は、Ubuntu カーネルではまだ維持されていますが、メインラインカーネルにも他のディストリビューションのカーネルにもありません。
+
+  <!--
+  While convenient in some environments, Ubuntu Fan bridges are dwarfed by what's possible through Incus' integration with OVN.
+  -->
+  Ubuntu Fan ブリッジは、一部の環境では便利ですが、Incus と OVN の統合によって可能になることに比べると小さく見えます。
+
+  <!--
+  The following network config keys have therefore been removed:
+  -->
+  このため、次のネットワーク設定キーは削除されました:
+
+   - `bridge.mode`
+   - `fan.overlay_subnet`
+   - `fan.underlay_subnet`
+   - `fan.type`
+
+  ### Ubuntu shiftfs の削除 <!-- Removal of Ubuntu shiftfs -->
+  <!--
+  Another feature that's unique to the Ubuntu kernel, shiftfs was an initial attempt at flexible uid/gid shifting at the kernel level.
+  -->
+  Ubuntu カーネルに固有のもう 1 つの機能である shiftfs は、カーネルレベルでの柔軟な uid/gid シフトの最初の試みでした。
+
+  <!--
+  While LXD supported shiftfs for years, it was never enabled by default due to a variety of kernel issues. Instead a cleaner in-kernel solution to this problem was developed, VFS idmap shifting. That's now available in recent Linux kernels and automatically used by Incus when present.
+  -->
+  LXD は何年もの間、shiftfs をサポートしてきましたが、カーネルのさまざまな問題のため、デフォルトで有効になることはありませんでした。代わりに、この問題に対するよりクリーンなカーネル内ソリューションである、VFS idmap shifting が開発されました。これは最近の Linux カーネルで利用できるようになり、存在する場合は Incus によって自動的に使用されます。
+
+  ### Canonical Candid 認証の削除 <!-- Removal of Canonical Candid authentication -->
+  <!--
+  Back in the days, Canonical developed its own authentication system based on the use of Macaroons. The central authentication server for this was Candid.
+  -->
+  以前 Canonical は、Macaroons の使用をベースとした独自の認証システムを開発しました。このための中央認証サーバーは Candid でした。
+
+  <!--
+  LXD got Candid support, allowing it to authenticate users through a variety of providers through it.
+  -->
+  LXD は Candid をサポートし、それを通して、さまざまなプロバイダー経由でユーザーを認証できるようになりました。
+
+  <!--
+  These days, Candid is mostly unmaintained and the focus has been on moving towards industry standards, namely Open ID Connect.
+  -->
+  最近では、Candid はほとんどメンテナンスされておらず、業界標準、つまり Open ID Connect に移行することに重点が置かれています。
+
+  <!--
+  Therefore, the following server configuration keys have been removed:
+  -->
+  そのため、次のサーバー設定キーは削除されました:
+
+   - `candid.api.key`
+   - `candid.api.url`
+   - `candid.domains`
+   - `candid.expiry`
+
+  <!--
+  Incus already has OpenID Connect support for external authentication and there are widely available OIDC servers that match and often exceed what Candid supported.
+  -->
+  Incus は、すでに外部認証用の OpenID Connect をサポートしており、Candid がサポートするものと同じくらい、またはそれを超える OIDC サーバーが広く利用可能です。
+
+  ### Removal of Canonical RBAC authorization
+  <!--
+  Canonical RBAC was a proprietary Role Based Access Control solution built on top of Macaroons and Candid.
+  -->
+  Canonical RBAC は、Macaroons と Candid 上に構築された、独自のロールベースのアクセス制御ソリューションでした。
+
+  <!--
+  It was only ever supported by MAAS and LXD and has seen extremely little adoption, mostly due to it being proprietary and generally difficult to get access to.
+  -->
+  これは、これまで MAAS と LXD によってのみサポートされており、プロプライエタリであり、一般的にアクセスするのが難しいことを主な理由として、採用されることはほとんどありませんでした。
+
+  <!--
+  It's mostly unmaintained and the focus these days is to transition to something more industry standard, namely OpenFGA.
+  -->
+  ほとんどメンテナンスされておらず、最近は、より業界標準のもの、つまり OpenFGA への移行に焦点が当たっています。
+
+  <!--
+  Therefore the following server configuration keys have been removed:
+  -->
+  このため、次のサーバー設定キーが削除されました:
+
+   - `rbac.agent.url`
+   - `rbac.agent.username`
+   - `rbac.agent.private_key`
+   - `rbac.agent.public_key`
+   - `rbac.api.expiry`
+   - `rbac.api.key`
+   - `rbac.api.url`
+   - `rbac.expiry`
+
+  <!--
+  Incus currently doesn't have OpenFGA support, so any existing user of Canonical RBAC should stick with LXD until such time as an OIDC + OpenFGA alternative is available.
+  -->
+  Incus は、現時点では OpenFGA をサポートしていないため、Canonical RBAC の既存ユーザーは、OIDC + OpenFGA の代替手段が利用可能になるまで、LXD を使い続ける必要があります。
+
+  ### Canonical MAAS との統合の削除 <!-- Removal of Canonical MAAS integration -->
+  <!--
+  LXD supports integrating with the MAAS API to use MAAS as some kind of IPAM (IP Address Management) solution.
+  -->
+  LXD は、MAAS API との統合をサポートし、MAAS をある種の IPAM (IP アドレス管理) ソリューションとして使用します。
+
+  <!--
+  This allows mapping specific LXD networks to MAAS subnet and then having MAAS create records for each instance on that network, assigning it a static address and DNS record.
+  -->
+  これにより、特定の LXD ネットワークを MAAS サブネットにマッピングし、MAAS にそのネットワーク上の各インスタンスのレコードを作成させ、静的アドレスと DNS レコードを割り当てることができます。
+
+  <!--
+  Unfortunately, this integration has seen very little adoption and MAAS itself has a number of constraints that makes this integration problematic:
+  -->
+  残念ながら、この統合はほとんど採用されておらず、MAAS 自体にはこの統合の際に問題となる多くの制約があります。
+
+   - MAAS の MAC アドレスはグローバルに一意であるのに対し、LXD では同じネットワーク上の実行中のインスタンス間で一意である必要があります。 この違いにより、一部のインスタンスのコピー操作が不可能になります。 <!-- MAC addresses in MAAS are globally unique whereas in LXD they have to be unique among running instances on the same network. This different makes some instance copy operations impossible. -->
+   - インスタンス名は、完全に異なる DNS ゾーンに接続されている場合でも、MAAS ではグローバルに一意であることが期待されます。これにより、インスタンスが競合しやすくなるため、LXD プロジェクトを使用することが事実上不可能になります。 <!-- Instance names are expected to be globally unique in MAAS, even if attached to completely different DNS zones. This effectively makes it impossible to use LXD projects as instances can now easily conflict. -->
+
+  <!--
+  Between those issues and the lack of adoption of this feature, we've made the decision to remove MAAS support from Incus, the following configuration keys have therefore been removed:
+  -->
+  これらの問題とこの機能が採用されないことで、私たちは Incus から MAAS サポートを削除することを決定し、そのため次の構成キーが削除されました。
+
+   - `maas.api.key`
+   - `maas.api.url`
+   - `maas.subnet.ipv4`
+   - `maas.subnet.ipv6`
+
+  ### トラストパスワードの概念の削除 <!-- Removal of the concept of trust password -->
+  <!--
+  Back in the early LXD days, the only way to connect to a remote server was to use a trust password, basically a fixed secret that would then allow a client to add its TLS certificate to the server's trust store.
+  -->
+  LXD の初期の頃、リモートサーバーに接続する唯一の方法は、トラストパスワードを使用することでした。これは基本的に、クライアントが TLS 証明書をサーバーの信頼ストアに追加できるようにする固定シークレットです。
+
+  <!--
+  This effectively allowed anyone who knew or could find the trust password to add their client into the trust store after which the trust store was no longer required for further operations.
+  -->
+  このトラストパスワードにより、トラストパスワードを知っている、またはトラストパスワードを見つけることができる人は誰でも、クライアントをトラストストアに追加できるようになり、その後の操作ではトラストストアが不要になります。
+
+  <!--
+  The trust password therefore had to be kept very safely, or unset immediately after adding a new client. This was unfortunately rarely the case, opening up the door for a brute force attack on the trust password and ultimately an attacker gaining full control over LXD and the server it runs on.
+  -->
+  したがって、トラストパスワードを厳重に保管するか、新しいクライアントを追加した直後に設定を解除する必要がありました。残念ながら、これが当てはまるケースはほとんどなく、信頼パスワードに対するブルートフォース攻撃の扉が開かれ、最終的には攻撃者が LXD とそれが実行されているサーバーを完全に制御できるようになります。
+
+  <!--
+  To address this, support for using one-time trust tokens has been added a little while back and all documentation updated to discourage users from using trust passwords.
+  -->
+  これに対処するために、ワンタイムトラストトークンの使用のサポートが少し前に追加され、ユーザーがトラストパスワードを使用しないようにすべてのドキュメントが更新されました。
+
+  <!--
+  In Incus, we went one step further and completely removed support for trust passwords. Adding new clients or new servers into a cluster should now be done through the use of one-time tokens or by using external authentication through OIDC.
+  -->
+  Incus ではさらに一歩進んで、トラストパスワードのサポートを完全に削除しました。 新しいクライアントまたは新しいサーバーをクラスターに追加するには、ワンタイムトークンを使用するか、OIDC を通した外部認証を使用して行う必要があります。
+
+  <!--
+  Therefore, the following server configuration key has been removed:
+  -->
+  このため、次のサーバー設定キーを削除しました:
+
+   - `core.trust_password`
+
+  ## その他 <!-- Other -->
+  ### DMI 情報の変更 <!-- Change in DMI information -->
+  <!--
+  Inside of Incus virtual machines, the vendor is now set to `Linux Containers` and the product is set to `Incus`.
+  -->
+  Incus の仮想マシン内では、ベンダー（vendor）は `Linux Containers` に、プロダクト（product）は `Incus` に設定されるようになりました。
+
+  ### virtio-serial マーカーの変更 <!-- Change in virtio-serial marker -->
+  <!--
+  The virtio-serial device used for limited communication with Incus prior to establishing full agent access through vsock is now `org.linuxcontainers.incus`.
+  -->
+  vsock を通したフルエージェントアクセスを確立するまで Incus との限定的な通信に使用される virtio-serial デバイスは、`org.linuxcontainers.incus` になりました。
+
+  # LXD からの移行 <!-- Migration from LXD -->
+  <!--
+  Incus comes with a convenient `lxd-to-incus` tool which can be used to transition a system from LXD to Incus.
+  -->
+  Incus には、便利な `lxd-to-incus` ツールが付属しています。このツールを使って、LXD から Incus へシステムの移行ができます。
+
+  <!--
+  The main restrictions at this stage are:
+  -->
+  現時点での制限は次の通りです:
+
+   - LXD の最小バージョンは 4.0 <!-- Minimum LXD version of 4.0 -->
+   - LXD の最大バージョンは 5.18 <!-- Maximum LXD version of 5.18 -->
+   - 現時点では、クラスターの移行はサポートされていません（現在取り組んでいます） <!-- No support for migrating clusters at this stage (this is being worked on) -->
+
+  # ドキュメント <!-- Documentation -->
+  <!--
+  The Incus documentation can be found at:
+  -->
+  Incus のドキュメントはこちらです: 
+  https://linuxcontainers.org/incus/docs/main/
+
+  （日本語訳: https://incus-ja.readthedocs.io/ja/latest/）
+
+  # パッケージ <!-- Packages -->
+  <!--
+  There are no official Incus packages as Incus upstream only releases regular release tarballs. Below are some available options to get Incus up and running.
+  -->
+  Incus の開発元は通常のリリース tarball をリリースするだけですので、公式の Incus パッケージはありません。以下は Incus を起動して実行するために利用可能なオプションです。
+
+  ## Debian と Ubuntu 向け Zabbly パッケージ <!-- Zabbly packages for Debian and Ubuntu -->
+  <!--
+  Zabbly provides both daily and stable builds of Incus to Debian and Ubuntu users:
+  -->
+  Zabbly がデイリーと安定版の両方の Incus のビルドを Debian と Ubuntu のユーザー向けに提供します:
+  https://github.com/zabbly/incus
+
+  ## Incus クライアントの Homebrew パッケージ <!-- Homebrew package for the Incus client -->
+  <!--
+  The client tool is available through HomeBrew for both Linux and MacOS.
+  -->
+  Linux と macOS の両方向けのパッケージが Homebrew 経由で利用できます。
+
+  https://formulae.brew.sh/formula/incus
+
+  ## Incus クライアントの Chocolatey パッケージ <!-- Chocolatey package for the Incus client -->
+  <!--
+  The client tool will soon be available through Chocolatey for Windows users.
+  -->
+  Windows ユーザー向けのパッケージが Chocolatey 経由で間もなく利用できるようになる予定です。
+
+  <!--
+  Until then, binaries can be found here: https://github.com/lxc/incus/releases/tag/v0.1.0
+  -->
+  それまでは、バイナリーがこちらから取得できます: https://github.com/lxc/incus/releases/tag/v0.1.0
+
+  # サポート <!-- Support -->
+  <!--
+  At this early stage, each Incus release will only be supported up until the next release comes out. This will change in a few months as we are planning an LTS release to coincide with the LTS releases of LXC and LXCFS.
+  -->
+  現在は初期段階ですので、Incus の各リリースは、次のリリースが出るまでしかサポートされません。LXC と LXCFS のリリースと合わせて LTS リリースを計画していますので、この状況はここ数ヶ月で変わるでしょう。
+
+  コミュニティサポートはこちらから<!-- Community support is provided at -->: https://discuss.linuxcontainers.org
+  バグはこちらから報告できます<!-- Bugs can be reported at -->: https://github.com/lxc/incus/issues

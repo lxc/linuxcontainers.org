@@ -1,0 +1,296 @@
+title: LXC 2.0.9 リリースのお知らせ
+date: 2017/10/19 00:00
+content: |-
+  <!--
+  This is the ninth bugfix release for LXC 2.0.
+  -->
+  このリリースは LXC 2.0 の 9 回目のバグフィックスリリースです。
+  
+  バグ修正<!-- Bugfixes -->:
+  
+   * apparmor: コンテナが AppArmor namespace 内で起動できるようになりました <!-- Allow containers to start in AppArmor namespaces -->
+   * apparmor: apparmor の不要な deny を削除しました <!-- Drop useless apparmor denies -->
+   * caps: ifndef/define の定義をコードの冒頭部分に移動させました <!-- Move ifndef/define to the top -->
+   * cgfsng: 制限の適用に失敗したときにはエラーになるようにしました <!-- Fail when limits fail to apply -->
+   * cgfsng: cgfsng を使わない場合はログに出力するようにしました <!-- Log when we defer to cgfsng -->
+   * cgfsng: cgroup のデータを設定した時のみデバッグ情報をログに出力するようにしました <!-- Only output debug info when we set cgroup data -->
+   * cgroups: hybrid cgroup レイアウトを扱えるようになりました<!-- Handle hybrid cgroup layouts -->
+   * cgroups: 変数のスコープを調整しました <!-- Use tight scoping -->
+   * cgroups: gcc-7 のバグを回避するようにしました <!-- Workaround gcc-7 bug -->
+   * commands: abstract コマンドソケットの扱いとロギングを実装しました <!-- Abstract cmd socket handling + logging -->
+   * commands: コマンドに対する足りていなかった変換を追加しました <!-- Add missing translation -->
+   * commands: 意味のないコメントを削除しました <!-- Delete meaningless comments -->
+   * commands: EINTR を扱うようになりました <!-- handle EINTR -->
+   * commands: ステートサーバのインターフェースをフレキシブルにしました <!-- Make state server interface flexible -->
+   * commands: lxc\_make\_abstract\_socket\_name() 関数を移動しました <!-- Move lxc\_make\_abstract\_socket\_name() -->
+   * commands: lxc\_cmd\_add\_state\_client() にリネームしました <!-- Rename to lxc\_cmd\_add\_state\_client() -->
+   * commonds: typo を修正しました <!-- Fix typo -->
+   * conf: lxc-user-nic の使われ方に合わせました <!-- Adapt to lxc-user-nic usage -->
+   * conf: lxc\_get\_idmaps() を追加しました <!-- Add lxc\_get\_idmaps() -->
+   * conf: userns\_exec\_full() を追加しました <!-- Add userns\_exec\_full() -->
+   * conf: すべての設定をクリアできるようになりました <!-- Allow to clear all config items -->
+   * conf: lxc.autodev を取得できるようになりました <!-- Allow to get lxc.autodev -->
+   * conf: lxc.haltsignal を取得できるようになりました <!-- Allow to get lxc.haltsignal -->
+   * conf: lxc.kmsg を取得できるようになりました <!-- Allow to get lxc.kmsg -->
+   * conf: lxc.rebootsignal を取得できるようになりました <!-- Allow to get lxc.rebootsignal -->
+   * conf: lxc.stopsignal を取得できるようになりました <!-- Allow to get lxc.stopsignal -->
+   * conf: euid != 0 でも uid マッピングが書き込めるようになりました (訳注: 非特権ユーザが自身の id だけをマップできるようになりました)<!-- Allow writing uid mappings with euid != 0 -->
+   * conf: userns\_exec\_1() 中のメモリの二重解放を修正しました <!-- Avoid double-frees in userns\_exec\_1() -->
+   * conf: lxc.include をクリアするようにしました <!-- Clear lxc.include -->
+   * conf: 空の値を二度チェックしなくなりました <!-- Do not check for empty value twice -->
+   * conf: 間違ったネットワークインターフェースのタイプの UNION のチェックをしなくなりました <!-- Do not check union on wrong net type -->
+   * conf: NULL ポインタへの参照を防ぎました <!-- Do not deref null pointer -->
+   * conf: static なメモリを解放しないようにしました <!-- Do not free static memory -->
+   * conf: 初期化されていないメモリについてログ出力しないようにしました <!-- Do not log uninitialized memory -->
+   * conf: 行末のスペースを出力しなくなりました <!-- Do not write out trailing spaces -->
+   * conf: 設定されていない場合は tty を送らないようになりました <!-- don't send ttys when none are configured -->
+   * conf: lxc\_get\_config\_item() を削除しました <!-- Dump lxc\_get\_config\_item() -->
+   * conf: 多数のマッピングをしようとした際にエラーになるようにしました <!-- Error out on too many mappings -->
+   * conf: bionic でのビルドを修正しました <!-- Fix bionic builds -->
+   * conf: libcap がない場合のビルドの問題を修正しました <!-- Fix building without libcap -->
+   * conf: tty の作成時の問題を修正しました <!-- Fix tty creation -->
+   * conf: userns\_exec\_1() の問題を修正しました <!-- Fix userns\_exec\_1() -->
+   * conf: netdev-\>downscript 変数を free するようにしました <!-- Free netdev-\>downscript -->
+   * conf: 設定項目をクリアするコールバック関数を実装しました <!-- Implement config item clear callback -->
+   * conf: lxc\_map\_ids() 関数を改良しました <!-- Improve lxc\_map\_ids() -->
+   * conf: tty の ID をシフトする関数を改良しました <!-- Improve tty shifting function -->
+   * conf: write\_id\_mapping() 関数を改良しました <!-- Improve write\_id\_mapping() -->
+   * conf: lxc-user-nic のバッファを増やしました <!-- Increase lxc-user-nic buffer -->
+   * conf: lxc-user-nic の出力をログに記録するようにしました <!-- Log lxc-user-nic output -->
+   * conf: lxc\_listconfigs -> lxc\_list\_config\_items
+   * conf: 設定項目をクリアする関数を一か所にまとめました <!-- Move clearing config items into one place -->
+   * conf: 機能と関係ない変更を行いました <!-- Non-functional changes -->
+   * conf: コンテナの /dev をマウントする際には NOTICE() で出力するようにしました <!-- NOTICE() on mounts on container's /dev -->
+   * conf: パフォーマンスの調整を行いました <!-- Performance tweaks -->
+   * conf: 設定ファイル中の改行を保存するようにしました <!-- Preserve newlines -->
+   * conf: lxc.idmap の設定値を正しくパースするようにしました <!-- Properly parse lxc.idmap entries -->
+   * conf: 書き込まれる idmap を記録するようになりました <!-- Record idmap that gets written -->
+   * conf: 設定値をパースするほとんどのコードをリファクタリングしました <!-- Refactoring of most config parsing code -->
+   * conf: ネットワークの削除をリファクタリングしました <!-- Refactor network deletion -->
+   * conf: parse\_idmaps() 中の不要な割り当てを削除しました <!-- Remove dead assignments in parse\_idmaps() -->
+   * conf: 使われないマウントのコードを削除しました <!-- Remove dead mount code -->
+   * conf: lxc\_map\_ids() を作りなおしました <!-- Rework lxc\_map\_ids() -->
+   * conf: userns\_exec\_1() を作りなおしました <!-- Rework userns\_exec\_1() -->
+   * conf: tty を 2 つ同時に送るようにしました <!-- Send ttys in batches of 2 -->
+   * conf: API を新しいコールバックシステムへ切り替えました <!-- Switch API to new callback system -->
+   * conf: uid,gidのマッピングは最小限だけ使うようにしました <!-- Use a minimal {g,u}id map -->
+   * conf: char の配列のチェックを正しく行うようになりました <!-- Use correct check on char array -->
+   * conf: lxc-usernsexec コマンドの実行には run\_command 関数を使うようにしました <!-- Use run\_command for lxc-usernsexec -->
+   * console: ピアが exit した際には tty の状態をクリアし、0 を返すようにしました <!-- Clean tty state + return 0 on peer exit -->
+   * console: 'stdin' が tty ではないときは winsize を調整するハンドルを追加しないようにしました <!-- DO NOT add the handles of adjust winsize when the 'stdin' is not a tty -->
+   * console: 'lxc\_tty\_state' のメモリリークを修正しました <!-- Fix memory leak of 'lxc\_tty\_state' -->
+   * console: 使われない変数割り当てを削除しました <!-- Remove dead assignments -->
+   * core: MS\_RDONLY でマウントされている場合は、MS\_REMOUNT フラグ付きで remount するようにしました <!-- Do remount with the MS\_REMOUNT flag when mounts with MS\_RDONLY -->
+   * core: x32 でエラーになっていたフォーマット文字列を修正しました <!-- Fix a format string build failure on x32 -->
+   * core: Android 向けに include を修正しました <!-- Fix includes for Android -->
+   * core: メモリとリソースのリークを修正しました <!-- Fix memory and resource leak -->
+   * core: cppcheck の警告をいくつか修正しました <!-- Fix some cppcheck warnings -->
+   * core: 'stdoutfd' を代入していない 'ts-\>stdoutfd' のバグを修正しました <!-- Fix the bug of 'ts-\>stdoutfd' did not fill with parameters 'stdoutfd' -->
+   * core: Android 向けに自前の mntent を include するようにしました <!-- Include custom mntent for Android -->
+   * core: userns\_exec\_1() 関数内でロギング関数を呼ぶようにしました <!-- Log function called in userns\_exec\_1() -->
+   * core: `__func__` マクロを削除しました <!-- Remove the `__func__` macro -->
+   * core: 使っていないマクロを削除しました <!-- Remove the unused macro -->
+   * core: "priority" を "level" に置き換えました (訳注: ログ関連の定数名)<!-- Replace "priority" with "level" -->
+   * core: lxc.pc に prefix を追加した変更を元に戻しました <!-- Revert "Add a prefix to the lxc.pc" -->
+   * core: root -> am\_root (訳注: 構造体のメンバ名の変更)
+   * core: struct bdev -> struct lxc\_storage (訳注: 構造体名の変更)
+   * core: .gitignore を更新しました <!-- Update .gitignore -->
+   * core: ログのフォーマット文字列として `%m` の代わりに `strerror(errno)` を使うようにしました <!-- Use strerror(errno) instead of %m -->
+   * criu: cmp\_version() 関数を追加しまいた <!--  Add cmp\_version() -->
+   * criu: 初期化のチェックの際、正しいチェックを行うようにしました <!-- Use correct check initialization check -->
+   * doc: README に CII Best Practices のバッヂを追加しました <!-- Add CII Best Practices badge to README -->
+   * doc: コンソールの動きに関する説明を日本語の lxc.container.conf(5) に追加しました <!-- Add console behavior to Japanese lxc.container.conf(5) -->
+   * doc: 環境変数の説明を追加しました <!-- Document missing env variables -->
+   * doc: lxc-monitor(1) にあった正規表現の typo を修正しました <!-- Fix regex-typo in Japanese and Korean lxc-monitor(1) -->
+  <!-- * doc: Fix regex-typo in lxc-monitor.sgml.in -->
+   * doc: 非特権の場合の idmap の制限に関する説明を書き換えました <!-- Reword id mapping restrictions when unpriv -->
+   * doc: README を書き換えました <!-- Rework README -->
+   * doc: lxc.container.conf(5) を調整しました <!-- Tweak Japanese lxc.container.conf(5) -->
+  <!-- * doc: Tweak lxc.container.conf a little -->
+  <!-- * doc: Untabify Japanese lxc.container.conf(5) -->
+   * doc: get\_config\_item の API ドキュメントを更新しました <!-- Update API documentation for get\_config\_item -->
+   * execute: コンソールと標準の /dev のシンボリックリンクを有効にしました <!-- Enable console & standard /dev symlinks -->
+   * init: 32 と 33 のシグナルに対するコメントを更新しました <!-- Add comment for exclude 32 and 33 signals -->
+   * init: include 定義の部分を調整しました <!-- Adjust include statements -->
+   * init: セッションリーダーになるようにしました <!-- Become session leader -->
+   * init: シグナル動作の初期化部分をループの外に移動しました <!-- Move initialization of act to outside of the loop -->
+   * init: exec\*() の失敗を報告するようになりました <!-- Report exec\*() failure -->
+   * init: systemd のサービスとして動作しているコンテナを停止する際には lxc-stop を使うようになりました <!-- Use lxc-stop to stop systemd service -->
+   * liblxc: 確実にメモリを free() するようにしました <!-- Make sure memory is free()ed -->
+   * liblxc: 要求に応じてのみ monitord を起動するようにしました <!-- Only spawn monitord on demand -->
+   * liblxc: エラー時の 5 秒のタイムアウトを削除しました <!-- Remove 5s timeout on error -->
+   * liblxc: snprintf() を使うようにしました <!-- Use snprintf() -->
+   * liblxc: userns\_exec\_full() を使うようにしました <!-- Use userns\_exec\_full() -->
+   * lock: 機能と関係ない変更を行いました <!-- Non-functional changes -->
+   * lock: ロックファイルのオープンに失敗した場合は正しいエラーを返すようにしました <!-- Return the right error when open lock file failed -->
+   * log: スタック破壊が起こらないようにしました <!-- Prevent stack smashing -->
+   * log: 新しい lxc\_log\_init を使用するようにしました <!-- Switch to a new lxc\_log\_init function -->
+   * monitor: いくつかの関数で同時に複数の fd を送受信できるようにしました <!-- Abstract lxc\_abstract\_unix\_{send,recv}\_fd for af\_unix -->
+   * monitor: lxc\_cmd\_state\_server() 関数を追加しました <!-- Add lxc\_cmd\_state\_server() -->
+   * monitor: TRACE レベルのログ出力をいくつか追加しました <!-- Add TRACE()ers -->
+   * monitor: 不要なインクルードファイルのインクルードを削除しました <!-- Delete unneccessory include file -->
+   * monitor: 不要な変数割り当てを削除しました <!-- Remove dead assignments -->
+   * monitor: lxc\_abstract\_unix\_connect 関数の不要な回避コードを削除しました <!-- Remove the workaround-code for lxc\_abstract\_unix\_connect -->
+   * monitor: af\_unix の不要な unlink を削除しました <!-- Remove unlink operation for af\_unix -->
+   * network: 設定をクリアする関数に引数を追加しました <!-- Add arg to config clear method -->
+   * network: (訳注: ↑で追加した引数に) コールバック関数を設定するようにしました <!-- Add data arg to set callback -->
+   * network: ホストの veth デバイスに対する ifindex フィールドを追加しました <!-- Add ifindex field for host veth device -->
+   * network: lxc\_log\_configured\_netdevs() 関数を追加しました <!-- Add lxc\_log\_configured\_netdevs() -->
+   * network: 空のリンクに対する足りなかったチェックを追加しました <!-- Add missing checks for empty links -->
+   * network: ネットワークカウンタを追加しました <!-- Add network counter -->
+   * network: MTU を無視する場合は警告を出力するようにしました <!-- Add warning when ignoring MTU -->
+   * network: インターフェースの index をクリアするようにしました <!-- Clear ifindeces -->
+   * network: 非特権ネットワークのための Open vSwitch を削除しました <!-- Delete ovs for unprivileged networks -->
+   * network: struct lxc\_netdev のすべてのフィールドの説明を追加しました <!-- Document all fields in struct lxc\_netdev -->
+   * network: 作成できなかったネットワークデバイスを削除しないようにしました <!-- Don't delete net devs we didn't create -->
+   * network: ログの文法を修正しました <!-- Fix grammar -->
+   * network: lxc\_get\_netdev\_by\_idx() 関数を追加しました <!-- Implement lxc\_get\_netdev\_by\_idx() -->
+   * network: openvswitch のクリーンアップスレッドの PID をログに記録するようにしました <!-- Log cleanup thread pid for openswitch -->
+   * network: インターフェースインデックスをログに記録するようにしました <!-- log ifindex -->
+   * network: ホスト側の veth デバイスのインターフェースインデックスをログに記録するようにしました <!-- Log ifindex for host side veth device -->
+   * network: veth\_attr.pair と veth\_attr.veth1 をログに記録するようにしました <!-- Log veth\_attr.pair and veth\_attr.veth1 -->
+   * network: config\_value\_empty() 関数を confile\_utils に移動しました <!-- Move config\_value\_empty() to confile\_utils -->
+   * network: 作成時にネットワークのバリデーションを行うようにしました <!-- Perform network validation at creation time -->
+   * network: lxc\_mkifname() を使う場面ではメモリを確保しないようにしました <!-- Remove allocation from lxc\_mkifname() -->
+   * network: 不要な変数割り当てを削除しました <!-- Remove dead assignments -->
+   * network: netpipe を削除しました <!-- Remove netpipe -->
+   * network: 正しい名前とインターフェースインデックスを取得するようにしました <!-- Retrieve correct names and ifindices -->
+   * network: ホストの veth デバイスのインターフェースインデックスを取得するようにしました <!-- Retrieve the host's veth device ifindex -->
+   * network: ネットワーク作成部分を作り直しました <!-- Rework network creation -->
+   * network: 非特権ネットワークでインターフェースインデックスを使うようにしました <!-- Send ifindex for unpriv networks -->
+   * network: 保存したネットワークデバイスの記録を止めました <!-- Stop recording saved physical net devices -->
+   * network: 正しいネットワークデバイス名を使うようにしました <!-- Use correct network device name -->
+   * network: send()/recv() を使うようにしました <!-- Use send()/recv() -->
+   * network: ネットワークを削除する場合は単一のヘルパ関数を使うようにしました <!-- Use single helper to delete networks -->
+   * network: ネットデバイス名にはサイズを静的に割り当てた変数を使うようになりました <!-- Use static memory for net device names -->
+   * openvswitch: ポートをインテリジェントに削除するようにしました <!-- delete ports intelligently -->
+   * seccomp: カーネルへのロードが成功したあとに seccomp フィルターをエクスポートするようにしました <!-- Export the seccomp filter after load it into kernel successful -->
+   * seccomp: ログにアクション名を出力するようにしました <!-- Print action name in log -->
+   * seccomp: s/n-new-privs/no-new-privs/g
+   * seccomp: `parse_config` 関数のコメントを更新しました <!-- Update comment for function `parse_config` -->
+   * start: lxc\_free\_handler() を追加しました <!-- Add lxc\_free\_handler() -->
+   * start: lxc\_init\_handler() を追加しました <!-- Add lxc\_init\_handler() -->
+   * start: すべてのハンドラのフィールドを文書化しました <!-- Document all handler fields -->
+   * start: idのマッピングなしで lxc\_map\_ids() を呼ばなくなりました <!-- Don't call lxc\_map\_ids() without id map -->
+   * start: 継承した名前空間の fd は閉じなくなりました <!-- Don't close inherited namespace fds -->
+   * start: data\_sock を利用する側で fd を閉じなくなりました <!-- Don't let data\_sock users close the fd -->
+   * start: pty スレーブのために std{in,out,err} を dup するようにしました <!-- Dup std{in,out,err} to pty slave -->
+   * start: cgroup がかならずクリーンアップされるようにしました <!-- Ensure cgroups are cleaned up -->
+   * start: lxc\_check\_inherited() を一般化しました <!-- Generalize lxc\_check\_inherited() -->
+   * start: tty の fd の送受信をログに記録するようにしました <!-- Log sending and receiving of tty fds -->
+   * start: unshare(CLONE\_NEWCGROUP) のあとで lxc\_setup() するようにしました <!-- lxc\_setup() after unshare(CLONE\_NEWCGROUP) -->
+   * start: 環境変数のセットアップをコンテナのセットアップの前に移動しました <!-- Move env setup before container setup -->
+   * start: LXC\_LOG\_LEVEL 環境変数をフックに与えるようにしました <!-- Pass LXC\_LOG\_LEVEL to hooks -->
+   * start: 特権の場合に rootfs を pin するようにしました <!-- Pin rootfs when privileged -->
+   * start: 使われていない変数を削除しました <!-- Remove dead variable -->
+   * start: クライアントに状態が登録されていなくても、古い lxc-monitord にサーバ状態を送るようにしました <!-- Send state to legacy lxc-monitord state server even if no state clients registered -->
+   * start: 環境変数を正しく設定するようにしました <!-- Set environment variables correctly -->
+   * start: SOCK\_DGRAM から SOCK\_STREAM に変更しました <!-- Switch from SOCK\_DGRAM to SOCK\_STREAM -->
+   * start: 非特権の ID へのスイッチを特権が必要な処理が終わった最後の瞬間に行うようにしました <!-- Switch ids at last possible instance -->
+   * start: デーモンとして起動する場合は分離したソケットを使うようにしました <!-- Use separate socket on daemonized start -->
+   * start: userns\_exec\_full() を使うようにしました <!-- Use userns\_exec\_full() -->
+   * state: lxc\_rmstate の宣言を削除しました <!-- Remove lxc\_rmstate declaration -->
+   * storage: storage\_utils.{c.h} を追加しました <!-- Add storage\_utils.{c.h} -->
+   * storage: segfault を防ぐようにしました <!-- Avoid segfault -->
+   * storage: 同じパスの場合は元のタイプをデフォルトにしました <!-- Default to orig type on identical paths -->
+   * storage: mkfs.\* の出力を記録するようにしました <!-- Record output from mkfs.\* -->
+   * storage: "bdev" -> "storage" とリネームしました <!-- Rename files "bdev" -> "storage" -->
+   * storage: userns\_exec\_full() を使うようにしました <!-- Use userns\_exec\_full() -->
+   * storage/dir: 必要なフラグを追加するために add-required\_remount\_flags 関数を使うようにしました <!-- Using 'add-required\_remount\_flags' function to add required flags -->
+   * storage/loop: loop ファイルを検出するようにしました <!-- Detect loop file -->
+   * storage/overlayfs: 間違ったパスを修正しました <!-- Fix wrong path -->
+   * storage/overlay: スナップショット時のoverlayfsを扱いを変更しました <!-- Handle overlay for stable 2.0 -->
+   * template: userns.conf から廃止になった bind-mounts を削除しました <!-- Remove obsolete bind-mounts from userns.conf -->
+   * template: キャッシュされた rootfs をコピーする際に "rsync -SHaAX" を使うようにしました <!-- Use "rsync -SHaAX" to copy the cached rootfs into place -->
+   * template/alpine: ppc64le のサポートを追加しました <!-- Add support for ppc64le -->
+   * template/alpine: ファイルの存在チェック時にサイズが 0 でないこともチェックするようにしました <!-- Change file check to also check file size (`-f` => `-s`) -->
+   * template/archlinux: ロケールを "en-US.UTF-8" から "en\_US.UTF-8" に変更しました <!-- Change locale "en-US.UTF-8" to "en\_US.UTF-8" -->
+   * template/centos: パッケージリストに cronie を追加しました <!-- Add cronie to the pkg list -->
+   * template/centos: i386 と x86\_64 以外のアーキの CentOS では AltArch ミラーを使うようになりました <!-- Use altarch mirror for CentOS on arches other than i386 and x86\_64 -->
+   * template/debian: aarch64 -> arm64 のマッピングを追加しました <!-- Add aarch64 -> arm64 mapping -->
+   * template/debian: buster を有効なリリースとして追加しました <!-- Add buster as a valid release -->
+   * template/debian: getty@ の設定を強制しなくなりました <!-- Don't force getty@ configuration -->
+   * template/debian: デフォルトの Debian ミラーとして deb.debian.org を使うようになりました <!-- Use deb.debian.org as the default Debian mirror -->
+   * template/download: 文法エラーを修正しました<!-- Fix syntax error -->
+   * template/download: shellcheck でスクリプトのサニタイズを行いました <!-- Sanitize script with shellcheck -->
+   * template/opensuse: Tumbleweed をサポートするリリースに追加しました <!-- Add Tumbleweed as supported release -->
+   * template/opensuse: Tumbleweed でのソフトウェアの選択の問題を修正しました <!-- Fix tumbleweed software selection -->
+   * template/opensuse: getty.target.wants が存在しない場合の処理を追加しました <!-- getty.target.wants does not always exists -->
+   * template/opensuse: leap 42.3 をサポートしました <!-- Support leap 42.3 -->
+   * template/opensuse: Tumbleweed は update リポジトリを持たないので対応した処理を行うようにしました <!-- Tumbleweed has no update repo -->
+   * template/plamo: コンテナのシャットダウン時の不要な処理を削除しました <!-- Delete unnecessary process during container shutdown -->
+   * template/ubuntu: netplan の判断を、config ディレクトリのチェックから netplan コマンドをチェックするようにしました <!-- Check that there is netplan binary, rather than just just a config directory -->
+   * template/ubuntu: upstart の ssh ジョブは現在オプショナルなので、条件付きで mv するようにしました。<!-- Conditionally move upstart ssh job, as it is now optional -->
+   * template/ubuntu: 新しいリリースではデフォルトで netplan をサポートするようになりました <!-- Support netplan in newer releases by default -->
+   * tests: lxc-user-nic のテストを新しい文法に合わせました <!-- Adapt lxc-user-nic tests to new syntax -->
+   * tests: lxc\_safe\_{u}int() の異常系テストを追加しました <!-- Add corner-case tests for lxc\_safe\_{u}int() -->
+   * tests: アイテムをクリアするテストと設定ファイルのテストを追加しました <!-- Add item clear and config file tests -->
+   * tests: lxc.rootfs.options の ro オプションのためのテストスクリプトを追加しました <!-- Add test script to test the ro option of lxc.rootfs.options -->
+   * tests: idmap パーサーのユニットテストを追加しました <!-- Add unit tests for idmap parser -->
+   * tests: NULL ポインタへの参照を防ぎました <!-- Avoid NULL pointer dereference -->
+   * tests: 可能な場合は常に返り値と期待する値を比較するようにしました <!-- Compare return value to expected value whenever we can -->
+   * tests: チェックの前にネットワークを定義するようにしました <!-- Define a network before checks -->
+   * tests: ユーザに対するプロセスがないときは失敗しないようにしました <!-- Don't fail when no processes for the user exist -->
+   * tests: すべての設定項目に対するメソッドを強制するようになりました <!-- Enforce all methods for config items -->
+   * tests: 不要な割り当てを削除しました <!-- Remove dead assignments -->
+   * tests: テンポラリのコンテナディレクトリを削除するようになりました <!-- Remove the temp container directory -->
+   * tests: 短命のデーモン化するコンテナのテストを追加しました <!-- Shortlived daemonized containers -->
+   * tests: systemd のハイブリッドな cgroup をサポートしました <!-- Support systemd hybrid cgroups -->
+   * tools: 追加の cgroup のチェックを追加しました <!-- Add additional cgroup checks -->
+   * tools: LXC\_DEVEL が true の場合は "-devel" と表示するようにしました <!-- Print "-devel" when LXC\_DEVEL is true -->
+   * tools/lxc-attach: /dev/tty がない状況でも利用できるようになりました <!-- Allow for situations without /dev/tty -->
+   * tools/lxc-checkconfig: "which" を使うようにしました <!-- Use "which" -->
+   * tools/lxc-checkconfig: CONFIG\_NETFILTER\_XT\_MATCH\_COMMENT を追加しました <!-- Add CONFIG\_NETFILTER\_XT\_MATCH\_COMMENT -->
+   * tools/lxc-checkconfig: ステータスをチェックするプローブを追加しました <!-- Add probe status checking -->
+   * tools/lxc-execute: 失敗した場合はエラーメッセージを出力するようにしました <!-- Print error message when failed -->
+   * tools/lxc-ls: デフォルトですべてのコンテナを返すようになりました <!-- Return all containers by default -->
+   * tools/lxc-monitord: quit コマンドを受信したら exit するようになりました <!-- Exit when receiving a quit command -->
+   * tools/lxc-unshare: NULL ポインターを与えないようにしました <!-- Do not pass NULL pointer -->
+   * tools/lxc-user-nic: 新たにサブコマンド create, delete を追加しました <!-- Add new {create,delete} subcommands -->
+   * tools/lxc-user-nic: 削除しようとする前に db のチェックを行うようにしました <!-- Check db before trying to delete -->
+   * tools/lxc-user-nic: データベースエントリの追加時の問題を修正しました <!-- Fix adding database entries -->
+   * tools/lxc-user-nic: メモリリークを修正しました <!-- Fix memleak -->
+   * tools/lxc-user-nic: メモリを free するようにしました。エラーのチェックを追加しました <!-- Free memory and check for error -->
+   * tools/lxc-user-nic: gcc-7 で警告がでないように変数を初期化するようにしました <!-- Initialize vars to silence gcc-7 -->
+   * tools/lxc-user-nic: 指定したユーザやリンク以外の行を削除しないようにしました <!-- Keep lines from other {users,links} -->
+   * tools/lxc-user-nic: master と stable の差をなくしました <!-- Remove delta between master + stable -->
+   * tools/lxc-user-nic: 二重の初期化を削除しました <!-- Remove double initialization -->
+   * tools/lxc-user-nic: ネットデバイスをリネームする処理を書き換えました <!-- Rework renaming net devices -->
+   * tools/lxc-user-nic: ロジックを簡素化しました <!-- Simplify logic -->
+   * tools/lxc-user-nic: delete コマンドを実行する際にネットワーク名前空間上で必要な権限があるかどうかチェックするようにしました <!-- Test privilege over netns on delete -->
+   * tools/lxc-usernsexec: 不要な割り当てを削除しました <!-- Remove dead assignments -->
+   * travis: ビルドを修正しました <!-- Fix builds -->
+   * utils: has\_fs\_type() と is\_fs\_type() を追加しました <!-- Add has\_fs\_type() + is\_fs\_type() -->
+   * utils: lxc\_nic\_exists() を追加しました <!-- Add lxc\_nic\_exists() -->
+   * utils: lxc\_safe\_ulong() を追加しました。 <!-- Add lxc\_safe\_ulong() -->
+   * utils: run\_command を追加しました <!-- Add run\_command -->
+   * utils: fork 後の子プロセス内で親の fd をクローズするようにしました <!-- Close parent end in child process after fork -->
+   * utils: サイズ 0 のバッファへ書き込まないようにしました <!-- Do not write to 0 sized buffer -->
+   * utils: lxc\_popen() 内で stderr を複製するようにしました <!-- Duplicate stderr as well in lxc\_popen() -->
+   * utils: lxc\_mount\_proc\_if\_needed() を修正しました <!-- Fix lxc\_mount\_proc\_if\_needed() -->
+   * utils: lxc\_popen()/lxc\_pclose() を修正しました <!-- Fix lxc\_popen()/lxc\_pclose() -->
+   * utils: realpath のメモリリークを修正しました <!-- Fix mem leak with realpath -->
+   * utils: 数字をパースする関数を修正しました <!-- Fix num parsing functions -->
+   * utils: ppc64le のビルドを修正しました <!-- Fix ppc64le builds -->
+   * utils: ブロックされた信号を検出する方法を修正しました <!-- Fix the way to detect blocking signal -->
+   * utils: lxc\_popen() 内の不要な割り当てを削除しました <!-- lxc\_popen() remove dead assignments -->
+   * utils: cgfsng.c から utils.{c,h} へヘルパ関数を移動させました <!-- Move helpers from cgfsng.c to utils.{c,h} -->
+   * utils: lxc\_deslashify() 関数を作りなおしました <!-- Rework lxc\_deslashify() -->
+   * utils: has\_fs\_type() にスイッチしました <!-- Switch to has\_fs\_type() -->
+   * utils: オーバーフローしてしまうので 1LU を使うようにしました <!-- Use 1LU otherwise we overflow -->
+   * utils: stat の代わりに access を使うようにしました <!-- Use access instead of stat -->
+  
+  ### ダウンロード <!-- Downloads -->
+  <!--
+  The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
+  will very soon ship a packaged version of LXC 2.0.9.
+  -->
+  このリリースの tarball は [ダウンロードページ](/lxc/downloads/) から取得できます。そして、各ディストリビューションがすぐに LXC 2.0.9 のパッケージをリリースするでしょう。
+  
+  <!--
+  Should you be interested in individual changes or just looking at the detailed development history,
+  our stable branch is on [GitHub](https://github.com/lxc/lxc/tree/stable-2.0).
+  -->
+  個々の変更点に興味がある場合、そして開発の履歴を見たい場合、stable-2.0 ブランチが [GitHub](https://github.com/lxc/lxc/tree/stable-2.0) にあります。
+  
+  

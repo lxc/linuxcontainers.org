@@ -1,0 +1,10 @@
+*.swp
+output/*
+manpages/*
+content/lxc/apidoc/*
+content/lxd/docs/*
+extensions/__pycache__
+.vscode
+.idea
+.venv
+linkchecker-out.txt

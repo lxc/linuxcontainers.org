@@ -1,0 +1,30 @@
+title: LXC 1.0 - End of Life announcement
+date: 2019/06/26 16:06
+origin: https://discuss.linuxcontainers.org/t/lxc-1-0-end-of-life-announcement/5111
+content: |-
+  # Introduction
+  The LXC 1.0 LTS branch has reached its end of life.
+
+  Released on the 20th of February 2014, it received over 5 years of bugfixes and security updates from the LXC team as part of our commitment to Long Term Stable releases.
+
+  With it reaching the end of its supported life, we will no longer be accepting fixes to the `stable-1.0` branch, nor run CI on this branch.
+
+  All remaining users should upgrade to a supported release as soon as possible.
+
+  # Long term support releases
+  LXC upstream commits to 5 years support for its LTS branches.
+  Such branches exist for LXC, LXCFS and LXD and see bugfixes and security fixes backported to them.
+
+  No new features get added to those branches and only the latest LTS branch sees most bugfixes backported, once a new LTS branch is released, the previous one will only get security and critical bugfixes.
+
+  # Migration paths
+  LXC 1.0 users can upgrade to LXC 2.0 LTS without any expected disruption nor configuration changes required.
+
+  Upgrading to LXC 3.0 LTS is also possible and doesn't require an intermediate upgrade to 2.0, however as 3.0 has a number of updated configuration options, you will need to run `lxc-update-config` and may need to manually handle some changes yourself.
+
+  # Currently supported releases
+  There are currently 3 supported releases of LXC:
+
+   - LXC 2.0 LTS (supported until June 2021)
+   - LXC 3.0 LTS (supported until June 2023)
+   - LXC 3.1 (feature release, end of life when 3.2 is released)

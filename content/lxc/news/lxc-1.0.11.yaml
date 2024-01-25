@@ -1,0 +1,71 @@
+title: LXC 1.0.11 release announcement
+date: 2017/10/19 00:00
+content: |-
+  This is the eleventh bugfix release for LXC 1.0.
+  
+  Bugfixes:
+  
+   * apparmor: Allow containers to start in AppArmor namespaces
+   * apparmor: Drop useless apparmor denies
+   * conf: Fix building without libcap
+   * conf: Free netdev-\>downscript
+   * conf: Improve write\_id\_mapping()
+   * conf: Non-functional changes
+   * conf: Refactor most of the parsing functions
+   * console: Non-functional change
+   * core: Remove the `__func__` macro
+   * core: Use strerror(errno) instead of %m
+   * doc: Add CII Best Practices badge to README
+   * doc: Add missing translations for commands
+   * doc: Fix a typo
+   * doc: Fix regex-typo in Japanese and Korean lxc-monitor(1)
+   * doc: Fix regex-typo in lxc-monitor.sgml.in
+   * doc: Reword idmap restrictions when unpriv
+   * doc: Update API for get\_config\_item
+   * doc: Update README
+   * init: Add comment for exclude 32 and 33 signals
+   * liblxc: Use snprintf()
+   * lock: Non-functional changes
+   * lock: Return the right error when open lock file failed
+   * monitor: Remove unlink operation in af\_unix
+   * network: Adding warning for mtu ignoring
+   * network: Non-functional changes
+   * seccomp: Print action name in log
+   * seccomp: s/n-new-privs/no-new-privs/g
+   * seccomp: Update comment for function `parse_config`
+   * state: Remove lxc\_rmstate declaration
+   * storage: Enable building with gcc7
+   * template/archlinux: Change locale "en-US.UTF-8" to "en\_US.UTF-8"
+   * template/centos: Add cronie to the pkg list
+   * template/centos: Use altarch mirror for CentOS on arches other than i386 and x86\_64
+   * template/debian: Add aarch64 -> arm64 mapping
+   * template/debian: Add buster as a valid release
+   * template/debian: Use deb.debian.org as the default Debian mirror
+   * template/opensuse: getty.target.wants does not always exists
+   * template/ubuntu: Conditionally move upstart ssh job, as it is now optional.
+   * template: Use "rsync -SHaAX" to copy the cached rootfs into place
+   * tests: Avoid NULL pointer dereference
+   * tests: Remove temp lxcpath for attach testcase
+   * tools/usernsexec: Remove dead assignments
+   * tools: Use "which"
+   * travis: Fix builds
+   * utils: Close parent end in child process after fork
+   * utils: Duplicate stderr as well in lxc\_popen()
+   * utils: Fix lxc\_popen()/lxc\_pclose()
+   * utils: Fix mem leak with realpath
+   * utils: Fix some cppcheck warnings
+   * utils: Fix the bug of 'ts-\>stdoutfd' did not fill with parameters 'stdoutfd'
+   * utils: Remove dead assignments in lxc\_popen()
+  
+  ### Downloads
+  The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
+  will very soon ship a packaged version of LXC 1.0.11.
+  
+  Please note that LXC upstream strongly recommends 1.0 users to upgrade to the 2.0 LTS release.
+  The 1.0 branch will keep being supported until June 2019, but at this point,
+  only critical bugfixes and security updates will be backported.
+  
+  Should you be interested in individual changes or just looking at the detailed development history,
+  our stable branch is on [GitHub](https://github.com/lxc/lxc/tree/stable-1.0).
+  
+  

@@ -1,0 +1,49 @@
+title: LXCFS 5.0.3 LTS has been released
+date: 2023/01/17 02:01
+origin: https://discuss.linuxcontainers.org/t/lxcfs-5-0-3-lts-has-been-released/16167
+content: |-
+  ### Introduction
+  The LXCFS team is pleased to announce the release of LXCFS 5.0.3!
+
+  This is the third bugfix release for LXCFS 5.0 which is supported until June 2027.
+
+  ### Bugfixes
+  Some of the highlights for this release are:
+
+   - Fixes VFS caching issues when run under FUSE3
+   - Fixes some behavioral issues with the new /sys/devices/system/cpu filtering
+   - Fixes building on ia64
+   - Properly handles cross-personality content for /proc/cpuinfo
+
+  The full list of commits is available below:
+
+  [details="Detailed changelog"]
+   - set oom_score_adj of lxcfs process to -1000
+   - init: respect --prefix when installing systemd unit files
+   - Fix build on ia64
+   - doc: guide for mount /sys/devices/system/cpu in docker demo
+   - utils: add safe_uint32() helper
+   - macro.h: add strnprintf macro
+   - utils: add get_task_personality helper
+   - cpuview: paththrough personality when reading cpuinfo
+   - cpuview: fix possible use-after-free in find_proc_stat_node
+   - github: make coverity workflow work with meson
+   - README: how to build with sanitizers
+   - cpuset_parse: check input string in cpuset_nexttok
+   - github: enable ASAN and UBSAN during PR tests
+   - lxcfs: explicitly enable direct_IO for libfuse3
+   - lxcfs: fix copypaste typo in error message
+   - /proc/stat: render physical cpu number in non-view mode
+   - sysfs: don't mask cpus in /sys/devices/system/cpu
+   - lxcfs: handle NULL path in lxcfs_releasedir/lxcfs_release
+   - cpuview: fix ABBA deadlock in find_proc_stat_nod
+  [/details]
+
+  ### Support and upgrade
+  The LXCFS 5.0 branch is supported until June 2027.
+  Only bugfixes and securitiy issues get included into the stable bugfix releases, so it's always safe and recommended to keep up and run the latest bugfix release.
+
+  ### Downloads
+
+   - Main release tarball: [lxcfs-5.0.3.tar.gz](https://linuxcontainers.org/downloads/lxcfs/lxcfs-5.0.3.tar.gz)
+   - GPG signature: [lxcfs-5.0.3.tar.gz.asc](https://linuxcontainers.org/downloads/lxcfs/lxcfs-5.0.3.tar.gz.asc)

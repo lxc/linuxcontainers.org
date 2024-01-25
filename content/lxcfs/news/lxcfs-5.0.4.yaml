@@ -1,0 +1,36 @@
+title: LXCFS 5.0.4 LTS has been released
+date: 2023/07/25 22:07
+origin: https://discuss.linuxcontainers.org/t/lxcfs-5-0-4-lts-has-been-released/17707
+content: |-
+  ### Introduction
+  The LXCFS team is pleased to announce the release of LXCFS 5.0.4!
+
+  This is the fourth bugfix release for LXCFS 5.0 which is supported until June 2027.
+
+  ### Bugfixes
+  Some of the highlights for this release are:
+
+   - Fixed the output format of /proc/diskstats
+   - Fixed an issue with cpuset path tracking when used with containerd
+
+  The full list of commits is available below:
+
+  [details="Detailed changelog"]
+   - build: tools: keep trailing newline in jinja2 renderer
+   - Revert "init: respect --prefix when installing systemd unit files"
+   - proc: fix /proc/diskstats output format
+   - github: start using ubuntu-22.04 image
+   - github: remove ubuntu-18.04
+   - tests: adapt for cgroup2
+   - cpuview: resolve cpu cgroup path separately from cpuset the cgroup path is different in kubernetes with containerd runtime.
+   - github: Update for main branch
+  [/details]
+
+  ### Support and upgrade
+  The LXCFS 5.0 branch is supported until June 2027.
+  Only bugfixes and securitiy issues get included into the stable bugfix releases, so it's always safe and recommended to keep up and run the latest bugfix release.
+
+  ### Downloads
+
+   - Main release tarball: [lxcfs-5.0.4.tar.gz](https://linuxcontainers.org/downloads/lxcfs/lxcfs-5.0.4.tar.gz)
+   - GPG signature: [lxcfs-5.0.4.tar.gz.asc](https://linuxcontainers.org/downloads/lxcfs/lxcfs-5.0.4.tar.gz.asc)

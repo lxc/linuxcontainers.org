@@ -1,0 +1,62 @@
+.xterm {
+    padding: 5px;
+}
+
+div#tryit_console_row {
+    position: fixed;
+    bottom: 0;
+    z-index: 10;
+    min-width: 100%;
+    padding: 0;
+    background: #fff;
+}
+
+div#tryit_console_panel {
+    width: 100%;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+div#tryit_console {
+    max-height: 20em;
+}
+
+div#tryit-instructions {
+    padding-bottom: 380px;
+}
+
+div#tryit_info_panel th {
+    width: 15em;
+}
+
+div#tryit_info_panel table {
+    margin-bottom: 0;
+}
+
+.p-notification__response {
+    width: 100%;
+}
+
+div#tryit_examples_panel pre,
+div#tryit_examples_panel h3 {
+    margin-bottom: 0;
+}
+
+div#tryit_examples_panel p {
+    margin-bottom: 0.5rem;
+    max-width: 100%;
+}
+
+.tryit_progress_bar {
+    margin-top: 1em;
+}
+
+#tryit_progress button {
+    margin-right: 0.2em;
+}
+
+@media (max-width: 500px) {
+    .tryit_progress_bar {
+        display: none;
+    }
+}

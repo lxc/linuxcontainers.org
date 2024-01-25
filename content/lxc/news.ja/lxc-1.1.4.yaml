@@ -1,0 +1,94 @@
+title: LXC 1.1.4 リリースのお知らせ
+date: 2015/10/06 00:00
+content: |-
+  <!--
+  This is the fourth bugfix release for LXC 1.1.
+  -->
+  このリリースは LXC 1.1 の 4 回目のバグフィックスリリースです。
+  
+  重要な変更<!-- Important -->:
+  
+   * セキュリティホール CVE-2015-1335 の修正 <!-- Security fix for CVE-2015-1335 -->
+  
+  コア:
+  
+   * setenv() を呼ぶ前に NULL ポインタのチェックを行うようにしました <!-- Check for NULL pointers before calling setenv() -->
+   * (lxc.mount.entry に指定する) create=dir と create=file を処理する関数を分けました (訳注: 以下のふたつの項目とセットで lxc.mount* で設定されたマウントエントリを処理する関数のリファクタリングを行っています)<!-- Factorize handle of create=dir and create=file -->
+   * マウント用のエントリを処理する関数の分割と再構築を行いました <!-- Refactor and factorize mount entries -->
+   * lxc.mount\* を扱う関数を 3 つに分割しました <!-- Split handle of lxc.mount\* with 3 functions -->
+   * init: 古いバージョンの apparmor をサポートしました <!-- Support older apparmor -->
+   * LXC\_CLONE\_KEEPNAME の指定が正常に動作するようになりました <!-- Make LXC\_CLONE\_KEEPNAME work -->
+   * rootfs が指定されない場合の自動マウントの不具合を修正しました <!-- Fix automatic mounts without a rootfs -->
+   * rootfs が指定されない場合のコンテナ作成の不具合を修正しました <!-- rootfs Fix container creation without a rootfs -->
+   * rootfs が指定されない場合の /dev のシンボリックリンクの不具合を修正しました <!-- Fix /dev symlinks without a rootfs -->
+   * rootfs が指定されない場合でも autodev が動作するようになりました <!-- Allow autodev without a rootfs -->
+   * rootfs が指定されない場合でも、必要な場合のみ /proc をマウントするようになりました <!-- Only mount /proc if needed, even without a rootfs -->
+   * コンテナ作成時、rootfs が既に存在している場合も設定を保存するようになりました <!-- When creating container, save configuration if rootfs already exists -->
+   * rootfs が指定されない場合の start フックの検証を修正しました <!-- Fix verification of start hook without a rootfs -->
+   * コンテナの停止時にネットワークデバイスを確実に削除するようにしました <!-- Tear down network devices during container halt -->
+   * coverity: mount\_entry\_create\_dir\_file の修正を行いました <!-- fix mount\_entry\_create\_dir\_file -->
+   * ネストしたコンテナをサポートするために include する nesting.conf を追加しました <!-- Add a nesting.conf which can be included to support nesting containers -->
+   * realloc() のサイズの計算を修正しました <!-- Fix reallocation calculation -->
+   * bdev\_destroy() と bdev\_destroy\_wrapper() を追加しました <!-- Add bdev\_destroy() and bdev\_destroy\_wrapper() -->
+   * overlayfs\_clone: rootfs をマウントして rsync を行うようにしました (訳注: overlayfs の非特権コンテナのクローンが行えるように修正しました)<!-- rsync the mounted rootfs -->
+   * lxc\_rmdir\_onedev: パスが存在しない場合でも失敗しなくなりました (訳注: 作成が不十分なコンテナの削除時にエラーがでないようになりました)<!-- don't fail if path doesn't exist -->
+   * overlayfs\_mount: delta ディレクトリが存在しない場合に作成するようにしました <!-- create delta dir if it doesn't exist -->
+   * ovl\_rsync: umount を確実に行うようにしました <!-- make sure to umount -->
+   * bdev.h の bdev\_destroy() を使って bdev を削除するようにしました <!-- Destroy bdevs using bdev\_destroy() from bdev.h -->
+   * インデントの修正を行いました <!-- Fix indentation -->
+   * cmds: abstract socket の長さの問題を修正しました <!-- fix abstract socket length problem -->
+   * coverity: 冗長な処理ブロックを削除しました <!-- drop second (redundant) block -->
+   * mount\_proc\_if\_needed() で snprintf の返り値のチェックを行うようにしました <!-- Check return value of snprintf in mount\_proc\_if\_needed() -->
+   * CAP\_AUDIT\_READ を追加しました <!-- Add CAP\_AUDIT\_READ -->
+   * CAP\_BLOCK\_SUSPEND を追加しました <!-- Add CAP\_BLOCK\_SUSPEND -->
+   * 処理の失敗時に確保されたメモリを解放するようにしました <!-- Free allocated memory on failure (v2) -->
+   * Android 用に O\_PATH と O\_NOFOLLOW を定義しました <!-- Define O\_PATH and O\_NOFOLLOW for Android -->
+   * seccomp: aarch64 のサポートを追加しました <!-- add aarch64 support -->
+   * lxc-test-symlink: 絶対パスのシンボリックリンクを使ったテストを追加しました <!-- add a test using absolute symlink -->
+   * lxc\_mount\_auto\_mounts: NULL 判定をきちんと行った後に処理を行うようにしました <!-- fix weirdness -->
+   * lxc\_mount\_auto\_mounts 内の変数の型がおかしかったので修正しました <!-- Fix the type of i in lxc\_mount\_auto\_mounts -->
+  
+  ツール <!-- Tools -->:
+  
+   * コマンドが出力する使い方の文法を修正しました <!-- Fix grammar in some of the executables "NAME for name of the container" becomes "NAME of the container" -->
+   * lxc-checkconfig: カーネル設定オプションのチェックをいくつか追加しました <!-- add some more config options -->
+   * lxc-start-ephemeral: パスワードを直接パースするようにしました <!-- Parse passwd directly -->
+  
+  ドキュメント <!-- Documentation -->:
+  
+   * -P オプションに対する長いオプション (--lxcpath) をドキュメントに追加しました <!-- Add long option for -P in documentation -->
+   * create=dir と create=file オプションの説明を lxc.container.conf に追加しました <!-- Add doc for optional, create=dir and create=file in lxc.container.conf man -->
+   * lxc.system.conf(5) の lxc.cgroup.use の説明を更新しました <!-- Update lxc.cgroup.use in lxc.system.conf(5) -->
+   * lxc-destroy(1) に共通オプションの説明を追加しました <!-- Add the description of common options in lxc-destroy(1) -->
+  <!-- * Add LXC-specific mount option in Japanese lxc.container.conf(5) -->
+  
+  テンプレート <!-- Templates -->:
+  
+   * lxc-debian: stretch (Debian 9) イメージのサポートを追加しました <!-- support stretch (Debian 9) images -->
+   * lxc-debian: contrib と non-free を含まない指定ができるようになりました <!-- allow not including contrib/non-free -->
+   * lxc-debian: dpkg コマンドが multiarch をサポートしているかチェックするようになりました <!-- Test dpkg for multiarch support -->
+   * lxc-debian: lxc-debian テンプレートで dpkg が multiarch をサポートしているかどうかのチェック方法を変更しました <!-- Alternative test for dpkg multiarch support in lxc-debian template -->
+   * lxc-ubuntu: ubuntu.common.conf: /dev/mqueue をマウントするようにしました <!-- mount /dev/mqueue -->
+   * lxc-debian: カーネルのアーキテクチャのみをチェックするようにしました <!-- We should only check the kernel architecture. -->
+   * lxc-alpine: 移植性を向上させるため GNU BRE 拡張の使用を止めました <!-- avoid GNU BRE extensions for better portability -->
+   * lxc-alpine: オプションをパースするために getopt を使うようにしました <!-- use getopt to parse options -->
+  
+  <!--
+  Those stable fixes were brought to you by 14 individual contributors.
+  -->
+  これらの stable の修正は 14 名のコントリビュータによってなされました。
+  
+  ### ダウンロード <!-- Downloads -->
+  <!--
+  The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
+  will very soon ship a packaged version of LXC 1.1.4.
+  -->
+  このリリースの tarball は [ダウンロードページ](/lxc/downloads/) から取得できます。そして、各ディストリビューションがすぐに LXC 1.1.4 のパッケージをリリースするでしょう。
+  
+  <!--
+  Should you be interested in individual changes or just looking at the detailed development history,
+  our stable branch is on [GitHub](https://github.com/lxc/lxc/tree/stable-1.1).
+  -->
+  個々の変更点に興味がある場合、そして開発の履歴を見たい場合、stable ブランチ (stable-1.1) は [GitHub](https://github.com/lxc/lxc/tree/stable-1.1) にあります。
+  
+  

@@ -1,0 +1,29 @@
+title: LXC/LXD/LXCFS 3.0 - End of Life announcement
+date: 2023/07/04 15:07
+origin: https://discuss.linuxcontainers.org/t/lxc-lxd-lxcfs-3-0-end-of-life-announcement/17600
+content: |-
+  # Introduction
+  The 3.0 LTS branch has reached its end of life.
+
+  This affects the following projects:
+
+   - LXC 3.0 (released 27th of March 2018)
+   - LXCFS 3.0 (released 26th of March 2018)
+   - LXD 3.0 (released 2nd of April 2018)
+
+  After over 5 years of bugfixes and security maintenance, those releases have now reached the end of their supported lifetime.
+
+  Concretely, this means that we will not be issuing any new releases, that our stable branches will be closed and associated CI disabled.
+
+  All remaining users should upgrade to a supported release as soon as possible.
+
+  # Long term support releases
+  Upstream commits to 5 years support for its LTS branches.
+  Such branches exist for LXC, LXCFS and LXD and see bugfixes and security fixes backported to them.
+
+  No new features get added to those branches and only the latest LTS branch sees most bugfixes backported, once a new LTS branch is released, the previous one will only get security and critical bugfixes.
+
+  # Currently supported releases
+  There are currently two remaining LTS releases, `4.0` with support lasting until June 2025 and `5.0` with support until June 2027.
+
+  Additionally, some projects (currently LXD) may have more frequent feature releases. Those do not get long term support and are usually only supported until the next one comes out.

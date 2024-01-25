@@ -1,0 +1,39 @@
+title: LXC 1.1.5 release announcement
+date: 2015/11/09 00:00
+content: |-
+  This is the fifth bugfix release for LXC 1.1.
+  
+  Core:
+  
+   * Fix handling of process title rename (now only on >= 3.19 kernels)
+   * Several improvements to overlayfs/aufs handling
+      * Needed directories are created if missing
+      * Better handling of absolute paths
+      * Better handling of cloning overlayfs containers
+   * Ignore trailing /init.scope in cgroup paths (needed for newer systemd)
+   * Allow checkpoint/restore of containers using non-bridged veth devices
+   * Properly initialize error\_num (exit code tracking for the container)
+   * lxc-usernsexec: Re-open fds 0,1,2 separately (only if stdin is a tty)
+  
+  Init scripts:
+  
+   * lxc-net: Start after network-online.target
+  
+  Commands:
+  
+   * lxc-start: Allow preserving the PID namespace too
+  
+  Templates:
+  
+   * archlinux: Fix systemd-sysctl service
+   * ubuntu-cloud: Use tar.xz tarballs by default (as tar.gz will soon be discontinued)
+   * ubuntu-cloud: Always exit 1 on error
+  
+  ### Downloads
+  The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
+  will very soon ship a packaged version of LXC 1.1.5.
+  
+  Should you be interested in individual changes or just looking at the detailed development history,
+  our stable branch is on [GitHub](https://github.com/lxc/lxc/tree/stable-1.1).
+  
+  

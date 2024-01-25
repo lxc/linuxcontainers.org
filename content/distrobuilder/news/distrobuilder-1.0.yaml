@@ -1,0 +1,243 @@
+title: Distrobuilder 1.0 has been released
+date: 2019/10/21 22:10
+origin: https://discuss.linuxcontainers.org/t/distrobuilder-1-0-has-been-released/5987
+content: |-
+  ### Introduction
+  The distrobuilder team is proud to announce its initial release, distrobuilder 1.0!
+
+  Distrobuilder is a tool which produces root filesystems, LXC and LXD images.
+
+  It's the replacement of the LXC `template` scripts and has slowly been taking over the generation of the many pre-built images that LXC and LXD consume, finally taking over all of them a few months ago.
+
+  It's written in Go, shares some logic with LXD and directly generates artifacts suitable for consumption by LXC/LXD or ready to host on an image server.
+
+  Rather than relying on shell scripts, it's using a declarative input (YAML) and a number of `sources`, `generators` and `managers` to suit most Linux distributions and use cases.
+
+  It can be seen at work [here](https://jenkins.linuxcontainers.org/view/Images/) building the many images that we [publish daily](https://images.linuxcontainers.org).
+
+  ### Main components
+  #### Image details
+  This first section covers the usual suspects, the image name, distribution, release, description and architecture.
+
+  Example:
+
+      image:
+        name: ubuntu-disco-x86_64
+        distribution: ubuntu
+        release: disco
+        description: Ubuntu {{ image.release }}
+        architecture: x86_64
+
+  #### Image sources
+  The image sources are distribution specific logic (in Go) to either retrieve a suitable minimal base image or produce one from scratch using commonly available tooling (like `debootstrap`).
+
+  Example:
+
+      source:
+        downloader: openwrt-http
+        url: https://downloads.openwrt.org
+        keys:
+          - 0x6768C55E79B032D77A28DA5F0F20257417E1CE16
+          - 0x54CC74307A2C6DC9CE618269CD84BCED626471F1
+          - 0x6D9278A33A9AB3146262DCECF93525A88B699029
+
+  #### Packages and package managers
+  Distrobuilder currently supports:
+
+   - apk
+   - apt
+   - dnf
+   - ego
+   - equo
+   - opkg
+   - pacman
+   - portage
+   - xbps
+   - yum
+   - zypper
+
+  They perform package installation/removal, cleanup, updates and add/remove of package repositories.
+
+  Example:
+
+      packages:
+          manager: yum
+          update: true
+          cleanup: true
+
+          sets:
+           - packages:
+              - cronie
+              - cronie-noanacron
+              - curl
+              - dhclient
+              - initscripts
+              - openssh-clients
+              - passwd
+              - policycoreutils
+              - rootfiles
+              - rsyslog
+              - vim-minimal
+             action: install
+
+           - packages:
+              - NetworkManager
+             action: install
+             releases:
+              - 8
+
+           - packages:
+              - cloud-init
+             action: install
+             variants:
+              - cloud
+
+  #### Files
+  Distrobuilder can generate common files like hostname/hosts, some amount of init system configuration files, cloud-init templates and more generating templating for LXD containers.
+
+  Example:
+
+      files:
+       - path: /etc/hostname
+         generator: hostname
+
+       - path: /etc/hosts
+         generator: hosts
+
+       - path: /etc/resolvconf/resolv.conf.d/original
+         generator: remove
+
+       - path: /etc/resolvconf/resolv.conf.d/tail
+         generator: remove
+
+       - path: /etc/machine-id
+         generator: remove
+
+  #### Actions
+  Actions are effectively a number of hook points at which a provided shell scripts can be run. Those hooks currently are:
+
+   - post-unpack (after the source image was retrieved and unpacked)
+   - post-files (after the files were generated)
+   - post-updates (after the package updates were applied)
+   - post-packages (after any additional package was installed/removed)
+
+  Example:
+
+      actions:
+        - trigger: post-packages
+          action: |-
+            #!/bin/sh
+            set -eux
+
+            # Make sure the locale is built and functional
+            echo en_US.UTF-8 UTF-8 >> /etc/locale.gen
+            locale-gen en_US.UTF-8 UTF-8
+            update-locale LANG=en_US.UTF-8
+
+            # Cleanup underlying /run
+            mount -o bind / /mnt
+            rm -rf /mnt/run/*
+            umount /mnt
+
+            # Cleanup temporary shadow paths
+            rm /etc/*-
+
+        - trigger: post-packages
+          action: |-
+            #!/bin/sh
+            set -eux
+
+            # Enable cloud-init units
+            systemctl enable cloud-init
+
+          variants:
+           - cloud
+
+  #### Architecture maps
+  One of those tiny internal details, but pretty much every Linux distribution has its own name for the various hardware architecture. Distrobuilder has maps for the most ones, translating between kernel architectures and the name used by the distribution.
+
+  This allows for consistent architecture naming in the output, to line up with the patterns used by LXC and LXD.
+
+  Example:
+
+      mappings:
+        architecture_map: debian
+
+
+  #### Conditions
+  Packages, Files and Actions can all be set to only apply to specific image variants, distribution releases or OS architectures, making it possible to have a single YAML file for an entire Linux distribution. Some examples of this can be found in the previous examples.
+
+  ### Examples
+  All the production YAML files for [our image server](https://images.linuxcontainers.org) can be [found here](https://github.com/lxc/lxc-ci/tree/master/images).
+
+  Those are all pretty featureful and will generally be used to generate multiple releases of the distribution for multiple architectures and often for two variants (standard and cloud-init enabled).
+
+  ### Supported distributions
+  Distrobuilder can build images for the following distributions:
+
+   - Alpine Linux
+   - Alt Linux
+   - Apertis
+   - ArchLinux
+   - CentOS
+   - Debian (and derivatives, Devuan, Kali, Mint and Ubuntu)
+   - Fedora
+   - Funtoo
+   - Gentoo
+   - OpenSUSE
+   - OpenWRT
+   - Oracle
+   - Plamo
+   - Sabayon
+   - Ubuntu Core
+   - Void Linux
+
+  On top of this, a generic `docker-http` source can also be used to use a Docker image as the base for a LXC/LXD image.
+
+  Adding a new distribution is usually pretty straightforward and just requires adding a new package manager wrapper and logic to fetch a minimal source image or to produce that image directly.
+
+  ### Architecture support
+  Distrobuilder supports and is actively used on:
+
+   - aarch64
+   - armv7l (with and without hard floating point)
+   - i686
+   - ppc64le
+   - x86_64
+   - s390x
+
+  Only native image building is supported at this point, no support for cross-building through `qemu-user-static` or similar tooling.
+
+  ### Security
+  A common issue with the older shell scripts in `lxc-templates` was the lack of validation of the downloaded packages and other artifacts instrumental to the image building process. This was often caused by lack of HTTPS servers to download those files from combined with difficulty of dealing with GPG for the very many distributions we had to support.
+
+  Distrobuilder changes that model by using pre-built minimal images downloaded over HTTPS or GPG validated (with support for key retrieval or in-line keyring), then either adding on top of that base image or using the base image to produce a whole new image using the distribution's native tooling.
+
+  ### How to get it
+  This new LXD release is already available for you to try on our [demo service](https://linuxcontainers.org/lxd/try-it/).
+
+  ### Installing it
+  #### Using the snap
+  A snap package is available with both `stable` and `edge` releases.
+
+  It can be installed with:
+
+      snap install distrobuilder --classic
+
+  Or to have the latest upstream snapshot:
+
+      snap install distrobuilder --classic --edge
+
+  #### From source
+  The release tarballs can be found on our [download page](https://linuxcontainers.org/distrobuilder/downloads/). Those include a snapshot of all the Go dependencies needed to build distrobuilder.
+
+  Alternatively, the current upstream code can be built with:
+
+      go get github.com/lxc/distrobuilder/distrobuilder
+
+  # Resources
+
+   - Website: [https://linuxcontainers.org/distrobuilder](https://linuxcontainers.org/distrobuilder)
+   - Code: [https://github.com/lxc/distrobuilder](https://github.com/lxc/distrobuilder)
+   - Bug tracker: [https://github.com/lxc/distrobuilder/issues](https://github.com/lxc/distrobuilder/issues)
+   - Forum: [https://discuss.linuxcontainers.org](https://discuss.linuxcontainers.org)

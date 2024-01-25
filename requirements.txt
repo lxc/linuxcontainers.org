@@ -1,0 +1,7 @@
+beautifulsoup4
+jinja2
+lxml
+markdown>=3.3.4,<3.4.0
+pygments
+pyyaml
+pymdown-extensions

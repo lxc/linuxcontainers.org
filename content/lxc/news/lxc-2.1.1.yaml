@@ -1,0 +1,75 @@
+title: LXC 2.1.1 has been released
+date: 2017/10/19 20:10
+origin: https://discuss.linuxcontainers.org/t/lxc-2-1-1-has-been-released/676
+content: |-
+  This is the first bugfix release for LXC 2.1.
+
+  Bugfixes:
+
+   * apparmor: Drop useless apparmor denies
+   * cgfsng: Check whether we have a conf
+   * cgfsng: Fail when limits fail to apply
+   * conf: Error out on too many mappings
+   * conf: Ignore lxc.kmsg and lxc.pivotdir
+   * conf: Make update warning opt-in
+   * conf: Preserve newlines in configuration file
+   * conf: Remove dead assignments in parse\_idmaps()
+   * conf: Remove unnecessary zeroing
+   * conf: Use the proper type for rlim\_t, fixing build failure on x32.
+   * console: Clean tty state + return 0 on peer exit
+   * console: Remove dead assignments
+   * core: Introduce userns\_exec\_full() and port the codebase to it
+   * criu: Use correct check initialization check
+   * doc: Add lxc.cgroup.dir to Japanese lxc.container.conf(5)
+   * doc: Add lxc-update-config manpage
+   * doc: Document missing env variables
+   * doc: Fix regex-typo in Japanese and Korean lxc-monitor(1)
+   * doc: Fix regex-typo in lxc-monitor.sgml.in
+   * doc: Translate lxc(7) into Japanese
+   * doc: Translate lxc-update-config(1) into Japanese
+   * execute: Enable console & standard /dev symlinks
+   * init: Become session leader
+   * log: Fix a format string build failure on x32.
+   * log: Prevent stack smashing
+   * monitor: Remove dead assignment
+   * network: Add missing checks for empty links
+   * network: Clear ifindeces
+   * network: Non-functional changes
+   * network: Remove dead assignments
+   * network: Use single helper to delete networks
+   * start: Don't close inherited namespace fds
+   * start: Move env setup before container setup
+   * start: Pass LXC\_LOG\_LEVEL to hooks
+   * start: Remove dead variable
+   * start: Set environment variables correctly
+   * start: Switch ids at last possible instance
+   * storage: Avoid segfault on missing lxc.rootfs.path
+   * storage: Fix typo in error message
+   * storage/lvm: Fix thinpool logical volumes
+   * storage/overlay: Do not write to invalid memory
+   * storage/overlay: Fix use after free()
+   * storage/zfs: Return error directly when zfs creation fails
+   * template/alpine: Change file check to also check file size (`-f` => `-s`)
+   * template/archlinux: Change locale "en-US.UTF-8" to "en\_US.UTF-8"
+   * template/debian: Don't force getty@ configuration
+   * template/plamo: Delete unnecessary process during container shutdown
+   * tests: Avoid NULL pointer dereference
+   * tests: Remove dead assignments
+   * tests: Support systemd hybrid cgroups
+   * tools: Print "-devel" when LXC\_DEVEL is true
+   * tools/lxc-unshare: Do not pass NULL pointer
+   * tools/lxc-update-config: Remove lxc.pivotdir and lxc.kmsg entries
+   * tools/lxc-update-config: Strip lxc.rootfs.backend and properly handle IPv4 addresses
+   * tools/lxc-user-nic: Remove double initialization
+   * tools/lxc-usernsexec: Remove dead assignments
+   * utils: Do not write to 0 sized buffer
+   * utils: Duplicate stderr as well in lxc\_popen()
+   * utils: Fix lxc\_popen()/lxc\_pclose()
+   * utils: Remove dead assignments in lxc\_popen()
+
+  ### Downloads
+  The release tarballs may be found on our [download page](https://linuxcontainers.org/lxc/downloads/) and we expect most distributions  
+  will very soon ship a packaged version of LXC 2.1.1.
+
+  Should you be interested in individual changes or just looking at the detailed development history,  
+  our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-2.1).

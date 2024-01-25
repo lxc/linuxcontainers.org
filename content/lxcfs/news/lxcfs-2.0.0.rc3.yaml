@@ -1,0 +1,10 @@
+title: LXCFS 2.0.0.rc3 release announcement
+date: 2016/03/07 00:00
+content: |-
+
+  
+   * This is the third release candidate for 2.0.0
+   * Fixes in this release:
+       * Not mounting lxcfs procfiles when /sys/fs/cgroup is not mounted in container.
+       * Occasional corrupted output in free -m.
+  

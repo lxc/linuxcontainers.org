@@ -1,0 +1,100 @@
+title: LXC 1.0.7 release announcement
+date: 2014/12/05 00:00
+content: |-
+  This is the seventh bugfix release for the LXC 1.0 series.
+  
+  ### Changes
+  
+  Core:
+  
+   * Include network prefix when ipv4/ipv6 keys are queried
+   * apparmor: silence 'silent' mount denials
+   * add file/func/line to debug info
+   * apparmor: restrict signal and ptrace for processes
+   * cgmanager: several fixes
+   * lxc: don't call pivot\_root if / is on a ramfs
+   * fix lxc.mount.auto clearing
+   * conf.c: Define MS\_PRIVATE for Android
+   * network: convert param ifname to const.
+   * network: check result of if\_nametoindex().
+   * network: allow lxc\_network\_move\_by\_index() rename netdev in moving.
+   * network: introduce a interface named lxc\_netdev\_isup().
+   * lxccontainer.c: rename enter\_to\_ns to enter\_net\_ns
+   * lxc\_global\_config\_value can return the default lxc.cgroup.pattern whether root or non-root
+   * do\_rootfs\_setup: fix return bugs
+   * lxc-start: don't re-try to mount rootfs if we already did so
+   * attach: don't use confstr(\_CS\_PATH)
+   * lxc\_global\_config\_value: simplify the theme
+   * Fixed mismatch on ipvX gateway
+   * attach: don't ignore sigint/sigkill if stdin is redirected
+   * cgmanager: fix 'attach' with "all" controller support
+   * lxc/utils: bugfix freed pointer return value
+   * conf.c: change 'instanciate' to 'instantiate'
+   * fix wrong nlmsg\_len
+   * Remounts bind mounts if read-only flag is provided
+   * Allow lxc\_clear\_config\_item to clear idmaps.
+   * overlay and aufs clone\_paths: be more robust
+   * overlayfs: overlayfs.v22 or higher needs workdir option
+   * Fix clone issues
+   * Improve veth error cases logging
+   * fixed typo in comment
+   * audit: added capacity and reserve() to nlmsg
+   * rmdir and lxc\_unpriv returns non-negative error codes
+   * typofixes - https://github.com/vlajos/misspell_fixer
+
+  Bindings:
+  
+   * add src/python-lxc/setup.py into .gitignore
+  
+  Tests:
+  
+   * tests: Fix unpriv test
+   * lxc-test-unpriv: don't clear out /etc/lxc/lxc-usernet
+   * lxc-test-unpriv: test for different cgroups per subsystem
+   * tests: try again when waitpid() sets errno as EINTR
+  
+  Commands:
+  
+   * lxc\_start: ERROR if container is already running.
+   * lxc-start: return 0 rather than error if container is already running
+   * Make legacy lxc-ls more robust
+   * lxc\_info: flush stdout before calling routines which may fork
+  
+  Templates:
+  
+   * Fix typo in lxc-gentoo template
+   * busybox template: support for unprivileged containers
+   * busybox template: mount fstab when available
+   * Fix another gentoo template typo
+   * Create the apt proxy in the cache instead of the 1st container
+   * lxc-plamo: mount tmpfs on /dev/shm
+   * lxc-cirros: support creating+running unprivileged
+   * Fix lxc-openmandriva.in typo.
+   * Fix lxc-centos.in typo.
+   * lxc-opensuse: Disable on 13.2
+   * lxc-alpine: make sure /dev/shm is world writeable
+   * lxc-alpine: create a default tty for console
+   * lxc-debian: added support for package installation
+   * lxc-debian: Fix default mirrors
+   * lxc-debian: support systemd as PID 1
+   * lxc-debian: adjust init system configurations
+   * lxc-debian: mask both Wheezy and Jessie udev services
+   * lxc-opensuse: Disabling builds on openSUSE Tumbleweed, detection improved.
+  
+  Documentation:
+  
+   * Fix the lxc manpage a bit
+   * lxc-create -t option is not optional
+   * doc: Update kernel and cgroup info in Japanese lxc(7)
+   * tabs/spaces consistency
+  
+  Those stable fixes were brought to you by 27 individual contributors.
+  
+  ### Downloads
+  The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
+  will very soon ship a packaged version of LXC 1.0.7.
+  
+  Should you be interested in individual changes or just looking at the detailed development history,
+  our stable branch is on [GitHub](https://github.com/lxc/lxc/tree/stable-1.0).
+  
+  

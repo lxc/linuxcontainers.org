@@ -1,0 +1,171 @@
+title: Distrobuilder 1.3 has been released
+date: 2021/08/09 18:08
+origin: https://discuss.linuxcontainers.org/t/distrobuilder-1-3-has-been-released/11836
+content: |-
+  ### Introduction
+  The distrobuilder team is proud to announce its initial release, distrobuilder 1.3!
+
+  The main highlights are:
+   - New systemd generator to dynamically apply needed tweaks in containers
+   - Support for AlmaLinux, SpringdaleLinux and RockyLinux (using shared CentOS logic)
+   - Support for busybox images
+
+
+  The full list of commits is available below:
+
+  [details="Detailed changelog"]
+   - sources/centos: Support patch releases
+   - sources/centos: Fix CentOS 8-Stream
+   - sources/centos: Only print error on patch releases
+   - sources/centos: Fix CentOS 8 Stream
+   - sources/centos: Fix centos-stream-repos package on 8-Stream
+   - sources: Support OpenWrt on ARM
+   - main: Fix systemd capabilities
+   - sources/funtoo: Handle missing releases
+   - sources/funtoo: Improve error handling
+   - managers/zypper: Add --replacefiles flag to install
+   - main: Consider the case of boot.wim and install.wim
+   - systemd: Also disable ProtectKernelTunables=no
+   - Adding AlmaLinux to build code
+   - Adds almalinux-http to valid downloaders list
+   - sources/funtoo: Add missing break
+   - main: Skip overlay on xfs
+   - main: Run systemd fix before post-files actions
+   - main: Add --disable-overlay flag
+   - main: Add systemd generator
+   - sources: Add generic HTTP downloader
+   - shared/definition: Support rootfs-http
+   - sources: Add Rocky Linux
+   - shared/definition: Support rockylinux-http downloader
+   - sources: Add Springdale Linux
+   - shared/definition: Support springdalelinux-http downloader
+   - main: Support source.URL template
+   - systemd: Refactor generator
+   - systemd-generator: Some small fixes
+   - main: Fix typos in systemd-generator
+   - main: Refactor networkd/resolved fixes
+   - main: Simplify sed call
+   - main: s/which/type/ in systemd generator
+   - main: Make sure to return 0
+   - main: Add settings for privileged containers
+   - main: Fix cloud-init and NetworkManager detection
+   - main: Add more distros to NetworkManager fix
+   - main: Fix calls to fix_ro_paths
+   - main: Restrict networkd/resolved fix to unprivileged containers
+   - main: Fix path of ip command
+   - main: Add /lib/systemd to searchable paths
+   - systemd: Make sure override runs last
+   - systemd: Fix Oracle networking
+   - systemd: Make network-connection-activate work on Oracle
+   - systemd: Always apply NM fix on centos
+   - almalinux: clean up downloader code and add beta/rc support
+   - main: Fix typo in systemd generator
+   - main: Add fix for systemd-udev-trigger.service
+   - systemd: Mask more units
+   - main: Add fix for systemd-sysctl
+   - sources/opensuse: Fix path to non-x86_64 tarballs
+   - sources/opensuse: Fix URL to tarballs
+   - main: Replace Sanity Checks with Quick Checks
+   - sources: Rework downloader
+   - sources: s/docker/docker-http/
+   - systemd: Mask systemd-pstore.service
+   - sources/centos: Support CentOS 8 on armhf
+   - sources/oracle: Fix ISO paths and support aarch64
+   - main: Mask ua-messaging.service
+   - sources: Remove duplicate code
+   - sources/almalinux: Update errors
+   - sources/alpine: Update errors
+   - sources/alt: Update errors
+   - sources/apertis: Update errors
+   - sources/archlinux: Update errors
+   - sources/centos: Update errors
+   - sources/debootstrap: Update errors
+   - sources/docker: Update errors
+   - sources/fedora: Update errors
+   - sources/funtoo: Update errors
+   - sources/gentoo: Update errors
+   - sources/opensuse: Update errors
+   - sources/openwrt: Update errors
+   - source/oraclelinux: Update errors
+   - sources/plamolinux: Update errors
+   - sources/rhel-common: Update errors
+   - sources/rocky: Update errors
+   - sources/rootfs: Update errors
+   - sources/sabayon: Update errors
+   - sources/springdalelinux: Update errors
+   - sources/ubuntu: Update errors
+   - sources/voidlinux: Update errors
+   - sources/centos: Add more GPG keys
+   - sources/oracle: Run yum with --skip-broken
+   - managers: Refactor
+   - main: Use refactored managers
+   - Drop apt-transport-https (transitional since 18.04)
+   - Revert "sources/oracle: Run yum with --skip-broken"
+   - sources/oracle: Fix iso script
+   - Avoid systemd generator to break systemd-networkd connections
+   - sources/oracle: Fix OL7 base URL
+   - sources/centos: Add GPG keys early
+   - sources/centos: Fix CentOS repo names
+   - sources/centos: Check repo before disabling it
+   - sources/centos: Include more gpg keys
+   - openwrt: Add ability to make 21.02 RC images
+   - systemd: Mask hwdb-update
+   - Drop Ubuntu 14.04 (EOL)
+   - Drop Ubuntu 16.04 (EOL)
+   - sources/gentoo: Support arm64
+   - sources/gentoo: Support source variant
+   - systemd: Fix typo in unit name
+   - generators: Drop upstart-tty
+   - generators: Refactor generators
+   - main: Use refactored generators
+   - main: Check filter before loading generator
+   - main: Clean up properly on timeout/interrupt
+   - main: Write to stderr if GetLogger fails
+   - main: Extend logging
+   - Wrap errors
+   - sources: Fix gentoo regexes
+   - main: Add NoNewPrivileges=no to systemd-generator
+   - sources: Fix gentoo source variant check
+   - Update go modules
+   - sources: Pass cache directory
+   - sources: Replace TempDir with cacheDir
+   - sources: Fix unmount for rhel based distros
+   - sources: Add busybox
+   - systemd: Add systemd-sysusers workaround
+   - archlinux: Switch test to official mirror
+   - sources/centos: Fix error message
+   - sources/centos: Unmount raw file
+   - sources/openwrt: Fix directory name
+   - vm: Check existance of loop device before detaching it
+   - vm: Fix error message
+   - sources/busybox: Fix mkdir call
+   - sources/busybox: Fix build
+   - sources/busybox: Remove test logging message
+   - sources/busybox: Rename directories to make more sense
+   - Update gomod
+   - doc: Update build instructions
+   - doc: Update usage
+   - main: Add logging
+   - sources: Add logging
+   - main: Wrap overlay errors
+   - doc/index: Drop internal command
+   - Hide completion sub-command
+   - Makefile: Set GO111MODULE
+   - image: Fix LXD compression
+   - image: Add compression flag for lxc images
+   - image: Update tests
+   - shared: Add zstd compression
+   - main: Add type and compression to help message
+   - sources/alt: Update tarball url (add arch subdir)
+   - sources/alt: Update checksum and gpg file paths
+   - main: Remove duplicate defer statement
+   - main: Disable overlay on FUSE filesystems
+   - image: Fix unified LXD tarballs
+   - sources/openwrt: Remove verification
+   - main: Support ISO generation with mkisofs
+  [/details]
+
+  ### Downloads
+
+   - Main release tarball: [distrobuilder-1.3.tar.gz](https://linuxcontainers.org/downloads/distrobuilder/distrobuilder-1.3.tar.gz)
+   - GPG signature: [distrobuilder-1.3.tar.gz.asc](https://linuxcontainers.org/downloads/distrobuilder/distrobuilder-1.3.tar.gz.asc)

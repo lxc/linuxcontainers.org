@@ -1,0 +1,9 @@
+title: LXCFS 2.0.0.beta2 リリースのお知らせ
+date: 2016/02/19 00:00
+content: |-
+
+  
+   * アンマウントされたコントローラがある場合に PAM モジュールが引き起こすハングアップのバグを修正しました <!-- Fix a bug causing PAM module to hang if there are unmounted controllers -->
+   * setns 後の pid を fork する際、不完全な glibc の assert に起因する、まれではあるが起こりうるバグを回避するようにしました。 <!-- Avoid a rare but not impossible bug due to a faulty glibc assert when
+     forking a pid after setns. -->
+  

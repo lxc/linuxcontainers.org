@@ -1,0 +1,91 @@
+title: LXC 4.0.12 has been released
+date: 2022/02/02 23:02
+origin: https://discuss.linuxcontainers.org/t/lxc-4-0-12-has-been-released/13288
+content: |-
+  ### Introduction
+  The LXC team is pleased to announce the release of LXC 4.0.12!
+
+  This is the twelfth bugfix release for LXC 4.0 which is supported until June 2025.
+
+  ### Bugfixes
+  As usual this bugfix releases focus on stability and hardening. Some of the highlights for this release are:
+
+   - Fixed CRIU restoration of containers with pre-created veth interfaces
+   - Fixed issue with kernels lacking SMT support
+   - Extended cgroup2 config options in lxc.mount.auto (cgroup2)
+   - `lxc-download` now relies on HTTPS for validation (avoids GPG issues)
+
+  The full list of commits is available below:
+
+  [details="Detailed changelog"]
+   - criu: support restoring containers with pre-created veth devices
+   - conf: make it more obvious how auto-mount flags are defined
+   - doc: add loglevels to ja and ko common options
+   - doc: Add lxc.sched.core to Japanese lxc.container.conf(5)
+   - doc: fix typo in English lxc.container.conf(5)
+   - conf: handle kernels without or not using SMT
+   - AUTHORS: Update to point to git history
+   - conf: add cgroup2, cgroup2:ro, cgroup2:force, cgroup2:ro:force options
+   - confile: don't use path_simplify() on lxc.{execute,init}.cmd
+   - build: add static libcap to output
+   - build: add io-uring-event-loop option
+   - Replace 'which' with 'command -v'
+   - mainloop: make sure that descr->ring is allocated
+   - start: check event loop type before closing fd
+   - Replace 'which' with 'command -v' in tests too
+   - Replace deprecated backticks with $() construct
+   - Replace last occurence of 'which' with 'command -v'
+   - mainloop: make ifdefs easier to follow
+   - build: improve liburing support detection
+   - process_utils: add signal_name() helper
+   - start: log signal name and number
+   - build: move _FILE_OFFSET_BITS to common option
+   - tests: include config.h
+   - conf: apply /proc/sys and /proc/<pid>/ parameters
+   - conf: improve logging setting sysctl and /proc/<pid>/ parameters
+   - test: improve logging helpers
+   - tests: add lxc.sysctls.* test
+   - tests: add lxc.proc.* test
+   - build: refuse to compile with unsupported liburing version
+   - autotools: Avoid multiple liblxc.so with --enable-pam
+   - macro: ensure necessary io_uring flags are defined
+   - Revert "initutils: use vfork() in lxc_container_init()"
+   - cgroups: fix compiler warning
+   - api: ->save_config() doesn't need to create container dir
+   - Revert "api: ->save_config() doesn't need to create container dir"
+   - use 2 sysfs instances for sys:mixed
+   - api-extensions: don't advertise seccomp notify support if it's not compiled in
+   - seccomp: only guard seccomp notify behind HAVE_DECL_SECCOMP_NOTIFY_FD
+   - seccomp: close seccomp notifier fd in cleanup handler
+   - (trivial) Fix error message, failure was connect not bind
+   - lxc-checkconfig.in: CONFIG_NF_NAT_IPV4 was removed from the kernel 2019-03-03
+   - commands: log command during file descriptor retrieval
+   - attach: don't pointlessly call cgroup_init()
+   - Update README.md: Fix broken link (403 Forbidden)
+   - lxc-download: Rely on HTTPS only
+   - github: stop installing gnupg now that it's unused
+   - conf: improve userns_exec_mapped_root()
+   - conf: log termination status
+   - lxccontainer: improve do_lxcapi_save_config()
+   - lxccontainer: improve do_lxcapi_create()
+   - lxccontainer: improve create_partial()
+   - lxccontainer: simplify partial file creation
+   - build: only enable LTO for regular builds
+   - build: simplify thread local storage handling
+   - lxccontainer: properly wrap lxcapi_create()
+   - github: ensure system liblxc is wiped
+   - github: log system info
+   - github: more detailed compilation instructions
+   - github: add systemd-coredump
+   - github: Clear default ACL on /home
+   - lxccontainer: allow xdev when creating the container dir
+  [/details]
+
+  ### Support and upgrade
+  The LXC 4.0 branch is supported until June 2025.
+  Only bugfixes and securitiy issues get included into the stable bugfix releases, so it's always safe and recommended to keep up and run the latest bugfix release.
+
+  ### Downloads
+
+   - Main release tarball: [lxc-4.0.12.tar.gz](https://linuxcontainers.org/downloads/lxc/lxc-4.0.12.tar.gz)
+   - GPG signature: [lxc-4.0.12.tar.gz.asc](https://linuxcontainers.org/downloads/lxc/lxc-4.0.12.tar.gz.asc)

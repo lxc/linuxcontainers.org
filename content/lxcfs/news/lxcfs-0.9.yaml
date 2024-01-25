@@ -1,0 +1,11 @@
+title: LXCFS 0.9 release announcement
+date: 2015/06/03 00:00
+content: |-
+
+  Bugfix release.
+  
+   * Fixes from Michael McCracken to fix lxcfs crashes
+  
+  ### Downloads
+  The release tarballs can be found on our [download page](/lxcfs/downloads/).
+  

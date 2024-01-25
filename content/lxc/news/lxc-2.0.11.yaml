@@ -1,0 +1,718 @@
+title: LXC 2.0.11 has been released
+date: 2019/03/12 15:03
+origin: https://discuss.linuxcontainers.org/t/lxc-2-0-11-has-been-released/4238
+content: |-
+  This is the eleventh bugfix release for LXC 2.0.
+
+  Note that LXC 2.0.10 was released a few days before 2.0.11 but the release tarball was missing some files and wasn't buildable on Android, so we ended up releasing 2.0.11 to address that.
+
+  The changelog below is for everything which happened between 2.0.9 and 2.0.11.
+
+  ### Security fixes
+  #### Fixes CVE-2018-6556
+  `lxc-user-nic` when asked to delete a network interface would unconditionally open a user provided path. This code path could be used by an unprivileged user to check for the existence of a path which they wouldn't otherwise be able to reach. It may also be used to trigger side effects by causing a (read-only) open of special kernel files (ptmx, proc, sys). For more details see [here](https://nvd.nist.gov/vuln/detail/CVE-2018-6556).
+
+  #### Fixes CVE-2019-5736
+  This release fixes [CVE-2019-5736](https://nvd.nist.gov/vuln/detail/CVE-2019-5736). It is a major security issue afflicting all container runtimes and is exploitable when attaching to privileged containers. More details on the the bug and how it is fixed can be found [here](https://brauner.github.io/2019/02/12/privileged-containers.html).
+
+  ### Main bugfixes
+  #### Allow attaching to undefined containers
+  For example the following sequence is now expected to work:
+
+      lxc-start -n <container-name> -f /path/to/conf \
+      -s 'lxc.id_map = u 0 100000 65536' \
+      -s 'lxc.id_map = g 0 100000 65536' \
+      -s 'lxc.rootfs = /path/to/rootfs' \
+      -s 'lxc.init_cmd = /path/to/initcmd'
+
+  #### Correctly handle namespace inheritance in attach
+  `lxc_attach` will now correctly distinguish between a caller specifying specific namespaces to attach to and a caller not requesting specific namespaces. The latter is taken by `lxc_attach` to mean that all namespaces will be attached. This also needs to include all inherited namespaces.
+
+  #### Allow the creation of `testing` and `unstable` Debian containers
+  Being able to create `testing` containers, regardless of what's the name of the next stable, is useful in several contexts, included but not limited to testing purposes. i.e. one won't need to explicitly switch to `bullseye` once `buster` is released to be able to continue tracking `testing`. While we are at it, let's also enable `unstable`, which is exactly the same as `sid`, but there is no reason for not being able to.
+
+  #### Enable container without `CAP_SYS_ADMIN` (cgroup handling)
+  In case cgroup namespaces are supported but we do not have `CAP_SYS_ADMIN` we need to mount cgroups for the container. This patch enables both privileged and unprivileged containers without `CAP_SYS_ADMIN`.
+
+  #### Improved `cgroup2` handling
+  Since cgroup2 is becoming more common LXC 2.0.11 comes with a wide range of improvements in that area.
+
+  #### Support read-only mounts of cgroups
+  This is especially useful if the container lacks `CAP_SYS_ADMIN` and thus cannot remount.
+
+  #### Allow to exit from console via `SIGTERM`
+  This allows cleanly exiting a console session without control sequences. Instead `SIGTERM` can be sent to the affected process and it will cause LXC to cleanly terminate the console session.
+
+  #### Correctly calculate the number of arguments passed when running application containers
+  The number of arguments passed to `exec` was miscalculated under certain conditions. This release ensure that the correct number of arguments is calculated and passed to `exec.`
+
+  #### Remove all unneeded locking from the codebase
+  Older version of LXC used mutexes in various places to ensure thread-safety. Careful redesign of these codepaths has enabled us to remove all mutextes from the codebase. This has led to simplifications and speedups for various operations such as container start and stop.
+
+  #### Fix cgroup namespace preservation
+  This eliminates a race and makes sure that the cached file descriptor refers to the container's cgroup namespace and not to the hosts'.
+
+  #### Allow application to share the hosts' pid namespace
+  Prior versions of LXC did not allow to share the hosts' pid namespace. Starting with this bugfix release it is possible to do this correctly.
+
+  #### Correctly handle very short-lived application containers
+  Prior versions had trouble to correctly handle extremely short-lived application containers. For example, LXC could incorrectly report that a container is still running when it had already shut down due to a TOCTU and refuse to restart it. This caused unnecessary delay. Also, output of such short-lived containers written to stdout could get lost or truncated. This release fixes both issues.
+
+  #### Correctly handle containers where `/proc` has been mount with `hidepid=1` or `hidepid=2`
+  In prior versions attaching to unprivileged containers as an unprivileged user with `/proc` mounted with `hidepid=1` or `hidepid=2` would fail since LXC could not retrieve needed information from `/proc`. This is now fixed.
+
+  #### Allow to force mount cgroups even when cgroup namespaces are supported
+  This lets users specify `lxc.mount.auto = cgroup:mixed:force` or `lxc.mount.auto = cgroup:ro:force` or `lxc.mount.auto = cgroup:rw:force`.
+
+  When cgroup namespaces are supported LXC will not mount cgroups for the container since it assumes that the init system will mount cgroups itself if it wants to. This assumption already broke when users wanted to run containers without CAP_SYS_ADMIN.
+
+  For example, systemd based containers wouldn't start since systemd needs to mount cgroups (named systemd hierarchy for legacy    cgroups and the unified hierarchy for unified cgroups) to track processes. This problem was solved by detecting whether the container had CAP_SYS_ADMIN. If it didn't we performed the cgroup mounts for it.
+
+  However, there are more cases when we should be able to mount cgroups for the container when cgroup namespaces are supported:
+
+    - init systems not mounting cgroups themselves:
+      A init system that doesn't mount cgroups would not have cgroups available especially when combined with custom LSM profiles to prevent cgroup {u}mount()ing inside containers.
+    - application containers:
+      Application containers will usually not mount by cgroups themselves.
+    - read-only cgroups:
+      It is useful to be able to mount cgroups read-only to e.g. prevent changing cgroup limits from inside the container while at the same time allowing the applications to perform introspection on their own cgroups. This again is mostly useful for application containers. System containers running systemd will usually not work correctly when cgroups are mounted read-only.
+
+  #### Everything else
+  2.0.11 includes almost a year and a half of bugfixes cherry-picked from current LXC, the entire list can be found below.
+
+  [details="Full changelog"]
+
+   - tools: allow lxc-attach to undefined containers
+   - utils: move memfd_create() definition
+   - utils: add lxc_cloexec()
+   - utils: add lxc_make_tmpfile()
+   - utils: add lxc_getpagesize()
+   - utils: add lxc_safe_long_long()
+   - utils: parse_byte_size_string()
+   - utils: add lxc_find_next_power2()
+   - namespace: use lxc_getpagesize()
+   - lxc-debian: allow creating `testing` and `unstable`
+   - Call lxc_config_define_load from lxc_execute again
+   - Fix typo in lxc-net script
+   - Add missing lxc_container_put
+   - lxc-debian: don't write C.* locales to /etc/locale.gen
+   - attach: correctly handle namespace inheritance
+   - cgfsng: fix cgroup2 detection
+   - cgroups: enable container without CAP_SYS_ADMIN
+   - lxc-start: remove unnecessary checks
+   - start: close non-needed file descriptors
+   - handler: make name argument const
+   - start: close data socket in parent
+   - monitor: do not log useless warnings
+   - network: reap child in all cases
+   - conf: reap child in all cases
+   - storage: switch to ext4 as default filesystem
+   - tools: fix help output of lxc-create
+   - attach: handle namespace inheritance
+   - cgroups/cgfsng: keep mountpoint intact
+   - cgroups/cgfsng: cgfsns_chown() -> cgfsng_chown()
+   - cgroups/cgfsng: support MS_READONLY with cgroup ns
+   - log: check for i/o error with vsnprintf()
+   - cgroupfs/cgfsng: tweak logging
+   - cgroups/cgfsng: remove is_lxcfs()
+   - cgroups/cgfsng: fix get_controllers() for cgroup2
+   - cgroupfs/cgfsng: improve cgroup2 handling
+   - config: remove SIGRTMIN+14 as lxc.signal.stop
+   - commands: non-functional changes
+   - console: non-functional changes
+   - console: non-functional changes
+   - lxc-test-unpriv: fix the overlayfs mount error
+   - attach: allow attach with empty conf
+   - tools/lxc_attach: removed api logging
+   - console: fix console info message
+   - Add missing dependency libunistring
+   - cgroups/cgfsng: adapt to new cgroup2 delegation
+   - console: report detach message on demand
+   - lxccontainer: enable daemonized app containers
+   - console: use correct escape sequence check
+   - console: prepare for generic signal handler
+   - console: exit mainloop on SIGTERM
+   - commands: non-functional changes
+   - lxccontainer: non-functional changes
+   - commands: fix state socket implementation
+   - lxc_init: set the control terminal in the child session
+   - lxc-test-unpriv: check user existence before removing it
+   - Fixed typo on lxc.spec.in
+   - conf: move CAP_SYS_* definitions to utils.h
+   - start.c: always switch uid and gid
+   - Use AX_PTHREAD config script to detect pthread api
+   - utils.h: Avoid duplicated sethostname implementation
+   - tools/lxc_cgroup: remove internal logging
+   - tools/lxc_autostart: remove internal logging
+   - tools/lxc_clone: remove internal logging
+   - tools/lxc_console: remove internal logging
+   - tools/lxc_create: remove internal logging
+   - tools/lxc_destroy: remove internal logging
+   - tools/lxc_device: remove internal logging
+   - tools/lxc_execute: removed internal logging
+   - tools/lxc_freeze: remove internal logging
+   - tools/lxc_info: removed internal logging
+   - criu: detect veth name
+   - lxccontainer: various container creation fixes
+   - storage: remove unused declaration
+   - tools/lxc_ls: remove internal logging
+   - tools/lxc_copy: remove internal logging
+   - tools/lxc_monitor: removed internal logging
+   - tools/lxc_snapshot: removed internal logging
+   - tools/lxc_start: removed internal logging
+   - tools/lxc_stop: removed internal logging
+   - tools/lxc_top: removed internal logging
+   - tools/lxc_unfreeze: removed internal logging
+   - tools/lxc_unshare: removed internal logging
+   - tools/lxc_usernsexec: removed internal logging
+   - tools/lxc_wait: removed internal logging
+   - confile: fix memory leak
+   - utils: declare sethostname() static inline
+   - lxc_unshare: Add uid_mapping when creating userns
+   - Update gentoo.moresecure.conf.
+   - Add new dependency to Slackware template
+   - Add bash completion to list backing store types for lxc-create -B - Backing Store types are hard-coded (Not sure how to get programmatically) - Closes #1236
+   - Fix SETCOLOR_FAILURE evaluation
+   - Insert missing "echo" after "is_enabled"
+   - conf: prevent null pointer dereference
+   - criu: initialize status
+   - confile: remove dead assignment
+   - criu: silence static analysis
+   - attach: do not fail on non-existing namespaces
+   - test: reenable Coverity integration
+   - lxc_execute: properly figure out number of needed arguments
+   - arguments: move to tools/ subdirectory
+   - start: set loglevel correctly
+   - commands: don't traverse whole list
+   - commands: don't lock atomic operations
+   - commands: don't lock the whole command
+   - start: don't lock setting the state
+   - commands: allow waiting for all states
+   - test: add state server tests
+   - commands: tweak locking
+   - lxccontainer: restore non-blocking shutdown
+   - commands: tell mainloop to reap client fd on error
+   - commands: return -ECONNRESET to caller
+   - execute: pass logfile to lxc-init
+   - lxccontainer: handle execute containers correctly
+   - lxc_init: move up to src/lxc
+   - init: rework dumb init
+   - lxc_init: add custom argument parser
+   - tests: expand tests for shortlived init processes
+   - coverity: #1425734
+   - coverity: #1425735
+   - coverity: #1425739
+   - coverity: #1425929
+   - coverity: #1425923
+   - coverity: #1425922
+   - coverity: #1425921
+   - coverity: #1425895
+   - coverity: #1425890
+   - coverity: #1425889
+   - coverity: #1425888
+   - lxc: Distinguish pthread_mutex_unlock error messages
+   - travis: Fix build failure
+   - coverity: #1425893
+   - coverity: #1425886
+   - coverity: #1428855
+   - coverity: #1425884
+   - coverity: #1425883
+   - coverity: #1425879
+   - tools: block using lxc-execute without config file
+   - conf: avoid spawning unnecessary subshells
+   - coverity: #1425874 + cleanup
+   - lxccontainer: only attach netns on netdev detach
+   - lxccontainer: cleanup {attach,detach}_interface()
+   - coverity: #1425870
+   - coverity: #1425869
+   - coverity: #1425867
+   - coverity: #1425866
+   - coverity: #1425863
+   - coverity: #1425862
+   - coverity: #1425860
+   - coverity: #1425859
+   - coverity: #1425858
+   - coverity: #1425857
+   - start: do not unconditionally dup std{in,out,err}
+   - tools: exit success when lxc-execute is daemonized
+   - start: fix cgroup namespace preservation
+   - init: don't kill(-1) if we aren't in a pid ns
+   - SHARE_NS options should be before OPT_USAGE
+   - commands: fix race when open()/close() cmd socket
+   - namespace: add lxc_raw_clone()
+   - utils: use lxc_raw_clone() in run_command()
+   - lxc_init: fix cgroup parsing
+   - tests: s/lxc.init.cmd/lxc.init_cmd/g
+   - commands_utils: add missing mutex
+   - [monitor] wrong statement of break
+   - cgfsng: Add new macro to print errors
+   - attach: simplify significantly
+   - attach: use lxc_raw_clone()
+   - attach: handle /proc with hidepid={1,2} property
+   - tests: expand lxc_raw_clone() tests
+   - namespace: add lxc_raw_getpid()
+   - tree-wide: s/getpid()/lxc_raw_getpid()/g
+   - namespace: comment lxc_{raw_}clone()
+   - namespace: add lxc_raw_clone_cb()
+   - start: use lxc_raw_clone_cb() where possible
+   - start: log closing cmd socket and STOPPED state
+   - start: make us dumpable
+   - start: simplify cgroup namespace preservation
+   - start: fix death signal
+   - start: handle setting death signal smarter
+   - mainloop: add mainloop macros
+   - mainloop: capture output of short-lived init procs
+   - lxc_config: Add -h and --help flags handler
+   - start: properly cleanup mainloop
+   - console: do not allow non-pty devices on open()
+   - mainloop: use epoll_create1(EPOLL_CLOEXEC)
+   - conf: adapt idmap helpers
+   - conf: adapt userns_exec_1()
+   - conf{ile}: detect ns{g,u}id mapping for root
+   - cgfsng: use init {g,u}id
+   - conf: detect if devpts can be mounted with gid=5
+   - gentoo: Add support for .xz tarballs
+   - configure.ac: fix the check for static libcap
+   - conf: write "deny" to /proc/[pid]/setgroups
+   - conf: non-functional changes
+   - conf: rework userns_exec_1()
+   - cgfsng: only establish mapping once
+   - Fix broken indentation
+   - Include -devel suffix in version string
+   - Add return check for 'lxc_cmd_get_name'
+   - fix up lxc-usernsexec's exit status
+   - add some idmap parsing error messages
+   - confile: improve log messages
+   - console: move pty creation to separate function
+   - start: non-functional changes
+   - console: add some pty helpers
+   - attach: cleanup attach_child_main()
+   - console: adapt lxc_console_mainloop_add()
+   - console: add lxc_pty_map_ids()
+   - attach: minor tweaks
+   - tools: honor --console and --console-log
+   - start: non-functional changes
+   - console: set SFD_CLOEXEC on signal fd
+   - lxc-alpine: allow retaining sys_ptrace per container
+   - utils: do not rely on unitialized variable
+   - test: log error on failure
+   - utils: check suffix length
+   - lxccontainer: restore blocking wait()
+   - freezer: non-functional changes
+   - commands: add LXC_CMD_SERVE_STATE_CLIENTS
+   - start: don't log stop/continue for non-init processes
+   - fix lxc_error_set_and_log to match the docs
+   - lxc.init: correctly exit with the app's error code
+   - remember the exit code from the init process
+   - start: don't return false when the container's init exits nonzero
+   - lxc-execute: actually exit with the status of the spawned task
+   - set exit status to 1 in the unknown si_code case
+   - console: cleanup
+   - test: fix console tests
+   - attach_options: reduce delta
+   - attach: reduce delta
+   - cgroups: reduce delta
+   - bla
+   - Revert commit "bla" with bad commit message
+   - cgfsng: reduce delta
+   - tools: fix android
+   - Create console when the rootfs is NULL
+   - unlink lxc-init
+   - coverity: #1427668
+   - coverity: #1427639
+   - coverity: #1427638
+   - coverity: #1427191
+   - coverity: #1427190
+   - coverity: #1426734
+   - coverity: #1426694
+   - start: fix mainloop cleanup goto statements
+   - Modify .gitignore
+   - Fix comments and add check in lxc_poll.
+   - lsm: non-functional changes
+   - lsm: add lsm_process_label_fd_get()
+   - lsm: add lsm_process_label_set_at()
+   - apparmor: do not call aa_change_profile()
+   - autotools: do not link against libapparmor
+   - network.c: Remove ip_forward_set and callers
+   - [cgfsng] show wrong errno
+   - better check for lock dir
+   - better unprivileged detection
+   - debian: Use iproute2 instead of iproute
+   - tools: make "-n" optional
+   - lsm: do not #ifdefine
+   - debian: We must use iproute on wheezy
+   - lxc-init: use SIGKILL after alarm timeout
+   - monitor: send SIGTERM to the container when SIGHUP is received
+   - lxc.init: ignore SIGHUP
+   - cgroups: get controllers on the unified hierarchy
+   - cgroups: cgfsng_create: handle unified hierarchy
+   - cgroups: cgfsng_attach: handle unified hierarchy
+   - cgroups: cgfsng_get: handle unified hierarchy
+   - cgroups: cgfsng_set: handle unified hierarchy
+   - cgroups: handle limits on the unified hierarchy
+   - cgroups: more consistent naming
+   - attach: set the container's environment variables
+   - attach: non-functional changes
+   - cgfsng: do MS_REMOUNT
+   - cgfsng: non-functional changes
+   - templates: CentOS fixes
+   - cgroups: add check for lxc.cgroup.use
+   - selinux: simplify check for default label
+   - lsm: fix missing @ in function documentation
+   - cgfsng: add required remount flags
+   - define am_guest_unpriv
+   - Restore most cases of am_guest_unpriv
+   - coverity: #1429139
+   - coverity: #1426734
+   - coverity: #1425971
+   - fix userns helper error handling
+   - console: they are really not necessary
+   - Modify .gitignore
+   - Fix lxc-console hang
+   - conf: support mount propagation
+   - lxclock: remove pthread_atfork_handlers
+   - cgfsng: simplifications and fixes
+   - CONTRIBUTING: update
+   - CODING_STYLE: add CODING_STYLE.md
+   - cgroups: use correct mask for chmod()
+   - CODING_STYLE: add section for str{n}cmp()
+   - tests: remove lxc-test-ubuntu
+   - utils: fix lxc_p{close,open}()
+   - start: don't call close on invalid file descriptor
+   - console: ensure that fd is marked EBADF
+   - README: add coverity
+   - confile: add "force" to cgroup:{mixed,ro,rw}
+   - cgfsng: order includes
+   - cgfsng: fully document struct hierarchy
+   - cgfsng: fully document struct cgfsng_handler_data
+   - cgfsng: fully document remaining variables
+   - cgfsng: free_string_list()
+   - cgfsng: cg_legacy_must_prefix_named()
+   - cgfsng: move cg_legacy_must_prefix_named()
+   - cgfsng: add me to authors
+   - cgfsng: append_null_to_list()
+   - cgfsng: string_in_list()
+   - cgfsng: must_append_controller()
+   - cgfsng: get_hierarchy()
+   - cgfsng: lxc_cpumask()
+   - cgfsng: lxc_cpumask_to_cpulist()
+   - cgfsng: get_max_cpus()
+   - cgfsng: cg_legacy_filter_and_set_cpus()
+   - cgfsng: copy_parent_file()
+   - cgfsng: cg_legacy_handle_cpuset_hierarchy()
+   - cgfsng: controller_lists_intersect()
+   - cgfsng: controller_list_is_dup()
+   - cgfsng: controller_found()
+   - cgfsng: all_controllers_found()
+   - cgfsng: cg_hybrid_get_controllers()
+   - cgfsng: cg_hybrid_get_mountpoint()
+   - cgfsng: copy_to_eol()
+   - cgfsng: controller_in_clist()
+   - cgfsng: cg_hybrid_get_current_cgroup()
+   - cgfsng: must_append_string()
+   - cgfsng: trim()
+   - cgfsng: lxc_cgfsng_print_hierarchies()
+   - cgfsng: lxc_cgfsng_print_basecg_debuginfo()
+   - cgfsng: cg_hybrid_init()
+   - cgfsng: cg_is_pure_unified()
+   - cgfsng: cg_unified_get_current_cgroup()
+   - cgfsng: cgfsng_init()
+   - cgfsng: recursive_destroy()
+   - cgfsng: cg_unified_create_cgroup()
+   - cgfsng: create_path_for_hierarchy()
+   - cgfsng: remove_path_for_hierarchy()
+   - cgfsng: cgfsng_create()
+   - cgfsng: cgfsng_enter()
+   - cgfsng: cgfsng_chown()
+   - cgfsng: mount_cgroup_full()
+   - cgfsng: cgfsng_mount()
+   - cgfsng: recursive_count_nrtasks()
+   - cgfsng: recursive_count_nrtasks()
+   - cgfsng: cgfsng_escape()
+   - cgfsng: build_full_cgpath_from_monitorpath()
+   - cgfsng: __cg_unified_attach()
+   - cgfsng: cgfsng_attach()
+   - cgfsng: cgfsng_get()
+   - cgfsng: cgfsng_set()
+   - cgfsng: convert_devpath()
+   - cgfsng: cg_legacy_set_data()
+   - cgfsng: __cg_legacy_setup_limits()
+   - lxccontainer: use wait_for_pid()
+   - start: remove duplicate lxc_monitor_send_state()
+   - tree-wide: remove locking around openpty()
+   - {commands,start}: remove element from list first
+   - start: use correct prefix for includes
+   - start: print_top_failing_dir()
+   - start: close_ns()
+   - start: preserve_ns()
+   - start: lxc_check_inherited()
+   - start: signal_handler()
+   - start: lxc_poll()
+   - start: lxc_init_handler()
+   - start: lxc_init()
+   - start: lxc_abort()
+   - start: start()
+   - start: post_start()
+   - start: lxc_destroy_container_on_signal()
+   - start: do_destroy_container()
+   - cgfsng: enable "force" for "cgroup-full"
+   - confile: backport parts of network parsing
+   - utils: add LXC_PROC_PID_FD_LEN
+   - CVE 2018-6556: verify netns fd in lxc-user-nic
+   - utils: include linux/types.h
+   - cgfsng: fix off-by-one error
+   - lxccontainer: do_lxcapi_start()
+   - lxccontainer: do_lxcapi_create()
+   - lxccontainer: do_lxcapi_get_interfaces()
+   - lxccontainer: do_lxcapi_get_ips()
+   - lxccontainer: do_lxcapi_clone()
+   - lxccontainer: do_add_remove_node()
+   - lxccontainer: do_lxcapi_detach_interface()
+   - lxclock: {un}lock_mutex()
+   - utils: lxc_popen()
+   - utils: run_command()
+   - network: lxc_create_network_unpriv_exec()
+   - network: lxc_delete_network_unpriv_exec()
+   - lxccontainer: config_file_exists()
+   - lxccontainer: ongoing_create()
+   - lxccontainer: create_partial()
+   - lxccontainer: create_partial()
+   - lxccontainer: lxc_container_free()
+   - lxccontainer: lxc_container_{get,put}()
+   - lxccontainer: do_lxcapi_is_defined()
+   - lxccontainer: do_lxcapi_state()
+   - lxccontainer: is_stopped()
+   - lxccontainer: do_lxcapi_is_running()
+   - lxccontainer: do_lxcapi_freeze()
+   - lxccontainer: do_lxcapi_unfreeze()
+   - lxccontainer: do_lxcapi_console_getfd()
+   - lxccontainer: lxcapi_console()
+   - lxccontainer: load_config_locked()
+   - lxccontainer: do_lxcapi_load_config()
+   - lxccontainer: do_lxcapi_want_daemonize()
+   - lxccontainer: do_lxcapi_want_close_all_fds()
+   - lxccontainer: do_lxcapi_wait()
+   - lxccontainer: am_single_threaded()
+   - lxccontainer: push_arg()
+   - lxccontainer: split_init_cmd()
+   - lxccontainer: free_init_cmd()
+   - lxccontainer: lxcapi_start()
+   - lxccontainer: lxcapi_startl()
+   - lxccontainer: do_create_container_dir()
+   - lxccontainer: create_container_dir()
+   - criu: criu_version_ok()
+   - criu: do_restore()
+   - criu: du_dump()
+   - cgfsng: fix get_hierarchy() for unified hierarchy
+   - fix download template for /tmp as tmpfs or noexec
+   - CODING_STYLE: add section about _exit()
+   - commands: remove mutex from state client list
+   - lxc-snapshot: fix segfault
+   - lxc_init: don't mount filesystems
+   - cgfsng: non-functional changes
+   - mainloop: add LXC_MAINLOOP_ERROR
+   - config: start with a full capability set
+   - CODING_STYLE: remove duplicate _exit() entry
+   - CODING_STYLE: clang-format
+   - CODING_STYLE: arrays of structs
+   - CODING_STYLE: add languages to highlight
+   - Add a workaround for a build issue with old versions of libcap
+   - usernsexec: init log fd
+   - cgroups: don't escape if we're not real root
+   - Revert "cgroups: don't escape if we're not real root"
+   - conf: fix clang warning when building w/o libcap
+   - fix handler use-after-free
+   - Rename ifup/down and remove usless parameter passing
+   - conf: simplify lxc_fill_autodev()
+   - start: always make us dumpable
+   - lxclock: use thread-safe *_OFD_* fcntl() locks
+   - locktests: fix test suite
+   - fix signal sending in lxc.init
+   - lxc init: remove dead code
+   - lxc init: coding style
+   - utils: define __NR_setns if missing on old glibcs
+   - conf: ret-try devpts mount without gid=5 on error
+   - do_lxcapi_create: set umask
+   - Fix the memory leak in cgfsng_attach
+   - Fix memory leak in list_active_containers
+   - coverity: #1435208
+   - coverity: #1435207
+   - coverity: #1435205
+   - coverity: #1435198
+   - lxccontainer: use thread-safe *_OFD_* locks
+   - lxccontainer: non-functional changes
+   - lxccontainer: do_lxcapi_is_running()
+   - lxccontainer: do_lxcapi_freeze()
+   - lxccontainer: do_lxcapi_unfreeze()
+   - lxccontainer: non-functional changes
+   - lxccontainer: non-functional changes
+   - lxccontainer: non-functional changes
+   - coverity: #1435263
+   - fix logic for execute log file
+   - execute: use static buffer
+   - execute: do not check inherited fds again
+   - lxc-unshare: add missing declaration
+   - execute: account for -o path option count
+   - genl: remove
+   - coverity: #1425744
+   - utils: account for terminating \0 byte
+   - network: silence gcc-8
+   - network: adhere to IFNAMSIZ limit
+   - autodev: adapt to changes in Linux 4.18
+   - strlcpy: add strlcpy() implementation
+   - tree-wide: s/strncpy()/strlcpy()/g
+   - CODING_STYLE: add section about using strlcpy()
+   - tools: s/strncpy()/strlcpy()/g
+   - Revert "tools: s/strncpy()/strlcpy()/g"
+   - coverity: #1435604
+   - coverity: #1435603
+   - coverity: #1425836
+   - coverity: #1248106
+   - coverity: #1425844
+   - config: allow read-write /sys in user namespace
+   - capabilities: raise ambient capabilities
+   - coverity: #1425802
+   - lxc-init: skip signals that can't be caught
+   - tree-wide: s/sigprocmask/pthread_sigmask()/g
+   - utils: fix task_blocking_signal()
+   - lxccontainer: fix fd leaks when sending signals
+   - confile: order architectures
+   - tools: fix lxc-create with global config value
+   - tools: fix lxc-create with global config value II
+   - coverity: #1435805
+   - coverity: #1435803
+   - utils: fix task_blocking_signal()
+   - network: fix socket handle leak
+   - conf: va_end was not called.
+   - confile: improve strprint()
+   - start: fix waitpid() blocking issue
+   - start: log unknown info.si_code
+   - tree-wide: handle EINTR in some read()/write()
+   - conf: copy mountinfo for remount_all_slave()
+   - support tls in cross-compile
+   - Fix typo
+   - coverity: #1425777
+   - coverity: #1425779
+   - coverity: #1425794
+   - coverity: #1425795
+   - coverity: #1425841
+   - coverity: #1425849
+   - coverity: #1425836
+   - conf: only use newuidmap and newgidmap when necessary
+   - arguments: improve some operations
+   - coverity: #1425781
+   - tools: restore lxc-create log behavior
+   - fix getpwnam() thread safe issue
+   - attach: fix double free
+   - coverity: #1436916
+   - fix getpwuid() thread safe issue
+   - fix getgrgid() thread safe issue
+   - coverity: #1437017
+   - coverity: #1425778
+   - coverity: #1425760
+   - coverity: #1425766
+   - coverity: #1425767
+   - coverity: #1425768
+   - storage: Resource leak
+   - include: add getgrgid_r()
+   - coverity: #1425770
+   - coverity: #1425771
+   - coverity: #1425789
+   - coverity: #1425792
+   - coverity: #1425793
+   - coverity: #1425799
+   - coverity: #1425810
+   - coverity: #1425813
+   - coverity: #1425818
+   - coverity: #1425819
+   - coverity: #1425824
+   - coverity: #1425825
+   - coverity: #1425837
+   - coverity: #1425840
+   - coverity: #1425846
+   - coverity: #1425789
+   - coverity: #1425855
+   - coverity: #1437027
+   - secure coding: strcpy => strlcpy
+   - secure coding: network: strcpy => strlcpy
+   - btrfs: fix btrfs_snapshot()
+   - include: add strlcat() implementation
+   - btrfs: fix get_btrfs_subvol_path()
+   - secure coding: #2 strcpy => strlcpy
+   - fix fd handle leak
+   - fix pointer c is dereferenced after checking null
+   - commands: simplify lxc_cmd()
+   - monitor: change exit() => _exit() system call in child process
+   - move some comments in lxc.spec.in
+   - log: add lxc_log_strerror_r macro
+   - log: account for Android's Bionic's strerror_r()
+   - CODING_STYLE: add section about using strlcat()
+   - coverity: #1425816
+   - start: don't unconditionally open("/dev/null")
+   - log: thread-safety backports
+   - attach: simplify lxc_attach_getpwshell()
+   - coverity: #1437936
+   - coverity: #1437935
+   - lxclock: change error log using strerror to SYSERROR
+   - conf: the atime flags are locked in userns
+   - coverity: #1438067
+   - change log macro of error case from lxc_ambient_caps_up/down
+   - nl: avoid NULL pointer dereference
+   - conf: s/pipe()/pipe2()/g
+   - conf: always close pipe in run_userns_fn()
+   - criu: s/pipe()/pipe2()/
+   - lxccontainer: cleanup do_lxcapi_get_interfaces()
+   - lxccontainer: s/pipe()/pipe2()/g
+   - cmd: s/pipe()/pipe2()/g
+   - cmd: s/write()/lxc_write_nointr()/g
+   - cmd: s/read()/lxc_read_nointr()/g
+   - criu: s/read()/lxc_read_nointr()/g
+   - criu: s/write()/lxc_write_nointr()/g
+   - lxccontainer: s/write()/lxc_write_nointr()/g
+   - lxccontainer: s/read()/lxc_read_nointr()/g
+   - network: s/read()/lxc_read_nointr()/g
+   - network: s/write()/lxc_write_nointr()/g
+   - sync: s/read()/lxc_read_nointr()/g
+   - sync: s/write()/lxc_write_nointr()/g
+   - log: handle EINTR in read()
+   - caps: handle EINTR in read()
+   - coverity: #438136
+   - READEM: update Serge's mail address
+   - MAINTAINERS: add Wolfgang Bumiller
+   - CONTRIBUTING: Update reference to kernel coding style
+   - CONTRIBUTING: Link to latest online kernel docs
+   - CONTRIBUTING: Direct readers to CODING_STYLE.md
+   - CODING_STYLE: Mention kernel style in introduction
+   - CONTRIBUTING: Add 'be' to fix grammar
+   - CODING_STLYE: Simplify explanation for use of 'extern'
+   - CODING_STLYE: Remove sections implied by 'kernel style'
+   - CODING_STYLE: Fix non-uniform heading level
+   - CODING_STYLE: Update section header format
+   - autotools: add --{disable,enable}-thread-safety
+   - attach: don't shutdown ipc socket in child
+   - attach: report standard shell exit codes
+   - storage: src cannot be truncated
+   - commands: backport robust infrastructure
+   - Fixing compile error when compiling for android
+   - Fixing hooks functionality Android where 'sh' is placed under /system/bin
+   - caps: check uid and euid
+   - CVE-2019-5736 (runC): rexec callers as memfd
+   - rexec: don't include non-existing header
+   - utils: add missing sealing flags
+   - include: add fexecve() for Android's Bionic
+   - fexecve: remove unnecessary #ifdef
+   - fexecve: use correct name
+   - rexec: handle legacy kernels
+   - cve-2019-5736: add test for rexec
+   - change version to 2.0.10 in configure.ac
+   - autotools: handle getgrgid_r on bionic
+   - autotools: add memory_utils.h to Makefile.am
+   - change version to 2.0.11 in configure.ac
+
+  [/details]
+
+
+  ### Downloads
+  The release tarballs may be found on our [download page](https://linuxcontainers.org/lxc/downloads/) and we expect most distributions will very soon ship a packaged version of LXC 2.0.11.
+
+  Should you be interested in individual changes or just looking at the detailed development history, our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-2.0).

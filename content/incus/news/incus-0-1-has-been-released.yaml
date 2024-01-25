@@ -1,0 +1,226 @@
+title: Incus 0.1 has been released
+date: 2023/10/07 06:10
+origin: https://discuss.linuxcontainers.org/t/incus-0-1-has-been-released/18036
+content: |-
+  # Introduction
+  The Linux Containers team is very excited to announce the initial release of Incus!
+
+  Incus is a community fork of Canonical LXD, created by @cyphar and now part of the Linux Containers project.
+
+  This initial release is roughly equivalent to LXD 5.18 but with a number of breaking changes on top of the obvious rename.
+
+  You can try it for yourself online: https://linuxcontainers.org/incus/try-it/
+
+  [![image|690x459](https://discuss.linuxcontainers.org/uploads/default/original/2X/0/0919352af00b619ccc98fc674c2d80e1ac7d23f4.png)](https://linuxcontainers.org/incus/try-it/)
+
+  # Changes
+  With this initial release of Incus, we took the opportunity to remove a lot of unused or problematic features from LXD. Most of those changes are things we would have liked to do in LXD but couldn't due to having strong guarantees around backward compatibility.
+
+  Incus will be similarly strict with backward compatibility in the future, but as this is the first release of the fork, it was our one big opportunity to change things.
+
+  That said, the API and CLI are still extremely close to what LXD has, making it trivial if not completely seamless to port from LXD to Incus.
+
+  ## API
+  ### Removal of `/1.0/containers` and `/1.0/virtual-machines`
+  LXD started as a container-only project and therefore its REST API used `/1.0/containers`.
+
+  When virtual-machines were then introduced, a new `/1.0/instances` endpoint took over for all operations across both containers and virtual-machines, but `/1.0/containers` was kept around for legacy clients. On top of that, a convenience `/1.0/virtual-machines` endpoint was also added, though never used.
+
+  With Incus, those two legacy endpoints are now removed and the only supported way to interact with instances is through `/1.0/instances`.
+
+  ### Replacement of /dev/lxd with /dev/incus
+  As part of the renaming of everything from LXD to Incus, the guest API was also renamed from /dev/lxd to /dev/incus.
+
+  Convenience symlinks are currently provided so existing workloads will keep working after a migration from LXD.
+
+  ### Type change for the server configuration
+  The LXD server configuration has always been a bit oddly typed as `map[string]any` rather than our usual `map[string]string`. The reason for that one inconsistency was because of `core.trust_password`, the legacy authentication method used by LXD in the early days.
+
+  That's because LXD never stored the password in clear text but instead would hash it and store the hash instead. This made it impossible to return the full configuration to the user. Instead when a password would be set, a `true` boolean would be returned rather than a string.
+
+  Now as mentioned, `core.trust_password` is a legacy way to handle authentication and should be replaced by either token based authentication, TLS certificate trust or external authentication.
+
+  Incus has removed support for `core.trust_password` completely (see below) and so all server config keys can now fit in a standard `map[string]string`.
+
+  ### Removal of legacy `Container` functions from the Go API
+  Following the above change of removing `/1.0/containers` and `/1.0/virtual-machines`, the matching functions in the Go client package are also all gone now.
+
+  Instead the `Instance` equivalents of those `Container` functions should be used.
+  (e.g. `CreateInstance` instead of `CreateContainer`)
+
+  ## CLI
+  ### Introduction of `incus snapshot` sub-command
+  A long term annoyance and inconsistency in the LXD CLI has been around snapshot management. While most other operations get their own sub-command (`file`, `config`, ...), snapshots were kept at the top-level with `snapshot` and `restore`.
+
+  This was then forcing us to handle things like renaming or deleting snapshots through the `lxc rename` and `lxc delete` functions. Instead having an `lxc snapshot` sub-command with `lxc snapshot create` would have made a lot more sense but couldn't be done without breaking all scripts using `lxc snapshot`.
+
+  Now is time to fix this, so `incus snapshot` is now a sub-command, featuring:
+
+   - `incus snapshot create`
+   - `incus snapshot delete`
+   - `incus snapshot list`
+   - `incus snapshot rename`
+   - `incus snapshot restore`
+
+  ### Handling of `incus config trust add` and `incus cluster add`
+  With Incus doing away with password based authentication and focusing a lot more on tokens, it was important to make the experience of issuing tokens be easy and consistent.
+
+  As a result, both `incus config trust add` and `incus cluster add` now simply take a name as argument and return a valid token.
+
+  The certificate handling aspect of `incus config trust add` has now been moved to `incus config trust add-certificate` instead.
+
+  ### Introduction of `incus admin` sub-command
+  Another long time annoyance in the LXD world was the fact that both `lxc` and `lxd` had to be used to set up a server. With incus, the `incusd` binary can be safely hidden away as nobody should ever have to directly interact with it.
+
+  Instead, we now have the `incus admin` sub-command:
+
+   - `incus admin cluster`
+   - `incus admin init`
+   - `incus admin recover`
+   - `incus admin shutdown`
+   - `incus admin waitready`
+
+  ## Dependencies
+  ### Transition to Cowsql
+  https://github.com/cowsql/cowsql
+
+  Shortly after @cyphar forked LXD as Incus, @freeekanayaka, the original author of Dqlite, also decided to fork Dqlite as Cowsql. Given that @freeekanayaka is also a maintainer on Incus, it made sense to port incus over to Cowsql.
+
+  Similarly to Incus itself, Cowsql is a community fork of Canonical Dqlite, largely compatible with Dqlite, allowing Incus to easily import existing data during the migration stage.
+
+  Focus on Cowsql so far has been on dramatically improving performance testing and making a number of changes across the Raft and Cowsql layers to make it as performant as possible for Incus' usage pattern.
+
+  ### Minimum Go version
+  For those building Incus from source, the minimum Go version required is now Go 1.20.
+  In general, we'll attempt to keep supporting building on the current and previous Go version.
+
+  ## Feature removal
+  A number of LXD features have been removed from Incus.
+  Those primarily focus around features that were added because of ecosystem reasons and/or depend on now deprecated or poorly maintained software.
+
+  ### Removal of Ubuntu Fan bridges
+  The Ubuntu Fan bridges depend on custom Ubuntu-only kernel patches and user-space changes to iproute2. While this feature is still maintained in the Ubuntu kernel, it can't be found in the mainline kernel nor in any other distro's kernel.
+
+  While convenient in some environments, Ubuntu Fan bridges are dwarfed by what's possible through Incus' integration with OVN.
+
+  The following network config keys have therefore been removed:
+
+   - `bridge.mode`
+   - `fan.overlay_subnet`
+   - `fan.underlay_subnet`
+   - `fan.type`
+
+  ### Removal of Ubuntu shiftfs
+  Another feature that's unique to the Ubuntu kernel, shiftfs was an initial attempt at flexible uid/gid shifting at the kernel level.
+
+  While LXD supported shiftfs for years, it was never enabled by default due to a variety of kernel issues. Instead a cleaner in-kernel solution to this problem was developed, VFS idmap shifting. That's now available in recent Linux kernels and automatically used by Incus when present.
+
+  ### Removal of Canonical Candid authentication
+  Back in the days, Canonical developed its own authentication system based on the use of Macaroons. The central authentication server for this was Candid.
+
+  LXD got Candid support, allowing it to authenticate users through a variety of providers through it.
+
+  These days, Candid is mostly unmaintained and the focus has been on moving towards industry standards, namely Open ID Connect.
+
+  Therefore, the following server configuration keys have been removed:
+
+   - `candid.api.key`
+   - `candid.api.url`
+   - `candid.domains`
+   - `candid.expiry`
+
+  Incus already has OpenID Connect support for external authentication and there are widely available OIDC servers that match and often exceed what Candid supported.
+
+  ### Removal of Canonical RBAC authorization
+  Canonical RBAC was a proprietary Role Based Access Control solution built on top of Macaroons and Candid.
+
+  It was only ever supported by MAAS and LXD and has seen extremely little adoption, mostly due to it being proprietary and generally difficult to get access to.
+
+  It's mostly unmaintained and the focus these days is to transition to something more industry standard, namely OpenFGA.
+
+  Therefore the following server configuration keys have been removed:
+
+   - `rbac.agent.url`
+   - `rbac.agent.username`
+   - `rbac.agent.private_key`
+   - `rbac.agent.public_key`
+   - `rbac.api.expiry`
+   - `rbac.api.key`
+   - `rbac.api.url`
+   - `rbac.expiry`
+
+  Incus currently doesn't have OpenFGA support, so any existing user of Canonical RBAC should stick with LXD until such time as an OIDC + OpenFGA alternative is available.
+
+  ### Removal of Canonical MAAS integration
+  LXD supports integrating with the MAAS API to use MAAS as some kind of IPAM (IP Address Management) solution.
+
+  This allows mapping specific LXD networks to MAAS subnet and then having MAAS create records for each instance on that network, assigning it a static address and DNS record.
+
+  Unfortunately, this integration has seen very little adoption and MAAS itself has a number of constraints that makes this integration problematic:
+
+   - MAC addresses in MAAS are globally unique whereas in LXD they have to be unique among running instances on the same network. This different makes some instance copy operations impossible.
+   - Instance names are expected to be globally unique in MAAS, even if attached to completely different DNS zones. This effectively makes it impossible to use LXD projects as instances can now easily conflict.
+
+  Between those issues and the lack of adoption of this feature, we've made the decision to remove MAAS support from Incus, the following configuration keys have therefore been removed:
+
+   - `maas.api.key`
+   - `maas.api.url`
+   - `maas.subnet.ipv4`
+   - `maas.subnet.ipv6`
+
+  ### Removal of the concept of trust password
+  Back in the early LXD days, the only way to connect to a remote server was to use a trust password, basically a fixed secret that would then allow a client to add its TLS certificate to the server's trust store.
+
+  This effectively allowed anyone who knew or could find the trust password to add their client into the trust store after which the trust store was no longer required for further operations.
+
+  The trust password therefore had to be kept very safely, or unset immediately after adding a new client. This was unfortunately rarely the case, opening up the door for a brute force attack on the trust password and ultimately an attacker gaining full control over LXD and the server it runs on.
+
+  To address this, support for using one-time trust tokens has been added a little while back and all documentation updated to discourage users from using trust passwords.
+
+  In Incus, we went one step further and completely removed support for trust passwords. Adding new clients or new servers into a cluster should now be done through the use of one-time tokens or by using external authentication through OIDC.
+
+  Therefore, the following server configuration key has been removed:
+
+   - `core.trust_password`
+
+  ## Other
+  ### Change in DMI information
+  Inside of Incus virtual machines, the vendor is now set to `Linux Containers` and the product is set to `Incus`.
+
+  ### Change in virtio-serial marker
+  The virtio-serial device used for limited communication with Incus prior to establishing full agent access through vsock is now `org.linuxcontainers.incus`.
+
+  # Migration from LXD
+  Incus comes with a convenient `lxd-to-incus` tool which can be used to transition a system from LXD to Incus.
+
+  The main restrictions at this stage are:
+
+   - Minimum LXD version of 4.0
+   - Maximum LXD version of 5.18
+   - No support for migrating clusters at this stage (this is being worked on)
+
+  # Documentation
+  The Incus documentation can be found at:
+  https://linuxcontainers.org/incus/docs/main/
+
+  # Packages
+  There are no official Incus packages as Incus upstream only releases regular release tarballs. Below are some available options to get Incus up and running.
+
+  ## Zabbly packages for Debian and Ubuntu
+  Zabbly provides both daily and stable builds of Incus to Debian and Ubuntu users:
+  https://github.com/zabbly/incus
+
+  ## Homebrew package for the Incus client
+  The client tool is available through HomeBrew for both Linux and MacOS.
+
+  https://formulae.brew.sh/formula/incus
+
+  ## Chocolatey package for the Incus client
+  The client tool will soon be available through Chocolatey for Windows users.
+  Until then, binaries can be found here: https://github.com/lxc/incus/releases/tag/v0.1.0
+
+  # Support
+  At this early stage, each Incus release will only be supported up until the next release comes out. This will change in a few months as we are planning an LTS release to coincide with the LTS releases of LXC and LXCFS.
+
+  Community support is provided at: https://discuss.linuxcontainers.org
+  Bugs can be reported at: https://github.com/lxc/incus/issues

@@ -1,0 +1,86 @@
+title: LXC 4.0.1 LTS リリースのお知らせ
+date: 2020/04/06 20:04
+origin: https://discuss.linuxcontainers.org/t/lxc-4-0-1-lts-has-been-released/7310
+content: |-
+  ### はじめに <!-- Introduction -->
+  <!--
+  The LXC team is pleased to announce the release of LXC 4.0.1!
+  -->
+  LXC チームは LXC 4.0.1 のリリースをお知らせできてとてもうれしいです!
+
+  <!--
+  This is the first bugfix release for LXC 4.0 which is supported until June 2025.
+  -->
+  このリリースは 2025 年 6 月までサポートされる LXC 4.0 に対するはじめてのバグフィックスリリースです。
+
+  ### バグ修正 <!-- Bugfixes -->
+  <!--
+  This release fixes a number of issues that were reported shortly following the [original 4.0.0 release](https://discuss.linuxcontainers.org/t/lxc-4-0-lts-has-been-released/7182). Some of the highlights include:
+  -->
+  このリリースでは [LXC 4.0.0 リリース](https://linuxcontainers.org/ja/lxc/news/#lxc-40-lts) 直後に報告された問題を修正しています。主なものは次の通りです:
+
+   - systemd での起動順の調整（remote-fs.target のあとで起動する）<!-- Tweak systemd ordering (start after remote-fs.target) -->
+   - attach と cgroup 周りのさまざまな問題の修正 <!-- Fix various issues around attach and cgroups -->
+   - pidfd を使うシステムでシャットダウンのタイムアウトが動作していなかった問題の修正 <!-- Fix shutdown timeout not working on pidfd systems -->
+   - 4.9 カーネルでの cgroup の問題の修正 <!-- Fix cgroup issue on 4.9 kernel -->
+   - `/dev/stdout` への書き込みの問題の修正 <!-- Fix write issues in /dev/stdout -->
+
+  <!--
+  The full list of commits is available below:
+  -->
+  コミットの全リストは次の通りです（翻訳なし）:
+
+   - lxc_init: move main() down
+   - lxc_init: add missing O_CLOEXEC
+   - [lxc.service] Starts after remote-fs.target to allow containers relying on remote FS to work
+   - tree-wide: harden mount option parsing
+   - dir: use cleanup macro in dir_mount()
+   - dir: improve dir backend
+   - cgroups: fix attaching to the unified cgroup
+   - conf: rework and fix leak in userns_exec_1()
+   - commands: log actual errno when lxc_cmd_get_cgroup2_fd() fails
+   - cgroups: move pointer dereference after check
+   - cgroups: rework __cg_unified_attach()
+   - attach: use close_prot_errno_disarm()
+   - cgroups: remove unused variable
+   - cgroups: fix unified cgroup attach
+   - fixup i/o handler return values
+   - Revert "cgroups: fix unified cgroup attach"
+   - conf: introduce and use userns_exec_minimal()
+   - conf: simplify userns_exec_minimal()
+   - cgroups: use hidden directory for attaching cgroup
+   - cgroups: please compilers
+   - monitor process exited by signal SIGKILL, clean cgroup resource by third party
+   - cgroups: move check for valid monitor process up
+   - cgroups: better helper naming
+   - tree-wide: s/recursive_destroy/lxc_rm_rf/g
+   - verify cgroup controller name
+   - cgroups: handle older kernels (e.g. v4.9)
+   - start: log error when failing to create cgroup
+   - cgroups: send two attach fds
+   - cgroups: send two fds to attach to unified cgroup
+   - start: remove unnecessary check for valid cgroup_ops
+   - init: add ExecReload to lxc.service to only reload profiles
+   - apparmor: generate ro,bind,remount rule list
+   - autotools: don't install run-coccinelle.sh
+   - systemd: Add Documentation key
+   - fix non-root user cannot write /dev/stdout
+   - cgroups: fix "uninitialized transient_len" warning
+   - utils: rework fix_stdio_permissions()
+   - utils: use setres{u,g}id() in lxc_switch_uid_gid()
+   - cgroups: fix build warning on GCC 7
+   - lxccontainer: poll takes millisecond not seconds
+   - Revert "start: remove unnecessary check for valid cgroup_ops"
+
+  ### サポートとアップグレード <!-- Support and upgrade -->
+  <!--
+  The LXC 4.0 branch is supported until June 2025.
+  Only bugfixes and securitiy issues get included into the stable bugfix releases, so it's always safe and recommended to keep up and run the latest bugfix release.
+  -->
+  LXC 4.0 ブランチは 2025 年 6 月までサポートされます。
+  stable のバグフィックスリリースでは、バグとセキュリティに関する問題に対する修正のみが行われますので、常に安全です。最新のバグフィックスリリースの状態を維持し、実行することをおすすめします。
+
+  ### ダウンロード <!-- Downloads -->
+
+   - リリース tarball <!-- Main release tarball -->: [lxc-4.0.1.tar.gz](https://linuxcontainers.org/downloads/lxc/lxc-4.0.1.tar.gz)
+   - GPG シグネチャー <!-- GPG signature -->: [lxc-4.0.1.tar.gz.asc](https://linuxcontainers.org/downloads/lxc/lxc-4.0.1.tar.gz.asc)

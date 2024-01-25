@@ -1,0 +1,90 @@
+title: LXCFS 3.1.2 リリースのお知らせ
+date: 2019/07/24 02:07
+origin: https://discuss.linuxcontainers.org/t/lxcfs-3-1-2-has-been-released/5321
+content: |-
+  ### はじめに <!-- Introduction -->
+  <!--
+  The LXCFS team is pleased to announce the release of LXCFS 3.1.2!
+  -->
+  LXCFS チームは LXCFS 3.1.2 のリリースをお知らせできることをうれしく思います!
+
+  <!--
+  We had to re-roll the 3.1.0 release twice, first because of a bad Makefile causing an invalid release tarball to be generated, then again to fix an upgrade issue affecting some users of LXCFS 3.0.4
+  -->
+  我々は、3.1.0 のリリースを 2 度やり直さなければなりませんでした。最初は、問題のある `Makefile` が原因で問題のあるリリース tarball が生成されてしまいました。そして、LXCFS 3.0.4 のユーザーの一部に影響するアップグレードの問題を修正するために再びリリースを行いました。
+
+  #### 新機能 <!-- New features -->
+
+  #### `/proc/stat` にコンテナごとの CPU 使用率表示を追加 <!-- Add support for per-container cpu usage in `/proc/stat` -->
+  <!--
+  Newer LXCFS releases make it possible to virtualize cpu usage per container by using the `cpuacct` cgroup.
+  -->
+  新しい LXCFS では、`cpuacct` cgroup を使って、コンテナごとの実際の CPU 使用率を仮想化して表示できるようになりました。
+
+  #### ロードアベレージ（`loadavg`）の仮想化 <!-- Add support for load average (`loadavg`) virtualization -->
+  <!--
+  LXCFS now supports virtualizing `/proc/loadavg`. It will calculate the loadavg for a container based on the `cpu` cgroup.
+  -->
+  LXCFS は `/proc/loadavg` の仮想化をサポートしました。`cpu` cgroup の情報に基づいて、コンテナに対する実際のロードアベレージを計算します。
+
+  #### cpu クォータに基づく `/proc/cpuinfo` 内の CPU 表示 <!-- Display cpus in `/proc/cpuinfo` based on cpu quotas -->
+  <!--
+  LXCFS will virtualize the cpus displayed in `/proc/cpuinfo` using the `cpu` cgroup and quotas calculated there.
+  -->
+  LXCFS は `cpu` cgroup と `cpu` cgroup で計算されたクォータを使って `/proc/cpuinfo` 内に表示される CPU を仮想化します。
+
+  #### `/proc/meminfo` 出力内に存在する swap の無効化が可能に <!-- Allow to disable swap in `/proc/meminfo` output -->
+  <!--
+  This adds the `-u` option to disable swap info output in `/proc/meminfo`.
+  -->
+  `/proc/meminfo` 内の swap 情報の出力を無効化するために `-u` オプションを追加しました。
+
+  #### `/sys/devices/system/cpu/online` の仮想化 <!-- Virtualize `/sys/devices/system/cpu/online` -->
+  <!--
+  LXCFS now also partially virtualizes `sysfs`. The first file to virtualize is `/sys/devices/system/cpu/online` per container.
+  -->
+  LXCFS は部分的に `sysfs` も仮想化するようになりました。仮想化された最初のファイルは、コンテナごとの `/sys/devices/system/cpu/online` ファイルです。
+
+  #### `/proc/uptime` へのより高い精度の出力が可能に <!-- Enable higher precision output in `/proc/uptime` -->
+  <!--
+  The calculations for `/proc/uptime` are now more correct.
+  -->
+  `/proc/uptime` の計算がより正しく行われるようになりました。
+
+  #### FUSE の `nonempty` オプションのサポート <!-- Add support for FUSE `nonempty` option -->
+  <!--
+  The `lxcfs` binary can now be passed the `-d` option. When passed, `lxcfs` will also start when the mountpoint is not empty.
+  -->
+  `lxcfs` バイナリーに `-d` オプションを指定できるようになりました。このオプションを指定すると、`lxcfs` はマウントポイントが空でなくても起動します。
+
+  #### バグ修正（翻訳なし） <!-- Bugfixes -->
+
+  - bindings: ensure that opts is non NULL
+  - Makefile: Fix typo in file name
+  - remove unused functions
+  - sys dirs do not need to implement 'read' method
+  - lxcfs: coding style update
+  - config: Adds RPM spec file.
+  - config: Adds reload mode to sysvinit and systemd scripts.
+  - bindings: prevent NULL pointer dereference
+  - stat: check for out of bound access to cpuacct usage data
+  - calc_hash(): do not apply modulo LOAD_SIZE
+  - tests: include missing sys/sysmacros.h header
+  - bindings: prevent double free
+  - bindings: better logging for write_string()
+  - meminfo: set ShmemHugePages and ShmemPmdMapped to zero
+  - bindings: fix memory leak in calc_pid()
+  - travis: fix .travis.yml
+  - bindings: fix memory leak in proc_loadavg_read()
+
+  ### サポートとアップグレード <!-- Support and upgrade -->
+  <!--
+  LXCFS 3.1.2 is only supported until the next feature release of LXCFS.
+  For long term support, you should prefer LXCFS 3.0.4 LTS which is supported until June 2023.
+  -->
+  LXCFS 3.1.2 は、LXCFS の次のフィーチャーリリースまでのみサポートされます。
+  長期のサポートが必要な場合、2023 年 6 月までサポートされる LXCFS 3.0.4 LTS を使うと良いでしょう。
+
+  ### ダウンロード <!-- Downloads -->
+   - リリース tarball <!-- Main release tarball -->: [lxcfs-3.1.2.tar.gz](https://linuxcontainers.org/downloads/lxcfs/lxcfs-3.1.2.tar.gz)
+   - GPG シグネチャ <!-- GPG signature -->: [lxcfs-3.1.2.tar.gz.asc](https://linuxcontainers.org/downloads/lxcfs/lxcfs-3.1.2.tar.gz.asc)

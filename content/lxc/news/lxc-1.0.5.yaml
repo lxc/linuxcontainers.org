@@ -1,0 +1,85 @@
+title: LXC 1.0.5 release announcement
+date: 2014/07/14 00:00
+content: |-
+  This is the fifth bugfix release for the LXC 1.0 series.
+  
+  ### seccomp profile
+  Outside of the usual bugfixes, this release also introduces one important change.
+  For systems where LXC is built with seccomp support, containers will now have a seccomp profile enabled
+  which will prevent calls to the following syscalls:
+  
+   * kexec\_load
+   * open\_by\_handle\_at
+   * init\_module
+   * finit\_module,
+   * delete\_module.
+  
+  This will amongst other things prevent exploits like the recently release "shocker" exploit.
+  
+  This profile will be applied to any new or existing container that uses the new-style LXC configurations
+  (using lxc.include of common configs), so currently the following distributions:
+  centos, debian, fedora, gentoo, oracle, plamo and ubuntu.
+  
+  You can turn this off by adding "lxc.seccomp =" in your container's configuration.
+  
+  If you want to manually turn this on for a container which doesn't use the common config mechanism,
+  you can add something like "lxc.seccomp = /usr/share/lxc/config/common.seccomp" to the container configuration.
+  
+  ### Changes
+  
+  Core:
+  
+   * core: Fix unprivileged containers to work with recent kernels.
+   * core: Fix building with -Werror=maybe-uninitialized.
+   * core: seccomp: Don't fail on unresolvable syscalls.
+   * core: lxc-init: Don't force dropping capabilities.
+   * core: configure: Split -lcap and -lselinux out of LIBS.
+   * core: configure: Fix expansion of libexecdir.
+   * core: seccomp: Support 'all' arch sections.
+   * core: seccomp: Fix 32-bit rules.
+   * core: seccomp: Enable a default filter for all templates.
+   * core: Fix corruption in write\_config.
+   * core: attach: Fix querying for the current personality.
+   * core: cgmanager: Have cgm\_set and cgm\_get use absolute paths when possible.
+   * core: cgmanager: Make sure @value is null-terminated in cgm\_get.
+   * core: optimization of signal filtering/parsing code.
+   * core: apparmor: Allow hugetlbfs by default (similar to tmpfs and restricted by the hugetlb cgroup controller).
+   * core: Fix find\_fstype\_cb to ignore blank lines and comments.
+  
+  Commands:
+  
+   * lxc-autostart: Actually respect -P when passed.
+   * lxc-attach: Fix typo in usage.
+   * lxc-start: propagate the container exit code.
+   * lxc-stop: Fix incorrect timeout handling.
+   * lxc-device: Support --version.
+   * lxc-ls: Support --version.
+   * lxc-start-ephemeral: Support --version.
+  
+  Tests:
+  
+   * tests: Avoid the download template when possible.
+   * tests: Don't fail when HOME isn't defined.
+   * tests: apparmor: Always end messages with a newline.
+   * tests: Clarify error message and fix return codes.
+   * tests: lxc-test-ubuntu doesn't actually need bind9-host.
+  
+  Templates:
+  
+   * lxc-debian: standardize formatting.
+   * lxc-debian: fix formatting.
+  
+  Bindings:
+  
+   * python3: Fix attach\_wait and threads.
+  
+  Those stable fixes were brought to you by 11 individual contributors.
+  
+  ### Downloads
+  The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
+  will very soon ship a packaged version of LXC 1.0.5.
+  
+  Should you be interested in individual changes or just looking at the detailed development history,
+  our stable branch is on [GitHub](https://github.com/lxc/lxc/tree/stable-1.0).
+  
+  
