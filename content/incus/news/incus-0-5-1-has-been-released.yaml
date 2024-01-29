@@ -1,0 +1,136 @@
+title: Incus 0.5.1 has been released
+date: 2024/01/29 05:01
+origin: https://discuss.linuxcontainers.org/t/incus-0-5-1-has-been-released/18848
+content: |-
+  # Introduction
+  The Incus team is pleased to announce the release of Incus 0.5.1!
+
+  This is an unusual release as we normally do not issue point releases on top of the monthly feature releases. But we felt this was needed this time due to some pretty important bugfixes and a minor feature addition needed to accommodate those running CentOS/Alma/Rocky virtual machines.
+
+  Most changes are on the server side, so if you're only using the command line client, there is no strong reason to upgrade from 0.5 to 0.5.1.
+
+  [![image|690x454](https://discuss.linuxcontainers.org/uploads/default/original/2X/1/185fa1ac456faa88a7a5e33f0b1b10802b01f6b7.png)](https://linuxcontainers.org/incus/try-it/)
+
+  As usual, you can try it for yourself online: https://linuxcontainers.org/incus/try-it/
+
+  Enjoy!
+
+  # Highlights
+  ## Alternative way to get the VM agent
+  With Incus 0.5, the distribution mechanism for the Incus VM agent changed a bit.
+  In the past, we had a single share named `config` which would include both the instance-specific agent configuration and the `incus-agent` binary.
+
+  This was a bit wasteful, requiring a copy of the 15-20MB large `incus-agent` for every VM but was still somewhat manageable. This share was also exposed as both `9p` and `virtiofs`. Leading to two processes running on the host system for every Incus VM.
+
+  With support for multiple agent binaries, copying them for every VM really wasn't an option anymore, so a separate share was introduced just for the binaries. As we really didn't want to end up with another two processes running on the host per VM, we made the decision to only make those internal shares be available over `9p`.
+
+  Testing on a variety of images, including CentOS 7 showed that this would be fine.
+  `9p` is lower performance than `virtiofs` but as those shares are only use for a couple of seconds on every VM boot, that really wasn't a concern. User defined shares would still be exposed over `virtiofs` so those would still get the high performance option.
+
+  What we failed to notice is that for some reason, CentOS 8-Stream, CentOS 9-Stream and other distributions that are derivatives of RHEL 8/9, do not ship the `9p` kernel driver at all...
+
+  This means that those instances no longer had a way to fetch an agent, leading to broken `incus exec` and `incus file`.
+
+  We still don't feel like running 4 host processes for every single Incus VM just to make things work on those few images. Instead, what we're introducing with Incus 0.5.1 is a new agent drive, effectively an extra disk which can be attached to those specific VMs, providing those files through what looks like a CD-ROM drive rather than being retrieved over a networked filesystem.
+
+  So to run CentOS 9-Stream, one now needs to do:
+
+      incus create images:centos/9-Stream centos --vm
+      incus config device add centos agent disk source=agent:config
+      incus start centos
+
+  If you run many such VMs, a better option is likely by creating a profile for it:
+
+      incus profile create vm-agent
+      incus profile device add vm-agent agent disk source=agent:config
+
+  At which point you can do:
+
+      incus launch images:centos/9-Stream centos --vm -p default -p vm-agent
+
+  This is obviously not ideal and adds a few more steps when creating VMs for those distributions but this new mechanism now offers a way to get the agent up and running in just about any environment.
+
+  NOTE: We're not considering always providing that extra device as it takes some resources to generate the cdrom device and uses some extra disk on the host. So it's best added only when needed.
+
+  ## Fixed handling of stopped instances during evacuation
+  A bug introduced with Incus 0.5 was causing stopped instances to get relocated to other systems during evacuation, even if the instance was configured to remain where it was.
+
+  This has now been corrected and instances using `stopped`, `force-stop` or `stateful-stop` are now guaranteed to remain on their current server.
+
+  ## Database performance fixes
+  Database improvements in Incus 0.5 accidentally caused some nested database transactions to occur when fetching network information details for a large number of instances.
+
+  This would only really become visible when using an Incus cluster that also serves DNS zones and has its metrics scraped by Prometheus. This combination would cause large spikes in API requests every 15s or so, which would then start triggering timeouts and retries, eventually leading to other API requests piling up and timing out.
+
+  The logic has now been changed to remove such nested transactions and further optimizations were also made to save some database interactions during very command API interactions like executing commands instance of instances.
+
+  # Complete changelog
+  Here is a complete list of all changes in this release:
+
+  [details="Full commit list"]
+   - Translated using Weblate (German)
+   - Translated using Weblate (Dutch)
+   - incus/action: Fix resume
+   - Translated using Weblate (Japanese)
+   - Translated using Weblate (Japanese)
+   - Translated using Weblate (Japanese)
+   - doc: Remove net_prio
+   - incusd/cgroup: Fully remove net_prio
+   - incusd/warningtype: Remove net_prio
+   - incusd/cgroup: Look for full cgroup controllers list at the root
+   - incusd/dns: Serialize DNS queries
+   - incusd/network: Optimize UsedByInstanceDevices
+   - incusd/backups: Simplify missing backup errors
+   - tests: Update for current backup errors
+   - incusd/cluster: Optimize ConnectIfInstanceIsRemote
+   - incusd/instance/qemu/agent-loader: Fix to work with busybox
+   - doc/installing.md: add a gentoo-wiki link under Gentoo section
+   - Translated using Weblate (French)
+   - Translated using Weblate (Dutch)
+   - incusd/device/disk: Better cleanup cloud-init ISO
+   - incusd/instance/qemu/qmp: Add Eject command
+   - incusd/instance/qemu/qmp: Handle eject requests
+   - api: agent_config_drive
+   - doc/devices/disk: Add agent:config drive
+   - incusd/device/disk: Add agent config drive
+   - incusd/project: Add support for agent config drive
+   - incusd/instance/qemu/agent-loader: Handle agent drive
+   - incusd/db/warningtype: gofmt
+   - incusd/loki: Sort lifecycle context keys
+   - incusd/instance/qemu/agent-loader: Don't hardcode paths
+   - incusd/cluster: Fix evacuation of stopped instances
+  [/details]
+
+  # Documentation
+  The Incus documentation can be found at:
+  https://linuxcontainers.org/incus/docs/main/
+
+  # Packages
+  There are no official Incus packages as Incus upstream only releases regular release tarballs. Below are some available options to get Incus up and running.
+
+  ## Installing the Incus server on Linux
+  Incus is available for most common Linux distributions. You'll find detailed installation instructions in our documentation.
+
+  https://linuxcontainers.org/incus/docs/main/installing/
+
+  ## Homebrew package for the Incus client
+  The client tool is available through HomeBrew for both Linux and MacOS.
+
+  https://formulae.brew.sh/formula/incus
+
+  ## Chocolatey package for the Incus client
+  The client tool is available through Chocolatey for Windows users.
+
+  https://community.chocolatey.org/packages/incus/0.5.1
+
+  ## Winget package for the Incus client
+  The client tool is also available through Winget for Windows users.
+
+  https://winstall.app/apps/LinuxContainers.Incus
+
+  # Support
+  At this early stage, each Incus release will only be supported up until the next release comes out. This will change in a few months as we are planning an LTS release to coincide with the LTS releases of LXC and LXCFS.
+
+  Community support is provided at: https://discuss.linuxcontainers.org
+  Commercial support is available through: https://zabbly.com/incus
+  Bugs can be reported at: https://github.com/lxc/incus/issues
