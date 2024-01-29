@@ -1,0 +1,735 @@
+title: Incus 0.5 リリースのお知らせ
+date: 2024/01/26 05:01
+origin: https://discuss.linuxcontainers.org/t/incus-0-5-has-been-released/18814
+content: |-
+  # はじめに <!-- Introduction -->
+  <!--
+  The Incus team is pleased to announce the release of Incus 0.5!
+  -->
+  Incus チームは、Incus 0.5 のリリースのアナウンスができてうれしいです！
+
+  <!--
+  This is our first release of 2024 and it's quite a busy one! It's also the first release to feature no change coming from LXD following their [decision to re-license to AGPLv3](https://stgraber.org/2023/12/12/lxd-now-re-licensed-and-under-a-cla/).
+  -->
+  このリリースは 2024 年の最初のリリースで、非常に忙しいリリースでした！LXD が AGPLv3 に再ライセンスされることが決まったあと、LXD からの変更が加えられていない最初のリリースでもあります。
+
+  <!--
+  This release comes with a number of welcome improvements to the Incus CLI, a number of new virtual machine features, more options to handle cluster evacuations and host shutdown and some other smaller features and improvements!
+  -->
+  このリリースには、Incus CLI に対する歓迎すべきたくさんの改良、たくさんの新たな仮想マシンの機能、クラスター退避とホストシャットダウンを処理するためのオプションの追加、そしてその他の小さな機能や改良点がいくつか含まれています。
+
+  <!--
+  On top of that, we've got quite a lot of bugfixes as well as a number of database improvements which should yield noticeable performance improvements especially in clusters.
+  -->
+  それに加えて、多数のバグフィックスと、データベースの改良が多数行われており、特にクラスター環境において顕著なパフォーマンスの向上が得られるはずです。
+
+  [![image|690x459](https://discuss.linuxcontainers.org/uploads/default/original/2X/5/5358ce147bfd6f080971c2111de2406c24831f31.png)](https://linuxcontainers.org/incus/try-it/)
+
+  <!--
+  As usual, you can try it for yourself online: https://linuxcontainers.org/incus/try-it/
+  -->
+  いつものように、オンラインでご自身で試せます: https://linuxcontainers.org/incus/try-it/
+
+  Enjoy!
+
+  # ハイライト <!-- Highlights -->
+  ## Ansible, Terraform/OpenTofu and Packer
+  <!--
+  Over the past few months, Incus support has grown quite a bit in common tools!
+  -->
+  ここ数ヶ月で、一般的に普及しているツールの Incus に対するサポートが大幅に増えました。
+
+   - 接続プラグインが [Ansible]((https://docs.ansible.com/ansible/devel/collections/community/general/incus_connection.html)) にあります <!-- A connection plugin for Incus can now be [found in Ansible](https://docs.ansible.com/ansible/devel/collections/community/general/incus_connection.html). -->
+   - Terraform と OpenTofu の [公式プロバイダー](https://github.com/lxc/terraform-provider-incus) があります <!-- We have an [official provider](https://github.com/lxc/terraform-provider-incus) for Terraform and OpenTofu -->
+   - Incus 用の [Packer プラグイン](https://github.com/bketelsen/packer-plugin-incus) が利用できます<!-- There is an available [Packer plugin](https://github.com/bketelsen/packer-plugin-incus) for Incus -->
+
+  ## Linux ディストリビューションパッケージ <!-- Linux distribution packages -->
+  <!--
+  Since the last release of Incus, additional packages are now available for:
+  -->
+  以前の Incus のリリース以降、次のディストリビューションで新たにパッケージが利用できるようになりました:
+
+   - Arch Linux
+   - Debian (testing/unstable)
+   - Ubuntu (noble)
+   - Void Linux
+
+  <!--
+  You'll find all instructions in our [installation guide](https://linuxcontainers.org/incus/docs/main/installing/).
+  -->
+  「[Incus をインストールするには](https://incus-ja.readthedocs.io/ja/latest/installing/)」（[原文](https://linuxcontainers.org/incus/docs/main/installing/)）ページでインストール方法をご覧いただけます。
+
+  ## 翻訳 <!-- Translations -->
+  <!--
+  We've spent a bit of time cleaning up translations and setting up [Weblate for Incus](https://hosted.weblate.org/projects/incus/cli/).
+  It's now easier than ever to log into Weblate and translate the Incus CLI into your language.
+  All changes are automatically submitted for inclusion through Github.
+  -->
+  翻訳のクリーンアップと [Incus 用の Weblate](https://hosted.weblate.org/projects/incus/cli/) のセットアップに少し時間がかかってしまいました。
+  Weblate にログインすることで、Incus CLI をお使いの言語に翻訳することがこれまでより簡単になりました。
+
+  <!--
+  [![Translation status](https://discuss.linuxcontainers.org/uploads/default/original/2X/3/3357fe654429c6314f2ad346a39f13ed93bf235d.png)](https://hosted.weblate.org/engage/incus/)
+  -->
+  [![翻訳のステータス](https://discuss.linuxcontainers.org/uploads/default/original/2X/3/3357fe654429c6314f2ad346a39f13ed93bf235d.png)](https://hosted.weblate.org/engage/incus/)
+
+  ## 新機能 <!-- New features -->
+  ### 新しい `incus file create` コマンド <!-- New `incus file create` command -->
+  <!--
+  A new `incus file create` command was added which provides an easy way to create empty files, symlinks and directories without having to transfer an existing local directory tree.
+  -->
+  新たに `incus file create` コマンドが追加されました。このコマンドにより、既存のディレクトリーツリーを転送せずに、簡単に空のファイルや、シンボリックリンク、ディレクトリーを簡単に作れます。
+
+      stgraber@dakara:~$ incus file create demo/root/file
+      stgraber@dakara:~$ incus file create --type=symlink demo/root/symlink /etc/hosts
+      stgraber@dakara:~$ incus file create --type=directory demo/root/dir
+      stgraber@dakara:~$ incus exec demo -- ls -lh /root
+      total 2.5K
+      drwxr-xr-x 2 root root  2 Jan 26 03:38 dir
+      -rw-r--r-- 1 root root  0 Jan 26 03:37 file
+      lrwxrwxrwx 1 root root 10 Jan 26 03:38 symlink -> /etc/hosts
+
+  ### 新しい `incus snapshot show` コマンド <!-- New `incus snapshot show` command -->
+  <!--
+  A new `incus snapshot show` command makes it easy to look at the configuration data that's included as part of an Incus instance snapshot.
+  -->
+  新しい `incus snapshot show` コマンドを使用すると、Incus のインスタンスのスナップショットの一部として含まれる構成データを簡単に確認できます。
+
+  <!--
+  As a reminder, Incus snapshots don't only contain the filesystem state, but also include all the instance configuration (config keys, devices, ...) at the time of the snapshot.
+  -->
+  なお、Incus のスナップショットには、ファイルシステムの状態だけでなく、スナップショットを取った時点のインスタンスの設定情報（設定、デバイス、…）がすべて含まれます。
+
+      stgraber@dakara:~$ incus snapshot create demo s1
+      stgraber@dakara:~$ incus snapshot list demo
+      +------+----------------------+----------------------+----------+
+      | NAME |       TAKEN AT       |      EXPIRES AT      | STATEFUL |
+      +------+----------------------+----------------------+----------+
+      | s1   | 2024/01/25 22:39 EST | 0000/12/31 19:03 LMT | NO       |
+      +------+----------------------+----------------------+----------+
+      stgraber@dakara:~$ incus snapshot show demo s1
+      expires_at: 0001-01-01T00:00:00Z
+      architecture: x86_64
+      config:
+        image.architecture: amd64
+        image.description: Ubuntu jammy amd64 (20240125_07:42)
+        image.os: Ubuntu
+        image.release: jammy
+        image.serial: "20240125_07:42"
+        image.type: squashfs
+        image.variant: default
+        volatile.base_image: f9e9abeb4fc8691edf48078616a1aae628c6d5938b715e361c6b47cda0474679
+        volatile.cloud-init.instance-id: f724feba-245a-424b-bc51-43167258dc2a
+        volatile.eth0.host_name: vethecbb346e
+        volatile.eth0.hwaddr: 00:16:3e:06:67:f0
+        volatile.idmap.base: "0"
+        volatile.idmap.current: '[{"Isuid":true,"Isgid":false,"Hostid":1000000,"Nsid":0,"Maprange":1000000000},{"Isuid":false,"Isgid":true,"Hostid":1000000,"Nsid":0,"Maprange":1000000000}]'
+        volatile.idmap.next: '[{"Isuid":true,"Isgid":false,"Hostid":1000000,"Nsid":0,"Maprange":1000000000},{"Isuid":false,"Isgid":true,"Hostid":1000000,"Nsid":0,"Maprange":1000000000}]'
+        volatile.last_state.idmap: '[]'
+        volatile.last_state.power: RUNNING
+        volatile.uuid: 8b8a1c75-977b-4197-9ad7-507b899432e9
+        volatile.uuid.generation: 8b8a1c75-977b-4197-9ad7-507b899432e9
+      created_at: 2024-01-26T03:39:09.583020489Z
+      devices: {}
+      ephemeral: false
+      expanded_config:
+        image.architecture: amd64
+        image.description: Ubuntu jammy amd64 (20240125_07:42)
+        image.os: Ubuntu
+        image.release: jammy
+        image.serial: "20240125_07:42"
+        image.type: squashfs
+        image.variant: default
+        volatile.base_image: f9e9abeb4fc8691edf48078616a1aae628c6d5938b715e361c6b47cda0474679
+        volatile.cloud-init.instance-id: f724feba-245a-424b-bc51-43167258dc2a
+        volatile.eth0.host_name: vethecbb346e
+        volatile.eth0.hwaddr: 00:16:3e:06:67:f0
+        volatile.idmap.base: "0"
+        volatile.idmap.current: '[{"Isuid":true,"Isgid":false,"Hostid":1000000,"Nsid":0,"Maprange":1000000000},{"Isuid":false,"Isgid":true,"Hostid":1000000,"Nsid":0,"Maprange":1000000000}]'
+        volatile.idmap.next: '[{"Isuid":true,"Isgid":false,"Hostid":1000000,"Nsid":0,"Maprange":1000000000},{"Isuid":false,"Isgid":true,"Hostid":1000000,"Nsid":0,"Maprange":1000000000}]'
+        volatile.last_state.idmap: '[]'
+        volatile.last_state.power: RUNNING
+        volatile.uuid: 8b8a1c75-977b-4197-9ad7-507b899432e9
+        volatile.uuid.generation: 8b8a1c75-977b-4197-9ad7-507b899432e9
+      expanded_devices:
+        eth0:
+          name: eth0
+          network: incusbr0
+          type: nic
+        root:
+          path: /
+          pool: default
+          type: disk
+      last_used_at: 0001-01-01T00:00:00Z
+      name: s1
+      profiles:
+      - default
+      stateful: false
+      size: 53760
+
+  ### シェル completion の新たな選択肢 <!-- More shell completion options -->
+  <!--
+  We're slowly transitioning from a single hand-written bash completion script for the `incus` command line tool, to instead using a much more dynamic way of handling shell completion.
+  -->
+  私たちは、`incus` コマンドラインツール用の単一の手書きの bash completion スクリプトから、代わりにシェル補完を処理するはるかに動的な方法を使用するようにゆっくりと移行しています。
+
+  <!--
+  Initial shell completion profiles can be retrieved with:
+  -->
+  初期の shell completion プロファイルは、次のコマンドで取得できます:
+
+   - `incus completion bash`
+   - `incus completion fish`
+   - `incus completion powershell`
+   - `incus completion zsh`
+
+  <!--
+  Bash users are probably still better off using the hand-written completion script at this point, but we're hopeful that the new dynamically generated completion profiles will take over in the next release or two.
+  -->
+  bash ユーザーはおそらく、現時点では手書きの completion スクリプトを使うほうが良いでしょう。しかし、次かその次のリリースでは、この動的に生成される新しいプロファイルが引き継ぐことに期待しています。
+
+  ### 複数の VM エージェントバイナリーのサポート <!-- Support for multiple VM agent binaries -->
+  <!--
+  It's now possible for Incus to provide multiple agent binaries to its virtual machines.
+  -->
+  Incus は、仮想マシンに、複数のエージェントバイナリーを提供できるようになりました。
+
+  <!--
+  This is useful in two scenarios:
+  -->
+  これは、次の 2 つのシナリオで役立ちます:
+
+   - 複数のオペレーティングシステムを扱う <!-- Handling multiple operating systems -->
+   - 複数のアーキテクチャーを扱う <!-- Handling multiple architectures -->
+
+  <!--
+  At this stage, the focus is on multiple architectures. With this new ability, you can now have 32bit virtual machines running on your system and have them fetch a 32bit of the agent binary.
+  -->
+  現時点では、複数のアーキテクチャーに焦点を当てます。この新しい機能により、システム上で 32 ビットの仮想マシンを実行し、32 ビットのエージェントバイナリーをフェッチできるようになりました。
+
+      stgraber@castiana:~$ incus exec debian32 bash
+      root@debian32:~# uname -a
+      Linux debian32 6.1.0-17-686-pae #1 SMP PREEMPT_DYNAMIC Debian 6.1.69-1 (2023-12-30) i686 GNU/Linux
+      root@debian32:~# 
+      exit
+      stgraber@castiana:~$ incus exec debian32 bash
+      root@debian32:~# uname -m
+      i686
+      root@debian32:~# mount -t 9p agent /mnt
+      root@debian32:~# ls -lh /mnt
+      total 34M
+      -rwxr-xr-x 1 root root 17M Jan 24 10:10 incus-agent.linux.i686
+      -rwxr-xr-x 1 root root 18M Jan 24 10:10 incus-agent.linux.x86_64
+
+  ### デイスクの `io.bus` で `virtio-blk` をサポート <!-- Support for `virtio-blk` as a disk `io.bus` -->
+  <!--
+  After adding NVME support in Incus 0.2, we're now expanding that mechanism to also offering `virtio-blk` as a disk I/O bus in our virtual machines.
+  -->
+  Incus 0.2 での NVME サポートの追加後、メカニズムを拡張し、仮想マシンの disk I/O バスとして、`virtio-blk` も提供するようになりました。
+
+  <!--
+  To use it, set the `io.bus` property on the `disk` device to be `virtio-blk`.
+  -->
+  この機能を使うには、`disk` デバイスの `io.bus` プロパティを `virtio-blk` に設定します。
+
+      stgraber@dakara:~$ incus launch images:debian/12 demo --vm
+      Launching demo
+      stgraber@dakara:~$ incus storage volume create default demo size=5GiB --type=block
+      Storage volume demo created
+      stgraber@dakara:~$ incus config device add demo extra disk pool=default source=demo io.bus=virtio-blk
+      Device extra added to demo
+      stgraber@dakara:~$ incus exec demo bash
+      root@demo:~# lsblk
+      NAME   MAJ:MIN RM  SIZE RO TYPE MOUNTPOINTS
+      sda      8:0    0   10G  0 disk 
+      ├─sda1   8:1    0  100M  0 part /boot/efi
+      └─sda2   8:2    0  3.9G  0 part /
+      vda    253:0    0    5G  0 disk 
+
+  ### VM への USB ネットワークデバイスのパススルーのサポート <!-- Support for USB network device pass-through in VMs -->
+  <!--
+  When using `nictype=physical` for a virtual machine with the parent network device being connected over the USB bus, Incus will now detect the situation and internally convert this into a USB device pass-through to the virtual machine.
+  -->
+  USB バス経由で親のネットワークデバイスが接続されている仮想マシンで `nictype=physical` を使うと、Incus はそのような接続を検出し、仮想マシンへの USB デバイスパススルーに内部的に変換するようになりました。
+
+      stgraber@castiana:~$ incus launch images:debian/12 demo --vm
+      Launching demo
+      stgraber@castiana:~$ incus config device add demo eth1 nic nictype=physical parent=enx207bd2a0f9eb
+      Device eth1 added to demo
+      stgraber@castiana:~$ incus exec demo bash
+      root@demo:~# apt install usbutils
+      Reading package lists... Done
+      Building dependency tree... Done
+      Reading state information... Done
+      The following additional packages will be installed:
+        libusb-1.0-0
+      The following NEW packages will be installed:
+        libusb-1.0-0 usbutils
+      0 upgraded, 2 newly installed, 0 to remove and 0 not upgraded.
+      Need to get 142 kB of archives.
+      After this operation, 492 kB of additional disk space will be used.
+      Do you want to continue? [Y/n]·
+      Get:1 http://deb.debian.org/debian bookworm/main amd64 libusb-1.0-0 amd64 2:1.0.26-1 [62.6 kB]
+      Get:2 http://deb.debian.org/debian bookworm/main amd64 usbutils amd64 1:014-1 [79.7 kB]
+      Fetched 142 kB in 1s (124 kB/s)
+      debconf: delaying package configuration, since apt-utils is not installed
+      Selecting previously unselected package libusb-1.0-0:amd64.
+      (Reading database ... 20425 files and directories currently installed.)
+      Preparing to unpack .../libusb-1.0-0_2%3a1.0.26-1_amd64.deb ...
+      Unpacking libusb-1.0-0:amd64 (2:1.0.26-1) ...
+      Selecting previously unselected package usbutils.
+      Preparing to unpack .../usbutils_1%3a014-1_amd64.deb ...
+      Unpacking usbutils (1:014-1) ...
+      Setting up libusb-1.0-0:amd64 (2:1.0.26-1) ...
+      Setting up usbutils (1:014-1) ...
+      Processing triggers for libc-bin (2.36-9+deb12u3) ...
+      root@demo:~# lsusb -tv
+      /:  Bus 02.Port 1: Dev 1, Class=root_hub, Driver=xhci_hcd/8p, 5000M
+          ID 1d6b:0003 Linux Foundation 3.0 root hub
+          |__ Port 4: Dev 2, If 0, Class=Communications, Driver=cdc_ncm, 5000M
+              ID 0b95:1790 ASIX Electronics Corp. AX88179 Gigabit Ethernet
+          |__ Port 4: Dev 2, If 1, Class=CDC Data, Driver=cdc_ncm, 5000M
+              ID 0b95:1790 ASIX Electronics Corp. AX88179 Gigabit Ethernet
+      /:  Bus 01.Port 1: Dev 1, Class=root_hub, Driver=xhci_hcd/8p, 480M
+          ID 1d6b:0002 Linux Foundation 2.0 root hub
+      root@demo:~# ip link
+      1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN mode DEFAULT group default qlen 1000
+          link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+      2: enp5s0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc mq state UP mode DEFAULT group default qlen 1000
+          link/ether 00:16:3e:e7:f7:2d brd ff:ff:ff:ff:ff:ff
+      3: enx207bd2a0f9eb: <BROADCAST,MULTICAST> mtu 1500 qdisc noop state DOWN mode DEFAULT group default qlen 1000
+          link/ether 20:7b:d2:a0:f9:eb brd ff:ff:ff:ff:ff:ff
+
+  ### クラスター退避の新しいオプション（`force-stop` と `stateful-stop`） <!-- New cluster evacuation options (`force-stop` and `stateful-stop`) -->
+  <!--
+  A couple of new cluster evacuation options have been added.
+  -->
+  新たにクラスターの退避オプションがいくつか追加されました。
+
+  <!--
+  Those can be selected on a per-instance basis through the `cluster.evacuate` instance configuration key.
+  -->
+  これらは、インスタンス設定の `cluster.evacuate` を使って、インスタンスごとに選択します。
+
+  <!--
+  `force-stop` causes the instance to be immediately stopped without giving it a chance at a clean shutdown. This only really makes sense in cases where the instance is effectively stateless as it won't have any chance to flush any ongoing state to disk.
+  -->
+  `force-stop` を使用すると、クリーンなシャットダウンのチャンスを与えられず、インスタンスは即時に停止します。このオプションでは、実行中の状態をディスクにフラッシュする機会がないため、インスタンスが実質的にステートレスであるときのみ意味があります。
+
+  <!--
+  `stateful-stop` causes the instance's state to be written to disk before stopping the instance. On restore, the instance state is restored too, causing the instance to just continue where it left off.
+  This option is currently primarily targeted at virtual machines as stateful stop for containers is quite difficult to achieve.
+  -->
+  `stateful-stop` を使用すると、インスタンスを停止する前に、インスタンスの状態がディスクに書き込まれます。リストア時、インスタンスの状態も復元され、インスタンスが中断したところから処理を続行します。
+
+  ### ホストインスタンスのシャットダウン動作を設定する機能 <!-- Ability to configure the host instance shutdown action -->
+  <!--
+  A new instance configuration key, `boot.host_shutdown_action`, has been introduced which supports:
+  -->
+  新たな設定として、`boot.host_shutdown_action` が追加されました。次の値を設定できます:
+
+   - `stop` （普通のシャットダウン動作）<!--  (normal shutdown behavior) -->
+   - `force-stop` （前の説明を参照） <!-- (see above) -->
+   - `stateful-stop` （前の説明を参照） <!-- (see above) -->
+
+  <!--
+  This makes it particularly easy to have a number of virtual machines going through stateful stop on host shutdown and then being restored on boot.
+  -->
+  この機能により特に、ホストのシャットダウン時に多数の仮想マシンをステートフルに停止し、その後起動時に復元することが簡単になります。
+
+  ### インスタンス作成の一部として起動まで行う機能 <!-- Ability to start instances as part of creation -->
+  <!--
+  A small API optimization was made which now allows for instances to be started as part of the creation request, saving an API call and making it easier for those scripting the Incus API.
+  -->
+  小さな API の最適化が行われ、インスタンスの作成リクエストの一部として、インスタンスを開始できるようになりました。API 呼び出しが節約され、Incus API のスクリプト作成が容易になりました。
+
+  <!--
+  `incus launch` now makes use of this too.
+  -->
+  `incus launch` も、この機能を使うようになりました。
+
+  ### Loki のインスタンス名が設定可能に <!-- Configurable Loki instance name -->
+  <!--
+  When sending events to Loki, Incus provides a set of default labels.
+  -->
+  イベントを Loki に送る際、Incus はデフォルトのラベルのセットを提供します。
+
+  <!--
+  Those include both an `instance` and a `location` label .Worth noting that here `instance` refers to the Loki event source instance, not an Incus instance.
+  -->
+  これらには、`instance` と `location` ラベルが含まれます。ここで、`instance` は、Incus のインスタンスではなく、Loki のイベントソースインスタンスを指すことに注意してください。
+
+  <!--
+  So far, those would only differ in the somewhat unlikely event that a server would be forwarding an event originating from another server in a cluster.
+  -->
+  これまでのところこれらは、サーバーがクラスター内の別のサーバーから発信されたイベントを転送するという、あまり起こりそうもないイベントの場合のみ異なります。
+
+  <!--
+  Instead, in clustered environments, it makes a lot more sense to have a way to provide a cluster name of some kind, so that if multiple clusters use the same Loki instance, they can easily be filtered.
+  -->
+  代わりに、クラスター環境では、複数のクラスターが同じ Loki インスタンスを使う場合に簡単にフィルターできるように、何らかのクラスター名を提供する方法を準備するほうがはるかに合理的です。
+
+  <!--
+  To that effect, we've introduced a new `loki.instance` server configuration key which, when set, will override the `instance` label.
+  -->
+  その目的で、新たな設定として `loki.instance` を導入しました。これを設定すると、`instance` ラベルを上書きします。
+
+  <!--
+  The default Grafana dashboard has also been updated to filter the Loki events under the assumption that the Loki `instance` label will match the Prometheus job name.
+  -->
+  デフォルトの Grafana ダッシュボードも更新されました。Loki の `instance` ラベルが Prometheus のジョブ名と一致する前提で Loki イベントをフィルターできるようになりました。
+
+  ### file における HEAD サポートの拡張 <!-- Extended HEAD support on files -->
+  <!--
+  The `HEAD` method on the Incus instance file API now returns the file size through the `Content-Length` header.
+  -->
+  Incus の file API の `HEAD` メソッドが、`Content-Length` ヘッダーでサイズを返すようになりました。
+
+  <!--
+  The primary use for this is for those building some kind of file manager on top of the Incus instance file API as it now allows for not just showing the name and file type but also the size of any regular files.
+  -->
+  この機能の用途は主に、ファイル名とファイルタイプだけでなく、通常のファイルのサイズも表示できるようになったため、Incus のインスタンス file API 上にあるファイルマネージャーのようなものを構築するような場合です。
+
+  ### ランタイムデータの保存に `/run/incus` を使用 <!-- Use of `/run/incus` for runtime data -->
+  <!--
+  Up until now, Incus has stored some amount of runtime data in the instance log directories under /var/log/incus/. Other than it obviously not being the correct location for it, it was also causing some issues with systems that aggressively rotate and expire log files.
+  -->
+  これまで Incus は、インスタンスログのためのディレクトリーである `/var/log/incus` 以下に、ある種のランタイムデータを保存していました。これは明らかに適切な場所ではなく、ログファイルを頻繁にローテーションして expire するようなシステムで、いくつか問題を起こしていました。
+
+  <!--
+  To solve this, Incus 0.5 will now place runtime data in /run/incus, keeping /var/log/incus only for actual log files.
+  -->
+  この問題を解決するために、Incus 0.5 ではランタイムデータを `/run/incus` に保存し、`/var/log/incus` は実際のログファイル専用の場所にしました。
+
+  <!--
+  In the future, more data will likely be relocated from /var/lib/incus to /run/incus as well.
+  -->
+  将来的には、より多くのデータが同様に `/var/lib/incus` から `/run/incus` へ移される可能性があります。
+
+  ### すべての変更点 <!-- Complete changelog -->
+  <!--
+  Here is a complete list of all changes in this release:
+  -->
+  このリリースのすべての変更のリストは次の通りです（翻訳なし）:
+
+  [details="すべてのChangeLogを見る"]
+   - incusd/instances/qemu: Don't fail event sending on missing agent
+   - incusd/network/ovsdb: Properly close the connections
+   - doc: Add Fedora installation instructions
+   - incusd/network/ovn: Use Mutate instead of Update
+   - incusd/network/ovs: Port BridgeDelete to OVSDB
+   - incusd/network/ovs: Port BridgeAdd to OVSDB
+   - incusd/network/ovs: Port BridgePortAdd to OVSDB
+   - incusd/network/ovn: Port LogicalSwitchPortIPs to OVSDB
+   - incus-doc: Don't try to guess types
+   - doc: Update configs
+   - doc/installing: Add Arch instructions
+   - lxd-to-incus: Clarify error messages
+   - doc/installing: Fix chocolatey link
+   - doc: Remove MicroCloud references
+   - incusd/network/ovn: Properly check transactions
+   - incusd/network/ovs: Properly check transactions
+   - incusd/network/ovn: Fix ChassisGroupChassisAdd
+   - incusd/network/ovn: Fix BridgeAdd
+   - incusd/network/ovn: Properly handle uplink with disabled DHCP/DHCPv6
+   - incus: Create config paths when no local daemons
+   - lxd-to-incus: Support alternative snap path
+   - incusd/device/pci: Detect USB bus
+   - incusd/device/nic: Support USB parents for physical NICs in VMs
+   - internal/instance: Add new volatile keys
+   - incusd/instance/qemu: Fix typo
+   - incusd/instance/qemu: Handle USB NIC hotremove
+   - incusd/networks: Don't Fill network configs when joining
+   - incus/create: Set Target after network/storage lookup
+   - doc/architectures: Add missing entries
+   - doc/architectures: Re-phrase headers
+   - doc/architectures: Fix typo
+   - doc/architectures: Add note about VM architectures
+   - doc/wordlist: Add Loongarch
+   - doc/migrate_lxd: Add mention of CLI configuration
+   - incus/snapshot: Fix format handling in list
+   - incus/snapshot: Add show sub-command
+   - i18n: Update translation templates
+   - incus: Enable cobra's completion support
+   - lxd-to-incus: Handle local OVN
+   - incusd/storage_pools: Don't crash on nil pool
+   - incusd/instance/lxc: Re-generate lxc.conf during Exec
+   - incusd/instance/qemu: Add ErrExecDisconnected
+   - incusd: Make VM shutdown/reboot exit cleanly
+   - lxd-to-incus: Fix incorrect directory name
+   - lxd-to-incus: Detect source daemon using symlink path
+   - lxd-to-incus: Remove trailing slashes from paths
+   - lxd-to-incus: touch completion file after migration
+   - incusd: Refresh the state on cluster put/join
+   - Makefile: Don't complain about shellcheck version
+   - golangci: Disable confusing-results
+   - shared/idmap: Remove Extend
+   - shared/idmap: Return all idmaps in DefaultIdmapSet
+   - shared/idmap: Split idrange
+   - shared/idmap: Split idmapset
+   - shared/idmap: Split idmap
+   - shared/idmap: Split ByHostid
+   - shared/idmap: Export non-Linux specific logic
+   - shared/idmap: Cleanup IdmapSet
+   - shared/idmap: Rename IdRange to IDRange
+   - shared/idmap: Cleanup IdmapEntry
+   - shared/idmap: Rename is_between to isBetween
+   - shared/idmap: Rename ByHostID and make it use IdmapSet
+   - shared/idmap: Update idmapset for modern standard
+   - shared/idmap: Rename the files
+   - shared/idmap: Move ByHostID back into set
+   - shared/idmap: Rename IdmapEntry to Entry
+   - shared/idmap: Rename IDRange to Range
+   - shared/idmap: Rename IdmapSet to Set
+   - shared/idmap: Fix import shadowing
+   - shared/idmap: Rename VFS3Fscaps to VFS3FSCaps
+   - shared/idmap: Add/tweak export function descriptions
+   - shared/idmap: Properly capitalize
+   - shared/idmap: Rename UIDShift to Shift
+   - shared/idmap: Update kernelDefaultMap to return multiple maps
+   - shared/idmap: Update comments
+   - shared/idmap: Add FilterPOSIX
+   - shared/idmap: Introduce NewSetFromIncusIDMap
+   - shared/idmap: Introduce NewSetFromJSON
+   - shared/idmap: Replace JSONMarshal with ToJSON
+   - shared/idmap: Introduce set_sort
+   - shared/idmap: Always use pointer receiver
+   - shared/idmap: Move remaining loaders to set_load
+   - shared/idmap: Run tests on all platforms
+   - shared/idmap: Introduce DefaultFullKernelSet
+   - shared/idmap: Introduce NewSetFromCurrentProcess
+   - shared/idmap: Remove GetSet
+   - shared/idmap: Introduce NewSetFromSystem
+   - shared/idmap: Remove kernelDefaultMap
+   - shared/idmap: Add Clone to Entry
+   - shared/idmap: Add Split to Set
+   - shared/idmap: Replace Shift functions with ShiftPath/UnshiftPath
+   - fuidshift: Update for idmap changes
+   - incusd: Update for idmap changes
+   - incus-user: Don't set raw.idmap when uid/gid aren't in system map
+   - shared/idmap: Add Includes to Set
+   - incusd: Simplify idmap serialization
+   - incusd/instance/lxc: Detect bad idmap and find new one
+   - shared/cliconfig: Improve error handling
+   - incusd/instance/qemu: Don't hardcode UEFI firmware in checkFeatures
+   - incusd/firewall/xtables: Fix iptablesClear on nft shim
+   - incus/network: add dynamic completions
+   - shared/idmap: Fix typo in comments
+   - incus/project: Get current project from connection info
+   - incusd/cluster: Ensure the cluster member config is always sorted
+   - Update madmin-go to support loong64
+   - server/seccomp: Add loongarch64
+   - shared/cgo: Add loongarch64
+   - shared/idmap: Don't change the json format
+   - shared/idmap: Document AddSafe and fix double records
+   - incusd: Update instance_test for shared/idmap fix
+   - incusd/instance/file: Add type and size to HEAD
+   - shared/idmap: Fix typo in comment
+   - api: disk_io_bus_virtio_blk
+   - doc: Add virtio-blk as option to io.bus
+   - incusd/device/disk: Add virtio-blk
+   - incusd/instance/qemu: Add virtio-blk support
+   - Move db backup functions to ClusterTx
+   - Move db image functions to ClusterTx
+   - Move db instance functions to ClusterTx
+   - Move db network ACL functions to ClusterTx
+   - Move db network forward functions to ClusterTx
+   - Move db network load balancer functions to ClusterTx
+   - Move db network peer functions to ClusterTx
+   - Move db profile functions to ClusterTx
+   - Move db network zone functions to ClusterTx
+   - Move db network functions to ClusterTx
+   - Move db snapshot functions to ClusterTx
+   - Move db storage bucket functions to ClusterTx
+   - Move db storage pool functions to ClusterTx
+   - Move db volume snapshot functions to ClusterTx
+   - Move db storage volume functions to ClusterTx
+   - Move db warning functions to ClusterTx
+   - cmd/incusd: Fix bulk unfreezing
+   - cmd/incus: Add `resume` command
+   - i18n: Update translations
+   - incusd/loki: Replace complex backoff with simple loop
+   - gomod: Update dependencies
+   - incus-agent: Handle built-in vsock module
+   - gomod: Update dependencies
+   - README: Re-introduce weblate
+   - incusd/network/acl: Avoid nested DB transactions
+   - incusd/instance/qemu: Start using seabios as CSM firmware
+   - incusd/forknet: Handle wifi detach
+   - doc/CONTRIBUTING: Fix incorrect comamnd paths
+   - i18n: Manual update to french translation
+   - i18n: Update translation templates
+   - Translated using Weblate (French)
+   - tests: Add license check
+   - Revert "Update madmin-go to support loong64"
+   - gomod: Update dependencies
+   - incusd: Correctly update event location
+   - incusd/events: Upgrade to websocket as late as possible
+   - Translated using Weblate (Japanese)
+   - Translated using Weblate (Japanese)
+   - Translated using Weblate (Japanese)
+   - Translated using Weblate (Japanese)
+   - Translated using Weblate (Japanese)
+   - api: loki_config_instance
+   - incusd/config: Add loki.instance
+   - incusd/loki: Add support for overriding instance name
+   - incusd: Add support for loki.instance
+   - doc: Update configs
+   - grafana: Add instance filters for Loki
+   - incusd/loki: Fix variable shadowing
+   - Translated using Weblate (Japanese)
+   - Translated using Weblate (Japanese)
+   - cmd/incusd/api_cluster: Join cluster transactions
+   - i18n: Remove empty translations
+   - api: instance_create_start
+   - shared/api: Add Start to InstnacesPost
+   - doc/rest-api: Refresh swagger YAML
+   - incusd/instance: Add support for Start property
+   - incus/launch: Use the Start property
+   - i18n: Update translation templates
+   - doc: Updates Windows install with Winget instructions
+   - doc: Add Winget to wordlist
+   - incusd/migration: Properly forward errors
+   - cmd/incus: Get owner mode only if `--gid` or `--uid` is unset
+   - cmd/incus: Add `incus file create` subcommand
+   - test: Add tests for `incus file create`
+   - i18n: Update translation templates
+   - Translated using Weblate (Japanese)
+   - Add note about scrape_interval and update examples
+   - cmd/incus: Remove unused `flagContent` variable in `incus file create`
+   - build(deps): bump actions/dependency-review-action from 3 to 4
+   - incusd/storage_volumes: Properly target refreshes
+   - incusd/storage_volumes: Use a single POST handler
+   - lxd-to-incus: Use Incus API client for LXD
+   - lxd-to-incus: Handle non-string LXD configs
+   - lxd-to-incus: Remove separate go package
+   - lxd-to-incus: Fix various issues
+   - Makefile: Update for lxd-to-incus
+   - gomod: Update dependencies
+   - incus/alias: Make default aliases visible
+   - incus: Mention aliases in help message
+   - i18n: Update translation templates
+   - incus: Handle non-existent home directory
+   - lxd-to-incus: Don't export internal functions
+   - lxd-to-incus: Fix error checking
+   - lxd-to-incus: Check that casting succeeded
+   - lxd-to-incus: Fix typo
+   - lxd-to-incus: Fix variable shadowing
+   - lxd-to-incus: Remove spurious printf
+   - lxd-to-incus: Add required comments
+   - lxd-to-incus: Simplify presence checks
+   - lxd-to-incus: Use field names in DottedVersion
+   - internal/util: Re-order path functions
+   - internal/util: Add RunPath
+   - incusd/sys: Add runtime directory
+   - incusd/seccomp: Move seccomp.socket to /run
+   - incusd/instance_logs: Drop conf files
+   - doc/rest-api: Refresh swagger YAML
+   - incusd/instance/common: Add RunPath
+   - incusd/instance/lxc: Move lxc.conf
+   - incusd/instance/qemu: Move qemu.conf
+   - doc: Update qemu.conf path
+   - incusd/apparmor: Add runtime directory
+   - incusd/instance/utils: Cleanup runtime path
+   - incusd/instance/lxc: Move files to runtime path
+   - incusd/instance/qemu: Move files to runtime path
+   - incusd/patches: Move files to runtime directory
+   - incusd/instance/qemu: Move agent loader to separate files
+   - incusd/apparmor/qemu: Remove mention of userns
+   - incusd/instance/qemu: Make config drive name configurable
+   - incusd/instance/qemu: Add new agent share
+   - incusd/apparmor/qemu: Allow access to agent path
+   - doc: Add INCUS_AGENT_PATH
+   - incusd/instance/qemu: Only expose config/agent drives over 9p
+   - incusd/instance/qemu/agent-loader: Remove virtiofs
+   - doc/getting_started: Point users to installing guide
+   - doc/installing: Cleanup distro instructions
+   - api_cluster: Optimize db transactions
+   - daemon_images: Optimize db transactions
+   - daemon_storage: Optimize db transactions
+   - images: Optimize db transactions
+   - storage_volumes_snapshot: Optimize db transactions
+   - instance/drivers: Optimize db transactions
+   - driver_ovn: Optimize db transactions
+   - network/acl: Optimize db transactions
+   - network/zone: Optimize db transactions
+   - storage_volumes: Optimize db transactions
+   - incusd/instance/qemu: Add some ArchLinux EDK2 filenames
+   - api_internal: Remove unreachable code
+   - doc/installing: Add Void Linux
+   - internal/instance: Don't use the node terminology
+   - doc: Update configs
+   - api: clustering_evacuation_stop_options
+   - internal/instance: Extend cluster.evacuate
+   - incusd/cluster: Add evacuation mode validation
+   - incusd/instance: Use a string for CanMigrate
+   - incusd/cluster: Update for CanMigrate
+   - incusd/cluster: Add stateful-stop and force-stop
+   - doc: Update configs
+   - api: boot_host_shutdown_action
+   - internal/instance: Add boot.host_shutdown_action
+   - doc: Update configs
+   - scripts/bash: Add boot.host_shutdown_action
+   - incusd/project: Add boot.host_shutdown_action
+   - incusd/instances: Add support for boot.host_shutdown_action
+   - incusd/instance: Fallback to stateless start when no state available
+   - internal/archive: Fix squashfs error handling
+   - gomod: Update dependencies
+  [/details]
+
+  # ドキュメント <!-- Documentation -->
+  <!--
+  The Incus documentation can be found at:
+  -->
+  Incus のドキュメントはこちらです:
+  https://incus-ja.readthedocs.io/ja/latest/ （日本語訳）
+  https://linuxcontainers.org/incus/docs/main/ （原文）
+
+  # パッケージ <!-- Packages -->
+  <!--
+  There are no official Incus packages as Incus upstream only releases regular release tarballs. Below are some available options to get Incus up and running.
+  -->
+  Incus の開発元は、通常リリースの tarball のみをリリースするため、公式の Incus パッケージはありません。Incus を実行するために使えるオプションを以下にいくつか示します。
+
+  ## Linux 上に Incus サーバーをインストールする <!-- Installing the Incus server on Linux -->
+  <!--
+  Incus is available for most common Linux distributions. You'll find detailed installation instructions in our documentation.
+  -->
+  Incus はほとんどの一般的な Linux ディストリビューションで利用できます。インストール手順の詳細は、Incus のドキュメントを参照してください。
+
+  https://incus-ja.readthedocs.io/ja/latest/installing/ （日本語訳）
+  https://linuxcontainers.org/incus/docs/main/installing/ （原文）
+
+  ## Incus クライアントの Homebrew パッケージ <!-- Homebrew package for the Incus client -->
+  <!--
+  The client tool is available through HomeBrew for both Linux and MacOS.
+  -->
+  HomeBrew 経由で、Linux と macOS 向けにクライアントツールが利用できます。
+
+  https://formulae.brew.sh/formula/incus
+
+  ## Incus クライアントの Chocolatey パッケージ <!-- Chocolatey package for the Incus client -->
+  <!--
+  The client tool is available through Chocolatey for Windows users.
+  -->
+  Chocolatey 経由で、Windows ユーザー向けにクライアントツールが利用できます。
+
+  https://community.chocolatey.org/packages/incus/0.5
+
+  ## Incus クライアントの Winget パッケージ <!-- Winget package for the Incus client -->
+  <!--
+  The client tool is also available through Winget for Windows users.
+  -->
+  Winget 経由で、Windows ユーザー向けにクライアントツールが利用できます。
+
+  https://winstall.app/apps/LinuxContainers.Incus
+
+  # サポート <!-- Support -->
+  <!--
+  At this early stage, each Incus release will only be supported up until the next release comes out. This will change in a few months as we are planning an LTS release to coincide with the LTS releases of LXC and LXCFS.
+  -->
+  現在は初期段階ですので、Incus の各リリースは、次のリリースが出るまでしかサポートされません。LXC と LXCFS のリリースと合わせて LTS リリースを計画していますので、この状況はここ数ヶ月で変わるでしょう。
+
+  コミュニティサポートはこちらから <!-- Community support is provided at -->: https://discuss.linuxcontainers.org
+  商用サポートはこちらから <!-- Commercial support is available through -->: https://zabbly.com/incus
+  バグはこちらから報告できます <!-- Bugs can be reported at -->: https://github.com/lxc/incus/issues
