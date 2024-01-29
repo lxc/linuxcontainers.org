@@ -689,7 +689,7 @@ content: |-
   <!--
   There are no official Incus packages as Incus upstream only releases regular release tarballs. Below are some available options to get Incus up and running.
   -->
-  Incus の開発元は、通常リリースの tarball おんみをリリースするため、公式の Incus パッケージはありません。Incus を実行するために使えるオプションを以下にいくつか示します。
+  Incus の開発元は、通常リリースの tarball のみをリリースするため、公式の Incus パッケージはありません。Incus を実行するために使えるオプションを以下にいくつか示します。
 
   ## Linux 上に Incus サーバーをインストールする <!-- Installing the Incus server on Linux -->
   <!--
