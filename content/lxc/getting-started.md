@@ -99,7 +99,7 @@ Explore the container.
     HOME_URL="https://alpinelinux.org/"
     BUG_REPORT_URL="https://gitlab.alpinelinux.org/alpine/aports/-/issues"
 
-Update the package index, upgraded installed packages, and install more packages you would like available.
+Update the package index, upgrade installed packages, and install more packages you would like available.
 
     root@mycontainer:~# apk update
 
