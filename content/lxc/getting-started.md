@@ -237,7 +237,7 @@ Restart the `lxc-net` service so the DHCP reservation is enabled.
 
     root@host:~# service lxc-net restart
 
-Restart the container. (You may need to recreated the container if you destroyed it somewhere along the way.)
+Restart the container. (You may need to recreate the container if you destroyed it somewhere along the way.)
 
     root@host:~# lxc-stop --name mycontainer
 
