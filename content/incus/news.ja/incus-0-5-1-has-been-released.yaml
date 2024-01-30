@@ -1,0 +1,227 @@
+title: Incus 0.5.1 リリースのお知らせ
+date: 2024/01/29 05:01
+origin: https://discuss.linuxcontainers.org/t/incus-0-5-1-has-been-released/18848
+content: |-
+  # はじめに <!-- Introduction -->
+  <!--
+  The Incus team is pleased to announce the release of Incus 0.5.1!
+  -->
+  Incus チームは、Incus 0.5.1 のリリースのアナウンスができてうれしいです！
+
+  <!--
+  This is an unusual release as we normally do not issue point releases on top of the monthly feature releases. But we felt this was needed this time due to some pretty important bugfixes and a minor feature addition needed to accommodate those running CentOS/Alma/Rocky virtual machines.
+  -->
+  通常、毎月の機能リリースに加えてポイントリリースを行わないため、このリリースは異例のリリースです。しかし、非常に重要なバグ修正のいくつかと、CentOS/Alma/Rocky 仮想マシンを実行するために必要なマイナーな機能追加があるので、今回のリリースが必要でした。
+
+  <!--
+  Most changes are on the server side, so if you're only using the command line client, there is no strong reason to upgrade from 0.5 to 0.5.1.
+  -->
+  ほとんどの変更はサーバー側であるため、コマンドラインクライアントを使うのみの場合は、0.5 から 0.5.1 にアップグレードする強い理由はありません。
+
+  [![image|690x454](https://discuss.linuxcontainers.org/uploads/default/original/2X/1/185fa1ac456faa88a7a5e33f0b1b10802b01f6b7.png)](https://linuxcontainers.org/incus/try-it/)
+
+  <!--
+  As usual, you can try it for yourself online: https://linuxcontainers.org/incus/try-it/
+  -->
+  いつものように、オンラインでご自身で試せます: https://linuxcontainers.org/incus/try-it/
+
+  Enjoy!
+
+  # ハイライト <!-- Highlights -->
+  ## VM エージェントを取得するための別の方法 <!-- Alternative way to get the VM agent -->
+  <!--
+  With Incus 0.5, the distribution mechanism for the Incus VM agent changed a bit.
+  In the past, we had a single share named `config` which would include both the instance-specific agent configuration and the `incus-agent` binary.
+  -->
+  Incus 0.5 で、Incus の VM エージェントを配布するメカニズムが少し変わりました。
+  以前は、インスタンス固有のエージェント設定と `incus-agent` バイナリーの両方を含む `config` という名前の単一の共有がありました。
+
+  <!--
+  This was a bit wasteful, requiring a copy of the 15-20MB large `incus-agent` for every VM but was still somewhat manageable. This share was also exposed as both `9p` and `virtiofs`. Leading to two processes running on the host system for every Incus VM.
+  -->
+  これは少し無駄であり、各 VM に 15-20MB の大きな `incus-agent` のコピーが必要です。しかし、それでもある程度は管理できました。この共有は `9p` と `virtiofs` の両方でも公開されます。Incus VM ごとにホストシステム上で 2 つのプロセスが実行されることになります。
+
+  <!--
+  With support for multiple agent binaries, copying them for every VM really wasn't an option anymore, so a separate share was introduced just for the binaries. As we really didn't want to end up with another two processes running on the host per VM, we made the decision to only make those internal shares be available over `9p`.
+  -->
+  複数のエージェントバイナリーのサポートで、全 VM にバイナリーをコピーすることは選択肢ではなくなりました。そのため、バイナリー向けに別の共有が導入されました。VM ごとにホスト上でさらに 2 つのプロセスが実行されることは本当に望ましくなかったので、それらの内部共有は `9p` を通して利用できるようにすることに決定しました。
+
+  <!--
+  Testing on a variety of images, including CentOS 7 showed that this would be fine.
+  `9p` is lower performance than `virtiofs` but as those shares are only use for a couple of seconds on every VM boot, that really wasn't a concern. User defined shares would still be exposed over `virtiofs` so those would still get the high performance option.
+  -->
+  CentOS 7 を含む、さまざまなイメージでテストしたところ、これで問題がないことがわかりました。
+  `9p` は `virtiofs` にくらべてパフォーマンスが劣りますが、これらの共有は VM の起動ごとに数秒しか使わないため、実際には問題にはなりませんでした。ユーザー定義の共有は、引き続き `virtiofs` を通して公開されるため、この共有には引き続き高いパフォーマンスのオプションが提供されます。
+
+  <!--
+  What we failed to notice is that for some reason, CentOS 8-Stream, CentOS 9-Stream and other distributions that are derivatives of RHEL 8/9, do not ship the `9p` kernel driver at all...
+  -->
+  われわれが気づかなかった問題は、CentOS 8-Stream、CentOS 9-Stream や他の RHEL 8/9 派生のディストリビューションでは、`9p` カーネルドライバーが同梱されていないことでした…
+
+  <!--
+  This means that those instances no longer had a way to fetch an agent, leading to broken `incus exec` and `incus file`.
+  -->
+  これらのインスタンスでは、エージェントを取得する方法がなくなり、`incus exec` と `incus file` が正常に動かないことになりました。
+
+  <!--
+  We still don't feel like running 4 host processes for every single Incus VM just to make things work on those few images. Instead, what we're introducing with Incus 0.5.1 is a new agent drive, effectively an extra disk which can be attached to those specific VMs, providing those files through what looks like a CD-ROM drive rather than being retrieved over a networked filesystem.
+  -->
+  いくつかのイメージ上で動かすために、Incus VM ごとに 4 つのホストプロセスを実行するのは気が進みません。その代わり、Incus 0.5.1 では新たなエージェントドライブを導入しました。これは、特定の VM にアタッチできる追加ディスクです。ネットワークファイルシステムからファイルを取得するのではなく、CD-ROM ドライブに見えるところからファイルを提供します。
+
+  <!--
+  So to run CentOS 9-Stream, one now needs to do:
+  -->
+  このため、CentOS 9-Stream を動かすには、次のようにする必要があります:
+
+      incus create images:centos/9-Stream centos --vm
+      incus config device add centos agent disk source=agent:config
+      incus start centos
+
+  <!--
+  If you run many such VMs, a better option is likely by creating a profile for it:
+  -->
+  このような VM を多数動作させる場合、このような VM 用にプロファイルを作成するのが良いでしょう:
+
+      incus profile create vm-agent
+      incus profile device add vm-agent agent disk source=agent:config
+
+  <!--
+  At which point you can do:
+  -->
+  プロファイルを作成すると、次のようにできます:
+
+      incus launch images:centos/9-Stream centos --vm -p default -p vm-agent
+
+  <!--
+  This is obviously not ideal and adds a few more steps when creating VMs for those distributions but this new mechanism now offers a way to get the agent up and running in just about any environment.
+  -->
+  これは、明らかに理想的ではなく、これらのディストリビューション用の VM を作成するときに、いくつか手順が追加されますが、この新しいメカニズムにより、ほぼすべての環境でエージェントを起動して実行する方法が提供できます。
+
+  <!--
+  NOTE: We're not considering always providing that extra device as it takes some resources to generate the cdrom device and uses some extra disk on the host. So it's best added only when needed.
+  -->
+  注意: CD-ROM デバイスを生成するにはリソースが必要であり、ホスト上の追加ディスクを使います。このため、追加のデバイスを常に提供することは考えていません。必要なときだけ追加するのが最適です。
+
+  ## 退避中の停止中インスタンスのハンドリングの修正 <!-- Fixed handling of stopped instances during evacuation -->
+  <!--
+  A bug introduced with Incus 0.5 was causing stopped instances to get relocated to other systems during evacuation, even if the instance was configured to remain where it was.
+  -->
+  Incus 0.5 で混入したバグにより、インスタンスがそのままの場所にとどまるように設定されていても、退避中に他のシステムに移動してしまうことがありました。
+
+  <!--
+  This has now been corrected and instances using `stopped`, `force-stop` or `stateful-stop` are now guaranteed to remain on their current server.
+  -->
+  この問題は修正され、`stopped`、`force-stop`、`stateful-stop` 使っているインスタンスは、現在のサーバーにとどまるようになりました。
+
+  ## データベースパフォーマンスの修正 <!-- Database performance fixes -->
+  <!--
+  Database improvements in Incus 0.5 accidentally caused some nested database transactions to occur when fetching network information details for a large number of instances.
+  -->
+  Incus 0.5 で行われたデータベースの改善で、多数のインスタンスのネットワーク情報の詳細を取得する際、ネストしたデータベースのトランザクションが発生してしまうことがありました。
+
+  <!--
+  This would only really become visible when using an Incus cluster that also serves DNS zones and has its metrics scraped by Prometheus. This combination would cause large spikes in API requests every 15s or so, which would then start triggering timeouts and retries, eventually leading to other API requests piling up and timing out.
+  -->
+  これは、DNS ゾーンを提供し、Prometheus がメトリクスを取得する Incus クラスターを使っているときのみ表面化します。このコンビネーションにより、15 秒程度ごとに API リクエストが急増し、タイムアウトとリトライがトリガーされはじめ、最終的には API リクエストが積み重なり、タイムアウトします。
+
+  <!--
+  The logic has now been changed to remove such nested transactions and further optimizations were also made to save some database interactions during very command API interactions like executing commands instance of instances.
+  -->
+  このようなネストしたトランザクションを削除するためにロジックを変更しました。そして、インスタンスのコマンドインスタンスを実行するようなコマンド API 対話中の一部のデータベース処理を節約するようなさらなる最適化も行われました。
+
+  # すべての変更点 <!-- Complete changelog -->
+  <!--
+  Here is a complete list of all changes in this release:
+  -->
+  このリリースのすべての変更のリストは次の通りです（翻訳なし）:
+
+  [details="すべてのChangeLogを見る"]
+   - Translated using Weblate (German)
+   - Translated using Weblate (Dutch)
+   - incus/action: Fix resume
+   - Translated using Weblate (Japanese)
+   - Translated using Weblate (Japanese)
+   - Translated using Weblate (Japanese)
+   - doc: Remove net_prio
+   - incusd/cgroup: Fully remove net_prio
+   - incusd/warningtype: Remove net_prio
+   - incusd/cgroup: Look for full cgroup controllers list at the root
+   - incusd/dns: Serialize DNS queries
+   - incusd/network: Optimize UsedByInstanceDevices
+   - incusd/backups: Simplify missing backup errors
+   - tests: Update for current backup errors
+   - incusd/cluster: Optimize ConnectIfInstanceIsRemote
+   - incusd/instance/qemu/agent-loader: Fix to work with busybox
+   - doc/installing.md: add a gentoo-wiki link under Gentoo section
+   - Translated using Weblate (French)
+   - Translated using Weblate (Dutch)
+   - incusd/device/disk: Better cleanup cloud-init ISO
+   - incusd/instance/qemu/qmp: Add Eject command
+   - incusd/instance/qemu/qmp: Handle eject requests
+   - api: agent_config_drive
+   - doc/devices/disk: Add agent:config drive
+   - incusd/device/disk: Add agent config drive
+   - incusd/project: Add support for agent config drive
+   - incusd/instance/qemu/agent-loader: Handle agent drive
+   - incusd/db/warningtype: gofmt
+   - incusd/loki: Sort lifecycle context keys
+   - incusd/instance/qemu/agent-loader: Don't hardcode paths
+   - incusd/cluster: Fix evacuation of stopped instances
+  [/details]
+
+  # ドキュメント <!-- Documentation -->
+  <!--
+  The Incus documentation can be found at:
+  -->
+  Incus のドキュメントはこちらです:
+  https://incus-ja.readthedocs.io/ja/latest/ （日本語訳）
+  https://linuxcontainers.org/incus/docs/main/ （原文）
+
+  # パッケージ <!-- Packages -->
+  <!--
+  There are no official Incus packages as Incus upstream only releases regular release tarballs. Below are some available options to get Incus up and running.
+  -->
+  Incus の開発元は、通常リリースの tarball のみをリリースするため、公式の Incus パッケージはありません。Incus を実行するために使えるオプションを以下にいくつか示します。
+
+  ## Linux 上に Incus サーバーをインストールする <!-- Installing the Incus server on Linux -->
+  <!--
+  Incus is available for most common Linux distributions. You'll find detailed installation instructions in our documentation.
+  -->
+  Incus はほとんどの一般的な Linux ディストリビューションで利用できます。インストール手順の詳細は、Incus のドキュメントを参照してください。
+
+  https://incus-ja.readthedocs.io/ja/latest/installing/ （日本語訳）
+  https://linuxcontainers.org/incus/docs/main/installing/ （原文）
+
+  ## Incus クライアントの Homebrew パッケージ <!-- Homebrew package for the Incus client -->
+  <!--
+  The client tool is available through HomeBrew for both Linux and MacOS.
+  -->
+  HomeBrew 経由で、Linux と macOS 向けにクライアントツールが利用できます。
+
+  https://formulae.brew.sh/formula/incus
+
+  ## Incus クライアントの Chocolatey パッケージ <!-- Chocolatey package for the Incus client -->
+  <!--
+  The client tool is available through Chocolatey for Windows users.
+  -->
+  Chocolatey 経由で、Windows ユーザー向けにクライアントツールが利用できます。
+
+  https://community.chocolatey.org/packages/incus/0.5
+
+  ## Incus クライアントの Winget パッケージ <!-- Winget package for the Incus client -->
+  <!--
+  The client tool is also available through Winget for Windows users.
+  -->
+  Winget 経由で、Windows ユーザー向けにクライアントツールが利用できます。
+
+  https://winstall.app/apps/LinuxContainers.Incus
+
+  # サポート <!-- Support -->
+  <!--
+  At this early stage, each Incus release will only be supported up until the next release comes out. This will change in a few months as we are planning an LTS release to coincide with the LTS releases of LXC and LXCFS.
+  -->
+  現在は初期段階ですので、Incus の各リリースは、次のリリースが出るまでしかサポートされません。LXC と LXCFS のリリースと合わせて LTS リリースを計画していますので、この状況はここ数ヶ月で変わるでしょう。
+
+  コミュニティサポートはこちらから <!-- Community support is provided at -->: https://discuss.linuxcontainers.org
+  商用サポートはこちらから <!-- Commercial support is available through -->: https://zabbly.com/incus
+  バグはこちらから報告できます <!-- Bugs can be reported at -->: https://github.com/lxc/incus/issues
