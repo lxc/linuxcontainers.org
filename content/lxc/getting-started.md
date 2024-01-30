@@ -99,7 +99,7 @@ Explore the container.
     HOME_URL="https://alpinelinux.org/"
     BUG_REPORT_URL="https://gitlab.alpinelinux.org/alpine/aports/-/issues"
 
-Update the package index, upgraded installed packages, and install more packages you would like available.
+Update the package index, upgrade installed packages, and install more packages you would like available.
 
     root@mycontainer:~# apk update
 
@@ -165,7 +165,7 @@ Now modify the default configuration.
 
     root@host:~# echo "lxc.start.auto = 1" >>/etc/lxc/default.conf
 
-All containers we create from now using the default configuration file on will have autostart. For example,
+All containers we create using the default configuration file from now on will have autostart. For example,
 
      root@host:~# lxc-create --name containerb --template download -- --dist alpine --release 3.19 --arch amd64
 
