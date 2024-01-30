@@ -165,7 +165,7 @@ Now modify the default configuration.
 
     root@host:~# echo "lxc.start.auto = 1" >>/etc/lxc/default.conf
 
-All containers we create from now using the default configuration file on will have autostart. For example,
+All containers we create using the default configuration file from now on will have autostart. For example,
 
      root@host:~# lxc-create --name containerb --template download -- --dist alpine --release 3.19 --arch amd64
 
