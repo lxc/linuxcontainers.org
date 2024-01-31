@@ -233,6 +233,12 @@ Add the DHCP reservation.
 
     root@host:~# echo "dhcp-host=mycontainer,10.0.3.100" >>/etc/lxc/dnsmasq.conf
 
+Note: the IP address (i.e. `10.0.3.100` in the command above) must be within `LXC_DHCP_RANGE`. To see `LXC_DHCP_RANGE`, open `/etc/lxc/dnsmasq.conf`. Suppose `LXC_DHCP_RANGE="10.0.1.2,10.0.1.254"`. Then the command above should be
+
+    root@host:~# echo "dhcp-host=mycontainer,10.0.1.100" >>/etc/lxc/dnsmasq.conf
+
+instead of the command with `10.0.3.100`. Moreover, the IP address must not already be in use. One way to pick an available IP address is use one of the addresses assigned dynamically while working through the section above.
+
 Restart the `lxc-net` service so the DHCP reservation is enabled.
 
     root@host:~# service lxc-net restart
