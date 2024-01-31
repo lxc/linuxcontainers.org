@@ -187,6 +187,15 @@ If we wait about 5 seconds and check again, then the container does have an IP a
     NAME        STATE   AUTOSTART GROUPS IPV4       IPV6 UNPRIVILEGED
     mycontainer RUNNING 1         -      10.0.3.152 -    false
 
+If the container does not have an IP address, we may need to [configure the firewall](https://linuxcontainers.org/incus/docs/main/howto/network_bridge_firewalld/). For example, on Ubuntu 22.04
+
+
+    root@host:~# ufw allow in on lxcbr0
+    root@host:~# ufw route allow in on lxcbr0
+    root@host:~# ufw route allow out on lxcbr0
+
+where the value `lxcbr0` comes from `LXC_BRIDGE` in `/etc/default/lxc-net`.
+
 If we are going to do something in the container that requires access to the Internet, we need to wait until the container has an IP address. One possibilty is to poll the output of `lxc-info` until it includes an IP address.
 
     root@host:~# lxc-start --name mycontainer
