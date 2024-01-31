@@ -225,7 +225,7 @@ Don't try this at home but force destroying a container does not clear the conta
 
 We may need a predictable IP address for the container. We can make a DHCP reservation on the host so the container is assigned the same IP address each time the container joins the local network.
 
-To enable DCHP reservations, we uncomment the `LXC_DHCP_CONFILE` line in `/etc/default/lxc-net`.
+To enable DHCP reservations, we uncomment the `LXC_DHCP_CONFILE` line in `/etc/default/lxc-net`.
 
     root@host:~# sed -i 's|^#LXC_DHCP_CONFILE=.*$|LXC_DHCP_CONFILE=/etc/lxc/dnsmasq.conf|' /etc/default/lxc-net
 
@@ -237,7 +237,7 @@ Restart the `lxc-net` service so the DHCP reservation is enabled.
 
     root@host:~# service lxc-net restart
 
-Restart the container. (You may need to recreated the container if you destroyed it somewhere along the way.)
+Restart the container. (You may need to recreate the container if you destroyed it somewhere along the way.)
 
     root@host:~# lxc-stop --name mycontainer
 
