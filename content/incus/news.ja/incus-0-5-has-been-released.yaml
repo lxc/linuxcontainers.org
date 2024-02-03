@@ -39,7 +39,7 @@ content: |-
   -->
   ここ数ヶ月で、一般的に普及しているツールの Incus に対するサポートが大幅に増えました。
 
-   - 接続プラグインが [Ansible]((https://docs.ansible.com/ansible/devel/collections/community/general/incus_connection.html)) にあります <!-- A connection plugin for Incus can now be [found in Ansible](https://docs.ansible.com/ansible/devel/collections/community/general/incus_connection.html). -->
+   - 接続プラグインが [Ansible](https://docs.ansible.com/ansible/devel/collections/community/general/incus_connection.html) にあります <!-- A connection plugin for Incus can now be [found in Ansible](https://docs.ansible.com/ansible/devel/collections/community/general/incus_connection.html). -->
    - Terraform と OpenTofu の [公式プロバイダー](https://github.com/lxc/terraform-provider-incus) があります <!-- We have an [official provider](https://github.com/lxc/terraform-provider-incus) for Terraform and OpenTofu -->
    - Incus 用の [Packer プラグイン](https://github.com/bketelsen/packer-plugin-incus) が利用できます<!-- There is an available [Packer plugin](https://github.com/bketelsen/packer-plugin-incus) for Incus -->
 
