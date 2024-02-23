@@ -42,6 +42,20 @@ content: |-
 
   [![Translation status](https://discuss.linuxcontainers.org/uploads/default/original/2X/3/3357fe654429c6314f2ad346a39f13ed93bf235d.png)](https://hosted.weblate.org/engage/incus/)
 
+  ## Upgrade notes
+  ### subuid/subgid entries
+  A longstanding bug in the idmap parser was causing everything but the first large entry for the root user to be discarded when parsing `/etc/subuid` and `/etc/subgid`.
+
+  This was then causing issues for the few users that have a legitimate reason to split their uid/gid allocation in half, mostly those using remote authentication on the host system.
+
+  This bug has been resolved, but this has a side effect of making Incus containers to fail to start on systems with an invalid subuid/subgid configuration.
+
+  If you notice that your containers won't start anymore, go look at `/etc/subuid` and `/etc/subgid` and make sure that there is one large entry for the `root` user, it must be at least `65536` uid/gid large. More importantly, make sure that there is no conflict/overlap in allocations given to the `root` user.
+
+  In most cases, the easiest is to remove all the `root` entries from those two files and replace them with a single very large entry:
+
+      root:1000000:1000000000
+
   ## New features
   ### New `incus file create` command
   A new `incus file create` command was added which provides an easy way to create empty files, symlinks and directories without having to transfer an existing local directory tree.
