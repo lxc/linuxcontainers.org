@@ -2,9 +2,9 @@
 
 # distrobuilder について <!-- What's distrobuilder? -->
 <!--
-`distrobuilder` is an image building tool for LXC and LXD.
+`distrobuilder` is an image building tool for LXC and Incus.
 -->
-`distrobuilder` は LXC と LXD 用のイメージを作成するツールです。
+`distrobuilder` は LXC と Incus 用のイメージを作成するツールです。
 
 <!--
 It's used to build all our official images available on [our image server](https://images.linuxcontainers.org).
@@ -18,9 +18,9 @@ The image definition is a YAML document which describes the source of the image,
 また、イメージのビルドプロセス中に生成して追加するファイルや、任意のアクションも記述します。
 
 <!--
-The output is either a plain root filesystem, a LXD image or a LXC image.
+The output is either a plain root filesystem, an Incus image or a LXC image.
 -->
-単純なルートファイルシステム、LXD イメージ、LXC イメージのいずれも出力できます。
+単純なルートファイルシステム、Incus イメージ、LXC イメージのいずれも出力できます。
 
 <!--
 You can see it at work here: [https://jenkins.linuxcontainers.org/view/Images/](https://jenkins.linuxcontainers.org/view/Images/)
