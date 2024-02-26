@@ -1,13 +1,13 @@
 
 
 # What's distrobuilder?
-`distrobuilder` is an image building tool for LXC and LXD.
+`distrobuilder` is an image building tool for LXC and Incus.
 
 It's used to build all our official images available on [our image server](https://images.linuxcontainers.org).
 
 The image definition is a YAML document which describes the source of the image, its package manager, what packages to install/remove for specific image variants, os releases and architectures, as well as additional files to generate and arbitrary actions to execute as part of the image build process.
 
-The output is either a plain root filesystem, a LXD image or a LXC image.
+The output is either a plain root filesystem, an Incus image or a LXC image.
 
 You can see it at work here: [https://jenkins.linuxcontainers.org/view/Images/](https://jenkins.linuxcontainers.org/view/Images/)
 
