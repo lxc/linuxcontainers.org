@@ -1,0 +1,401 @@
+[
+    {"path": "/",
+     "title": "",
+     "menu": ["主页"],
+     "generator": "html",
+     "meta": {"input": "index.zh-cn.html"}},
+
+
+
+     {"path": "/incus/",
+     "generator": "alias",
+     "meta": {"target": "/incus/introduction/"}},
+
+    {"path": "/incus/introduction/",
+     "title": "Incus - 介绍",
+     "menu": ["Incus", "介绍"],
+     "generator": "markdown",
+     "meta": {"input": "incus/introduction.md"}},
+
+    {"path": "/incus/announcement/",
+     "title": "Incus - 公告",
+     "menu": ["Incus", "公告"],
+     "generator": "markdown",
+     "meta": {"input": "incus/announcement.md"}},
+
+    {"path": "/incus/try-it/",
+     "title": "Incus - 在线体验",
+     "menu": ["Incus", "在线体验"],
+     "generator": "html",
+     "meta": {"input": "incus/try-it.html"}},
+
+    {"path": "/incus/news/",
+     "title": "Incus - 新闻",
+     "menu": ["Incus", "新闻"],
+     "generator": "news",
+     "meta": {"dir": "/content/incus/news/",
+              "input": "incus/news.md",
+              "toc_depth": "2-2",
+              "str_older": "旧闻",
+              "str_back": "回到概览"}},
+
+    {"path": "/incus/docs/",
+     "menu": ["Incus", "文档"],
+     "generator": "link",
+     "meta": {"url": "https://linuxcontainers.org/incus/docs/main/"}},
+
+    {"path": "/incus/downloads/",
+     "title": "Incus - 下载",
+     "menu": ["Incus", "下载"],
+     "generator": "downloads",
+     "meta": {"dir": "/downloads/incus",
+              "input": "incus/downloads.md"}},
+
+    {"path": "/incus/github/",
+     "menu": ["Incus", "GitHub"],
+     "generator": "link",
+     "meta": {"url": "https://github.com/lxc/incus"}},
+
+    {"path": "/incus/forum/",
+     "menu": ["Incus", "论坛"],
+     "generator": "link",
+     "meta": {"url": "https://discuss.linuxcontainers.org"}},
+
+    {"path": "/incus/irc/",
+     "menu": ["Incus", "IRC"],
+     "generator": "link",
+     "meta": {"url": "https://web.libera.chat/#lxc"}},
+
+    {"path": "/incus/mailing-lists/",
+     "menu": ["Incus", "邮件列表"],
+     "generator": "link",
+     "meta": {"url": "https://lists.linuxcontainers.org"}},
+
+
+
+     {"path": "/lxd/",
+     "title": "LXD - 已被移至 Canonical",
+     "generator": "markdown",
+     "meta": {"input": "lxd/moved-to-canonical.md"}},
+
+
+
+    {"path": "/lxc/",
+     "generator": "alias",
+     "meta": {"target": "/lxc/introduction/"}},
+
+    {"path": "/lxc/introduction/",
+     "title": "LXC - 介绍",
+     "menu": ["LXC", "介绍"],
+     "generator": "markdown",
+     "meta": {"input": "lxc/introduction.md"}},
+
+    {"path": "/lxc/news/",
+     "title": "LXC - 新闻",
+     "menu": ["LXC", "新闻"],
+     "generator": "news",
+     "meta": {"dir": "/content/lxc/news/",
+              "input": "lxc/news.md",
+              "toc_depth": "2-2",
+              "str_older": "旧闻",
+              "str_back": "回到概览"}},
+
+    {"path": "/lxc/getting-started/",
+     "title": "LXC - 开始上手",
+     "menu": ["LXC", "开始上手"],
+     "generator": "markdown",
+     "meta": {"input": "lxc/getting-started.md"}},
+
+    {"path": "/lxc/documentation/",
+     "title": "LXC - 文档",
+     "menu": ["LXC", "文档"],
+     "generator": "markdown",
+     "meta": {"input": "lxc/documentation.md"}},
+
+    {"path": "/lxc/apidoc/",
+     "generator": "directory",
+     "meta": {"input": "lxc/apidoc"}},
+
+    {"path": "/lxc/manpages/",
+     "title": "LXC - 手册",
+     "menu": ["LXC", "手册"],
+     "generator": "manpages",
+     "meta": {"dir": "/manpages/lxc"}},
+
+    {"path": "/lxc/contribute/",
+     "title": "LXC - 贡献",
+     "menu": ["LXC", "贡献"],
+     "generator": "markdown",
+     "meta": {"input": "lxc/contribute.md"}},
+
+    {"path": "/lxc/security/",
+     "title": "LXC - 安全性",
+     "menu": ["LXC", "安全性"],
+     "generator": "markdown",
+     "meta": {"input": "lxc/security.md"}},
+
+    {"path": "/lxc/downloads/",
+     "title": "LXC - 下载",
+     "menu": ["LXC", "下载"],
+     "generator": "downloads",
+     "meta": {"dir": "/downloads/lxc",
+              "input": "lxc/downloads.md"}},
+
+    {"path": "/lxc/external-resources/",
+     "menu": ["LXC", "外部资源"]},
+
+    {"path": "/lxc/articles/",
+     "title": "LXC - 文章",
+     "menu": ["LXC", "文章"],
+     "generator": "markdown",
+     "meta": {"input": "lxc/articles.md"}},
+
+    {"path": "/lxc/forum/",
+     "menu": ["LXC", "论坛"],
+     "generator": "link",
+     "meta": {"url": "https://discuss.linuxcontainers.org"}},
+
+    {"path": "/lxc/mailing-lists/",
+     "menu": ["LXC", "邮件列表"],
+     "generator": "link",
+     "meta": {"url": "https://lists.linuxcontainers.org"}},
+
+    {"path": "/lxc/irc/",
+     "menu": ["LXC", "IRC"],
+     "generator": "link",
+     "meta": {"url": "https://web.libera.chat/#lxc"}},
+
+    {"path": "/lxc/github/",
+     "menu": ["LXC", "GitHub"],
+     "generator": "link",
+     "meta": {"url": "https://github.com/lxc/lxc"}},
+
+    {"path": "/lxc/github-actions/",
+     "menu": ["LXC", "GitHub Actions"],
+     "generator": "link",
+     "meta": {"url": "https://github.com/lxc/lxc/actions"}},
+
+    {"path": "/lxc/jenkins-ci/",
+     "menu": ["LXC", "Jenkins CI"],
+     "generator": "link",
+     "meta": {"url": "https://jenkins.linuxcontainers.org/view/LXC/"}},
+
+
+
+    {"path": "/lxcfs/",
+     "generator": "alias",
+     "meta": {"target": "/lxcfs/introduction/"}},
+
+    {"path": "/lxcfs/introduction/",
+     "title": "LXCFS - 介绍",
+     "menu": ["LXCFS", "介绍"],
+     "generator": "markdown",
+     "meta": {"input": "lxcfs/introduction.md"}},
+
+    {"path": "/lxcfs/news/",
+     "title": "LXCFS - 新闻",
+     "menu": ["LXCFS", "新闻"],
+     "generator": "news",
+     "meta": {"dir": "/content/lxcfs/news/",
+              "input": "lxcfs/news.md",
+              "toc_depth": "2-2",
+              "str_older": "旧闻",
+              "str_back": "回到概览"}},
+
+    {"path": "/lxcfs/getting-started/",
+     "title": "LXCFS - 开始上手",
+     "menu": ["LXCFS", "开始上手"],
+     "generator": "markdown",
+     "meta": {"input": "lxcfs/getting-started.md"}},
+
+    {"path": "/lxcfs/manpages/",
+     "title": "LXCFS - 手册",
+     "menu": ["LXCFS", "手册"],
+     "generator": "manpages",
+     "meta": {"dir": "/manpages/lxcfs"}},
+
+    {"path": "/lxcfs/contribute/",
+     "title": "LXCFS - 贡献",
+     "menu": ["LXCFS", "贡献"],
+     "generator": "markdown",
+     "meta": {"input": "lxcfs/contribute.md"}},
+
+    {"path": "/lxcfs/downloads/",
+     "title": "LXCFS - 下载",
+     "menu": ["LXCFS", "下载"],
+     "generator": "downloads",
+     "meta": {"dir": "/downloads/lxcfs",
+              "input": "lxcfs/downloads.md"}},
+
+    {"path": "/lxcfs/external-resources/",
+     "menu": ["LXCFS", "外部资源"]},
+
+    {"path": "/lxcfs/forum/",
+     "menu": ["LXCFS", "论坛"],
+     "generator": "link",
+     "meta": {"url": "https://discuss.linuxcontainers.org"}},
+
+    {"path": "/lxcfs/mailing-lists/",
+     "menu": ["LXCFS", "邮件列表"],
+     "generator": "link",
+     "meta": {"url": "https://lists.linuxcontainers.org"}},
+
+    {"path": "/lxcfs/irc/",
+     "menu": ["LXCFS", "IRC"],
+     "generator": "link",
+     "meta": {"url": "https://web.libera.chat/#lxc"}},
+
+    {"path": "/lxcfs/github/",
+     "menu": ["LXCFS", "GitHub"],
+     "generator": "link",
+     "meta": {"url": "https://github.com/lxc/lxcfs"}},
+
+    {"path": "/lxcfs/github-actions/",
+     "menu": ["LXCFS", "GitHub Actions"],
+     "generator": "link",
+     "meta": {"url": "https://github.com/lxc/lxcfs/actions"}},
+
+
+
+    {"path": "/distrobuilder/",
+     "generator": "alias",
+     "meta": {"target": "/distrobuilder/introduction/"}},
+
+    {"path": "/distrobuilder/introduction/",
+     "title": "distrobuilder - 介绍",
+     "menu": ["distrobuilder", "介绍"],
+     "generator": "markdown",
+     "meta": {"input": "distrobuilder/introduction.md"}},
+
+    {"path": "/distrobuilder/news/",
+     "title": "distrobuilder - 新闻",
+     "menu": ["distrobuilder", "新闻"],
+     "generator": "news",
+     "meta": {"dir": "/content/distrobuilder/news/",
+              "input": "distrobuilder/news.md",
+              "toc_depth": "2-2",
+              "str_older": "旧闻",
+              "str_back": "回到概览"}},
+
+    {"path": "/distrobuilder/documentation",
+     "menu": ["distrobuilder", "文档"],
+     "generator": "link",
+     "meta": {"url": "/distrobuilder/docs/latest/"}},
+
+    {"path": "/distrobuilder/contribute/",
+     "title": "distrobuilder - 贡献",
+     "menu": ["distrobuilder", "贡献"],
+     "generator": "markdown",
+     "meta": {"input": "distrobuilder/contribute.md"}},
+
+    {"path": "/distrobuilder/downloads/",
+     "title": "distrobuilder - 下载",
+     "menu": ["distrobuilder", "下载"],
+     "generator": "downloads",
+     "meta": {"dir": "/downloads/distrobuilder",
+              "input": "distrobuilder/downloads.md"}},
+
+    {"path": "/distrobuilder/external-resources/",
+     "menu": ["distrobuilder", "外部资源"]},
+
+    {"path": "/distrobuilder/forum/",
+     "menu": ["distrobuilder", "论坛"],
+     "generator": "link",
+     "meta": {"url": "https://discuss.linuxcontainers.org"}},
+
+    {"path": "/distrobuilder/mailing-lists/",
+     "menu": ["distrobuilder", "邮件列表"],
+     "generator": "link",
+     "meta": {"url": "https://lists.linuxcontainers.org"}},
+
+    {"path": "/distrobuilder/irc/",
+     "menu": ["distrobuilder", "IRC"],
+     "generator": "link",
+     "meta": {"url": "https://web.libera.chat/#lxc"}},
+
+    {"path": "/distrobuilder/github/",
+     "menu": ["distrobuilder", "GitHub"],
+     "generator": "link",
+     "meta": {"url": "https://github.com/lxc/distrobuilder"}},
+
+    {"path": "/distrobuilder/github-actions/",
+     "menu": ["distrobuilder", "GitHub Actions"],
+     "generator": "link",
+     "meta": {"url": "https://github.com/lxc/distrobuilder/actions"}},
+
+
+
+    {"path": "/cgmanager/",
+     "generator": "alias",
+     "meta": {"target": "/cgmanager/introduction/"}},
+
+    {"path": "/cgmanager/introduction/",
+     "title": "CGManager - 介绍",
+     "menu": ["CGManager", "介绍"],
+     "generator": "markdown",
+     "meta": {"input": "cgmanager/introduction.md"}},
+
+    {"path": "/cgmanager/news/",
+     "title": "CGManager - 新闻",
+     "menu": ["CGManager", "新闻"],
+     "generator": "markdown",
+     "meta": {"input": "cgmanager/news.md",
+              "toc_depth": "2-2",
+              "str_older": "旧闻",
+              "str_back": "回到概览"}},
+
+    {"path": "/cgmanager/getting-started/",
+     "title": "CGManager - 开始上手",
+     "menu": ["CGManager", "开始上手"],
+     "generator": "markdown",
+     "meta": {"input": "cgmanager/getting-started.md"}},
+
+    {"path": "/cgmanager/dbus-api/",
+     "title": "CGManager - D-Bus API",
+     "menu": ["CGManager", "D-Bus API"],
+     "generator": "markdown",
+     "meta": {"input": "cgmanager/dbus-api.md"}},
+
+    {"path": "/cgmanager/manpages/",
+     "title": "CGManager - 手册",
+     "menu": ["CGManager", "手册"],
+     "generator": "manpages",
+     "meta": {"dir": "/manpages/cgmanager"}},
+
+    {"path": "/cgmanager/contribute/",
+     "title": "CGManager - 贡献",
+     "menu": ["CGManager", "贡献"],
+     "generator": "markdown",
+     "meta": {"input": "cgmanager/contribute.md"}},
+
+    {"path": "/cgmanager/downloads/",
+     "title": "CGManager - 下载",
+     "menu": ["CGManager", "下载"],
+     "generator": "downloads",
+     "meta": {"dir": "/downloads/cgmanager",
+              "input": "cgmanager/downloads.md"}},
+
+    {"path": "/cgmanager/external-resources/",
+     "menu": ["CGManager", "外部资源"]},
+
+    {"path": "/cgmanager/articles/",
+     "title": "CGManager - 文章",
+     "menu": ["CGManager", "文章"],
+     "generator": "markdown",
+     "meta": {"input": "cgmanager/articles.md"}},
+
+    {"path": "/cgmanager/mailing-lists/",
+     "menu": ["CGManager", "邮件列表"],
+     "generator": "link",
+     "meta": {"url": "https://lists.linuxcontainers.org"}},
+
+    {"path": "/cgmanager/irc/",
+     "menu": ["CGManager", "IRC"],
+     "generator": "link",
+     "meta": {"url": "https://web.libera.chat/#lxc"}},
+
+    {"path": "/cgmanager/github/",
+     "menu": ["CGManager", "GitHub"],
+     "generator": "link",
+     "meta": {"url": "https://github.com/lxc/cgmanager"}}
+]
