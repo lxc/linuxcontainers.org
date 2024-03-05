@@ -1,0 +1,207 @@
+<div class="p-strip--light" style="padding-bottom:0; padding-top:0;">
+  <div class="row">
+    <div class="col-12">
+      <div class="p-notification--information">
+        <div class="p-notification__content">
+          <h5 class="p-notification__title">Incus 已加入 LinuxContainers</h5>
+          <p class="p-notification__message">点击查看<a href="/incus/">项目公告</a>。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="p-strip">
+  <div class="row">
+    <div class="col-8 suffix-1">
+      <!-- Container and virtualization tools -->
+      <h1 id="startpage-heading">容器和虚拟化工具</h1>
+
+      <!--
+        linuxcontainers.org is the umbrella project behind Incus, LXC,
+        LXCFS, Distrobuilder and more.
+      -->
+      <p>linuxcontainers.org 是 Incus、LXC、LXCFS 和 distrobuilder 等项目的总和。</p>
+
+      <!--
+        The goal is to offer a distro and vendor neutral environment
+        for the development of Linux container technologies.
+      -->
+      <p>旨在为 Linux 容器的开发提供一个独立于发行版和供应商的环境。</p>
+
+      <!--
+        Our focus is providing containers and virtual machines that run
+        full Linux systems. While VMs supply a complete environment,
+        system containers offer an environment as close as possible to
+        the one you'd get from a VM, but without the overhead that comes
+        with running a separate kernel and simulating all the hardware.
+      -->
+      <p>我们致力于提供运行完整 Linux 系统的容器和虚拟机。虽然虚拟机可以提供完整的环境，但是系统容器可以尽可能接近虚拟机的环境，同时避免了运行独立内核和模拟硬件所带来的额外开销。</p>
+
+    </div>
+    <div class="col-4">
+      <img src="/static/img/containers.png" alt="" />
+    </div>
+  </div>
+</div>
+
+<div class="p-strip--light">
+  <div class="row">
+    <div class="col-12">
+      <!-- Active projects -->
+      <h2>活跃项目</h2>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="p-card col-6">
+      <h3>LXC</h3>
+
+      <!--
+        LXC is a well-known Linux container runtime that consists of
+        tools, templates, and library and language bindings. It's pretty
+        low level, very flexible and covers just about every containment
+        feature supported by the upstream kernel.
+      -->
+      <p>LXC 是一个知名的 Linux 容器运行时，包括各类工具、模板、库以及语言绑定。它非常底层，相当灵活，并覆盖了上游内核支持的几乎所有与容器相关的功能。</p>
+
+      <p><a class="p-button" href="/lxc/introduction/" role="button">详情</a></p>
+    </div>
+
+    <div class="p-card col-6">
+      <h3>Incus</h3>
+
+      <!--
+        Incus is a container and virtual-machine manager.<br />
+        Based on LXC for containers and QEMU for virtual machines, it offers a
+        seamless cloud-like experience scaling from a developer's laptop to a
+        full cluster of up to 50 servers.<br />
+        In addition to managing containers and VMs, Incus also provides
+        a variety of options to manage storage and network.
+      -->
+      <p>
+        Incus 是一个容器和虚拟机管理器。<br />
+        它基于 LXC 运行容器，基于 QEMU 运行虚拟机，提供了一种无缝的云体验，可以从开发者的笔记本电脑扩展到最多 50 台服务器的完整集群。<br />
+        除了管理容器和虚拟机之外，Incus 还提供了各种选项来管理存储和网络。
+      </p>
+
+      <p>
+        <a class="p-button" href="/incus/introduction/" role="button">详情</a>
+        <a class="p-button" href="/incus/try-it/" role="button">在线体验</a>
+      </p>
+    </div>
+  </div>
+
+  <div class="row u-equal-height">
+    <div class="p-card col-6">
+      <h3>LXCFS</h3>
+
+      <!--
+      LXCFS is a userspace (FUSE) filesystem which offers:
+        <ul>
+          <li>Overlay files for cpuinfo, meminfo, stat and uptime.</li>
+          <li>A cgroupfs compatible tree allowing unprivileged writes.</li>
+        </ul>
+      -->
+      <p>
+        LXCFS 是一个用户空间文件系统（FUSE），它提供了以下功能：
+        <ul>
+          <li>掩蔽 cpuinfo, meminfo, stat 和 uptime 等文件</li>
+          <li>提供 cgroupfs 兼容的文件树，允许非特权写入</li>
+        </ul>
+      </p>
+
+      <!--
+        It's designed to work around the shortcomings of procfs, sysfs
+        and cgroupfs by exporting files that match what a system
+        container user would expect.
+      -->
+      <p>它旨在导出系统容器用户所需要的文件，以此规避 procfs, sysfs 和 cgroupfs 的痛点。</p>
+
+      <p><a class="p-button" href="/lxcfs/introduction/" role="button">详情</a></p>
+    </div>
+
+    <div class="p-card col-6">
+      <h3>distrobuilder</h3>
+
+      <!--
+      distrobuilder is an image building tool for containers and virtual machines:
+        <ul>
+          <li>Complex image definition as a simple YAML document.</li>
+          <li>Multiple output formats (chroot, LXD, LXC).</li>
+          <li>Support for a lot of distributions and architectures.</li>
+        </ul>
+      -->
+      <p>
+        distrobuilder 是一个用于容器和虚拟机的镜像构建工具：
+        <ul>
+          <li>使用简单的 YAML 文档定义复杂的镜像结构</li>
+          <li>支持多种输出格式（chroot、LXD、LXC）</li>
+          <li>支持多种发行版和架构</li>
+        </ul>
+      </p>
+
+      <!--
+        distrobuilder's modern design utilises pre-built official images whenever available,
+        uses a declarative image definition (YAML) and supports a variety of
+        modifications on the base image.
+      -->
+      <p>distrobuilder 的现代化设计可以充分利用预构建的官方镜像（如果可用），使用声明式镜像定义（YAML），并支持在基础镜像上进行各种修改。</p>
+
+      <p><a class="p-button" href="/distrobuilder/introduction/" role="button">详情</a></p>
+    </div>
+  </div>
+
+  <div class="row u-equal-height">
+    <div class="p-card col-6">
+      <h3>libresource</h3>
+
+      <!--
+        library of interfaces through which we can get system resource
+        information like memory, CPU, stat, networking, device etc. Currently
+        most of such information is read from /proc and /sys.
+      -->
+      <p>libresource 是一个系统资源信息接口库，可以通过它获得内存、CPU、统计、网络和设备等信息。目前，其中大部分是从 /proc 和 /sys 中读取的。</p>
+
+      <p><a class="p-button" href="https://github.com/lxc/libresource/" role="button">详情</a></p>
+    </div>
+
+    <div class="p-card col-6">
+      <h3>lxcri</h3>
+
+      <!--
+        lxcri is a wrapper around LXC which can be used as a drop-in
+        container runtime replacement for use by CRI-O.
+      -->
+      <p>lxcri 是 LXC 的一个封装，作为一个容器运行时，它与 CRI-O 兼容，可用作其替代品。</p>
+
+      <p><a class="p-button" href="https://github.com/lxc/lxcri/" role="button">详情</a></p>
+    </div>
+  </div>
+</div>
+
+<div class="p-strip--light">
+  <div class="row">
+    <div class="col-12">
+      <h2>已弃用项目</h2>
+    </div>
+  </div>
+
+  <div class="row u-equal-height">
+    <div class="p-card col-6">
+      <h3>CGManager</h3>
+
+      <!--
+        CGManager is a cgroup manager daemon
+        designed to allow nested unprivileged containers
+        to be able to create and manage their
+        cgroups through a DBus API.
+      -->
+      <p>
+        CGManager 是一个 cgroup 管理器守护进程，旨在允许嵌套的非特权容器能够通过 DBus API 创建和管理 cgroup。
+      </p>
+
+      <p><a class="p-button" href="/cgmanager/introduction/" role="button">详情</a></p>
+    </div>
+  </div>
+</div>
