@@ -328,7 +328,7 @@ If we wait about 5 seconds and check again, then the container does have an IP a
 <!--
 If the container does not have an IP address, we may need to [configure the firewall](https://linuxcontainers.org/incus/docs/main/howto/network_bridge_firewalld/). For example, on Ubuntu 22.04
 -->
-コンテナが IP アドレスを持っていない場合、[ファイアウォールの設定](https://linuxcontainers.org/incus/docs/main/howto/network_bridge_firewalld/)が必要かもしれません。例えば、Ubuntu 22.04 では次のようになります。
+コンテナが IP アドレスを持っていない場合、[ファイアウォールの設定](https://linuxcontainers.org/incus/docs/main/howto/network_bridge_firewalld/)（[日本語訳](https://incus-ja.readthedocs.io/ja/latest/howto/network_bridge_firewalld/)）が必要かもしれません。例えば、Ubuntu 22.04 では次のようになります。
 
 
     root@host:~# ufw allow in on lxcbr0
@@ -564,7 +564,7 @@ The host can see the container's message.
 <!--
 Creating system-wide unprivileged containers (that is, unprivileged containers created and started by root) requires only a few extra steps to organize subordinate user IDs (uid) and subordinate group IDs (gid).
 -->
-システム全体の非特権コンテナ（）を作成するには、サブ UID とサブ GID を構成するためのステップがいくつか必要です。
+システム全体の非特権コンテナ（rootが作成して起動する非特権コンテナ）を作成するには、サブ UID とサブ GID を構成するためのステップがいくつか必要です。
 
 <!--
 Specifically, you need to manually allocate the subordinate uid and gid ranges to root in `/etc/subuid` and `/etc/subgid` and then set those ranges in `/etc/lxc/default.conf` using `lxc.idmap` entries.
