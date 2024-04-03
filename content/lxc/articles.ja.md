@@ -23,5 +23,5 @@
     (日本語訳 [LXC 1.0: コンテナーの中でGUI [9/10]](http://qiita.com/m-shibata/items/907986ed25f7619dc5eb) )
     * [LXC 1.0: Troubleshooting and debugging [10/10]](https://www.stgraber.org/2014/02/18/lxc-1-0-troubleshooting-and-debugging)
     (日本語訳 [LXC 1.0: 問題の解決方法とデバッグ [10/10]](http://qiita.com/m-shibata/items/ec723b891e59154c5798) )
- * [Ubuntu server guide chapter on LXC](https://help.ubuntu.com/lts/serverguide/lxc.html)
+ * [Ubuntu server guide chapter on LXC](https://ubuntu.com/server/docs/lxc)
  * [LXCで学ぶコンテナ入門 －軽量仮想化環境を実現する技術](http://gihyo.jp/admin/serial/01/linux_containers/) (gihyo.jp by 加藤泰文、田向正一)

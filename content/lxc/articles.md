@@ -11,4 +11,4 @@
     * [LXC 1.0: Scripting with the API [8/10]](https://www.stgraber.org/2014/02/05/lxc-1-0-scripting-with-the-api)
     * [LXC 1.0: GUI in containers [9/10]](https://www.stgraber.org/2014/02/09/lxc-1-0-gui-in-containers)
     * [LXC 1.0: Troubleshooting and debugging [10/10]](https://www.stgraber.org/2014/02/18/lxc-1-0-troubleshooting-and-debugging)
- * [Ubuntu server guide chapter on LXC](https://ubuntu.com/server/docs/containers-lxc)
+ * [Ubuntu server guide chapter on LXC](https://ubuntu.com/server/docs/lxc)
