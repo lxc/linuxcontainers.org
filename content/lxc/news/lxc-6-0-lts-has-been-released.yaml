@@ -1,0 +1,273 @@
+title: LXC 6.0 LTS has been released
+date: 2024/04/03 20:04
+origin: https://discuss.linuxcontainers.org/t/lxc-6-0-lts-has-been-released/19567
+content: |-
+  ### Introduction
+  The LXC team is pleased to announce the release of LXC 6.0 LTS!
+
+  This is the result of two years of work since the LXC 5.0 release and is the sixth LTS release for the LXC project. This release will be supported until June 2029.
+
+  ### Highlights
+  #### New multi-call binary
+  A new `tools-multicall=true` configuration option can be used to produce a single `lxc` binary which can then have all other `lxc-XYZ` commands be symlinked to.
+
+  This allows for a massive disk space reduction, particularly useful for embedded platforms.
+
+  #### Add a `set_timeout` function to the library
+  A new `set_timeout` function is available on the main `lxc_container` struct and allow for setting a global timeout for interactions with the LXC monitor.
+
+  Prior to this, there was no timeout, leading to potential deadlocks as there's also no way to cancel an monitor request.
+
+  As a result of adding this new symbol to the library, we have bumped the liblxc symbol version to 1.8.0.
+
+  #### LXC bridge now has IPV6 enabled
+  The default `lxcbr0` bridge now comes with IPv6 enabled by default, using an IPv6 ULA subnet.
+
+  #### Support for uid/gid selection in `lxc-usernsexec`
+  The `lxc-usernsexec` tool now has both `-u` and `-g` options to control what resulting UID and GID (respectively) the user wishes to use (defaulting to 0/0).
+
+  #### Improvements to `lxc-checkconfig`
+  `lxc-checkconfig` now only shows the version if `lxc-start` is present (rather than failing).
+  Additionally, it's seen a number of other cosmetic improvements as well as now listing the maximum number of allowed namespaces for every namespace type.
+
+  #### Support for squashfs OCI images
+  The built-in `oci` container template can now handle `squashfs` compressed OCI images through the use of `atomfs`.
+
+  #### Switched from systemd's dbus to dbus-1
+  LXC now uses `libdbus-1` for DBus interactions with systemd rather than using `libsystemd`.
+  The reason for this change is that `libdbus-1` is readily available for static builds.
+
+  #### Removed Upstart support
+  Support for the `Upstart` init system has finally been removed from LXC.
+
+  This shouldn't really affect anyone at this stage and allowed for cleaning up some logic and config files from our repository.
+
+  ### Full changelog
+
+  [details="Changelog"]
+   - Read list until process exits
+   - lxccontainer: improve mod_rdep()
+   - lxccontainer: rework copy_file()
+   - meson: Generate compile commands by iterating over an array
+   - tools: Provide multicall lxc binary
+   - meson: Set DEVEL flag post release
+   - Fix uninitialized read in parse_cap when libcap is not used
+   - use systemd dbus StartTransientUnit for unpriv cgroup2
+   - fix for issue 4026: set broadcast to 0.0.0.0 for /31 and /32
+   - conf: log file descriptors on error during idmapped mount setup
+   - start: don't overwrite file descriptors during namespace preservation
+   - start: record inherited namespaces earlier to make it available for idmapped rootfs setup
+   - conf: fix append_ttyname()
+   - start: fix namespace sharing
+   - add check for statvfs
+   - Fix off-by-one error constructing mount options
+   - Store mount options in correct variable
+   - meson: add remaining still-in-use config checks
+   - src/lxc/log.h: fix STRERROR_R_CHAR_P
+   - meson.build: fix build with -Dcapabilities=false
+   - meson.build: fix build without stack-protector
+   - README: update security mails
+   - lxc-usernsexec: allow to select which {g,u}id to switch to
+   - gitignore: Simplify
+   - build: detect where struct mount_attr is declared
+   - build: detect sys/pidfd.h availability
+   - build: check for FS_CONFIG_* header symbol in sys/mount.h
+   - meson.build: allow explicit distrosysconfdir
+   - tree-wide: wipe direct or indirect linux/mount.h inclusion
+   - tree-wide: use struct clone_args directly
+   - tree-wide: use struct open_how directly
+   - meson: fix docbook2x detection
+   - tree-wide: minimize liburing.h inclusion
+   - mount: move mount utilities from syscall_wrappers.h into mount_utils.h
+   - mount_utils: remove conf.h include
+   - build: prevent the inclusion of linux/mount.h with a hack
+   - tree-wide: split open helpers into open_utils.h
+   - use sd_bus_call_method_async to replace the asyncv one
+   - fix error message when use tools with -? option
+   - Update cifuzz.yml
+   - build(deps): bump actions/checkout from 2 to 3
+   - conf: allow cross-device links
+   - Update README.md
+   - lxc-attach: Fix lost return codes of spawned processes that are killed
+   - lxc/attach: Detect EACCES from execvp and convert to 126 exit status
+   - build: add libsystemd to oss fuzz dependencies
+   - tools: lxc-destroy: update help message for --force
+   - tests: lxc-test-checkpoint-restore: use trap to do cleanup
+   - Unroll IN_SET since the max usage is 2 elements check
+   - cgroups: fix -Waddress warning
+   - build: fix handling of dependancies to fix build on openSUSE
+   - build: only build init.lxc.static if libcap is statically linkable
+   - build: use cc.get_define to detect FS_CONFIG_* symbols
+   - build: drop build-time systemd dependency
+   - src/lxc/meson.build: fix the static library path
+   - tests: lxc-test-reboot: Fix build on ia64
+   - meson.build: strip newlines from git output
+   - meson.build: strip newline for variable assignments
+   - README: remove lgtm
+   - cgroups: use userns_exec_full() during cgroup removal
+   - cgroups: only allocate user namespace if we have to
+   - conf: create separate peer group for container's root
+   - apparmor: allow shared mounts in start-container.in
+   - conf: ensure mount tunnel is a dependent mount
+   - github: fix coverity build
+   - github: fix coverity (add libpam-dev)
+   - apparmor: properly check lxc_strmmap ret value
+   - network: always initialize struct nl_handler
+   - cgroups: fix buffer out-of-bounds access in enable_controllers_delegation
+   - cgroups: check snprintf retval in unpriv_systemd_create_scope
+   - state: additional check in lxc_wait to prevent OOB
+   - cgroups: fix cgroup layout detection in __initialize_cgroups
+   - src/lxc/meson.build: fix build without apparmor
+   - checkconfig: Fix mixed tabs/spaces
+   - checkconfig: Hide version if no lxc-start
+   - checkconfig: Tweak layout
+   - checkconfig: Tweak cgroup handling
+   - checkconfig: Fix filesystem capability check
+   - build: force linking against liblxc
+   - Patching an incoming CVE (CVE-2022-47952)
+   - lxc_user_nic: fix get_mtu() error handling
+   - lxc-default-cgns apparmor profile: allow overlay mounts
+   - Fix build error on sparc64 caused by using the gold linker
+   - drop broken lxc-test-fuzzers
+   - Fix typo: bev_type -> bdev_type
+   - Fix strlcat's return value checks
+   - lxc-net.in: fix nftables syntax for IPv6 NAT
+   - initutils: use PRIu64 for uint64_t in setproctitle
+   - apparmor: don't try to mmap empty files
+   - Add support for squashfs images in oci via atomfs
+   - Allow fuse mounts in apparmor start-container.
+   - tree-wide: convert fcntl(FD_CLOEXEC) to SOCK_CLOEXEC
+   - switch from libsystemd's dbus to dbus-1
+   - console-log test: make sure container is stopped before restarting
+   - lsm: apparmor: allow to change mount propagation
+   - make setproctitle()'s /proc/pid/stat parsing safe
+   - setproctitle(): Handle potential NULL return from strrchr()
+   - file_utils: rename fd_make_nonblocking to fd_make_blocking
+   - file_utils: add fd_make_nonblocking helper
+   - terminal: make a terminal FDs non-blocking
+   - mainloop: io_uring: disable IORING_POLL_ADD_MULTI
+   - lxccontainer: extend lxccontainer API with set_timeout
+   - commands: support timeout in LXC_CMD_GET_STATE
+   - rename functions which clash with libsystemd's
+   - src/tests: Fix container creation errors
+   - tests: fix parse_config_file seccomp test
+   - explicitly convert *mainloop_handler to __u64
+   - github: Add DCO/target tests
+   - Add libarchive tar support for lxc download
+   - get_hierarchy: dont WARN about no usable controller
+   - CONTRIBUTING: add a note on AI generated code
+   - github: Update for main branch
+   - Fix start api call to split quoted strings in execute or init command.
+   - Update console perms to 0600
+   - Remove references to LXD
+   - lxccontainer.h: Move new fields to the end
+   - build(deps): bump actions/checkout from 3 to 4
+   - containers in the FREEZING state also need to be unfreeze
+   - lxc/lxccontainer: fix do_lxcapi_set_timeout retval
+   - lxc/checkconfig: replace `cat | grep` with `grep`
+   - lxc/checkconfig: replace `type` by `command`
+   - lxc/checkconfig: remove some unneeded `echo -n`
+   - lxc/checkconfig: add missing quotes to please shellcheck
+   - lxc/checkconfig: replace `! -z` by `-n` (SC2236)
+   - lxc/checkconfig: check exit code directly (SC2181)
+   - lxc/checkconfig: remove superfluous (..) around test command (SC2234)
+   - lxc/checkconfig: avoid subshell (SC2235)
+   - lxc/checkconfig: minor cosmetic change
+   - lxc/checkconfig: replace `echo -n` by printf
+   - lxc/checkconfig: use multiline `echo`
+   - reset root_nsuid_map and root_nsgid_map when idmaps is cleared
+   - meson: Remove support for upstart
+   - hooks/ubuntu-cloud-prep: remove upstart handling
+   - doc: remove the warning mentionning upstart
+   - config/init: Drop upstart files
+   - conf: fix ephemeral copies
+   - don't try to delete vlan 0 from veth
+   - Disable IPv6 link-local addresses for bridged veth
+   - lxc-local: Change LXC_CONFIG to LXC_METADATA to match args and be more clear
+   - lxc-local: Improve usage info
+   - lxc-local: Re-organize code to use more functions
+   - lxc-local: Add --no-dev option to exclude /dev from the fstree
+   - config: try to create workdir if not exist
+   - build(deps): bump actions/upload-artifact from 3 to 4
+   - Add loongarch64 support
+   - build: add more options for customizing install
+   - Align columns in lxc-download.in template
+   - Add verbose output in download template.
+   - Fix error message.
+   - tree-wide: use container_uses_namespace() helper
+   - tree-wide: use container_uses_namespace() in less trivial cases
+   - lxc-download, lxc-local: preserve xattrs on unpack
+   - Add x32 to the list of recognized architectures
+   - test-usernic: don't use ifconfig
+   - lxc-test-usernic: drop cgroup handling
+   - oci: resolve cross-filesystem blob caching failure
+   - tests: lxc-test-usernic: use iproute tool instead of brctl
+   - config: apparmor: add AppArmor profile for lxc-copy
+   - tests: remove old and broken cgroup handling code from tests
+   - confile: move lxc_fill_elevated_privileges() to tools/lxc_attach
+   - meson: introduce IN_LIBLXC preprocessor macro
+   - confile: unhide lxc_config_define*() helpers
+   - conf: reorganize/split code to idmap_utils.c
+   - conf: reorganize/split code to utils.c
+   - confile: unhide lxc_config_parse_arch() helper
+   - storage_utils: unhide and rename is_valid_storage_type to lxc_is_valid_storage_type
+   - storage_utils: move get_fssize to utils
+   - network: use IN_LIBLXC
+   - meson: link with liblxc dynamically everywhere if possible
+   - github: master -> main
+   - tests/meson: attempt to fix ossfuzz builds
+   - lxc-net: Enable IPv6 by default
+   - lxc-unshare: fix an buffer overflow issue in lxc_unshare
+   - unshare: simplify lookup_name
+   - README: Correct 'armvl7' to 'armv7l'
+   - rexec: Avoid invalid free in rexec failure path
+   - src/lxc/syscall_numbers.h: drop define -1
+   - Revert "lxccontainer: fixes"
+   - lxccontainer: improve mod_rdep()
+   - lxccontainer: rework copy_file()
+   - tree-wide: replace multiply_overflow with check_mul_overflow
+   - tests/parse_config_file: add tests for lxc.time.offset.*
+   - tests/parse_config_file: fix some typos
+   - lxc/confile: do not print newline symbol in getter for lxc.time.offset.*
+   - lxc/confile: do not print excess space before scale suffix for time.offset.boot
+   - lxc/lxccontainer: specify file mode in open() call inside mod_rdep
+   - tools/lxc_autostart: don't fail when there are no containers
+   - lxc/tools: set default log_priority to ERROR
+   - lxc-ls: list names with whitespaces in `--active`.
+   - lxc-checkconfig: Show namespace limits
+   - lxc-checkconfig: Fix shellcheck
+   - MAINTAINERS: Remove Dwight from the maintainer list
+   - COPYING: Remove whitespace
+   - config/yum: Use SPDX header
+   - template: Use SPDX
+   - lxc.spec: Use SPDX
+   - lxc.spec: Clear default changelog
+   - hooks: Add SPDX headers
+   - src/tests: Add SPDX headers
+   - src/include: Add SPDX headers
+   - doc: Add SPDX headers and remove Author field
+   - COPYING: Clarify licensing of files without SPDX
+   - meson: Align SPDX license id
+   - Makefile: Align SPDX license id
+   - lxc.spec: Align SPDX license id
+  [/details]
+
+  ### Support and upgrade
+  LXC 6.0 will be supported until June 2029 and our current LTS release, LXC 5.0 will now switch to a slower maintenance pace, only getting critical bugfixes and security updates.
+
+  We strongly recommend all LXC users to plan an upgrade to the 6.0 branch.
+
+  ### Future release cadence
+  To make new LXC features more readily available to users, we have decided to start producing non-LTS releases again. The planned interval is every 6 months with LXC 6.1 planned for October.
+
+  Those releases will not benefit from the LTS guarantees around stability, support and security maintenance and will only be supported until the next release comes out.
+
+  Production users will likely want to remain on an LTS release.
+
+  ### Downloads
+
+   - Main release tarball: [lxc-6.0.0.tar.gz](https://linuxcontainers.org/downloads/lxc/lxc-6.0.0.tar.gz)
+   - GPG signature: [lxc-6.0.0.tar.gz.asc](https://linuxcontainers.org/downloads/lxc/lxc-6.0.0.tar.gz.asc)
+
+  ### Contributors
+  The LXC 6.0 release was brought to you by a total of 56 contributors.
