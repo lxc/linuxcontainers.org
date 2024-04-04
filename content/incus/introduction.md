@@ -70,9 +70,11 @@ Incus has two kind of releases:
  * LTS releases
  * Feature releases
 
-At present, no LTS releases have been released.
+The current LTS release is Incus 6.0 and is supported until June 2029.
 
-Feature releases are pushed out every month or so and contain new features as well as bugfixes. The normal support length for those releases is of about a month, or until the next release comes out. Some Linux distributions might offer longer support for particular feature releases that they decided to ship.
+Feature releases are pushed out every month or so and contain new features as well as bugfixes.
+The normal support length for those releases is of about a month, or until the next release comes out.
+Some Linux distributions might offer longer support for particular feature releases that they decided to ship.
 
 Commercial support for Incus can be obtained from [Zabbly](https://zabbly.com/incus).
 
