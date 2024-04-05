@@ -1,0 +1,165 @@
+title: LXCFS 6.0 LTS リリースのお知らせ
+date: 2024/04/01 04:04
+origin: https://discuss.linuxcontainers.org/t/lxcfs-6-0-lts-has-been-released/19546
+content: |-
+  ### はじめに <!-- Introduction -->
+  <!--
+  The LXCFS team is pleased to announce the release of LXCFS 6.0 LTS!
+  -->
+  LXCFS チームが LXCFS 6.0 LTS のリリースをお知らせします!
+
+  <!--
+  This is the result of two years of work since the LXCFS 5.0 release and is the fifth LTS release for the LXCFS project. This release will be supported until June 2029.
+  -->
+  このリリースは、LXCFS 5.0 リリース以来 2 年の取り組みの結果で、LXCFS プロジェクトの 5 つ目の LTS リリースです。
+
+  ### ハイライト <!-- Highlights -->
+  #### 新しい `--enable-cgroup` オプション <!-- New `\-\-enable-cgroup option` -->
+  <!--
+  LXCFS can provide a virtual cgroupfs (v1) tree for use by containers.
+  This feature was implemented prior to cgroup namespaces being implemented in the kernel and effectively allow providing a similar experience on kernels lacking that feature.
+  -->
+  LXCFS は、コンテナ向けに、仮想的な cgroupfs (v1) ツリーを提供できます。
+  この機能は cgroup namespace がカーネルに実装される前に実装されており、その機能がないカーネルでも、同様の機能を提供できます。
+
+  <!--
+  As most supported Linux distributions now all feature a kernel supporting cgroup namespaces and most new distros have even switched away from cgroupv1, it didn't make sense to keep this feature enabled by default. As a result, it has now been moved behind a new startup argument, `--enable-cgroup`.
+  -->
+  今では、サポートされているほとんどの Linux ディストリビューションは、すべて cgroup namespace をサポートするカーネルを提供しており、新しいディストリビューションのほとんどは cgroup v1 から（v2 に）切り替わっているので、この機能をデフォルトで有効にし続ける意味がありません。そのため、この機能は新しい起動時の引数である `--enable-cgroup` で有効にするようになりました。
+
+  #### CPU の `/sys/devices/system/cpu` での非マスク化 <!-- CPUs no longer masked in /sys/devices/system/cpu -->
+  <!--
+  LXCFS 5.0 shipped with logic to filter out entries in `/sys/devices/system/cpu` based on what CPUs were allowed in the caller's cpuset. This behavior doesn't actually reflect the behavior on normal systems where even offline CPUs still show up in `/sys/devices/system/cpu`.
+  -->
+  LXCFS 5.0 は、呼び出し元の cpuset で許可されている CPU をもとに、`/sys/devices/system/cpu` のエントリーをフィルタリングするロジックが存在しました。この動作は、オフラインの CPU であっても `/sys/devices/system/cpu` に表示される通常のシステムの動作を実際には反映していません。
+
+  <!--
+  As a result, LXCFS 6.0 reversed that logic and is now only making sure to keep the list of online/offline CPUs up to date while the individual CPU directories all remain accessible.
+  -->
+  このため、LXCFS 6.0 ではこのロジックを逆転し、オンライン・オフラインの CPU のリストを最新に保つようになっただけで、個々の CPU ディレクトリーにはすべてアクセス可能なままです。
+
+  ### すべての変更点 <!-- Full changelog -->
+
+  [details="すべてのChangeLogを見る"]
+   - lxcfs_fuse: ensure lxcfs_fuse_compat.h is included after including fuse header
+   - tree-wide: remove struct stat argument from DIR_FILLER and make it static inline
+   - tree-wide: ensure that file information is set even with legacy fuse
+   - tests: add test for issue #522
+   - meson: Include documentation
+   - workflows: disable documentation generation
+   - sysfs: Don't incorrectly filter entries
+   - tests: Fix sysfs test
+   - utils: add and use opathdir()
+   - sysfs_fuse: fix indendation
+   - sysfs_fuse: generate file info for cpu<nr> entries as well
+   - meson: bump fuse version
+   - github: add fuse3 tests
+   - meson: handle fuse versions with buggy dt_type handling
+   - init/meson: Use libdir instead of hardcoded /lib path
+   - Query systemd system unit dir.
+   - support explicit fuse version choice
+   - github: Re-organize Github Actions
+   - tests: Skip sysfs test on older FUSE versions
+   - init: Fix install paths for sysvinit and openrc
+   - meson: Support multiple init systems
+   - meson: Syntax nit
+   - proc_fuse: extra space in /proc/stat
+   - util: remove doubled comment
+   - sysfs: correct file size of /sys/devices/system/cpu/online.
+   - sysfs: cleanup sys_devices_system_cpu_online_getsize
+   - cgroup v2: return cpuset cpu count when no quota is set
+   - re-initialize library after reload
+   - replace opathdir with opendir_flags
+   - github: Restrict permissions
+   - github: Validate target branch
+   - fix reinitialization with fuse3
+   - set oom_score_adj of lxcfs process to -1000
+   - init: respect --prefix when installing systemd unit files
+   - Fix build on ia64
+   - doc: guide for mount /sys/devices/system/cpu in docker demo
+   - utils: add safe_uint32() helper
+   - macro.h: add strnprintf macro
+   - utils: add get_task_personality helper
+   - cpuview: paththrough personality when reading cpuinfo
+   - cpuview: fix possible use-after-free in find_proc_stat_node
+   - github: make coverity workflow work with meson
+   - README: how to build with sanitizers
+   - cpuset_parse: check input string in cpuset_nexttok
+   - github: enable ASAN and UBSAN during PR tests
+   - lxcfs: explicitly enable direct_IO for libfuse3
+   - lxcfs: fix copypaste typo in error message
+   - /proc/stat: render physical cpu number in non-view mode
+   - sysfs: don't mask cpus in /sys/devices/system/cpu
+   - lxcfs: handle NULL path in lxcfs_releasedir/lxcfs_release
+   - cpuview: fix ABBA deadlock in find_proc_stat_node
+   - build: tools: keep trailing newline in jinja2 renderer
+   - Revert "init: respect --prefix when installing systemd unit files"
+   - proc: fix /proc/diskstats output format
+   - github: start using ubuntu-22.04 image
+   - github: remove ubuntu-18.04
+   - tests: adapt for cgroup2
+   - cpuview: resolve cpu cgroup path separately from cpuset the cgroup path is different in kubernetes with containerd runtime.
+   - lxcfs: preparation for FUSE_INTERRUPT support
+   - lxcfs: add fuse interruptible locks
+   - cpuview: start to use interruptible lock primitives
+   - github: Update for main branch
+   - proc_loadavg: fix ABBA deadlock between read/refresh
+   - proc: Fix /proc/cpuinfo not respecting personality
+   - proc_loadavg.c: Fix incompatible integer to pointer conversion
+   - cgroups: cleanup and remove unused cgroup2_devices code
+   - loadavg: make cleanup of start_loadavg
+   - cpuview: pass a correct argument to lxcfs_debug
+   - lxcfs: Add startup message
+   - proc: fix MemAvailable in /proc/meminfo to exclude tmpfs files
+   - systemd: mkdir -p the target mount dir
+   - typofix: fix incorrect printing in lxcfs help interface
+   - Add macro pivot&bpf for loongarch64
+   - lxc.mount.hook: Skip cpu sysfs logic if missing target
+   - sysfs: forbid write()
+   - lxcfs: introduce new option --enable-cgroup
+   - tests: use --enable-cgroup for tests
+   - github: workaround CI issue with ASAN
+   - Revert "github: workaround CI issue with ASAN"
+   - proc_fuse: Fix get_swap_info typo swtotal == 0 -> *swtotal == 0
+   - proc: Fix swap handling for cgroups v2 (can_use_swap)
+   - proc: Fix swap handling for cgroups v2 (zero limits)
+   - cgroup_utils: explicitly check for cgroup2 FDs in cgroup_walkup_to_root
+  [/details]
+
+  ### サポートとアップグレード <!-- Support and upgrade -->
+  <!--
+  LXCFS 6.0 will be supported until June 2029 and our current LTS release, LXCFS 5.0 will now switch to a slower maintenance pace, only getting critical bugfixes and security updates.
+  -->
+  LXCFS 6.0 は 2029 年 6 月までサポートされる、最新の LTS リリースです。LXCFS 5.0 は、より遅いメンテナンスペースに変更され、重要なバグ修正とセキュリティ更新のみが提供されます。
+
+  <!--
+  We strongly recommend all LXCFS users to plan an upgrade to the 6.0 branch.
+  -->
+  LXCFS のユーザーはすべて、6.0 ブランチへのアップグレードを計画することを強くおすすめします。
+
+  ### 今後のリリースについて <!-- Future release cadence -->
+  <!--
+  To make new LXCFS features more readily available to users, we have decided to start producing non-LTS releases again. The planned interval is every 6 months with LXCFS 6.1 planned for October.
+  -->
+  ユーザーが新しい LXCFS の機能をより簡単に利用できるように、今後は LTS ではないリリースの作成を開始することにしました。計画している間隔は 6 ヶ月ごとで、LXCFS 6.1 は 10 月に予定されています。
+
+  <!--
+  Those releases will not benefit from the LTS guarantees around stability, support and security maintenance and will only be supported until the next release comes out.
+  -->
+  この LTS ではないリリースでは、安定性、サポート、セキュリティメンテナンスに関する LTS の保証は受けられず、次のリリースが出るまでのみサポートされます。
+
+  <!--
+  Production users will likely want to remain on an LTS release.
+  -->
+  本番環境のユーザーは LTS リリースを利用し続けたいと思うでしょう。
+
+  ### ダウンロード<!-- Downloads -->
+
+   - リリース tarball <!-- Main release tarball -->: [lxcfs-6.0.0.tar.gz](https://linuxcontainers.org/downloads/lxcfs/lxcfs-6.0.0.tar.gz)
+   - GPG シグネチャー <!-- GPG signature -->: [lxcfs-6.0.0.tar.gz.asc](https://linuxcontainers.org/downloads/lxcfs/lxcfs-6.0.0.tar.gz.asc)
+
+  ### コントリビューター <!-- Contributors -->
+  <!--
+  The LXCFS 6.0 release was brought to you by a total of 25 contributors.
+  -->
+  LXCFS 6.0 は、合計 25 名のコントリビューターによってリリースしました。
