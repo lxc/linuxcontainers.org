@@ -11,7 +11,7 @@ content: |-
   <!--
   This is the result of two years of work since the LXC 5.0 release and is the sixth LTS release for the LXC project. This release will be supported until June 2029.
   -->
-  これは LXC 5.0 のリリース以来 2 年の作業の成果です。そして、LXC プロジェクトの 6 回目の LTS リリースです。
+  これは LXC 5.0 のリリース以来 2 年の作業の成果です。そして、LXC プロジェクトの 6 回目の LTS リリースです。このリリースは 2029 年 6 月までサポートされます。
 
   ### ハイライト <!-- Highlights -->
   #### 新しいマルチコールバイナリー <!-- New multi-call binary -->
@@ -51,7 +51,7 @@ content: |-
   <!--
   The `lxc-usernsexec` tool now has both `-u` and `-g` options to control what resulting UID and GID (respectively) the user wishes to use (defaulting to 0/0).
   -->
-  `lxc-usernsexec` ツールに、ユーザーが使いたい UID と GID それぞれを制御するための `-u` と `-g` オプションが追加されました。
+  `lxc-usernsexec` ツールに、ユーザーが使いたい UID と GID それぞれを制御するための `-u` と `-g` オプションが追加されました（デフォルトは 0/0 です）。
 
   #### `lxc-checkconfig` の改良 <!-- Improvements to `lxc-checkconfig` -->
   <!--
