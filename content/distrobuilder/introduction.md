@@ -16,7 +16,7 @@ Release tarballs can be found in the [Downloads](/distrobuilder/downloads) secti
 
 The current build can also be installed directly with:
 
-    go get -v -x github.com/lxc/distrobuilder/distrobuilder
+    go install -v -x github.com/lxc/distrobuilder/distrobuilder@latest
 
 # Language, licensing and contributions
 distrobuilder is written in Go, it's free software and is developed under the Apache 2 license.
