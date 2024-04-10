@@ -671,7 +671,7 @@ content: |-
   -->
   Chocolatey 経由で、Windows ユーザー向けにクライアントツールが利用できます。
 
-  https://community.chocolatey.org/packages/incus/0.6
+  https://community.chocolatey.org/packages/incus/0.7
 
   ## Incus クライアントの Winget パッケージ <!-- Winget package for the Incus client -->
   <!--

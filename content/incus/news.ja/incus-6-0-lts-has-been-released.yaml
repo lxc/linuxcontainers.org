@@ -1,0 +1,699 @@
+title: Incus 6.0 LTS リリースのお知らせ
+date: 2024/04/04 03:04
+origin: https://discuss.linuxcontainers.org/t/incus-6-0-lts-has-been-released/19576
+content: |-
+  # はじめに <!-- Introduction -->
+  <!--
+  It's with great pride and pleasure that the Incus team is announcing the release of Incus 6.0 LTS!
+  -->
+  Incus チームが Incus 6.0 LTS のリリースをお知らせできることは、大きな誇りであり喜びです。
+
+  <!--
+  [Incus](https://linuxcontainers.org/incus/) is a modern system container and virtual machine manager developed and maintained by the same team that first created LXD. It's released under the Apache 2.0 license and is run as a community led Open Source project as part of the [Linux Containers](https://linuxcontainers.org) organization.
+  -->
+  [Incus](https://linuxcontainers.org/incus/) は、最新のシステムコンテナおよび仮想マシンのマネージャーで、LXD を最初に開発したチームにより開発とメンテナンスが行われています。Apache 2.0 ライセンスのもとでリリースされており、[Linux Containers](https://linuxcontainers.org)プロジェクトの一部として、コミュニティ主導で運営されています。
+
+  <!--
+  Incus provides a cloud-like environment, creating instances from [premade images](https://images.linuxcontainers.org) and offers a wide variety of features, including the ability to seamlessly cluster up to 50 servers together.
+  -->
+  Incus はクラウドのような環境を提供し、[あらかじめ作成されたイメージ](https://images.linuxcontainers.org)からインスタンスを作成し、最大 50 台のサーバーをシームレスにクラスター化する機能を含む、さまざまな機能を提供します。
+
+  <!--
+  It supports multiple different local or remote storage options, traditional or fully distributed networking and offers most common cloud features, including a [full REST API](https://linuxcontainers.org/incus/docs/main/rest-api-spec/) and [integrations](https://linuxcontainers.org/incus/docs/main/third_party/) with common tooling like Ansible, Terraform/OpenTofu and more!
+  -->
+  複数の異なるローカルもしくはリモートのストレージオプション、従来型もしくは完全分散ネットワークをサポートし、完全な [REST API](https://linuxcontainers.org/incus/docs/main/rest-api-spec/) と、Ansible や Terraform/OpenTofu などの一般的なツールとの[統合](https://linuxcontainers.org/incus/docs/main/third_party/)を含む、一般的なクラウド機能を提供します。
+
+  [![image|690x489](https://discuss.linuxcontainers.org/uploads/default/original/2X/a/af2c62a2b818adece32adbe8fa7b31b0b4355a3b.png)](https://linuxcontainers.org/incus/try-it/)
+
+  <!--
+  This is a major milestone for Incus as it marks our first release with extended support, suitable for use in production environments where monthly feature releases aren't suitable.
+  -->
+  このリリースは Incus にとって大きなマイルストーンであり、毎月のフィーチャーリリースが適さない本番環境での使用に適した、拡張サポート付きの最初のリリースです。
+
+  <!--
+  It joins [LXC 6.0 LTS](https://discuss.linuxcontainers.org/t/lxc-6-0-lts-has-been-released/19567) and [LXCFS 6.0 LTS](https://discuss.linuxcontainers.org/t/lxcfs-6-0-lts-has-been-released/19546) in wrapping up this round of LTS releases.
+  -->
+  このリリースが、[LXC 6.0 LTS](https://discuss.linuxcontainers.org/t/lxc-6-0-lts-has-been-released/19567) と [LXCFS 6.0 LTS](https://discuss.linuxcontainers.org/t/lxcfs-6-0-lts-has-been-released/19546) に加わり、今回の LTS リリースを締めくくります。
+
+  <!--
+  Just like its sister projects, Incus 6.0 LTS will be supported until **June 2029**.
+  The first 2 years will feature bug and security fixes as well as minor usability improvements, delivered through occasional point releases (6.0.x). After that initial two years, Incus 6.0 LTS will move to security only maintenance for the remaining of its 5 years of support.
+  -->
+  姉妹プロジェクトと同様に、Incus 6.0 LTS は **2029 年 6 月**までサポートされます。
+  最初の 2 年間は、バグとセキュリティの修正に加えて、小規模なユーザビリティの改善が行われ、不定期のポイントリリース（6.0.x）を通して提供されます。その最初の 2 年間の後、Incus 6.0 LTS は、サポート期間の 5 年間の残りはセキュリティ修正のみのメンテナンスに移行します。
+
+  <!--
+  As usual, you can try it for yourself online: https://linuxcontainers.org/incus/try-it/
+  -->
+  いつものように、オンラインでご自身で試せます: https://linuxcontainers.org/incus/try-it/
+
+  Enjoy!
+
+  <!--
+  PS: Incus was made possible thanks to the work of over 70 individual contributors!
+  -->
+  PS: Incus は 70 名を超える個人コントリビューターの作業のおかげで可能になりました。
+
+  # Incus 0.7 からの変更 <!-- Changes since Incus 0.7 -->
+  ## コンテナのスワップに対する制限 <!-- Swap limits for containers -->
+  <!--
+  The existing `limits.memory.swap` configuration key for containers has been extended to also allow for byte amounts.
+  -->
+  コンテナ向けの既存の設定である `limits.memory.swap` が拡張され、バイト単位でも指定できるようになりました。
+
+  <!--
+  This now makes its behavior be as follows:
+  -->
+  今回の機能追加で、動作は次のようになります:
+
+   - `limits.memory.swap=true` => コンテナはスワップ可能（デフォルト）<!-- Container memory may be swapped (default) -->
+   - `limits.memory.swap=false` => コンテナはスワップされるべきではない（最小限のスワップ）<!-- Container shouldn't get swapped (minimal swappiness) -->
+   - `limits.memory.swap=256MiB` => コンテナは（`limits.memory` で設定されたメモリー制限に加えて）256MiB までのスワップスペースを使用できる<!-- Container can use up to 256MiB of swap space (in addition to its memory limit set through `limits.memory`) -->
+
+  例（cgroup2 を使ったシステム）<!-- Example (cgroup2 system) -->:
+
+      stgraber@dakara:~$ incus launch images:debian/12 d12 -c limits.memory=1GiB
+      Launching d12
+      stgraber@dakara:~$ incus exec d12 bash
+      root@d12:~# free -m
+                     total        used        free      shared  buff/cache   available           
+      Mem:            1024          21         983           0          19        1002
+      Swap:              0           0           0
+      root@d12:~#
+      exit
+      stgraber@dakara:~$ incus config set d12 limits.memory.swap=128MiB
+      stgraber@dakara:~$ incus exec d12 bash
+      root@d12:~# free -m      
+                     total        used        free      shared  buff/cache   available
+      Mem:            1024          21         983           0          19        1002
+      Swap:            128           0         128
+      root@d12:~#
+      exit
+
+  ## 新しいシェル補完メカニズム <!-- New shell completion mechanism -->
+  <!--
+  With this release, we complete the migration away from a hand-maintained bash completion script and over to generate completion scripts directly in our command line tool.
+  -->
+  このリリースで、手動でメンテナンスしてた bash 補完（completion）スクリプトからの移行を完了し、コマンドラインツールから直接補完スクリプトを生成できるようになりました。
+
+  <!--
+  Completion profiles are now available for:
+  -->
+  補完プロファイルが次に対して利用できるようになりました:
+
+   - bash
+   - fish
+   - powershell
+   - zsh
+
+  <!--
+  The profile can be retrieved by calling `incus completion <shell>` (e.g. `incus completion bash`) though this will generally be done by packagers as part of the Incus package build process.
+  -->
+  プロファイルは `incus completion <shell>`（例: `incus completion bash`）で呼び出せます。しかしこれは通常、Incus パッケージのビルドプロセスの一部としてパッケージャーによって行われます。
+
+  ## 外部ブリッジインターフェースの作成 <!-- Creation of external bridge interfaces -->
+  <!--
+  The managed network bridge configuration syntax for external interfaces, `bridge.external_interfaces` has now been extended to allow for the creation and attachment of VLAN interfaces.
+  -->
+  外部インターフェース向けの管理ネットワークブリッジの設定構文である `bridge.external_interfaces` が拡張され、VLAN インターフェースの作成と接続ができるようになりました。
+
+      stgraber@dakara:~$ incus network set incusbr0 bridge.external_interfaces=vlan60/enp35s0/60
+      stgraber@dakara:~$ ip link show dev vlan60
+      269: vlan60@enp35s0: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc noqueue master incusbr0 state LOWERLAYERDOWN mode DEFAULT group default qlen 1000
+          link/ether 00:23:a4:01:01:6f brd ff:ff:ff:ff:ff:ff
+      stgraber@dakara:~$ incus network unset incusbr0 bridge.external_interfaces
+      stgraber@dakara:~$ ip link show dev vlan60
+      Device "vlan60" does not exist.
+      stgraber@dakara:~$
+
+  ## リモートストレージからのディスクがアタッチされたVMのライブマイグレーション <!-- Live-migration of VMs with attached disks (from remote storage) -->
+  <!--
+  As an extension to our ever improving VM live-migration support, virtual-machines with additional disks attached to them which come from a "remote" storage pool (`ceph` or `lvmcluster`) will now be live-migratable alongside the virtual machine.
+  -->
+  改善を続ける VM のライブマイグレーションサポートの拡張として、"remote" のストレージプール（`ceph` もしくは `lvmcluster`）から追加ディスクがアタッチされた仮想マシンが、仮想マシンと一緒にライブマイグレーションされるようになりました。
+
+  <!--
+  No user action is required for this to happen, you'll simply now notice that virtual machines that previously would have refused to live-migrate through either a manual `incus move --target` or a cluster evacuation will now happily live-migrate to another server.
+  -->
+  これを行うためのユーザーアクションは不要です。以前は、マニュアルによる `incus move --target` やクラスター退避によるライブマイグレーションを拒絶していた仮想マシンが、別のサーバーに適切にライブマイグレーションされるのがわかります。
+
+  ## `incus info --resources` 中のシステム情報 <!-- System information in `incus info \-\-resources` -->
+  <!--
+  A new `System` section is now visible in `incus info --resources`
+  -->
+  `incus info --resources` の出力に、新たに `System` セクションが追加されました。
+
+      stgraber@dakara:~$ incus info --resources
+      System:
+        UUID: 88eecd60-34fc-9f97-48f5-fc34979f48f6
+        Vendor: ASUS
+        Product: System Product Name
+        Family: To be filled by O.E.M.
+        Version: System Version
+        SKU: SKU
+        Serial: System Serial Number
+        Type: physical
+        Chassis:
+            Vendor: Default string
+            Type: Desktop
+            Version: Default string
+            Serial: Default string
+        Motherboard:
+            Vendor: ASUSTeK COMPUTER INC.
+            Product: ProArt B550-CREATOR
+            Serial: 210382121300122
+            Version: Rev X.0x
+        Firmware:
+            Vendor: American Megatrends Inc.
+            Version: 2803
+            Date: 04/28/2022
+   
+       [snip...]
+
+  <!--
+  Having access to this information is particularly useful in clustered environments where `incus info \-\-resources` can be used with the `\-\-target` argument to query specific servers, check that all firmwares are up to date and check what machines one is dealing with.
+  -->
+  この情報にアクセスできることは、`incus info --resources` を `--target` 引数とともに使い、特定のサーバーについて問い合わせたり、すべてのファームウェアが最新であることを確認したり、どのマシンを扱っているかをチェックしたりというように、クラスター環境で特に役に立ちます。
+
+  <!--
+  This feature was contributed by [University of Texas at Austin](https://www.utexas.edu) students.
+  -->
+  この機能は [University of Texas at Austin](https://www.utexas.edu) の学生によるコントリビューションです。
+
+  ## `incus info --resources` 中の USB デバイス <!-- USB devices in `incus info \-\-resources` -->
+  <!--
+  A new `USB devices` section is now visible in `incus info --resources`
+  -->
+  `incus info --resources` の出力に、新たに `USB devices` セクションが追加されました。
+
+      stgraber@dakara:~$ incus info --resources
+      [snip...]
+      
+      USB devices:
+        Device 0:
+          Vendor: Intel Corp.
+          Vendor ID: 8087
+          Product: AX200 Bluetooth
+          Product ID: 0029
+          Bus Address: 1
+          Device Address: 6
+        Device 1:
+          Vendor: Corsair
+          Vendor ID: 1b1c
+          Product: H150iRGBPROXT
+          Product ID: 0c22
+          Bus Address: 1
+          Device Address: 5
+        Device 2:
+          Vendor: ASUSTek Computer, Inc.
+          Vendor ID: 0b05
+          Product: AURA LED Controller
+          Product ID: 19af
+          Bus Address: 1
+          Device Address: 2
+        Device 3:
+          Vendor: Realtek Semiconductor Corp.
+          Vendor ID: 0bda
+          Product: TX42C500
+          Product ID: 4933
+          Bus Address: 5
+          Device Address: 2
+        Device 4:
+          Vendor: Blue Microphones
+          Vendor ID: b58e
+          Product: Yeti Stereo Microphone
+          Product ID: 9e84
+          Bus Address: 5
+          Device Address: 15
+        Device 5:
+          Vendor: Yubico.com
+          Vendor ID: 1050
+          Product: YubiKey FIDO+CCID
+          Product ID: 0406
+          Bus Address: 5
+          Device Address: 29
+        Device 6:
+          Vendor: Logitech, Inc.
+          Vendor ID: 046d
+          Product: HD Pro Webcam C920
+          Product ID: 082d
+          Bus Address: 5
+          Device Address: 17
+        Device 7:
+          Vendor: Powerware Corp.
+          Vendor ID: 0592
+          Product: Powerware UPS
+          Product ID: 0002
+          Bus Address: 7
+          Device Address: 2
+
+  <!--
+  That information comes in very handy when adding a [USB device](https://linuxcontainers.org/incus/docs/main/reference/devices_usb/) to a container or virtual machine.
+  -->
+  この情報は、USB デバイスをコンテナや仮想マシンに追加する場合に非常に役に立ちます。
+
+  <!--
+  This feature was contributed by [University of Texas at Austin](https://www.utexas.edu) students.
+  -->
+  この機能は [University of Texas at Austin](https://www.utexas.edu) の学生によるコントリビューションです。
+
+  # LXD 5.0 LTS からの変更点 <!-- Changes since LXD 5.0 LTS -->
+  <!--
+  For those coming from the LXD 5.0 LTS release, here is a concise list of what to expect as far as features having been removed and what has been added both in subsequent LXD feature releases and then through Incus.
+  -->
+  LXD 5.0 LTS リリースからのユーザー向けに、削除された機能と、その後の LXD 機能リリースと Incus で追加された機能についての簡単なリストを示します。
+
+  ## 削除された機能 <!-- Feature removal -->
+  <!--
+  A number of features that were Ubuntu or Canonical specific were removed as part of the creation of the Incus project. A number of legacy APIs have also been removed at the same time.
+  You'll find the full list in the [Incus 0.1 announcement](https://discuss.linuxcontainers.org/t/incus-0-1-has-been-released/18036).
+  -->
+  Ubunttu や Canonical 固有の多数の機能が、Incus プロジェクト設立の一環として削除されました。
+  [Incus 0.1 リリースのお知らせ](https://linuxcontainers.org/ja/incus/news/2023_10_07_06_10.html#incus-01) に、削除された機能の全リストがあります。
+
+  ハイライト<!-- Highlights -->:
+
+   - VFS idmap shifting 機能を使うようにして、（同じ機能である）`shiftfs` を削除しました <!-- `shiftfs` has been removed in favor of VFS idmap shifting -->
+   - OpenID Connect を使うようにして、`Canonical Candid` を削除しました <!-- `Canonical Candid` authentication has been removed in favor of OpenID Connect -->
+   - OpenFGA を使うようにして、`Canonical RBAC` 認証を削除しました <!-- `Canonical RBAC` authorization has been removed in favor of OpenFGA -->
+   - `Canonical MAAS` 機能を削除しました（使用されていない機能）<!-- `Canonical MAAS` network integration has been removed (under/unused feature) -->
+   - OVN を使うようにして、`Ubuntu Fan` を削除しました <!-- `Ubuntu Fan` networking has been removed in favor of OVN -->
+   - セキュリティ上の理由から、信頼トークンを使用するようにし、`core.trust_password` は削除しました <!-- `core.trust_password` has been removed in favor of trust tokens for security reasons -->
+
+  ## 追加された機能 <!-- Feature additions -->
+  <!--
+  Here are a few highlights from the many new features introduced within the 2 years since the release of LXD 5.0 LTS.
+  -->
+  次は、LXD 5.0 LTS のリリース以来 2 年間で導入した多数の新機能から、いくつかハイライトを紹介します。
+
+   - API
+       - プロジェクトをまたがったオブジェクトをリストする機能（CLI の `?all-projects=true` や `--all-projects`） <!-- Abiltiy to list objects across projects (`?all-projects=true` or `--all-projects` in CLI) -->
+       - [JWT 認証 <!-- JWT authentication -->](https://linuxcontainers.org/incus/docs/main/authentication/#using-json-web-token-jwt-to-perform-tls-authentication) （TLS証明書から取得）<!-- (derived from TLS certificate) -->
+   - インスタンス <!-- Instances -->
+       - [配置スクリプトレット<!-- Placement scriptlet -->](https://linuxcontainers.org/incus/docs/main/explanation/clustering/#instance-placement-scriptlet)
+       - [インスタンスのリビルド<!-- Instance rebuilding -->](https://linuxcontainers.org/incus/docs/main/howto/instances_manage/#rebuild-an-instance)
+       - [インスタンス状態 `READY` <!-- `READY` instance state -->](https://linuxcontainers.org/incus/docs/main/dev-incus/#patch)
+       - NUMA 対応のインスタンス配置 <!-- NUMA aware instance placement -->(`limits.cpu.nodes`)
+       - （コンテナ）`sysinfo` システムコールのインターセプション <!-- (CONTAINER) `sysinfo` system call interception -->(`security.syscalls.intercept.sysinfo`)
+       - （VM）CPU ホットプラグサポート<!-- (VM) CPU hotplug support -->(`limits.cpu`)
+       - （VM）「オンライン」ライブマイグレーションのサポート<!-- (VM) "Online" live-migration support -->
+       - （VM）AMD SEV のサポート <!-- (VM) AMD SEV support -->(`security.sev`)
+       - （VM）レガシー BIOS サポート <!-- (VM) Legacy (BIOS) support -->(`security.csm`)
+       - （VM）ディスクにあるディレクトリーのホットプラグ機能<!-- (VM) Ability to hot-plug directories backed disks -->
+       - （VM）I/O バスオプションの NVME と VirtIO <!-- (VM) NVME and VirtIO block I/O bus options -->
+   - インテグレーション <!-- Integrations -->
+       - [Grafana Loki のログとイベントストリーミング <!-- Grafana Loki log and event streaming -->](https://linuxcontainers.org/incus/docs/main/server_config/#server-options-loki)
+       - [ACME / Let's Encrypt 証明書生成と署名 <!-- ACME / Let's Encrypt certificate generation/signing -->](https://linuxcontainers.org/incus/docs/main/authentication/#authentication-server-certificate)
+       - [OpenID Connect 認証のサポート <!-- OpenID Connect authentication support -->](https://linuxcontainers.org/incus/docs/main/authentication/#openid-connect-authentication)
+       - [OpenFGA 認証のサポート <!-- OpenFGA authorization support -->](https://linuxcontainers.org/incus/docs/main/authorization/#authorization-openfga)
+       - [イメージサーバーの管理ツール <!-- Image server management tool -->](https://linuxcontainers.org/incus/docs/main/reference/image_servers/#tooling-to-manage-a-simplestreams-server)
+   - ネットワーク<!-- Networking -->
+       - [ネットワークインテグレーション<!-- Network integrations](https://linuxcontainers.org/incus/docs/main/howto/network_integrations/) (OVN interconnect support)
+       - [ロードバランサー <!-- Load-balancers -->](https://linuxcontainers.org/incus/docs/main/howto/network_load_balancers/) (OVN)
+       - [IPAM データエクスポート API <!-- IPAM data export API -->](https://linuxcontainers.org/incus/docs/main/howto/network_ipam/)
+       - オフロードされた OVN ネットワークの VDPA <!-- VDPA for offloaded OVN networks -->
+   - ストレージ <!-- Storage -->
+       - [クラスター LVM ストレージドライバー <!-- Clustered LVM storage driver -->](https://linuxcontainers.org/incus/docs/main/reference/storage_lvm/#lvmcluster-driver-in-incus)
+       - [ストレージバケット<!-- Storage buckets -->](https://linuxcontainers.org/incus/docs/main/howto/storage_buckets/#howto-storage-buckets) (S3 API)
+       - [ISO イメージカスタムボリューム<!-- ISO image custom volumes -->](https://linuxcontainers.org/incus/docs/main/howto/instances_create/#launch-a-vm-that-boots-from-an-iso)
+       - ZFS 委任管理（delegation）<!-- ZFS delegation -->
+       - ZFS ブロックモード <!-- ZFS block mode -->
+
+  # すべての変更点 <!-- Complete changelog -->
+  <!--
+  Here is a complete list of all changes since Incus 0.7:
+  -->
+  Incus 0.7 からのすべての変更のリストは次のとおりです（翻訳なし）:
+
+  [details="すべてのChangeLogを見る"]
+   - Translated using Weblate (Japanese)
+   - Translated using Weblate (Japanese)
+   - incus/image: Fix column handling with --all-projects
+   - Replace util.ValueInSlice with slices.Contains
+   - shared/util: Delete ValueInSlice function
+   - incus/image: Fix column handling with --all-projects
+   - incusd/instance/qemu: Relocate image requirement checks
+   - doc/images: Add requirements.cdrom_agent
+   - incusd/instance/qemu: Add support for requirements.cdrom_agent
+   - incusd/device/disk: Fix incorrect block volume usage
+   - Translated using Weblate (Japanese)
+   - incusd/network/ovn: Use ParseIPToNet instead of manual IPToNet and net.ParseIP
+   - incusd/network/ovn: Use listenAddressNet in family check
+   - incusd/instance/drivers: Disable architecture check on incus cp with snapshots
+   - Translated using Weblate (French)
+   - incusd/network/bridge: Set local address on all VXLAN tunnels
+   - incus/instance/qemu: Fix RecordOutput
+   - incus: add completions for instance actions and snapshots
+   - incus: add completions for profiles
+   - incusd/network/ovn: Introduce get helper
+   - incusd/network/ovn: Add some missing indices
+   - incusd/network/ovn: Use get helper
+   - incusd/network/ovn: Fix LogicalSwitchPortIPs logic
+   - incusd/network/bridge: Fix gofmt
+   - incusd/network/ovn: Fix gofmt
+   - cmd/incus: Use proper timestamp check
+   - cmd/incus: Use consistent date format and timezone
+   - client: Rename network_peer for consistency
+   - cmd/incusd: Rename network_peer to network_peers
+   - shared/api: Rename network_allocation for consistency
+   - incusd/db: Fix comment typoes
+   - incusd/db/generate: Fix bad camel case handling
+   - incusd/db/network_peers: Fix duplicate type definitions
+   - incusd/auth: Drop Permission type
+   - incusd/auth: Add boilerplate doc strings
+   - incusd/images: Properly handle null creation and expiry dates
+   - incus: add completions for remotes
+   - incus: add completions for projects
+   - incusd/images: Fix reporting of images in multiple projects
+   - github: Add static build of lxd-to-incus
+   - lxd-to-incus: Add support for Alpine service name
+   - lxd-to-incus: Re-organize target list
+   - lxd-to-incus: Add support for APK
+   - Makefile: Add OVN IC to update-ovsdb
+   - incusd/network: Update OVS/OVN schemas
+   - incusd/network/ovn: Add IC clients
+   - incusd/network/ovn: Add GetName to NB client
+   - incusd/network/ovn: Add GetGateways to ICSB
+   - incusd/network/ovn: Introduce new errors
+   - incusd/network/ovn: Add CreateTransitSwitch and DeleteTransitSwitch to ICNB
+   - incusd/device/gpu_sriov: Add locking
+   - incusd/device/gpu_sriov: Re-locate vfio-pci loading
+   - incusd/device/gpu_sriov: Rework VF allocation logic
+   - incus/remote: Add a generate-certificate sub-command
+   - i18n: Update translation templates
+   - incusd/drivers/qmp: Add SetBlockThrottle
+   - incusd/device/disk/config: Add DiskLimits
+   - incusd/device/disk: Re-shuffle limit parsing
+   - incusd/device/disk: Add disk limits on VMs
+   - incusd/device/disk: Support live limits update for VMs
+   - incusd/instance/qemu: Support disk I/O limits
+   - incus/remote: Add missing docstrings
+   - incusd/certificates: Improve token handling when clustered
+   - cmd/incusd/api_1.0: Update context
+   - cmd/incusd/api_cluster: Update context
+   - cmd/incusd/api_internal: Update context
+   - cmd/incusd/daemon: Update context
+   - cmd/incusd/api_project: Update context
+   - cmd/incusd/certificates: Update context
+   - cmd/incusd/images: Update context
+   - cmd/incusd/instance: Update context
+   - cmd/incusd/network: Update context
+   - cmd/incusd/operations: Update context
+   - cmd/incusd/profiles: Update context
+   - cmd/incusd/storage: Update context
+   - cmd/incusd/warnings: Update context
+   - incusd/devices: Skip isolated threads from NUMA CPUs
+   - incusd/devices: Restrict CPU threads by NUMA node
+   - incusd/instance/qemu: Add support for limits.cpu.nodes
+   - incusd/device/gpu: Add support for limits.cpu.nodes for VF selection
+   - incusd: Fix import shadowing
+   - incusd/images: Fix potential race condition
+   - incusd/instance/qemu: Add support for NUMA node restrictions for memory
+   - incusd/apparmor/qemu: Silence apparmor failures
+   - incusd/network/ovs: Introduce new errors
+   - incusd/network/ovn/nb: Move SetChassisGroupPriority to new function signature
+   - incusd/network/ovn/sb: Move GetLogicalRouterPortActiveChassisHostname to new function signature
+   - incusd/network/ovs: Move GetBridge to new function signature
+   - incusd/network/ovs: Move CreateBridge to new function signature
+   - incusd/network/ovs: Move DeleteBridge to new function signature
+   - incusd/network/ovs: Move CreateBridgePort to new function signature
+   - incusd/network/ovs: Move GetChassisID to new function signature
+   - incusd/network/ovs: Move GetOVNBridgeMappings to new function signature
+   - incusd/network: Update for function changes
+   - incusd/device/nic: Update for function changes
+   - incusd: Update for function changes
+   - doc: Fix bad snapshot syntax
+   - Translated using Weblate (French)
+   - doc: Fix token creation procedure
+   - incusd/network/ovn/nb: Add GetLogicalSwitch
+   - incusd/network/ovn/nb: Replace ChassisGroupChassisDelete with SetChassisGroupPriority
+   - incusd/network/ovn/nb: Port CreateLogicalRouterPort to OVSDB
+   - incusd/network/ovn/nb: Replace LogicalRouterPortLinkChassisGroup with CreateLogicalRouterPort
+   - incusd/network/ovn/nb: Port CreateChassisGroup to OVSDB
+   - incusd/network/ovn/nb: Port CreateLogicalSwitch to OVSDB
+   - incusd/network/ovn: Update for function changes
+   - incusd/network/ovn: Remove state references
+   - incusd/state: Add OVNNB and OVNSB handles
+   - incusd: Update to use state for OVN
+   - incusd/device: Make init function return error
+   - incusd/device: Add OVN check on nicOVN
+   - client: Still return response on RawQuery error
+   - incus/query: Respect --raw for errors
+   - incusd/network/acl: Add OVN check
+   - incusd/network: Make init function return error
+   - incusd/network: Add OVN check on ovn driver
+   - incusd/api: Re-order config checks
+   - incusd: Add OVN loader
+   - Translated using Weblate (French)
+   - incusd/network/ovn/nb: Port CreateLogicalSwitchPort to OVSDB
+   - incusd/network/ovn/nb: Port DeleteLogicalSwitchPort to OVSDB
+   - incusd/network/ovn/nb: Port DeleteLogicalRouterPort to OVSDB
+   - incusd/network/ovn: Update for function changes
+   - incusd/network/ovs: Port GetOVNSouthboundDBRemoteAddress to OVSDB
+   - incusd/network/ovs: Port DeleteBridgePort to OVSDB
+   - incusd/network/ovs: Port GetInterfaceAssociatedOVNSwitchPort to OVSDB
+   - incusd/network/ovs: Align GetChassisID with other functions
+   - incusd: Update for OVS function changes
+   - incusd/network/ovn/icsb: Fix bad DB schema
+   - incusd/network/ovn/nb: Introduce GetLogicalRouterPort
+   - incusd/network/ovn/nb: Extend OVNSwitchPortOpts to handle router ports
+   - incusd/network/ovn/nb: Change type of RouterPort field to OVNRouterPort
+   - incusd/network/ovn/nb: Port DeleteChassisGroup to OVSDB
+   - incusd/network/ovn/icnb: Update DeleteTransitSwitch to handle missing switches
+   - incusd/network/ovn: Update for function changes
+   - Translated using Weblate (French)
+   - incus/completion: do not add a space after remote names completion
+   - incusd/device/disk: Disable virtiofsd caching
+   - incus-agent: Cleanup mount logic
+   - Translated using Weblate (French)
+   - incus: expose parseVolume to entire package
+   - incus: add completions for storage pools and volumes
+   - incusd/device/gpu_sriov: Fix default handling
+   - doc/packaging: Add mention of documentation
+   - incusd/auth: Fix --all-projects for restricted users
+   - doc: Add third party tools page
+   - gomod: Update dependencies
+   - incusd/auth/tls: Prevent project modifications
+   - doc: Update wordlist
+   - internal/usbid: allow path override of usb.ids path
+   - incus/completion: fix image names completion
+   - doc/environment: document INCUS_USBIDS_PATH
+   - incusd/instance/qemu/agent: Check for semanage
+   - incusd/project: Fix config name in ImageProjectFromRecord
+   - incus/restart: Fix long description
+   - i18n: Update translations
+   - lxd-to-incus: Handle common existing bridges
+   - shared/simplestreams: Remove defaultOS
+   - shared/simplestreams: Add NewLocalClient
+   - incus-simplestreams: Introduce new command
+   - incus-simplestreams: Simplify delete logic
+   - doc: Re-organize image server doc
+   - doc: Add section for incus-simplestreams
+   - incusd/seccomp: Add support for pidfd threads
+   - incus: add completions for clusters
+   - incus: add completions for cluster groups
+   - incus: add completions for cluster roles
+   - incus: add completions for config devices
+   - incus: add completions for config templates
+   - update translations
+   - doc: Update references to mage docs
+   - doc/backup: Remove bad reference
+   - incus: add completions for network acls
+   - shared/api: Add new structs to support configuration metadata
+   - client: Add GetMetadataConfiguration
+   - incusd: Rename documentation.go -> metadata.go
+   - doc/rest-api: Refresh swagger YAML
+   - shared/api/metadata: Add GetKeys to simplify usage
+   - incusd: Add support for JWT authentication
+   - gomod: Update dependencies
+   - tests: Add tls2jwt tool
+   - tests: Add JWT authentication test
+   - api: auth_tls_jwt
+   - doc/authentication: Add section on JWT
+   - doc/instances: Remove size.state requirement for live migration
+   - incusd/instance/qemu: Allow live migration without size.state
+   - shared/idmap: Support uid/gid in subuid/subgid
+   - shared/cliconfig: Copy clientcerts on remote copy
+   - shared/cliconfig: Add HasRemoteClientCertificate
+   - shared/cliconfig: Support per-remote client certificates
+   - doc: Add clientcerts
+   - incusd/cluster/config: Add oidc.claim
+   - incusd/auth/oidc: Add support for using a specific claim as username
+   - incusd: Pass OIDC claim to verifier
+   - api: oidc_claim
+   - doc: Update configs
+   - doc/howto/instances: Mention extra resources in ISO guidea
+   - doc/installing: Add Debian backport
+   - doc: Add backported to dictionary
+   - lxd-to-incus: Add support for LXD 5.21
+   - shared/cliconfig: Ensure client certificate key is 0600
+   - api: device_usb_serial
+   - doc: Add busnum, devnum and serial to USB devices
+   - shared/api: Add Serial to ResourcesUSBDevice
+   - incusd/resources: Add USB Serial
+   - incusd/devices/usb: Add serial, busnum and devnum  options
+   - doc/rest-api: Refresh swagger YAML
+   - incusd/instance/qemu: Fix handling of > 64 limits.cpu
+   - incusd/device/gpu_sriov: Implement NUMA fallback
+   - incus: add completions for network forwards
+   - incus: add completions for network load balancers
+   - shared/validate: Remove stringInSlice
+   - shared/validate: Add And and Or functions
+   - shared/util: Move ParseUint32Range
+   - incusd/project: Update for ParseUint32Range
+   - doc/instance_options: Remove mention of limits.cpu.nodes from container-only section
+   - incusd/devices: Better handle bad config
+   - api: numa_cpu_balanced
+   - internal/instance: Add support for balanced NUMA nodes
+   - doc: Update configs
+   - incusd/instance/common: Add NUMA balancing
+   - incusd/instance/lxc: Add support for balanced NUMA allocation
+   - incusd/instance/qemu: Add support for balanced NUMA allocation
+   - incusd/devices: Add support for balanced NUMA allocation
+   - incusd/device/gpu_sriov: Simplify NUMA logic
+   - doc/cloud-init: Don't mention non-existing remotes
+   - doc/howto/images_remote: Fix wording around image servers
+   - doc/benchmark: Fix install command
+   - incusd/instance/common: Fix CanMigrate mutating devices
+   - incusd/instance/qemu: Reduce agent queries
+   - incusd/metrics: Don't filter out all server metrics
+   - incusd/auth/tls: Include project restrictions for metrics certificates
+   - incusd/auth/tls: Return project-aware checker for metrics
+   - incusd/metrics: Use project-specific checker if no global access
+   - internal/server/instance/lxd: add support for image.requirments.nesting
+   - api: add image_restriction_nesting
+   - doc/images: introduce requirements.nesting
+   - Show the count values in snapshot count mismatch error
+   - incus/admin/init: Use btrfs subvol in --auto
+   - incus-migrate: Clarify that disk image files must be raw
+   - incusd/network/ovn/icnb: Fix comment
+   - incusd/project: Re-format the comments
+   - incusd/project: Fix bad default value
+   - doc: Update configs
+   - incus/migrate: Add CSM support
+   - incusd/storage/backend: Better handle name conflicts
+   - incus-migrate: Support using the local server
+   - api: network_integrations
+   - shared/api: Add type and target_integration fields to NetworkPeersPost
+   - incusd/db/cluster: Add networks_integrations
+   - incusd/db/cluster: Re-generate schema
+   - incusd/db/cluster: Add generated DB code for network integrations
+   - incusd/db: Update network peer DB query functions
+   - client: Add check for network_integrations in CreateNetworkPeer
+   - incus/network/peer: Add support for network peer types
+   - shared/api: Add network integrations
+   - client: Add network integration functions
+   - incus/network: Introduce support for integrations
+   - incusd/auth: Add network integration functions
+   - shared/api: Add lifecycle events for network integrations
+   - incusd/lifecycle: Add network integration events
+   - incusd: Add network integration API
+   - incusd/db: Add GetNetworkPeersURLByIntegration
+   - incusd/network_integration: Add UsedBy field
+   - incusd/network_integrations: Add validator
+   - incusd/network/ovn: Add support for peering with OVN IC
+   - incusd/project: Add restricted.networks.integrations
+   - incusd/project: Add NetworkIntegrationAllowed
+   - incusd/network/integrations: Respect project restrictions
+   - incusd/network/ovn: Add support for integration restrictions
+   - incusd/auth/openfga: Update the model
+   - incusd/auth/openfga: Update the generated model
+   - incusd/auth/openfga: Handle model updates
+   - incusd: Remove openfga.store.model_id
+   - incusd/db/cluster: Remove openfga.store.model_id
+   - doc/ovn_peers: Add remote peering
+   - doc: Add documentation for network integrations
+   - doc/rest-api: Refresh swagger YAML
+   - i18n: Update translation templates
+   - doc: Update configs
+   - gomod: Update dependencies
+  [/details]
+
+  # ドキュメント <!-- Documentation -->
+  <!--
+  The Incus documentation can be found at:
+  -->
+  Incus のドキュメントはこちらです:
+  https://incus-ja.readthedocs.io/ja/latest/ （日本語訳）
+  https://linuxcontainers.org/incus/docs/main/ （原文）
+
+  # インストール <!-- Installation -->
+  <!--
+  There are no official Incus packages as Incus upstream only releases regular release tarballs. Below are some available options to get Incus up and running.
+  -->
+  Incus の開発元は、通常リリースの tarball のみをリリースするため、公式の Incus パッケージはありません。Incus を実行するために使えるオプションを以下にいくつか示します。
+
+  ## Linux パッケージ <!-- Linux packages -->
+  <!--
+  Incus is available for most common Linux distributions. You'll find detailed installation instructions in our documentation.
+  -->
+  Incus はほとんどの一般的な Linux ディストリビューションで利用できます。インストール手順の詳細は、Incus のドキュメントを参照してください。
+
+  https://incus-ja.readthedocs.io/ja/latest/installing/ （日本語訳）
+  https://linuxcontainers.org/incus/docs/main/installing/ （原文）
+
+  ## Incus クライアントの Homebrew パッケージ <!-- Homebrew package for the Incus client -->
+  <!--
+  The client tool is available through HomeBrew for both Linux and MacOS.
+  -->
+  HomeBrew 経由で、Linux と macOS 向けにクライアントツールが利用できます。
+
+  https://formulae.brew.sh/formula/incus
+
+  ## Incus クライアントの Chocolatey パッケージ <!-- Chocolatey package for the Incus client -->
+  <!--
+  The client tool is available through Chocolatey for Windows users.
+  -->
+  Chocolatey 経由で、Windows ユーザー向けにクライアントツールが利用できます。
+
+  https://community.chocolatey.org/packages/incus/6.0.0
+
+  ## Incus クライアントの Winget パッケージ <!-- Winget package for the Incus client -->
+  <!--
+  The client tool is also available through Winget for Windows users.
+  -->
+  Winget 経由で、Windows ユーザー向けにクライアントツールが利用できます。
+
+  https://winstall.app/apps/LinuxContainers.Incus
+
+  # LXD からの移行 <!-- Migrating from LXD -->
+  <!--
+  A `lxd-to-incus` migration tool allows for in-place migration from LXD to Incus.
+  It's been tested with LXD versions as low as 4.0 LTS and as high as the latest LXD 5.21 bugfix release.
+  -->
+  マイグレーションツールである `lxd-to-incus` を使って、LXD から Incus への移行が適切に行えます。
+  このツールは 4.0 LTS からバグフィックスリリースである LXD 5.21 までのバージョンでテストされています。
+
+  <!--
+  It allows for a very quick migration from LXD over to Incus, automatically checking for potential conflicts ahead of time.
+  -->
+  このツールで、LXD から Incus への非常に速いマイグレーションが可能になり、潜在的なコンフリクトを事前に自動的にチェックします。
+
+  [![asciicast](https://asciinema.org/a/650718.svg)](https://asciinema.org/a/650718)
+
+  <!--
+  More details can be found here: https://linuxcontainers.org/incus/docs/main/howto/server_migrate_lxd/
+  -->
+  詳細はこちらでご覧いただけます:
+  https://incus-ja.readthedocs.io/ja/latest/howto/server_migrate_lxd/ （日本語訳）
+  https://linuxcontainers.org/incus/docs/main/howto/server_migrate_lxd/) （原文）
+
+  # サポート <!-- Support -->
+  <!--
+  Incus 6.0 LTS will be supported for a total of 5 years (until June 2029).
+  -->
+  Incus 6.0 LTS はトータルで 5 年間（2029 年 6 月）までサポートされます。
+
+  <!--
+  During the first 2 years, new point releases will be issued including a mix of bug and security fixes as well as some minor usabiltiy improvements. After that initial 2 years (after Incus 7.0 LTS is released), Incus 6.0 LTS will transition to security fixes only for the remaining 3 years.
+  -->
+  最初の 2 年間は、バグとセキュリティ修正、細かな使い勝手の改良を含む新しいポイントリリースが発行されます。最初の 2 年間のあと（Incus 7.0 LTS がリリースされたあと）、Incus 6.0 LTS は、残りの 3 年間はセキュリティ修正のみの提供に移行します。
+
+  <!--
+  This matches what we've been doing for our other projects (LXC and LXCFS) over the past 10 years.
+  -->
+  これは、これまで 10 年間にわたって、我々の他のプロジェクトである LXC や LXCFS で行ってきたことと同じです。
+
+  コミュニティサポートはこちらから <!-- Community support is provided at -->: https://discuss.linuxcontainers.org
+  商用サポートはこちらから <!-- Commercial support is available through -->: https://zabbly.com/incus
+  バグはこちらから報告できます <!-- Bugs can be reported at -->: https://github.com/lxc/incus/issues
