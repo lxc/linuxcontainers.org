@@ -275,7 +275,7 @@ content: |-
 
    - VFS idmap shifting 機能を使うようにして、（同じ機能である）`shiftfs` を削除しました <!-- `shiftfs` has been removed in favor of VFS idmap shifting -->
    - OpenID Connect を使うようにして、`Canonical Candid` を削除しました <!-- `Canonical Candid` authentication has been removed in favor of OpenID Connect -->
-   - OpenFGA を使うようにして、`Canonical Candid` 認証を削除しました <!-- `Canonical RBAC` authorization has been removed in favor of OpenFGA -->
+   - OpenFGA を使うようにして、`Canonical RBAC` 認証を削除しました <!-- `Canonical RBAC` authorization has been removed in favor of OpenFGA -->
    - `Canonical MAAS` 機能を削除しました（使用されていない機能）<!-- `Canonical MAAS` network integration has been removed (under/unused feature) -->
    - OVN を使うようにして、`Ubuntu Fan` を削除しました <!-- `Ubuntu Fan` networking has been removed in favor of OVN -->
    - セキュリティ上の理由から、信頼トークンを使用するようにし、`core.trust_password` は削除しました <!-- `core.trust_password` has been removed in favor of trust tokens for security reasons -->
