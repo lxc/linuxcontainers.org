@@ -1,0 +1,138 @@
+<div class="p-strip--light" style="padding-bottom:0; padding-top:0;">
+  <div class="row">
+    <div class="col-12">
+      <div class="p-notification--information">
+        <div class="p-notification__content">
+          <h5 class="p-notification__title">Incus telah bergabung dengan LinuxContainers</h5>
+          <p class="p-notification__message">Baca pengumuman <a href="/incus/">proyek di sini</a>.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="p-strip">
+  <div class="row">
+    <div class="col-8 suffix-1">
+      <h1 id="startpage-heading">Alat container and virtualisasi</h1>
+      <p>linuxcontainers.org adalah proyek yang menaungi Incus, LXC, LXCFS, Distrobuilder and lainnya.</p>
+
+      <p>Bertujuan untuk memberikan lingkungan netral distro dan vendor untuk pengembangan teknologi linux container.</p>
+
+      <p>Fokus kami adalah menyediakan container dan mesin-virtual (VM) yang menjalankan sistem Linux secara lengkap.
+      Meskipun VM menyediakan lingkungan yang lengkap, container sistem menawarkan lingkungan yang sedekat mungkin dengan
+      lingkungan yang anda dapatkan dari VM, namun tanpa overhead yang timbul karena menjalankan kernel terpisah dan
+      mensimulasikan semua perangkat keras.
+      </p>
+
+    </div>
+    <div class="col-4">
+      <img src="/static/img/containers.png" alt="" />
+    </div>
+  </div>
+</div>
+
+<div class="p-strip--light">
+  <div class="row">
+    <div class="col-12">
+      <h2>Proyek aktif</h2>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="p-card col-6">
+      <h3>LXC</h3>
+      <p>LXC adalah runtime container Linux yang terdiri dari alat, template
+      dan pustaka serta language binding. Cukup low level, sangat fleksibel dan
+      mencakup hampir semua fitur yang didukung oleh kernel upstream.</p>
+
+      <p><a class="p-button" href="/lxc/introduction/" role="button">Pelajari lebih lanjut</a></p>
+    </div>
+
+    <div class="p-card col-6">
+      <h3>Incus</h3>
+      <p>Incus adalah manajer container dan mesin-virtual (VM). <br />
+      Berdasarkan LXC untuk container dan QEMU untuk VM, incus menawarkan
+      pengalaman penskalaan seperti pada cloud yang mulus dari laptop pengembang ke cluster 
+      penuh hingga 50 server.<br />
+      Selain mengelola container dan VM, Incus juga menyediakan beragam opsi untuk mengelola
+      penyimpanan dan jaringan.</p>
+
+      <p>
+        <a class="p-button" href="/incus/introduction/" role="button">Pelajari lebih lanjut</a>
+        <a class="p-button" href="/incus/try-it/" role="button">Coba secara daring</a>
+      </p>
+    </div>
+  </div>
+
+  <div class="row u-equal-height">
+    <div class="p-card col-6">
+      <h3>LXCFS</h3>
+      <p>LXCFX adalah userspace (FUSE) sistem file yang menawarkan:
+        <ul>
+          <li>File overlay untuk cpuinfo, meminfo, stat dan uptime.</li>
+          <li>Tree yang kompatibel dengan cgroups memungkinkan penulisan tanpa hak istimewa (unprivileged writes).</li>
+        </ul>
+      </p>
+
+      <p>Ini dirancang untuk mengatasi kekurangan procfs, sysfs dan cgroupfs dengan mengekspor file yang sesuai
+      dengan apa yang diharapkan oleh pengguna sistem container.</p>
+
+      <p><a class="p-button" href="/lxcfs/introduction/" role="button">Pelajari lebih lanjut</a></p>
+    </div>
+
+    <div class="p-card col-6">
+      <h3>distrobuilder</h3>
+      <p>distrobuilder adalah alat pembuat image untuk container dan mesin-virtual (VM):
+        <ul>
+          <li>Mendefinisikan image kompleks sebagai dokumen YAML sederhana.</li>
+          <li>Berbagai format keluaran (chroot, LXD, LXC).</li>
+          <li>Dukungan untuk banyak distribusi dan arsitektur.</li>
+        </ul>
+      </p>
+
+      <p>desain modern distrobuilder menggunakan image resmi yang dibuat sebelumnya (jika tersedia),
+      menggunakan definisi gambar deklaratif (YAML) dan mendukung berbagai modifikasi pada image dasar.</p>
+
+      <p><a class="p-button" href="/distrobuilder/introduction/" role="button">Pelajari lebih lanjut</a></p>
+    </div>
+  </div>
+
+  <div class="row u-equal-height">
+    <div class="p-card col-6">
+      <h3>libresource</h3>
+      <p>perpustakaan antarmuka yang melaluinya kita dapat memperoleh informasi sumber daya sistem seperti
+      memori, CPU, stat, jaringan, perangkat dan lain lain. Saat ini sebagaian besar informasi tersebut 
+      dibaca dari /proc dan /sys.</p>
+
+      <p><a class="p-button" href="https://github.com/lxc/libresource/" role="button">Pelajari lebih lanjut</a></p>
+    </div>
+
+    <div class="p-card col-6">
+      <h3>lxcri</h3>
+      <p>lxcri adalah pembungkus LXC yang dapat digunakan sebagai penganti runtime container drop-in
+      untuk digunakan oleh CRI-O.</p>
+
+      <p><a class="p-button" href="https://github.com/lxc/lxcri/" role="button">Pelajari lebih lanjut</a></p>
+    </div>
+  </div>
+</div>
+
+<div class="p-strip--light">
+  <div class="row">
+    <div class="col-12">
+      <h2>Proyek kadaluarsa</h2>
+    </div>
+  </div>
+
+  <div class="row u-equal-height">
+    <div class="p-card col-6">
+      <h3>CGManager</h3>
+      <p>CGManager adalah daemon manajer cgroup yang dirancang untuk
+      memungkinkan container bersarang yang tidak memiliki hak istimewa untuk
+      dapat membuat dan mengelola cgroupnya melalui DBus API.</p>
+
+      <p><a class="p-button" href="/cgmanager/introduction/" role="button">Pelajari lebih lanjut&nbsp;&rsaquo;</a></p>
+    </div>
+  </div>
+</div>
