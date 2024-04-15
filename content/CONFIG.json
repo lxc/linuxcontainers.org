@@ -3,5 +3,6 @@
                     ["", "English", "Language"],
                     ["ja", "日本語", "言語"],
                     ["de", "Deutsch", "Sprache"],
-                    ["zh-cn", "简体中文", "语言"]]
+                    ["zh-cn", "简体中文", "语言"],
+                    ["id", "Indonesia", "Bahasa"]]
 }
