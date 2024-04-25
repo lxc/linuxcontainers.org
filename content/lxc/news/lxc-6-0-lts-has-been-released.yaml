@@ -266,8 +266,10 @@ content: |-
 
   ### Downloads
 
-   - Main release tarball: [lxc-6.0.0.tar.gz](https://linuxcontainers.org/downloads/lxc/lxc-6.0.0.tar.gz)
-   - GPG signature: [lxc-6.0.0.tar.gz.asc](https://linuxcontainers.org/downloads/lxc/lxc-6.0.0.tar.gz.asc)
+   - Main release tarball: [lxc-6.0.0a.tar.gz](https://linuxcontainers.org/downloads/lxc/lxc-6.0.0a.tar.gz)
+   - GPG signature: [lxc-6.0.0a.tar.gz.asc](https://linuxcontainers.org/downloads/lxc/lxc-6.0.0a.tar.gz.asc)
+
+  **NOTE:** The initial release tarballs (`lxc-6.0.0.tar.gz`) had an incorrect `LXC_DEVEL` line in `meson.build` which didn't line up with the matching git commit. `lxc-6.0.0a.tar.gz` is a re-issue of the release tarball which now properly matches the git tag.
 
   ### Contributors
   The LXC 6.0 release was brought to you by a total of 56 contributors.
