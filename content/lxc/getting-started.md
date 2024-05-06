@@ -407,7 +407,7 @@ With that done, the last step is to create an LXC configuration file.
 
 * Create the `~/.config/lxc` directory if it doesn't exist.
 * Copy `/etc/lxc/default.conf` to `~/.config/lxc/default.conf`
-* Set `lxc.apparmor.profile = lxc-container-default-cgns`
+* Set `lxc.apparmor.profile = lxc-container-default`
 * Append the following two lines to it:
     * `lxc.idmap = u 0 100000 65536`
     * `lxc.idmap = g 0 100000 65536`
