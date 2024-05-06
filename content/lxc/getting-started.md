@@ -401,7 +401,7 @@ This means that "your-username" is allowed to create up to 10 veth devices conne
 
 Create the `~/.local/share/lxc` directory if it doesn't exist and ensure `~/.local` is executable.
 
-    mkdir -p ~/.local/share/lxc && chmod -R +x ~/.local
+    mkdir -p ~/.local/share/lxc && chmod +x ~/.local ~/.local/share ~/.local/share/lxc
 
 With that done, the last step is to create an LXC configuration file.
 
@@ -435,11 +435,7 @@ The download template will show you a list of distributions, versions, and archi
 
 To run unprivileged containers as an unprivileged user, the user must be allocated an empty delegated cgroup (this is required because of the leaf-node and delegation model of cgroup2, not because of liblxc). See [cgroups: Full cgroup2 support](/lxc/news/2020_03_25_13_03.html#cgroups-full-cgroup2-support) for more information.
 
-In newer versions of lxc, to start a container, use the following command instead of just `lxc-start mycontainer`:
-
-    lxc-unpriv-start --name mycontainer
-
-In older versions of lxc it's not possible to simply start a container from a shell as a user and automatically delegate a cgroup. Therefore, you need to wrap each call to any of the `lxc-*` commands in a `systemd-run` command. For example, to start a container, use the following command instead of just `lxc-start mycontainer`:
+It is not possible to simply start a container from a shell as a user and automatically delegate a cgroup. Therefore, you need to wrap each call to any of the `lxc-*` commands in a `systemd-run` command. For example, to start a container, use the following command instead of just `lxc-start mycontainer`:
 
     systemd-run --unit=my-unit --user --scope -p "Delegate=yes" -- lxc-start --name mycontainer
 
@@ -452,7 +448,7 @@ You can then confirm its status with either of:
 
 And get a shell inside it with:
 
-    lxc-unpriv-attach --name mycontainer
+    lxc-attach --name mycontainer
 
 Stopping it can be done with:
 
