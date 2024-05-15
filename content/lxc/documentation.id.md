@@ -41,7 +41,7 @@ Beberapa contoh terbaik penggunaan API adalah binding dan alat LXC itu sendiri.
 <!--
 We also have a up to date API documentation for current git master [here.](/lxc/apidoc/)
 -->
-Kami juga memiliki dokumentasi API terbaru untuk git master saat ini [disini.](/lxc/apidocs/)
+Kami juga memiliki dokumentasi API terbaru untuk git master saat ini [disini.](/lxc/apidoc/)
 
 <!--
 And now a simple example of how to use the API to create, start, stop and destroy a container:

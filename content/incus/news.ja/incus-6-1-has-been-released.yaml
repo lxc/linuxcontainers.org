@@ -1,0 +1,529 @@
+title: Incus 6.1 リリースのお知らせ
+date: 2024/05/07 21:05
+origin: https://discuss.linuxcontainers.org/t/incus-6-1-has-been-released/19894
+content: |-
+  # はじめに <!-- Introduction -->
+  <!--
+  The Incus team is pleased to announce the release of Incus 6.1!
+  -->
+  Incus チームは、Incus 6.1 のリリースのアナウンスができてうれしいです！
+
+  <!--
+  This is our first feature release following Incus 6.0 LTS.
+  As a reminder, feature releases are only supported until the next one comes out, usually on a monthly cadence. Critical production environments should stay on the LTS release instead.
+  -->
+  このリリースは、Incus 6.0 LTS に続く初めての機能リリースです。
+  機能リリースは、通常は毎月のペースでリリースされ、次の機能リリースがリリースされるまでのみサポートされることに注意してください。重要な本番環境は、機能リリースではなく LTS リリースを使い続ける必要があります。
+
+  <!--
+  In this release, we have a lot of small quality of life improvements throughout. A lot of those being first contributions from students of the [University of Texas at Austin](https://www.utexas.edu/). Expect a lot more of those in Incus 6.2!
+  -->
+  このリリースでは、全体を通して細かな使い勝手の向上がたくさん行われています。それらの多くは、[テキサス大学オースティン校](https://www.utexas.edu/)の学生からの初めてのコントリビューションです。Incus 6.2 では、さらに多くの機能が追加されるので期待してください!
+
+  [![image|690x459](https://discuss.linuxcontainers.org/uploads/default/original/2X/b/b20c0103176b2463495b1c3c38c330a8c4e947fe.png)](https://linuxcontainers.org/incus/try-it/)
+
+  <!--
+  As usual, you can try it for yourself online: https://linuxcontainers.org/incus/try-it/
+  -->
+  いつものように、オンラインでご自身で試せます: https://linuxcontainers.org/incus/try-it/
+
+  Enjoy!
+
+  # 新機能 <!-- New features -->
+  ## 複雑な ZFS プールの作成 <!-- Creation of complex ZFS pools -->
+  <!--
+  The `source` key when creating storage pools using our `zfs` driver has now been extended to allow the creation of more complex vdevs including striping, mirroring, raidz1 and raidz2.
+  -->
+  `zfs` ドライバーを使ってストレージプールを作成するときのキー `source` が拡張され、ストライピング、ミラーリング、raidz1、raidz2 を含む、より複雑な vdev の作成ができるようになりました。
+
+  <!--
+  Example syntax:
+  -->
+  指定例:
+
+   - `/dev/sda,/dev/sdb` (striping, RAID0)
+   - `mirror=/dev/sda,/dev/sdb` (mirroring, RAID1)
+   - `raidz1=/dev/sda,/dev/sdb,/dev/sdc,/dev/sdd,/dev/sde` (raidz1, RAID5)
+   - `raidz2=/dev/sda,/dev/sdb,/dev/sdc,/dev/sdd,/dev/sde` (raidz2, RAID6)
+
+  <!--
+  This combined with the data from `incus info --resources` will now make it possible to deploy complex storage pools all through the API.
+  -->
+  これを `incus info --resources` からのデータと組み合わせることで、API を通して複雑なストレージプールをデプロイできるようになります。
+
+  ## プロジェクトをまたいだプロファイルのリスト表示 <!-- Listing of profiles across projects -->
+  <!--
+  As part of an effort to add cross-project querying of all API objects, it is now possible to list profiles across all projects.
+  -->
+  すべての API オブジェクトで、プロジェクトをまたいだクエリーを追加する取り組みの一環として、すべてのプロジェクトをまたいだプロファイルのリスト表示ができるようになりました。
+
+  <!--
+  At the API level, this is support for `all-projects=true` on the `/1.0/profiles` API endpoint, at the CLI level this looks like:
+  -->
+  API レベルでは、`/1.0/profiles` API エンドポイントでの `all-projects=true` のサポートであり、CLI レベルでは次のようになります:
+
+      stgraber@dakara:~$ incus profile list --all-projects
+      +-----------------+---------+---------------------------------------+---------+
+      |     PROJECT     |  NAME   |              DESCRIPTION              | USED BY |
+      +-----------------+---------+---------------------------------------+---------+
+      | default         | default | Default Incus profile                 | 10      |
+      +-----------------+---------+---------------------------------------+---------+
+      | demo            | default | Default Incus profile                 | 12      |
+      +-----------------+---------+---------------------------------------+---------+
+      | lab-cgroup      | default | Default Incus profile                 | 2       |
+      +-----------------+---------+---------------------------------------+---------+
+      | lab-lvm-cluster | default | Default Incus profile                 | 3       |
+      +-----------------+---------+---------------------------------------+---------+
+      | lab-ovn-ic      | default | Default Incus profile                 | 10      |
+      +-----------------+---------+---------------------------------------+---------+
+      | vpn             | default | Default Incus profile for project vpn | 2       |
+      +-----------------+---------+---------------------------------------+---------+
+
+  <!--
+  This feature was contributed by [University of Texas at Austin ](https://www.utexas.edu) students.
+  -->
+  この機能は、[テキサス大学オースティン校](https://www.utexas.edu)の学生によるコントリビューションです。
+
+  ## プロジェクトをまたいだネットワークゾーンの一覧表示 <!-- Listing of network zones across projects -->
+  <!--
+  As part of an effort to add cross-project querying of all API objects, it is now possible to list network zones across all projects.
+  -->
+  すべての API オブジェクトのプロジェクトをまたいだクエリを追加する取り組みの一環として、すべてのプロジェクトをまたいだネットワークゾーンの一覧表示ができるようになりました。
+
+  <!--
+  At the API level, this is support for `all-projects=true` on the `/1.0/network-zones` API endpoint, at the CLI level this looks like:
+  -->
+  API レベルでは、これは `/1.0/network-zones` API エンドポイントでの `all-projects=true` のサポートです。CLI レベルでは次のようになります:
+
+      stgraber@dakara:~$ incus network zone list --all-projects
+      +---------+--------------------------+-------------+---------+
+      | PROJECT |           NAME           | DESCRIPTION | USED BY |
+      +---------+--------------------------+-------------+---------+
+      | default | default.demo.example.net |             | 0       |
+      +---------+--------------------------+-------------+---------+
+      | foo     | foo.demo.example.net     |             | 0       |
+      +---------+--------------------------+-------------+---------+
+
+  <!--
+  This feature was contributed by [University of Texas at Austin ](https://www.utexas.edu) students.
+  -->
+  この機能は、[テキサス大学オースティン校](https://www.utexas.edu)の学生によるコントリビューションです。
+
+  ## インスタンス配置スクリプトレットで利用できる追加関数 <!-- Additional functions made available to the instance placement scriptlet -->
+  <!--
+  Incus supports customizing instance placement through the use of a python-like script called a scriptlet. When used, the scriptlet is exposed some information about the instance, potential targets and the reason for the request.
+  -->
+  Incus は、スクリプトレットというPython 風のスクリプトの使用によるインスタンス配置のカスタマイズをサポートしています。スクリプトレットを使用すると、リクエストに対するインスタンス、可能性のあるターゲット、理由についての情報が公開されます。
+
+  <!--
+  On top of those arguments, a number of functions are also exposed to those scriptlets.
+  That includes the ability to log information, the function to actually make the final placement decision and the ability to fetch some basic load information about the candidate servers.
+  -->
+  これらの値に加えて、これらのスクリプトレットでは、多数の関数も公開されています。情報をログに記録する機能、実際に最終的な配置を決定する機能、候補サーバーについての基本的な負荷情報を取得する機能が含まれてます。
+
+  <!--
+  Now this is being extended through two additional functions:
+  -->
+  これが、2 つの追加関数により拡張されるようになりました:
+
+   - `get_instances(location, project)` => `[]api.Instance`
+   - `get_cluster_members(group)` => `[]api.ClusterMember`
+
+  <!--
+  Those are all optional arguments, so they can be used to list all instances or all cluster members as well, allowing a lot of flexibility in placement scripts.
+  -->
+  これらはすべて引数がオプショナルなので、すべてのインスタンスのリストやすべてのクラスターメンバーのリストを表示するために使用でき、配置スクリプトで非常に柔軟な対応ができるようになります。
+
+  ドキュメント <!-- Documentation -->: https://linuxcontainers.org/incus/docs/main/explanation/clustering/#instance-placement-scriptlet
+  <!--
+  This feature was contributed by [University of Texas at Austin ](https://www.utexas.edu) students.
+  -->
+  この機能は、[テキサス大学オースティン校](https://www.utexas.edu)の学生によるコントリビューションです。
+
+  ## `incus` CLI の create コマンドで与える YAML <!-- Feeding YAML to create commands in the incus CLI -->
+  <!--
+  A number of Incus commands already support reading a YAML file through their standard input as part of a `create` command, but this isn't very consistent nor well documented, we're now in the process of making things consistent and this release now has support for reading a YAML object definition in the following commands:
+  -->
+  多くの Incus コマンドは、`create` コマンドの一部として標準入力を通して YAML ファイルを読み取る機能をサポートしています。しかし、これらにはあまり一貫性がなく、十分に文書化されていません。現在、一貫性を保つ作業を行っており、次のコマンドでは、YAML 定義を読み取る機能をサポートするようになりました:
+
+   - `incus create` & `incus launch`
+   - `incus cluster group create`
+   - `incus network acl create`
+   - `incus network forward create`
+   - `incus network integration create`
+   - `incus network load-balance create`
+   - `incus network peer create`
+   - `incus network zone create`
+   - `incus profile create`
+   - `incus project create`
+   - `incus snapshot create`
+   - `incus storage create`
+   - `incus storage bucket create`
+
+  <!--
+  For all of those, YAML data similar to what's showed in the matching `show` command can be fed through stdin at creation time to configure the object as part of its creation.
+  -->
+  これらのすべてで、対応する `show` コマンドで表示されるものと同じ YAML データを、オブジェクト生成の一部として設定するために、生成時に標準入力を通してコマンドに与えることができます。
+
+  ## `incus` CLI でのカラムのカスタマイズ <!-- Customizable columns in the `incus` CLI -->
+  <!--
+  Something else we're slowly making consistent in the CLI is the ability to choose what columns to display in our `list` commands.
+  -->
+  CLI での一貫性を徐々に高めているもう 1 つの機能が、リストコマンドで表示するカラムを選択する機能です。
+
+  <!--
+  This has also been expanded with the following commands now supporting it:
+  -->
+  この機能が拡張され、次のコマンドでサポートされるようになりました:
+
+   - `incus cluster list`
+   - `incus config trust list`
+   - `incus image list`
+   - `incus list`
+   - `incus profile list`
+   - `incus project list`
+   - `incus storage volume list`
+   - `incus storage volume snapshot list`
+   - `incus warning list`
+
+  <!--
+  This feature was contributed by [University of Texas at Austin ](https://www.utexas.edu) students.
+  -->
+  この機能は、[テキサス大学オースティン校](https://www.utexas.edu)の学生によるコントリビューションです。
+
+  ## コンテナに対する `migration.stateful` 設定キー <!-- `migration.stateful` configuration key for containers -->
+  <!--
+  The `migration.stateful` configuration key has been expanded to also apply to containers now.
+  -->
+  `migration.stateful` 設定キーが拡張され、コンテナにも適用されるようになりました。
+
+  <!--
+  It is now required to have it set to `true` to access any feature requiring the recording and restoration of process state in containers (CRIU), which basically means stateful stop, stateful snapshots and live migration.
+  -->
+  コンテナでプロセスの状態を記録し、リストアすることが必要な機能（CRIU）にアクセスするには、この設定を true に設定する必要があります。これは、基本的に、ステートフルストップ、ステートフルスナップショット、ライブマイグレーションを意味します。
+
+  <!--
+  This change is unlikely to affect many users as CRIU's ability to live-migrate or perform stateful dumps of Incus containers is extremely limited and so generally seen as not functional.
+  The change does have the benefit of providing clearer errors to users who accidentally request an action which would make use of CRIU.
+  -->
+  Incus コンテナのライブマイグレーションやステートフルダンプを実行する CRIU の機能は非常に限定的で、一般的には機能していないと見なされているため、この変更は多くのユーザーに影響を与える可能性は低いです。
+  この変更には、CRIU を使用するアクションを誤って要求したユーザーに対して、より明確なエラーを提供するという利点があります。
+
+  <!--
+  This feature was contributed by [University of Texas at Austin ](https://www.utexas.edu) students.
+  -->
+  この機能は、[テキサス大学オースティン校](https://www.utexas.edu)の学生によるコントリビューションです。
+
+  ## OVN のステートレス ACL <!-- Stateless ACLs on OVN -->
+  <!--
+  A new `allow-stateless` action has now been added to Incus' network ACL rules.
+  -->
+  新たに `allow-stateless` アクションが Incus のネットワーク ACL に追加されました。
+
+  <!--
+  As the name implies, this leads to the creation of a stateless rule inside of OVN.
+  This is great for situations where stateful rules may come with a heavy cost and where a matching stateless rule is possible (e.g. DNS interactions).
+  -->
+  名前の通り、これにより OVN 内にステートレスルールが作成されます。
+  これは、ステートフルルールに大きなコストがかかり、ステートレスルールとのマッチングが可能である状況（例: DNS インタラクション）に最適です。
+
+  <!--
+  This feature was contributed by [University of Texas at Austin ](https://www.utexas.edu) students.
+  -->
+  この機能は、[テキサス大学オースティン校](https://www.utexas.edu)の学生によるコントリビューションです。
+
+  ## インスタンスの uptime（開始時間）トラッキング <!-- Instance uptime (startup time) tracking -->
+  <!--
+  A new `StartedAt` field has been added to the instance state data.
+  This exposes the timestamp at which the instance was started and is also available in `incus info` and `incus list`.
+  -->
+  新たにインスタンスの状態のデータに `StartedAt` フィールドが追加されました。
+  これにより、インスタンスが起動したタイムスタンプが公開されます。そして、`incus info` と `incus list` でも利用できます。
+
+      stgraber@dakara:~$ incus info speedtest | grep Started
+      Started: 2024/04/29 11:03 EDT
+
+      stgraber@dakara:~$ incus list -cnstU
+      +-------------+---------+-----------------+----------------------+
+      |    NAME     |  STATE  |      TYPE       |      STARTED AT      |
+      +-------------+---------+-----------------+----------------------+
+      | centos3     | STOPPED | CONTAINER       |                      |
+      +-------------+---------+-----------------+----------------------+
+      | centos4     | STOPPED | CONTAINER       |                      |
+      +-------------+---------+-----------------+----------------------+
+      | fga         | STOPPED | VIRTUAL-MACHINE |                      |
+      +-------------+---------+-----------------+----------------------+
+      | incus-ui    | RUNNING | CONTAINER       | 2024/05/07 16:54 EDT |
+      +-------------+---------+-----------------+----------------------+
+      | kernel-test | RUNNING | VIRTUAL-MACHINE | 2024/05/07 15:43 EDT |
+      +-------------+---------+-----------------+----------------------+
+      | keybase     | STOPPED | CONTAINER       |                      |
+      +-------------+---------+-----------------+----------------------+
+      | ovn-test    | RUNNING | VIRTUAL-MACHINE | 2024/05/07 15:43 EDT |
+      +-------------+---------+-----------------+----------------------+
+      | speedtest   | RUNNING | CONTAINER       | 2024/04/29 11:03 EDT |
+      +-------------+---------+-----------------+----------------------+
+      | void        | STOPPED | VIRTUAL-MACHINE |                      |
+      +-------------+---------+-----------------+----------------------+
+      | win11       | STOPPED | VIRTUAL-MACHINE |                      |
+      +-------------+---------+-----------------+----------------------+
+
+  <!--
+  This feature was contributed by [University of Texas at Austin ](https://www.utexas.edu) students.
+  -->
+  この機能は、[テキサス大学オースティン校](https://www.utexas.edu)の学生によるコントリビューションです。
+
+  ## 退避の間のネットワークハンドリングの改良 <!-- Improvement to network handling during evacuation -->
+
+  <!--
+  When performing a cluster evacuation, all the networks will now be shut down at the end of the evacuation and only started back as part of the restoration action.
+  -->
+  クラスターの退避を実行しているとき、退避の終了時にはネットワークはすべてシャットダウンされ、復元アクションの一部としてのみ再開されるようになりました。
+
+  <!--
+  This is particularly useful in OVN environments as it ensures that an evacuated Incus server doesn't act as a virtual router for any of the defined networks, making system shutdown/reboot less likely to cause network glitches.
+  -->
+  これは、退避した Incus サーバーが、定義されたネットワークに対する仮想ルーターとして働かないことを保証し、システムのシャットダウンがネットワーク障害を引き起こす可能性が低くなるので、OVN ネットワーク環境で特に役に立ちます。
+
+  <!--
+  This feature was contributed by [University of Texas at Austin ](https://www.utexas.edu) students.
+  -->
+  この機能は、[テキサス大学オースティン校](https://www.utexas.edu)の学生によるコントリビューションです。
+
+  # すべての変更点 <!-- Complete changelog -->
+  <!--
+  Here is a complete list of all changes in this release:
+  -->
+  このリリースのすべての変更のリストは次の通りです（翻訳なし）:
+
+  [details="すべてのChangeLogを見る"]
+   - doc/support: Update for LTS
+   - incusd/network: Remove bridge.driver=native requirement for extended external_interfaces syntax
+   - doc/network/bridge: Update extended external_interfaces documentation
+   - incusd/storage/drivers/zfs: Simplify dataset receive and fix progress handling
+   - gomod: Update dependencies
+   - mini-oidc: Merge into main gomod
+   - gomod: Update dependencies
+   - go.mod: Bump package major version
+   - global: Update Go package to v6
+   - test: Update godeps.list
+   - README: Update for godoc URLs
+   - doc/rest-api: Refresh swagger YAML
+   - cmd/incus: Fix import ordering
+   - incusd: Remove unneeded import renames
+   - incusd/instance: Fix duplicate import
+   - doc/projects: Tweak examples
+   - shared/api: Remove container resources (deprecated)
+   - doc/rest-api: Refresh swagger YAML
+   - incus/create: Remove dead code
+   - i18n: Update translation templates
+   - incusd/daemon: Remove old migration logic
+   - incusd: Stop mentioning containers in resources
+   - doc/rest-api: Use instances API in example
+   - incusd/db/cluster: containers URLs aren't valid in Incus
+   - incusd/instances: Don't start instances when evacuated
+   - doc/installing: Sort source-build distro instructions
+   - doc/installing: Add OpenSUSE source instructions
+   - doc/installing: Add Alpine instructions
+   - incus/aliases: fix completion regression
+   - incus/snapshot: Fix deletion of snapshots containing colons
+   - incusd/instance/drivers: Have SR-IOV get stable MACs
+   - incusd/device/nic_sriov: Use stable MAC
+   - incus/profile: Add support for creating from YAML
+   - i18n: Update translation templates
+   - incusd/instance/lxc: Only apply soft cgroup limits on cgroup1
+   - incus/admin: Don't hide the sql command
+   - grafana: Refresh dashboard
+   - doc/metrics: Mention Loki in Grafana setup
+   - grafana: Better filter Loki events by project
+   - incusd/loki: Use hostname as default instance property on standalone systems
+   - incusd/loki: Re-order config fields
+   - incusd/loki: Allow overriding the location field
+   - incusd/loki: Set location field to local hostname on standalone systems
+   - incus/projct: Add support for creating project from yaml
+   - i18n: Update translation templates
+   - incusd/network/ovs: Port GetOVNEncapIP to libovsdb
+   - incusd/network/ovs: Add some comments to GetOVNBridgeMappings
+   - incusd/network/ovs: Port AddOVNBridgeMapping to libovsdb
+   - incusd/network/ovs: Port RemoveOVNBridgeMapping to libovsdb
+   - incusd/network/ovs: Port GetHardwareOffload to libovsdb
+   - incusd/network/ovs: Port GetBridgePorts to libovsdb
+   - incusd/network/ovs: Port UpdateBridgePortVLANs to libovsdb
+   - incusd/network/ovs: Port AssociateInterfaceOVNSwitchPort to libovsdb
+   - incusd/network/ovs: Switch Installed to checking for unix socket
+   - incusd/network: Update for OVS function changes
+   - Add missing SecureBoot firmware names
+   - incus/snapshot: Add support for creating project from yaml
+   - i18n: Update translation templates
+   - api: network_zones_all_projects
+   - shared/api: Add Project field to NetworkZone
+   - incusd/network_zones: Add support for all-projects
+   - doc/rest-api: Refresh swagger YAML
+   - client: Add GetNetworkZonesAllProjects
+   - incus/network_zone: Add --all-projects flag to list
+   - i18n: Update translation templates
+   - tests: Add all-projects network zone test
+   - incusd/network/ovn: Port LogicalRouterAdd to libovsdb
+   - incusd/network/ovn: Remove LogicalRouterAdd
+   - incusd/network: Replace LogicalRouterAdd usage with CreateLogicalRouter
+   - incusd/network/ovn: gofmt
+   - incusd/cluster: Disable networks during evacuation
+   - incusd/cgroup: Set hugepages reserved limits
+   - incusd/storage/drivers: Introduce SparseFileWrapper
+   - incusd/storage/drivers/vfs: Use SparseFileWrapper on backup import
+   - incusd/storage/drivers/vfs: Use SparseFileWrapper on volume migration
+   - incus/storage: Support creating storage pool from yaml
+   - i18n: Update translation templates
+   - incus/info: Show CPU architecture as separate line
+   - i18n: Update translation templates
+   - incus/cluster_group: Add yaml support for cluster group create
+   - i18n: Update translation templates
+   - gitignore: Add JetBrains
+   - api: storage_zfs_vdev
+   - doc: Update ZFS support for multiple block devices and vdev types in doc/reference/storage_zfs.md
+   - incusd/storage/zfs: Add support for vdev type and multiple block devices
+   - incus/info: Sorting network interfaces
+   - incus/network_acl: Add cmd.Example for network acl create
+   - i18n: Update translation templates
+   - incus/network_forward: Add yaml example for create
+   - i18n: Update translation templates
+   - incus/config_template: Add file support for create
+   - i18n: Update translation templates
+   - incus/network_integrations: Add yaml support for create
+   - i18n: Update translation templates
+   - incusd/storage/s3: Use 'mc' client
+   - incusd/storage: Switch to use minio's 'mc' client
+   - gomod: Update dependencies
+   - github: Download MinIO client
+   - doc: Avoid MyST 3.0.0
+   - incus/doc/installing.md: Add Docker information
+   - doc: Add Podman to wordlist
+   - incus/cluster: Add columns to list
+   - i18n: Update translation templates
+   - incus/project: Add customazible columns to list
+   - i18n: Update translation templates
+   - api: container_migration_stateful
+   - internal/instance: Add migration.stateful to containers
+   - incusd/instance/lxc: Add checks for migration.stateful
+   - doc: Update configs
+   - incus/network_load_balancer: add Example to create
+   - i18n: Update translation templates
+   - incus/network_zone: Add example for create command
+   - i18n: Update translation templates
+   - doc: Fix bad sphinx requirements
+   - incusd/instances/qemu: Tweak secureboot firmware list
+   - cmd/incus/admin_cluster: Add libexec path for incusd
+   - incus/storage: Show usage when no driver passed
+   - incusd/storage/drivers/dir: Tweak path validation
+   - incusd/backup: Show profile list on lookup error
+   - incusd/apparmor/lxc: Allow access to binfmt_misc
+   - incusd/apparmor/lxc: Refresh generated rules
+   - incusd/storage: Handle instance volume size on import
+   - incus/profile: Add customizable columns to list
+   - i18n: Update translation templates
+   - incus/project: Fix help message for list
+   - i18n: Update translation templates
+   - api: profiles_all_projects
+   - shared/api: Add Project field to Profile
+   - client: Add GetProfilesAllProjects
+   - incus/profile: Add all-projects to list
+   - incusd/db/cluster: Add Project field to Profile
+   - incusd/profile: Add all-projects support
+   - doc/rest-api: Refresh swagger YAML
+   - i18n: Update translation templates
+   - incus/storage_volume: Clarify volume errors
+   - incusd/apparmor/lxc: Fix access to kernel/security/apparmor
+   - api: instances_scriptlet_get_instances
+   - doc/instances/scriptlet: Add get_instances
+   - incusd/scriptlet: Add get_instances
+   - api: instances_scriptlet_get_cluster_members
+   - doc/instances/scriptlet: Add get_cluster_members
+   - incusd/scriptlet: Add get_cluster_members
+   - api: Add network_acl_stateless
+   - doc/network_acl: Add allow-stateless action
+   - incusd/network/acl: Add allow-stateless action
+   - incusd/network/ovn/nb: Port DeleteLogicalRouter to libovsdb
+   - incusd/network/ovn/nb: Port CreateLogicalRouterSNAT to libovsdb
+   - incusd/network: Update for OVS function changes
+   - incusd/network/acl: Properly run instance counting outside of ACL loop
+   - incusd/network/ovn: Wait up to 1s for dynamic IPs
+   - incusd/network/ovn/nb: Port DeleteLogicalRouterNAT to libovsdb
+   - incusd/network: Update for OVS function changes
+   - shared/archive: Fix typo
+   - incusd/cluster: Re-organize joining logic
+   - incusd/cluster: Ignore OVN networks during joining
+   - shared/archive: Properly anchor exclude rules
+   - incusd/project: Rework low-level permission checks
+   - incus/storage_bucket: Add example for storage bucket create
+   - i18n: Update translation templates
+   - incus/network_peer: Add example for create command
+   - i18n: Update trasnlation templates
+   - api: instance_state_started_at
+   - shared/api: Add StartedAt to InstanceState
+   - doc/rest-api: Refresh swagger YAML
+   - incusd/instance: Add StartedAt to InstanceState
+   - incus/info: Add Started field
+   - incus/list: Add started at column
+   - i18n: Update translation templates
+   - Makefile: Cleanup gomod update
+   - gomod: Update dependencies
+   - tests/mini-oidc: Bump to go-jose/v4
+   - client/connection: Add support for the socket existing in /run/incus
+  [/details]
+
+  # ドキュメント <!-- Documentation -->
+  <!--
+  The Incus documentation can be found at:
+  -->
+  Incus のドキュメントはこちらです:
+  https://incus-ja.readthedocs.io/ja/latest/ （日本語訳）
+  https://linuxcontainers.org/incus/docs/main/ （原文）
+
+  # パッケージ <!-- Packages -->
+  <!--
+  There are no official Incus packages as Incus upstream only releases regular release tarballs. Below are some available options to get Incus up and running.
+  -->
+  Incus の開発元は、通常リリースの tarball のみをリリースするため、公式の Incus パッケージはありません。Incus を実行するために使えるオプションを以下にいくつか示します。
+
+  ## Linux 上に Incus サーバーをインストールする <!-- Installing the Incus server on Linux -->
+  <!--
+  Incus is available for most common Linux distributions. You'll find detailed installation instructions in our documentation.
+  -->
+  Incus はほとんどの一般的な Linux ディストリビューションで利用できます。インストール手順の詳細は、Incus のドキュメントを参照してください。
+
+  https://incus-ja.readthedocs.io/ja/latest/installing/ （日本語訳）
+  https://linuxcontainers.org/incus/docs/main/installing/ （原文）
+
+  ## Incus クライアントの Homebrew パッケージ <!-- Homebrew package for the Incus client -->
+  <!--
+  The client tool is available through HomeBrew for both Linux and MacOS.
+  -->
+  HomeBrew 経由で、Linux と macOS 向けにクライアントツールが利用できます。
+
+  https://formulae.brew.sh/formula/incus
+
+  ## Incus クライアントの Chocolatey パッケージ <!-- Chocolatey package for the Incus client -->
+  <!--
+  The client tool is available through Chocolatey for Windows users.
+  -->
+  Chocolatey 経由で、Windows ユーザー向けにクライアントツールが利用できます。
+
+  https://community.chocolatey.org/packages/incus/6.1.0
+
+  ## Incus クライアントの Winget パッケージ <!-- Winget package for the Incus client -->
+  <!--
+  The client tool is also available through Winget for Windows users.
+  -->
+  Winget 経由で、Windows ユーザー向けにクライアントツールが利用できます。
+
+  https://winstall.app/apps/LinuxContainers.Incus
+
+  # サポート <!-- Support -->
+  <!--
+  At this early stage, each Incus release will only be supported up until the next release comes out. This will change in a few months as we are planning an LTS release to coincide with the LTS releases of LXC and LXCFS.
+  -->
+  現在は初期段階ですので、Incus の各リリースは、次のリリースが出るまでしかサポートされません。LXC と LXCFS のリリースと合わせて LTS リリースを計画していますので、この状況はここ数ヶ月で変わるでしょう。
+
+  コミュニティサポートはこちらから <!-- Community support is provided at -->: https://discuss.linuxcontainers.org
+  商用サポートはこちらから <!-- Commercial support is available through -->: https://zabbly.com/incus
+  バグはこちらから報告できます <!-- Bugs can be reported at -->: https://github.com/lxc/incus/issues
