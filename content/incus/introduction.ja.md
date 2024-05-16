@@ -150,14 +150,18 @@ Incus には 2 種類のリリースがあります:
  * フィーチャーリリース <!-- Feature releases -->
 
 <!--
-At present, no LTS releases have been released.
+The current LTS release is Incus 6.0 and is supported until June 2029.
 -->
-現時点では、LTS リリースはリリースされていません。
+現時点の LTS リリースは Incus 6.0 であり、2029 年 6 月までサポートされます。
 
 <!--
-Feature releases are pushed out every month or so and contain new features as well as bugfixes. The normal support length for those releases is of about a month, or until the next release comes out. Some Linux distributions might offer longer support for particular feature releases that they decided to ship.
+Feature releases are pushed out every month or so and contain new features as well as bugfixes.
+The normal support length for those releases is of about a month, or until the next release comes out. 
+Some Linux distributions might offer longer support for particular feature releases that they decided to ship.
 -->
-フィーチャーリリースは、毎月リリースされ、新機能とバグ修正が含まれています。フィーチャーリリースに対する通常のサポート期間は約 1 ヶ月、もしくは次のリリースがリリースされるまでです。一部のディストリビューションでは、出荷を決定した特定のフィーチャーリリースに対して、より長いサポートが提供される場合もあります。
+フィーチャーリリースは、毎月リリースされ、新機能とバグ修正が含まれています。
+フィーチャーリリースに対する通常のサポート期間は約 1 ヶ月、もしくは次のリリースがリリースされるまでです。
+一部のディストリビューションでは、出荷を決定した特定のフィーチャーリリースに対して、より長いサポートが提供される場合もあります。
 
 <!--
 Commercial support for Incus can be obtained from [Zabbly](https://zabbly.com/incus).
