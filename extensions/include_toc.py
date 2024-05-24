@@ -38,5 +38,5 @@ class InsertToCStuff(Preprocessor):
 
 class IncludeToCExtension (Extension):
 
-    def extendMarkdown(self, md, md_globals):
-        md.preprocessors.add('includetoc', InsertToCStuff(md), '_begin')
+    def extendMarkdown(self, md):
+        md.preprocessors.register(InsertToCStuff(md), 'includetoc', 9999)
