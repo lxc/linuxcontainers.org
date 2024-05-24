@@ -22,7 +22,7 @@ class FixFormatting(Preprocessor):
                     # it in the required format.
 
                     details = 1
-                    match = re.search('\[details=(.+)\]', line)
+                    match = re.search(r'\[details=(.+)\]', line)
                     if match:
                         new_lines.append("??? details "+match.group(1)+"\n")
                     else:
@@ -52,5 +52,5 @@ class FixFormatting(Preprocessor):
 
 class FormatDetailsExtension (Extension):
 
-    def extendMarkdown(self, md, md_globals):
-        md.preprocessors.add('formatdetails', FixFormatting(md), '_begin')
+    def extendMarkdown(self, md):
+        md.preprocessors.register(FixFormatting(md), 'formatdetails', 9999)
