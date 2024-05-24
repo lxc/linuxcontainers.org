@@ -11,16 +11,16 @@
      "meta": {"target": "/incus/introduction/"}},
 
     {"path": "/incus/introduction/",
-     "title": "Incus - Introduction",
+     "title": "Incus — Introduction",
      "menu": ["Incus", "Introduction"],
      "generator": "markdown",
      "meta": {"input": "incus/introduction.fr.md"}},
 
     {"path": "/incus/announcement/",
-     "title": "Incus - Announcement",
-     "menu": ["Incus", "Announcement"],
+     "title": "Incus — Annonces",
+     "menu": ["Incus", "Annonces"],
      "generator": "markdown",
-     "meta": {"input": "incus/announcement.md"}},
+     "meta": {"input": "incus/announcement.fr.md"}},
 
     {"path": "/incus/try-it/",
      "title": "Incus - Try it online",
