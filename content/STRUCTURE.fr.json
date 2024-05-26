@@ -66,7 +66,7 @@
      "meta": {"url": "https://web.libera.chat/#lxc"}},
 
     {"path": "/incus/mailing-lists/",
-     "menu": ["Incus", "Mailing lists"],
+     "menu": ["Incus", "Listes de diffusion"],
      "generator": "link",
      "meta": {"url": "https://lists.linuxcontainers.org"}},
 
