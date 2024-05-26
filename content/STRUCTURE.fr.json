@@ -44,11 +44,11 @@
      "meta": {"url": "https://linuxcontainers.org/incus/docs/main/"}},
 
     {"path": "/incus/downloads/",
-     "title": "Incus - Downloads",
-     "menu": ["Incus", "Downloads"],
+     "title": "Incus — Téléchargements",
+     "menu": ["Incus", "Téléchargements"],
      "generator": "downloads",
      "meta": {"dir": "/downloads/incus",
-              "input": "incus/downloads.md"}},
+              "input": "incus/downloads.fr.md"}},
 
     {"path": "/incus/github/",
      "menu": ["Incus", "GitHub"],
