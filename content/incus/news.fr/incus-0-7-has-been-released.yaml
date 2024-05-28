@@ -1,0 +1,755 @@
+title: Incus 0.7 est maintenant disponible
+date: 2024/03/26 18:03
+origin: https://discuss.linuxcontainers.org/t/incus-0-7-has-been-released/19485
+content: |-
+  <!--
+  # Introduction
+  The Incus team is pleased to announce the release of Incus 0.7!
+  -->
+  # Introduction
+  L’équipe d’Incus est heureuse d’annoncer la sortie d’Incus 0.7 !
+
+  <!--
+  This is going to be our last release before Incus 6.0 LTS which is now scheduled to be released next week. As releases go, this is quite a busy one, which is how we like it before releasing an LTS, trying to keep the amount of new features in the LTS release itself to a minimum.
+  -->
+  Ce sera notre dernière version avant Incus 6.0 LTS, dont la sortie est prévue pour la semaine prochaine. Cette version est assez dense ; c’est ce que nous préférons faire avant la sortie d’une LTS, pour réduire le plus possible le nombre de nouvelles fonctionnalités dans la version LTS elle-même.
+
+  [
+  ![image|690x404](https://discuss.linuxcontainers.org/uploads/default/original/2X/8/88e148d64ec264e8d6770f2afab6711aa9864a18.png)](https://linuxcontainers.org/incus/try-it/)
+
+  <!--
+  As usual, you can try it for yourself online: https://linuxcontainers.org/incus/try-it/
+  -->
+  Comme d’habitude, vous pouvez l’essayer vous-même en ligne : https://linuxcontainers.org/incus/try-it/
+
+  <!--
+  Enjoy!
+  -->
+
+  <!--
+  # New features
+  ## Network integrations
+  A new top-level concept, network integrations are a way to connect an Incus deployment to networks outside of its own control.
+  -->
+  # Nouvelles fonctionnalités
+  ## Intégrations réseau
+  Les intégrations réseau sont un nouveau concept de haut niveau permettant de connecter un déploiement Incus à des réseaux en dehors de son contrôle.
+
+  <!--
+  Currently the only implementation of the concept is [OVN interconnection](https://docs.ovn.org/en/latest/tutorials/ovn-interconnection.html) which makes it possible for an Incus cluster to directly peer its OVN networks with equivalent networks running on other Incus clusters or even other OVN users like OpenStack or Kubernetes.
+  -->
+  Actuellement, la seule implémentation du concept est l’interconnexion OVN, qui permet à un cluster Incus de peerer directement ses réseaux OVN avec d’autres réseaux tournant sur d’autres clusters Incus, ou même d’autres applications utilisant OVN telles qu’OpenStack ou Kubernetes.
+
+  <!--
+  Here is an example of creating a new network integration using an OVN interconnection gateway, then peering an existing network through it:
+  -->
+  Voici un exemple présentant la création d’une nouvelle intégration réseau avec une interconnexion OVN, puis son peering avec un réseau existant :
+
+      root@az01-server01:~# incus network integration create ovn-region ovn
+      Network integration ovn-region created
+      root@az01-server01:~# incus network integration set ovn-region ovn.northbound_connection tcp:[10.50.1.12]:6645,tcp:[10.50.2.13]:6645,tcp:[10.50.3.19]:6645
+      root@az01-server01:~# incus network integration set ovn-region ovn.southbound_connection tcp:[10.50.1.12]:6646,tcp:[10.50.2.13]:6646,tcp:[10.50.3.19]:6646
+      root@az01-server01:~# incus network peer create default region ovn-region --type=remote
+      Network peer region created
+
+  <!--
+  Documentation: https://linuxcontainers.org/incus/docs/main/howto/network_integrations/
+  -->
+  Documentation : https://linuxcontainers.org/incus/docs/main/howto/network_integrations/
+
+  <!--
+  ## Image server management tool
+  A common way to run an Incus image server, be it for some internal servers or as a publicly available image server is through a static web server providing Incus images using `simplestreams`.
+  -->
+  ## Outil de gestion des serveurs d’images
+  Une façon classique de faire fonctionner un serveur d’images Incus, qu’il soit dédié à des serveurs internes ou ouvert au public, consiste à utiliser un serveur web statique fournissant des images Incus à l’aide de simplestreams.
+
+  <!--
+  To make this easier to set up, we're now introducing a new tool, `incus-simplestreams` which can easily manage a simple image server, listing the images available, adding and removing images as well as generating the needed metadata files.
+  -->
+  Pour simplifier sa mise en œuvre, nous avons développé un nouvel outil, `incus-simplestreams`, qui permet de gérer facilement un serveur d’images permettant de lister les images disponibles, d’en ajouter, d’en supprimer, ainsi que de générer les métadonnées nécessaires.
+
+      stgraber@dakara:~$ mkdir image-server
+      stgraber@dakara:~$ cd image-server/
+      stgraber@dakara:~/image-server$ incus-simplestreams generate-metadata ~/Downloads/incus.tar.xz
+      Operating system name: Red Hat Enterprise Linux
+      Release name: 9
+      Variant name [default="default"]:
+      Architecture name: x86_64
+      Description [default="Red Hat Enterprise Linux 9 (default) (x86_64) (202403260239)"]:·
+      stgraber@dakara:~/image-server$ incus-simplestreams add ~/Downloads/incus.tar.xz ~/Downloads/rhel9.qcow2·
+      stgraber@dakara:~/image-server$ incus-simplestreams list
+      +------------------------------------------------------------------+--------------------------------------------------+--------------------------+---------+---------+--------------+-----------------+----------------------+
+      |                           FINGERPRINT                            |                   DESCRIPTION                    |            OS            | RELEASE | VARIANT | ARCHITECTURE |      TYPE       |       CREATED        |
+      +------------------------------------------------------------------+--------------------------------------------------+--------------------------+---------+---------+--------------+-----------------+----------------------+
+      | 7d256e4fac6fc63fb47bc1e07e1c6ee234281cdf1ed21788c920d763b7bd93ba | Red Hat Enterprise Linux 9 x86_64 (202403252239) | Red Hat Enterprise Linux | 9       | default | x86_64       | virtual-machine | 2024/03/25 00:00 UTC |
+      +------------------------------------------------------------------+--------------------------------------------------+--------------------------+---------+---------+--------------+-----------------+----------------------+
+      stgraber@dakara:~/image-server$ find . | sort
+      .
+      ./images
+      ./images/ef6cf538776b05a64c789f16f235a757522724f2c490c7e118645be2eb920d30.incus.tar.xz
+      ./images/ef6cf538776b05a64c789f16f235a757522724f2c490c7e118645be2eb920d30.qcow2
+      ./streams
+      ./streams/v1
+      ./streams/v1/images.json
+      ./streams/v1/index.json
+
+  <!--
+  Put that on an HTTPS capable web server and then add it with:
+  -->
+  Déposez les fichiers sur un serveur web HTTPS, et ajoutez-le à Incus avec :
+
+      incus remote add my-server https://xyz.example.net --protocol=simplestreams
+
+  <!--
+  Documentation: https://linuxcontainers.org/incus/docs/main/reference/image_servers/#tooling-to-manage-a-simplestreams-server
+  -->
+  Documentation: https://linuxcontainers.org/incus/docs/main/reference/image_servers/#tooling-to-manage-a-simplestreams-server
+
+  <!--
+  ## JSON Web Token authentication
+  Incus basically supports two mechanisms for remote authentication:
+  -->
+  ## Authentification par JSON Web Token
+  Incus prend en charge deux mécanismes pour l’authentification à distance :
+
+  <!--
+   - TLS client certificates (added to the local trust store with or without restrictions)
+   - OpenID Connect external authentication (with or without OpenFGA for authorization)
+  -->
+   - Des certificats client TLS (ajoutés au magasin de confiance local, avec ou sans restrictions)
+   - L’authentification externe avec OpenID Connect (avec ou sans OpenFGA pour l’autorisation)
+
+  <!--
+  The former is the most common for simple interactions with a remote Incus server.
+  Our own CLI tool and most 3rd party tools don't have any problems using a TLS keypair to establish the HTTPS connection and get authenticated that way.
+  -->
+  Le premier mécanisme est le plus courant pour des interactions simples avec un serveur Incus distant.
+  Notre outil en ligne de commande et la plupart des outils tiers n’ont aucun problème à utiliser une paire de clefs TLS pour établir une connexion HTTPS et s’authentifier de cette manière.
+
+  <!--
+  But there are some situations, like running Incus behind a reverse HTTP(S) proxy where TLS client certificates can become a bit problematic.
+  -->
+  Mais dans certaines situations, par exemple lors de l’exécution d’Incus derrière un reverse proxy HTTP(S), l’utilisation de certificats client TLS peut devenir problématique.
+
+  <!--
+  To address that, we now support using a JSON Web Token (JWT) bearer token through the HTTP `Authorization` field. That token can be generated by any user with a valid TLS client certificate by setting the Subject field to the certificate fingerprint, setting applicable NotBefore/NotAfter values and signing the JWT with their private key.
+  -->
+  Pour y remédier, nous supportons désormais l’utilisation d’un jeton JSON Web Token (JWT) passé dans le champ HTTP `Authorization`. Ce jeton peut être généré par n’importe quel utilisateur avec un certificat client TLS valide en définissant le champ Subject avec l’empreinte du certificat, en ajoutant les valeurs NotBefore/NotAfter applicables, et en signant le JWT avec sa clef privée.
+
+  <!--
+  Incus will treat any such connections as equivalent to using the TLS client certificate.
+  -->
+  Incus considérera ces connexions comme équivalentes à l’utilisation d’un certificat client TLS.
+
+      stgraber@dakara:~$ openssl req -x509 -newkey rsa:4096 -sha384 -keyout client.key -nodes -out client.crt -days 1 -subj "/CN=test.local"
+      .+.........+...+...+..+....+......+........+.+.....+.+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*......+.+......+...+......+......+..+...+...+...............+.......+...+......+...+.....+......+....+......+..+...+......+....+............+.....+....+.....+.+............+..+.........+......+....+......+...........+....+........+...+...+.+...+..+..........+.....+...+......+............+...+.......+........+....+.....+.+..+.......+......+..+....+........+..........+...+..+.+.....+.+......+..+.......+.....+.+..+..........+..+....+..............+.+..+...........................+...+....+......+...+..............+.+..+....+.....+.+.........+...+..+....+..+.............+.........+.....+...+..........+...+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*.....+...+...+..+...+.........+.+...+............+..+............+.+.......................................+.....+...+......+.........+......+.+.....+...+.+...........+......+.......+.....+.......+......+.....+..........+...+..+.........+....+.........+...........+......+.+..................+..+....+...........+.............+.....+....+..+......+............+..........+......+......+......+..+.............+.....+...+.+........+............+....+.................+.........+......+.......+...+.........+.....+....+......+........+.+..+....+......+........+....+...+.................+.+..+.........+....+............+.....+.........+....+.....+.......+.....+...............+..............................+....+........+.......+...........+.......+.....+......+.........+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+      ...+...............+.+...+...+...+.........+..+.+...+..+.......+.....+.+..+...+...................+...........+......+....+..+............+...+.......+..+.........+....+...+.........+.....+...+...+....+...........+...+.+.........+.....+......+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*.+...+......+..+...+......+.+..+.............+..+.......+........+...+...+....+...............+..+....+..+....+...+.....+.+.....+..........+.....+.+.....+....+............+.........+...+.....+......+......+.............+..+.+..+.......+...+........+...+.......+.........+......+..+.+......+...........+...+.........+...+...+....+..+.........+....+.....+.+......+.........+..+..........+..+...+...+....+..+...+.+.....+......+.+...+......+.....+.+.....+.......+........+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*........+..+.......+...+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+      -----
+      stgraber@dakara:~$ incus config trust add-certificate client.crt --restricted --projects demo
+      stgraber@dakara:~$ tls2jwt client.key client.crt now 120
+      eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2MzI3Y2Q5YmIxYTFmN2ExMWM3ODBkZjc4YjVkNjg5YzhkMGQ5YzcwZGQxOGQ1YTMyYzI1M2ZiODA0N2U2M2E0IiwiZXhwIjoxNzExNDcyMjE2LCJuYmYiOjE3MTE0NzIwOTYsImlhdCI6MTcxMTQ3MjA5Nn0.pNQ4AcgoymxWHROXVjcYX8QMKdf9QgRH3zex7qc16avX7_Ax1q_WFWzQWfP48Fh-ooeh9hBQKCQkZxjVxYx8Sy-cNqmkf1AI9KGh5uemHh3FYAbvebCTaIXan0B6glWHVnDSwLZKBWTDDai2VXOmUfntyV9yPJdTqxt1J0j8PNuIWzNVdFlcTxzpggcJMhbcqtf4GRwSMKx69HU5sP4AQ7GJ2cBvN7Im-nkRXTc7xiyYnIsFx0vIWJzojC4zwg0-C1LHKQD4DyEKhqOVISIKUSa3GhD6ajcDuGDS8af4Iz19sNPsSoSULBUG-a7E5lXx2vk802vOFFWV68ZHugsJHpdSpLFwTVixipQ1-QdKRozlMjNPguu-5CYxhZVR1p32lbN9D879xGbFXUgPJVwK25NILvbEMcrqnGPgKcRUjJlHtVljGOgXrjmG7dMiW5QOsyy1eIvJ1D1sNsG02fDTbchTzXHmIybxQTK0FXCyNDLOAl6xgW0Jundg7AN1uJU2cLEWy1x3TusqC7lyeTeF3WYT-G8xE2CU4GpLBeYWyLwuJgxRkaWcg9IXiivguPbWpcT0RMl1bmpn0TJ2VgEPCuSG0mJxMBp8HbAgxwgar8AHdpoZ43dCCwZnB0a0O_kmGkBE2xGKKvgTx_U6eSixZzyyNmHDC1KH1Vy1WW1ZcF0stgraber@dakara:~$·
+      stgraber@dakara:~$ curl -s -k -H 'Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2MzI3Y2Q5YmIxYTFmN2ExMWM3ODBkZjc4YjVkNjg5YzhkMGQ5YzcwZGQxOGQ1YTMyYzI1M2ZiODA0N2U2M2E0IiwiZXhwIjoxNzExNDcyMjE2LCJuYmYiOjE3MTE0NzIwOTYsImlhdCI6MTcxMTQ3MjA5Nn0.pNQ4AcgoymxWHROXVjcYX8QMKdf9QgRH3zex7qc16avX7_Ax1q_WFWzQWfP48Fh-ooeh9hBQKCQkZxjVxYx8Sy-cNqmkf1AI9KGh5uemHh3FYAbvebCTaIXan0B6glWHVnDSwLZKBWTDDai2VXOmUfntyV9yPJdTqxt1J0j8PNuIWzNVdFlcTxzpggcJMhbcqtf4GRwSMKx69HU5sP4AQ7GJ2cBvN7Im-nkRXTc7xiyYnIsFx0vIWJzojC4zwg0-C1LHKQD4DyEKhqOVISIKUSa3GhD6ajcDuGDS8af4Iz19sNPsSoSULBUG-a7E5lXx2vk802vOFFWV68ZHugsJHpdSpLFwTVixipQ1-QdKRozlMjNPguu-5CYxhZVR1p32lbN9D879xGbFXUgPJVwK25NILvbEMcrqnGPgKcRUjJlHtVljGOgXrjmG7dMiW5QOsyy1eIvJ1D1sNsG02fDTbchTzXHmIybxQTK0FXCyNDLOAl6xgW0Jundg7AN1uJU2cLEWy1x3TusqC7lyeTeF3WYT-G8xE2CU4GpLBeYWyLwuJgxRkaWcg9IXiivguPbWpcT0RMl1bmpn0TJ2VgEPCuSG0mJxMBp8HbAgxwgar8AHdpoZ43dCCwZnB0a0O_kmGkBE2xGKKvgTx_U6eSixZzyyNmHDC1KH1Vy1WW1ZcF0' https://localhost:8443/1.0/projects | jq
+      {
+        "type": "sync",
+        "status": "Success",
+        "status_code": 200,
+        "operation": "",
+        "error_code": 0,
+        "error": "",
+        "metadata": [
+          "/1.0/projects/demo"
+        ]
+      }
+
+  <!--
+  Documentation: https://linuxcontainers.org/incus/docs/main/authentication/#using-json-web-token-jwt-to-perform-tls-authentication
+  -->
+  Documentation : https://linuxcontainers.org/incus/docs/main/authentication/#using-json-web-token-jwt-to-perform-tls-authentication
+
+  <!--
+  ## Configurable OIDC username field
+  For those using OpenID Connect, you may have noticed that Incus will use the `e-mail` claim when available as the user's identifier. Then if missing, it will rely on the Subject.
+  -->
+  ## Champ du nom d’utilisateur OIDC configurable
+  Les personnes utilisant OpenID Connect auront peut-être remarqué qu’Incus utilise le claim `e-mail` comme nom d’utilisateur lorsqu’il est disponible. S’il n’est pas présent, c’est le Subject qui est utilisé.
+
+  <!--
+  As different deployments may make different information available through OIDC claims, it's now possible to set `oidc.claim` to the claim to use as the user identifier.
+  -->
+  Étant donné que les informations rendues disponibles dans les claims OIDC peuvent différer selon la solution déployée, il est désormais possible de définir dans le paramètre `oidc.claim` le claim à utiliser comme nom d’utilisateur.
+
+      stgraber@dakara:~$ incus query s-dakara:/1.0 | jq -r .auth_user_name
+      stgraber@stgraber.org
+      stgraber@dakara:~$ incus config set oidc.claim=name
+      stgraber@dakara:~$ incus query s-dakara:/1.0 | jq -r .auth_user_name
+      Stéphane Graber
+      stgraber@dakara:~$ incus config set oidc.claim=sub
+      stgraber@dakara:~$ incus query s-dakara:/1.0 | jq -r .auth_user_name
+      99cb8caa-3640-45b9-b87a-55266366aaf3
+      stgraber@dakara:~$ incus config set oidc.claim=email
+      stgraber@dakara:~$ incus query s-dakara:/1.0 | jq -r .auth_user_name
+      stgraber@stgraber.org
+
+  <!--
+  ## Improved NUMA handling
+  With this release, we spent a fair amount of time trying to improve both the container and virtual-machine performance on large systems. This obviously includes multi-socket systems but also AMD systems running in NPS4 or similar mode where each CPU is exposed as multiple NUMA nodes.
+  -->
+  ## Amélioration de la gestion de NUMA
+  Dans cete version, nous avons passé beaucoup de temps à essayer d’améliorer les performances à la fois des conteneurs et des machines virtuelles sur les gros systèmes. Cela inclut bien sûr les systèmes à plusieurs sockets CPU, mais également les systèmes AMD fonctionnant en mode NPS4 ou similaire, dans lequel chaque processeur est exposé comme plusieurs nœuds NUMA.
+
+  <!--
+  In general, our goal has been to make it easy to distribute workloads across NUMA nodes while keeping their CPU and memory properly pinned and also selecting PCIe resources that are closest to their NUMA node(s).
+  -->
+  Globalement, notre objectif a été de faciliter la distribution de la charge sur les nœuds NUMA, tout en respectant le pinning CPU et en sélectionnant les ressources PCIe les plus proches des nœuds NUMA.
+
+  <!--
+  As part of that, a few things were done:
+  -->
+  Dans ce cadre, plusieurs choses ont été faites :
+
+  <!--
+   - `limits.cpu.nodes` is now supported for virtual-machines too
+   - A new `balanced` value has been added to `limits.cpu.nodes` which will have Incus pick the NUMA node with the least instances configured to use it
+   - SR-IOV GPU selection now also considers NUMA nodes as part of the selection logic and when no match is found, will prefer PCIe devices that are attached to the same CPU socket
+  -->
+   - `limits.cpu.nodes` est désormais également supporté pour les machines virtuelles
+   - Une nouvelle valeur `balanced` a été ajoutée à `limits.cpu.nodes`, permettant à Incus de choisir le nœud NUMA avec le moins d’instances utilisatrices
+   - La logique de sélection des GPU SR-IOV prend désormais en considération les nœuds NUMA, et si aucune correspondance n’est trouvée, elle préférera les périphériques PCIe reliés au même socket CPU.
+
+  <!--
+  For example:
+  -->
+  Par exemple :
+
+      stgraber@gputest:~$ incus list stgraber-gpu -cns4,limits.cpu.nodes,volatile.cpu.nodes,volatile.gpu.last_state.pci.parent,volatile.gpu.last_state.vf.id
+      +----------------+---------+-----------------------+------------------+--------------------+------------------------------------+-------------------------------+
+      |      NAME      |  STATE  |         IPV4          | LIMITS CPU NODES | VOLATILE CPU NODES | VOLATILE GPU LAST STATE PCI PARENT | VOLATILE GPU LAST STATE VF ID |
+      +----------------+---------+-----------------------+------------------+--------------------+------------------------------------+-------------------------------+
+      | stgraber-gpu01 | RUNNING | 10.232.44.8 (enp5s0)  | balanced         | 0                  | 0000:63:00.0                       | 1                             |
+      +----------------+---------+-----------------------+------------------+--------------------+------------------------------------+-------------------------------+
+      | stgraber-gpu02 | RUNNING | 10.232.44.9 (enp5s0)  | balanced         | 2                  | 0000:03:00.0                       | 1                             |
+      +----------------+---------+-----------------------+------------------+--------------------+------------------------------------+-------------------------------+
+      | stgraber-gpu03 | RUNNING | 10.232.44.10 (enp5s0) | balanced         | 4                  | 0000:e3:00.0                       | 1                             |
+      +----------------+---------+-----------------------+------------------+--------------------+------------------------------------+-------------------------------+
+      | stgraber-gpu04 | RUNNING | 10.232.44.11 (enp5s0) | balanced         | 5                  | 0000:c3:00.0                       | 2                             |
+      +----------------+---------+-----------------------+------------------+--------------------+------------------------------------+-------------------------------+
+      | stgraber-gpu05 | RUNNING | 10.232.44.12 (enp5s0) | balanced         | 6                  | 0000:c3:00.0                       | 1                             |
+      +----------------+---------+-----------------------+------------------+--------------------+------------------------------------+-------------------------------+
+      | stgraber-gpu06 | RUNNING | 10.232.44.13 (enp5s0) | balanced         | 7                  | 0000:83:00.0                       | 0                             |
+      +----------------+---------+-----------------------+------------------+--------------------+------------------------------------+-------------------------------+
+      | stgraber-gpu07 | RUNNING | 10.232.44.15 (enp5s0) | balanced         | 1                  | 0000:43:00.0                       | 3                             |
+      +----------------+---------+-----------------------+------------------+--------------------+------------------------------------+-------------------------------+
+      | stgraber-gpu08 | RUNNING | 10.232.44.16 (enp5s0) | balanced         | 2                  | 0000:03:00.0                       | 0                             |
+      +----------------+---------+-----------------------+------------------+--------------------+------------------------------------+-------------------------------+
+      | stgraber-gpu09 | RUNNING | 10.232.44.17 (enp5s0) | balanced         | 3                  | 0000:03:00.0                       | 2                             |
+      +----------------+---------+-----------------------+------------------+--------------------+------------------------------------+-------------------------------+
+      | stgraber-gpu10 | RUNNING | 10.232.44.18 (enp5s0) | balanced         | 4                  | 0000:e3:00.0                       | 0                             |
+      +----------------+---------+-----------------------+------------------+--------------------+------------------------------------+-------------------------------+
+      | stgraber-gpu11 | RUNNING | 10.232.44.19 (enp5s0) | balanced         | 5                  | 0000:c3:00.0                       | 0                             |
+      +----------------+---------+-----------------------+------------------+--------------------+------------------------------------+-------------------------------+
+      | stgraber-gpu12 | RUNNING | 10.232.44.20 (enp5s0) | balanced         | 6                  | 0000:83:00.0                       | 1                             |
+      +----------------+---------+-----------------------+------------------+--------------------+------------------------------------+-------------------------------+
+      | stgraber-gpu13 | RUNNING | 10.232.44.21 (enp5s0) | balanced         | 7                  | 0000:83:00.0                       | 2                             |
+      +----------------+---------+-----------------------+------------------+--------------------+------------------------------------+-------------------------------+
+      | stgraber-gpu14 | RUNNING | 10.232.44.22 (enp5s0) | balanced         | 1                  | 0000:43:00.0                       | 1                             |
+      +----------------+---------+-----------------------+------------------+--------------------+------------------------------------+-------------------------------+
+      | stgraber-gpu15 | RUNNING | 10.232.44.23 (enp5s0) | balanced         | 2                  | 0000:43:00.0                       | 2                             |
+      +----------------+---------+-----------------------+------------------+--------------------+------------------------------------+-------------------------------+
+      | stgraber-gpu16 | RUNNING | 10.232.44.24 (enp5s0) | balanced         | 3                  | 0000:03:00.0                       | 3                             |
+      +----------------+---------+-----------------------+------------------+--------------------+------------------------------------+-------------------------------+
+
+
+  <!--
+  In this case we can see 16 VMs each using the new `balanced` option for NUMA nodes and getting scheduled across 8 NUMA nodes (2 sockets AMD NPS4) with GPUs being selected to match.
+  -->
+  Dans cet exemple, nous pouvons voir 16 VM utilisant chacune la nouvelle option `balanced`, ordonnancées sur 8 nœuds NUMA (2 sockets AMD NPS4), avec des GPU sélectionnés par proximité.
+
+  <!--
+  ## More options to select USB devices
+  USB device passhtrough for both containers and virtual-machines has so far been using the `vendorid` and `productid` fields. This works fine as long as there is only one USB device of any one type connected to the system.
+  -->
+  ## Plus d’options pour sélectionner des périphériques USB
+  Le passthrough de périphériques USB pour les conteneurs et les machines virtuelles se faisait jusqu’alors avec les champs `vendorid` et `productid`. Cela fonctionne bien tant qu’il n’y a qu’un seul périphérique USB d’un type donné connecté au système.
+
+  <!--
+  When multiple identical devices are present, the inability to distinguish them has been a problem.
+  -->
+  Lorsque plusieurs périphériques identiques sont présents, l’impossibilité de les distinguer était problématique.
+
+  <!--
+  To address this, three new fields have now been added to `usb` devices:
+  -->
+  Pour résoudre ce problème, trois nouveaux champs ont été ajoutés aux périphériques `usb` :
+
+  <!--
+   - `busnum` referring to the USB bus number
+   - `devnum` referring to the USB device number (on its bus)
+   - `serial` referring to the USB device serial number (not present on all devices)
+  -->
+    - `busnum`, correspondant au numéro du bus USB
+    - `devnum`, correspondant au numéro du périphérique USB (dans son bus)
+    - `serial`, correspondant au numéro de série du périphérique (pas présent sur tous les périphériques)
+
+  <!--
+  The same fields can be found in the full Incus resources list through:
+  -->
+  Ces champs peuvent être trouvés dans la liste complète des ressources d’Incus :
+
+      incus query /1.0/resources
+
+  <!--
+  ## Disk I/O throttling for VMs
+  One more feature gap between containers and virtual-machines is now gone.
+  -->
+  ## Limitation des E/S disque pour les VM
+  Une autre différence de fonctionnalité entre les conteneurs et les machines virtuelles a été éliminée dans cette version.
+
+  <!--
+  The `limits.write` and `limits.read` properties on `disk` devices are now properly enforced on virtual-machines by having Incus setup an I/O throttle in QEMU.
+  -->
+  Incus applique désormais correctement les propriétés `limits.write` et `limits.read` pour les périphériques `disk` sur les machines virtuelles, en définissant des limites d’E/S dans QEMU.
+
+  <!--
+  Both bytes per second and I/O per second type limits are supported.
+  -->
+  Les limitations peuvent se faire, au choix, en octets par seconde ou en E/S par seconde.
+
+  <!--
+  ## Per-remote client certificates
+  It's now possible to put a `<remote>.crt` and `<remote>.key` file in a new `clientcerts` folder within the Incus command line client config directory (typically `~/.config/incus/`) and have those certificates be used when interacting with that particular remote.
+  -->
+  ## Certificats client par serveur distant
+  Il est maintenant possible de créer un dossier `clientcerts` dans le répertoire de configuration de l’outil en ligne de commande d’Incus (typiquement dans `~/.config/incus/`) et d’y placer des paires de fichiers `<remote>.crt` et `<remote>.key` pour les utiliser automatiquement lors de la connexion au serveur distant `<remote>`.
+
+  <!--
+  While this may be useful on its own, it becomes a lot more useful when combined with global remotes, which can be added in `/etc/incus/config.yml`. Now with this feature, those global remotes can also have a client certificate made available in `/etc/incus/clientcerts/` which will then be used by all users on the system.
+  -->
+  Bien que la fonctionnalité soit utile telle quelle, elle devient encore plus utile lorsqu’elle est combinée avec des serveurs distants globaux, qui peuvent être ajoutés dans `/etc/incus/config.yml`. Il devient ainsi possible de se connecter aux serveurs distants globaux avec des certificats clients placés dans `/etc/incus/clientcerts/`, qui seront utilisés par tous les utilisateurs du système.
+
+  <!--
+  ## Manual generation of the client certificate keypair
+  A new command to manually trigger the generation of the main `client.crt` and `client.key` keypair is now available.
+  -->
+  ## Génération manuelle de paires de clefs pour les certificats client
+  Une nouvelle commande permettant de générer manuellement la paire de clefs principale `client.crt` et `client.key` est maintenant disponible.
+
+  <!--
+  This is done by running `incus remote generate-certificate`
+  -->
+  Pour l’utiliser, il faut lancer `incus remote generate-certificate`
+
+  <!--
+  ## Improvements to `lxd-to-incus`
+  The `lxd-to-incus` tool keeps evolving with every release.
+  -->
+  ## Améliorations dans `lxd-to-incus`
+  L’outil `lxd-to-incus` continue d’évoluer à chaque version.
+
+  <!--
+  In this one, it gains support for migrating users from the newly released LXD 5.21 LTS as well as handling Alpine installations.
+  -->
+  Dans celle-ci, il prend désormais en charge la migration des utilisateurs depuis la nouvelle version LXD 5.21 LTS, ainsi que la gestion des installations Alpine.
+
+  <!--
+  Additionally, a static binary version of the tool is now available on Github, making it easier for users to fetch the latest version of the tool, useful as bugs get fixed in between Incus releases.
+  -->
+  De plus, une version binaire statique de l’outil est maintenant disponible sur Github, permettant aux utilisateurs de récupérer plus facilement la dernière version de l’outil, ce qui est utile dans la mesure où des bugs sont corrigés à chaque version d’Incus.
+
+  <!--
+  ## Improvements to `incus-migrate`
+  The workload migration tool `incus-migrate` has also seen a couple of small improvements.
+  -->
+  ## Améliorations dans `incus-migrate`
+  L’outil de migration `incus-migrate` a également fait l’objet de quelques petites améliorations.
+
+  <!--
+  It can now use the local Incus system as the target of the migration, useful when importing virtual-machine images from another virtualization tool.
+  -->
+  Il peut désormais utiliser le système Incus local comme cible de la migration, ce qui est utile lors de l’import d’images de machines virtuelles depuis un autre outil de virtualisation.
+
+  <!--
+  And it's also now prompting for whether the imported virtual machine should be using a UEFI firmware or instead use a legacy BIOS.
+  -->
+  Enfin, il demande maintenant si la machine virtuelle importée doit utiliser un firmware UEFI ou un BIOS legacy.
+
+  <!--
+  ## Additional image restrictions
+  A bit of an internal detail, or at least only relevant to public image server operators, but two new image restrictions have been added:
+  -->
+  ## Restrictions supplémentaires sur les images
+  Il s’agit d’un détail interne, ou du moins concernant uniquement les opérateurs de serveurs d’images publics, mais deux nouvelles restrictions sur les images ont été ajoutées :
+
+  <!--
+   - `requirements.nesting` which will require the container have `security.nesting=true`
+   - `requirements.cdrom_agent` which will require that a `source=agent:config` disk device be added to the virtual-machine
+  -->
+   - `requirements.nesting`, qui exige que le conteneur ait `security.nesting=true`
+   - `requirements.cdrom_agent`, qui exige qu’un périphérique disque `source=agent:config` soit ajouté à la machine virtuelle
+
+  <!--
+  Those two can be used to flag specific images that need extra user interaction to work properly, resulting in a clear client-side error rather than starting a potentially broken instance.
+  -->
+  Ces deux restrictions peuvent être utilisées pour marquer des images spécifiques qui nécessitent une interaction supplémentaire de la part de l’utilisateur pour fonctionner correctement, affichant ainsi une erreur claire au client plutôt que de démarrer une instance potentiellement défectueuse.
+
+  <!--
+  # Complete changelog
+  Here is a complete list of all changes in this release:
+  -->
+  # Liste complète des changements
+  Voici une liste complète de tous les changements apportés par cette version :
+
+  <!--
+  [details="Full commit list"]
+  -->
+  [details="Liste complète des commits"]
+   - Translated using Weblate (Japanese)
+   - Translated using Weblate (Japanese)
+   - incus/image: Fix column handling with --all-projects
+   - Replace util.ValueInSlice with slices.Contains
+   - shared/util: Delete ValueInSlice function
+   - incus/image: Fix column handling with --all-projects
+   - incusd/instance/qemu: Relocate image requirement checks
+   - doc/images: Add requirements.cdrom_agent
+   - incusd/instance/qemu: Add support for requirements.cdrom_agent
+   - incusd/device/disk: Fix incorrect block volume usage
+   - Translated using Weblate (Japanese)
+   - incusd/network/ovn: Use ParseIPToNet instead of manual IPToNet and net.ParseIP
+   - incusd/network/ovn: Use listenAddressNet in family check
+   - incusd/instance/drivers: Disable architecture check on incus cp with snapshots
+   - Translated using Weblate (French)
+   - incusd/network/bridge: Set local address on all VXLAN tunnels
+   - incus/instance/qemu: Fix RecordOutput
+   - incus: add completions for instance actions and snapshots
+   - incus: add completions for profiles
+   - incusd/network/ovn: Introduce get helper
+   - incusd/network/ovn: Add some missing indices
+   - incusd/network/ovn: Use get helper
+   - incusd/network/ovn: Fix LogicalSwitchPortIPs logic
+   - incusd/network/bridge: Fix gofmt
+   - incusd/network/ovn: Fix gofmt
+   - cmd/incus: Use proper timestamp check
+   - cmd/incus: Use consistent date format and timezone
+   - client: Rename network_peer for consistency
+   - cmd/incusd: Rename network_peer to network_peers
+   - shared/api: Rename network_allocation for consistency
+   - incusd/db: Fix comment typoes
+   - incusd/db/generate: Fix bad camel case handling
+   - incusd/db/network_peers: Fix duplicate type definitions
+   - incusd/auth: Drop Permission type
+   - incusd/auth: Add boilerplate doc strings
+   - incusd/images: Properly handle null creation and expiry dates
+   - incus: add completions for remotes
+   - incus: add completions for projects
+   - incusd/images: Fix reporting of images in multiple projects
+   - github: Add static build of lxd-to-incus
+   - lxd-to-incus: Add support for Alpine service name
+   - lxd-to-incus: Re-organize target list
+   - lxd-to-incus: Add support for APK
+   - Makefile: Add OVN IC to update-ovsdb
+   - incusd/network: Update OVS/OVN schemas
+   - incusd/network/ovn: Add IC clients
+   - incusd/network/ovn: Add GetName to NB client
+   - incusd/network/ovn: Add GetGateways to ICSB
+   - incusd/network/ovn: Introduce new errors
+   - incusd/network/ovn: Add CreateTransitSwitch and DeleteTransitSwitch to ICNB
+   - incusd/device/gpu_sriov: Add locking
+   - incusd/device/gpu_sriov: Re-locate vfio-pci loading
+   - incusd/device/gpu_sriov: Rework VF allocation logic
+   - incus/remote: Add a generate-certificate sub-command
+   - i18n: Update translation templates
+   - incusd/drivers/qmp: Add SetBlockThrottle
+   - incusd/device/disk/config: Add DiskLimits
+   - incusd/device/disk: Re-shuffle limit parsing
+   - incusd/device/disk: Add disk limits on VMs
+   - incusd/device/disk: Support live limits update for VMs
+   - incusd/instance/qemu: Support disk I/O limits
+   - incus/remote: Add missing docstrings
+   - incusd/certificates: Improve token handling when clustered
+   - cmd/incusd/api_1.0: Update context
+   - cmd/incusd/api_cluster: Update context
+   - cmd/incusd/api_internal: Update context
+   - cmd/incusd/daemon: Update context
+   - cmd/incusd/api_project: Update context
+   - cmd/incusd/certificates: Update context
+   - cmd/incusd/images: Update context
+   - cmd/incusd/instance: Update context
+   - cmd/incusd/network: Update context
+   - cmd/incusd/operations: Update context
+   - cmd/incusd/profiles: Update context
+   - cmd/incusd/storage: Update context
+   - cmd/incusd/warnings: Update context
+   - incusd/devices: Skip isolated threads from NUMA CPUs
+   - incusd/devices: Restrict CPU threads by NUMA node
+   - incusd/instance/qemu: Add support for limits.cpu.nodes
+   - incusd/device/gpu: Add support for limits.cpu.nodes for VF selection
+   - incusd: Fix import shadowing
+   - incusd/images: Fix potential race condition
+   - incusd/instance/qemu: Add support for NUMA node restrictions for memory
+   - incusd/apparmor/qemu: Silence apparmor failures
+   - incusd/network/ovs: Introduce new errors
+   - incusd/network/ovn/nb: Move SetChassisGroupPriority to new function signature
+   - incusd/network/ovn/sb: Move GetLogicalRouterPortActiveChassisHostname to new function signature
+   - incusd/network/ovs: Move GetBridge to new function signature
+   - incusd/network/ovs: Move CreateBridge to new function signature
+   - incusd/network/ovs: Move DeleteBridge to new function signature
+   - incusd/network/ovs: Move CreateBridgePort to new function signature
+   - incusd/network/ovs: Move GetChassisID to new function signature
+   - incusd/network/ovs: Move GetOVNBridgeMappings to new function signature
+   - incusd/network: Update for function changes
+   - incusd/device/nic: Update for function changes
+   - incusd: Update for function changes
+   - doc: Fix bad snapshot syntax
+   - Translated using Weblate (French)
+   - doc: Fix token creation procedure
+   - incusd/network/ovn/nb: Add GetLogicalSwitch
+   - incusd/network/ovn/nb: Replace ChassisGroupChassisDelete with SetChassisGroupPriority
+   - incusd/network/ovn/nb: Port CreateLogicalRouterPort to OVSDB
+   - incusd/network/ovn/nb: Replace LogicalRouterPortLinkChassisGroup with CreateLogicalRouterPort
+   - incusd/network/ovn/nb: Port CreateChassisGroup to OVSDB
+   - incusd/network/ovn/nb: Port CreateLogicalSwitch to OVSDB
+   - incusd/network/ovn: Update for function changes
+   - incusd/network/ovn: Remove state references
+   - incusd/state: Add OVNNB and OVNSB handles
+   - incusd: Update to use state for OVN
+   - incusd/device: Make init function return error
+   - incusd/device: Add OVN check on nicOVN
+   - client: Still return response on RawQuery error
+   - incus/query: Respect --raw for errors
+   - incusd/network/acl: Add OVN check
+   - incusd/network: Make init function return error
+   - incusd/network: Add OVN check on ovn driver
+   - incusd/api: Re-order config checks
+   - incusd: Add OVN loader
+   - Translated using Weblate (French)
+   - incusd/network/ovn/nb: Port CreateLogicalSwitchPort to OVSDB
+   - incusd/network/ovn/nb: Port DeleteLogicalSwitchPort to OVSDB
+   - incusd/network/ovn/nb: Port DeleteLogicalRouterPort to OVSDB
+   - incusd/network/ovn: Update for function changes
+   - incusd/network/ovs: Port GetOVNSouthboundDBRemoteAddress to OVSDB
+   - incusd/network/ovs: Port DeleteBridgePort to OVSDB
+   - incusd/network/ovs: Port GetInterfaceAssociatedOVNSwitchPort to OVSDB
+   - incusd/network/ovs: Align GetChassisID with other functions
+   - incusd: Update for OVS function changes
+   - incusd/network/ovn/icsb: Fix bad DB schema
+   - incusd/network/ovn/nb: Introduce GetLogicalRouterPort
+   - incusd/network/ovn/nb: Extend OVNSwitchPortOpts to handle router ports
+   - incusd/network/ovn/nb: Change type of RouterPort field to OVNRouterPort
+   - incusd/network/ovn/nb: Port DeleteChassisGroup to OVSDB
+   - incusd/network/ovn/icnb: Update DeleteTransitSwitch to handle missing switches
+   - incusd/network/ovn: Update for function changes
+   - Translated using Weblate (French)
+   - incus/completion: do not add a space after remote names completion
+   - incusd/device/disk: Disable virtiofsd caching
+   - incus-agent: Cleanup mount logic
+   - Translated using Weblate (French)
+   - incus: expose parseVolume to entire package
+   - incus: add completions for storage pools and volumes
+   - incusd/device/gpu_sriov: Fix default handling
+   - doc/packaging: Add mention of documentation
+   - incusd/auth: Fix --all-projects for restricted users
+   - doc: Add third party tools page
+   - gomod: Update dependencies
+   - incusd/auth/tls: Prevent project modifications
+   - doc: Update wordlist
+   - internal/usbid: allow path override of usb.ids path
+   - incus/completion: fix image names completion
+   - doc/environment: document INCUS_USBIDS_PATH
+   - incusd/instance/qemu/agent: Check for semanage
+   - incusd/project: Fix config name in ImageProjectFromRecord
+   - incus/restart: Fix long description
+   - i18n: Update translations
+   - lxd-to-incus: Handle common existing bridges
+   - shared/simplestreams: Remove defaultOS
+   - shared/simplestreams: Add NewLocalClient
+   - incus-simplestreams: Introduce new command
+   - incus-simplestreams: Simplify delete logic
+   - doc: Re-organize image server doc
+   - doc: Add section for incus-simplestreams
+   - incusd/seccomp: Add support for pidfd threads
+   - incus: add completions for clusters
+   - incus: add completions for cluster groups
+   - incus: add completions for cluster roles
+   - incus: add completions for config devices
+   - incus: add completions for config templates
+   - update translations
+   - doc: Update references to mage docs
+   - doc/backup: Remove bad reference
+   - incus: add completions for network acls
+   - shared/api: Add new structs to support configuration metadata
+   - client: Add GetMetadataConfiguration
+   - incusd: Rename documentation.go -> metadata.go
+   - doc/rest-api: Refresh swagger YAML
+   - shared/api/metadata: Add GetKeys to simplify usage
+   - incusd: Add support for JWT authentication
+   - gomod: Update dependencies
+   - tests: Add tls2jwt tool
+   - tests: Add JWT authentication test
+   - api: auth_tls_jwt
+   - doc/authentication: Add section on JWT
+   - doc/instances: Remove size.state requirement for live migration
+   - incusd/instance/qemu: Allow live migration without size.state
+   - shared/idmap: Support uid/gid in subuid/subgid
+   - shared/cliconfig: Copy clientcerts on remote copy
+   - shared/cliconfig: Add HasRemoteClientCertificate
+   - shared/cliconfig: Support per-remote client certificates
+   - doc: Add clientcerts
+   - incusd/cluster/config: Add oidc.claim
+   - incusd/auth/oidc: Add support for using a specific claim as username
+   - incusd: Pass OIDC claim to verifier
+   - api: oidc_claim
+   - doc: Update configs
+   - doc/howto/instances: Mention extra resources in ISO guidea
+   - doc/installing: Add Debian backport
+   - doc: Add backported to dictionary
+   - lxd-to-incus: Add support for LXD 5.21
+   - shared/cliconfig: Ensure client certificate key is 0600
+   - api: device_usb_serial
+   - doc: Add busnum, devnum and serial to USB devices
+   - shared/api: Add Serial to ResourcesUSBDevice
+   - incusd/resources: Add USB Serial
+   - incusd/devices/usb: Add serial, busnum and devnum  options
+   - doc/rest-api: Refresh swagger YAML
+   - incusd/instance/qemu: Fix handling of > 64 limits.cpu
+   - incusd/device/gpu_sriov: Implement NUMA fallback
+   - incus: add completions for network forwards
+   - incus: add completions for network load balancers
+   - shared/validate: Remove stringInSlice
+   - shared/validate: Add And and Or functions
+   - shared/util: Move ParseUint32Range
+   - incusd/project: Update for ParseUint32Range
+   - doc/instance_options: Remove mention of limits.cpu.nodes from container-only section
+   - incusd/devices: Better handle bad config
+   - api: numa_cpu_balanced
+   - internal/instance: Add support for balanced NUMA nodes
+   - doc: Update configs
+   - incusd/instance/common: Add NUMA balancing
+   - incusd/instance/lxc: Add support for balanced NUMA allocation
+   - incusd/instance/qemu: Add support for balanced NUMA allocation
+   - incusd/devices: Add support for balanced NUMA allocation
+   - incusd/device/gpu_sriov: Simplify NUMA logic
+   - doc/cloud-init: Don't mention non-existing remotes
+   - doc/howto/images_remote: Fix wording around image servers
+   - doc/benchmark: Fix install command
+   - incusd/instance/common: Fix CanMigrate mutating devices
+   - incusd/instance/qemu: Reduce agent queries
+   - incusd/metrics: Don't filter out all server metrics
+   - incusd/auth/tls: Include project restrictions for metrics certificates
+   - incusd/auth/tls: Return project-aware checker for metrics
+   - incusd/metrics: Use project-specific checker if no global access
+   - internal/server/instance/lxd: add support for image.requirments.nesting
+   - api: add image_restriction_nesting
+   - doc/images: introduce requirements.nesting
+   - Show the count values in snapshot count mismatch error
+   - incus/admin/init: Use btrfs subvol in --auto
+   - incus-migrate: Clarify that disk image files must be raw
+   - incusd/network/ovn/icnb: Fix comment
+   - incusd/project: Re-format the comments
+   - incusd/project: Fix bad default value
+   - doc: Update configs
+   - incus/migrate: Add CSM support
+   - incusd/storage/backend: Better handle name conflicts
+   - incus-migrate: Support using the local server
+   - api: network_integrations
+   - shared/api: Add type and target_integration fields to NetworkPeersPost
+   - incusd/db/cluster: Add networks_integrations
+   - incusd/db/cluster: Re-generate schema
+   - incusd/db/cluster: Add generated DB code for network integrations
+   - incusd/db: Update network peer DB query functions
+   - client: Add check for network_integrations in CreateNetworkPeer
+   - incus/network/peer: Add support for network peer types
+   - shared/api: Add network integrations
+   - client: Add network integration functions
+   - incus/network: Introduce support for integrations
+   - incusd/auth: Add network integration functions
+   - shared/api: Add lifecycle events for network integrations
+   - incusd/lifecycle: Add network integration events
+   - incusd: Add network integration API
+   - incusd/db: Add GetNetworkPeersURLByIntegration
+   - incusd/network_integration: Add UsedBy field
+   - incusd/network_integrations: Add validator
+   - incusd/network/ovn: Add support for peering with OVN IC
+   - incusd/project: Add restricted.networks.integrations
+   - incusd/project: Add NetworkIntegrationAllowed
+   - incusd/network/integrations: Respect project restrictions
+   - incusd/network/ovn: Add support for integration restrictions
+   - incusd/auth/openfga: Update the model
+   - incusd/auth/openfga: Update the generated model
+   - incusd/auth/openfga: Handle model updates
+   - incusd: Remove openfga.store.model_id
+   - incusd/db/cluster: Remove openfga.store.model_id
+   - doc/ovn_peers: Add remote peering
+   - doc: Add documentation for network integrations
+   - doc/rest-api: Refresh swagger YAML
+   - i18n: Update translation templates
+   - doc: Update configs
+   - gomod: Update dependencies
+  [/details]
+
+  <!--
+  # Documentation
+  The Incus documentation can be found at:
+  https://linuxcontainers.org/incus/docs/main/
+  -->
+  # Documentation
+  La documentation d’Incus peut être consultée sur :
+  https://linuxcontainers.org/incus/docs/main/
+
+  <!--
+  # Packages
+  There are no official Incus packages as Incus upstream only releases regular release tarballs. Below are some available options to get Incus up and running.
+  -->
+  # Paquets
+  Incus ne fournit pas de paquet d’installation mais bien un tarball à chaque version. Vous trouverez ci-dessous différentes solutions pour mettre Incus en service.
+
+  <!--
+  ## Installing the Incus server on Linux
+  Incus is available for most common Linux distributions. You'll find detailed installation instructions in our documentation.
+  -->
+  ## Installation du serveur Incus sous Linux
+  Incus est disponible sur la plupart des distributions Linux courantes. Vous trouverez des instructions d’installation détaillées dans notre documentation.
+
+  https://linuxcontainers.org/incus/docs/main/installing/
+
+  <!--
+  ## Homebrew package for the Incus client
+  The client tool is available through HomeBrew for both Linux and MacOS.
+  -->
+  ## Paquet Homebrew du client Incus
+  Le client Incus est disponible sur Homebrew pour Linux et macOS.
+
+  https://formulae.brew.sh/formula/incus
+
+  <!--
+  ## Chocolatey package for the Incus client
+  The client tool is available through Chocolatey for Windows users.
+  -->
+  ## Paquet Chocolatey du client Incus
+  Le client Incus est disponible sur Chocolatey pour les utilisateurs de Windows.
+
+  https://community.chocolatey.org/packages/incus/0.7
+
+  <!--
+  ## Winget package for the Incus client
+  The client tool is also available through Winget for Windows users.
+  -->
+  ## Paquet Winget du client Incus
+  Le client Incus est aussi disponible sur Winget pour les utilisateurs de Windows.
+
+  https://winstall.app/apps/LinuxContainers.Incus
+
+  <!--
+  # Support
+  At this early stage, each Incus release will only be supported up until the next release comes out. This will change in a few months as we are planning an LTS release to coincide with the LTS releases of LXC and LXCFS.
+  -->
+  # Support
+  À ce stade, chaque version d’Incus ne sera supportée que jusqu’à la sortie de la suivante. Cela changera dans quelques mois, car nous prévoyons de sortir une version LTS qui coïncidera avec les versions LTS de LXC et LXCFS.
+
+  <!--
+  Community support is provided at: https://discuss.linuxcontainers.org
+  Commercial support is available through: https://zabbly.com/incus
+  Bugs can be reported at: https://github.com/lxc/incus/issues
+  -->
+  Le support communautaire est disponible sur : https://discuss.linuxcontainers.org
+  Un support commercial est disponible sur : https://zabbly.com/incus
+  Les bugs peuvent être signalés sur : https://github.com/lxc/incus/issues
