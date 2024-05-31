@@ -70,7 +70,7 @@ content: |-
   <!--
   We still don't feel like running 4 host processes for every single Incus VM just to make things work on those few images. Instead, what we're introducing with Incus 0.5.1 is a new agent drive, effectively an extra disk which can be attached to those specific VMs, providing those files through what looks like a CD-ROM drive rather than being retrieved over a networked filesystem.
   -->
-  Nous n’avons pas vraiment envie de lancer 4 processus sur l’hôte pour chaque VM Incus pour convenir à ces quelques images. Au lieu de cela, nous proposons dans Incus 0.5.1 un disque spécial pouvant être attaché à ces VM, reconnu comme un CD-ROM et non pas un système de fichier en réseau, fournissant les fichiers nécessaires.
+  Nous n’avons pas vraiment envie de lancer 4 processus sur l’hôte pour chaque VM Incus pour convenir à ces quelques images. Au lieu de cela, nous proposons dans Incus 0.5.1 un disque spécial pouvant être attaché à ces VM, reconnu comme un CD-ROM et non pas un système de fichiers en réseau, fournissant les fichiers nécessaires.
 
   <!--
   So to run CentOS 9-Stream, one now needs to do:
