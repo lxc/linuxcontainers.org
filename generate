@@ -488,8 +488,14 @@ def gen_page(entry, override, prefix, **variables):
                 "<span class=\"text-muted\">%s</span>\n" % \
                 (title, article_date)
 
+            article_content = ""
+            for line in article["content"].splitlines(keepends=True):
+                if line.startswith("#"):
+                    line = "##%s" % line
+                article_content += line
+
             # Compose the content
-            article_content = "[TOC]\n" + article_title + article["content"]
+            article_content = "[TOC]\n" + article_title + article_content
 
             # Get the file name and path
             article_filename = date.strftime("%Y_%m_%d_%H_%M")+".html"
