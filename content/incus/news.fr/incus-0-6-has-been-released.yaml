@@ -1,0 +1,537 @@
+title: Incus 0.6 est maintenant disponible
+date: 2024/02/23 04:02
+origin: https://discuss.linuxcontainers.org/t/incus-0-6-has-been-released/19134
+content: |-
+  <!--
+  # Introduction
+  The Incus team is pleased to announce the release of Incus 0.6!
+  -->
+  # Introduction
+  L’équipe d’Incus est heureuse d’annoncer la sortie d’Incus 0.6 !
+
+  <!--
+  This second release of 2024 features a number of improvements, both large and small.
+  -->
+  Cette deuxième version de l’année 2024 comporte un certain nombre d’améliorations, petites et grandes.
+
+  <!--
+  It comes with a completely new storage driver for cluster users, import/export support for storage buckets, a number of improvements for OVN users, support for new container kernel features, quite a few improvements to the migration tooling and more!
+  -->
+  Elle intègre un tout nouveau driver de stockage pour les utilisateurs de clusters, la prise en charge de l’import/export de buckets de stockage, un certain nombre d’améliorations pour les utilisateurs d’OVN, le support de nouvelles fonctionnalités du noyau pour les conteneurs, plusieurs améliorations des outils de migration et bien d’autres choses encore !
+
+  [![image|690x459](https://discuss.linuxcontainers.org/uploads/default/original/2X/c/c74c71ace8a3ebd9babf4109edb6d7b514d80ccd.png)](https://linuxcontainers.org/incus/try-it/)
+
+  <!--
+  As usual, you can try it for yourself online: https://linuxcontainers.org/incus/try-it/
+  -->
+  Comme d’habitude, vous pouvez l’essayer vous-même en ligne : https://linuxcontainers.org/incus/try-it/
+
+  <!--
+  Enjoy!
+  -->
+
+  <!--
+  # New features
+  ## Clustered LVM storage driver
+  A new storage driver named `lvmcluster` has been added.
+  -->
+  # Nouvelles fonctionnalités
+  ## Driver pour les clusters de stockage LVM
+  Un nouveau driver de stockage nommé `lvmcluster` a été ajouté.
+
+  <!--
+  As the name implies, this is for clustered use of the LVM storage driver.
+  This relies on `lvmlockd` and a lock manager like `sanlock` to provide concurrent access to a shared storage device across a cluster.
+  -->
+  Comme son nom l’indique, il permet une utilisation en cluster du driver de stockage LVM.
+  Il s’appuie sur `lvmlockd` et sur un gestionnaire de verrous comme `sanlock` pour fournir un accès concurrent à un périphérique de stockage partagé dans un cluster.
+
+  <!--
+  This is aimed at anyone who wants to run an Incus cluster and use a shared storage device like a FiberChannel SAN, iSCSI export, NVMEoF/NVMEoTCP disk, ...
+  -->
+  Ce driver s’adresse à toutes les personnes souhaitant faire tourner un cluster Incus en utilisant un périphérique de stockage partagé comme un SAN FiberChannel, un export iSCSI, un disque NVMEoF/NVMEoTCP…
+
+  <!--
+  With the ability of having the same storage available on all servers comes support for much faster live migrations, server evacuations and the ability to automatically recover should a server suddenly die.
+  -->
+  La possibilité d’avoir le même stockage disponible sur tous les serveurs permet d’accélérer les migrations à chaud, les évacuations de serveurs et la récupération automatique en cas de défaillance soudaine d’un serveur.
+
+  ![image|622x500](https://discuss.linuxcontainers.org/uploads/default/optimized/2X/2/20f2960f2ad0b6ccf5364ab901a286bdd0ba391a_2_622x500.png)
+
+  <!--
+  Documentation: https://linuxcontainers.org/incus/docs/main/reference/storage_lvm/#lvmcluster-driver-in-incus
+  -->
+  Documentation : https://linuxcontainers.org/incus/docs/main/reference/storage_lvm/#lvmcluster-driver-in-incus
+
+  <!--
+  ## Storage bucket backup and import
+  It is now possible to backup a full storage bucket and later re-import back into Incus.
+  -->
+  ## Sauvegarde et import de buckets de stockage
+  Il est maintenant possible de sauvegarder un bucket de stockage complet et de le réimporter ultérieurement dans Incus.
+
+      stgraber@dakara:~$ incus storage bucket create default foo
+      Storage bucket foo created
+      Admin access key: HD2GWC1KX693MFVT3P30
+      Admin secret key: tX9+G9G5UlcuT21yatKIUImSGvcXzPyA7ONgkjUv
+      
+      stgraber@dakara:~$ dd if=/dev/random of=out.img bs=4M count=10
+      10+0 records in
+      10+0 records out
+      41943040 bytes (42 MB, 40 MiB) copied, 0.0975758 s, 430 MB/s
+      stgraber@dakara:~$ s3cmd --host=127.0.0.1:8445 --host-bucket=127.0.0.1:8445 --no-check-certificate --access_key=HD2GWC1KX693MFVT3P30 --secret_key=tX9+G9G5UlcuT21yatKIUImSGvcXzPyA7ONgkjUv put out.img s3://foo
+      upload: 'out.img' -> 's3://foo/out.img'  [part 1 of 3, 15MB] [1 of 1]
+       15728640 of 15728640   100% in    0s   262.42 MB/s  done
+      upload: 'out.img' -> 's3://foo/out.img'  [part 2 of 3, 15MB] [1 of 1]
+       15728640 of 15728640   100% in    0s   241.54 MB/s  done
+      upload: 'out.img' -> 's3://foo/out.img'  [part 3 of 3, 10MB] [1 of 1]
+       10485760 of 10485760   100% in    0s   241.99 MB/s  done
+      stgraber@dakara:~$ s3cmd --host=127.0.0.1:8445 --host-bucket=127.0.0.1:8445 --no-check-certificate --access_key=HD2GWC1KX693MFVT3P30 --secret_key=tX9+G9G5UlcuT21yatKIUImSGvcXzPyA7ONgkjUv ls s3://foo
+      2024-02-23 03:26     41943040  s3://foo/out.img
+      
+      stgraber@dakara:~$ incus storage bucket export default foo
+      Backup exported successfully!
+      stgraber@dakara:~$ incus storage bucket delete default foo
+      Storage bucket foo deleted
+      
+      stgraber@dakara:~$ incus storage bucket import default backup.tar.gz
+      stgraber@dakara:~$ s3cmd --host=127.0.0.1:8445 --host-bucket=127.0.0.1:8445 --no-check-certificate --access_key=HD2GWC1KX693MFVT3P30 --secret_key=tX9+G9G5UlcuT21yatKIUImSGvcXzPyA7ONgkjUv ls s3://foo
+      2024-02-23 03:27     41943040  s3://foo/out.img
+
+  <!--
+  API: https://linuxcontainers.org/incus/docs/main/rest-api-spec/#/storage/storage_pool_buckets_backups_post
+  -->
+  API : https://linuxcontainers.org/incus/docs/main/rest-api-spec/#/storage/storage_pool_buckets_backups_post
+
+  <!--
+  ## Listing image across all projects
+  Just as it's possible to list instances across all projects using the `--all-projects`, it's now possible to do the same but for images.
+  -->
+  ## Liste des images sur tous les projets
+  Il était possible jusque là de lister les instances sur l’ensemble des projets en utilisant `--all-projects`, c’est maintenant aussi le cas pour les images.
+
+      stgraber@dakara:~$ incus image list --all-projects
+      +---------+-------+--------------+--------+------------------------------------------+--------------+-----------------+-----------+-------------------------------+
+      | PROJECT | ALIAS | FINGERPRINT  | PUBLIC |               DESCRIPTION                | ARCHITECTURE |      TYPE       |   SIZE    |          UPLOAD DATE          |
+      +---------+-------+--------------+--------+------------------------------------------+--------------+-----------------+-----------+-------------------------------+
+      | default |       | 256f59a72af5 | no     | Ubuntu jammy amd64 (20240222_07:42)      | x86_64       | VIRTUAL-MACHINE | 267.19MiB | Feb 23, 2024 at 12:27am (UTC) |
+      +---------+-------+--------------+--------+------------------------------------------+--------------+-----------------+-----------+-------------------------------+
+      | default |       | 0941e441dbb9 | no     | Alpine edge amd64 (20240222_13:00)       | x86_64       | CONTAINER       | 2.93MiB   | Feb 23, 2024 at 12:27am (UTC) |
+      +---------+-------+--------------+--------+------------------------------------------+--------------+-----------------+-----------+-------------------------------+
+      | default |       | d5fc6024f0fa | no     | Openwrt snapshot amd64 (20240222_11:57)  | x86_64       | CONTAINER       | 3.50MiB   | Feb 23, 2024 at 2:55am (UTC)  |
+      +---------+-------+--------------+--------+------------------------------------------+--------------+-----------------+-----------+-------------------------------+
+      | demo    |       | f44a6b4e56f4 | no     | Archlinux current amd64 (20240222_04:18) | x86_64       | CONTAINER       | 188.86MiB | Feb 23, 2024 at 3:32am (UTC)  |
+      +---------+-------+--------------+--------+------------------------------------------+--------------+-----------------+-----------+-------------------------------+
+
+  <!--
+  Over the API, this is done by passing `?all-projects=true`.
+  -->
+  Avec l’API, cela se fait en passant `?all-projects=true`.
+
+  <!--
+  ## binfmt_misc in unprivileged containers
+  Linux 6.7 added support for mounting of `binfmt_misc` inside of unprivileged containers.
+  -->
+  ## binfmt_misc dans des conteneurs non privilégiés
+  Linux 6.7 a ajouté le support de l’utilisation de `binfmt_misc` par des conteneurs non privilégiés.
+
+  <!--
+  Incus 0.6 will detect kernels that support this feature and when they do, it will no longer bind-mount `binfmt_misc` from the host system but instead allow it to be mounted from within the container.
+  -->
+  Incus 0.6 détectera les noyaux supportant cette fonctionnalité, et le cas échéant, il ne fera plus de bind-mount de `binfmt_misc` depuis le système hôte mais autorisera directement le conteneur à le monter.
+
+      stgraber@castiana:~$ incus launch images:ubuntu/22.04 foo
+      Launching foo
+      stgraber@castiana:~$ incus exec foo bash
+      root@foo:~# uname -a
+      Linux foo 6.7.4-zabbly+ #debian12 SMP PREEMPT_DYNAMIC Mon Feb  5 23:37:46 UTC 2024 x86_64 x86_64 x86_64 GNU/Linux
+      root@foo:~# mount -t binfmt_misc binfmt_misc /proc/sys/fs/binfmt_misc/
+      root@foo:~# ls -lh /proc/sys/fs/binfmt_misc/
+      total 0
+      --w------- 1 root root 0 Feb 23 03:46 register
+      -rw-r--r-- 1 root root 0 Feb 23 03:46 status
+
+  <!--
+  The `binfmt_misc` filesystem is used to define custom binary formats for emulation.
+  It's most notably used by qemu-user-static as a way to run binaries of other architectures.
+  -->
+  Le système de fichiers `binfmt_misc` est utilisé pour définir des formats binaires personnalisés destinés à être émulés.
+  Il est notamment utilisé par qemu-user-static comme moyen d’exécuter des binaires ciblant d’autres architectures.
+
+  <!--
+  ## Control over shared block storage volumes
+  A new `security.shared` volume storage option has been introduced to control whether a custom block volume should be allowed to be used by multiple instances.
+  -->
+  ## Contrôle des volumes de stockage bloc partagés
+  Une nouvelle option s’appliquant aux volumes de stockage, `security.shared`, a été introduite pour contrôler si un volume en mode bloc personnalisé est autorisé à être partagé entre plusieurs instances.
+
+  <!--
+  It is now required to set that configuration key prior to adding a custom block volume to a profile or add it directly to multiple virtual machines.
+  -->
+  Il est désormais nécessaire de définir cette clef de configuration avant d’ajouter un volume en mode bloc personnalisé à un profil ou de l’ajouter directement à plusieurs machines virtuelles.
+
+      stgraber@castiana:~$ incus config device add lvm01 shared disk pool=default source=shared-lvm io.bus=nvme
+      Device shared added to lvm01
+      
+      stgraber@castiana:~$ incus config device add lvm02 shared disk pool=default source=shared-lvm io.bus=nvme
+      Error: Failed add validation for device "shared": Cannot add un-shared custom storage block volume to more than one instance
+      
+      stgraber@castiana:~$ incus storage volume set default shared-lvm security.shared=true
+      
+      stgraber@castiana:~$ incus config device add lvm02 shared disk pool=default source=shared-lvm io.bus=nvme
+      Device shared added to lvm02
+      stgraber@castiana:~$ incus config device add lvm03 shared disk pool=default source=shared-lvm io.bus=nvme
+      Device shared added to lvm03
+      stgraber@castiana:~$ incus start lvm01 lvm02 lvm03
+
+  <!--
+  ## OVN logical router name in network info
+  To make it easier to see what's going on within OVN, `incus network info` now gives you the name of the logical router for a particular network.
+  -->
+  ## Nom des routeurs logiques OVN dans les informations réseau
+  Afin de faciliter la compréhension de ce qui se passe dans OVN, `incus network info` affiche désormais le nom du routeur logique pour un réseau particulier.
+
+      root@abydos:~# incus network info default
+      Name: default
+      MAC address: 00:16:3e:38:dd:28
+      MTU: 1500
+      State: up
+      Type: broadcast
+      
+      IP addresses:
+        inet	10.180.103.1/24 (link)
+        inet6	2602:fc62:a:1004::1/64 (link)
+      
+      Network usage:
+        Bytes received: 0B
+        Bytes sent: 0B
+        Packets received: 0
+        Packets sent: 0
+      
+      OVN:
+        Chassis: abydos
+        Logical router: incus-net6-lr
+
+  <!--
+  ## File ownership and permissions in image templates
+  Template files can now have a `uid`, `gid` and `mode` set on them.
+  This can be particularly useful if a template is meant to be an executable shell script.
+  -->
+  ## Droits et propriétaires des fichiers dans les templates d’images
+  Les fichiers des templates peuvent désormais avoir un `uid`, un `gid` et un `mode`.
+  Cela peut s'avérer particulièrement utile si un template est destiné à être un script shell exécutable.
+
+      stgraber@castiana:~$ incus config metadata show foo
+      architecture: amd64
+      creation_date: 1708588077
+      expiry_date: 1711180077
+      properties:
+        architecture: amd64
+        description: Ubuntu jammy amd64 (20240222_07:42)
+        name: ubuntu-jammy-amd64-default-20240222_07:42
+        os: ubuntu
+        release: jammy
+        serial: "20240222_07:42"
+        variant: default
+      templates:
+        /etc/hostname:
+          when:
+          - create
+          - copy
+          create_only: false
+          template: hostname.tpl
+          properties: {}
+        /etc/hosts:
+          when:
+          - create
+          - copy
+          create_only: false
+          template: hosts.tpl
+          properties: {}
+        /root/hello.sh:
+          when:
+          - start
+          create_only: false
+          template: hello.tpl
+          properties: {}
+          uid: "1000"
+          gid: "2000"
+          mode: "0755"
+      
+      stgraber@castiana:~$ incus config template show foo hello.tpl
+      #!/bin/sh
+      echo "Hello world!"
+      
+      stgraber@castiana:~$ incus start foo
+      stgraber@castiana:~$ incus exec foo bash
+      root@foo:~# ls -lh /root/hello.sh
+      -rwxr-xr-x 1 ubuntu 2000 30 Feb 23 04:07 /root/hello.sh
+      root@foo:~# /root/hello.sh
+      Hello world!
+
+  <!--
+  Documentation: https://linuxcontainers.org/incus/docs/main/reference/image_format/#template-rules
+  -->
+  Documentation : https://linuxcontainers.org/incus/docs/main/reference/image_format/#template-rules
+
+  <!--
+  ## Encrypted EC client certificate keys
+  For those interacting with remote Incus servers, you may not know that it's possible to protect your Incus private key with a password.
+  -->
+  ## Clefs EC chiffrées pour les certificats client
+  Pour les personnes qui interagissent avec des serveurs Incus distants, vous ne savez peut-être pas qu’il est possible de protéger votre clef privée Incus avec un mot de passe.
+
+  <!--
+  Up until now, this was only possible for RSA keys, but with Incus 0.6, we're now adding support for EC keys too. That's particularly relevant as EC keys have been the default for a while now.
+  -->
+  Jusqu’à présent, cela n’était possible que pour les clefs RSA, mais avec Incus 0.6, nous ajoutons maintenant la prise en charge des clefs EC. C’est d’autant plus important que les clefs EC sont devenues la norme depuis un certain temps.
+
+  <!--
+  Documentation: https://linuxcontainers.org/incus/docs/main/authentication/#encrypting-local-keys
+  -->
+  Documentation : https://linuxcontainers.org/incus/docs/main/authentication/#encrypting-local-keys
+
+  <!--
+  Worth noting that if using this feature, you'll likely also want to make use of the recently introduced ["keepalive mode"](https://linuxcontainers.org/incus/docs/main/remotes/#remote-keepalive) as this will then significantly reduce the number of password prompts you'll get while using Incus.
+  -->
+  Notez que si vous utilisez cette fonctionnalité, vous voudrez probablement aussi utiliser le [« mode keepalive »](https://linuxcontainers.org/incus/docs/main/remotes/#remote-keepalive) récemment introduit ; il réduira de manière significative le nombre de demandes de votre mot de passe lorsque vous utiliserez Incus.
+
+  <!--
+  ## lxd-to-incus improvements
+  Lastly, `lxd-to-incus` saw a number of improvements:
+  -->
+  ## Améliorations dans lxd-to-incus
+  Finalement, `lxd-to-incus` a bénéficié d’un certain nombre d’améliorations :
+
+  <!--
+  - Support for Void Linux
+  - Detection of the `boot.debug_edk2` configuration key
+  - Handling of OVN SSL database connections
+  - Automatic clearing of the simplestreams cache during migration
+  -->
+  - Support de Void Linux
+  - Détection de la clef de configuration `boot.debug_edk2`
+  - Prise en charge des connexion SSL aux bases de données OVN
+  - Effacement automatique du cache simplestreams lors de la migration
+
+  <!--
+  # Complete changelog
+  Here is a complete list of all changes in this release:
+  -->
+  # Liste complète des changements
+  Voici une liste complète de tous les changements apportés par cette version :
+
+  <!--
+  [details="Full commit list"]
+  -->
+  [details="Liste complète des commits"]
+  - incusd/instance/qemu/qmp: Don't risk blocking QMP on eject
+  - github: Switch to minio deb and pin working version
+  - github: Use stable MicroCeph
+  - incusd/db: Fix error handling in CreateNetworkPeer
+  - incusd/apparmor: Allow more mounts in unprivileged containers
+  - Translated using Weblate (Portuguese (Brazil))
+  - incusd/instance/qemu/agent-loader: Handle legacy lxd-agent-loader
+  - incusd/device/disk: Use genisoimage when mkisofs can't be found
+  - shared/api: Add example of Chassis in NetworkStateOVN
+  - doc/rest-api: Refresh swagger YAML
+  - api: network_state_ovn_lr
+  - shared/api: Add LogicalRouter field to NetworkStateOVN
+  - incusd/network/ovn: Expose LogicalRouter name
+  - incus: Add OVN logical router name
+  - i18n: Update translation templates
+  - doc/rest-api: Refresh swagger YAML
+  - scripts/bash: Don't follow aliases
+  - Translated using Weblate (Japanese)
+  - test: Adapt test_database_no_disk_space() to newer libraft versions
+  - incus/launch: Fix --console
+  - api: image_template_permissions
+  - doc: Add uid/gid/mode to image template metadata
+  - shared/api: Add owner/permission fields to ImageMetadataTemplate
+  - doc/rest-api: Refresh swagger YAML
+  - incusd/instance/lxc: Add support for template ownership/mode
+  - incus-agent: Add support for template ownership/mode
+  - lxd-to-incus: Add comment
+  - lxd-to-incus: Add cache cleanup logic
+  - .github: Bump minimum Go version to 1.21
+  - Makefile: Bump minimum Go version to 1.21
+  - gomod: Update dependencies
+  - doc: Bump minimum Go version to 1.21
+  - Translated using Weblate (French)
+  - incusd/daemon: Fix log format
+  - incusd/sys: Sort kernel features
+  - incusd/sys: Add doc strings
+  - incusd/checkfeature: Add unprivileged binfmt detection
+  - incusd/sys: Add UnprivBinfmt
+  - incusd/daemon: Detect unprivileged binfmt_misc
+  - incusd/api_1.0: Add unpriv_binfmt kernel feature
+  - incusd/instance/lxc: Support unpriv binfmt_misc
+  - incusd/apparmor: Support unpriv binfmt_misc
+  - Translated using Weblate (Italian)
+  - completion: support returning non-incus remotes
+  - incus/image: add dynamic command line completions
+  - shared/cliconfig: Support SSH encrypted keys
+  - tests: Add crypto/ssh
+  - doc/remotes: Add mention of keepalive
+  - doc: Add Ansible to wordlist
+  - doc/authentication: Hints on encrypting client key
+  - api: images_all_projects
+  - lxd-to-incus: Indicate what existing configuration was found
+  - shared/api: Add project property to Image
+  - client: Add GetImagesAllProjects
+  - incusd/images: Add support for all_projects
+  - doc/rest-api: Refresh swagger YAML
+  - incus/image: Add --all-projects flag to list
+  - i18n: Update translation templates
+  - shared/cliconfig: Fix static analysis
+  - gomod: Update dependencies
+  - Makefile: Pin rpc2 version due to OVN issue
+  - incusd/instance/qemu: Re-shuffle agent NIC handling
+  - incusd/instance/qemu/agent-loader: Handle SELinux
+  - incus/config: add completions
+  - incus-agent: Load virtio_net before configuring NICs
+  - incus: Run gofmt
+  - doc/storage/lvm: Cleanup tables
+  - incusd/patches: Move lvm.vg.force_reuse to be server-specific
+  - incusd/db: Mark lvm.vg.force_reuse as server-specific
+  - doc/faq: Add mention of the -mtu network interfaces
+  - incusd/device: Bump base VM filesystem volume to 500MiB
+  - incusd/storage: Create rootfs dir on empty instances
+  - incusd/storage/quota: Don't fail on missing project
+  - incusd/instances: Use correct project on cross-project copy
+  - incusd/patches: Fix bad SQL query
+  - incusd/instances: Don't bypass instance limit check
+  - Added translation using Weblate (Portuguese)
+  - incus-agent: Re-order imports
+  - api: Add storage_bucket_backup extension
+  - shared/api: Add storage bucket backup
+  - incusd/db: Add storage bucket backup functions
+  - incusd/db/operation: Add storage volume backup types
+  - incusd/lifecycle: Add storage bucket backup events
+  - incusd/project: Add StorageBucket function
+  - incusd/storage/s3: Add transfer manager
+  - incusd: Add storage bucket backup
+  - client: Add storage bucket backup
+  - incus: Add storage bucket import/export
+  - doc/rest-api: Refresh swagger YAML
+  - i18n: Update translation templates
+  - test: Add storage bucket backup
+  - client: Remove ceph-specific logic
+  - incusd/storage/s3: Fix typo
+  - incus: Fix import shadowing
+  - incus: Fix comments on exported functions
+  - client: Fix comments on exported functions
+  - incusd: Fix import shadowing
+  - incusd: Fix comments on exported functions
+  - incusd/cluster: Make remote storage volume logic generic
+  - incusd/db: Don't hardcode remote storage drivers
+  - incusd/storage_volumes: Don't hardcode ceph
+  - incusd/instances: Update ceph-specific comment
+  - incusd/cluster: Update ceph-specific comment
+  - incusd/instances: Generalize Ceph logic
+  - lxd-to-incus: Support SSL authentication in OVN
+  - lxd-to-incus: Don't fail on missing OVN bridge mapping
+  - lxd-to-incus: Ignore OVN chassis external_ids
+  - lxd-to-incus: Add boot.debug_edk2 to deprecated keys
+  - lxd-to-incus: Support Void Linux
+  - cmd/incusd: Disable the architecture check on incus cp/mv
+  - incusd/instance: Disable the architecture check on incus cp/mv
+  - api: storage_lvm_cluster
+  - incus/admin/init: Add LVM cluster logic
+  - i18n: Update translation templates
+  - lxd-to-incus: Add LVM cluster
+  - doc: Add LVM cluster
+  - shared/api: Add cephobject
+  - shared/api: Add lvmcluster
+  - doc/rest-api: Refresh swagger YAML
+  - incusd/storage/lvm: Add clustered LVM
+  - incusd/storage/lvm: Fix import shadowing
+  - incusd/storage/lvm: Tweak locking in cluster
+  - internal/server/device/config: Don't include empty values
+  - internal/server/device/config: Fix return values of Update function
+  - api: Add shared_custom_block_volumes API extension
+  - doc/reference: Add `security.shared` config key
+  - instance/server/device: Validate shared block devices
+  - internal/server/storage: Handle `security.shared` update
+  - internal/server/storage: Allow security.shared key for custom block volumes
+  - internal/server/storage/drivers: Handle security.shared in fillVolumeConfig
+  - incusd/instance/qemu: Cap hotplug CPU slots to 64
+  - incusd/storage/lvm: Make gofmt happy
+  - shared/subprocess: Improve error handling
+  - incusd/instance/qemu: Improve error handling
+  - incusd/network/ovs: Wait for bridge interface to appear
+  - incusd/storage/zfs: Fix refresh of VM volumes
+  - internal/instance: Fix volatile key definitions
+  - doc: Update configs
+  - incusd/network/ovn: Extend validateExternalSubnet to allow uplink subnets
+  - incusd/network/ovn: Add static routes to load-balancer and forwards
+  - gomod: Update dependencies
+  [/details]
+
+  <!--
+  # Documentation
+  The Incus documentation can be found at:
+  https://linuxcontainers.org/incus/docs/main/
+  -->
+  # Documentation
+  La documentation d’Incus peut être consultée sur :
+  https://linuxcontainers.org/incus/docs/main/
+
+  <!--
+  # Packages
+  There are no official Incus packages as Incus upstream only releases regular release tarballs. Below are some available options to get Incus up and running.
+  -->
+  # Paquets
+  Incus ne fournit pas de paquet d’installation mais bien un tarball à chaque version. Vous trouverez ci-dessous différentes solutions pour mettre Incus en service.
+
+  <!--
+  ## Installing the Incus server on Linux
+  Incus is available for most common Linux distributions. You'll find detailed installation instructions in our documentation.
+  -->
+  ## Installation du serveur Incus sous Linux
+  Incus est disponible sur la plupart des distributions Linux courantes. Vous trouverez des instructions d’installation détaillées dans notre documentation.
+
+  https://linuxcontainers.org/incus/docs/main/installing/
+
+  <!--
+  ## Homebrew package for the Incus client
+  The client tool is available through HomeBrew for both Linux and MacOS.
+  -->
+  ## Paquet Homebrew du client Incus
+  Le client Incus est disponible sur Homebrew pour Linux et macOS.
+
+  https://formulae.brew.sh/formula/incus
+
+  <!--
+  ## Chocolatey package for the Incus client
+  The client tool is available through Chocolatey for Windows users.
+  -->
+  ## Paquet Chocolatey du client Incus
+  Le client Incus est disponible sur Chocolatey pour les utilisateurs de Windows.
+
+  https://community.chocolatey.org/packages/incus/0.6
+
+  <!--
+  ## Winget package for the Incus client
+  The client tool is also available through Winget for Windows users.
+  -->
+  ## Paquet Winget du client Incus
+  Le client Incus est aussi disponible sur Winget pour les utilisateurs de Windows.
+
+  https://winstall.app/apps/LinuxContainers.Incus
+
+  <!--
+  # Support
+  At this early stage, each Incus release will only be supported up until the next release comes out. This will change in a few months as we are planning an LTS release to coincide with the LTS releases of LXC and LXCFS.
+  -->
+  # Support
+  À ce stade, chaque version d’Incus ne sera supportée que jusqu’à la sortie de la suivante. Cela changera dans quelques mois, car nous prévoyons de sortir une version LTS qui coïncidera avec les versions LTS de LXC et LXCFS.
+
+  <!--
+  Community support is provided at: https://discuss.linuxcontainers.org
+  Commercial support is available through: https://zabbly.com/incus
+  Bugs can be reported at: https://github.com/lxc/incus/issues
+  -->
+  Le support communautaire est disponible sur : https://discuss.linuxcontainers.org
+  Un support commercial est disponible sur : https://zabbly.com/incus
+  Les bugs peuvent être signalés sur : https://github.com/lxc/incus/issues

@@ -1,0 +1,384 @@
+title: Incus 0.3 est maintenant disponible
+date: 2023/11/27 05:11
+origin: https://discuss.linuxcontainers.org/t/incus-0-3-has-been-released/18351
+content: |-
+  <!--
+  # Introduction
+  The Incus team is pleased to announce the release of Incus 0.3!
+  -->
+  # Introduction
+  L’équipe d’Incus est heureuse d’annoncer la sortie d’Incus 0.3 !
+
+  <!--
+  This isn't a very busy release as a good chunk of the Incus team has been traveling to the Linux Plumbers Conference in Richmond, VA.
+  -->
+  Cette version n’est pas très chargée, puisqu’une bonne partie de l’équipe d’Incus allait à la Linux Plumbers Conference, à Richmond (Virginie).
+
+  <!--
+  The most exciting new feature is likely the addition of [OpenFGA](https://openfga.dev/) support as when combined with an OpenID connect provider, this now allows for a fully open source identity and authorization stack. This also removes the last blocker for some waiting to migrate to Incus from LXD (with Canonical RBAC).
+  -->
+  La nouvelle fonctionnalité la plus attrayante est probablement l’ajout du support pour [OpenFGA](https://openfga.dev/) ; utilisé avec un fournisseur OpenID Connect, il permet d’avoir un système d’identité et d’autorisation entièrement open source. Cette fonctionnalité supprime le dernier obstacle à la migration de LXD (avec Canonical RBAC) vers Incus.
+
+  <!--
+  On top of that, a lot of improvements have gone into the `lxd-to-incus` migration tool and we've also added support for hot-plug/hot-remove of shared paths in virtual machines!
+  -->
+  De plus, de nombreuses améliorations ont été apportées à l’outil de migration `lxd-to-incus`, et nous avons également ajouté le support du branchement/débranchement à chaud des chemins partagés dans les machines virtuelles !
+
+  [![image|690x459](https://discuss.linuxcontainers.org/uploads/default/original/2X/4/49ba67a937fbebe2ea9248de0b12c8fa65a81c10.png)](https://linuxcontainers.org/incus/try-it/)
+
+  <!--
+  You can try it for yourself online: https://linuxcontainers.org/incus/try-it/
+  -->
+  Vous pouvez l’essayer vous-même en ligne : https://linuxcontainers.org/incus/try-it/
+
+  <!--
+  Enjoy!
+  -->
+
+  <!--
+  # New features and highlights
+  ## OpenFGA support for authorization control
+  OpenFGA is an open source authorization solution which is designed to be very easy to integrate with while still offering extremely good performance.
+  -->
+  # Nouvelles fonctionnalités et points marquants
+  ## Support d’OpenFGA pour le contrôle de l’autorisation
+  OpenFGA est une solution d’autorisation open source conçue pour être très facile à intégrer, tout en offrant d’excellentes performances.
+
+  <!--
+  It's basically an external daemon that you run on your network and which will get asked by Incus whether to allow a specific user to perform a specific action.
+  -->
+  Concrètement, il s’agit d’un démon externe lancé sur votre réseau et qui reçoit des demandes d’Incus pour savoir si tel utilisateur est capable d’effectuer telle action.
+
+  <!--
+  You can learn more about OpenFGA here: https://openfga.dev/
+  -->
+  Vous pouvez en savoir plus sur OpenFGA ici : https://openfga.dev/
+
+  <!--
+  On the Incus side of things, OpenFGA is enabled through a new set of server configuration keys:
+  -->
+  Du côté d’Incus, OpenFGA est activé par le biais de nouvelles clefs de configuration du serveur :
+
+   - openfga.api.token
+   - openfga.api.url
+   - openfga.store.id
+   - openfga.store.model_id
+
+  <!--
+  You'll want to set those to point to your OpenFGA instance and then configure an OIDC provider for authentication. Once done, OpenFGA will be queried whenever a user request is received.
+  -->
+  Vous devrez faire pointer Incus sur votre instance OpenFGA et configurer un fournisseur OIDC pour l’authentification. Une fois cela fait, OpenFGA sera interrogé à chaque fois qu’une requête utilisateur sera reçue.
+
+  <!--
+  Documentation: https://linuxcontainers.org/incus/docs/main/authorization/#open-fine-grained-authorization-openfga
+  -->
+  Documentation : https://linuxcontainers.org/incus/docs/main/authorization/#open-fine-grained-authorization-openfga
+
+  <!--
+  *This feature was first introduced in LXD.*
+  -->
+  *Cette fonctionnalité a initialement été introduite dans LXD.*
+
+  <!--
+  ## `lxd-to-incus` improvements
+  The `lxd-to-incus` migration tool has seen a lot of improvements:
+  -->
+  ## Améliorations dans `lxd-to-incus`
+  L’outil de migration `lxd-to-incus` a fait l’objet de nombreuses améliorations :
+
+  <!--
+   - Support for OpenRC target systems
+   - Detection and handling of mounts on the daemon path
+   - Support for migrating Ceph storage pools
+   - Support for migrating OVN networks
+   - Generation of a log file
+   - Generation of backups (database, OVN data)
+  -->
+   - Prise en charge des systèmes OpenRC
+   - Détection et gestion des montages sur le chemin du démon
+   - Support de la migration des pools de stockage Ceph
+   - Support de la migration des réseaux OVN
+   - Génération d’un fichier de journal
+   - Génération de sauvegardes (base de données, données OVN)
+
+  <!--
+  Note that as LXD is late in releasing LXD 5.20, the migration tool only supports up to LXD 5.19 as a source release. Packagers should update that to 5.20 once LXD releases and assuming no last minute changes that would break the migration.
+  -->
+  Notez que comme la sortie de LXD 5.20 a pris du retard, l’outil de migration ne supporte que les versions de LXD jusqu’à la 5.19. Les personnes gérant le paquetage d’Incus devraient mettre à jour cette limite à 5.20 dès que la nouvelle version de LXD est disponible, en supposant qu’il n’y ait pas de changement de dernière minute pouvant faire échouer la migration.
+
+  <!--
+  ## Hot-plug/hot-remove of paths in virtual machines
+  Incus has had support for hot-plug and hot-remove of disks for a little while.
+  With those, you see a virtual disk appearing or disappearing inside the VM.
+  -->
+  ## Branchement/débranchement à chaud des chemins dans les machines virtuelles
+  Incus prend en change le branchement/débranchement à chaud des disques depuis un certain temps.
+  Dans une VM, cela se traduit par un disque pouvant apparaître et disparaître selon qu’il est branché ou débranché.
+
+  <!--
+  But Incus also supports sharing just a path from the host system or passing in a shared custom volume (filesystem) to the instance.
+  -->
+  Mais Incus prend également en charge le montage d’un dossier du système hôte, ou d’un système de fichiers personnalisé, sur une instance.
+
+  <!--
+  This is handled through virtio-fs or 9p and up until now, required the VM to be stopped, the device added and then the VM started.
+  -->
+  Le montage est géré par virtio-fs ou 9p, et jusqu’alors, nécessitait l’arrêt de la VM, l’ajout du montage, et le redémarrage de la VM.
+
+  <!--
+  But that's now a thing of the past and Incus now supports hot-plug and hot-remove of those paths through a combination of PCI hotplug in QEMU and communication with the incus-agent in the guest to perform the actual mount as part of the hot-plug process.
+  -->
+  C’est à présent de l’histoire ancienne ; Incus permet de brancher et débrancher à chaud de tels montages, grâce à une combinaison de hotplug PCI dans QEMU et de communication avec l’incus-agent dans le système invité pour effectuer le montage à chaud.
+
+  <!--
+  Worth noting that the agent will not automatically unmount the filesystem prior to hot-remove. If the filesystem is mounted in the guest, you'll get an error during hot-remove.
+  -->
+  Il convient de noter que l’agent ne va pas effectuer le démontage automatiquement avant le débranchement à chaud. Si le système de fichiers est monté dans le système invité, vous obtiendrez une erreur lors du débranchement à chaud.
+
+  <!--
+  ### Complete changelog
+  Here is a complete list of all changes in this release:
+  -->
+  ### Liste complète des changements
+  Voici une liste complète de tous les changements apportés par cette version :
+
+  <!--
+  [details="Full commit list"]
+  -->
+  [details="Liste complète des commits"]
+   - lxd-to-incus: query systemd instead of assuming service file path
+   - doc/installing: Re-introduce direct download links
+   - doc/howto/import-machines: Re-introduce direct download links
+   - cmd/lxd-to-incus: Unmount target paths
+   - cmd/lxd-to-incus: Add OpenRC target support
+   - doc: Link to migration guide from getting started
+   - cmd/network {forward,load-balancer}: fix typo port to ports
+   - i18n: Update translation templates
+   - lxd-to-incus: Split the targets
+   - lxd-to-incus: Handle mountpoint on daemon path
+   - [lxd-import] lxd/cluster/config: Adds OpenFGA config keys.
+   - [lxd-import] incus-doc: Runs make update-metadata.
+   - [lxd-import] lxd/db: Exports StoragePoolVolumeTypeToName function.
+   - [lxd-import] lxd: Adds method to daemon to load the OpenFGA authorizer.
+   - [lxd-import] lxd: Loads OpenFGA authorizer at startup if configured.
+   - [lxd-import] lxd: Load OpenFGA authorizer on config change.
+   - [lxd-import] test/lint: Adds linter for openfga model.
+   - [lxd-import] test/includes: Adds util for getting certificate fingerprint.
+   - [lxd-import] test/includes: Adds utils for running and interacting with an openfga server.
+   - [lxd-import] test/suites: Adds OpenFGA test suite.
+   - [lxd-import] test/suites: Adds OpenFGA clustering test.
+   - [lxd-import] test: Runs OpenFGA tests in main.
+   - [lxd-import] workflows: Installs openfga server and CLI in github action.
+   - [lxd-import] doc: Adds OpenFGA to wordlist.
+   - [lxd-import] lxd/patches: Ensure renaming is only done on cluster leader
+   - [lxd-import] test/suites: Fixes wait_no_operations helper.
+   - [lxd-import] lxd/auth: Adds OpenFGA model.
+   - [lxd-import] Makefile: Adds make target for generating openfga model json.
+   - [lxd-import] lxd/auth: Runs make-openfga.
+   - Makefile: Pass --yes to npx
+   - [lxd-import] lxd/auth: Adds constants for relations.
+   - [lxd-import] lxd/auth: Adds Resources type and load option.
+   - [lxd-import] gomod: Adds openfga dependency.
+   - [lxd-import] lxd/auth: Adds OpenFGA authorization driver.
+   - gomod: Use older OpenFGA for Go 1.20
+   - [lxd-import] doc: Adds openfga server configuration options.
+   - [lxd-import] doc: Adds authorization explanation page.
+   - doc/authorization: Update for Incus
+   - [lxd-import] doc: Updates authentication page to separate authorization.
+   - [lxd-import] doc: Adds authorization page to security related links.
+   - tests: Disable OpenFGA tests until we have a test OIDC provider
+   - tests: Don't require OpenFGA
+   - gomod: Update dependencies
+   - client: Allow overriding web browser
+   - client: Cleanup OIDC login
+   - tests: Add mini-oidc
+   - tests/link: Ignore test/mini-oidc
+   - tests: Re-enable openfga tests
+   - tests: Add oidc helpers
+   - tests: Add OpenID Connect tests
+   - internal/server/auth: Replace LXD with Incus
+   - cmd/incus-agent: Remove LXD reference
+   - tests: Update OpenFGA tests for Incus and OIDC
+   - [lxd-import] zfs: Support zfs pools containing '/' in the patch
+   - [lxd-import] test/deps: switch to ecdsa certificate
+   - [lxd-import] github: shorten job names to improve the UI view
+   - [lxd-import] test/clustering: remove unneeded shellcheck ignore and update others
+   - [lxd-import] config: Ensure config key values are reset to their default
+   - [lxd-import] test: Test unsetting config keys
+   - [lxd-import] doc/configuration: review openfga.* documentation
+   - [lxd-import] doc/openfga: small fixes to documentation
+   - doc/installing: Remove LXD reference
+   - incusd/auth: Fix handling of trusted certs in CA mode
+   - tests: Properly test core.trust_ca_certificates
+   - lxd-to-incus: Skip non-symlinks
+   - lxd-to-incus: Detect mountpoint on target path
+   - lxd-to-incus: Rewrite rbd stamp volume
+   - lxd-to-incus: Split out validation code
+   - lxd-to-incus: Add advanced option to bypass cluster evacuation
+   - incusd/server/task: Code style
+   - incusd/server/task: Handle nil group
+   - internal/linux: Rename parseMountinfo
+   - internal/linux: Add GetMountinfo
+   - incusd/storage/drivers/btrfs: Skip nodatacow on compressed pools
+   - incusd/storage/drivers/btrfs: Check for datacow mount option
+   - [lxd-import] metrics: Fix label merging in metric sets
+   - [lxd-import] test: Check instance type in filesystem metrics
+   - [lxd-import] test/includes/certificates: add gen_cert_and_key()
+   - [lxd-import] test/metrics: use gen_cert_and_key function instead of directly calling openssl
+   - [lxd-import] test/remote: use gen_cert_and_key function instead of directly calling openssl
+   - [lxd-import] test/tls_restrictions: add some double quotes
+   - [lxd-import] test/tls_restrictions: fix some comments
+   - [lxd-import] test/tls_restrictions: make sure expected failures get the expected 403
+   - [lxd-import] test/tls_restrictions: use gen_cert_and_key function instead of directly calling openssl
+   - [lxd-import] test/tls_restrictions: ensure type=metrics certificates cannot access anything besides /1.0/metrics.
+   - [lxd-import] lxd/device/proxy: Consider routed NIC IPs for wildcard target check
+   - [lxd-import] lxd/network/driver/bridge: Improve comments for accept_ra
+   - [lxd-import] config: Restrict user.* keys
+   - [lxd-import] test: Validate user.* keys
+   - [lxd-import] github: Use Go 1.20 and check for compat with that in go mod tidy
+   - [lxd-import] github: Removes whitespace
+   - [lxd-import] lxd/incus-doc: Remove noisy log line
+   - [lxd-import] test/lint: Removes openfga model linter.
+   - [lxd-import] test/basic: always use -- with `incus exec`
+   - [lxd-import] test/basic: test with and without "--" separator
+   - [lxd-import] test/clustering: always use -- with `incus exec`
+   - [lxd-import] test/config: always use -- with `incus exec`
+   - [lxd-import] test/dev-incus: always use -- with `incus exec`
+   - [lxd-import] test/image_acl: always use -- with `incus exec`
+   - [lxd-import] test/storage_snapshots: always use -- with `incus exec`
+   - [lxd-import] doc/howto/network_ovn_setup: always use -- with `incus exec`
+   - [lxd-import] doc/howto/instances_troubleshoot: always use -- with `lxc exec`
+   - [lxd-import] lxd/dev-incus: always use -- with `incus exec`
+   - [lxd-import] doc/requirements: allow linking to Go requirements
+   - [lxd-import] doc/installing: link to Go requirements and update Ubuntu instructions
+   - [lxd-import] doc/howto/benchmark_performance: link to Go requirements
+   - [lxd-import] doc/howto/migrate_from_lxc: link to Go requirements
+   - [lxd-import] doc/requirements: Go 1.20 is now the minimum version
+   - [lxd-import] shared/cert: Update code comments about CRL
+   - [lxd-import] lxd/util/http: Check if the CRL was signed by the CA before using it
+   - [lxd-import] lxc/delete: Include instance name in error message
+   - [lxd-import] Update translations
+   - incus: Fix first use missing on init/create
+   - incus: Fix first use message on admin init
+   - incus: Don't show first use on admin commands
+   - incusd/device: The MTU can always be controlled
+   - [lxd-import] lxc: Use volume copy when moving to target project
+   - [lxd-import] shared/network: Only skip TLS verification if no remote certificate is available
+   - [lxd-import] lxd/daemon_images: fix typo
+   - [lxd-import] lxd: Enforce users to be authenticated before running the access handler.
+   - [lxd-import] lxd/instance/exec: Only use keepalives on TCP sockets
+   - [lxd-import] test: Restructure local volume handling
+   - [lxd-import] test: Add storage volume move between projects
+   - doc: Update for trust add-certificate
+   - lxd-to-incus: Add support for OVN database mangling
+   - doc: incus -> incusd in build instructions.
+   - lxd-to-incus: Add target name
+   - lxd-to-incus: Fix env variable name
+   - lxd-to-incus: Fix bad exit code
+   - lxd-to-incus: Add debug log
+   - lxd-to-incus: Backup the database
+   - lxd-to-incus: Backup the OVN database
+   - lxd-to-incus: Detect problematic btrfs setup
+   - tests: Workaround shellcheck
+   - gomod: Update dependencies
+   - lxd-to-incus: Allow evacuated servers when using CLUSTER_NO_STOP
+   - lxd-to-incus: Fix ceph username
+   - lxd-to-incus: Add missing line breaks in log
+   - lxd-to-incus: Don't fail migration on a failed command
+   - lxd-to-incus: Fix format string
+   - lxd-to-incus: Split OVS commands from OVN
+   - lxd-to-incus: Fix typo in OVS migration
+   - doc: replace lxc with incus in cmdStorageVolumeSnapshotShow example
+   - doc: Document INCUS_DOCUMENTATION
+   - [lxd-import] client: Use io.Writer for Stdout/Stderr in InstanceExecArgs
+   - [lxd-import] btrfs: Add function to check subvolumes in a given path
+   - [lxd-import] btrfs: Use `hasSubvolumes` when creating a new pool
+   - [lxd-import] test: Btrfs pool with a subvolume as its source
+   - [lxd-import] client: Use io.Reader for Stdin in InstanceExecArgs
+   - [lxd-import] Makefile: remove toolchain directive from go.mod for backward compat
+   - Makefile: Use GO env variable everywhere
+   - [lxd-import] github: remove Go tip tarball after extraction
+   - [lxd-import] config: Fix `acme.ca_url` short description
+   - [lxd-import] Update metadata
+   - [lxd-import] lxd/instance/drivers/driver_qemu: factor out config volume mounting from setupNvram
+   - [lxd-import] shared/instance: correct volatile.apply_nvram type
+   - [lxd-import] client/lxd/instances: Close websocket as soon as channel mirror finishes in ExecInstance
+   - [lxd-import] lxc/exec: No need to use io.ReadCloser anymore
+   - [lxd-import] shared/ws/mirror: No need for defer in MirrorWrite and MirrorRead
+   - [lxd-import] Revert "lxd/instance/exec: Only use keepalives on TCP sockets"
+   - [lxd-import] client/lxd/instances: Consume ping messages from server for exec control and stdin channels
+   - incusd/instance/qemu: Send device notifications
+   - incus-agent: Properly forward device events
+   - incusd/instance/qemu/qmp: Add CharDevice commands
+   - incusd/device/disk: Allow virtiofs hotplug/hotremove
+   - incusd/device/disk: Don't spawn 9p proxy for hotplug
+   - incusd/instance/qemu: Add support for hotplug/hotremove of virtiofs
+   - incus-agent: Add support for mounting hot-plugged paths
+   - gomod: Update dependencies
+   - doc: Add markdown table to containers vs vms
+   - doc: Minor changes to containers vs vms
+   - incusd/instances: Properly detect unfiltered
+   - incusd/images: Properly detect unfiltered
+   - internal/filter: Support string slices
+   - incusd/storage_volumes: Allow filtering based on UsedBy
+  [/details]
+
+  <!--
+  # Documentation
+  The Incus documentation can be found at:
+  https://linuxcontainers.org/incus/docs/main/
+  -->
+  # Documentation
+  La documentation d’Incus peut être consultée sur :
+  https://linuxcontainers.org/incus/docs/main/
+
+  <!--
+  # Packages
+  There are no official Incus packages as Incus upstream only releases regular release tarballs. Below are some available options to get Incus up and running.
+  -->
+  # Paquets
+  Incus ne fournit pas de paquet d’installation mais bien un tarball à chaque version. Vous trouverez ci-dessous différentes solutions pour mettre Incus en service.
+
+  <!--
+  ## Zabbly packages for Debian and Ubuntu
+  Zabbly provides both daily and stable builds of Incus to Debian and Ubuntu users:
+  https://github.com/zabbly/incus
+  -->
+  ## Paquets Zabbly pour Debian et Ubuntu
+  Zabbly fournit à la fois des paquets stables et des paquets générés quotidiennement pour Incus à destination des systèmes Debian et Ubuntu :
+  https://github.com/zabbly/incus
+
+  <!--
+  ## Homebrew package for the Incus client
+  The client tool is available through HomeBrew for both Linux and MacOS.
+  -->
+  ## Paquet Homebrew du client Incus
+  Le client Incus est disponible sur Homebrew pour Linux et macOS.
+
+  https://formulae.brew.sh/formula/incus
+
+  <!--
+  ## Chocolatey package for the Incus client
+  The client tool will soon be available through Chocolatey for Windows users.
+  -->
+  ## Paquet Chocolatey du client Incus
+  Le client Incus sera bientôt disponible sur Chocolatey pour les utilisateurs de Windows.
+
+  <!--
+  Until then, binaries can be found here: https://github.com/lxc/incus/releases/tag/v0.3.0
+  -->
+  En attendant, les binaires peuvent être obtenus ici : https://github.com/lxc/incus/releases/tag/v0.3.0
+
+  <!--
+  # Support
+  At this early stage, each Incus release will only be supported up until the next release comes out. This will change in a few months as we are planning an LTS release to coincide with the LTS releases of LXC and LXCFS.
+  -->
+  # Support
+  À ce stade, chaque version d’Incus ne sera supportée que jusqu’à la sortie de la suivante. Cela changera dans quelques mois, car nous prévoyons de sortir une version LTS qui coïncidera avec les versions LTS de LXC et LXCFS.
+
+  <!--
+  Community support is provided at: https://discuss.linuxcontainers.org
+  Bugs can be reported at: https://github.com/lxc/incus/issues
+  -->
+  Le support communautaire est disponible sur : https://discuss.linuxcontainers.org
+  Les bugs peuvent être signalés sur : https://github.com/lxc/incus/issues
