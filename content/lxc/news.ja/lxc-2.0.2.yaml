@@ -34,7 +34,7 @@ content: |-
    * travis: VPATH ビルドのテストを行うようにしました <!-- test VPATH builds -->
    * upstart: lxc-instance を Upstart クライアントとして適した形に変更しました <!-- Force lxc-instance to behave like a good Upstart client -->
   
-  ### ダウンロード <!-- Downloads -->
+  # ダウンロード <!-- Downloads -->
   <!--
   The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
   will very soon ship a packaged version of LXC 2.0.2.

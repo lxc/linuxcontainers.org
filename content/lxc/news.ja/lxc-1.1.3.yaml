@@ -6,7 +6,7 @@ content: |-
   -->
   このリリースは LXC 1.1 の 3 回目のバグフィックスリリースです。
   
-  ### 変更点 <!-- Changes -->
+  # 変更点 <!-- Changes -->
   
   重要な変更<!-- Important -->:
   
@@ -77,7 +77,7 @@ content: |-
   -->
   これらの stable の修正は 31 名のコントリビュータによってなされました。
   
-  ### ダウンロード<!-- Downloads -->
+  # ダウンロード<!-- Downloads -->
   <!--
   The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
   will very soon ship a packaged version of LXC 1.1.3.

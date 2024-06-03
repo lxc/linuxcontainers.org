@@ -2,7 +2,7 @@ title: LXC 5.0.3 LTS リリースのお知らせ
 date: 2023/07/25 22:07
 origin: https://discuss.linuxcontainers.org/t/lxc-5-0-3-lts-has-been-released/17708
 content: |-
-  ### はじめに <!-- Introduction -->
+  # はじめに <!-- Introduction -->
   <!--
   The LXC team is pleased to announce the release of LXC 5.0.3!
   -->
@@ -13,7 +13,7 @@ content: |-
   -->
   このリリースは LXC 5.0 の 3 回目のバグ修正リリースです。このリリースは 2027 年 6 月までサポートされます。
 
-  ### バグ修正 <!-- Bugfixes -->
+  # バグ修正 <!-- Bugfixes -->
   <!--
   As usual this bugfix releases focus on stability and hardening.
   -->
@@ -60,7 +60,7 @@ content: |-
    - github: Update for main branch
   [/details]
 
-  ### サポートとアップグレード <!-- Support and upgrade -->
+  # サポートとアップグレード <!-- Support and upgrade -->
   <!--
   The LXC 5.0 branch is supported until June 2027.
   Only bugfixes and securitiy issues get included into the stable bugfix releases, so it's always safe and recommended to keep up and run the latest bugfix release.
@@ -68,7 +68,7 @@ content: |-
   LXC 5.0 ブランチは 2027 年 6 月までサポートされます。
   stable のバグフィックスリリースでは、バグとセキュリティに関する問題に対する修正のみが行われますので、常に安全です。最新のバグフィックスリリースの状態を維持し、実行することをおすすめします。
 
-  ### ダウンロード<!-- Downloads -->
+  # ダウンロード<!-- Downloads -->
 
    - リリース tarball <!-- Main release tarball -->: [lxc-5.0.3.tar.gz](https://linuxcontainers.org/downloads/lxc/lxc-5.0.3.tar.gz)
    - GPG シグネチャー <!-- GPG signature -->: [lxc-5.0.3.tar.gz.asc](https://linuxcontainers.org/downloads/lxc/lxc-5.0.3.tar.gz.asc)

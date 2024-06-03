@@ -2,7 +2,7 @@ title: LXC 5.0 LTS リリースのお知らせ
 date: 2022/06/17 17:06
 origin: https://discuss.linuxcontainers.org/t/lxc-5-0-lts-has-been-released/14381
 content: |-
-  ### はじめに <!-- Introduction -->
+  # はじめに <!-- Introduction -->
   <!--
   The LXC team is pleased to announce the release of LXC 5.0.0!
   -->
@@ -13,8 +13,8 @@ content: |-
   -->
   このリリースは LXC 4.0.0 リリース以来の 2 年間の作業の成果で、LXC プロジェクトの 5 回目の LTS リリースです。このリリースは 2027 年 6 月までサポートされます。
 
-  ### 主な変更点 <!-- Major changes -->
-  #### meson への切り替え <!-- Switch to meson -->
+  # 主な変更点 <!-- Major changes -->
+  ## meson への切り替え <!-- Switch to meson -->
   <!--
   With this release of LXC, autotools is being replaced by `meson` as the build tooling. Compatibility `Makefile` targets are provided for `all`, `install` and `dist`.
   -->
@@ -25,7 +25,7 @@ content: |-
   -->
   この変更は特にパッケージ作成者に関係する変更で、それ以外、ユーザーには目に見える影響はありません。
 
-  #### 新しい cgroup 設定オプション <!-- New cgroup configuration options -->
+  ## 新しい cgroup 設定オプション <!-- New cgroup configuration options -->
   <!--
   Four new options were added:
   -->
@@ -41,7 +41,7 @@ content: |-
   -->
   これにより、コンテナ自身、モニタープロセス、コンテナ終了時のモニタープロセスが使う cgroup パスが正確にコントロールできるようになります。そして、コンテナの cgroup をネストした（内部の）cgroup 内に配置することもできます。
 
-  #### Time namespace サポート <!-- Time namespace support -->
+  ## Time namespace サポート <!-- Time namespace support -->
   <!--
   LXC now supports setting up the time namespace.
   This is done through two new options:
@@ -56,7 +56,7 @@ content: |-
   -->
   これは、メインシステムクロックにオフセット（数ナノ秒から数時間）を適用します。
 
-  #### VETH デバイスに対する VLAN サポート <!-- VLAN support on VETH devices -->
+  ## VETH デバイスに対する VLAN サポート <!-- VLAN support on VETH devices -->
   <!--
   Two new config options were added to the VETH network devices to control VLAN tagging.
   -->
@@ -70,7 +70,7 @@ content: |-
   -->
   前者はプライマリー（タグなし）VLAN を設定します。後者はデバイスに追加のタグ付き VLAN を設定するのに使います。これは親のブリッジデバイスで VLAN フィルタリングの使用を要求します。
 
-  #### VETH デバイスで送受信キューが設定可能に <!-- Configurable transmit/receive queues on VETH devices -->
+  ## VETH デバイスで送受信キューが設定可能に <!-- Configurable transmit/receive queues on VETH devices -->
   <!--
   Still on VETH devices. It's now possible to customize the number of receive and transmit queues through two new configuration options:
   -->
@@ -80,7 +80,7 @@ content: |-
    - veth.n_txqueues
 
 
-  ### 完全な ChangeLog（翻訳なし）<!-- Complete changelog -->
+  # 完全な ChangeLog（翻訳なし）<!-- Complete changelog -->
   <!--
   Here is a complete list of all changes in this release:
   -->
@@ -1940,7 +1940,7 @@ content: |-
    - meson: Fix bad strerror_r check
   [/details]
 
-  ### サポートとアップグレード <!-- Support and upgrade -->
+  # サポートとアップグレード <!-- Support and upgrade -->
   <!--
   LXC 5.0 will be supported until June 2027 and our current LTS release, LXC 4.0 will now switch to a slower maintenance pace, only getting critical bugfixes and security updates.
   -->
@@ -1951,12 +1951,12 @@ content: |-
   -->
   すべての LXC ユーザーは 5.0 ブランチへのアップグレードを計画することを強く推奨します。
 
-  ### ダウンロード <!-- Downloads -->
+  # ダウンロード <!-- Downloads -->
 
    - リリース tarball <!-- Main release tarball -->: [lxc-5.0.0.tar.gz](https://linuxcontainers.org/downloads/lxc/lxc-5.0.0.tar.gz)
    - GPG シグネチャ <!-- GPG signature -->: [lxc-5.0.0.tar.gz.asc](https://linuxcontainers.org/downloads/lxc/lxc-5.0.0.tar.gz.asc)
 
-  ### コントリビューター <!-- Contributors -->
+  # コントリビューター <!-- Contributors -->
   <!--
   The LXC 5.0 release was brought to you by a total of 65 contributors.
   -->

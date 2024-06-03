@@ -4,7 +4,7 @@ content: |-
   
   <!-- This is the fifth bugfix release for the LXC 1.0 series. -->このリリースは LXC 1.0 シリーズの 5 回目のバグフィックスとなるリリースです。
   
-  ### seccomp profile
+  # seccomp profile
   
     <!--
         Outside of the usual bugfixes, this release also introduces
@@ -41,7 +41,7 @@ content: |-
     共通の設定を読み込む仕組みを使っていないコンテナでこの機能をオンにしたい場合は、"lxc.seccomp = /usr/share/lxc/config/common.seccomp" というような設定を、コンテナの設定ファイルに追加します。
   
   
-  ### <!-- Changes -->変更点
+  # <!-- Changes -->変更点
   
   
   * <!-- core: Fix unprivileged containers to work with recent
@@ -84,7 +84,7 @@ content: |-
   <!-- Those stable fixes were brought to you by 11 individual
           contributors. -->これらの stable の修正は 11 名のコントリビュータによってなされました。
   
-  ### <!-- Downloads -->ダウンロード
+  # <!-- Downloads -->ダウンロード
   <!-- The release tarballs may be found on our
           [download page</a> and we expect most
           distributions will very soon ship a packaged version of LXC 1.0.5. -->

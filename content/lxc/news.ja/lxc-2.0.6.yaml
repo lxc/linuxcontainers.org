@@ -119,7 +119,7 @@ content: |-
    * tests: overflow のテストを削除しました <!-- remove overflow tests -->
    * attach: attach するプロセスに procfd を送らないようにしました <!-- do not send procfd to attached process -->
   
-  ### ダウンロード <!-- Downloads -->
+  # ダウンロード <!-- Downloads -->
   <!--
   The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
   will very soon ship a packaged version of LXC 2.0.6.

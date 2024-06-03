@@ -4,7 +4,7 @@ content: |-
   
   <!-- This is the fourth bugfix release for the LXC 1.0 series. -->このリリースは LXC 1.0 シリーズの 4 回目のバグフィックスとなるリリースです。
   
-  ### <!-- Changes -->変更点
+  # <!-- Changes -->変更点
   
   
   * <!-- core: Don't call nih_dbus_setup for cgmanager as it's
@@ -108,7 +108,7 @@ content: |-
   <!-- Those stable fixes were brought to you by 14 individual
           contributors. -->これらの stable の修正は 14 名のコントリビュータによってなされました。
   
-  ### <!-- Downloads -->ダウンロード
+  # <!-- Downloads -->ダウンロード
   <!-- The release tarballs may be found on our
           [download page</a> and we expect most
           distributions will very soon ship a packaged version of LXC 1.0.4. -->

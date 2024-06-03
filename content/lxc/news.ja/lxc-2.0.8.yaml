@@ -116,7 +116,7 @@ content: |-
    * (訳注: configure で) `ubuntu` と `debian` の case をマージしました <!-- Merge `ubuntu` and `debian`case -->
    * start: lxc\_spawn() に重要なコメントを追加しました <!-- add crucial details about lxc\_spawn() -->
   
-  ### ダウンロード <!-- Downloads -->
+  # ダウンロード <!-- Downloads -->
   <!--
   The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
   will very soon ship a packaged version of LXC 2.0.8.

@@ -2,7 +2,7 @@ title: LXC 1.0.0 リリースのお知らせ
 date: 2014/02/20 00:00
 content: |-
   
-  ### <!-- Introduction -->はじめに
+  # <!-- Introduction -->はじめに
   <!-- It's with great pleasure that the LXC team is announcing the
           release of LXC 1.0! -->
     LXC チームが LXC 1.0 のリリースをアナウンスできるのは大きな喜びです!
@@ -31,7 +31,7 @@ content: |-
     どのような変更がされ、開発がどのように進んだのかをご覧になりたい場合は、メインリポジトリが <a href="https://github.com/lxc/lxc">GitHub</a> にあります。
   
   
-  ### <!-- New features -->新機能について
+  # <!-- New features -->新機能について
   <!-- LXC 1.0 is the result of 10 months of development and over a
           thousand commits, including a major rework of the way LXC is
           structured.  It's therefore near impossible to come up with a
@@ -77,7 +77,7 @@ content: |-
   
   
   
-  ### <!-- LXC 1.0 moving forward -->
+  # <!-- LXC 1.0 moving forward -->
   <!-- LXC 1.0 is the first production ready release of LXC and it
           comes with a commitment from upstream to maintain it until at
           least Ubuntu 14.04 LTS reaches end of life in April 2019.
@@ -93,7 +93,7 @@ content: |-
     stable ブランチは別に管理され、必要に応じてバックポートされます。頻繁に 1.0 のバグフィックス版を出す予定なので、各ディストリビューションは単純にそれを使用すれば良く、stable ブランチを自身でフォローする手間を省くことができます。
   
   
-  ### <!-- Bug reports and contact information -->バグレポートと連絡先
+  # <!-- Bug reports and contact information -->バグレポートと連絡先
   <!-- Bug reports should be filed on
           <a href="https://github.com/lxc/lxc/issues">GitHub</a>
           or if you do not wish to create an account, by e-mail to the

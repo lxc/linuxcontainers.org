@@ -13,7 +13,7 @@ content: |-
     LXC 1.0 と将来リリースする LXC 1.1 の両方を簡単にサポートするために、このバージョンでは lxc-start に -F オプションを追加しました。(現在の 1.0 で) デフォルトでフォアグラウンドで起動している lxc-start ではこのオプションは不要ですが、この動きは LXC 1.1 で変わる予定です (訳注: バックグラウンドがデフォルトに変わる予定です)。1.0 で -F を導入したのは、アップグレード後も作成したスクリプトが変わらずに動くようにするためです。
   
   
-  ### <!-- Changes -->変更点
+  # <!-- Changes -->変更点
   
   * <!-- rootfs_is_blockdev: don't run if no rootfs is specified -->rootfs_is_blockdev: rootfs が指定されていないときには実行されないようにしました (訳注: rootfs が指定されていない場合はストレージバックエンドがブロックデバイスかどうかチェックを行う処理を実行しないようにしました)
   * <!-- confile: sanity-check netdev-&#62;type before setting
@@ -110,7 +110,7 @@ content: |-
   <!-- Those stable fixes were brought to you by 24 individual
           contributors. -->これらの stable の修正は 24 名のコントリビュータによってなされました。
   
-  ### <!-- Downloads -->
+  # <!-- Downloads -->
   <!-- The release tarballs may be found on our
           <a href="/downloads/">download page</a> and we expect most
           distributions will very soon ship a packaged version of LXC 1.0.6. -->

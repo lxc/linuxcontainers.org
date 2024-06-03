@@ -2,7 +2,7 @@ title: LXC 4.0.2 LTS リリースのお知らせ
 date: 2020/04/16 19:04
 origin: https://discuss.linuxcontainers.org/t/lxc-4-0-2-lts-has-been-released/7449
 content: |-
-  ### はじめに <!-- Introduction -->
+  # はじめに <!-- Introduction -->
   <!--
   The LXC team is pleased to announce the release of LXC 4.0.2!
   -->
@@ -13,7 +13,7 @@ content: |-
   -->
   このリリースは 2025 年 6 月までサポートされる LXC 4.0 に対する 2 回目のバグフィックスリリースです。
 
-  ### バグ修正 <!-- Bugfixes -->
+  # バグ修正 <!-- Bugfixes -->
   <!--
   This release fixes a number of issues that were reported shortly following the original [4.0.0](https://discuss.linuxcontainers.org/t/lxc-4-0-lts-has-been-released/7182) and [4.0.1](https://discuss.linuxcontainers.org/t/lxc-4-0-1-lts-has-been-released/7310) releases. Some of the highlights include:
   -->
@@ -68,7 +68,7 @@ content: |-
    - cgroups: fix cgroup limit braino
    - configure: fix coverity builds
 
-  ### サポートとアップグレード <!-- Support and upgrade -->
+  # サポートとアップグレード <!-- Support and upgrade -->
   <!--
   The LXC 4.0 branch is supported until June 2025.
   Only bugfixes and securitiy issues get included into the stable bugfix releases, so it's always safe and recommended to keep up and run the latest bugfix release.
@@ -76,7 +76,7 @@ content: |-
   LXC 4.0 ブランチは 2025 年 6 月までサポートされます。
   stable のバグフィックスリリースでは、バグとセキュリティに関する問題に対する修正のみが行われますので、常に安全です。最新のバグフィックスリリースの状態を維持し、実行することをおすすめします。
 
-  ### ダウンロード <!-- Downloads -->
+  # ダウンロード <!-- Downloads -->
 
    - リリース tarball <!-- Main release tarball -->: [lxc-4.0.2.tar.gz](https://linuxcontainers.org/downloads/lxc/lxc-4.0.2.tar.gz)
    - GPG シグネチャー <!-- GPG signature -->: [lxc-4.0.2.tar.gz.asc](https://linuxcontainers.org/downloads/lxc/lxc-4.0.2.tar.gz.asc)

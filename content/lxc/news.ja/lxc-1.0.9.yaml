@@ -153,7 +153,7 @@ content: |-
    * tree-wide: readdir\_r() を readdir() に置き換えました <!-- replace readdir\_r() with readdir() -->
    * attach: attach するプロセスに procfd を送らないようにしました <!-- do not send procfd to attached process -->
   
-  ### ダウンロード <!-- Downloads -->
+  # ダウンロード <!-- Downloads -->
   <!--
   The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
   will very soon ship a packaged version of LXC 1.0.9.
