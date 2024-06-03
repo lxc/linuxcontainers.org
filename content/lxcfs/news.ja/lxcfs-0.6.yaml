@@ -10,7 +10,7 @@ content: |-
    * メモリとファイルディスクリプタのリークをいくつか修正しました <!-- Fixes some memory and fd leaks. -->
    * /proc/stat の cpu-average の修正を行いました <!-- Fixes cpu-average in /proc/stat. -->
   
-  ### ダウンロード <!-- Downloads -->
+  # ダウンロード <!-- Downloads -->
   <!--
   The release tarballs can be found on our [download page](/lxcfs/downloads/).
   -->

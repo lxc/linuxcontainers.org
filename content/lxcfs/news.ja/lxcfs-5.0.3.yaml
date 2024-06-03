@@ -2,7 +2,7 @@ title: LXCFS 5.0.3 LTS リリースのお知らせ
 date: 2023/01/17 02:01
 origin: https://discuss.linuxcontainers.org/t/lxcfs-5-0-3-lts-has-been-released/16167
 content: |-
-  ### はじめに <!-- Introduction -->
+  # はじめに <!-- Introduction -->
   <!--
   The LXCFS team is pleased to announce the release of LXCFS 5.0.3!
   -->
@@ -13,7 +13,7 @@ content: |-
   -->
   これは 2027 年 6 月までサポートされる LXCFS 5.0 の 3 回目のバグフィックスリリースです。
 
-  ### バグ修正 <!-- Bugfixes -->
+  # バグ修正 <!-- Bugfixes -->
   <!--
   Some of the highlights for this release are:
   -->
@@ -51,7 +51,7 @@ content: |-
    - cpuview: fix ABBA deadlock in find_proc_stat_nod
   [/details]
 
-  ### サポートとアップグレード <!-- Support and upgrade -->
+  # サポートとアップグレード <!-- Support and upgrade -->
   <!--
   The LXCFS 5.0 branch is supported until June 2027.
   Only bugfixes and securitiy issues get included into the stable bugfix releases, so it's always safe and recommended to keep up and run the latest bugfix release.
@@ -59,7 +59,7 @@ content: |-
   LXCFS 5.0 ブランチは 2027 年 6 月までサポートされます。
   stable のバグフィックスリリースでは、バグとセキュリティに関する問題に対する修正のみが行われますので、常に安全です。最新のバグフィックスリリースの状態を維持し、実行することをおすすめします。
 
-  ### ダウンロード <!-- Downloads -->
+  # ダウンロード <!-- Downloads -->
 
    - リリース tarball <!-- Main release tarball -->: [lxcfs-5.0.3.tar.gz](https://linuxcontainers.org/downloads/lxcfs/lxcfs-5.0.3.tar.gz)
    - GPG シグネチャー <!-- GPG signature -->: [lxcfs-5.0.3.tar.gz.asc](https://linuxcontainers.org/downloads/lxcfs/lxcfs-5.0.3.tar.gz.asc)

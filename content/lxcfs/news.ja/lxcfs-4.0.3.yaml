@@ -2,7 +2,7 @@ title: LXCFS 4.0.3 LTS リリースのお知らせ
 date: 2020/04/17 20:04
 origin: https://discuss.linuxcontainers.org/t/lxcfs-4-0-3-lts-has-been-released/7470
 content: |-
-  ### はじめに <!-- Introduction -->
+  # はじめに <!-- Introduction -->
   <!--
   The LXCFS team is pleased to announce the release of LXCFS 4.0.3!
   -->
@@ -13,7 +13,7 @@ content: |-
   -->
   これは 2025 年 6 月までサポートされる LXCFS 4.0 の 3 回目のバグフィックスリリースです。
 
-  ### バグ修正 <!-- Bugfixes -->
+  # バグ修正 <!-- Bugfixes -->
   <!--
   This release fixes a number of issues that were reported shortly following the [original 4.0.0](https://discuss.linuxcontainers.org/t/lxcfs-4-0-lts-has-been-released/7031), [4.0.1](https://discuss.linuxcontainers.org/t/lxcfs-4-0-1-lts-has-been-released/7130) and [4.0.2](https://discuss.linuxcontainers.org/t/lxcfs-4-0-2-lts-has-been-released/7327) releases. Some of the highlights include:
   -->
@@ -48,7 +48,7 @@ content: |-
    - proc_fuse: improve swap calculation
 
 
-  ### サポートとアップグレード <!-- Support and upgrade -->
+  # サポートとアップグレード <!-- Support and upgrade -->
   <!--
   The LXCFS 4.0 branch is supported until June 2025.
   Only bugfixes and securitiy issues get included into the stable bugfix releases, so it's always safe and recommended to keep up and run the latest bugfix release.
@@ -56,7 +56,7 @@ content: |-
   LXCFS 4.0 ブランチは 2025 年 6 月までサポートされます。
   stable のバグフィックスリリースでは、バグとセキュリティに関する問題に対する修正のみが行われますので、常に安全です。最新のバグフィックスリリースの状態を維持し、実行することをおすすめします。
 
-  ### ダウンロード <!-- Downloads -->
+  # ダウンロード <!-- Downloads -->
 
    - リリース tarball <!-- Main release tarball -->: [lxcfs-4.0.3.tar.gz](https://linuxcontainers.org/downloads/lxcfs/lxcfs-4.0.3.tar.gz)
    - GPG シグネチャー <!-- GPG signature -->: [lxcfs-4.0.3.tar.gz.asc](https://linuxcontainers.org/downloads/lxcfs/lxcfs-4.0.3.tar.gz.asc)

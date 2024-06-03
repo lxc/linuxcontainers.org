@@ -20,7 +20,7 @@ content: |-
   -->
   LXCFS の最初のリリースですので、まだ非常に未完成である可能性があり、まだ production 環境で使用しないでください。
   
-  ### ダウンロード <!-- Downloads -->
+  # ダウンロード <!-- Downloads -->
   <!--
   The release tarballs can be found on our [download page](/lxcfs/downloads/).
   -->

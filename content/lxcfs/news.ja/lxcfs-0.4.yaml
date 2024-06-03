@@ -18,7 +18,7 @@ content: |-
   -->
   このリリースはバグの修正**のみ**を含みます。lxcfsを現在使っている場合はいかなる場合でもすぐに新しいバージョンに置き換えるべきです。
   
-  ### ダウンロード <!-- Downloads -->
+  # ダウンロード <!-- Downloads -->
   <!--
   The release tarballs can be found on our [download page](/lxcfs/downloads/).
   -->

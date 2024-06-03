@@ -2,7 +2,7 @@ title: LXCFS 4.0.1 LTS リリースのお知らせ
 date: 2020/03/19 14:03
 origin: https://discuss.linuxcontainers.org/t/lxcfs-4-0-1-lts-has-been-released/7130
 content: |-
-  ### はじめに <!-- Introduction -->
+  # はじめに <!-- Introduction -->
   <!--
   The LXCFS team is pleased to announce the release of LXCFS 4.0.1!
   -->
@@ -13,7 +13,7 @@ content: |-
   -->
   これは 2025 年 6 月までサポートされる LXCFS 4.0 の最初のバグフィックスリリースです。
 
-  ### バグ修正 <!-- Bugfixes -->
+  # バグ修正 <!-- Bugfixes -->
   <!--
   This release fixes a number of issues that were reported shortly following the [original 4.0.0 release](https://discuss.linuxcontainers.org/t/lxcfs-4-0-lts-has-been-released/7031). Some of the highlights include:
   -->
@@ -72,7 +72,7 @@ content: |-
    - tests: Silence build output
    - cgroup_fuse: actually make asz check mean something
 
-  ### サポートとアップグレード <!-- Support and upgrade -->
+  # サポートとアップグレード <!-- Support and upgrade -->
   <!--
   The LXCFS 4.0 branch is supported until June 2025.
   Only bugfixes and securitiy issues get included into the stable bugfix releases, so it's always safe and recommended to keep up and run the latest bugfix release.
@@ -80,7 +80,7 @@ content: |-
   LXCFS 4.0 ブランチは 2025 年 6 月までサポートされます。
   stable に対するバグ修正リリースにはバグ修正とセキュリティ問題の修正のみが含まれ常に安全ですので、最新のバグ修正リリースを維持し、実行することをおすすめします。
 
-  ### ダウンロード <!-- Downloads -->
+  # ダウンロード <!-- Downloads -->
 
    - リリース tarball <!-- Main release tarball -->: [lxcfs-4.0.1.tar.gz](https://linuxcontainers.org/downloads/lxcfs/lxcfs-4.0.1.tar.gz)
    - GPG シグネチャ <!-- GPG signature -->: [lxcfs-4.0.1.tar.gz.asc](https://linuxcontainers.org/downloads/lxcfs/lxcfs-4.0.1.tar.gz.asc)

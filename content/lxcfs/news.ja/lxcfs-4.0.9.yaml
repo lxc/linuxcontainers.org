@@ -2,7 +2,7 @@ title: LXCFS 4.0.9 LTS リリースのお知らせ
 date: 2021/07/17 02:07
 origin: https://discuss.linuxcontainers.org/t/lxcfs-4-0-9-lts-has-been-released/11617
 content: |-
-  ### はじめに <!-- Introduction -->
+  # はじめに <!-- Introduction -->
   <!--
   The LXCFS team is pleased to announce the release of LXCFS 4.0.9!
   -->
@@ -13,7 +13,7 @@ content: |-
   -->
   これは 2025 年 6 月までサポートされる LXCFS 4.0 の 9 回目のバグフィックスリリースです。
 
-  ### バグ修正 <!-- Bugfixes -->
+  # バグ修正 <!-- Bugfixes -->
   <!--
   Some of the highlights for this release are:
   -->
@@ -35,7 +35,7 @@ content: |-
    - cgroup_fuse: 問題になりそうな単語の置き換え <!-- replace potentially problematic terminology -->
    - lxcfs: libfuse2, libfuse3 の両方のサポート <!-- handle libfuse2 vs libfuse3 -->
 
-  ### サポートとアップグレード <!-- Support and upgrade -->
+  # サポートとアップグレード <!-- Support and upgrade -->
   <!--
   The LXCFS 4.0 branch is supported until June 2025.
   Only bugfixes and securitiy issues get included into the stable bugfix releases, so it's always safe and recommended to keep up and run the latest bugfix release.
@@ -43,7 +43,7 @@ content: |-
   LXCFS 4.0 ブランチは 2025 年 6 月までサポートされます。
   stable のバグフィックスリリースでは、バグとセキュリティに関する問題に対する修正のみが行われますので、常に安全です。最新のバグフィックスリリースの状態を維持し、実行することをおすすめします。
 
-  ### ダウンロード <!-- Downloads -->
+  # ダウンロード <!-- Downloads -->
 
    - リリース tarball <!-- Main release tarball -->: [lxcfs-4.0.9.tar.gz](https://linuxcontainers.org/downloads/lxcfs/lxcfs-4.0.9.tar.gz)
    - GPG シグネチャー <!-- GPG signature -->: [lxcfs-4.0.9.tar.gz.asc](https://linuxcontainers.org/downloads/lxcfs/lxcfs-4.0.9.tar.gz.asc)
