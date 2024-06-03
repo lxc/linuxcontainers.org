@@ -3,7 +3,7 @@ date: 2014/03/27 00:00
 content: |-
   This is the second bugfix release for the LXC 1.0 series.
   
-  ### Changes
+  # Changes
   
   Core:
   
@@ -52,7 +52,7 @@ content: |-
    * fedora template: Fix building i686 containers on x86\_64
    * opensuse template: Fix syntax error
   
-  ### Downloads
+  # Downloads
   The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
   will very soon ship a packaged version of LXC 1.0.2.
   

@@ -2,25 +2,25 @@ title: LXCFS 4.0 LTS has been released
 date: 2020/03/06 23:03
 origin: https://discuss.linuxcontainers.org/t/lxcfs-4-0-lts-has-been-released/7031
 content: |-
-  ### Introduction
+  # Introduction
   The LXCFS team is pleased to announce the release of LXCFS 4.0.0!
 
   This is the result of two years of work since the LXCFS 3.0.0 release and is the third LTS release for the LXCFS project. This release will be supported until June 2025.
 
-  ### Major changes
-  #### Repository re-organization
+  # Major changes
+  ## Repository re-organization
   The `LXCFS` repo has been completely reorganized. Prior to LXCFS 4.0 all functionality used to live in a single file. This used to work fine for a long time since LXCFS encompassed a very small set of features. Over the years LXCFS has grown a range of new abilities and has seen major improvements in how various aspects of the system are virtualized for containers. This meant that the single file approach was not feasible anymore.
 
   With LXCFS 4.0 various large virtualization features have been moved into separate files under a common source directory. This has also necessitated various changes to the build system. While we have stuck with the autotools build suite we have had to make significant changes how LXCFS is built. The most obvious change is that the location of the compiled binaries has changed from the top level directory under the source directory. For distributions packaging LXCFS this might mean that the package tooling needs to be made aware of this.
 
-  #### cgroup2: Support for the new unified cgroup hierarchy
+  ## cgroup2: Support for the new unified cgroup hierarchy
   The virtualization abilities of LXCFS are often centered around cgroups, i.e. cgroups are used to calculate container specific values that are shown in various files that provide access to system resources. So far, LXCFS has only supported virtualization based on the legacy cgroup hierarchy. With more systems slowly migrating to the unified cgroup hierarchy we have extended LXCFS to provide the same virtualization abilities based on the unified cgroup hierarchy whenever possible. The qualifying "whenever possible" clause needs to be highlighted. Currently, there are various smaller features that can't be virtualized based on the current implementation of the unified cgroup hierarchy. That might change over time as the unified cgroup hierarchy grows new features in the upstream kernel but we can't guarantee that it will provide full feature parity with the legacy cgroup hierarchy as there is no such guarantee or intention from the kernel developers. We hope however, to come to feature parity in what LXCFS provides.
   When sending patches upstream we would appreciate if you could try to make sure that the legacy cgroup and unified cgroup hierarchy support the new feature alike and provide both implementations in one go whenever possible.
 
-  #### `/proc/cpuinfo` and cpu output in `/proc/stat` based on cpu shares
+  ## `/proc/cpuinfo` and cpu output in `/proc/stat` based on cpu shares
   CPU information provided in `cpuinfo` and `stat` in `procfs` can now be based on cpu shares. This can provide a more fine-grained and precise view then the regular virtualization we do but requires more state be kept by LXCFS. For full functionality the legacy `cpu` and `cpuacct` controllers need to be enabled on the system. When the unified hierarchy is used only a very rough approximation can be provided though we expec the `cpu` controller in the unified hierarchy to support some of the features that the `cpu` and `cpuacct` controllers in the legacy hierarchy support. This feature can be enabled by passing the `--enable-cfs` flag to LXCFS.
 
-  #### Improved command line options
+  ## Improved command line options
   LXCFS has grown support for features over time and they have mostly been placed behind new command line options. Some of the options had no long or short options and so the experience could feel a little dated. With LXCFS 4.0 we have updated our command line experience. The following options are now supported:
 
       Usage: lxcfs <directory>
@@ -40,13 +40,13 @@ content: |-
         -v, --version        Print lxcfs version
         --enable-pidfd       Use pidfd for process tracking
 
-  #### `/proc/loadavg` virtualization
+  ## `/proc/loadavg` virtualization
   It is now possible for LXCFS to virtualize `loadavg` output. If  `--enable-loadavg` is passed that LXCFS will provide a container-specific `/proc/loadavg` view based on cgroups.
 
-  #### `pidfd` supported process tracking
+  ## `pidfd` supported process tracking
   LXCFS needs to keep track of each container's init process in order to correctly virtualize various values. This means LXCFS needs to detect when a container's process has died. Detecting this is suspect to the usual pid reuse races which have plagued Linux for a long time. Newer kernels provide the concept of a pidfd which solves pid reuse problems. When LXCFS is started with `--enable-pidfd` it will make use of this feature when the underlying kernel supports it. This will ensure reliable process tracking.
 
-  #### Compiler based hardening
+  ## Compiler based hardening
   For a long time LXC has supported compiler based hardening, i.e. a set of well-known compiler and linker options are automatically enabled whenever the compiler or linker support them. The set of currently supported hardening flags is:
 
       -Wimplicit-fallthrough=5
@@ -83,21 +83,21 @@ content: |-
       -fvisibility=hidden
 
 
-  #### Minimal compiler based resource management
+  ## Minimal compiler based resource management
   As has been the case a long time for LXC, LXCFS will now make use of the cleanup macro feature of `clang` and `gcc` to provide automatic cleanup of resources such as memory and file descriptors. For LXC this has significantly reduced the number of resource leaks and we expect the same to be the case for LXCFS.
 
-  #### Full test suite enabled on all supported architectures
+  ## Full test suite enabled on all supported architectures
   Prior to the LXCFS 4.0 release we have finally come around to enabling our test-suite on all supported architectures. This will ensure more rigorous testing going forward.
 
-  ### Support and upgrade
+  # Support and upgrade
   LXCFS 4.0.0 will be supported until June 2025 and our current LTS release, LXCFS 3.0 will now switch to a slower maintenance pace, only getting critical bugfixes and security updates.
 
   We strongly recommend all LXCFS users to plan an upgrade to the 4.0 branch.
 
-  ### Downloads
+  # Downloads
 
    - Main release tarball: [lxcfs-4.0.0.tar.gz](https://linuxcontainers.org/downloads/lxcfs/lxcfs-4.0.0.tar.gz)
    - GPG signature: [lxcfs-4.0.0.tar.gz.asc](https://linuxcontainers.org/downloads/lxcfs/lxcfs-4.0.0.tar.gz.asc)
 
-  ### Contributors
+  # Contributors
   The LXCFS 4.0.0 release was brought to you by a total of 15 contributors.

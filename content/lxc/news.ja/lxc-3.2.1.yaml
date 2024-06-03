@@ -2,7 +2,7 @@ title: LXC 3.2.1 リリースのお知らせ
 date: 2019/07/24 02:07
 origin: https://discuss.linuxcontainers.org/t/lxc-3-2-1-has-been-released/5322
 content: |-
-  ### はじめに <!-- Introduction -->
+  # はじめに <!-- Introduction -->
   <!--
   The LXC team is pleased to announce the release of LXC 3.2.1!
   -->
@@ -13,9 +13,9 @@ content: |-
   -->
   3.2.0 のリリースプロセスに問題があったため、3.2.1 をすぐにリリースしなければなりませんでした。このリリースで `configure.ac` ファイルにリリースが stable であることをす示すよう修正しました。
 
-  ### 新機能 <!-- New features -->
+  # 新機能 <!-- New features -->
 
-  #### seccomp: システムコールのユーザースペースへのフォワーディングのサポート <!-- Support syscall forwarding to userspace -->
+  ## seccomp: システムコールのユーザースペースへのフォワーディングのサポート <!-- Support syscall forwarding to userspace -->
   <!--
   Newer kernels allow seccomp to forward intercepted syscalls to a dedicated file descriptor. These messages can be read, the syscall arguments inspected, and if found secure, a sufficiently privileged userspace process can perform the actions normally done by the kernel for the container.
   -->
@@ -36,13 +36,13 @@ content: |-
   -->
   この機能を使って、LXD は例えば、`mknod()` や `mknodat()` システムコールを使ったデバイスノードの作成ができます。このようなことは、セキュアなデバイスが明確に定義されているコンテナでは通常は禁止されています。
 
-  #### 設定 `lxc.seccomp.allow_nesting` の追加 <!-- Add `lxc.seccomp.allow_nesting` configuration key -->
+  ## 設定 `lxc.seccomp.allow_nesting` の追加 <!-- Add `lxc.seccomp.allow_nesting` configuration key -->
   <!--
   This release adds the lxc.seccomp.allow_nesting api extension. If `lxc.seccomp.allow_nesting` is set to 1 then seccomp profiles will be stacked. This way nested containers can load their own seccomp policy on top of the policy that the outer container might have applied.
   -->
   このリリースで `lxc.seccomp.allow_nesting` API 拡張を追加しました。`lxc.seccomp.allow_nesting` が 1 に設定されている場合、seccomp プロファイルはスタックされます。このように、ネストされたコンテナが、祖先のコンテナが適用した可能性のあるポリシーに加えて、自身の seccomp ポリシーをロードできます。
 
-  #### ネットワーク: IPVLAN サポート <!-- Networking: Add IPVLAN support -->
+  ## ネットワーク: IPVLAN サポート <!-- Networking: Add IPVLAN support -->
   <!--
   LXC has gained support for IPVLAN. Here is an example how to setup the network:
   -->
@@ -54,7 +54,7 @@ content: |-
       lxc.net[i].link=eth0
       lxc.net[i].flags=up
 
-  #### ネットワーク: レイヤー 2（ARP/NDP）プロキシモードの追加 <!-- Networking: Add layer 2 (ARP/NDP) proxy mode -->
+  ## ネットワーク: レイヤー 2（ARP/NDP）プロキシモードの追加 <!-- Networking: Add layer 2 (ARP/NDP) proxy mode -->
   <!--
   LXC now supports layer 2 ARD/NDP proxy mode. This can be enabled by using:
   -->
@@ -62,13 +62,13 @@ content: |-
 
       lxc.net.[i].l2proxy = [0,1] (defaults to 0)
 
-  #### ネットワーク: ゲートウェイのデバイスルートモードの追加 <!-- Networking: Add gateway device route mode -->
+  ## ネットワーク: ゲートウェイのデバイスルートモードの追加 <!-- Networking: Add gateway device route mode -->
   <!--
   LXC now supports specifying `lxc.net.[i].ipv4.gateway` and/or `lxc.net.[i].ipv6.gateway` with a value of `dev`. This will cause LXC to set a device route as default gateway.
   -->
   LXC で `lxc.net.[i].ipv4.gateway` もしくは `lxc.net.[i].ipv6.gateway`、またはその両方に `dev` という値を設定できるようになりました。これにより、デフォルトゲートウェイとしてデバイスのルートが設定されます。
 
-  #### ネットワーク: スタティックルートのサポート <!-- Networking: Add support for static routes -->
+  ## ネットワーク: スタティックルートのサポート <!-- Networking: Add support for static routes -->
   <!--
   This release introudces two new configuration keys
   -->
@@ -82,7 +82,7 @@ content: |-
   -->
   これにより、ユーザーは veth インターフェースにスタティックルートを設定できます。
 
-  #### Networking: Add router veth mode
+  ## Networking: Add router veth mode
   <!--
   LXC has gained a new router mode for veth networking. This "router" mode will configure the host machine as a router for the container by adding static routes for the container's IPs on the host pointing to the container's host-side veth interface. It will also add static IP proxy entries of either the host's link interface IP or a statically set IP on the host-side veth interface to provide the container a gateway to the host.
   -->
@@ -118,13 +118,13 @@ content: |-
   * ローカルのルーティングテーブルにあるコンテナの IP アドレスを広域のネットワークに配布するために、ホスト上で BGP（や他のルーティングプロトコル）が実行されている設定に対して、レイヤー 3 のみのモードをサポートする <!-- Supports layer 3 only mode for setups where BGP (or other routing protocols) are running on the host to distribute container's IPs in the local routing table to the wider network. -->
   * コンテナは、既存の `l2proxy` と `link` 設定を使って、レイヤー 2 のローカルな LAN 上でアクセス可能な IP アドレスをオプションで持てる <!-- Containers can optionally have IPs accessible on local LAN at layer 2 using the existing  `l2proxy` and  `link`  settings. -->
 
-  #### pidfd: 新しい pidfd API の初期サポート <!-- Add initial support for the new pidfd api -->
+  ## pidfd: 新しい pidfd API の初期サポート <!-- Add initial support for the new pidfd api -->
   <!--
   Newer kernel versions allow interaction with processes through process file descriptors (pidfds). This eliminates various race conditions when e.g. sending signals or retrieving process information. This LXC version make use of the pidfd_send_signal() syscall and the CLONE_PIDFD flag with the clone() syscall.
   -->
   新しいバージョンのカーネルでは、プロセスファイルディスクリプタ（pidfds）を通してプロセスと対話できます。これにより、例えばシグナルの送信やプロセス情報の取得のような場合での様々な競合状態が解消されます。このバージョンの LXC では、`pidfd_send_signal()` システムコールと、`clone()` システムコールに対して `CLONE_PIDFD` フラグを使います。
 
-  #### ハードニング: さらにコンパイラベースのハードニングを追加 <!-- Hardening: Add more compiler based hardening -->
+  ## ハードニング: さらにコンパイラベースのハードニングを追加 <!-- Hardening: Add more compiler based hardening -->
   <!--
   Over the last few releases we enabled options compilers provide to harden C codebases. This release enables:
   -->
@@ -153,79 +153,79 @@ content: |-
       -pipe
       -fexceptions
 
-  #### ハードニング: すべてのスタック割当てを削除 <!-- Hardening: Remove all stack allocations -->
+  ## ハードニング: すべてのスタック割当てを削除 <!-- Hardening: Remove all stack allocations -->
   <!--
   Stack-based memory allocations (e.g. through `alloca()`) can cause quite severe memory bugs. LXC has therefore removed all stack-based memory allocations and will not allow new code to add any.
   -->
   スタックベースのメモリ割り当て（例えば `alloca()` を使った）は、非常に深刻なメモリのバグを引き起こす可能性があります。そのため、LXC ではすべてのスタックベースのメモリ割り当てを削除し、新しいコードでも追加は許可しません。
 
-  #### ハードニング: [LGTM](https://lgtm.com/projects/g/lxc/lxc/overview/) のサポート <!-- Hardening: Add support for [LGTM](https://lgtm.com/projects/g/lxc/lxc/overview/) -->
+  ## ハードニング: [LGTM](https://lgtm.com/projects/g/lxc/lxc/overview/) のサポート <!-- Hardening: Add support for [LGTM](https://lgtm.com/projects/g/lxc/lxc/overview/) -->
   <!--
   LXC has gained support for the LGTM code analysis tool. We're happy that LXC's code is currently ranked as A+.
   -->
   LGTM コード解析ツールのサポートを追加しました。LXC のコードは現在 A+ にランク付けされていてハッピーです。
 
-  #### ハードニング: [coccinelle](https://en.wikipedia.org/wiki/Coccinelle_(software)) のサポート <!-- Hardening: Add support for [coccinelle](https://en.wikipedia.org/wiki/Coccinelle_(software)) -->
+  ## ハードニング: [coccinelle](https://en.wikipedia.org/wiki/Coccinelle_(software)) のサポート <!-- Hardening: Add support for [coccinelle](https://en.wikipedia.org/wiki/Coccinelle_(software)) -->
   <!--
   LXC has gained support for the coccinelle code transformation tool. This allows us to automatically change code eliminating error caused by manually replacing e.g. deprecated functions such as `alloca()`.
   -->
   coccinelle コード解析（変形）ツールのサポートを追加しました。これによりコードを自動的に変更し、例えば `alloca()` のような使わない関数を手動で置き換える際のエラーを排除できます。
 
-  #### ハードニング: コンパイラベースのリソースクリーンアップ <!-- Hardening: Compiler based resource cleanup -->
+  ## ハードニング: コンパイラベースのリソースクリーンアップ <!-- Hardening: Compiler based resource cleanup -->
   <!--
   The codebase will be slowly switched over to make user of cleanup attributes supported by compilers such as `gcc` and `clang`.
   -->
   `gcc` や `clang` と言ったコンパイラがサポートするクリーンアップ属性を使用するために、コードベースはゆっくりと切り替わります。
 
-  #### ハードニング: コードベースから `fgets()` を削除 <!-- Hardening: Remove `fgets()` from the codebase -->
+  ## ハードニング: コードベースから `fgets()` を削除 <!-- Hardening: Remove `fgets()` from the codebase -->
   <!--
   To improve security all uses of `fgets()` have been removed from the codebase. Use of this function in new code is strongly discouraged.
   -->
   セキュリティの改善のため、`fgets()` をコードベースからすべて削除しました。今後、この関数を新たにコードで使用することは推奨しません。
 
-  #### ハードニング: Hardening: Expand close-on-exec usage
+  ## ハードニング: Hardening: Expand close-on-exec usage
   <!--
   All file descriptors that can be made close-on-exec are now close-on-exec.
   -->
   close-on-exec にできるファイルディスクリプタは、すべて close-on-exec になりました。
 
-  #### cgroup v2 で `/sys/kernel/cgroup/delegate` ファイルを使用 <!-- Use `/sys/kernel/cgroup/delegate` file for cgroup v2 -->
+  ## cgroup v2 で `/sys/kernel/cgroup/delegate` ファイルを使用 <!-- Use `/sys/kernel/cgroup/delegate` file for cgroup v2 -->
   <!--
   This  file  exports  a  list  of  the  cgroups  v2  files  (one  per line) that are delegatable (i.e., whose ownership  should  be  changed  to  the  user  ID  of  the delegatee). LXC will use this to determine how to correctly delegate cgroups.
   -->
   このファイルは委任可能な（つまり、所有権を委任者のユーザー ID に変更する必要がある） cgroup v2 ファイルの（1 行に 1 つの）リストを表示します。LXC はこのファイルを使い、正しく cgroup の委任を行う方法を決定します。
 
-  #### cgroup なしのレイアウトを扱う <!-- Handle layouts without cgroups -->
+  ## cgroup なしのレイアウトを扱う <!-- Handle layouts without cgroups -->
   <!--
   This lets LXC start containers on systems without writable cgroups.
   -->
   LXC は、書き込み可能な cgroup がない状態のシステムでコンテナを起動できます。
 
-  #### cpuset でオフラインの CPU を扱う <!-- Handle offline cpus in cpuset -->
+  ## cpuset でオフラインの CPU を扱う <!-- Handle offline cpus in cpuset -->
   <!--
   In addition to removing isolated cpus from a container's cgroup LXC will now also remove offline cpus from the container's cpuset.
   -->
   コンテナの cgroup から隔離する CPU を削除するのに加えて、LXC はコンテナの cpuset からオフラインの CPU も削除するようになりました。
 
-  #### コンテナごとに新しい boot id を生成 <!-- Generate new boot id for each container -->
+  ## コンテナごとに新しい boot id を生成 <!-- Generate new boot id for each container -->
   <!--
   LXC will now generate a new random boot id for each container and mount it to `/proc/sys/kernel/random/boot_id`. This will allow `systemd` to recognize the boots of each container.
   -->
   LXC は、コンテナごとに新たにランダムの boot id を生成し、それを `/proc/sys/kernel/random/boot_id` にマウントするようになりました。これで `systemd` が各コンテナのブートを認識できるようになりました。
 
-  #### 統一されたネットワーク作成 <!-- Unified network creation -->
+  ## 統一されたネットワーク作成 <!-- Unified network creation -->
   <!--
   LXC has a new unified way of creating networks for privileged and unprivileged containers greatly simplifying the code.
   -->
   LXC は特権コンテナであっても非特権コンテナであっても統一した方法でネットワークを作成し、コードを大幅に単純化します。
 
-  #### セキュリティ: [runC の CVE-2019-5736 に対する修正](https://nvd.nist.gov/vuln/detail/CVE-2019-5736) <!-- Security: [Fix for runC CVE-2019-5736](https://nvd.nist.gov/vuln/detail/CVE-2019-5736) -->
+  ## セキュリティ: [runC の CVE-2019-5736 に対する修正](https://nvd.nist.gov/vuln/detail/CVE-2019-5736) <!-- Security: [Fix for runC CVE-2019-5736](https://nvd.nist.gov/vuln/detail/CVE-2019-5736) -->
   <!--
   This release comes with  a fix for the privileged container breakout discovered earlier this year. As per our policy we don't consider privileged containers root safe and thus LXC as not received a CVE for this. However, we still provide a fix in this release. For more details see [this blog post](https://people.kernel.org/brauner/runtimes-and-the-curse-of-the-privileged-container).
   -->
   このリリースでは、今年初めに発見された特権コンテナの脱獄に対する修正が含まれています。我々のポリシーでは、特権コンテナは安全であるとは考えていません。それゆえ LXC はこの CVE を受けていないと考えています。しかし、このリリースでは修正が含まれています。詳細については [このブログポスト](https://people.kernel.org/brauner/runtimes-and-the-curse-of-the-privileged-container) をご覧ください。
 
-  ### バグ修正（翻訳なし） <!-- Bugfixes -->
+  # バグ修正（翻訳なし） <!-- Bugfixes -->
   - lxc-download: Pre-release bump of compat
   - seccomp: open memfd read-write
   - doc: Documents the lxc.net.[i].veth.mode option
@@ -437,11 +437,11 @@ content: |-
   - storage: do not destroy pre-existing rootfs
   - terminal: remove sigwinch command
 
-  ### サポートとアップグレード <!-- Support and upgrade -->
+  # サポートとアップグレード <!-- Support and upgrade -->
   <!--
   LXC 3.2 isn't a LTS release and so will only be supported until such time as LXC 3.3 is released. We recommend users that need a stronger support commitment to stay on one of our LTS releases.
   -->
   LXC 3.2 は LTS リリースではありません。したがって、LXC 3.3 がリリースされるまでのみサポートされます。強力なサポートのコミットが必要なユーザーは LTS リリースを使い続けることをおすすめします。
 
-  ### ダウンロード <!-- Downloads -->
+  # ダウンロード <!-- Downloads -->
    - LXC リリース tarball <!-- LXC release tarball -->: [lxc-3.2.1.tar.gz](https://linuxcontainers.org/downloads/lxc/lxc-3.2.1.tar.gz) (GPG: [lxc-3.2.1.tar.gz.asc](https://linuxcontainers.org/downloads/lxc/lxc-3.2.1.tar.gz.asc))

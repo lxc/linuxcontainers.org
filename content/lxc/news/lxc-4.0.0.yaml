@@ -2,14 +2,14 @@ title: LXC 4.0 LTS has been released
 date: 2020/03/25 13:03
 origin: https://discuss.linuxcontainers.org/t/lxc-4-0-lts-has-been-released/7182
 content: |-
-  ### Introduction
+  # Introduction
   The LXC team is pleased to announce the release of LXC 4.0.0!
 
   This is the result of two years of work since the LXC 3.0.0 release and is the fourth LTS release for the LXC project. This release will be supported until June 2025.
 
-  ### Major changes
+  # Major changes
 
-  #### cgroups: Full cgroup2 support
+  ## cgroups: Full cgroup2 support
   LXC 4.0 now fully supports the unified cgroup hierarchy. For this to work the whole cgroup driver had to be rewritten. A consequence of this work is that the cgroup layout for LXC containers had to be changed. Older versions of LXC used the layout:
 
       /sys/fs/cgroup/<controller>/<container-name>/
@@ -55,49 +55,49 @@ content: |-
 
   The restrictions enforced by the unified cgroup hierarchy also mean, that in order to start fully unprivileged containers cooperation is needed on distributions that make use of an init system which manages cgroups. This applies to all distributions that use systemd as their init system. When a container is started from the shell via `lxc-start` or other means one either needs to be root to allow LXC to escape to the root cgroup or the init system needs to be instructed to delegate an empty cgroup. In such scenarios it is wise to set the configuration key `lxc.cgroup.relative` to `1` to prevent LXC from escaping to the root cgroup.
 
-  #### cgroups: Freezer support in CGroup2
+  ## cgroups: Freezer support in CGroup2
   As part of the cgroup2 support work for LXC 4.0 we also added support for cgroup2's implementation of the freezer controller which allows to poll until the cgroup is frozen or unfrozen making freezing and unfreezing container's way more reliable than before.
 
-  #### cgroups: eBPF device controller support in CGroup2
+  ## cgroups: eBPF device controller support in CGroup2
   LXC 4.0 can now make proper use of the cgroup2 device controller. It will automatically create, load, and attach a eBPF program to the container's cgroup and supports dynamic additional and removal of rules. The configuration format is the same as for the legacy cgroup controller. Only the `lxc.cgroup2.devices.` prefix instead of the legacy `lxc.cgroup.devices` prefix needs to be used. LXC continues to support both black- and whitelists.
 
-  #### AppArmor: Deny access to `/proc/acpi/**`
+  ## AppArmor: Deny access to `/proc/acpi/**`
   The default AppArmor profile now denies access to `/proc/acpi/` improving safety.
 
-  #### config: Add `lxc.autodev.tmpfs.size` configuration key
+  ## config: Add `lxc.autodev.tmpfs.size` configuration key
   LXC supports creating a usable minimal `/dev` directory for the container by setting `lxc.autodev = 1` in the container's config file. To do this LXC sets up a `tmpfs` mount on `/dev`. This `tmpfs` mount could not be restricted in prior releases. Now it is possible to set a limit on the size of the `tmpfs` mount by setting `lxc.autodev.tmpfs.size` to the number of bytes that the `tmpfs` should be restricted to use.
 
-  #### config: Add `lxc.selinux.context.keyring` key
+  ## config: Add `lxc.selinux.context.keyring` key
   This allows to specify the `selinux` context to be used for the keyring the container uses.
 
-  #### config: Add `lxc.keyring.session`
+  ## config: Add `lxc.keyring.session`
   Setting this to `1` (default) will cause LXC to create a new session keyring.
 
-  #### file utils: Add `fopen_cached()` and `fdopen_cached`
+  ## file utils: Add `fopen_cached()` and `fdopen_cached`
   These helpers first read a whole file and then make it available as a stream to be read via regular file-based libc apis. This makes LXC's handling of various files more robust where the underlying file can change while it is read.
 
-  #### api: Add new `init_pidfd()` member
+  ## api: Add new `init_pidfd()` member
   LXC 4.0 fully supports the new pidfd kernel api the LXC team has merged in the upstream Linux kernel. The `pidfd` of the container's init process can be requested via `c->init_pidfd(c)`.
 
-  #### memory utils: Add new cleanup api
+  ## memory utils: Add new cleanup api
   LXC 4.0 expands the usage of the compiler's cleanup attribute by introducing new internal apis to define and call cleanup macros for complex resource allocations. We have had extremely positive results decreasing bugs around file descriptor and memory leaks significantly by switching to this new way of cleaning up resources.
 
-  #### lxc-usernsexec: Make it easy to map own uid
+  ## lxc-usernsexec: Make it easy to map own uid
   The `lxc-usernsexec` binary now finds a default mapping as specified in `/etc/subuid` and `/etc/subgid` and writes it via `newuidmap` and `newgidmap`.
 
-  #### seccomp: Add s390 support
+  ## seccomp: Add s390 support
   LXC 4.0's seccomp implementation now supports s390 as architecture.
 
-  #### syscalls: Improve manual syscall implementations
+  ## syscalls: Improve manual syscall implementations
   Whenever a given syscall is not supported or exposed by the underlying `C` library of the system LXC will define syscall stubs for important syscalls or new features it deems extremely valuable. This used to be done by checking for `__NR_<syscall-name>` being defined. But `__NR_<syscall-name>` being defined depended on the correct headers for the currently running kernel LXC was compiled on being installed and would be problematic whenever LXC was compiled on a system running an older kernel but used or deployed on systems that use a new kernel. In such scenarios LXC could not make use of new kernel features even though it should. We now introduce definitions for `__NR_<syscall-name>` whenever the system does not define it already and it is an architecture we support (which is basically any architecture). This way we better handle kernel <-> header version mismatches and compilation <-> deployment kernel mismatches.
 
-  #### network: Improved network device creation and removal
+  ## network: Improved network device creation and removal
   We have reworked how network devices are created, tracked, moved between network namespaces, and are removed making low-level network management way more reliable.
 
-  #### network: Allow moving wireless devices
+  ## network: Allow moving wireless devices
   LXC allowed to move wireless network devices (`nl80211`) into containers. This was broken for a while. With 4.0 the ability to move wireless network devices is restored and improved.
 
-  ### Complete changelog
+  # Complete changelog
   Here is a complete list of all changes in this release:
 
   [details="Full commit list"]
@@ -397,15 +397,15 @@ content: |-
   - tree-wide: fix wrong copy-paste for licenses
   [/details]
 
-  ### Support and upgrade
+  # Support and upgrade
   LXC 4.0.0 will be supported until June 2025 and our current LTS release, LXC 3.0 will now switch to a slower maintenance pace, only getting critical bugfixes and security updates.
 
   We strongly recommend all LXC users to plan an upgrade to the 4.0 branch.
 
-  ### Downloads
+  # Downloads
 
    - Main release tarball: [lxc-4.0.0.tar.gz](https://linuxcontainers.org/downloads/lxc/lxc-4.0.0.tar.gz)
    - GPG signature: [lxc-4.0.0.tar.gz.asc](https://linuxcontainers.org/downloads/lxc/lxc-4.0.0.tar.gz.asc)
 
-  ### Contributors
+  # Contributors
   The LXC 4.0.0 release was brought to you by a total of 30 contributors.

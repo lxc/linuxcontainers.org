@@ -2,12 +2,12 @@ title: LXC 5.0.1 LTS has been released
 date: 2022/07/28 22:07
 origin: https://discuss.linuxcontainers.org/t/lxc-5-0-1-lts-has-been-released/14724
 content: |-
-  ### Introduction
+  # Introduction
   The LXC team is pleased to announce the release of LXC 5.0.1!
 
   This is the first bugfix release for LXC 5.0 which is supported until June 2027.
 
-  ### Bugfixes
+  # Bugfixes
   As usual this bugfix releases focus on stability and hardening.
   Some of the highlights for this release are:
 
@@ -36,11 +36,11 @@ content: |-
    - README: update security mails
   [/details]
 
-  ### Support and upgrade
+  # Support and upgrade
   The LXC 5.0 branch is supported until June 2027.
   Only bugfixes and securitiy issues get included into the stable bugfix releases, so it's always safe and recommended to keep up and run the latest bugfix release.
 
-  ### Downloads
+  # Downloads
 
    - Main release tarball: [lxc-5.0.1.tar.gz](https://linuxcontainers.org/downloads/lxc/lxc-5.0.1.tar.gz)
    - GPG signature: [lxc-5.0.1.tar.gz.asc](https://linuxcontainers.org/downloads/lxc/lxc-5.0.1.tar.gz.asc)

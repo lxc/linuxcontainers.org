@@ -2,12 +2,12 @@ title: LXCFS 4.0.8 LTS has been released
 date: 2021/05/06 17:05
 origin: https://discuss.linuxcontainers.org/t/lxcfs-4-0-8-lts-has-been-released/10998
 content: |-
-  ### Introduction
+  # Introduction
   The LXCFS team is pleased to announce the release of LXCFS 4.0.8!
 
   This is the eight bugfix release for LXCFS 4.0 which is supported until June 2025.
 
-  ### Bugfixes
+  # Bugfixes
   Some of the highlights for this release are:
 
    - Correct file size for proc files
@@ -20,11 +20,11 @@ content: |-
    - Switch to Github Actions
   [/details]
 
-  ### Support and upgrade
+  # Support and upgrade
   The LXCFS 4.0 branch is supported until June 2025.
   Only bugfixes and securitiy issues get included into the stable bugfix releases, so it's always safe and recommended to keep up and run the latest bugfix release.
 
-  ### Downloads
+  # Downloads
 
    - Main release tarball: [lxcfs-4.0.8.tar.gz](https://linuxcontainers.org/downloads/lxcfs/lxcfs-4.0.8.tar.gz)
    - GPG signature: [lxcfs-4.0.8.tar.gz.asc](https://linuxcontainers.org/downloads/lxcfs/lxcfs-4.0.8.tar.gz.asc)

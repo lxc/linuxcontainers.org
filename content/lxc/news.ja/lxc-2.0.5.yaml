@@ -75,7 +75,7 @@ content: |-
    * 開発リリースであることが検出できるように LXC\_DEVEL を定義しました <!-- Define LXC\_DEVEL to detect development releases -->
    * tools: lxc-checkconfig の devpts のチェックを条件付きとしました (訳注: kernel 4.7 で DEVPTS_MULTIPLE_INSTANCES が削除されたので < 4.7 の時のみチェックするようになった)<!-- lxc-checkconfig conditionalize devpts check -->
   
-  ### ダウンロード <!-- Downloads -->
+  # ダウンロード <!-- Downloads -->
   <!--
   The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
   will very soon ship a packaged version of LXC 2.0.5.

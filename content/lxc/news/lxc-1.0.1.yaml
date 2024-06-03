@@ -3,7 +3,7 @@ date: 2014/03/06 00:00
 content: |-
   This is the first bugfix release for the LXC 1.0 series.
   
-  ### Changes
+  # Changes
   
   Core:
   
@@ -39,7 +39,7 @@ content: |-
    * tests: Fix potential hang in lxc-test-concurent
    * upstart: Don't forward requests for LXC\_DOMAIN (dnsmasq)
   
-  ### Downloads
+  # Downloads
   The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
   will very soon ship a packaged version of LXC 1.0.1.
   

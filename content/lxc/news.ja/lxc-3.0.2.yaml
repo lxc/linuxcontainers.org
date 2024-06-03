@@ -2,7 +2,7 @@ title: LXC 3.0.2 リリースのお知らせ
 date: 2018/08/21 00:00
 origin: https://discuss.linuxcontainers.org/t/lxc-3-0-2-has-been-released/2504
 content: |-
-  ### はじめに <!-- Introduction -->
+  # はじめに <!-- Introduction -->
   <!--
   The LXC team is pleased to announce the release of LXC 3.0.2!
   -->
@@ -13,7 +13,7 @@ content: |-
   -->
   Stable に対するバグフィックスのためのリリースですので、大きな変更はありません。バグフィックスと細かな使い勝手の改良にフォーカスしています。
   
-  #### ハイライト <!-- Highlights -->
+  ## ハイライト <!-- Highlights -->
   
    - ユーザ名前空間内ではデバイスを作成できるがオープンできないという Linux `4.18` での変更に合わせました <!-- Adapt to changes in Linux `4.18` which allows to create but not to open devices nodes in user namespaces -->
    - コンテナの起動時にネットワーク名前空間の ID を割り当てるようにしました <!-- Allocate network namespace id on container startup -->
@@ -25,7 +25,7 @@ content: |-
      これによりコードベースのサイズが大幅に減りました <!-- This significantly reduced the size of the codebase. -->
    - コード全体でコーディングスタイルの修正を行いました <!-- Tree-wide coding style fixes -->
   
-  ##### CVE-2018-6556
+  ### CVE-2018-6556
   
   <!--
   This release fixes [CVE-2018-6556](http://seclists.org/oss-sec/2018/q3/81) via commit [CVE 2018-6556: verify netns fd in lxc-user-nic](https://github.com/lxc/lxc/commit/c1cf54ebf251fdbad1e971679614e81649f1c032): `lxc-user-nic` when asked to delete a network interface will unconditionally open a user provided path. 
@@ -42,7 +42,7 @@ content: |-
   -->
   影響を受ける LXC のリリースは、2.0.9 を含む 2.0 以上のバージョン、3.0.2 より前の、3.0.0 を含む 3.0 以上のバージョンです。
   
-  #### バグ修正 <!-- Bugfixes -->(LXC)
+  ## バグ修正 <!-- Bugfixes -->(LXC)
   
    - Coverity が見つけた一連のバグを修正しました <!-- fixed a range of bugs found by Coverity -->
    - lxc-usernsexec: クリーンアップとバグフィックスを行いました <!-- cleanup and bugfixes -->
@@ -93,7 +93,7 @@ content: |-
    - conf: 必要なときだけ `newuidmap` と `newgidmap` を使うようになりました <!-- only use newuidmap and newgidmap when necessary -->
    - autotools: クロスコンパイル時に TLS をサポートするようになりました <!-- support tls in cross-compile -->
   
-  #### バグ修正 <!-- Bugfixes -->(LXC templates)
+  ## バグ修正 <!-- Bugfixes -->(LXC templates)
   
    - fedora: Fedora 28 をサポートを追加しました <!-- support Fedora 28 -->
    - templates: opensuse: openSUSE Leap 15 のサポートを追加しました <!-- Add support for openSUSE Leap 15 -->
@@ -101,18 +101,18 @@ content: |-
    - templates: lxc-opensuse.in: キャッシュが完全に存在していることを保証するようにしました <!-- Ensure cache is fully populated -->
    - templates: lxc-opensuse.in: openSUSE Leap 15 のキャッシュ URL を修正しました <!-- Fix openSUSE Leap 15 cache url -->
   
-  #### バグ修正 (python3 バインディング)<!-- Bugfixes (python3 binding) -->
+  ## バグ修正 (python3 バインディング)<!-- Bugfixes (python3 binding) -->
   
    - README.md 内の Typo を修正しました <!-- Fix typo in README.md -->
   
-  ### サポートとアップグレード <!-- Support and upgrade -->
+  # サポートとアップグレード <!-- Support and upgrade -->
   <!--
   LXC 3.0.2 is supported until June 2023 and is our current LTS release, users are encouraged to update to the latest bugfix releases as they're made available.
   -->
   LXC 3.0.2 は 2023 年 6 月までサポートされる最新の LTS リリースです。
   利用可能になった最新のバグ修正リリースに更新することをお勧めします。
   
-  ### ダウンロード <!-- Downloads -->
+  # ダウンロード <!-- Downloads -->
    - LXC リリース tarball <!-- Main release tarball -->: [lxc-3.0.2.tar.gz](https://linuxcontainers.org/downloads/lxc/lxc-3.0.2.tar.gz) (GPG: [lxc-3.0.2.tar.gz.asc](https://linuxcontainers.org/downloads/lxc/lxc-3.0.2.tar.gz.asc))
    - LXC テンプレート tarball <!-- LXC templates tarball -->: [lxc-templates-3.0.2.tar.gz](https://linuxcontainers.org/downloads/lxc/lxc-templates-3.0.2.tar.gz) (GPG: [lxc-templates-3.0.2.tar.gz.asc](https://linuxcontainers.org/downloads/lxc/lxc-templates-3.0.2.tar.gz.asc))
    - LXC python3 バインディング tarball <!-- LXC python3 bindings tarball -->: [python3-lxc-3.0.2.tar.gz](https://linuxcontainers.org/downloads/lxc/python3-lxc-3.0.2.tar.gz) (GPG: [python3-lxc-3.0.2.tar.gz.asc](https://linuxcontainers.org/downloads/lxc/python3-lxc-3.0.2.tar.gz.asc))

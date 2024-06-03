@@ -11,5 +11,5 @@ content: |-
   Note that as the first release of LXCFS, things can still be very rough and we would advice
   against using this in production.
   
-  ### Downloads
+  # Downloads
   The release tarballs can be found on our [download page](/lxcfs/downloads/).

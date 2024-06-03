@@ -116,7 +116,7 @@ content: |-
    * tests: remove overflow tests
    * attach: do not send procfd to attached process
   
-  ### Downloads
+  # Downloads
   The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
   will very soon ship a packaged version of LXC 2.0.6.
   

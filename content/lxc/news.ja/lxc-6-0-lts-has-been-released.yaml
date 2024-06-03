@@ -2,7 +2,7 @@ title: LXC 6.0 LTS リリースのお知らせ
 date: 2024/04/03 20:04
 origin: https://discuss.linuxcontainers.org/t/lxc-6-0-lts-has-been-released/19567
 content: |-
-  ### はじめに <!-- Introduction -->
+  # はじめに <!-- Introduction -->
   <!--
   The LXC team is pleased to announce the release of LXC 6.0 LTS!
   -->
@@ -13,8 +13,8 @@ content: |-
   -->
   これは LXC 5.0 のリリース以来 2 年の作業の成果です。そして、LXC プロジェクトの 6 回目の LTS リリースです。このリリースは 2029 年 6 月までサポートされます。
 
-  ### ハイライト <!-- Highlights -->
-  #### 新しいマルチコールバイナリー <!-- New multi-call binary -->
+  # ハイライト <!-- Highlights -->
+  ## 新しいマルチコールバイナリー <!-- New multi-call binary -->
   <!--
   A new `tools-multicall=true` configuration option can be used to produce a single `lxc` binary which can then have all other `lxc-XYZ` commands be symlinked to.
   -->
@@ -25,7 +25,7 @@ content: |-
   -->
   これにより、大幅にディスクスペースを削減でき、特に組み込みプラットフォームで有用です。
 
-  #### ライブラリーへの `set_timeout` 関数の追加 <!-- Add a `set_timeout` function to the library -->
+  ## ライブラリーへの `set_timeout` 関数の追加 <!-- Add a `set_timeout` function to the library -->
   <!--
   A new `set_timeout` function is available on the main `lxc_container` struct and allow for setting a global timeout for interactions with the LXC monitor.
   -->
@@ -41,19 +41,19 @@ content: |-
   -->
   この新しいシンボルをライブラリーに追加した結果、liblxc のシンボルバージョンが 1.8.0 に上がりました。
 
-  #### LXC ブリッジで IPv6 が有効に <!-- LXC bridge now has IPV6 enabled -->
+  ## LXC ブリッジで IPv6 が有効に <!-- LXC bridge now has IPV6 enabled -->
   <!--
   The default `lxcbr0` bridge now comes with IPv6 enabled by default, using an IPv6 ULA subnet.
   -->
   デフォルトの `lxcbr0` ブリッジは、IPv6 ULA サブネットを使い、デフォルトで IPv6 が有効になりました。
 
-  #### `lxc-usernsexec` の uid/gid 選択のサポート <!-- Support for uid/gid selection in `lxc-usernsexec` -->
+  ## `lxc-usernsexec` の uid/gid 選択のサポート <!-- Support for uid/gid selection in `lxc-usernsexec` -->
   <!--
   The `lxc-usernsexec` tool now has both `-u` and `-g` options to control what resulting UID and GID (respectively) the user wishes to use (defaulting to 0/0).
   -->
   `lxc-usernsexec` ツールに、ユーザーが使いたい UID と GID それぞれを制御するための `-u` と `-g` オプションが追加されました（デフォルトは 0/0 です）。
 
-  #### `lxc-checkconfig` の改良 <!-- Improvements to `lxc-checkconfig` -->
+  ## `lxc-checkconfig` の改良 <!-- Improvements to `lxc-checkconfig` -->
   <!--
   `lxc-checkconfig` now only shows the version if `lxc-start` is present (rather than failing).
   Additionally, it's seen a number of other cosmetic improvements as well as now listing the maximum number of allowed namespaces for every namespace type.
@@ -61,13 +61,13 @@ content: |-
   `lxc-checkconfig` は、（失敗するのではなく）`lxc-start` が存在するときだけ、バージョンを表示するようになりました。
   さらに、各 Namespace タイプごとに使える名前空間の最大数をリストするだけでなく、その他の見た目の改良も多数行われています。
 
-  #### squashfs OCI イメージのサポート <!-- Support for squashfs OCI images -->
+  ## squashfs OCI イメージのサポート <!-- Support for squashfs OCI images -->
   <!--
   The built-in `oci` container template can now handle `squashfs` compressed OCI images through the use of `atomfs`.
   -->
   ビルトインの `oci` コンテナテンプレートは、`atomfs` を使用し、`squashfs` 圧縮された OCI イメージを処理できるようになりました。
 
-  #### systemd の dbus から dbus-1 への変更 <!-- Switched from systemd's dbus to dbus-1 -->
+  ## systemd の dbus から dbus-1 への変更 <!-- Switched from systemd's dbus to dbus-1 -->
   <!--
   LXC now uses `libdbus-1` for DBus interactions with systemd rather than using `libsystemd`.
   The reason for this change is that `libdbus-1` is readily available for static builds.
@@ -75,7 +75,7 @@ content: |-
   LXC は systemd との DBus でのやりとりに `libsystemd` ではなく、`libdbus-1` を使うようになりました。
   この理由は、`libdbus-1` は静的ビルドですぐに使えるためです。
 
-  #### Upstart サポートの削除 <!-- Removed Upstart support -->
+  ## Upstart サポートの削除 <!-- Removed Upstart support -->
   <!--
   Support for the `Upstart` init system has finally been removed from LXC.
   -->
@@ -86,7 +86,7 @@ content: |-
   -->
   この削除は、現段階では誰にも影響しないはずです。そして、リポジトリーからいくつかのロジックと構成ファイルをクリーンアップできます。
 
-  ### すべての変更点（翻訳なし） <!-- Full changelog -->
+  # すべての変更点（翻訳なし） <!-- Full changelog -->
 
   [details="すべてのChangelogを見る"]
    - Read list until process exits
@@ -296,7 +296,7 @@ content: |-
    - lxc.spec: Align SPDX license id
   [/details]
 
-  ### サポートとアップグレード <!-- Support and upgrade -->
+  # サポートとアップグレード <!-- Support and upgrade -->
   <!--
   LXC 6.0 will be supported until June 2029 and our current LTS release, LXC 5.0 will now switch to a slower maintenance pace, only getting critical bugfixes and security updates.
   -->
@@ -307,7 +307,7 @@ content: |-
   -->
   LXC のユーザーはすべて、6.0 ブランチをアップグレードを計画することを強くおすすめします。
 
-  ### 今後のリリースについて <!-- Future release cadence -->
+  # 今後のリリースについて <!-- Future release cadence -->
   <!--
   To make new LXC features more readily available to users, we have decided to start producing non-LTS releases again. The planned interval is every 6 months with LXC 6.1 planned for October.
   -->
@@ -323,12 +323,12 @@ content: |-
   -->
   本番環境のユーザーは LTS リリースを利用し続けたいと思うでしょう。
 
-  ### ダウンロード <!-- Downloads -->
+  # ダウンロード <!-- Downloads -->
 
    - リリース tarball <!-- Main release tarball -->: [lxc-6.0.0.tar.gz](https://linuxcontainers.org/downloads/lxc/lxc-6.0.0.tar.gz)
    - GPG シグネチャー <!-- GPG signature -->: [lxc-6.0.0.tar.gz.asc](https://linuxcontainers.org/downloads/lxc/lxc-6.0.0.tar.gz.asc)
 
-  ### コントリビューター <!-- Contributors -->
+  # コントリビューター <!-- Contributors -->
   <!--
   The LXC 6.0 release was brought to you by a total of 56 contributors.
   -->

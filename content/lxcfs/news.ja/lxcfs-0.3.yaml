@@ -7,7 +7,7 @@ content: |-
   -->
   このリリースは LXC 設定ファイルのインストールパスに関する修正をのぞいて 0.2 と同じです。
   
-  ### ダウンロード <!-- Downloads -->
+  # ダウンロード <!-- Downloads -->
   <!--
   The release tarballs can be found on our [download page](/lxcfs/downloads/).
   -->

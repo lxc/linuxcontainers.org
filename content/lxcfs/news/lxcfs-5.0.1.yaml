@@ -2,12 +2,12 @@ title: LXCFS 5.0.1 LTS has been released
 date: 2022/07/26 23:07
 origin: https://discuss.linuxcontainers.org/t/lxcfs-5-0-1-lts-has-been-released/14709
 content: |-
-  ### Introduction
+  # Introduction
   The LXCFS team is pleased to announce the release of LXCFS 5.0.1!
 
   This is the first bugfix release for LXCFS 5.0 which is supported until June 2027.
 
-  ### Bugfixes
+  # Bugfixes
   Some of the highlights for this release are:
 
    - Various fixes related to the meson migration
@@ -52,11 +52,11 @@ content: |-
    - github: Validate target branch
   [/details]
 
-  ### Support and upgrade
+  # Support and upgrade
   The LXCFS 5.0 branch is supported until June 2027.
   Only bugfixes and securitiy issues get included into the stable bugfix releases, so it's always safe and recommended to keep up and run the latest bugfix release.
 
-  ### Downloads
+  # Downloads
 
    - Main release tarball: [lxcfs-5.0.1.tar.gz](https://linuxcontainers.org/downloads/lxcfs/lxcfs-5.0.1.tar.gz)
    - GPG signature: [lxcfs-5.0.1.tar.gz.asc](https://linuxcontainers.org/downloads/lxcfs/lxcfs-5.0.1.tar.gz.asc)

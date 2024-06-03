@@ -10,6 +10,6 @@ content: |-
    * Turn off threading globally because of problems with libdbus.
    * Tweak lxcfs mounts to better accommodate systemd.
   
-  ### Downloads
+  # Downloads
   The release tarballs can be found on our [download page](/lxcfs/downloads/).
   

@@ -60,7 +60,7 @@ content: |-
    * utils: 'stdoutfd' を代入していない 'ts-\>stdoutfd' のバグを修正しました <!-- Fix the bug of 'ts-\>stdoutfd' did not fill with parameters 'stdoutfd' -->
    * utils: lxc\_popen() 内の不要な割り当てを削除しました <!-- Remove dead assignments in lxc\_popen() -->
   
-  ### ダウンロード <!-- Downloads -->
+  # ダウンロード <!-- Downloads -->
   <!--
   The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
   will very soon ship a packaged version of LXC 1.0.11.

@@ -2,12 +2,12 @@ title: LXC 4.0.3 LTS has been released
 date: 2020/06/29 14:06
 origin: https://discuss.linuxcontainers.org/t/lxc-4-0-3-lts-has-been-released/8285
 content: |-
-  ### Introduction
+  # Introduction
   The LXC team is pleased to announce the release of LXC 4.0.3!
 
   This is the third bugfix release for LXC 4.0 which is supported until June 2025.
 
-  ### Bugfixes
+  # Bugfixes
   Some of the highlights for this release are:
 
    - Improvement to cgroupv1/cgroupv2 handling
@@ -87,11 +87,11 @@ content: |-
    - commands: don't flood logs
   [/details]
 
-  ### Support and upgrade
+  # Support and upgrade
   The LXC 4.0 branch is supported until June 2025.
   Only bugfixes and securitiy issues get included into the stable bugfix releases, so it's always safe and recommended to keep up and run the latest bugfix release.
 
-  ### Downloads
+  # Downloads
 
    - Main release tarball: [lxc-4.0.3.tar.gz](https://linuxcontainers.org/downloads/lxc/lxc-4.0.3.tar.gz)
    - GPG signature: [lxc-4.0.3.tar.gz.asc](https://linuxcontainers.org/downloads/lxc/lxc-4.0.3.tar.gz.asc)

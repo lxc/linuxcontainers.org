@@ -3,7 +3,7 @@ date: 2015/08/14 00:00
 content: |-
   This is the third bugfix release for LXC 1.1.
   
-  ### Changes
+  # Changes
   
   Important:
   
@@ -69,7 +69,7 @@ content: |-
   
   Those stable fixes were brought to you by 31 individual contributors.
   
-  ### Downloads
+  # Downloads
   The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
   will very soon ship a packaged version of LXC 1.1.3.
   

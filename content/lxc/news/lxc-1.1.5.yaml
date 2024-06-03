@@ -29,7 +29,7 @@ content: |-
    * ubuntu-cloud: Use tar.xz tarballs by default (as tar.gz will soon be discontinued)
    * ubuntu-cloud: Always exit 1 on error
   
-  ### Downloads
+  # Downloads
   The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
   will very soon ship a packaged version of LXC 1.1.5.
   

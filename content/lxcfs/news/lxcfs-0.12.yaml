@@ -12,6 +12,6 @@ content: |-
    * Set FUSE attr caching to half a second, and ship lxc stop hook to wait half
      a second before reboot.
   
-  ### Downloads
+  # Downloads
   The release tarballs can be found on our [download page](/lxcfs/downloads/).
   

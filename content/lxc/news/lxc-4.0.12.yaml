@@ -2,12 +2,12 @@ title: LXC 4.0.12 has been released
 date: 2022/02/02 23:02
 origin: https://discuss.linuxcontainers.org/t/lxc-4-0-12-has-been-released/13288
 content: |-
-  ### Introduction
+  # Introduction
   The LXC team is pleased to announce the release of LXC 4.0.12!
 
   This is the twelfth bugfix release for LXC 4.0 which is supported until June 2025.
 
-  ### Bugfixes
+  # Bugfixes
   As usual this bugfix releases focus on stability and hardening. Some of the highlights for this release are:
 
    - Fixed CRIU restoration of containers with pre-created veth interfaces
@@ -81,11 +81,11 @@ content: |-
    - lxccontainer: allow xdev when creating the container dir
   [/details]
 
-  ### Support and upgrade
+  # Support and upgrade
   The LXC 4.0 branch is supported until June 2025.
   Only bugfixes and securitiy issues get included into the stable bugfix releases, so it's always safe and recommended to keep up and run the latest bugfix release.
 
-  ### Downloads
+  # Downloads
 
    - Main release tarball: [lxc-4.0.12.tar.gz](https://linuxcontainers.org/downloads/lxc/lxc-4.0.12.tar.gz)
    - GPG signature: [lxc-4.0.12.tar.gz.asc](https://linuxcontainers.org/downloads/lxc/lxc-4.0.12.tar.gz.asc)

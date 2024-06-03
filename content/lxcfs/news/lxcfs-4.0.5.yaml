@@ -2,12 +2,12 @@ title: LXCFS 4.0.5 LTS has been released
 date: 2020/08/03 22:08
 origin: https://discuss.linuxcontainers.org/t/lxcfs-4-0-5-lts-has-been-released/8602
 content: |-
-  ### Introduction
+  # Introduction
   The LXCFS team is pleased to announce the release of LXCFS 4.0.5!
 
   This is the fifth bugfix release for LXCFS 4.0 which is supported until June 2025.
 
-  ### Bugfixes
+  # Bugfixes
   Some of the highlights for this release are:
 
    - Fix bad swap value on hosts without memsw enabled
@@ -27,11 +27,11 @@ content: |-
    - fix type mismatch
   [/details]
 
-  ### Support and upgrade
+  # Support and upgrade
   The LXCFS 4.0 branch is supported until June 2025.
   Only bugfixes and securitiy issues get included into the stable bugfix releases, so it's always safe and recommended to keep up and run the latest bugfix release.
 
-  ### Downloads
+  # Downloads
 
    - Main release tarball: [lxcfs-4.0.5.tar.gz](https://linuxcontainers.org/downloads/lxcfs/lxcfs-4.0.5.tar.gz)
    - GPG signature: [lxcfs-4.0.5.tar.gz.asc](https://linuxcontainers.org/downloads/lxcfs/lxcfs-4.0.5.tar.gz.asc)

@@ -43,7 +43,7 @@ content: |-
    * tests: Add unit tests for lxc\_string\_in\_array()
    * tests: Add unit tests for lxc\_string\_replace()
   
-  ### Downloads
+  # Downloads
   The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
   will very soon ship a packaged version of LXC 2.0.4.
   

@@ -5,7 +5,7 @@ content: |-
   <!-- This is the seventh bugfix release for the LXC 1.0 series. -->
   このリリースは LXC 1.0 シリーズの 7 回目のバグフィックスとなるリリースです。
   
-  ### 変更点 <!-- Changes -->
+  # 変更点 <!-- Changes -->
   
   コア <!-- Core -->:
   
@@ -96,7 +96,7 @@ content: |-
   -->
   これらの stable の修正は 27 名のコントリビュータによってなされました。
   
-  ### ダウンロード <!-- Downloads -->
+  # ダウンロード <!-- Downloads -->
   <!--
   The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
   will very soon ship a packaged version of LXC 1.0.7.

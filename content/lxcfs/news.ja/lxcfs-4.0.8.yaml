@@ -2,7 +2,7 @@ title: LXCFS 4.0.8 LTS リリースのお知らせ <!-- LXCFS 4.0.8 LTS has been
 date: 2021/05/06 17:05
 origin: https://discuss.linuxcontainers.org/t/lxcfs-4-0-8-lts-has-been-released/10998
 content: |-
-  ### お知らせ <!-- Introduction -->
+  # お知らせ <!-- Introduction -->
   <!--
   The LXCFS team is pleased to announce the release of LXCFS 4.0.8!
   -->
@@ -13,7 +13,7 @@ content: |-
   -->
   これは 2025 年 6 月までサポートされる LXCFS 4.0 の 8 回目のバグフィックスリリースです。
 
-  ### バグ修正 <!-- Bugfixes -->
+  # バグ修正 <!-- Bugfixes -->
   <!--
   Some of the highlights for this release are:
   -->
@@ -30,7 +30,7 @@ content: |-
    - 現在のシステムのファイルサイズからファイルサイズを決定するようにしました <!-- Determine the file size from the current system file size -->
    - Github Actions に変更しました <!-- Switch to Github Actions -->
 
-  ### Support and upgrade
+  # Support and upgrade
   <!--
   The LXCFS 4.0 branch is supported until June 2025.
   Only bugfixes and securitiy issues get included into the stable bugfix releases, so it's always safe and recommended to keep up and run the latest bugfix release.
@@ -38,7 +38,7 @@ content: |-
   LXCFS 4.0 ブランチは 2025 年 6 月までサポートされます。
   stable のバグフィックスリリースでは、バグとセキュリティに関する問題に対する修正のみが行われますので、常に安全です。最新のバグフィックスリリースの状態を維持し、実行することをおすすめします。
 
-  ### ダウンロード <!-- Downloads -->
+  # ダウンロード <!-- Downloads -->
 
    - リリース tarball <!-- Main release tarball -->: [lxcfs-4.0.8.tar.gz](https://linuxcontainers.org/downloads/lxcfs/lxcfs-4.0.8.tar.gz)
    - GPG シグネチャー <!-- GPG signature -->: [lxcfs-4.0.8.tar.gz.asc](https://linuxcontainers.org/downloads/lxcfs/lxcfs-4.0.8.tar.gz.asc)

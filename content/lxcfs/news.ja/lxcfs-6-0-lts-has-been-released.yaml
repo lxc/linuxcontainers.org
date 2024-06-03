@@ -2,7 +2,7 @@ title: LXCFS 6.0 LTS リリースのお知らせ
 date: 2024/04/01 04:04
 origin: https://discuss.linuxcontainers.org/t/lxcfs-6-0-lts-has-been-released/19546
 content: |-
-  ### はじめに <!-- Introduction -->
+  # はじめに <!-- Introduction -->
   <!--
   The LXCFS team is pleased to announce the release of LXCFS 6.0 LTS!
   -->
@@ -13,8 +13,8 @@ content: |-
   -->
   このリリースは、LXCFS 5.0 リリース以来 2 年の取り組みの結果で、LXCFS プロジェクトの 5 つ目の LTS リリースです。
 
-  ### ハイライト <!-- Highlights -->
-  #### 新しい `--enable-cgroup` オプション <!-- New `\-\-enable-cgroup option` -->
+  # ハイライト <!-- Highlights -->
+  ## 新しい `--enable-cgroup` オプション <!-- New `\-\-enable-cgroup option` -->
   <!--
   LXCFS can provide a virtual cgroupfs (v1) tree for use by containers.
   This feature was implemented prior to cgroup namespaces being implemented in the kernel and effectively allow providing a similar experience on kernels lacking that feature.
@@ -27,7 +27,7 @@ content: |-
   -->
   今では、サポートされているほとんどの Linux ディストリビューションは、すべて cgroup namespace をサポートするカーネルを提供しており、新しいディストリビューションのほとんどは cgroup v1 から（v2 に）切り替わっているので、この機能をデフォルトで有効にし続ける意味がありません。そのため、この機能は新しい起動時の引数である `--enable-cgroup` で有効にするようになりました。
 
-  #### CPU の `/sys/devices/system/cpu` での非マスク化 <!-- CPUs no longer masked in /sys/devices/system/cpu -->
+  ## CPU の `/sys/devices/system/cpu` での非マスク化 <!-- CPUs no longer masked in /sys/devices/system/cpu -->
   <!--
   LXCFS 5.0 shipped with logic to filter out entries in `/sys/devices/system/cpu` based on what CPUs were allowed in the caller's cpuset. This behavior doesn't actually reflect the behavior on normal systems where even offline CPUs still show up in `/sys/devices/system/cpu`.
   -->
@@ -38,7 +38,7 @@ content: |-
   -->
   このため、LXCFS 6.0 ではこのロジックを逆転し、オンライン・オフラインの CPU のリストを最新に保つようになっただけで、個々の CPU ディレクトリーにはすべてアクセス可能なままです。
 
-  ### すべての変更点 <!-- Full changelog -->
+  # すべての変更点 <!-- Full changelog -->
 
   [details="すべてのChangeLogを見る"]
    - lxcfs_fuse: ensure lxcfs_fuse_compat.h is included after including fuse header
@@ -126,7 +126,7 @@ content: |-
    - cgroup_utils: explicitly check for cgroup2 FDs in cgroup_walkup_to_root
   [/details]
 
-  ### サポートとアップグレード <!-- Support and upgrade -->
+  # サポートとアップグレード <!-- Support and upgrade -->
   <!--
   LXCFS 6.0 will be supported until June 2029 and our current LTS release, LXCFS 5.0 will now switch to a slower maintenance pace, only getting critical bugfixes and security updates.
   -->
@@ -137,7 +137,7 @@ content: |-
   -->
   LXCFS のユーザーはすべて、6.0 ブランチへのアップグレードを計画することを強くおすすめします。
 
-  ### 今後のリリースについて <!-- Future release cadence -->
+  # 今後のリリースについて <!-- Future release cadence -->
   <!--
   To make new LXCFS features more readily available to users, we have decided to start producing non-LTS releases again. The planned interval is every 6 months with LXCFS 6.1 planned for October.
   -->
@@ -153,12 +153,12 @@ content: |-
   -->
   本番環境のユーザーは LTS リリースを利用し続けたいと思うでしょう。
 
-  ### ダウンロード<!-- Downloads -->
+  # ダウンロード<!-- Downloads -->
 
    - リリース tarball <!-- Main release tarball -->: [lxcfs-6.0.0.tar.gz](https://linuxcontainers.org/downloads/lxcfs/lxcfs-6.0.0.tar.gz)
    - GPG シグネチャー <!-- GPG signature -->: [lxcfs-6.0.0.tar.gz.asc](https://linuxcontainers.org/downloads/lxcfs/lxcfs-6.0.0.tar.gz.asc)
 
-  ### コントリビューター <!-- Contributors -->
+  # コントリビューター <!-- Contributors -->
   <!--
   The LXCFS 6.0 release was brought to you by a total of 25 contributors.
   -->

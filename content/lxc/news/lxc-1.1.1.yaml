@@ -3,7 +3,7 @@ date: 2015/03/16 00:00
 content: |-
   This is the first bugfix release for LXC 1.1.
   
-  ### Changes
+  # Changes
   
    * config: Allow FUSE access by default (instead of individually in most templates)
    * Make /proc/sys/net writable when using proc:mixed (required for network config)
@@ -21,7 +21,7 @@ content: |-
   
   Those stable fixes were brought to you by 13 individual contributors.
   
-  ### Downloads
+  # Downloads
   The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
   will very soon ship a packaged version of LXC 1.1.1.
   

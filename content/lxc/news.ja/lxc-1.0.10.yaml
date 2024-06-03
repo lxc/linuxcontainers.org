@@ -53,7 +53,7 @@ content: |-
    * commands: 機能と関係のない変更を行いました (訳注: デバッグログの追加、int -> size\_t への修正)<!-- non-functional changes -->
    * lxccontainer: NULL ポインタへの参照をしないようにしました <!-- avoid NULL pointer dereference -->
   
-  ### ダウンロード <!-- Downloads -->
+  # ダウンロード <!-- Downloads -->
   <!--
   The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
   will very soon ship a packaged version of LXC 1.0.10.

@@ -67,7 +67,7 @@ content: |-
    * utils: Fix lxc\_popen()/lxc\_pclose()
    * utils: Remove dead assignments in lxc\_popen()
 
-  ### Downloads
+  # Downloads
   The release tarballs may be found on our [download page](https://linuxcontainers.org/lxc/downloads/) and we expect most distributions  
   will very soon ship a packaged version of LXC 2.1.1.
 

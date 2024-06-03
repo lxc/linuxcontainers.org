@@ -2,12 +2,12 @@ title: LXC 4.0.5 LTS has been released
 date: 2020/10/22 17:10
 origin: https://discuss.linuxcontainers.org/t/lxc-4-0-5-lts-has-been-released/9269
 content: |-
-  ### Introduction
+  # Introduction
   The LXC team is pleased to announce the release of LXC 4.0.5!
 
   This is the fifth bugfix release for LXC 4.0 which is supported until June 2025.
 
-  ### Bugfixes
+  # Bugfixes
   Some of the highlights for this release are:
 
    - Support allocating PTS devices from within the container
@@ -63,11 +63,11 @@ content: |-
    - conf: account for early return when sending devpts fd
   [/details]
 
-  ### Support and upgrade
+  # Support and upgrade
   The LXC 4.0 branch is supported until June 2025.
   Only bugfixes and securitiy issues get included into the stable bugfix releases, so it's always safe and recommended to keep up and run the latest bugfix release.
 
-  ### Downloads
+  # Downloads
 
    - Main release tarball: [lxc-4.0.5.tar.gz](https://linuxcontainers.org/downloads/lxc/lxc-4.0.5.tar.gz)
    - GPG signature: [lxc-4.0.5.tar.gz.asc](https://linuxcontainers.org/downloads/lxc/lxc-4.0.5.tar.gz.asc)

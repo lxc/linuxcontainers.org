@@ -6,7 +6,7 @@ content: |-
   -->
   LXC チームは LXC 2.0 のリリースをお知らせできることをうれしく思います！
   
-  ### ハイライト <!-- Highlights -->
+  # ハイライト <!-- Highlights -->
   
    * 主要な LXC コマンドはすべて C 言語で書きなおされました <!-- All main LXC commands have now been rewritten in C -->
       * lxc-ls
@@ -25,7 +25,7 @@ content: |-
   -->
   このリリースは合計 96 名のコントリビュータからの 720 コミットからなる貢献によってリリースできました。
   
-  ### 新しい設定オプション <!-- New configuration options -->
+  # 新しい設定オプション <!-- New configuration options -->
   
    * lxc.ephemeral: コンテナが一時的 (ephemeral) かどうかをコントロールします。一時的な場合はシャットダウン後に削除されます <!-- Controls whether the container is ephemeral and so will be destroyed on shutdown -->
    * lxc.rebootsignal: コンテナをリブートするために送出するシグナルを指定できます <!-- Allows to override the signal sent for container reboot -->
@@ -35,7 +35,7 @@ content: |-
    * lxc.init\_gid: lxc-execute が使うグループを指定します <!-- Used by lxc-execute to set an alternative group -->
    * lxc.monitor.unshare: 他のフックを実行する前にマウント名前空間を unshare できます <!-- Allows unsharing the mount namespace prior to running any hook -->
   
-  ### 新機能 <!-- New features -->
+  # 新機能 <!-- New features -->
   
    * API:
       * API バージョンは 1.2 です。1.0、1.1 に対する完全な後方互換性を保っています <!-- API version is 1.2, fully backward compatible with 1.1 and 1.0 -->
@@ -87,7 +87,7 @@ content: |-
       * ubuntu: ユーザが debootstrap の variant を指定できるように -v オプションを追加しました <!-- New -v option allowing the user to set the debootstrap variant -->
       * ubuntu-cloud: vendor-data を指定できるようになりました <!-- Support for vendor-data passthrough -->
   
-  ### 挙動の変更 <!-- Change in behavior -->
+  # 挙動の変更 <!-- Change in behavior -->
   
    * lxc-autostart の起動順が逆になりました (正しい動きになりました) (訳注: lxc.start.order に指定した値の降順で起動していたのが昇順になった)<!-- The lxc-autostart container startup order is now reversed (to be correct) -->
    * cgfsng cgroup バックエンドが推奨のバックエンドになりました <!-- The new cgfsng cgroup backend is now the recommended backend -->
@@ -102,7 +102,7 @@ content: |-
   我々は、コマンドラインツールは stable な ABI とはみなしていませんので、ご自身のスクリプトをテストして変更する必要があるかもしれません。
   そのスクリプトを、LXC の stable な C API か、言語バインディングのどれかを使って書きなおすのがよりベターでしょう。
   
-  ### 廃止予定の警告 <!-- Deprecation warnings -->
+  # 廃止予定の警告 <!-- Deprecation warnings -->
   
   <!--
   The "lxc-clone" and "lxc-start-ephemeral" commands are now considered deprecated and to be replaced by the new lxc-copy.
@@ -112,7 +112,7 @@ content: |-
   "lxc-clone" と "lxc-start-ephemeral" コマンドは、"lxc-copy" に置き換えられ、将来廃止の予定です。
   これらのコマンドは --enable-legacy フラグを使ってビルドできますが、使用の際に警告が表示されます。そして、LXC の将来のリリースで削除される予定です。
   
-  ### サポート <!-- Support -->
+  # サポート <!-- Support -->
   <!--
   This is the second LXC Long Term Support release which we will be supporting until the 1st of June 2021.
   LXC 1.0, our previous Long Term Support release, is still supported until the 1st of June 2019.
@@ -122,7 +122,7 @@ content: |-
   前の長期サポートリリース版である LXC 1.0 も、2019 年 6 月 1 日までサポートされます。
   そして、先の stable リリースである LXC 1.1 は 2016 年 9 月 1 日に EOL となります。
   
-  ### ダウンロード <!-- Downloads -->
+  # ダウンロード <!-- Downloads -->
   <!--
   The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
   will very soon ship a packaged version of LXC 2.0.0.

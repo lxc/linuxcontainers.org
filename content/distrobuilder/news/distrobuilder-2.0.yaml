@@ -2,7 +2,7 @@ title: Distrobuilder 2.0 has been released
 date: 2021/10/18 03:10
 origin: https://discuss.linuxcontainers.org/t/distrobuilder-2-0-has-been-released/12403
 content: |-
-  ### Introduction
+  # Introduction
   The distrobuilder team is proud to announce its initial release, distrobuilder 2.0!
 
   As usual, this release fixes a variety of issues as Linux distributions evolve and change the way they're built. Additionally, it also improves the Windows ISO repack feature quite a bit and introduces support for directly importing an image into LXD
@@ -66,7 +66,7 @@ content: |-
    - Update gomod
   [/details]
 
-  ### Downloads
+  # Downloads
 
    - Main release tarball: [distrobuilder-2.0.tar.gz](https://linuxcontainers.org/downloads/distrobuilder/distrobuilder-2.0.tar.gz)
    - GPG signature: [distrobuilder-2.0.tar.gz.asc](https://linuxcontainers.org/downloads/distrobuilder/distrobuilder-2.0.tar.gz.asc)

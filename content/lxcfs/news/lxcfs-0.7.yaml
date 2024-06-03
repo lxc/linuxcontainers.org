@@ -7,7 +7,7 @@ content: |-
    * Support for /proc/diskstats.
    * Fixes a few bugs that were causing hangs.
   
-  ### Downloads
+  # Downloads
   The release tarballs can be found on our [download page](/lxcfs/downloads/).
   
   

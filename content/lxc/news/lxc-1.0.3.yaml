@@ -3,7 +3,7 @@ date: 2014/04/08 00:00
 content: |-
   This is the third bugfix release for the LXC 1.0 series.
   
-  ### Changes
+  # Changes
   
   Core:
   
@@ -45,7 +45,7 @@ content: |-
    * tests: Bump timeouts to fix occasional failures on slow ARM builders.
    * tests: Always propagate http\_proxy and https\_proxy.
   
-  ### Downloads
+  # Downloads
   The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
   will very soon ship a packaged version of LXC 1.0.3.
   

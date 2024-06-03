@@ -2,7 +2,7 @@ title: LXC 3.0.1 リリースのお知らせ
 date: 2018/06/05 00:00
 origin: https://discuss.linuxcontainers.org/t/lxc-3-0-1-has-been-released/1949
 content: |-
-  ### はじめに
+  # はじめに
   <!--
   The LXC team is pleased to announce the release of LXC 3.0.1!
   -->
@@ -13,14 +13,14 @@ content: |-
   -->
   Stable に対するバグフィックスのためのリリースですので、大きな変更はありません。バグフィックスと細かな使い勝手の改良にフォーカスしています。
   
-  #### ハイライト <!-- Highlights -->
+  ## ハイライト <!-- Highlights -->
   
    * liblxc の様々な部分でスレッドセーフとなるように改良されました <!-- Improvement in thread safety of various part of liblxc -->
    * Coverity によって見つかった問題を多数修正しました <!-- Lots of bugfixes for issues identified by Coverity -->
    * seccomp の扱いに関していくつか改良が行われました。特に personality に関係する部分です <!-- Several improvements to Seccomp handling, especially related to personalities -->
    * GCC 8 をサポートしました <!-- Support for GCC 8 -->
   
-  #### バグフィックス <!-- Bugfixes -->(LXC)
+  ## バグフィックス <!-- Bugfixes -->(LXC)
   
    * tools: 初期化されていない変数を修正しました <!-- fix uninitialized variable -->
    * storage: lvm fs の uuid 生成の問題を修正しました<!-- fix lvm fs uuid generation -->
@@ -177,19 +177,19 @@ content: |-
    * templates: download テンプレートを修正しました <!-- fix download template -->
    * `lxc-update-config` を修正しました <!-- Patch lxc-update-config -->
   
-  #### バグ修正 <!-- Bugfixes -->(LXC templates)
+  ## バグ修正 <!-- Bugfixes -->(LXC templates)
   
    * sshd: lxc.autodev を使うようにしました <!-- Use lxc.autodev -->
    * sshd: init スクリプトにコンテナ名を渡すようにしました <!-- Pass the container name to the init script -->
   
-  ### サポートとアップグレード <!-- Support and upgrade -->
+  # サポートとアップグレード <!-- Support and upgrade -->
   <!--
   LXC 3.0.1 is supported until June 2023 and is our current LTS release, users are encouraged to update to the latest bugfix releases as they're made available.
   -->
   LXC 3.0.1 は 2023 年 6 月までサポートされる最新の LTS リリースです。
   利用可能になった最新のバグ修正リリースに更新することをお勧めします。
   
-  ### ダウンロード <!-- Downloads -->
+  # ダウンロード <!-- Downloads -->
   
    - LXC リリース tarball <!-- Main release tarball -->: [lxc-3.0.1.tar.gz](https://linuxcontainers.org/downloads/lxc/lxc-3.0.1.tar.gz) (GPG: [lxc-3.0.1.tar.gz.asc](https://linuxcontainers.org/downloads/lxc/lxc-3.0.1.tar.gz.asc))
    - LXC テンプレート tarball <!-- LXC templates tarball -->: [lxc-templates-3.0.1.tar.gz](https://linuxcontainers.org/downloads/lxc/lxc-templates-3.0.1.tar.gz) (GPG: [lxc-templates-3.0.1.tar.gz.asc](https://linuxcontainers.org/downloads/lxc/lxc-templates-3.0.1.tar.gz.asc))

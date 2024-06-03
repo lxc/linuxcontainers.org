@@ -13,7 +13,7 @@ content: |-
    * libdbus と使う場合に起こる問題のため、全体的にスレッディングを止めました <!-- Turn off threading globally because of problems with libdbus. -->
    * より systemd に適応するために lxcfs マウントを調整しました <!-- Tweak lxcfs mounts to better accommodate systemd. -->
   
-  ### ダウンロード <!-- Downloads -->
+  # ダウンロード <!-- Downloads -->
   <!--
   The release tarballs can be found on our [download page](/lxcfs/downloads/).
   -->

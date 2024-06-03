@@ -34,7 +34,7 @@
      "generator": "news",
      "meta": {"dir": "/content/incus/news.ja/",
               "input": "incus/news.ja.md",
-              "toc_depth": "2-2",
+              "toc_depth": "2-3",
               "str_older": "Older news",
               "str_back": "Back to the news overview"}},
 
@@ -93,7 +93,7 @@
      "generator": "news",
      "meta": {"dir": "/content/lxc/news.ja/",
               "input": "lxc/news.md",
-              "toc_depth": "2-2",
+              "toc_depth": "2-3",
               "str_older": "Older news",
               "str_back": "Back to the news overview"}},
 
@@ -193,7 +193,7 @@
      "generator": "news",
      "meta": {"dir": "/content/lxcfs/news.ja/",
               "input": "lxcfs/news.md",
-              "toc_depth": "2-2",
+              "toc_depth": "2-3",
               "str_older": "Older news",
               "str_back": "Back to the news overview"}},
 
@@ -268,7 +268,7 @@
      "generator": "news",
      "meta": {"dir": "/content/distrobuilder/news/",
               "input": "distrobuilder/news.md",
-              "toc_depth": "2-2",
+              "toc_depth": "2-3",
               "str_older": "Older news",
               "str_back": "Back to the news overview"}},
 
@@ -331,7 +331,7 @@
      "menu": ["CGManager", "ニュース"],
      "generator": "markdown",
      "meta": {"input": "cgmanager/news.ja.md",
-              "toc_depth": "2-2"}},
+              "toc_depth": "2-3"}},
 
     {"path": "/cgmanager/getting-started/",
      "title": "CGManager - はじめに",

@@ -2,12 +2,12 @@ title: LXCFS 4.0.3 LTS has been released
 date: 2020/04/17 20:04
 origin: https://discuss.linuxcontainers.org/t/lxcfs-4-0-3-lts-has-been-released/7470
 content: |-
-  ### Introduction
+  # Introduction
   The LXCFS team is pleased to announce the release of LXCFS 4.0.3!
 
   This is the third bugfix release for LXCFS 4.0 which is supported until June 2025.
 
-  ### Bugfixes
+  # Bugfixes
   This release fixes a number of issues that were reported shortly following the [original 4.0.0](https://discuss.linuxcontainers.org/t/lxcfs-4-0-lts-has-been-released/7031), [4.0.1](https://discuss.linuxcontainers.org/t/lxcfs-4-0-1-lts-has-been-released/7130) and [4.0.2](https://discuss.linuxcontainers.org/t/lxcfs-4-0-2-lts-has-been-released/7327) releases. Some of the highlights include:
 
    - Fix some issues detected by Coverity Scan
@@ -38,11 +38,11 @@ content: |-
 
   [/details]
 
-  ### Support and upgrade
+  # Support and upgrade
   The LXCFS 4.0 branch is supported until June 2025.
   Only bugfixes and securitiy issues get included into the stable bugfix releases, so it's always safe and recommended to keep up and run the latest bugfix release.
 
-  ### Downloads
+  # Downloads
 
    - Main release tarball: [lxcfs-4.0.3.tar.gz](https://linuxcontainers.org/downloads/lxcfs/lxcfs-4.0.3.tar.gz)
    - GPG signature: [lxcfs-4.0.3.tar.gz.asc](https://linuxcontainers.org/downloads/lxcfs/lxcfs-4.0.3.tar.gz.asc)

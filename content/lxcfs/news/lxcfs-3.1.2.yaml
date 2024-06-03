@@ -2,35 +2,35 @@ title: LXCFS 3.1.2 has been released
 date: 2019/07/24 02:07
 origin: https://discuss.linuxcontainers.org/t/lxcfs-3-1-2-has-been-released/5321
 content: |-
-  ### Introduction
+  # Introduction
   The LXCFS team is pleased to announce the release of LXCFS 3.1.2!
 
   We had to re-roll the 3.1.0 release twice, first because of a bad Makefile causing an invalid release tarball to be generated, then again to fix an upgrade issue affecting some users of LXCFS 3.0.4
 
-  #### New features
+  ## New features
 
-  #### Add support for per-container cpu usage in `/proc/stat`
+  ## Add support for per-container cpu usage in `/proc/stat`
   Newer LXCFS releases make it possible to virtualize cpu usage per container by using the `cpuacct` cgroup.
 
-  #### Add support for load average (`loadavg`) virtualization
+  ## Add support for load average (`loadavg`) virtualization
   LXCFS now supports virtualizing `/proc/loadavg`. It will calculate the loadavg for a container based on the `cpu` cgroup.
 
-  #### Display cpus in `/proc/cpuinfo` based on cpu quotas
+  ## Display cpus in `/proc/cpuinfo` based on cpu quotas
   LXCFS will virtualize the cpus displayed in `/proc/cpuinfo` using the `cpu` cgroup and quotas calculated there.
 
-  #### Allow to disable swap in `/proc/meminfo` output
+  ## Allow to disable swap in `/proc/meminfo` output
   This adds the `-u` option to disable swap info output in `/proc/meminfo`.
 
-  #### Virtualize `/sys/devices/system/cpu/online`
+  ## Virtualize `/sys/devices/system/cpu/online`
   LXCFS now also partially virtualizes `sysfs`. The first file to virtualize is `/sys/devices/system/cpu/online` per container.
 
-  #### Enable higher precision output in `/proc/uptime`
+  ## Enable higher precision output in `/proc/uptime`
   The calculations for `/proc/uptime` are now more correct.
 
-  #### Add support for FUSE `nonempty` option
+  ## Add support for FUSE `nonempty` option
   The `lxcfs` binary can now be passed the `-d` option. When passed, `lxcfs` will also start when the mountpoint is not empty.
 
-  #### Bugfixes
+  ## Bugfixes
 
   - bindings: ensure that opts is non NULL
   - Makefile: Fix typo in file name
@@ -50,10 +50,10 @@ content: |-
   - travis: fix .travis.yml
   - bindings: fix memory leak in proc_loadavg_read()
 
-  ### Support and upgrade
+  # Support and upgrade
   LXCFS 3.1.2 is only supported until the next feature release of LXCFS.
   For long term support, you should prefer LXCFS 3.0.4 LTS which is supported until June 2023.
 
-  ### Downloads
+  # Downloads
    - Main release tarball: [lxcfs-3.1.2.tar.gz](https://linuxcontainers.org/downloads/lxcfs/lxcfs-3.1.2.tar.gz)
    - GPG signature: [lxcfs-3.1.2.tar.gz.asc](https://linuxcontainers.org/downloads/lxcfs/lxcfs-3.1.2.tar.gz.asc)

@@ -280,7 +280,7 @@ content: |-
    * utils: オーバーフローしてしまうので 1LU を使うようにしました <!-- Use 1LU otherwise we overflow -->
    * utils: stat の代わりに access を使うようにしました <!-- Use access instead of stat -->
   
-  ### ダウンロード <!-- Downloads -->
+  # ダウンロード <!-- Downloads -->
   <!--
   The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
   will very soon ship a packaged version of LXC 2.0.9.

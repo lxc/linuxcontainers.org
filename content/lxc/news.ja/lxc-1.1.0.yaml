@@ -20,7 +20,7 @@ content: |-
   -->
   一方でそこまでの厳密さが不要であれば、LXC 1.1 を cgmanager 0.35 以降、lxcfs 0.5 以降と一緒に使うこともおすすめです。
   
-  ### 注目の新機能 <!-- Highlights -->
+  # 注目の新機能 <!-- Highlights -->
   <!--
   LXC 1.1 introduces checkpoint/restore support for containers through CRIU.
   This allows to serialize the container running state to disk, for live migration or for later local restoration
@@ -45,7 +45,7 @@ content: |-
   <!-- This release was made possible by contributions from 84 developers. -->
   このリリースは 84 名の開発者からのコントリビュートによりリリースできました。
   
-  ### 新機能<!-- New features -->
+  # 新機能<!-- New features -->
    * lxc-autostart: 新たに -A/--ignore-auto オプションを追加しました (すべてのコンテナを起動できます) <!-- New -A/--ignore-auto flag (starts all containers) -->
    * lxc-ls: 新たな出力項目 "interface" を追加しました <!-- New "interface" field -->
    * centos/fedora: root\_password\_expired 環境変数を追加しました (デフォルト yes) <!-- Added a root\_password\_expired environment variable (defaults to yes) -->
@@ -76,7 +76,7 @@ content: |-
    * core: 新たに common.conf.d ディレクトリが利用可能になりました。ユーザ、パッケージが全てのコンテナに反映させたい設定を追加できるようになりました<!-- A new common.conf.d configuration directory is available for users and packages to drop configuration snippets to be applied to all containers -->
    * core: LXC が container_ttys 環境変数を設定するようになりました <!-- The container\_ttys environment variable is now set by LXC -->
   
-  ### 動作の変更点<!-- Change in behavior -->
+  # 動作の変更点<!-- Change in behavior -->
    * lxc-create で -t オプションが必須になりました。以前のようにテンプレートなしの場合は "none" を使用します <!-- lxc-create now requires be passed (-t), use "none" for the old behavior. -->
    * スナップショットがコンテナのディレクトリ内に保存されるようになりました <!-- snapshots are now stored in the container's directory -->
    * PER\_LINUX32 に対する lxc.arch は i686 を出力するようになりました <!-- lxc.arch for PER\_LINUX32 is now output as i686 -->
@@ -90,7 +90,7 @@ content: |-
    * core: clear\_config\_item はリスト (lxc\_list) のみに影響するようになりました。他では set\_config\_item を使用してください <!-- clear\_config\_item now exclusively Affects lists (lxc\_list) entries. set\_config\_item should be used for anything else. -->
    * templates: 全てのテンプレートで lxc.mount.auto = cgroup:mixed proc:mixed sys:mixed を使うようになりました (安全なデフォルト設定です) <!-- All templates now use lxc.mount.auto = cgroup:mixed proc:mixed sys:mixed (safe default configuration) -->
   
-  ### ダウンロード<!-- Downloads -->
+  # ダウンロード<!-- Downloads -->
   <!-- The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
   will very soon ship a packaged version of LXC 1.1.0, unless they decide to stick to the long term 1.0 release. -->
   このリリースの tarball は [ダウンロードページ](/lxc/downloads/) から取得できます。そして、各ディストリビューションが長期サポートの 1.0 リリースの採用を続ける決定をしない場合は、すぐに LXC 1.1.0 のパッケージをリリースするでしょう。

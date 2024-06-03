@@ -2,7 +2,7 @@ title: Distrobuilder 3.0 has been released
 date: 2023/11/11 03:11
 origin: https://discuss.linuxcontainers.org/t/distrobuilder-3-0-has-been-released/18260
 content: |-
-  ### Introduction
+  # Introduction
   The distrobuilder team is proud to announce the release of distrobuilder 3.0!
 
   Outside of the usual updates to account for changes made by various distributions, the main highlights are:
@@ -203,7 +203,7 @@ content: |-
    - Update Vyos rolling update iso url
   [/details]
 
-  ### Downloads
+  # Downloads
 
    - Main release tarball: [distrobuilder-3.0.tar.gz](https://linuxcontainers.org/downloads/distrobuilder/distrobuilder-3.0.tar.gz)
    - GPG signature: [distrobuilder-3.0.tar.gz.asc](https://linuxcontainers.org/downloads/distrobuilder/distrobuilder-3.0.tar.gz.asc)

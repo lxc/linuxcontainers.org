@@ -6,7 +6,7 @@ content: |-
   -->
   このリリースは LXC 1.1 の初めてのバグフィックスリリースです。
   
-  ### 変更点 <!-- Changes -->
+  # 変更点 <!-- Changes -->
   
   * config: デフォルトで FUSE へのアクセスが可能になりました (元々ほとんどのテンプレートそれぞれで許可されていました) <!-- Allow FUSE access by default (instead of individually in most templates) -->
    * proc:mixed を使った場合、/proc/sys/net が書き込み可能になりました (ネットワーク設定に必要です)<!-- Make /proc/sys/net writable when using proc:mixed (required for network config) -->
@@ -27,7 +27,7 @@ content: |-
   -->
   これらの stable の修正は 13 名のコントリビュータによってなされました。
   
-  ### ダウンロード <!-- Downloads -->
+  # ダウンロード <!-- Downloads -->
   <!--
   The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
   will very soon ship a packaged version of LXC 1.1.1.

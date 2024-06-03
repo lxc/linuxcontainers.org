@@ -2,7 +2,7 @@ title: LXC 3.0.3 リリースのお知らせ
 date: 2018/11/22 00:00
 origin: https://discuss.linuxcontainers.org/t/lxc-3-0-3-has-been-released/3358
 content: |-
-  ### はじめに <!-- Introduction -->
+  # はじめに <!-- Introduction -->
   <!--
   The LXC team is pleased to announce the release of LXC 3.0.3!
   -->
@@ -13,14 +13,14 @@ content: |-
   -->
   Stable に対するバグフィックスのためのリリースですので、大きな変更はありません。バグフィックスと細かな使い勝手の改良にフォーカスしています。
   
-  #### ハイライト <!-- Highlights -->
+  ## ハイライト <!-- Highlights -->
   
    - コンパイラが持つよりセキュアなバイナリを生成するための機能を使うためにビルドフラグを見直しました <!-- Improved our default build flags to make use of compiler hardening -->
    - 新しいカーネルで使える netlink の厳格なプロパティチェックのサポートを追加しました <!-- Added support for netlink strict property checking on newer kernels -->
    - netlink の新しいインターフェース・アドレスの netns API のサポートを追加しました <!-- Added support for new netlink interface/address netns API -->
    - 起動時のカーネルキーリングの処理を追加しました <!-- Added handling of the kernel keyring on startup -->
   
-  #### バグ修正 <!-- Bugfixes -->(LXC)
+  ## バグ修正 <!-- Bugfixes -->(LXC)
   
    - CONTRIBUTING: カーネルのコーディングスタイルへのリファレンスを更新しました <!-- Update reference to kernel coding style -->
    - CONTRIBUTING: カーネルの最新のオンラインドキュメントへリンクするようにしました <!-- Link to latest online kernel docs -->
@@ -220,24 +220,24 @@ content: |-
    - cgfsng: 要求仕様から freezer を削除しました <!-- remove freezer requirement -->
    - start: `cgroup_exit()` を二度呼ばないようにしました <!-- don't call cgroup\_exit() twice -->
   
-  #### バグ修正（LXCテンプレート） <!-- Bugfixes (LXC templates) -->
+  ## バグ修正（LXCテンプレート） <!-- Bugfixes (LXC templates) -->
   
    - alpine: `setpcap` を drop するのをオプショナルにしました <!-- Make dropping setpcap optional -->
    - plamo: デフォルトバージョンを 7.x にしました <!-- Update the default version to 7.x -->
    - sabayon: ディレクトリが存在するときに失敗しないようにしました <!-- Don't fail on existing directories -->
   
-  #### バグ修正（python3 バインディング） <!-- Bugfixes (python3 binding) -->
+  ## バグ修正（python3 バインディング） <!-- Bugfixes (python3 binding) -->
   
    - このリリースでは変更はありません。バージョンを上げただけです <!-- No changes in this release, version bump only -->
   
-  ### サポートとアップグレード <!-- Support and upgrade -->
+  # サポートとアップグレード <!-- Support and upgrade -->
   <!--
   LXC 3.0.3 is supported until June 2023 and is our current LTS release, users are encouraged to update to the latest bugfix releases as they're made available.
   -->
   LXC 3.0.3 は 2023 年 6 月までサポートされる最新の LTS リリースです。
   利用可能になった最新のバグ修正リリースに更新することをお勧めします。
   
-  ### ダウンロード <!-- Downloads -->
+  # ダウンロード <!-- Downloads -->
    - LXC リリース tarball <!-- Main release tarball -->: [lxc-3.0.3.tar.gz](https://linuxcontainers.org/downloads/lxc/lxc-3.0.3.tar.gz) (GPG: [lxc-3.0.3.tar.gz.asc](https://linuxcontainers.org/downloads/lxc/lxc-3.0.3.tar.gz.asc))
    - LXC テンプレート tarball <!-- LXC templates tarball -->: [lxc-templates-3.0.3.tar.gz](https://linuxcontainers.org/downloads/lxc/lxc-templates-3.0.3.tar.gz) (GPG: [lxc-templates-3.0.3.tar.gz.asc](https://linuxcontainers.org/downloads/lxc/lxc-templates-3.0.3.tar.gz.asc))
    - LXC python3 バインディング <!-- LXC python3 bindings tarball -->: [python3-lxc-3.0.3.tar.gz](https://linuxcontainers.org/downloads/lxc/python3-lxc-3.0.3.tar.gz) (GPG: [python3-lxc-3.0.3.tar.gz.asc](https://linuxcontainers.org/downloads/lxc/python3-lxc-3.0.3.tar.gz.asc))

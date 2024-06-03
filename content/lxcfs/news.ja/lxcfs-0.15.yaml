@@ -9,7 +9,7 @@ content: |-
   
    * 深刻なメモリアロケーションに関するバグの修正を行いました。このバグがあるので 0.14 は使用に適しません <!-- Fixing a critical memory allocation bug which makes 0.14 unusable. -->
   
-  ### ダウンロード <!-- Downloads -->
+  # ダウンロード <!-- Downloads -->
   <!--
   The release tarballs can be found on our [download page](/lxcfs/downloads).
   -->

@@ -2,18 +2,18 @@ title: LXC 5.0.2 LTS has been released
 date: 2023/01/20 19:01
 origin: https://discuss.linuxcontainers.org/t/lxc-5-0-2-lts-has-been-released/16210
 content: |-
-  ### Introduction
+  # Introduction
   The LXC team is pleased to announce the release of LXC 5.0.2!
 
   This is the second bugfix release for LXC 5.0 which is supported until June 2027.
 
-  ### Security fix
+  # Security fix
   This release does fix one CVE which was recently open against LXC.
   [CVE-2022-47952](https://nvd.nist.gov/vuln/detail/CVE-2022-47952) covers the use of `lxc-user-nic` (setuid binary) as a way to uncover the existence of files at locations which would normally not be accessible to the user.
 
   This is classified as a low severity CVE and was reported to us publicly through Github along with a fix. Given this was not released under embargo and given the low impact of this issue, we made the decision to process it as we would any other bugfix to liblxc.
 
-  ### Bugfixes
+  # Bugfixes
   As usual this bugfix releases focus on stability and hardening.
 
   Some of the highlights for this release are:
@@ -88,11 +88,11 @@ content: |-
    - Fix build error on sparc64 caused by using the gold linker
   [/details]
 
-  ### Support and upgrade
+  # Support and upgrade
   The LXC 5.0 branch is supported until June 2027.
   Only bugfixes and securitiy issues get included into the stable bugfix releases, so it's always safe and recommended to keep up and run the latest bugfix release.
 
-  ### Downloads
+  # Downloads
 
    - Main release tarball: [lxc-5.0.2.tar.gz](https://linuxcontainers.org/downloads/lxc/lxc-5.0.2.tar.gz)
    - GPG signature: [lxc-5.0.2.tar.gz.asc](https://linuxcontainers.org/downloads/lxc/lxc-5.0.2.tar.gz.asc)

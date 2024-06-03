@@ -2,7 +2,7 @@ title: Distrobuilder 1.2 has been released
 date: 2021/03/23 15:03
 origin: https://discuss.linuxcontainers.org/t/distrobuilder-1-2-has-been-released/10592
 content: |-
-  ### Introduction
+  # Introduction
   The distrobuilder team is proud to announce its initial release, distrobuilder 1.2!
 
   This release's highlight is the introduction of Windows image repacking.
@@ -72,7 +72,7 @@ content: |-
    - Update gomod
   [/details]
 
-  ### Downloads
+  # Downloads
 
    - Main release tarball: [distrobuilder-1.2.tar.gz](https://linuxcontainers.org/downloads/distrobuilder/distrobuilder-1.2.tar.gz)
    - GPG signature: [distrobuilder-1.2.tar.gz.asc](https://linuxcontainers.org/downloads/distrobuilder/distrobuilder-1.2.tar.gz.asc)

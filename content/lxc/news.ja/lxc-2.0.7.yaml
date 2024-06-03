@@ -68,7 +68,7 @@ content: |-
    * utils: \_\_LXC\_NUMSTRLEN マクロを追加しました <!-- Add macro \_\_LXC\_NUMSTRLEN -->
    * utils: uid, gid, group を扱うのに便利なラッパー関数を追加しました <!-- Add uid, gid, group convenience wrappers -->
   
-  ### ダウンロード <!-- Downloads -->
+  # ダウンロード <!-- Downloads -->
   <!--
   The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
   will very soon ship a packaged version of LXC 2.0.7.

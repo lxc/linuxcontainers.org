@@ -2,7 +2,7 @@ title: LXC 4.0.9 LTS リリースのお知らせ <!-- LXC 4.0.9 LTS has been rel
 date: 2021/05/06 17:05
 origin: https://discuss.linuxcontainers.org/t/lxc-4-0-9-lts-has-been-released/10999
 content: |-
-  ### はじめに <!-- Introduction -->
+  # はじめに <!-- Introduction -->
   <!--
   The LXC team is pleased to announce the release of LXC 4.0.9!
   -->
@@ -23,7 +23,7 @@ content: |-
   -->
   以下の変更は 4.0.6 から 4.0.9 までの変更を含みます。
 
-  ### バグ修正 <!-- Bugfixes -->
+  # バグ修正 <!-- Bugfixes -->
   <!--
   As usual this bugfix releases focus on stability and hardening. Some of the highlights for this release are:
   -->
@@ -832,7 +832,7 @@ content: |-
    - conf: add personality_t
    - attach: introduce explicit personality macro
 
-  ### サポートとアップグレード <!-- Support and upgrade -->
+  # サポートとアップグレード <!-- Support and upgrade -->
   <!--
   The LXC 4.0 branch is supported until June 2025.
   Only bugfixes and securitiy issues get included into the stable bugfix releases, so it's always safe and recommended to keep up and run the latest bugfix release.
@@ -840,7 +840,7 @@ content: |-
   LXC 4.0 ブランチは 2025 年 6 月までサポートされます。
   stable のバグフィックスリリースでは、バグとセキュリティに関する問題に対する修正のみが行われますので、常に安全です。最新のバグフィックスリリースの状態を維持し、実行することをおすすめします。
 
-  ### ダウンロード <!-- Downloads -->
+  # ダウンロード <!-- Downloads -->
 
    - リリース tarball <!-- Main release tarball -->: [lxc-4.0.9.tar.gz](https://linuxcontainers.org/downloads/lxc/lxc-4.0.9.tar.gz)
    - GPG シグネチャー <!-- GPG signature -->: [lxc-4.0.9.tar.gz.asc](https://linuxcontainers.org/downloads/lxc/lxc-4.0.9.tar.gz.asc)

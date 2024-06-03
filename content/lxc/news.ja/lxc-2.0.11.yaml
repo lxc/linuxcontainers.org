@@ -18,21 +18,21 @@ content: |-
   -->
   以下の変更点は 2.0.9 から 2.0.11のものすべてです。
 
-  ### セキュリティ上の修正 <!-- Security fixes -->
-  #### CVE-2018-6556 の修正<!-- Fixes CVE-2018-6556 -->
+  # セキュリティ上の修正 <!-- Security fixes -->
+  ## CVE-2018-6556 の修正<!-- Fixes CVE-2018-6556 -->
   <!--
   `lxc-user-nic` when asked to delete a network interface would unconditionally open a user provided path. This code path could be used by an unprivileged user to check for the existence of a path which they wouldn't otherwise be able to reach. It may also be used to trigger side effects by causing a (read-only) open of special kernel files (ptmx, proc, sys). For more details see [here](https://nvd.nist.gov/vuln/detail/CVE-2018-6556).
   -->
   `lxc-user-nic` がネットワークインターフェースを削除するような要求を受けたとき、ユーザーが与えたパスを無条件に open します。このコードが、非特権ユーザーが他の方法では到達できないパスの存在をチェックするのに使われる可能性がありました。特別なカーネルファイル（ptmx、proc、sys）を（読み取り専用で） open することで副作用を引き起こすのに使われる可能性もあります。詳しくは [CVE-2018-6556](https://nvd.nist.gov/vuln/detail/CVE-2018-6556) をご覧ください。
 
-  #### CVE-2019-5736 の修正 <!-- Fixes CVE-2019-5736 -->
+  ## CVE-2019-5736 の修正 <!-- Fixes CVE-2019-5736 -->
   <!--
   This release fixes [CVE-2019-5736](https://nvd.nist.gov/vuln/detail/CVE-2019-5736). It is a major security issue afflicting all container runtimes and is exploitable when attaching to privileged containers. More details on the the bug and how it is fixed can be found [here](https://brauner.github.io/2019/02/12/privileged-containers.html).
   -->
   [CVE-2019-5736](https://nvd.nist.gov/vuln/detail/CVE-2019-5736) を修正しました。この問題は、すべてのコンテナランタイムを苦しめる大きなセキュリティ上の問題で、特権を持つコンテナにアタッチする際に悪用されます。バグの詳細とそれをどのように修正するかは [このページ](https://brauner.github.io/2019/02/12/privileged-containers.html) で読むことができます。
 
-  ### 主なバグ修正 <!-- Main bugfixes -->
-  #### 設定ファイルのないコンテナを扱えるようになりました <!-- Allow attaching to undefined containers -->
+  # 主なバグ修正 <!-- Main bugfixes -->
+  ## 設定ファイルのないコンテナを扱えるようになりました <!-- Allow attaching to undefined containers -->
 
   <!--
   For example the following sequence is now expected to work:
@@ -45,82 +45,82 @@ content: |-
       -s 'lxc.rootfs = /path/to/rootfs' \
       -s 'lxc.init_cmd = /path/to/initcmd'
 
-  #### アタッチの際に正しい名前空間の継承処理を行うようになりました <!-- Correctly handle namespace inheritance in attach -->
+  ## アタッチの際に正しい名前空間の継承処理を行うようになりました <!-- Correctly handle namespace inheritance in attach -->
 
   <!--
   `lxc_attach` will now correctly distinguish between a caller specifying specific namespaces to attach to and a caller not requesting specific namespaces. The latter is taken by `lxc_attach` to mean that all namespaces will be attached. This also needs to include all inherited namespaces.
   -->
   `lxc_attach` が、アタッチするために特定の名前空間を指定する呼び出し元と、特定の名前空間を要求しない呼び出し元を正しく区別するようになりました。後者は、すべての名前空間にアタッチされるという意味に `lxc_attach` が処理します。これにはすべての継承した名前空間を含める必要があります。
 
-  #### `testing` と `unstable` の Debian コンテナが作成できるようになりました <!-- Allow the creation of `testing` and `unstable` Debian containers -->
+  ## `testing` と `unstable` の Debian コンテナが作成できるようになりました <!-- Allow the creation of `testing` and `unstable` Debian containers -->
   
   <!--
   Being able to create `testing` containers, regardless of what's the name of the next stable, is useful in several contexts, included but not limited to testing purposes. i.e. one won't need to explicitly switch to `bullseye` once `buster` is released to be able to continue tracking `testing`. While we are at it, let's also enable `unstable`, which is exactly the same as `sid`, but there is no reason for not being able to.
   -->
   次の stable の名前に関わらず `testing` のコンテナを作成できることは、テスト用途を含むがそれに限らない、いくつかの状況で役立ちます。すなわち、`buster` がリリースされても、明示的に `bullseye` に切り替える必要がないということは、ずっと `testing` を追跡し続けることができるということです。そのように行った上で、`unstable` （これは `sid` と同じです）も有効にしてみましょう。これも同様にできるでしょう。
 
-  #### `CAP_SYS_ADMIN` なしのコンテナが可能になりました（cgroup の扱いに関係する）<!-- Enable container without `CAP_SYS_ADMIN` (cgroup handling) -->
+  ## `CAP_SYS_ADMIN` なしのコンテナが可能になりました（cgroup の扱いに関係する）<!-- Enable container without `CAP_SYS_ADMIN` (cgroup handling) -->
 
   <!--
   In case cgroup namespaces are supported but we do not have `CAP_SYS_ADMIN` we need to mount cgroups for the container. This patch enables both privileged and unprivileged containers without `CAP_SYS_ADMIN`.
   -->
   cgroup 名前空間がサポートされているけれども `CAP_SYS_ADMIN` を持っていない場合、コンテナのために（訳注: LXC が） cgroup をマウントする必要があります。`CAP_SYS_ADMIN` を持たない特権、非特権コンテナの両方で可能になります。
 
-  #### `cgroup2` の扱いの改良 <!-- Improved `cgroup2` handling -->
+  ## `cgroup2` の扱いの改良 <!-- Improved `cgroup2` handling -->
   <!--
   Since cgroup2 is becoming more common LXC 2.0.11 comes with a wide range of improvements in that area.
   -->
   cgroup2 がより一般的になってきているので、LXC 2.0.11 では cgroup2 に関して広く改良がなされています。
 
-  #### cgroup の read-only マウントのサポート <!-- Support read-only mounts of cgroups -->
+  ## cgroup の read-only マウントのサポート <!-- Support read-only mounts of cgroups -->
   <!--
   This is especially useful if the container lacks `CAP_SYS_ADMIN` and thus cannot remount.
   -->
   これは、コンテナに `CAP_SYS_ADMIN` がなくて、そのため再マウントができない場合に特に便利な機能です。
 
-  #### `SIGTERM` を使ってコンソールから exit できるようになりました <!-- Allow to exit from console via `SIGTERM` -->
+  ## `SIGTERM` を使ってコンソールから exit できるようになりました <!-- Allow to exit from console via `SIGTERM` -->
   <!--
   This allows cleanly exiting a console session without control sequences. Instead `SIGTERM` can be sent to the affected process and it will cause LXC to cleanly terminate the console session.
   -->
   これにより、コントロールシーケンスなしでコンソールセッションからきれいに exit できます。代わりに `SIGTERM` を対象のプロセスに送ると、LXC はきれいにコンソールセッションを終了させます。
 
-  #### アプリケーションコンテナの実行時に与える引数の数を正しく計算するようになりました <!-- Correctly calculate the number of arguments passed when running application containers -->
+  ## アプリケーションコンテナの実行時に与える引数の数を正しく計算するようになりました <!-- Correctly calculate the number of arguments passed when running application containers -->
   <!--
   The number of arguments passed to `exec` was miscalculated under certain conditions. This release ensure that the correct number of arguments is calculated and passed to `exec.`
   -->
   `exec` に渡す引数の数を、特定の条件下で間違って計算していました。このリリースで確実に正しく引数の数を計算し、`exec` に渡すようになりました。
 
-  #### コード全体から不要なロックを削除しました <!-- Remove all unneeded locking from the codebase -->
+  ## コード全体から不要なロックを削除しました <!-- Remove all unneeded locking from the codebase -->
   <!--
   Older version of LXC used mutexes in various places to ensure thread-safety. Careful redesign of these codepaths has enabled us to remove all mutextes from the codebase. This has led to simplifications and speedups for various operations such as container start and stop.
   -->
   古いバージョンの LXC はスレッドセーフを保証するために、色々な場所で mutex を使っていました。これらのコードパスを注意深く再デザインすることで、コードからすべての mutex を削除できました。これにより、簡略化が行え、コンテナの起動や停止のような様々な操作でスピードアップが図れました。
 
-  #### cgroup 名前空間の保護の問題を修正しました <!-- Fix cgroup namespace preservation -->
+  ## cgroup 名前空間の保護の問題を修正しました <!-- Fix cgroup namespace preservation -->
   <!--
   This eliminates a race and makes sure that the cached file descriptor refers to the container's cgroup namespace and not to the hosts'.
   -->
   これにより競合が取り除かれ、キャッシュされたファイルディスクリプタが、ホストでなく確実にコンテナの cgroup 名前空間を参照するようになります。
 
-  #### アプリケーションがホストの PID 名前空間を共有できるようになりました <!-- Allow application to share the hosts' pid namespace -->
+  ## アプリケーションがホストの PID 名前空間を共有できるようになりました <!-- Allow application to share the hosts' pid namespace -->
   <!--
   Prior versions of LXC did not allow to share the hosts' pid namespace. Starting with this bugfix release it is possible to do this correctly.
   -->
   以前のバージョンの LXC は、ホストの PID 名前空間を共有できませんでした。このバグ修正リリース以降、これを正しく行うことができます。
 
-  #### 非常に寿命が短いアプリケーションコンテナを正しく扱うようになりました <!-- Correctly handle very short-lived application containers -->
+  ## 非常に寿命が短いアプリケーションコンテナを正しく扱うようになりました <!-- Correctly handle very short-lived application containers -->
   <!--
   Prior versions had trouble to correctly handle extremely short-lived application containers. For example, LXC could incorrectly report that a container is still running when it had already shut down due to a TOCTU and refuse to restart it. This caused unnecessary delay. Also, output of such short-lived containers written to stdout could get lost or truncated. This release fixes both issues.
   -->
   これまでのバージョンでは、極端に寿命が短いアプリケーションコンテナを正しく処理するのが困難でした。例えば LXC は TOCTOU が原因で、コンテナがすでにシャットダウンしていてもまだ実行中であると誤って報告し、再起動を拒否する可能性がありました。これは不要な遅延を引き起こします。そして、このような寿命の短いコンテナの出力が stdout に書かれると、出力が失われたり切り詰められたりする可能性がありました。このリリースでこれらの問題を修正しました。
 
-  #### `hidepid=1` か `hidepid=2` でマウントされたコンテナを正しく処理するようになりました <!-- `/proc` Correctly handle containers where `/proc` has been mount with `hidepid=1` or `hidepid=2` -->
+  ## `hidepid=1` か `hidepid=2` でマウントされたコンテナを正しく処理するようになりました <!-- `/proc` Correctly handle containers where `/proc` has been mount with `hidepid=1` or `hidepid=2` -->
   <!--
   In prior versions attaching to unprivileged containers as an unprivileged user with `/proc` mounted with `hidepid=1` or `hidepid=2` would fail since LXC could not retrieve needed information from `/proc`. This is now fixed.
   -->
   これまでのバージョンでは、`hidepid=1` もしくは `hidepid=2` でマウントされた `/proc` を持つ非特権コンテナに非特権ユーザーとしてアタッチすると、LXC は必要な情報を `/proc` から取得できないため失敗していました。これを修正しました。
 
-  #### cgroup 名前空間がサポートされている場合でも、強制的に cgroup をマウントできるようになりました <!-- Allow to force mount cgroups even when cgroup namespaces are supported -->
+  ## cgroup 名前空間がサポートされている場合でも、強制的に cgroup をマウントできるようになりました <!-- Allow to force mount cgroups even when cgroup namespaces are supported -->
   <!--
   This lets users specify `lxc.mount.auto = cgroup:mixed:force` or `lxc.mount.auto = cgroup:ro:force` or `lxc.mount.auto = cgroup:rw:force`.
   -->
@@ -156,7 +156,7 @@ content: |-
     - read-only cgroup:
       例えば、アプリケーションに自身が所属する cgroup の内部を見せつつ、コンテナ内から cgroup の制限を変更するのを防ぐには cgroup を read-only でマウントすることができれば便利です。これもアプリケーションコンテナには便利です。systemd が動作しているシステムコンテナは、通常は cgroup が read-only でマウントされていると動作しません。
 
-  #### その他のバグフィックス <!-- Everything else -->
+  ## その他のバグフィックス <!-- Everything else -->
   <!--
   2.0.11 includes almost a year and a half of bugfixes cherry-picked from current LXC, the entire list can be found below.
   -->
@@ -791,7 +791,7 @@ content: |-
 
 
 
-  ### ダウンロード <!-- Downloads -->
+  # ダウンロード <!-- Downloads -->
   <!--
   The release tarballs may be found on our [download page](https://linuxcontainers.org/lxc/downloads/) and we expect most distributions
   will very soon ship a packaged version of LXC 2.0.11.

@@ -6,6 +6,6 @@ content: |-
   
    * This provides a fix for the memory allocation bugs in the last two releases.
   
-  ### Downloads
+  # Downloads
   The release tarballs can be found on our [download page](/lxcfs/downloads).
   

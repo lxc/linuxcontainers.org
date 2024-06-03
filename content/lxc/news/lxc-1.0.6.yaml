@@ -7,7 +7,7 @@ content: |-
   This argument is a no-op as lxc-start is already running in the foreground by default, but as that behavior will change in LXC 1.1,
   introducing -F in 1.0 too allows for writing script which will work consistently on upgrades.
   
-  ### Changes
+  # Changes
   Core:
   
    * rootfs\_is\_blockdev: don't run if no rootfs is specified
@@ -107,7 +107,7 @@ content: |-
   
   Those stable fixes were brought to you by 24 individual contributors.
   
-  ### Downloads
+  # Downloads
   The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
   will very soon ship a packaged version of LXC 1.0.6.
   

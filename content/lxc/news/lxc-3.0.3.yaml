@@ -2,19 +2,19 @@ title: LXC 3.0.3 has been released
 date: 2018/11/23 01:11
 origin: https://discuss.linuxcontainers.org/t/lxc-3-0-3-has-been-released/3358
 content: |-
-  ### Introduction
+  # Introduction
   The LXC team is pleased to announce the release of LXC 3.0.3!
 
   As a stable bugfix release, no major changes have been done, instead focusing on bugfixes and minor usability improvements.
 
-  #### Highlights
+  ## Highlights
 
    - Improved our default build flags to make use of compiler hardening
    - Added support for netlink strict property checking on newer kernels
    - Added support for new netlink interface/address netns API 
    - Added handling of the kernel keyring on startup
 
-  #### Bugfixes (LXC)
+  ## Bugfixes (LXC)
 
    - CONTRIBUTING: Update reference to kernel coding style
    - CONTRIBUTING: Link to latest online kernel docs
@@ -388,20 +388,20 @@ content: |-
    - cgfsng: remove freezer requirement
    - start: don't call cgroup_exit() twice
 
-  #### Bugfixes (LXC templates)
+  ## Bugfixes (LXC templates)
 
    - alpine: Make dropping setpcap optional
    - plamo: Update the default version to 7.x
    - sabayon: Don't fail on existing directories
 
-  #### Bugfixes (python3 binding)
+  ## Bugfixes (python3 binding)
 
    - No changes in this release, version bump only
 
-  ### Support and upgrade
+  # Support and upgrade
   LXC 3.0.3 is supported until June 2023 and is our current LTS release, users are encouraged to update to the latest bugfix releases as they're made available.
 
-  ### Downloads
+  # Downloads
    - Main release tarball: [lxc-3.0.3.tar.gz](https://linuxcontainers.org/downloads/lxc/lxc-3.0.3.tar.gz) (GPG: [lxc-3.0.3.tar.gz.asc](https://linuxcontainers.org/downloads/lxc/lxc-3.0.3.tar.gz.asc))
    - LXC templates tarball: [lxc-templates-3.0.3.tar.gz](https://linuxcontainers.org/downloads/lxc/lxc-templates-3.0.3.tar.gz) (GPG: [lxc-templates-3.0.3.tar.gz.asc](https://linuxcontainers.org/downloads/lxc/lxc-templates-3.0.3.tar.gz.asc))
    - LXC python3 bindings tarball: [python3-lxc-3.0.3.tar.gz](https://linuxcontainers.org/downloads/lxc/python3-lxc-3.0.3.tar.gz) (GPG: [python3-lxc-3.0.3.tar.gz.asc](https://linuxcontainers.org/downloads/lxc/python3-lxc-3.0.3.tar.gz.asc))

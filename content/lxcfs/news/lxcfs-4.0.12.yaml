@@ -2,12 +2,12 @@ title: LXCFS 4.0.12 has been released
 date: 2022/02/02 23:02
 origin: https://discuss.linuxcontainers.org/t/lxcfs-4-0-12-has-been-released/13287
 content: |-
-  ### Introduction
+  # Introduction
   The LXCFS team is pleased to announce the release of LXCFS 4.0.12!
 
   This is the twelfth bugfix release for LXCFS 4.0 which is supported until June 2025.
 
-  ### Bugfixes
+  # Bugfixes
   Some of the highlights for this release are:
 
    - CPU sum in /proc/stat is now preserved on cpuset changes
@@ -28,11 +28,11 @@ content: |-
    - Preseve cpu sum in /proc/stat when cpuset changes
   [/details]
 
-  ### Support and upgrade
+  # Support and upgrade
   The LXCFS 4.0 branch is supported until June 2025.
   Only bugfixes and securitiy issues get included into the stable bugfix releases, so it's always safe and recommended to keep up and run the latest bugfix release.
 
-  ### Downloads
+  # Downloads
 
    - Main release tarball: [lxcfs-4.0.12.tar.gz](https://linuxcontainers.org/downloads/lxcfs/lxcfs-4.0.12.tar.gz)
    - GPG signature: [lxcfs-4.0.12.tar.gz.asc](https://linuxcontainers.org/downloads/lxcfs/lxcfs-4.0.12.tar.gz.asc)

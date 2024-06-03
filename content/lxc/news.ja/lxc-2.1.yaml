@@ -14,8 +14,8 @@ content: |-
   -->
   このリリースは LTS リリースではないことに注意してください。LTS リリースではありませんので、LXC 2.1 のサポートは 1 年間のみです。長い期間のサポートが必要なプロダクション環境では 2021 年 6 月までサポートされる LXC 2.0 を使い続けてください。
   
-  ## 新機能 <!-- New features -->
-  ### リソース制限のサポート<!-- Resource limit support -->
+  # 新機能 <!-- New features -->
+  ## リソース制限のサポート<!-- Resource limit support -->
   <!--
   Similar to requesting specific cgroup limits users can specify any limits for any resource
   the underlying kernel is aware of by prefixing the name of the limit with "lxc.prlimit."
@@ -27,7 +27,7 @@ content: |-
       lxc.prlimit.nproc = unlimited
       lxc.prlimit.nice = 4
   
-  ### 非特権での Open vSwitch ネットワークのサポート <!-- Support for unprivileged openvswitch networks -->
+  ## 非特権での Open vSwitch ネットワークのサポート <!-- Support for unprivileged openvswitch networks -->
   <!--
   It is now possible to define openvswitch networks as an unprivileged user:
   -->
@@ -44,7 +44,7 @@ content: |-
   -->
   LXC 2.1 は、シャットダウン時に openvswitch からホスト側の veth デバイスを適切に削除する処理を行います。
   
-  ### 新たな設定項目 `lxc.cgroup.dir` <!-- New `lxc.cgroup.dir` key -->
+  ## 新たな設定項目 `lxc.cgroup.dir` <!-- New `lxc.cgroup.dir` key -->
   <!--
   The `lxc.cgroup.dir` key lets users specify the name of the parent cgroup under
   which the container's cgroup will be created. Setting `lxc.cgroup.dir` will
@@ -58,7 +58,7 @@ content: |-
   -->
   例えば、`lxc.uts.name = c1` と設定されたコンテナに `lxc.cgroup.dir = mycontainers` と設定すると、LXC は cgroup 階層内のすべてのコントローラで、`mycontainers/c1` という cgroup を作ります。
   
-  ### hybrid cgroup レイアウトのサポート <!-- Support for hybrid cgroup layout -->
+  ## hybrid cgroup レイアウトのサポート <!-- Support for hybrid cgroup layout -->
   <!--
   Since the advent of cgroup v2 some init systems have decided to allow for a hybrid mode in which
   cgroup v1 per-controller hierarchies can be used simultaneously with an empty cgroup v2 hierarchy.
@@ -78,7 +78,7 @@ content: |-
   -->
   マウントポイント `/sys/fs/cgroup/unified` は、通常は cgroup v2 階層の存在を示します。これは `findmnt | grep cgroup2` が一致する行を返すかどうかをテストすることで確認できます。LXC 2.1 はこの hybrid モードをサポートします。
   
-  ### コンテナが割り当てることができる pty の数を制限する <!-- Limiting the number of ptys a container can allocate -->
+  ## コンテナが割り当てることができる pty の数を制限する <!-- Limiting the number of ptys a container can allocate -->
   <!--
   Setting `lxc.pty.max` will cause LXC to mount the container's devpts with the requested limit
   on the number of usable ptys. For example, setting `lxc.pty.max = 10` will only allow
@@ -86,7 +86,7 @@ content: |-
   -->
   `lxc.pty.max` を設定すると、LXC は、使える pty の数に指定した制限を設定した上で、コンテナの devpts をマウントします。例えば、`lxc.pty.max = 10` と設定すると、コンテナは `10` 個の pty だけしか割り当てられません。デフォルト値は `1024` です。
   
-  ### `bool lxc_config_item_is_supported(const char *key)` API 拡張 <!-- extension -->
+  ## `bool lxc_config_item_is_supported(const char *key)` API 拡張 <!-- extension -->
   <!--
   This function let's users query the liblxc whether a specific configuration item is supported for this library.
   This is particularly useful for embedded users that running versions of liblxc that come with significantly
@@ -95,7 +95,7 @@ content: |-
   この関数は、特定の設定項目がライブラリでサポートされているかどうかをユーザが問い合わせるための関数です。この関数は、標準的な liblxc ライブラリや、新しい設定項目がバックポートされた liblxc よりもはるかに少ない設定オプションを持つ liblxc のバージョンを実行する組み込みユーザに特に役に立つでしょう。
   
   
-  ### 新しいログ API 拡張 <!-- New log API extension -->
+  ## 新しいログ API 拡張 <!-- New log API extension -->
   
       struct lxc_log {
           const char *name;
@@ -123,7 +123,7 @@ content: |-
   -->
   上記の構造体や関数は、ユーザが LXC のロギングを初期化できるようにするためのものです。liblxc の API を直接使うユーザには役に立つでしょう。
   
-  ### `lxc-monitord` が廃止予定に <!-- Deprecation of `lxc-monitord` -->
+  ## `lxc-monitord` が廃止予定に <!-- Deprecation of `lxc-monitord` -->
   <!--
   Starting with LXC 2.1 the `lxc-monitord` binary is marked as deprecated.
   It is not required anymore to start daemonized containers. Instead, LXC 2.1 switches to an implementation using
@@ -137,7 +137,7 @@ content: |-
   -->
   また、重い負荷で行った新しい実装のテストで、このソリューションがより堅牢で信頼性が高いことがわかりました。
   
-  ### `lxc-copy` は `tmpfs` 上にスナップショットを作ります <!-- `lxc-copy` create snapshots on `tmpfs` -->
+  ## `lxc-copy` は `tmpfs` 上にスナップショットを作ります <!-- `lxc-copy` create snapshots on `tmpfs` -->
   <!--
   Place an ephemeral container started with -e flag on a tmpfs.
   Restrictions are that you cannot request the data to be kept while placing the container on a tmpfs,
@@ -185,7 +185,7 @@ content: |-
   これで、通常のクローン処理での正確な動作をリストアするために必要なことすべてのはずです。
   注: もしコンテナを再起動した場合、すべての変更は失われます。リブートごとに rootfs が再度マウントされますので、これを防ぐのは容易ではありません。
   
-  ## 設定項目名の変更 <!-- Configuration changes -->
+  # 設定項目名の変更 <!-- Configuration changes -->
   <!--
   A lot of configuration keys have been renamed to make the experience of configuring a container much more consistent.
   LXC 2.1 ensures that all keys that have subkeys are properly namespaces via the "." syntax.
@@ -193,7 +193,7 @@ content: |-
   コンテナの設定がより一貫性を持って行えるように、多数の設定項目の名前が変わりました。
   LXC 2.1 では、すべての設定項目が "." で分けられた適切なネームスペースから構成されるサブキーを持つようになりました。
   
-  ### ネットワーク設定 <!-- Network configuration -->
+  ## ネットワーク設定 <!-- Network configuration -->
   <!--
   The network configuration keys have all been given a new prefix. Some of them  have also been renamed.
   From LXC 2.1. onwards network configuration keys using the "lxc.network" prefix are considered deprecated.
@@ -264,7 +264,7 @@ content: |-
   -->
   上のような設定では、LXC は、最後の設定が `virbr0` に設定されているため、ネットワークは `virbr0` に関連付けられます。
   
-  ### 変更された設定項目一覧 <!-- Table of changed configuration keys -->
+  ## 変更された設定項目一覧 <!-- Table of changed configuration keys -->
   <!--
   The following table lists the legacy configuration keys on the left side and their corresponding new keys on the right side. Keys that have been entirely removed will have "-" as entry in the "New Key" column and a comment saying "removed" in the "Comments" table.
   -->
@@ -314,7 +314,7 @@ content: |-
       lxc.tty                              | lxc.tty.max                   |
       lxc.utsname                          | lxc.uts.name                  |
   
-  ### `lxc-update-config` スクリプト <!-- script -->
+  ## `lxc-update-config` スクリプト <!-- script -->
   <!--
   LXC 2.1 comes with a new script `lxc-update-config` which can be used to upgrade existing legacy
   LXC configurations to valid LXC 2.1 configurations by simply passing
@@ -334,7 +334,7 @@ content: |-
   バックアップファイルは、万が一、アップグレードで生成した設定ファイルが LXC 2.1 で使えないのに備えて作成します。
   バックアップを生成したあと、スクリプトが以前の設定が新しい設定に置き換えます。
   
-  ## 廃止予定の警告 <!-- Deprecation warnings -->
+  # 廃止予定の警告 <!-- Deprecation warnings -->
   <!--
   LXC 2.1 intends to be fully backward compatible with respect to pre-2.1 configuration files.
   This specifically means that the presence of any deprecated keys should not prevent the container from being usable.

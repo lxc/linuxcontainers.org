@@ -69,7 +69,7 @@ content: |-
    * utils: <!-- Fix -->lxc\_popen()/lxc\_pclose() を修正しました
    * utils: lxc\_popen() 内の不要な変数割り当てを削除しました <!-- Remove dead assignments in lxc\_popen() -->
   
-  ### ダウンロード <!-- Downloads -->
+  # ダウンロード <!-- Downloads -->
   <!--
   The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
   will very soon ship a packaged version of LXC 2.1.1.
