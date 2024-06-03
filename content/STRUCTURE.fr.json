@@ -23,10 +23,10 @@
      "meta": {"input": "incus/announcement.fr.md"}},
 
     {"path": "/incus/try-it/",
-     "title": "Incus - Try it online",
-     "menu": ["Incus", "Try it online"],
+     "title": "Incus — Essayer en ligne",
+     "menu": ["Incus", "Essayer en ligne"],
      "generator": "html",
-     "meta": {"input": "incus/try-it.html"}},
+     "meta": {"input": "incus/try-it.fr.html"}},
 
     {"path": "/incus/news/",
      "title": "Incus - News",
