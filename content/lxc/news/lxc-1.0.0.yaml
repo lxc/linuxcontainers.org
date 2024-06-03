@@ -1,7 +1,7 @@
 title: LXC 1.0.0 release announcement
 date: 2014/02/20 00:00
 content: |-
-  ### Introduction
+  # Introduction
   It's with great pleasure that the LXC team is announcing the release of LXC 1.0!
   
   This release is a significant milestone for us as it marks the first release we consider to be production ready.
@@ -13,14 +13,14 @@ content: |-
   cellphones and cloud instances. And we are confident that with LXC 1.0, we will see LXC's usage expand even more
   and be used for a lot of new and exciting projects.
   
-  ### Downloads
+  # Downloads
   The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
   will very soon ship a packaged version of LXC 1.0.
   
   Should you be interested in individual changes or just looking at the detailed development history,
   our main repository is on [GitHub](https://github.com/lxc/lxc).
   
-  ### New features
+  # New features
   LXC 1.0 is the result of 10 months of development and over a thousand commits, including a major rework of the way LXC is structured.
   It's therefore near impossible to come up with a comprehensive list of changes in this release,
   however here are some highlights:
@@ -46,7 +46,7 @@ content: |-
   A series of blog posts introducing you to LXC and highlighting some of LXC 1.0's new features may be found [here](https://www.stgraber.org/2013/12/20/lxc-1-0-blog-post-series/).
   
   
-  ### LXC 1.0 moving forward
+  # LXC 1.0 moving forward
   LXC 1.0 is the first production ready release of LXC and it comes with a commitment from upstream
   to maintain it until at least Ubuntu 14.04 LTS reaches end of life in April 2019.
   That's slightly over 5 years of support!
@@ -55,7 +55,7 @@ content: |-
   It's expected that we will have frequent bugfix releases of 1.0 so distributions can simply use those
   and save themselves the trouble of having to manually follow our stable branch.
   
-  ### Bug reports and contact information
+  # Bug reports and contact information
   Bug reports should be filed on [GitHub](https://github.com/lxc/lxc/issues) or if you do not wish to create an account, by e-mail to the appropriate [mailing-list](https://lists.linuxcontainers.org).
   The same goes for your patches. We tend to prefer patches sent to lxc-devel but we also accept pull request directly on GitHub.
   

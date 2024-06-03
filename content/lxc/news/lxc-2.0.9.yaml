@@ -277,7 +277,7 @@ content: |-
    * utils: Use 1LU otherwise we overflow
    * utils: Use access instead of stat
   
-  ### Downloads
+  # Downloads
   The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
   will very soon ship a packaged version of LXC 2.0.9.
   

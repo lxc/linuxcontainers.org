@@ -2,7 +2,7 @@ title: LXC 4.0.9 LTS has been released
 date: 2021/05/06 17:05
 origin: https://discuss.linuxcontainers.org/t/lxc-4-0-9-lts-has-been-released/10999
 content: |-
-  ### Introduction
+  # Introduction
   The LXC team is pleased to announce the release of LXC 4.0.9!
 
   This is the ninth bugfix release for LXC 4.0 which is supported until June 2025.
@@ -11,7 +11,7 @@ content: |-
 
   The changelog below covers 4.0.6 to 4.0.9.
 
-  ### Bugfixes
+  # Bugfixes
   As usual this bugfix releases focus on stability and hardening. Some of the highlights for this release are:
 
    - Testing improvements including fixes from oss-fuzz
@@ -816,11 +816,11 @@ content: |-
    - attach: introduce explicit personality macro
   [/details]
 
-  ### Support and upgrade
+  # Support and upgrade
   The LXC 4.0 branch is supported until June 2025.
   Only bugfixes and securitiy issues get included into the stable bugfix releases, so it's always safe and recommended to keep up and run the latest bugfix release.
 
-  ### Downloads
+  # Downloads
 
    - Main release tarball: [lxc-4.0.9.tar.gz](https://linuxcontainers.org/downloads/lxc/lxc-4.0.9.tar.gz)
    - GPG signature: [lxc-4.0.9.tar.gz.asc](https://linuxcontainers.org/downloads/lxc/lxc-4.0.9.tar.gz.asc)

@@ -62,7 +62,7 @@ content: |-
    * utils: Add macro \_\_LXC\_NUMSTRLEN
    * utils: Add uid, gid, group convenience wrappers
   
-  ### Downloads
+  # Downloads
   The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
   will very soon ship a packaged version of LXC 2.0.7.
   

@@ -152,7 +152,7 @@ content: |-
    * tree-wide: replace readdir\_r() with readdir()
    * attach: do not send procfd to attached process
   
-  ### Downloads
+  # Downloads
   The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
   will very soon ship a packaged version of LXC 1.0.9.
   

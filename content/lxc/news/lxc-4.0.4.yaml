@@ -2,12 +2,12 @@ title: LXC 4.0.4 LTS has been released
 date: 2020/08/04 21:08
 origin: https://discuss.linuxcontainers.org/t/lxc-4-0-4-lts-has-been-released/8624
 content: |-
-  ### Introduction
+  # Introduction
   The LXC team is pleased to announce the release of LXC 4.0.4!
 
   This is the fourth bugfix release for LXC 4.0 which is supported until June 2025.
 
-  ### Bugfixes
+  # Bugfixes
   Some of the highlights for this release are:
 
    - Support for new Linux clone flags (clone into cgroup)
@@ -98,11 +98,11 @@ content: |-
    - conf: ensure that the idmap pointer itself is freed
   [/details]
 
-  ### Support and upgrade
+  # Support and upgrade
   The LXC 4.0 branch is supported until June 2025.
   Only bugfixes and securitiy issues get included into the stable bugfix releases, so it's always safe and recommended to keep up and run the latest bugfix release.
 
-  ### Downloads
+  # Downloads
 
    - Main release tarball: [lxc-4.0.4.tar.gz](https://linuxcontainers.org/downloads/lxc/lxc-4.0.4.tar.gz)
    - GPG signature: [lxc-4.0.4.tar.gz.asc](https://linuxcontainers.org/downloads/lxc/lxc-4.0.4.tar.gz.asc)

@@ -3,7 +3,7 @@ date: 2015/04/10 00:00
 content: |-
   This is the second bugfix release for LXC 1.1.
   
-  ### Changes
+  # Changes
   
    * core: Fix non-tty stdin during attach
    * core: Improved container logging
@@ -19,7 +19,7 @@ content: |-
   
   Those stable fixes were brought to you by 9 individual contributors.
   
-  ### Downloads
+  # Downloads
   The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
   will very soon ship a packaged version of LXC 1.1.2.
   

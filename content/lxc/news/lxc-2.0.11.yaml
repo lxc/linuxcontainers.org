@@ -8,15 +8,15 @@ content: |-
 
   The changelog below is for everything which happened between 2.0.9 and 2.0.11.
 
-  ### Security fixes
-  #### Fixes CVE-2018-6556
+  # Security fixes
+  ## Fixes CVE-2018-6556
   `lxc-user-nic` when asked to delete a network interface would unconditionally open a user provided path. This code path could be used by an unprivileged user to check for the existence of a path which they wouldn't otherwise be able to reach. It may also be used to trigger side effects by causing a (read-only) open of special kernel files (ptmx, proc, sys). For more details see [here](https://nvd.nist.gov/vuln/detail/CVE-2018-6556).
 
-  #### Fixes CVE-2019-5736
+  ## Fixes CVE-2019-5736
   This release fixes [CVE-2019-5736](https://nvd.nist.gov/vuln/detail/CVE-2019-5736). It is a major security issue afflicting all container runtimes and is exploitable when attaching to privileged containers. More details on the the bug and how it is fixed can be found [here](https://brauner.github.io/2019/02/12/privileged-containers.html).
 
-  ### Main bugfixes
-  #### Allow attaching to undefined containers
+  # Main bugfixes
+  ## Allow attaching to undefined containers
   For example the following sequence is now expected to work:
 
       lxc-start -n <container-name> -f /path/to/conf \
@@ -25,43 +25,43 @@ content: |-
       -s 'lxc.rootfs = /path/to/rootfs' \
       -s 'lxc.init_cmd = /path/to/initcmd'
 
-  #### Correctly handle namespace inheritance in attach
+  ## Correctly handle namespace inheritance in attach
   `lxc_attach` will now correctly distinguish between a caller specifying specific namespaces to attach to and a caller not requesting specific namespaces. The latter is taken by `lxc_attach` to mean that all namespaces will be attached. This also needs to include all inherited namespaces.
 
-  #### Allow the creation of `testing` and `unstable` Debian containers
+  ## Allow the creation of `testing` and `unstable` Debian containers
   Being able to create `testing` containers, regardless of what's the name of the next stable, is useful in several contexts, included but not limited to testing purposes. i.e. one won't need to explicitly switch to `bullseye` once `buster` is released to be able to continue tracking `testing`. While we are at it, let's also enable `unstable`, which is exactly the same as `sid`, but there is no reason for not being able to.
 
-  #### Enable container without `CAP_SYS_ADMIN` (cgroup handling)
+  ## Enable container without `CAP_SYS_ADMIN` (cgroup handling)
   In case cgroup namespaces are supported but we do not have `CAP_SYS_ADMIN` we need to mount cgroups for the container. This patch enables both privileged and unprivileged containers without `CAP_SYS_ADMIN`.
 
-  #### Improved `cgroup2` handling
+  ## Improved `cgroup2` handling
   Since cgroup2 is becoming more common LXC 2.0.11 comes with a wide range of improvements in that area.
 
-  #### Support read-only mounts of cgroups
+  ## Support read-only mounts of cgroups
   This is especially useful if the container lacks `CAP_SYS_ADMIN` and thus cannot remount.
 
-  #### Allow to exit from console via `SIGTERM`
+  ## Allow to exit from console via `SIGTERM`
   This allows cleanly exiting a console session without control sequences. Instead `SIGTERM` can be sent to the affected process and it will cause LXC to cleanly terminate the console session.
 
-  #### Correctly calculate the number of arguments passed when running application containers
+  ## Correctly calculate the number of arguments passed when running application containers
   The number of arguments passed to `exec` was miscalculated under certain conditions. This release ensure that the correct number of arguments is calculated and passed to `exec.`
 
-  #### Remove all unneeded locking from the codebase
+  ## Remove all unneeded locking from the codebase
   Older version of LXC used mutexes in various places to ensure thread-safety. Careful redesign of these codepaths has enabled us to remove all mutextes from the codebase. This has led to simplifications and speedups for various operations such as container start and stop.
 
-  #### Fix cgroup namespace preservation
+  ## Fix cgroup namespace preservation
   This eliminates a race and makes sure that the cached file descriptor refers to the container's cgroup namespace and not to the hosts'.
 
-  #### Allow application to share the hosts' pid namespace
+  ## Allow application to share the hosts' pid namespace
   Prior versions of LXC did not allow to share the hosts' pid namespace. Starting with this bugfix release it is possible to do this correctly.
 
-  #### Correctly handle very short-lived application containers
+  ## Correctly handle very short-lived application containers
   Prior versions had trouble to correctly handle extremely short-lived application containers. For example, LXC could incorrectly report that a container is still running when it had already shut down due to a TOCTU and refuse to restart it. This caused unnecessary delay. Also, output of such short-lived containers written to stdout could get lost or truncated. This release fixes both issues.
 
-  #### Correctly handle containers where `/proc` has been mount with `hidepid=1` or `hidepid=2`
+  ## Correctly handle containers where `/proc` has been mount with `hidepid=1` or `hidepid=2`
   In prior versions attaching to unprivileged containers as an unprivileged user with `/proc` mounted with `hidepid=1` or `hidepid=2` would fail since LXC could not retrieve needed information from `/proc`. This is now fixed.
 
-  #### Allow to force mount cgroups even when cgroup namespaces are supported
+  ## Allow to force mount cgroups even when cgroup namespaces are supported
   This lets users specify `lxc.mount.auto = cgroup:mixed:force` or `lxc.mount.auto = cgroup:ro:force` or `lxc.mount.auto = cgroup:rw:force`.
 
   When cgroup namespaces are supported LXC will not mount cgroups for the container since it assumes that the init system will mount cgroups itself if it wants to. This assumption already broke when users wanted to run containers without CAP_SYS_ADMIN.
@@ -77,7 +77,7 @@ content: |-
     - read-only cgroups:
       It is useful to be able to mount cgroups read-only to e.g. prevent changing cgroup limits from inside the container while at the same time allowing the applications to perform introspection on their own cgroups. This again is mostly useful for application containers. System containers running systemd will usually not work correctly when cgroups are mounted read-only.
 
-  #### Everything else
+  ## Everything else
   2.0.11 includes almost a year and a half of bugfixes cherry-picked from current LXC, the entire list can be found below.
 
   [details="Full changelog"]
@@ -712,7 +712,7 @@ content: |-
   [/details]
 
 
-  ### Downloads
+  # Downloads
   The release tarballs may be found on our [download page](https://linuxcontainers.org/lxc/downloads/) and we expect most distributions will very soon ship a packaged version of LXC 2.0.11.
 
   Should you be interested in individual changes or just looking at the detailed development history, our stable branch is on [Github](https://github.com/lxc/lxc/tree/stable-2.0).

@@ -3,7 +3,7 @@ date: 2014/07/14 00:00
 content: |-
   This is the fifth bugfix release for the LXC 1.0 series.
   
-  ### seccomp profile
+  # seccomp profile
   Outside of the usual bugfixes, this release also introduces one important change.
   For systems where LXC is built with seccomp support, containers will now have a seccomp profile enabled
   which will prevent calls to the following syscalls:
@@ -25,7 +25,7 @@ content: |-
   If you want to manually turn this on for a container which doesn't use the common config mechanism,
   you can add something like "lxc.seccomp = /usr/share/lxc/config/common.seccomp" to the container configuration.
   
-  ### Changes
+  # Changes
   
   Core:
   
@@ -75,7 +75,7 @@ content: |-
   
   Those stable fixes were brought to you by 11 individual contributors.
   
-  ### Downloads
+  # Downloads
   The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
   will very soon ship a packaged version of LXC 1.0.5.
   

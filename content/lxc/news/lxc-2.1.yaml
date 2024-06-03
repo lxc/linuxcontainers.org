@@ -7,8 +7,8 @@ content: |-
   Note that this isn't a LTS release and we'll therefore only be supporting LXC 2.1 for a year.
   Production environments that require longer term support should remain on LXC 2.0 which is supported until June 2021.
   
-  ## New features
-  ### Resource limit support
+  # New features
+  ## Resource limit support
   Similar to requesting specific cgroup limits users can specify any limits for any resource
   the underlying kernel is aware of by prefixing the name of the limit with "lxc.prlimit."
   in the container's configuration file. For example, to request a limit on the number of processes
@@ -17,7 +17,7 @@ content: |-
       lxc.prlimit.nproc = unlimited
       lxc.prlimit.nice = 4
   
-  ### Support for unprivileged openvswitch networks
+  ## Support for unprivileged openvswitch networks
   It is now possible to define openvswitch networks as an unprivileged user:
   
       lxc.net.0.type = veth
@@ -28,7 +28,7 @@ content: |-
   LXC 2.1. will take care to properly delete the host-side veth device from the
   openvswitch database on shutdown.
   
-  ### New `lxc.cgroup.dir` key
+  ## New `lxc.cgroup.dir` key
   The `lxc.cgroup.dir` key lets users specify the name of the parent cgroup under
   which the container's cgroup will be created. Setting `lxc.cgroup.dir` will
   override the system-wide setting for `lxc.cgroup.pattern`.
@@ -36,7 +36,7 @@ content: |-
   For example, setting `lxc.cgroup.dir = mycontainers` for a container with `lxc.uts.name = c1`
   will cause LXC to create the cgroups `mycontainers/c1` for all controllers in the cgroup hierarchy.
   
-  ### Support for hybrid cgroup layout
+  ## Support for hybrid cgroup layout
   Since the advent of cgroup v2 some init systems have decided to allow for a hybrid mode in which
   cgroup v1 per-controller hierarchies can be used simultaneously with an empty cgroup v2 hierarchy.
   Systems that use this hybrid mode usually have a cgroup layout similar to this one:
@@ -50,17 +50,17 @@ content: |-
   This can be confirmed by testing whether `findmnt | grep cgroup2` returns a matching line.
   LXC 2.1 supports this hybrid mode.
   
-  ### Limiting the number of ptys a container can allocate
+  ## Limiting the number of ptys a container can allocate
   Setting `lxc.pty.max` will cause LXC to mount the container's devpts with the requested limit
   on the number of usable ptys. For example, setting `lxc.pty.max = 10` will only allow
   the container to allocate `10` ptys. The default setting is `1024`.
   
-  ### `bool lxc_config_item_is_supported(const char *key)` API extension
+  ## `bool lxc_config_item_is_supported(const char *key)` API extension
   This function let's users query the liblxc whether a specific configuration item is supported for this library.
   This is particularly useful for embedded users that running versions of liblxc that come with significantly
   less configuration options than the standard liblxc library or liblxc's that have backported new configuration items.
   
-  ### New log API extension
+  ## New log API extension
   
       struct lxc_log {
           const char *name;
@@ -85,7 +85,7 @@ content: |-
   
   These types and functions let users initialize LXC logging. This is useful for users who use the liblxc API directly.
   
-  ### Deprecation of `lxc-monitord`
+  ## Deprecation of `lxc-monitord`
   Starting with LXC 2.1 the `lxc-monitord` binary is marked as deprecated.
   It is not required anymore to start daemonized containers. Instead, LXC 2.1 switches to an implementation using
   an abstract unix domain socketpair. This has the advantage of spawning one less processes on container startup which is
@@ -93,7 +93,7 @@ content: |-
   
   Also, testing the new implementation on heavy workloads has shown this solution to be more robust and reliable in every way.
   
-  ### `lxc-copy` create snapshots on `tmpfs`
+  ## `lxc-copy` create snapshots on `tmpfs`
   Place an ephemeral container started with -e flag on a tmpfs.
   Restrictions are that you cannot request the data to be kept while placing the container on a tmpfs,
   that either overlay or aufs backing storage must be used, and that the storage backend of the original
@@ -123,11 +123,11 @@ content: |-
   This should be all that is required to restore the exact behaviour we would get with a normal clone.
   NOTE: If the container is rebooted all changes made to it are lost. This is not easy to prevent since each reboot remounts the rootfs again.
   
-  ## Configuration changes
+  # Configuration changes
   A lot of configuration keys have been renamed to make the experience of configuring a container much more consistent.
   LXC 2.1 ensures that all keys that have subkeys are properly namespaces via the "." syntax.
   
-  ### Network configuration
+  ## Network configuration
   The network configuration keys have all been given a new prefix. Some of them  have also been renamed.
   From LXC 2.1. onwards network configuration keys using the "lxc.network" prefix are considered deprecated.
   They are replaced by network configuration keys using the new "lxc.net" prefix.
@@ -180,7 +180,7 @@ content: |-
   
   would lead to LXC associating the network with `virbr0` since it is the last key in the configuration.
   
-  ### Table of changed configuration keys
+  ## Table of changed configuration keys
   The following table lists the legacy configuration keys on the left side and their corresponding new keys on the right side. Keys that have been entirely removed will have "-" as entry in the "New Key" column and a comment saying "removed" in the "Comments" table.
   
       Legacy Key                           | New Key                       | Comments
@@ -227,7 +227,7 @@ content: |-
       lxc.tty                              | lxc.tty.max                   |
       lxc.utsname                          | lxc.uts.name                  |
   
-  ### `lxc-update-config` script
+  ## `lxc-update-config` script
   LXC 2.1 comes with a new script `lxc-update-config` which can be used to upgrade existing legacy
   LXC configurations to valid LXC 2.1 configurations by simply passing
   
@@ -238,7 +238,7 @@ content: |-
   The backup is made in case the upgrade does not yield a usable LXC 2.1 config file.
   After creating the backup the script will replace all legacy configuration keys with their new counterparts.
   
-  ## Deprecation warnings
+  # Deprecation warnings
   LXC 2.1 intends to be fully backward compatible with respect to pre-2.1 configuration files.
   This specifically means that the presence of any deprecated keys should not prevent the container from being usable.
   However, LXC 2.1 will warn about the presence of any deprecated configuration keys.

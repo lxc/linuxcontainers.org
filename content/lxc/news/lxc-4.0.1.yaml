@@ -2,12 +2,12 @@ title: LXC 4.0.1 LTS has been released
 date: 2020/04/06 20:04
 origin: https://discuss.linuxcontainers.org/t/lxc-4-0-1-lts-has-been-released/7310
 content: |-
-  ### Introduction
+  # Introduction
   The LXC team is pleased to announce the release of LXC 4.0.1!
 
   This is the first bugfix release for LXC 4.0 which is supported until June 2025.
 
-  ### Bugfixes
+  # Bugfixes
   This release fixes a number of issues that were reported shortly following the [original 4.0.0 release](https://discuss.linuxcontainers.org/t/lxc-4-0-lts-has-been-released/7182). Some of the highlights include:
 
    - Tweak systemd ordering (start after remote-fs.target)
@@ -62,11 +62,11 @@ content: |-
    - Revert "start: remove unnecessary check for valid cgroup_ops"
   [/details]
 
-  ### Support and upgrade
+  # Support and upgrade
   The LXC 4.0 branch is supported until June 2025.
   Only bugfixes and securitiy issues get included into the stable bugfix releases, so it's always safe and recommended to keep up and run the latest bugfix release.
 
-  ### Downloads
+  # Downloads
 
    - Main release tarball: [lxc-4.0.1.tar.gz](https://linuxcontainers.org/downloads/lxc/lxc-4.0.1.tar.gz)
    - GPG signature: [lxc-4.0.1.tar.gz.asc](https://linuxcontainers.org/downloads/lxc/lxc-4.0.1.tar.gz.asc)

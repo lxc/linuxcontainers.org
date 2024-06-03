@@ -2,18 +2,18 @@ title: LXC 5.0 LTS has been released
 date: 2022/06/17 17:06
 origin: https://discuss.linuxcontainers.org/t/lxc-5-0-lts-has-been-released/14381
 content: |-
-  ### Introduction
+  # Introduction
   The LXC team is pleased to announce the release of LXC 5.0.0!
 
   This is the result of two years of work since the LXC 4.0.0 release and is the fifth LTS release for the LXC project. This release will be supported until June 2027.
 
-  ### Major changes
-  #### Switch to meson
+  # Major changes
+  ## Switch to meson
   With this release of LXC, autotools is being replaced by `meson` as the build tooling. Compatibility `Makefile` targets are provided for `all`, `install` and `dist`.
 
   This is a change which is particularly relevant for packagers as it otherwise has no user visible impact.
 
-  #### New cgroup configuration options
+  ## New cgroup configuration options
   Four new options were added:
 
    - lxc.cgroup.dir.container
@@ -23,7 +23,7 @@ content: |-
 
   Those allow controlling exactly what cgroup paths will be used for the container itself, for the monitor process, for the moitor process upon container termination as well as allow the container cgroup to be placed inside of a nested (inner) cgroup.
 
-  #### Time namespace support
+  ## Time namespace support
   LXC now supports setting up the time namespace.
   This is done through two new options:
 
@@ -32,7 +32,7 @@ content: |-
 
   Which will apply an offset (anywhere from a few nanoseconds to hours) on top of the main system clock.
 
-  #### VLAN support on VETH devices
+  ## VLAN support on VETH devices
   Two new config options were added to the VETH network devices to control VLAN tagging.
 
    - veth.vlan.id
@@ -40,14 +40,14 @@ content: |-
 
   The former sets the primary (untagged) VLAN while the latter is used to set additional tagged VLANs on the device. This requires the use of VLAN filtering on the parent bridge device.
 
-  #### Configurable transmit/receive queues on VETH devices
+  ## Configurable transmit/receive queues on VETH devices
   Still on VETH devices. It's now possible to customize the number of receive and transmit queues through two new configuration options:
 
    - veth.n_rxqueues
    - veth.n_txqueues
 
 
-  ### Complete changelog
+  # Complete changelog
   Here is a complete list of all changes in this release:
 
   [details="Full commit list"]
@@ -1905,15 +1905,15 @@ content: |-
    - meson: Fix bad strerror_r check
   [/details]
 
-  ### Support and upgrade
+  # Support and upgrade
   LXC 5.0 will be supported until June 2027 and our current LTS release, LXC 4.0 will now switch to a slower maintenance pace, only getting critical bugfixes and security updates.
 
   We strongly recommend all LXC users to plan an upgrade to the 5.0 branch.
 
-  ### Downloads
+  # Downloads
 
    - Main release tarball: [lxc-5.0.0.tar.gz](https://linuxcontainers.org/downloads/lxc/lxc-5.0.0.tar.gz)
    - GPG signature: [lxc-5.0.0.tar.gz.asc](https://linuxcontainers.org/downloads/lxc/lxc-5.0.0.tar.gz.asc)
 
-  ### Contributors
+  # Contributors
   The LXC 5.0 release was brought to you by a total of 65 contributors.

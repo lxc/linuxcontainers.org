@@ -2,47 +2,47 @@ title: LXC 6.0 LTS has been released
 date: 2024/04/03 20:04
 origin: https://discuss.linuxcontainers.org/t/lxc-6-0-lts-has-been-released/19567
 content: |-
-  ### Introduction
+  # Introduction
   The LXC team is pleased to announce the release of LXC 6.0 LTS!
 
   This is the result of two years of work since the LXC 5.0 release and is the sixth LTS release for the LXC project. This release will be supported until June 2029.
 
-  ### Highlights
-  #### New multi-call binary
+  # Highlights
+  ## New multi-call binary
   A new `tools-multicall=true` configuration option can be used to produce a single `lxc` binary which can then have all other `lxc-XYZ` commands be symlinked to.
 
   This allows for a massive disk space reduction, particularly useful for embedded platforms.
 
-  #### Add a `set_timeout` function to the library
+  ## Add a `set_timeout` function to the library
   A new `set_timeout` function is available on the main `lxc_container` struct and allow for setting a global timeout for interactions with the LXC monitor.
 
   Prior to this, there was no timeout, leading to potential deadlocks as there's also no way to cancel an monitor request.
 
   As a result of adding this new symbol to the library, we have bumped the liblxc symbol version to 1.8.0.
 
-  #### LXC bridge now has IPV6 enabled
+  ## LXC bridge now has IPV6 enabled
   The default `lxcbr0` bridge now comes with IPv6 enabled by default, using an IPv6 ULA subnet.
 
-  #### Support for uid/gid selection in `lxc-usernsexec`
+  ## Support for uid/gid selection in `lxc-usernsexec`
   The `lxc-usernsexec` tool now has both `-u` and `-g` options to control what resulting UID and GID (respectively) the user wishes to use (defaulting to 0/0).
 
-  #### Improvements to `lxc-checkconfig`
+  ## Improvements to `lxc-checkconfig`
   `lxc-checkconfig` now only shows the version if `lxc-start` is present (rather than failing).
   Additionally, it's seen a number of other cosmetic improvements as well as now listing the maximum number of allowed namespaces for every namespace type.
 
-  #### Support for squashfs OCI images
+  ## Support for squashfs OCI images
   The built-in `oci` container template can now handle `squashfs` compressed OCI images through the use of `atomfs`.
 
-  #### Switched from systemd's dbus to dbus-1
+  ## Switched from systemd's dbus to dbus-1
   LXC now uses `libdbus-1` for DBus interactions with systemd rather than using `libsystemd`.
   The reason for this change is that `libdbus-1` is readily available for static builds.
 
-  #### Removed Upstart support
+  ## Removed Upstart support
   Support for the `Upstart` init system has finally been removed from LXC.
 
   This shouldn't really affect anyone at this stage and allowed for cleaning up some logic and config files from our repository.
 
-  ### Full changelog
+  # Full changelog
 
   [details="Changelog"]
    - Read list until process exits
@@ -252,24 +252,24 @@ content: |-
    - lxc.spec: Align SPDX license id
   [/details]
 
-  ### Support and upgrade
+  # Support and upgrade
   LXC 6.0 will be supported until June 2029 and our current LTS release, LXC 5.0 will now switch to a slower maintenance pace, only getting critical bugfixes and security updates.
 
   We strongly recommend all LXC users to plan an upgrade to the 6.0 branch.
 
-  ### Future release cadence
+  # Future release cadence
   To make new LXC features more readily available to users, we have decided to start producing non-LTS releases again. The planned interval is every 6 months with LXC 6.1 planned for October.
 
   Those releases will not benefit from the LTS guarantees around stability, support and security maintenance and will only be supported until the next release comes out.
 
   Production users will likely want to remain on an LTS release.
 
-  ### Downloads
+  # Downloads
 
    - Main release tarball: [lxc-6.0.0a.tar.gz](https://linuxcontainers.org/downloads/lxc/lxc-6.0.0a.tar.gz)
    - GPG signature: [lxc-6.0.0a.tar.gz.asc](https://linuxcontainers.org/downloads/lxc/lxc-6.0.0a.tar.gz.asc)
 
   **NOTE:** The initial release tarballs (`lxc-6.0.0.tar.gz`) had an incorrect `LXC_DEVEL` line in `meson.build` which didn't line up with the matching git commit. `lxc-6.0.0a.tar.gz` is a re-issue of the release tarball which now properly matches the git tag.
 
-  ### Contributors
+  # Contributors
   The LXC 6.0 release was brought to you by a total of 56 contributors.

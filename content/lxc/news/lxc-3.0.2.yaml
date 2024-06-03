@@ -2,12 +2,12 @@ title: LXC 3.0.2 has been released
 date: 2018/08/21 15:08
 origin: https://discuss.linuxcontainers.org/t/lxc-3-0-2-has-been-released/2504
 content: |-
-  ### Introduction
+  # Introduction
   The LXC team is pleased to announce the release of LXC 3.0.2!
 
   As a stable bugfix release, no major changes have been done, instead focusing on bugfixes and minor usability improvements.
 
-  #### Highlights
+  ## Highlights
 
   - Adapt to changes in Linux `4.18` which allows to create but not to open devices nodes in user namespaces
   - Allocate network namespace id on container startup
@@ -19,7 +19,7 @@ content: |-
     This significantly reduced the size of the codebase.
   - Tree-wide coding style fixes
 
-  ##### CVE-2018-6556
+  ### CVE-2018-6556
 
   This release fixes [CVE-2018-6556](http://seclists.org/oss-sec/2018/q3/81) via commit [CVE 2018-6556: verify netns fd in lxc-user-nic](https://github.com/lxc/lxc/commit/c1cf54ebf251fdbad1e971679614e81649f1c032): `lxc-user-nic` when asked to delete a network interface will unconditionally open a user provided path. 
 
@@ -27,7 +27,7 @@ content: |-
 
   Affected releases are LXC: 2.0 versions above and including 2.0.9; 3.0 versions above and including 3.0.0, prior to 3.0.2.
 
-  #### Bugfixes (LXC)
+  ## Bugfixes (LXC)
 
   - fixed a range of bugs found by Coverity
   - lxc-usernsexec: cleanup and bugfixes
@@ -78,7 +78,7 @@ content: |-
   - conf: only use newuidmap and newgidmap when necessary
   - autotools: support tls in cross-compile
 
-  #### Bugfixes (LXC templates)
+  ## Bugfixes (LXC templates)
 
    - fedora: support Fedora 28
    - templates: opensuse: Add support for openSUSE Leap 15
@@ -86,14 +86,14 @@ content: |-
    - templates: lxc-opensuse.in: Ensure cache is fully populated
    - templates: lxc-opensuse.in: Fix openSUSE Leap 15 cache url
 
-  #### Bugfixes (python3 binding)
+  ## Bugfixes (python3 binding)
 
    - Fix typo in README.md
 
-  ### Support and upgrade
+  # Support and upgrade
   LXC 3.0.2 is supported until June 2023 and is our current LTS release, users are encouraged to update to the latest bugfix releases as they're made available.
 
-  ### Downloads
+  # Downloads
    - Main release tarball: [lxc-3.0.2.tar.gz](https://linuxcontainers.org/downloads/lxc/lxc-3.0.2.tar.gz) (GPG: [lxc-3.0.2.tar.gz.asc](https://linuxcontainers.org/downloads/lxc/lxc-3.0.2.tar.gz.asc))
    - LXC templates tarball: [lxc-templates-3.0.2.tar.gz](https://linuxcontainers.org/downloads/lxc/lxc-templates-3.0.2.tar.gz) (GPG: [lxc-templates-3.0.2.tar.gz.asc](https://linuxcontainers.org/downloads/lxc/lxc-templates-3.0.2.tar.gz.asc))
    - LXC python3 bindings tarball: [python3-lxc-3.0.2.tar.gz](https://linuxcontainers.org/downloads/lxc/python3-lxc-3.0.2.tar.gz) (GPG: [python3-lxc-3.0.2.tar.gz.asc](https://linuxcontainers.org/downloads/lxc/python3-lxc-3.0.2.tar.gz.asc))

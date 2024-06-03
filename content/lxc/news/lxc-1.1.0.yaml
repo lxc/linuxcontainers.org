@@ -13,7 +13,7 @@ content: |-
   While not strictly required, it is recommended that LXC 1.1 be used with cgmanager 0.35 (or higher)
   and lxcfs 0.5 (or higher).
   
-  ### Highlights
+  # Highlights
   LXC 1.1 introduces checkpoint/restore support for containers through CRIU.
   This allows to serialize the container running state to disk, for live migration or for later local restoration
   of the container.
@@ -28,7 +28,7 @@ content: |-
   
   This release was made possible by contributions from 84 developers.
   
-  ### New features
+  # New features
    * lxc-autostart: New -A/--ignore-auto flag (starts all containers)
    * lxc-ls: New "interface" field
    * centos/fedora: Added a root\_password\_expired environment variable (defaults to yes)
@@ -59,7 +59,7 @@ content: |-
    * core: A new common.conf.d configuration directory is available for users and packages to drop configuration snippets to be applied to all containers
    * core: The container\_ttys environment variable is now set by LXC
   
-  ### Change in behavior
+  # Change in behavior
    * lxc-create now requires be passed (-t), use "none" for the old behavior.
    * snapshots are now stored in the container's directory
    * lxc.arch for PER\_LINUX32 is now output as i686
@@ -73,7 +73,7 @@ content: |-
    * core: clear\_config\_item now exclusively affects lists (lxc\_list) entries. set\_config\_item should be used for anything else.
    * templates: All templates now use lxc.mount.auto = cgroup:mixed proc:mixed sys:mixed (safe default configuration)
   
-  ### Downloads
+  # Downloads
   The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
   will very soon ship a packaged version of LXC 1.1.0, unless they decide to stick to the long term 1.0 release.
   

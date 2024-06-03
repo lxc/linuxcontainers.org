@@ -57,7 +57,7 @@ content: |-
    * utils: Fix the bug of 'ts-\>stdoutfd' did not fill with parameters 'stdoutfd'
    * utils: Remove dead assignments in lxc\_popen()
   
-  ### Downloads
+  # Downloads
   The release tarballs may be found on our [download page](/lxc/downloads/) and we expect most distributions
   will very soon ship a packaged version of LXC 1.0.11.
   
