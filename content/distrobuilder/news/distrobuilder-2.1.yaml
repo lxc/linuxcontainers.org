@@ -2,7 +2,7 @@ title: Distrobuilder 2.1 has been released
 date: 2022/04/27 16:04
 origin: https://discuss.linuxcontainers.org/t/distrobuilder-2-1-has-been-released/13954
 content: |-
-  ### Introduction
+  # Introduction
   The distrobuilder team is proud to announce the release of distrobuilder 2.1!
 
   Outside of the usual updates to account for changes made by various distributions, the main highlights are:
@@ -91,7 +91,7 @@ content: |-
    - windows: Add viostor driver
   [/details]
 
-  ### Downloads
+  # Downloads
 
    - Main release tarball: [distrobuilder-2.1.tar.gz](https://linuxcontainers.org/downloads/distrobuilder/distrobuilder-2.1.tar.gz)
    - GPG signature: [distrobuilder-2.1.tar.gz.asc](https://linuxcontainers.org/downloads/distrobuilder/distrobuilder-2.1.tar.gz.asc)

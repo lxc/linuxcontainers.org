@@ -2,7 +2,7 @@ title: Distrobuilder 1.1 has been released
 date: 2020/08/20 21:08
 origin: https://discuss.linuxcontainers.org/t/distrobuilder-1-1-has-been-released/8749
 content: |-
-  ### Introduction
+  # Introduction
   The distrobuilder team is proud to announce its initial release, distrobuilder 1.1!
 
   This release's highlight is the introduction of VM image building support following LXD's introduction of VM support.
@@ -138,7 +138,7 @@ content: |-
    - doc/generators: Add fstab
   [/details]
 
-  ### Downloads
+  # Downloads
 
    - Main release tarball: [distrobuilder-1.1.tar.gz](https://linuxcontainers.org/downloads/distrobuilder/distrobuilder-1.1.tar.gz)
    - GPG signature: [distrobuilder-1.1.tar.gz.asc](https://linuxcontainers.org/downloads/distrobuilder/distrobuilder-1.1.tar.gz.asc)

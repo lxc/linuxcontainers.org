@@ -272,7 +272,7 @@
      "generator": "news",
      "meta": {"dir": "/content/distrobuilder/news/",
               "input": "distrobuilder/news.md",
-              "toc_depth": "2-2",
+              "toc_depth": "2-3",
               "str_older": "Older news",
               "str_back": "Back to the news overview"}},
 
