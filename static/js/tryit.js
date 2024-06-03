@@ -457,7 +457,7 @@ $(document).ready(function() {
         var displayFeedback = 0;
 
         var nextIndex = -1;
-        if ($(this).text() === "Next") {
+        if ($(this).hasClass("tabNext")) {
             nextIndex = thisIndex + 1;
             if (nextIndex >= $('#tryit_navigation li').length) {
                 nextIndex = 0;
@@ -466,7 +466,7 @@ $(document).ready(function() {
                 displayFeedback = 1;
             };
         }
-        else if ($(this).text() === "Previous") {
+        else if ($(this).hasClass("tabPrevious")) {
             nextIndex = thisIndex - 1;
             if (nextIndex < 0) { nextIndex = 0; };
         };
