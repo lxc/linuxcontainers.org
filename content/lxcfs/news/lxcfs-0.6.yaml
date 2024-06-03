@@ -7,7 +7,7 @@ content: |-
    * Fixes some memory and fd leaks.
    * Fixes cpu-average in /proc/stat.
   
-  ### Downloads
+  # Downloads
   The release tarballs can be found on our [download page](/lxcfs/downloads/).
   
   

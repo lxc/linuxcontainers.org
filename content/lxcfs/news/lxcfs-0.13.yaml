@@ -7,6 +7,6 @@ content: |-
    * This fixes several bugs which prevented newer systemd-based containers from
      starting, and some more general bugs.
   
-  ### Downloads
+  # Downloads
   The release tarballs can be found on our [download page](/lxcfs/downloads/).
   

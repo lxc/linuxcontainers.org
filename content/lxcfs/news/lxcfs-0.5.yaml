@@ -6,7 +6,7 @@ content: |-
   
   This tweaks configure.ac to detect cgmanager version and tweak the LXC hook.
   
-  ### Downloads
+  # Downloads
   The release tarballs can be found on our [download page](/lxcfs/downloads/).
   
   

@@ -2,10 +2,10 @@ title: LXCFS 0.18 release announcement
 date: 2016/02/04 00:00
 content: |-
 
-  ### Changes
+  # Changes
    * Support restarting lxcfs in most cases, by moving most functionality
      into a library which is reloaded on SIGUSR1
   
-  ### Downloads
+  # Downloads
   The release tarballs can be found on our [download page](/lxcfs/downloads).
   

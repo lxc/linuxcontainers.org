@@ -6,6 +6,6 @@ content: |-
   
    * Fixing a critical memory allocation bug which makes 0.14 unusable.
   
-  ### Downloads
+  # Downloads
   The release tarballs can be found on our [download page](/lxcfs/downloads).
   

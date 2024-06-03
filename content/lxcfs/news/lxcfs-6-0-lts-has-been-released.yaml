@@ -2,24 +2,24 @@ title: LXCFS 6.0 LTS has been released
 date: 2024/04/01 04:04
 origin: https://discuss.linuxcontainers.org/t/lxcfs-6-0-lts-has-been-released/19546
 content: |-
-  ### Introduction
+  # Introduction
   The LXCFS team is pleased to announce the release of LXCFS 6.0 LTS!
 
   This is the result of two years of work since the LXCFS 5.0 release and is the fifth LTS release for the LXCFS project. This release will be supported until June 2029.
 
-  ### Highlights
-  #### New `--enable-cgroup option`
+  # Highlights
+  ## New `--enable-cgroup option`
   LXCFS can provide a virtual cgroupfs (v1) tree for use by containers.
   This feature was implemented prior to cgroup namespaces being implemented in the kernel and effectively allow providing a similar experience on kernels lacking that feature.
 
   As most supported Linux distributions now all feature a kernel supporting cgroup namespaces and most new distros have even switched away from cgroupv1, it didn't make sense to keep this feature enabled by default. As a result, it has now been moved behind a new startup argument, `--enable-cgroup`.
 
-  #### CPUs no longer masked in /sys/devices/system/cpu
+  ## CPUs no longer masked in /sys/devices/system/cpu
   LXCFS 5.0 shipped with logic to filter out entries in `/sys/devices/system/cpu` based on what CPUs were allowed in the caller's cpuset. This behavior doesn't actually reflect the behavior on normal systems where even offline CPUs still show up in `/sys/devices/system/cpu`.
 
   As a result, LXCFS 6.0 reversed that logic and is now only making sure to keep the list of online/offline CPUs up to date while the individual CPU directories all remain accessible.
 
-  ### Full changelog
+  # Full changelog
 
   [details="Changelog"]
    - lxcfs_fuse: ensure lxcfs_fuse_compat.h is included after including fuse header
@@ -107,22 +107,22 @@ content: |-
    - cgroup_utils: explicitly check for cgroup2 FDs in cgroup_walkup_to_root
   [/details]
 
-  ### Support and upgrade
+  # Support and upgrade
   LXCFS 6.0 will be supported until June 2029 and our current LTS release, LXCFS 5.0 will now switch to a slower maintenance pace, only getting critical bugfixes and security updates.
 
   We strongly recommend all LXCFS users to plan an upgrade to the 6.0 branch.
 
-  ### Future release cadence
+  # Future release cadence
   To make new LXCFS features more readily available to users, we have decided to start producing non-LTS releases again. The planned interval is every 6 months with LXCFS 6.1 planned for October.
 
   Those releases will not benefit from the LTS guarantees around stability, support and security maintenance and will only be supported until the next release comes out.
 
   Production users will likely want to remain on an LTS release.
 
-  ### Downloads
+  # Downloads
 
    - Main release tarball: [lxcfs-6.0.0.tar.gz](https://linuxcontainers.org/downloads/lxcfs/lxcfs-6.0.0.tar.gz)
    - GPG signature: [lxcfs-6.0.0.tar.gz.asc](https://linuxcontainers.org/downloads/lxcfs/lxcfs-6.0.0.tar.gz.asc)
 
-  ### Contributors
+  # Contributors
   The LXCFS 6.0 release was brought to you by a total of 25 contributors.

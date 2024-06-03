@@ -9,7 +9,7 @@ content: |-
   
   This release includes ONLY this bugfix and should be immediately deployed by anyone currently using lxcfs.
   
-  ### Downloads
+  # Downloads
   The release tarballs can be found on our [download page](/lxcfs/downloads/).
   
   

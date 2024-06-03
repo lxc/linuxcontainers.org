@@ -2,12 +2,12 @@ title: LXCFS 4.0.4 LTS has been released
 date: 2020/06/18 20:06
 origin: https://discuss.linuxcontainers.org/t/lxcfs-4-0-4-lts-has-been-released/8212
 content: |-
-  ### Introduction
+  # Introduction
   The LXCFS team is pleased to announce the release of LXCFS 4.0.4!
 
   This is the fourth bugfix release for LXCFS 4.0 which is supported until June 2025.
 
-  ### Bugfixes
+  # Bugfixes
   Some of the highlights for this release are:
 
    - Fix internal cache (big performance improvement)
@@ -67,11 +67,11 @@ content: |-
    - proc_cpuview: cleanup cpuview_init_head()
   [/details]
 
-  ### Support and upgrade
+  # Support and upgrade
   The LXCFS 4.0 branch is supported until June 2025.
   Only bugfixes and securitiy issues get included into the stable bugfix releases, so it's always safe and recommended to keep up and run the latest bugfix release.
 
-  ### Downloads
+  # Downloads
 
    - Main release tarball: [lxcfs-4.0.4.tar.gz](https://linuxcontainers.org/downloads/lxcfs/lxcfs-4.0.4.tar.gz)
    - GPG signature: [lxcfs-4.0.4.tar.gz.asc](https://linuxcontainers.org/downloads/lxcfs/lxcfs-4.0.4.tar.gz.asc)
