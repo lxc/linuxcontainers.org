@@ -1,0 +1,479 @@
+title: Incus 6.2 リリースのお知らせ
+date: 2024/05/31 20:05
+origin: https://discuss.linuxcontainers.org/t/incus-6-2-has-been-released/20060
+content: |-
+  # はじめに <!-- Introduction -->
+  <!--
+  The Incus team is pleased to announce the release of Incus 6.2!
+  -->
+  Incus チームは、Incus 6.2 のリリースのアナウンスができてうれしいです！
+
+  <!--
+  This release contains the second wave of changes contributed by students of the [University of Texas at Austin](https://www.utexas.edu/) and a few other features and improvements.
+  -->
+  このリリースには、[テキサス大学オースティン校](https://www.utexas.edu/)の学生による変更の第 2 弾と、その他いくつかの機能追加と改良が含まれています。
+
+  [![image|690x454](https://discuss.linuxcontainers.org/uploads/default/original/2X/3/317d9a37f10c18618c360f850231d8b731360c7a.png)](https://linuxcontainers.org/incus/try-it/)
+
+  <!--
+  As usual, you can try it for yourself online: https://linuxcontainers.org/incus/try-it/
+  -->
+  いつものように、オンラインでご自身で試せます: https://linuxcontainers.org/incus/try-it/
+
+  Enjoy!
+
+  # 新機能 <!-- New features -->
+  ## 新しい `incus top` コマンド <!-- New `incus top` command -->
+  <!--
+  A new `incus top` command was added. This builds on top of Incus' built-in OpenMetrics endpoint and allows for a refreshing view of the instance list, including CPU, memory and disk usage.
+  -->
+  新たに `incus top` コマンドを追加しました。これは、Incus のビルトイン OpenMetrics エンドポイント上に構築され、CPU、メモリー、ディスク使用量のインスタンスのリストの更新ビューが表示できるようになります。
+
+      +---------------+-------------+-----------+-----------+
+      | INSTANCE NAME | CPU TIME(S) |  MEMORY   |   DISK    |
+      +---------------+-------------+-----------+-----------+
+      | foo           | 6.73        | 12.44MiB  | 341.88MiB |
+      +---------------+-------------+-----------+-----------+
+      | speedtest     | 32.79       | 23.84MiB  | 373.50MiB |
+      +---------------+-------------+-----------+-----------+
+      | v1            | 67130.91    | 254.54MiB | 1.25GiB   |
+      +---------------+-------------+-----------+-----------+
+      Press 'd' + ENTER to change delay
+      Press 's' + ENTER to change sorting method
+      Press CTRL-C to exit
+
+      Delay: 5s
+      Sorting Method: Alphabetical
+
+  <!--
+  This work was contributed by [University of Texas at Austin ](https://www.utexas.edu) students.
+  -->
+  この作業は、[テキサス大学オースティン校](https://www.utexas.edu)の学生によるコントリビューションです。
+
+  ## リソース API 内のシステム負荷情報 <!-- System load information in resources API -->
+  <!--
+  A new section was added to the resources API to expose server load information (1min, 5min, 10min) as well as total process count.
+  -->
+  リソース API に新しいセクションが追加されました。サーバー負荷情報（1分、5分、10分）と、合計プロセス数が公開されるようになりました。
+
+  <!--
+  This is particularly useful for placement and auto-balancing logic as it allows for getting a good glimpse at how busy the various servers are solely from the Incus API.
+  -->
+  これは、Incus API からだけでさまざまなサーバーがどの程度ビジーかをひと目で見ることができるため、配置や自動バランシングのロジックに特に役立つでしょう。
+
+      stgraber@castiana:~$ incus info --resources
+      System:
+        UUID: 05006c9c-7863-ee11-9e1b-224425600022
+        Vendor: Framework
+        Product: Laptop 13 (AMD Ryzen 7040Series)
+        Family: Laptop
+        Version: A5
+        SKU: FRANDGCP05
+        Serial: FRANDGCPA5340500AZ
+        Type: physical
+        Chassis:
+            Vendor: Framework
+            Type: Notebook
+            Version: A5
+            Serial: FRANDGCPA5340500AZ
+        Motherboard:
+            Vendor: Framework
+            Product: FRANMDCP05
+            Serial: FRANMDCPA534040120
+            Version: A5
+        Firmware:
+            Vendor: INSYDE Corp.
+            Version: 03.05
+            Date: 03/29/2024
+
+      Load:
+        Processes: 519
+        Average: 0.80 0.77 0.71
+
+      [snip...]
+
+  <!--
+  This work was contributed by [University of Texas at Austin ](https://www.utexas.edu) students.
+  -->
+  この作業は、[テキサス大学オースティン校](https://www.utexas.edu)の学生によるコントリビューションです。
+
+  ## インスタンスとプロジェクトへのアクセス情報を問い合わせる機能 <!-- Ability to query access information for instances and projects -->
+  <!--
+  Two new APIs were added to allow querying the access list of a project or even a specific instance.
+  -->
+  新しい API が 2 つ追加され、プロジェクトまたは特定のインスタンスのアクセスリストが照会できるようになりました。
+
+  <!--
+  This integrates with our OpenFGA support and provided a sufficiently recent version of OpenFGA, will show you exactly who can access an instance and what role they have.
+  -->
+  これは、OpenFGA サポートと統合されており、OpenFGA の十分に新しいバージョンであれば、誰がインスタンスにアクセスでき、どのようなロールを持っているのかを正確に表示します。
+
+      stgraber@castiana:~$ incus info --show-access foo
+      - identifier: stgraber@stgraber.org
+        role: admin
+        provider: openfga
+
+      stgraber@castiana:~$ incus project info --show-access default
+      - identifier: stgraber@stgraber.org
+        role: admin
+        provider: openfga
+
+  <!--
+  This work was contributed by [University of Texas at Austin ](https://www.utexas.edu) students.
+  -->
+  この作業は、[テキサス大学オースティン校](https://www.utexas.edu)の学生によるコントリビューションです。
+
+  ## プロジェクトの強制削除 <!-- Forceful deletion of projects -->
+  <!--
+  When dealing with a lot of busy projects, deleting them can become rather frustrating due to having to track down and delete everything they contain in the right order.
+  -->
+  多数の負荷の高いプロジェクトを扱うとき、プロジェクトを削除するには、それらに含まれるすべてを正しい順序で探し出して、削除する必要があるため、かなりフラストレーションがたまります。
+
+  <!--
+  To address that, we now have `incus project delete --force` which will instruct Incus itself to delete everything in the correct order before deleting the project itself.
+  -->
+  このようなことに対応するため、プロジェクトを削除する前に、すべてを正しい順序で削除するように Incus に指示する `incus project delete --force` が追加されました。
+
+  <!--
+  This is obviously an extremely dangerous thing to do. The command line tool will always ask for confirmation that you indeed want this project fully gone.
+  -->
+  このコマンドは明らかに危険なコマンドです。このコマンドラインツールは、このプロジェクトをすべて削除しても良いのかを常に確認します。
+
+      stgraber@castiana:~$ incus project delete demo
+      Error: Only empty projects can be removed.
+
+      stgraber@castiana:~$ incus project delete demo --force
+      Remove demo and everything it contains (instances, images, volumes, networks, ...) (yes/no): yes
+      Project demo deleted
+
+  ## 新たに `get_project` 関数をスクリプトレット関数に追加 <!-- New `get_project` scriptlet function -->
+  <!--
+  For those using our scriplet instance placement feature (`instances.placement.scriptlet`), a new function has now been added, `get_project`.
+  -->
+  スクリプトレットによるインスタンス配置機能（`instances.placement.scriptlet`）を利用しているユーザー向けに、新たに `get_project` 関数を追加しました。
+
+  <!--
+  This allows retrieving all the details (`api.Project`) for a specific project and is particularly useful if you want project restrictions or limits to impact the placement decision.
+  -->
+  この機能により、特定のプロジェクトのすべての詳細情報（`api.Project`）が取得できるようになり、プロジェクトの制限や制約を、配置を決定する際に特に役に立つようになりました。
+
+  ドキュメント<!-- Documentation -->: https://linuxcontainers.org/incus/docs/main/explanation/clustering/#instance-placement-scriptlet
+  <!--
+  This work was contributed by [University of Texas at Austin ](https://www.utexas.edu) students.
+  -->
+  この作業は、[テキサス大学オースティン校](https://www.utexas.edu)の学生によるコントリビューションです。
+
+  ## プロジェクトをまたぐオブジェクトの問い合わせ <!-- Querying objects across projects -->
+  <!--
+  Incus has long supported listing all instances regardless of projects.
+  Then recently this was extended to also cover storage volumes, images, profiles, network zones and operations.
+  -->
+  Incus は、プロジェクトをまたいだ、すべてのインスタンスのリスト表示を長い間サポートしてきました。
+  そして、最近では、この機能はストレージボリューム、イメージ、プロファイル、ネットワークゾーン、オペレーションもカバーするように拡張されました。
+
+  <!--
+  With Incus 6.2, all remaining object collections now support this, adding:
+  -->
+  Incus 6.2 では、残りのすべてのオブジェクトが、この機能をサポートするようになりました。追加されたのは次のものです:
+
+   - ストレージバケット <!-- Storage buckets -->
+   - ネットワーク <!-- Networks -->
+   - ネットワーク ACL <!-- Network ACLs -->
+
+  <!--
+  The CLI was updated to match, so all `list` commands interacting with objects that can be project-specific now also support `--all-projects`.
+  -->
+  CLI もそれに合わせて更新されたので、プロジェクト固有である可能性のあるオブジェクトを操作する `list` コマンドもすべて、`--all-projects` をサポートするようになりました。
+
+  <!--
+  This work was contributed by [University of Texas at Austin ](https://www.utexas.edu) students.
+  -->
+  この作業は、[テキサス大学オースティン校](https://www.utexas.edu)の学生によるコントリビューションです。
+
+  ## `incus info --resources` の PCI デバイス <!-- PCI devices in `incus info \-\-resources` -->
+  <!--
+  All PCI devices are now included in the `incus info --resources` output.
+  In the past, only those devices that were included in the GPU or disk sections were readily available.
+  -->
+  `incus info --resources` の出力に、すべての PCI デバイスが含まれるようになりました。
+  従来は、GPU もしくはディスクセクションに含まれるデバイスのみが利用できました。
+
+  <!--
+  This work was contributed by [University of Texas at Austin ](https://www.utexas.edu) students.
+  -->
+  この作業は、[テキサス大学オースティン校](https://www.utexas.edu)の学生によるコントリビューションです。
+
+  ## `incus-simplestreams` のエイリアス処理の改良 <!-- Improved alias handling in `incus-simplestreams` -->
+  <!--
+  The initial `incus-simplestreams` implementation would automatically generate our standard looking alias, basically `DISTRIBUTION/RELEASE/VARIANT` but that's not suitable for all environments and so you now have two new arguments to `incus-simplestreams add`:
+  -->
+  初期の `incus-simplestreams` の実装は、基本的に `DISTRIBUTION/RELEASE/VARIANT` という標準的なエイリアスが自動的に生成されます。しかし、これはすべての環境に適しているわけではありません。そこで、`incus-simplestreams add` に新たに 2 つの引数が追加されました。
+
+   - 前述のエイリアスを無効化するための `--no-default-alias` <!-- `\-\-no-default-alias` to disable the above alias -->
+   - カスタムエイリアスを定義するための `--alias` （複数回指定可能）<!-- `\-\-alias` to define a custom alias (can be passed multiple times) -->
+
+  ## `incus` CLI の `create` に与える YAML <!-- Feeding YAML to `create` commands in the `incus` CLI -->
+  <!--
+  This work was started with Incus 6.1 and is now complete.
+  -->
+  この作業は Incus 6.1 で始まり、今回完了しました。
+
+  <!--
+  All `create` commands as well as `incus init` and `incus launch` now support reading an initial configuration as YAML from stdin.
+  -->
+  すべての `create` コマンド、`incus init`、`incus launch` コマンドは、標準入力からの YAML を初期設定として読み取ることをサポートするようになりました。
+
+  <!--
+  This enables much easier scripting of complex deployments.
+  -->
+  これにより複雑なデプロイのスクリプトがはるかに簡単に作成できるようになります。
+
+  ## CLI のリストのカラムのカスタマイズ <!-- Customizable column lists in the CLI -->
+  <!--
+  Another piece of work which started with Incus 6.1 and is now complete.
+  -->
+  Incus 6.1 で開始したもう 1 つの作業が完了しました。
+
+  <!--
+  All CLI commands that have a `list` function now support the `\-\-column/-c` flag.
+  -->
+  `list` 機能を持つ CLI コマンドはすべて、`--column/-c` フラグをサポートするようになりました。
+
+  <!--
+  This work was contributed by [University of Texas at Austin ](https://www.utexas.edu) students.
+  -->
+  この作業は、[テキサス大学オースティン校](https://www.utexas.edu)の学生によるコントリビューションです。
+
+  ## ドキュメントの自動生成の増加 <!-- More automatically generated documentation -->
+  <!--
+  Not something that should be generally noticeable to most users, but we've been slowly moving our documentation to be generated directly from comments in our code, limiting the risk of it getting outdated or out of sync.
+  -->
+  ほとんどのユーザーは気づかないことですが、ドキュメントが古くなったり、動機がずれるリスクを減らすため、コード内のコメントから直接ドキュメントが生成されるように徐々に移行しています。
+
+  <!--
+  With Incus 6.2, the following are now generated in that way:
+  -->
+  Incus 6.2 では、次のドキュメントがこの方法で生成されるようになりました:
+
+   - Network zones
+   - Image restrictions
+   - Kernel limits
+   - Devices
+      - disk
+      - unix-block
+      - unix-char
+      - unix-hotplug
+      - usb
+
+  <!--
+  This work was contributed by [University of Texas at Austin ](https://www.utexas.edu) students.
+  -->
+  この作業は、[テキサス大学オースティン校](https://www.utexas.edu)の学生によるコントリビューションです。
+
+  # すべての変更点 <!-- Complete changelog -->
+  <!--
+  Here is a complete list of all changes in this release:
+  -->
+  このリリースのすべての変更のリストは次の通りです（翻訳なし）:
+
+  [details="すべてのChangeLogを見る"]
+   - incusd/instance/lxc: Add gendoc comments for image restrictions
+   - incusd/instance/qemu: Add gendoc comments for image restrictions
+   - doc: Update configs
+   - doc/image-handling: Use gendoc data
+   - incus/storage_bucket: Add yaml support for key create
+   - i18n: Update translation templates
+   - incusd/instance/qemu: Fix StartedAt handling
+   - incus/storage: Customizable columns in list
+   - i18n: Update translation templates
+   - incusd/network/ovn: Port LogicalRouterSNATAdd and LogicalRouterDNATSNATAdd to libovsdb
+   - incusd/network: Update for OVN function changes
+   - api: instances_scriptlet_get_project
+   - doc/instances/scriptlet: Add get_project
+   - incusd/scriptlet: Add get_project
+   - api: networks_all_projects
+   - shared/api: Add Project field to Network
+   - client: Add GetNetworksAllProjects
+   - incus/network: Add all-projects
+   - incusd/db: Add GetNetworksAllProjects
+   - incusd/networks: Add all-projects
+   - internal/instance: Add gendoc for limits.kernel
+   - doc: Update configs
+   - doc: Use gendoc for limits.kernel
+   - api: network_acls_all_projects
+   - shared/api: Add Project field to NetworkACL
+   - client: Add GetNetworkACLsAllProjects
+   - incus/network/acl: Add all-projects
+   - incusd/db: Add GetNetworkACLsAllProjects
+   - incusd/network/acl: Set Project field
+   - incusd/network_acls: Add all-projects
+   - api: storage_buckets_all_projects
+   - shared/api: Add Project field to StorageBucket
+   - client: Add GetStoragePoolBucketsAllProjects
+   - incus/storage/bucket: Add all-projects
+   - incusd/db/storage_buckets: Fill Project field
+   - incusd/storage_buckets: Add all-projects
+   - i18n: Update translation templates
+   - incusd/networks: Fix import shadowing
+   - doc/rest-api: Refresh swagger YAML
+   - client: Align GetProfilesAllProjects with GetProfiles
+   - client: Align GetNetworkZonesAllProjects with GetNetworkZones
+   - client: Standardize the GetNetworkAllocation functions
+   - incus/network_allocations: Update for client changes
+   - incusd/device/usb: Add gendoc for the USB device
+   - doc: Update configs
+   - doc: Use gendoc for USB devices
+   - api: resources_load
+   - shared/api: Add Load to resources API
+   - doc/rest-api: Refresh swagger YAML
+   - incusd/resources: Add load information
+   - incus/info: Add load information
+   - i18n: Update translation templates
+   - incusd/device/unix: Add gendoc comments
+   - doc: Update configs
+   - doc/devices_unix_block.md: Use gendoc data
+   - doc/devices_unix_char.md: Use gendoc data
+   - doc/devices_unix_hotplug.md: Use gendoc data
+   - incus/top: Add new command
+   - i18n: Update translation templates
+   - incusd/network/zone: add gendoc for network zone
+   - doc: Update configs
+   - doc: Use gen doc for network zones
+   - incusd/device/unix: Run gofmt
+   - incus/info: Add PCI devices to --resources
+   - i18n: Update translation templates
+   - incusd/device/disk: Add gendoc comments
+   - doc: Update configs
+   - doc/devices/disk: Use gendoc
+   - incus/network: Customizable columns in list
+   - i18n: Update translation templates
+   - incusd/network_zones: Fix listing of zones within a project
+   - incusd/instance/lxc: Fix handling of migration.stateful
+   - gomod: Update dependencies
+   - incusd/network/ovs: Fix bad VLANMode value
+   - fix: close resources
+   - incusd/instance: Fix building on 32bit architectures
+   - incus/network_zone: Add example for network zone record create
+   - i18n: Update translation template
+   - incus/storage_volume: Add yaml support for create
+   - i18n: Update translation templates
+   - cmd/incus/info: Fix runtime error when chassis, motherboard and firwmare information is not available
+   - Translated using Weblate (German)
+   - incusd/instance/qemu: Allow setting protection.delete when running
+   - doc/api-extension: Fix typo
+   - shared/api: Introduce Access structs
+   - api: instance_access
+   - incusd/auth: Introduce GetInstanceAccess
+   - incusd/instance: Add access endpoint
+   - api: project_access
+   - incusd/auth: Introduce GetProjectAccess
+   - incusd/project: Add access endpoint
+   - doc/rest-api: Refresh swagger YAML
+   - client: Add GetInstanceAccess
+   - client: Add GetProjectAccess
+   - incus/info: Fix description of --show-log
+   - incus/info: Add --show-access
+   - incus/project: Add --show-access to info
+   - i18n: Update translation templates
+   - incusd/auth/fga: Rename manager by admin in model
+   - incusd/auth/fga: Rework permission model
+   - incusd/auth/fga: Rebuild model
+   - tests: Fix for permission changes
+   - incusd/instance/agent-loader: Support installing to /etc
+   - incusd/apparmor/lxc: Fix rule syntax
+   - incus-simplestreams add:  added flags: --no-default-alias, --alias.  #875
+   - incus/storage_volume/snapshot: Support YAML for creation
+   - i18n: Update translation templates
+   - shared/idmap: Make get_userns_fd configure the userns
+   - incus-migrate: Handle valid CA certificates
+   - incusd/instances_post: Fix migrating into remote cluster
+   - incusd/apparmor: Detect nosymfollow support
+   - incusd: Set SELinux label on socket
+   - incus/network: Align attach-profile with attach
+   - create_detached_idmapped_mount: avoid double close
+   - incusd/instance/qemu: Extend missing QEMU error
+   - doc/installing: Mention extra packages for VMs
+   - incusd/storage/btrfs: Fix btrfs argument order
+   - incusd/seccomp/sysinfo: Handle 32bit on 64bit
+   - api: projects_force_delete
+   - incusd/api_project: Add force delete endpoint
+   - doc/rest-api: Refresh swagger YAML
+   - client: Introduce DeleteProjectForce
+   - cmd/incus/project: Add --force to delete
+   - i18n: Update translation templates
+   - incusd/project: Simplify projectIsEmpty
+   - incusd/db: Introduce GetNetworkZoneURIs
+   - incusd/db: Introduce GetStorageBucketURIs
+   - incusd/api_project: Fix UsedBy
+   - incusd/api_project: Add force deletion logic
+   - incus/completion: Reduce API calls
+   - incus/publish: Complete snapshot names
+   - incus/completion: Fix import shadowing
+   - Translated using Weblate (French)
+   - Makefile: Pin go-acme/lego for Go 1.21
+   - Update dependencies
+   - cmd/incus/console: Cleanup --show-log
+   - incusd/instance_console: Remove old check
+   - incusd/instance_console: Handle missing log file
+   - incusd/instance_console: Don't fail on empty logs
+   - incusd/instance_console: Cleanup error message
+   - i18n: Update translation templates
+   - incusd/device/sriov: Line up code with comment
+  [/details]
+
+  # ドキュメント <!-- Documentation -->
+  <!--
+  The Incus documentation can be found at:
+  -->
+  Incus のドキュメントはこちらです:
+  https://incus-ja.readthedocs.io/ja/latest/ （日本語訳）
+  https://linuxcontainers.org/incus/docs/main/ （原文）
+
+  # パッケージ <!-- Packages -->
+  <!--
+  There are no official Incus packages as Incus upstream only releases regular release tarballs. Below are some available options to get Incus up and running.
+  -->
+  Incus の開発元は、通常リリースの tarball のみをリリースするため、公式の Incus パッケージはありません。Incus を実行するために使えるオプションを以下にいくつか示します。
+
+  ## Linux 上に Incus サーバーをインストールする <!-- Installing the Incus server on Linux -->
+  <!--
+  Incus is available for most common Linux distributions. You'll find detailed installation instructions in our documentation.
+  -->
+  Incus はほとんどの一般的な Linux ディストリビューションで利用できます。インストール手順の詳細は、Incus のドキュメントを参照してください。
+
+  https://incus-ja.readthedocs.io/ja/latest/installing/ （日本語訳）
+  https://linuxcontainers.org/incus/docs/main/installing/ （原文）
+
+  ## Incus クライアントの Homebrew パッケージ <!-- Homebrew package for the Incus client -->
+  <!--
+  The client tool is available through HomeBrew for both Linux and MacOS.
+  -->
+  HomeBrew 経由で、Linux と macOS 向けにクライアントツールが利用できます。
+
+  https://formulae.brew.sh/formula/incus
+
+  ## Incus クライアントの Chocolatey パッケージ <!-- Chocolatey package for the Incus client -->
+  <!--
+  The client tool is available through Chocolatey for Windows users.
+  -->
+  Chocolatey 経由で、Windows ユーザー向けにクライアントツールが利用できます。
+
+  https://community.chocolatey.org/packages/incus/6.2.0
+
+  ## Incus クライアントの Winget パッケージ <!-- Winget package for the Incus client -->
+  <!--
+  The client tool is also available through Winget for Windows users.
+  -->
+  Winget 経由で、Windows ユーザー向けにクライアントツールが利用できます。
+
+  https://winstall.app/apps/LinuxContainers.Incus
+
+  # サポート <!-- Support -->
+  <!--
+  Monthly feature releases are only supported up until the next release comes out.  Users needing a longer support length and less frequent changes should consider using Incus 6.0 LTS instead.
+  -->
+  月次のフィーチャーリリースは、次のリリースがリリースされるまでのみサポートされます。より長いサポート期間と少ない変更頻度が必要な場合、代わりに Incus 6.0 LTS の使用を検討すべきです。
+
+  コミュニティサポートはこちらから <!-- Community support is provided at -->: https://discuss.linuxcontainers.org
+  商用サポートはこちらから <!-- Commercial support is available through -->: https://zabbly.com/incus
+  バグはこちらから報告できます <!-- Bugs can be reported at -->: https://github.com/lxc/incus/issues
