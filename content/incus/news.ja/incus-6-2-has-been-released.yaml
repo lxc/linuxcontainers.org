@@ -163,7 +163,7 @@ content: |-
   -->
   この作業は、[テキサス大学オースティン校](https://www.utexas.edu)の学生によるコントリビューションです。
 
-  ## プロジェクトをまたいぐオブジェクトの問い合わせ <!-- Querying objects across projects -->
+  ## プロジェクトをまたぐオブジェクトの問い合わせ <!-- Querying objects across projects -->
   <!--
   Incus has long supported listing all instances regardless of projects.
   Then recently this was extended to also cover storage volumes, images, profiles, network zones and operations.
