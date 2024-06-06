@@ -34,7 +34,7 @@
      "generator": "news",
      "meta": {"dir": "/content/incus/news.fr/",
               "input": "incus/news.fr.md",
-              "toc_depth": "2-2",
+              "toc_depth": "2-3",
               "str_older": "Anciennes nouvelles",
               "str_back": "Retour à l’aperçu de l’actualité"}},
 
@@ -93,7 +93,7 @@
      "generator": "news",
      "meta": {"dir": "/content/lxc/news/",
               "input": "lxc/news.md",
-              "toc_depth": "2-2",
+              "toc_depth": "2-3",
               "str_older": "Older news",
               "str_back": "Back to the news overview"}},
 
@@ -197,7 +197,7 @@
      "generator": "news",
      "meta": {"dir": "/content/lxcfs/news/",
               "input": "lxcfs/news.md",
-              "toc_depth": "2-2",
+              "toc_depth": "2-3",
               "str_older": "Older news",
               "str_back": "Back to the news overview"}},
 
@@ -272,7 +272,7 @@
      "generator": "news",
      "meta": {"dir": "/content/distrobuilder/news/",
               "input": "distrobuilder/news.md",
-              "toc_depth": "2-2",
+              "toc_depth": "2-3",
               "str_older": "Older news",
               "str_back": "Back to the news overview"}},
 
@@ -339,7 +339,7 @@
      "menu": ["CGManager", "News"],
      "generator": "markdown",
      "meta": {"input": "cgmanager/news.md",
-              "toc_depth": "2-2",
+              "toc_depth": "2-3",
               "str_older": "Older news",
               "str_back": "Back to the news overview"}},
 
