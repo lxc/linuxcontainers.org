@@ -10,7 +10,7 @@ Incus is image based and provides images for a [wide number of Linux distributio
 When using Incus, you can manage your instances (containers and VMs) with a simple command line tool, directly through the REST API or by using third-party tools and integrations. Incus implements a single REST API for both local and remote access.
 
 The Incus project [was created](/incus/announcement/) by Aleksa Sarai as a community driven alternative to Canonical's LXD.
-Today, it's led and maintained by much of the same people that once created LXD.
+Today, it's led and maintained by many of the same people that once created LXD.
 
 ## Get started
 To get a better idea of what Incus is and what it does, you can [try it online](/incus/try-it/)!
