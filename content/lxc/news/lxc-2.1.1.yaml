@@ -2,9 +2,10 @@ title: LXC 2.1.1 has been released
 date: 2017/10/19 20:10
 origin: https://discuss.linuxcontainers.org/t/lxc-2-1-1-has-been-released/676
 content: |-
+  # Introduction
   This is the first bugfix release for LXC 2.1.
 
-  Bugfixes:
+  # Bugfixes
 
    * apparmor: Drop useless apparmor denies
    * cgfsng: Check whether we have a conf

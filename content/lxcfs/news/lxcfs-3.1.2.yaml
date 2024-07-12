@@ -7,8 +7,7 @@ content: |-
 
   We had to re-roll the 3.1.0 release twice, first because of a bad Makefile causing an invalid release tarball to be generated, then again to fix an upgrade issue affecting some users of LXCFS 3.0.4
 
-  ## New features
-
+  # New features
   ## Add support for per-container cpu usage in `/proc/stat`
   Newer LXCFS releases make it possible to virtualize cpu usage per container by using the `cpuacct` cgroup.
 
@@ -30,7 +29,7 @@ content: |-
   ## Add support for FUSE `nonempty` option
   The `lxcfs` binary can now be passed the `-d` option. When passed, `lxcfs` will also start when the mountpoint is not empty.
 
-  ## Bugfixes
+  # Bugfixes
 
   - bindings: ensure that opts is non NULL
   - Makefile: Fix typo in file name

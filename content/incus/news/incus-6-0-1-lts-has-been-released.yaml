@@ -2,12 +2,12 @@ title: Incus 6.0.1 LTS has been released
 date: 2024/06/28 21:06
 origin: https://discuss.linuxcontainers.org/t/incus-6-0-1-lts-has-been-released/20297
 content: |-
-  ### Introduction
+  # Introduction
   The Incus team is pleased to announce the release of Incus 6.0.1!
 
   This is the first bugfix release for Incus 6.0 which is supported until June 2029.
 
-  ### Changes
+  # Changes
   As usual this bugfix releases focus on stability and hardening.
 
   Minor improvements have also been backported, specifically anything which does not require data migration, database changes or cause any unexpected change to user facing behavior.
@@ -412,10 +412,10 @@ content: |-
    - doc/installing: Use Incus 6.0.0 as example
   [/details]
 
-  ### Support and upgrade
+  # Support and upgrade
   The Incus 6.0 branch is supported until June 2029. It's always strongly recommended to keep up and run the latest LTS bugfix release.
 
-  ### Downloads
+  # Downloads
 
    - Main release tarball: [incus-6.0.1.tar.gz](https://linuxcontainers.org/downloads/incus/incus-6.0.1.tar.gz)
    - GPG signature: [incus-6.0.1.tar.gz.asc](https://linuxcontainers.org/downloads/incus/incus-6.0.1.tar.gz.asc)

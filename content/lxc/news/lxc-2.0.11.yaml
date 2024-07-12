@@ -2,6 +2,7 @@ title: LXC 2.0.11 has been released
 date: 2019/03/12 15:03
 origin: https://discuss.linuxcontainers.org/t/lxc-2-0-11-has-been-released/4238
 content: |-
+  # Introduction
   This is the eleventh bugfix release for LXC 2.0.
 
   Note that LXC 2.0.10 was released a few days before 2.0.11 but the release tarball was missing some files and wasn't buildable on Android, so we ended up releasing 2.0.11 to address that.

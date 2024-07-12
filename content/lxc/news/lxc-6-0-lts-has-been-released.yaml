@@ -58,6 +58,7 @@ content: |-
    - start: don't overwrite file descriptors during namespace preservation
    - start: record inherited namespaces earlier to make it available for idmapped rootfs setup
    - conf: fix append_ttyname()
+
    - start: fix namespace sharing
    - add check for statvfs
    - Fix off-by-one error constructing mount options

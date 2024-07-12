@@ -2,12 +2,12 @@ title: LXC 6.0.1 LTS has been released
 date: 2024/06/27 18:06
 origin: https://discuss.linuxcontainers.org/t/lxc-6-0-1-lts-has-been-released/20283
 content: |-
-  ### Introduction
+  # Introduction
   The LXC team is pleased to announce the release of LXC 6.0.1!
 
   This is the first bugfix release for LXC 6.0 which is supported until June 2029.
 
-  ### Changes
+  # Changes
   As usual this bugfix releases focus on stability and hardening.
 
   Some of the highlights for this release are:
@@ -41,11 +41,11 @@ content: |-
    - meson: fix build with -Dtools-multicall=true on NixOS
   [/details]
 
-  ### Support and upgrade
+  # Support and upgrade
   The LXC 6.0 branch is supported until June 2029.
   Only bugfixes and securitiy issues get included into the stable bugfix releases, so it's always safe and recommended to keep up and run the latest bugfix release.
 
-  ### Downloads
+  # Downloads
 
    - Main release tarball: [lxc-6.0.1.tar.gz](https://linuxcontainers.org/downloads/lxc/lxc-6.0.1.tar.gz)
    - GPG signature: [lxc-6.0.1.tar.gz.asc](https://linuxcontainers.org/downloads/lxc/lxc-6.0.1.tar.gz.asc)

@@ -7,7 +7,7 @@ content: |-
 
   As a stable bugfix release, no major changes have been done, instead focusing on bugfixes and minor usability improvements.
 
-  ## Highlights
+  # Highlights
 
   - Adapt to changes in Linux `4.18` which allows to create but not to open devices nodes in user namespaces
   - Allocate network namespace id on container startup
@@ -19,7 +19,7 @@ content: |-
     This significantly reduced the size of the codebase.
   - Tree-wide coding style fixes
 
-  ### CVE-2018-6556
+  ## CVE-2018-6556
 
   This release fixes [CVE-2018-6556](http://seclists.org/oss-sec/2018/q3/81) via commit [CVE 2018-6556: verify netns fd in lxc-user-nic](https://github.com/lxc/lxc/commit/c1cf54ebf251fdbad1e971679614e81649f1c032): `lxc-user-nic` when asked to delete a network interface will unconditionally open a user provided path. 
 

@@ -7,7 +7,7 @@ content: |-
 
   As a stable bugfix release, no major changes have been done, instead focusing on bugfixes and minor usability improvements.
 
-  ## Highlights
+  # Highlights
 
    - Improved our default build flags to make use of compiler hardening
    - Added support for netlink strict property checking on newer kernels

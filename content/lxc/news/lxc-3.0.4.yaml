@@ -7,18 +7,18 @@ content: |-
 
   As a stable bugfix release, no major changes have been done, instead focusing on bugfixes and minor usability improvements.
 
-  ## Highlights
-  ### [Fix for runC CVE-2019-5736](https://nvd.nist.gov/vuln/detail/CVE-2019-5736)
+  # Highlights
+  ## [Fix for runC CVE-2019-5736](https://nvd.nist.gov/vuln/detail/CVE-2019-5736)
   This release comes with  a fix for the privileged container breakout discovered earlier this year. As per our policy we don't consider privileged containers root safe and thus LXC as not received a CVE for this. However, we still provide a fix in this release. For more details see [this blog post](https://people.kernel.org/brauner/runtimes-and-the-curse-of-the-privileged-container).
 
-  ### Prefix veth interface names with caller's uid
+  ## Prefix veth interface names with caller's uid
   To make it easier for users to inspect veth devices LXC will now prefix the uid of the caller for the host veth device.
 
-  ### Improve using LXC on Android devices
+  ## Improve using LXC on Android devices
   This makes LXC look for standard tools in locations such as `/system/bin` that are specific to Android.
   Additionally, it is now possible to correctly allocate loop devices on Android.
 
-  ### Backport all compiler hardening options which are standard on current master.
+  ## Backport all compiler hardening options which are standard on current master.
   This backports:
 
       -fdiagnostics-color
@@ -55,34 +55,34 @@ content: |-
       -z relro
       -z now
 
-  ### Remove all stack allocation (`alloca()`)
+  ## Remove all stack allocation (`alloca()`)
   As is already the case on master, all stack allocations via `alloca()` have been wiped from the codebase to increase security.
 
-  ### Added support for [LGTM](https://lgtm.com/projects/g/lxc/lxc/overview/)
+  ## Added support for [LGTM](https://lgtm.com/projects/g/lxc/lxc/overview/)
   This adds support for the [LGTM](https://lgtm.com/projects/g/lxc/lxc/overview/) code quality checker.
 
-  ### Add support for [coccinelle](https://github.com/coccinelle/coccinelle) code transformation tool
+  ## Add support for [coccinelle](https://github.com/coccinelle/coccinelle) code transformation tool
   This allows us to automatically detect, remove, or add code to the LXC codebase to improve security and reliability.
 
-  ### Compiler based resource cleanup
+  ## Compiler based resource cleanup
   The codebase will be slowly switched over to make user of cleanup attributes supported by compilers such as `gcc` and `clang`.
 
-  ### Remove `fgets()` from the codebase
+  ## Remove `fgets()` from the codebase
   To improve security all uses of `fgets()` have been removed from the codebase. Use of this function in new code is strongly discouraged.
 
-  ### Improve `cgroup2` handling
+  ## Improve `cgroup2` handling
   With this release `cgroup2` layouts will be better supported.
 
-  ### Setup `lxc.mount.entry` right after `lxc.mount.fstab`
+  ## Setup `lxc.mount.entry` right after `lxc.mount.fstab`
   This allows us to unify the mounting logic in LXC.
 
-  ### Expand namespace sharing options
+  ## Expand namespace sharing options
   When inheriting a namespace a pathname to a namespace file descriptor can now be specified.
 
-  ### Expand close-on-exec usage
+  ## Expand close-on-exec usage
   All file descriptors that can be made close-on-exec are now close-on-exec.
 
-  ### Support `pidfd` api
+  ## Support `pidfd` api
   Newer kernel versions allow interaction with processes through process file descriptors (`pidfd`s). This eliminates various race conditions when e.g. sending signals or retrieving process information. This LXC version make use of the `pidfd_send_signal()` syscall and the `CLONE_PIDFD` flag with the `clone()` syscall.
 
   ## Bugfixes (LXC)

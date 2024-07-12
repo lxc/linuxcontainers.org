@@ -288,9 +288,9 @@ content: |-
   The nic 'peer1' was placed into the container as expected.
   For this to work, we pass the container init's pid as LXC_PID in an environment variable, since lxc-info cannot work at that point.
 
-  ## API extensions
+  # API extensions
 
-  ### `console_log()`
+  ## `console_log()`
   A new API extension
 
       	int console_log(struct lxc_container *c, struct lxc_console_log *log);
@@ -321,10 +321,10 @@ content: |-
   };
   ```
 
-  ### `reboot2()`
+  ## `reboot2()`
   This adds `reboot2()` as a new API extension. This function properly wait until a reboot succeeded. It takes a timeout argument. When set to `> 0` `reboot2()` will block until the timeout is reached, if timeout is set to zero `reboot2()` will not block, if set to `-1` `reboot2()` will block indefinitely.
 
-  ### `MIGRATE_FEATURE_CHECK` for `CRIU` ``migrate()` API call
+  ## `MIGRATE_FEATURE_CHECK` for `CRIU` ``migrate()` API call
   For migration optimization features like pre-copy or post-copy migration the support cannot be determined by simply looking at the `CRIU` version.  Features like that depend on the architecture/kernel/criu combination and `CRIU` offers a feature checking interface to query if it is supported.
 
   This adds a LXC interface to query CRIU for those feature via the `migrate()` API call. For the recent pre-copy migration support in LXD this can be used to automatically detect if pre-copy migration should be used.
@@ -335,7 +335,7 @@ content: |-
 
   Currently only querying the features `FEATURE_MEM_TRACK` and `FEATURE_LAZY_PAGES` are supported.
 
-  ### add `LXC_ATTACH_TERMINAL` to `attach()` API call
+  ## add `LXC_ATTACH_TERMINAL` to `attach()` API call
   Allocation of a new terminal has been moved into the API itself. Callers can  now set `LXC_ATTACH_TERMINAL` to request to be attached to a new terminal allocated from the host's `devpts` mount before attaching to the container.
 
   # Support and upgrade
@@ -349,7 +349,6 @@ content: |-
    - LXC release tarball: [lxc-3.0.0.tar.gz](https://linuxcontainers.org/downloads/lxc/lxc-3.0.0.tar.gz) (GPG: [lxc-3.0.0.tar.gz.asc](https://linuxcontainers.org/downloads/lxc/lxc-3.0.0.tar.gz.asc))
    - LXC templates tarball: [lxc-templates-3.0.0.tar.gz](https://linuxcontainers.org/downloads/lxc/lxc-templates-3.0.0.tar.gz) (GPG: [lxc-templates-3.0.0.tar.gz.asc](https://linuxcontainers.org/downloads/lxc/lxc-templates-3.0.0.tar.gz.asc))
    - LXC python3 bindings tarball: [python3-lxc-3.0.1.tar.gz](https://linuxcontainers.org/downloads/lxc/python3-lxc-3.0.1.tar.gz) (GPG: [python3-lxc-3.0.1.tar.gz.asc](https://linuxcontainers.org/downloads/lxc/python3-lxc-3.0.1.tar.gz.asc))
-
 
   # Contributors
   The LXC 3.0.0 release was brought to you by a total of 42 contributors.
