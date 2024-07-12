@@ -11,7 +11,6 @@ content: |-
   This allows the use of common Docker/OCI images directly through Incus, with those containers living alongside our usual system containers and virtual machines!
 
   As usual, you can try it for yourself online: https://linuxcontainers.org/incus/try-it/
-  **NOTE**: The online demo environment can't access the Docker Hub.
 
   Enjoy!
 
