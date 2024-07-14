@@ -1,0 +1,445 @@
+title: Incus 6.0.1 LTS リリースのお知らせ
+date: 2024/06/28 21:06
+origin: https://discuss.linuxcontainers.org/t/incus-6-0-1-lts-has-been-released/20297
+content: |-
+  # はじめに <!-- Introduction -->
+  <!--
+  The Incus team is pleased to announce the release of Incus 6.0.1!
+  -->
+  Incus チームは、Incus 6.0.1 のリリースのアナウンスができてうれしいです！
+
+  <!--
+  This is the first bugfix release for Incus 6.0 which is supported until June 2029.
+  -->
+  このリリースは、Incus 6.0 に対する初めてのバグ修正リリースであり、2029 年 6 月までサポートされます。
+
+  # 変更点 <!-- Changes -->
+  <!--
+  As usual this bugfix releases focus on stability and hardening.
+  -->
+  いつもどおり、このバグ修正リリースは、安定性とセキュリティー強化にフォーカスを当てています。
+
+  <!--
+  Minor improvements have also been backported, specifically anything which does not require data migration, database changes or cause any unexpected change to user facing behavior.
+  -->
+  データのマイグレーションやデータベースの変更を必要とせず、ユーザーが予期しない動きの変化に直面するようなことにはならない、マイナーな改善もバックポートされています。
+
+  <!--
+  The number of such improvements will decrease over time within the LTS branch.
+  -->
+  このような改良の数は、LTS ブランチ内では時間の経過とともに減少するでしょう。
+
+  <!--
+  Some of the highlights for this release are:
+  -->
+  このリリースのハイライトは次のとおりです:
+
+   - ZFS プールに対する拡張されたソース書式（ミラー、raidz1/raidz2） <!-- Extended source syntax for ZFS pools (allows mirror & raidz1/raidz2) -->
+   - すべてのオブジェクト（インスタンス、プロファイル、イメージ、ストレージボリューム・バケット、ネットワーク）での、プロジェクトをまたぐリスト表示 <!-- Cross-project listing on all objects (instances, profiles, images, storage volumes/buckets, networks, ...) -->
+   - インスタンス配置スクリプトレットで利用できる追加関数 <!-- Additional functions exposed to instance placement scriptlet -->
+   - CLI のすべての `create` サブコマンドがYAML 入力を受け付けるように <!-- All `create` sub-commands in the CLI now accept YAML input -->
+   - CLI のすべての `list` サブコマンドが出力カラムのカスタマイズを受け付けるように <!-- All `list` sub-commands in the CLI now accept customizable columns -->
+   - `migration.stateful` 設定キーがコンテナにも拡張 <!-- The `migration.stateful` config key was expanded to containers too -->
+   - OVN でのステートレスネットワーク ACL のサポート <!-- Stateless network ACLs are now supported on OVN -->
+   - インスタンスの uptime の出力 <!-- New timestamp exposed for instance uptime -->
+   - 新たな `incus top` コマンド（既存の metric API を使用）<!-- New `incus top` command (uses existing metric API) -->
+   - `incus info --resources` 内のシステム負荷情報 <!-- System load information in `incus info --resources` -->
+   - `incus info --resources` 内の PCI デバイス情報 <!-- PCI devices information in `incus info --resources` -->
+   - プロジェクトとインスタンスへ、誰がアクセスしたかを問い合わせる機能 <!-- Ability to query who has access to a given project or instance -->
+   - プロジェクトの強制削除 <!-- Forceful deletion of projects -->
+   - `incus-simplestreams` のエイリアスの扱いの改良 <!-- Improved alias handling in `incus-simplestreams` -->
+
+  <!--
+  The full list of commits is available below:
+  -->
+  コミットのすべてのリストは次のとおりです:
+
+  [details="すべてのChangeLogを見る"]
+   - doc/support: Update for LTS
+   - incusd/network: Remove bridge.driver=native requirement for extended external_interfaces syntax
+   - doc/network/bridge: Update extended external_interfaces documentation
+   - incusd/storage/drivers/zfs: Simplify dataset receive and fix progress handling
+   - gomod: Update dependencies
+   - mini-oidc: Merge into main gomod
+   - gomod: Update dependencies
+   - go.mod: Bump package major version
+   - global: Update Go package to v6
+   - test: Update godeps.list
+   - README: Update for godoc URLs
+   - doc/rest-api: Refresh swagger YAML
+   - cmd/incus: Fix import ordering
+   - incusd: Remove unneeded import renames
+   - incusd/instance: Fix duplicate import
+   - doc/projects: Tweak examples
+   - shared/api: Remove container resources (deprecated)
+   - doc/rest-api: Refresh swagger YAML
+   - incus/create: Remove dead code
+   - i18n: Update translation templates
+   - incusd/daemon: Remove old migration logic
+   - incusd: Stop mentioning containers in resources
+   - doc/rest-api: Use instances API in example
+   - incusd/db/cluster: containers URLs aren't valid in Incus
+   - incusd/instances: Don't start instances when evacuated
+   - doc/installing: Sort source-build distro instructions
+   - doc/installing: Add OpenSUSE source instructions
+   - doc/installing: Add Alpine instructions
+   - incus/aliases: fix completion regression
+   - incus/snapshot: Fix deletion of snapshots containing colons
+   - incusd/instance/drivers: Have SR-IOV get stable MACs
+   - incusd/device/nic_sriov: Use stable MAC
+   - incus/profile: Add support for creating from YAML
+   - i18n: Update translation templates
+   - incusd/instance/lxc: Only apply soft cgroup limits on cgroup1
+   - incus/admin: Don't hide the sql command
+   - grafana: Refresh dashboard
+   - doc/metrics: Mention Loki in Grafana setup
+   - grafana: Better filter Loki events by project
+   - incusd/loki: Use hostname as default instance property on standalone systems
+   - incusd/loki: Re-order config fields
+   - incusd/loki: Allow overriding the location field
+   - incusd/loki: Set location field to local hostname on standalone systems
+   - incus/projct: Add support for creating project from yaml
+   - i18n: Update translation templates
+   - incusd/network/ovs: Port GetOVNEncapIP to libovsdb
+   - incusd/network/ovs: Add some comments to GetOVNBridgeMappings
+   - incusd/network/ovs: Port AddOVNBridgeMapping to libovsdb
+   - incusd/network/ovs: Port RemoveOVNBridgeMapping to libovsdb
+   - incusd/network/ovs: Port GetHardwareOffload to libovsdb
+   - incusd/network/ovs: Port GetBridgePorts to libovsdb
+   - incusd/network/ovs: Port UpdateBridgePortVLANs to libovsdb
+   - incusd/network/ovs: Port AssociateInterfaceOVNSwitchPort to libovsdb
+   - incusd/network/ovs: Switch Installed to checking for unix socket
+   - incusd/network: Update for OVS function changes
+   - Add missing SecureBoot firmware names
+   - incus/snapshot: Add support for creating project from yaml
+   - i18n: Update translation templates
+   - api: network_zones_all_projects
+   - shared/api: Add Project field to NetworkZone
+   - incusd/network_zones: Add support for all-projects
+   - doc/rest-api: Refresh swagger YAML
+   - client: Add GetNetworkZonesAllProjects
+   - incus/network_zone: Add --all-projects flag to list
+   - i18n: Update translation templates
+   - tests: Add all-projects network zone test
+   - incusd/network/ovn: Port LogicalRouterAdd to libovsdb
+   - incusd/network/ovn: Remove LogicalRouterAdd
+   - incusd/network: Replace LogicalRouterAdd usage with CreateLogicalRouter
+   - incusd/network/ovn: gofmt
+   - incusd/cluster: Disable networks during evacuation
+   - incusd/cgroup: Set hugepages reserved limits
+   - incusd/storage/drivers: Introduce SparseFileWrapper
+   - incusd/storage/drivers/vfs: Use SparseFileWrapper on backup import
+   - incusd/storage/drivers/vfs: Use SparseFileWrapper on volume migration
+   - incus/storage: Support creating storage pool from yaml
+   - i18n: Update translation templates
+   - incus/info: Show CPU architecture as separate line
+   - i18n: Update translation templates
+   - incus/cluster_group: Add yaml support for cluster group create
+   - i18n: Update translation templates
+   - gitignore: Add JetBrains
+   - api: storage_zfs_vdev
+   - doc: Update ZFS support for multiple block devices and vdev types in doc/reference/storage_zfs.md
+   - incusd/storage/zfs: Add support for vdev type and multiple block devices
+   - incus/info: Sorting network interfaces
+   - incus/network_acl: Add cmd.Example for network acl create
+   - i18n: Update translation templates
+   - incus/network_forward: Add yaml example for create
+   - i18n: Update translation templates
+   - incus/config_template: Add file support for create
+   - i18n: Update translation templates
+   - incus/network_integrations: Add yaml support for create
+   - i18n: Update translation templates
+   - incusd/storage/s3: Use 'mc' client
+   - incusd/storage: Switch to use minio's 'mc' client
+   - gomod: Update dependencies
+   - github: Download MinIO client
+   - doc: Avoid MyST 3.0.0
+   - incus/doc/installing.md: Add Docker information
+   - doc: Add Podman to wordlist
+   - incus/cluster: Add columns to list
+   - i18n: Update translation templates
+   - incus/project: Add customazible columns to list
+   - i18n: Update translation templates
+   - api: container_migration_stateful
+   - internal/instance: Add migration.stateful to containers
+   - incusd/instance/lxc: Add checks for migration.stateful
+   - doc: Update configs
+   - incus/network_load_balancer: add Example to create
+   - i18n: Update translation templates
+   - incus/network_zone: Add example for create command
+   - i18n: Update translation templates
+   - doc: Fix bad sphinx requirements
+   - incusd/instances/qemu: Tweak secureboot firmware list
+   - cmd/incus/admin_cluster: Add libexec path for incusd
+   - incus/storage: Show usage when no driver passed
+   - incusd/storage/drivers/dir: Tweak path validation
+   - incusd/backup: Show profile list on lookup error
+   - incusd/apparmor/lxc: Allow access to binfmt_misc
+   - incusd/apparmor/lxc: Refresh generated rules
+   - incusd/storage: Handle instance volume size on import
+   - incus/profile: Add customizable columns to list
+   - i18n: Update translation templates
+   - incus/project: Fix help message for list
+   - i18n: Update translation templates
+   - api: profiles_all_projects
+   - shared/api: Add Project field to Profile
+   - client: Add GetProfilesAllProjects
+   - incus/profile: Add all-projects to list
+   - incusd/db/cluster: Add Project field to Profile
+   - incusd/profile: Add all-projects support
+   - doc/rest-api: Refresh swagger YAML
+   - i18n: Update translation templates
+   - incus/storage_volume: Clarify volume errors
+   - incusd/apparmor/lxc: Fix access to kernel/security/apparmor
+   - api: instances_scriptlet_get_instances
+   - doc/instances/scriptlet: Add get_instances
+   - incusd/scriptlet: Add get_instances
+   - api: instances_scriptlet_get_cluster_members
+   - doc/instances/scriptlet: Add get_cluster_members
+   - incusd/scriptlet: Add get_cluster_members
+   - api: Add network_acl_stateless
+   - doc/network_acl: Add allow-stateless action
+   - incusd/network/acl: Add allow-stateless action
+   - incusd/network/ovn/nb: Port DeleteLogicalRouter to libovsdb
+   - incusd/network/ovn/nb: Port CreateLogicalRouterSNAT to libovsdb
+   - incusd/network: Update for OVS function changes
+   - incusd/network/acl: Properly run instance counting outside of ACL loop
+   - incusd/network/ovn: Wait up to 1s for dynamic IPs
+   - incusd/network/ovn/nb: Port DeleteLogicalRouterNAT to libovsdb
+   - incusd/network: Update for OVS function changes
+   - shared/archive: Fix typo
+   - incusd/cluster: Re-organize joining logic
+   - incusd/cluster: Ignore OVN networks during joining
+   - shared/archive: Properly anchor exclude rules
+   - incusd/project: Rework low-level permission checks
+   - incus/storage_bucket: Add example for storage bucket create
+   - i18n: Update translation templates
+   - incus/network_peer: Add example for create command
+   - i18n: Update trasnlation templates
+   - api: instance_state_started_at
+   - shared/api: Add StartedAt to InstanceState
+   - doc/rest-api: Refresh swagger YAML
+   - incusd/instance: Add StartedAt to InstanceState
+   - incus/info: Add Started field
+   - incus/list: Add started at column
+   - i18n: Update translation templates
+   - Makefile: Cleanup gomod update
+   - gomod: Update dependencies
+   - tests/mini-oidc: Bump to go-jose/v4
+   - client/connection: Add support for the socket existing in /run/incus
+   - incusd/instance/lxc: Add gendoc comments for image restrictions
+   - incusd/instance/qemu: Add gendoc comments for image restrictions
+   - doc: Update configs
+   - doc/image-handling: Use gendoc data
+   - incus/storage_bucket: Add yaml support for key create
+   - i18n: Update translation templates
+   - incusd/instance/qemu: Fix StartedAt handling
+   - incus/storage: Customizable columns in list
+   - i18n: Update translation templates
+   - incusd/network/ovn: Port LogicalRouterSNATAdd and LogicalRouterDNATSNATAdd to libovsdb
+   - incusd/network: Update for OVN function changes
+   - api: instances_scriptlet_get_project
+   - doc/instances/scriptlet: Add get_project
+   - incusd/scriptlet: Add get_project
+   - api: networks_all_projects
+   - shared/api: Add Project field to Network
+   - client: Add GetNetworksAllProjects
+   - incus/network: Add all-projects
+   - incusd/db: Add GetNetworksAllProjects
+   - incusd/networks: Add all-projects
+   - internal/instance: Add gendoc for limits.kernel
+   - doc: Update configs
+   - doc: Use gendoc for limits.kernel
+   - api: network_acls_all_projects
+   - shared/api: Add Project field to NetworkACL
+   - client: Add GetNetworkACLsAllProjects
+   - incus/network/acl: Add all-projects
+   - incusd/db: Add GetNetworkACLsAllProjects
+   - incusd/network/acl: Set Project field
+   - incusd/network_acls: Add all-projects
+   - api: storage_buckets_all_projects
+   - shared/api: Add Project field to StorageBucket
+   - client: Add GetStoragePoolBucketsAllProjects
+   - incus/storage/bucket: Add all-projects
+   - incusd/db/storage_buckets: Fill Project field
+   - incusd/storage_buckets: Add all-projects
+   - i18n: Update translation templates
+   - incusd/networks: Fix import shadowing
+   - doc/rest-api: Refresh swagger YAML
+   - client: Align GetProfilesAllProjects with GetProfiles
+   - client: Align GetNetworkZonesAllProjects with GetNetworkZones
+   - client: Standardize the GetNetworkAllocation functions
+   - incus/network_allocations: Update for client changes
+   - incusd/device/usb: Add gendoc for the USB device
+   - doc: Update configs
+   - doc: Use gendoc for USB devices
+   - api: resources_load
+   - shared/api: Add Load to resources API
+   - doc/rest-api: Refresh swagger YAML
+   - incusd/resources: Add load information
+   - incus/info: Add load information
+   - i18n: Update translation templates
+   - incusd/device/unix: Add gendoc comments
+   - doc: Update configs
+   - doc/devices_unix_block.md: Use gendoc data
+   - doc/devices_unix_char.md: Use gendoc data
+   - doc/devices_unix_hotplug.md: Use gendoc data
+   - incus/top: Add new command
+   - i18n: Update translation templates
+   - incusd/network/zone: add gendoc for network zone
+   - doc: Update configs
+   - doc: Use gen doc for network zones
+   - incusd/device/unix: Run gofmt
+   - incus/info: Add PCI devices to --resources
+   - i18n: Update translation templates
+   - incusd/device/disk: Add gendoc comments
+   - doc: Update configs
+   - doc/devices/disk: Use gendoc
+   - incus/network: Customizable columns in list
+   - i18n: Update translation templates
+   - incusd/network_zones: Fix listing of zones within a project
+   - incusd/instance/lxc: Fix handling of migration.stateful
+   - gomod: Update dependencies
+   - incusd/network/ovs: Fix bad VLANMode value
+   - fix: close resources
+   - incusd/instance: Fix building on 32bit architectures
+   - incus/network_zone: Add example for network zone record create
+   - i18n: Update translation template
+   - incus/storage_volume: Add yaml support for create
+   - i18n: Update translation templates
+   - cmd/incus/info: Fix runtime error when chassis, motherboard and firwmare information is not available
+   - Translated using Weblate (German)
+   - incusd/instance/qemu: Allow setting protection.delete when running
+   - doc/api-extension: Fix typo
+   - shared/api: Introduce Access structs
+   - api: instance_access
+   - incusd/auth: Introduce GetInstanceAccess
+   - incusd/instance: Add access endpoint
+   - api: project_access
+   - incusd/auth: Introduce GetProjectAccess
+   - incusd/project: Add access endpoint
+   - doc/rest-api: Refresh swagger YAML
+   - client: Add GetInstanceAccess
+   - client: Add GetProjectAccess
+   - incus/info: Fix description of --show-log
+   - incus/info: Add --show-access
+   - incus/project: Add --show-access to info
+   - i18n: Update translation templates
+   - incusd/auth/fga: Rename manager by admin in model
+   - incusd/auth/fga: Rework permission model
+   - incusd/auth/fga: Rebuild model
+   - tests: Fix for permission changes
+   - incusd/instance/agent-loader: Support installing to /etc
+   - incusd/apparmor/lxc: Fix rule syntax
+   - incus-simplestreams add:  added flags: --no-default-alias, --alias.  #875
+   - incus/storage_volume/snapshot: Support YAML for creation
+   - i18n: Update translation templates
+   - shared/idmap: Make get_userns_fd configure the userns
+   - incus-migrate: Handle valid CA certificates
+   - incusd/instances_post: Fix migrating into remote cluster
+   - incusd/apparmor: Detect nosymfollow support
+   - incusd: Set SELinux label on socket
+   - incus/network: Align attach-profile with attach
+   - create_detached_idmapped_mount: avoid double close
+   - incusd/instance/qemu: Extend missing QEMU error
+   - doc/installing: Mention extra packages for VMs
+   - incusd/storage/btrfs: Fix btrfs argument order
+   - incusd/seccomp/sysinfo: Handle 32bit on 64bit
+   - api: projects_force_delete
+   - incusd/api_project: Add force delete endpoint
+   - doc/rest-api: Refresh swagger YAML
+   - client: Introduce DeleteProjectForce
+   - cmd/incus/project: Add --force to delete
+   - i18n: Update translation templates
+   - incusd/project: Simplify projectIsEmpty
+   - incusd/db: Introduce GetNetworkZoneURIs
+   - incusd/db: Introduce GetStorageBucketURIs
+   - incusd/api_project: Fix UsedBy
+   - incusd/api_project: Add force deletion logic
+   - incus/completion: Reduce API calls
+   - incus/publish: Complete snapshot names
+   - incus/completion: Fix import shadowing
+   - Translated using Weblate (French)
+   - Makefile: Pin go-acme/lego for Go 1.21
+   - Update dependencies
+   - cmd/incus/console: Cleanup --show-log
+   - incusd/instance_console: Remove old check
+   - incusd/instance_console: Handle missing log file
+   - incusd/instance_console: Don't fail on empty logs
+   - incusd/instance_console: Cleanup error message
+   - i18n: Update translation templates
+   - incusd/device/sriov: Line up code with comment
+   - incus/project: Fix bad --show-access output
+   - cmd/incus-user: Avoid double user-user- in network description
+   - Translated using Weblate (German)
+   - Translated using Weblate (Japanese)
+   - incus/admin_sql: Fix description
+   - incus/storage_bucket: Fix string quoting
+   - incus/profile: Fix examples
+   - incus/project: Fix examples
+   - incus/snapshot: Improve restore example
+   - incus/storage_bucket: Fix typoes in examples
+   - incus/storage_bucket: Fix export example
+   - incus/exec: Add some examples
+   - i18n: Update translation templates
+   - incus-user: Don't needlessly update the default profile
+   - incus/top: Support remote servers
+   - incus/top: Properly handle projects
+   - incus/top: Handle clusters
+   - incusd/instance/qemu: Avoid endianness issues with vsockIDInt
+   - internal/linux: Define some IOCTLs
+   - incusd/instance/qemu: Don't use hardcoded ioctl
+   - incusd/storage/btrfs: Don't use hardcoded ioctl
+   - incusd/devices: Simplify ioctl logic
+   - shared/cliconfig: Remove old migration logic
+   - shared/cliconfig: Generalize logic
+   - incusd/seccomp: Fix sysinfo logic on 32bit platforms
+   - shared/cliconfig: Always fill in the protocol
+   - incus: Generalize image server logic
+   - incus/console: Re-shuffle logic a bit
+   - incus: Handle stopped containers in --console
+   - incus/console: Don't export an internal function
+   - doc: update documentation for forming cluster with existing server
+   - github: Cleanup workflow file
+   - github: Build go tip
+   - github: Change Go releases in tests
+   - test/lint/golangci: Properly pull the parent ref
+   - cmd/incusd: Fix typo in forknet
+   - api: resources_cpu_flags
+   - shared/api: Add Flags to ResourceCPUCore
+   - doc/rest-api: Refresh swagger YAML
+   - incusd/resources: Add CPU Flags to ResourceCPUCore
+   - doc/instances_console: Tweak wording on SPICE clients
+   - incus/network_load_balancer: Fix example
+   - i18n: Update translation templates
+   - incusd/networks: Properly finalize OVN networks
+   - incusd/networks: Properly record description
+   - incusd/response: Add Code function
+   - incusd/operations: Implement Code function
+   - incusd: Implement Code function
+   - incus-agent: Implement Code function
+   - client: Fix OIDC re-authentication on POST
+   - client: Fix OIDC re-authentication on websocket
+   - incus/network: Add missing stdin handling
+   - i18n: Update translation templates
+   - lxd-to-incus: Handle volume config keys
+   - incusd/project: Don't fail creation on authorizer
+   - doc/instance_units: Clarify usage
+   - incusd/apparmor: Update for current QEMU
+   - incusd/apparmor: Allow /dev/shm in forkproxy
+   - Translated using Weblate (Chinese (Simplified))
+   - doc/installing: Update Debian/Ubuntu build instructions
+   - doc/installing: Mention installing Go from upstream
+   - doc/installing: Use Incus 6.0.0 as example
+  [/details]
+
+  # サポートとアップグレード <!-- Support and upgrade -->
+  <!--
+  The Incus 6.0 branch is supported until June 2029. It's always strongly recommended to keep up and run the latest LTS bugfix release.
+  -->
+  Incus 6.0 ブランチは 2029 年 6 月までサポートされます。常に最新の LTS バグ修正リリースを実行することを強く推奨します。
+
+  # ダウンロード <!-- Downloads -->
+
+   - リリース tarball <!-- Main release tarball -->: [incus-6.0.1.tar.xz](https://linuxcontainers.org/downloads/incus/incus-6.0.1.tar.xz)
+   - GPG シグネチャー <!-- GPG signature -->: [incus-6.0.1.tar.xz.asc](https://linuxcontainers.org/downloads/incus/incus-6.0.1.tar.xz.asc)
