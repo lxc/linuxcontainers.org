@@ -417,5 +417,5 @@ content: |-
 
   # Downloads
 
-   - Main release tarball: [incus-6.0.1.tar.gz](https://linuxcontainers.org/downloads/incus/incus-6.0.1.tar.gz)
-   - GPG signature: [incus-6.0.1.tar.gz.asc](https://linuxcontainers.org/downloads/incus/incus-6.0.1.tar.gz.asc)
+   - Main release tarball: [incus-6.0.1.tar.xz](https://linuxcontainers.org/downloads/incus/incus-6.0.1.tar.xz)
+   - GPG signature: [incus-6.0.1.tar.xz.asc](https://linuxcontainers.org/downloads/incus/incus-6.0.1.tar.xz.asc)
