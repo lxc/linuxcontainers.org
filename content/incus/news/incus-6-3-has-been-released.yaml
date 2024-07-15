@@ -123,6 +123,11 @@ content: |-
 
   The new logic keeps a persistent connection to the relevant databases, significantly reducing the time and CPU overhead needed to interact with OVN. This persistent connection will also allow receiving and reacting to events directly from OVN, something which wasn't possible with the previous approach.
 
+  # Notice for packages
+  This release introduces OCI support which requires the presence of both `skopeo` and `umoci` as commands in the `PATH` for the feature to work.
+
+  Additionally, the `INCUS_OVMF_PATH` environment variable was renamed to `INCUS_EDK2_PATH` to avoid the use of the architecture-specific name (arm64 uses AAVMF) and instead rely on the generic name of the firmware.
+
   # Complete changelog
   Here is a complete list of all changes in this release:
 
