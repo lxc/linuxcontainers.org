@@ -35,6 +35,7 @@ import re
 import shutil
 import subprocess
 import yaml
+from babel.dates import format_date
 from extensions.include_toc import IncludeToCExtension
 from extensions.format_details import FormatDetailsExtension
 
@@ -443,6 +444,8 @@ def gen_page(entry, override, prefix, **variables):
         with open(content_path(item['meta']['input']), "r") as fd:
             full_content = fd.read()
 
+        locale = variables["page_language"][0].replace('-', '_') or "en"
+
         # Load all articles
         articles = []
         news_path = item["meta"]["dir"].lstrip("/")
@@ -472,12 +475,7 @@ def gen_page(entry, override, prefix, **variables):
             date = datetime.datetime.strptime(article["date"],
                                               "%Y/%m/%d %H:%M")
 
-            if 4 <= date.day <= 20 or 24 <= date.day <= 30:
-                suffix = "th"
-            else:
-                suffix = ["st", "nd", "rd"][date.day % 10 - 1]
-
-            article_date = date.strftime("%%-d%s of %%B %%Y" % suffix)
+            article_date = format_date(date, locale=locale)
 
             # Compose the title
             title = article["title"]
