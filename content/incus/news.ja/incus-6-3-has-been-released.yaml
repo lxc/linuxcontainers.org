@@ -31,7 +31,7 @@ content: |-
   <!--
   Incus is now capable of accessing application container registries such as the Docker Hub, retrieve images, convert (flatten) them for use by Incus and then create a working containers from them.
   -->
-  Incus は、Docker Hub のようなアプリケーションコンテナのリポジトリにアクセスし、イメージを取得し、Incus で使えるように変換（フラット化）し、それからそこから作業用コンテナを作成できるようになりました。
+  Incus は、Docker Hub のようなアプリケーションコンテナのリポジトリにアクセスし、イメージを取得し、Incus で使えるように変換（フラット化）し、そして、そこから作業用コンテナを作成できるようになりました。
 
   <!--
   This is still very early in our OCI container support and there will likely be quite a few gaps that will need to be filled in based on user feedback, but for many simple cases where people are currently running both Docker and Incus on the same system or where they've been using Docker inside of an Incus container just to run a single piece of software, Incus should now be able to handle that directly.
