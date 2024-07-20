@@ -1,0 +1,452 @@
+title: Incus 6.3 リリースのお知らせ
+date: 2024/07/12 05:07
+origin: https://discuss.linuxcontainers.org/t/incus-6-3-has-been-released/21019
+content: |-
+  # はじめに <!-- Introduction -->
+  <!--
+  The Incus team is pleased to announce the release of Incus 6.3!
+  -->
+  Incus チームは、Incus 6.3 のリリースのアナウンスができてうれしいです！
+
+  [![image|690x486](https://discuss.linuxcontainers.org/uploads/default/original/2X/c/cf8e4ddb52de6b0bae11dabc1d975475b90e6ebc.png)](https://linuxcontainers.org/incus/try-it/)
+
+  <!--
+  The highlight for this release is the initial support for running OCI application containers.
+  This allows the use of common Docker/OCI images directly through Incus, with those containers living alongside our usual system containers and virtual machines!
+  -->
+  このリリースのハイライトは、OCI アプリケーションコンテナの初期サポートです。
+  これにより、一般的な Docker/OCI コンテナイメージを直接 Incus で使用できるようになります。このコンテナは、通常のシステムコンテナや仮想マシンと一緒に使用できます。
+
+  <!--
+  As usual, you can try it for yourself online: https://linuxcontainers.org/incus/try-it/
+  **NOTE**: The online demo environment can't access the Docker Hub.
+  -->
+  いつものように、オンラインでご自身で試せます: https://linuxcontainers.org/incus/try-it/
+  **注意**: オンラインデモ環境は Docker Hub にはアクセスできません。
+
+  Enjoy!
+
+  # 新機能 <!-- New features -->
+  ## OCI アプリケーションコンテナの初期サポート <!-- Initial support for OCI application containers -->
+  <!--
+  Incus is now capable of accessing application container registries such as the Docker Hub, retrieve images, convert (flatten) them for use by Incus and then create a working containers from them.
+  -->
+  Incus は、Docker Hub のようなアプリケーションコンテナのリポジトリにアクセスし、イメージを取得し、Incus で使えるように変換（フラット化）し、そして、そこから作業用コンテナを作成できるようになりました。
+
+  <!--
+  This is still very early in our OCI container support and there will likely be quite a few gaps that will need to be filled in based on user feedback, but for many simple cases where people are currently running both Docker and Incus on the same system or where they've been using Docker inside of an Incus container just to run a single piece of software, Incus should now be able to handle that directly.
+  -->
+  このサポートは、OCI コンテナサポートの非常に初期の状態であり、ユーザーからのフィードバックにもとづいて埋める必要があるギャップがかなりあると思われます。しかし現在、同じシステムで Docker と Incus を同時に動かしているユーザーや、単一のソフトウェアを実行するためだけに Incus コンテナ内で Docker を使っているユーザーのような、多数のシンプルなケースでは、Incus は直接それを処理できるようになったはずです。
+
+  <!--
+  All of the Incus container configuration options, whether resource limits, system call interception, ... all apply to those containers too. They're also all run in the same safe container environment as our system containers.
+  -->
+  リソースリミット、システムコールインターセプションといったような、すべての Incus コンテナの設定オプションは、これらのコンテナにもすべて適用されます。また、これらはすべて、システムコンテナと同様の安全なコンテナ環境で実行されます。
+
+      stgraber@dakara:~$ incus remote add docker https://docker.io --protocol=oci
+      stgraber@dakara:~$ incus launch docker:mysql mysql \
+      > -c environment.MYSQL_DATABASE=wordpress \
+      > -c environment.MYSQL_USER=wordpress \
+      > -c environment.MYSQL_PASSWORD=wordpress \
+      > -c environment.MYSQL_RANDOM_ROOT_PASSWORD=1
+      Launching mysql
+
+      stgraber@dakara:~$ incus list mysql
+      +-------+---------+----------------------+------------------------------------------+-----------------+-----------+
+      | NAME  |  STATE  |         IPV4         |                   IPV6                   |      TYPE       | SNAPSHOTS |
+      +-------+---------+----------------------+------------------------------------------+-----------------+-----------+
+      | mysql | RUNNING | 172.17.250.26 (eth0) | 2602:fc62:c:250:216:3eff:fefa:468 (eth0) | CONTAINER (APP) | 0         |
+      +-------+---------+----------------------+------------------------------------------+-----------------+-----------+
+
+      stgraber@dakara:~$ incus launch docker:wordpress wordpress \
+      > -c environment.WORDPRESS_DB_HOST=172.17.250.26 \
+      > -c environment.WORDPRESS_DB_USER=wordpress \
+      > -c environment.WORDPRESS_DB_PASSWORD=wordpress \
+      > -c environment.WORDPRESS_DB_NAME=wordpress
+      Launching wordpress
+
+      stgraber@dakara:~$ incus list wordpress
+      +-----------+---------+-----------------------+-------------------------------------------+-----------------+-----------+
+      |   NAME    |  STATE  |         IPV4          |                   IPV6                    |      TYPE       | SNAPSHOTS |
+      +-----------+---------+-----------------------+-------------------------------------------+-----------------+-----------+
+      | wordpress | RUNNING | 172.17.250.119 (eth0) | 2602:fc62:c:250:216:3eff:fe61:c1fc (eth0) | CONTAINER (APP) | 0         |
+      +-----------+---------+-----------------------+-------------------------------------------+-----------------+-----------+
+      stgraber@dakara:~$
+
+  ## クラスター内のベースライン CPU 定義 <!-- Baseline CPU definition within clusters -->
+  <!--
+  One big limitation of Incus' live migration logic so far has been that it expected all servers within a cluster to run identical CPUs. Should the CPU differ between two systems, the live migration would fail or cause crashes later on.
+  -->
+  これまでの Incus のライブマイグレーションの大きな制限の 1 つは、クラスター内のすべてのサーバーで同一の CPU が実行されている前提だったことです。2 つのシステム間で CPU が異なる場合、ライブマイグレーションは失敗するか、あとでクラッシュするかです。
+
+  <!--
+  That's because Incus would always expose all the CPU flags from the machine it runs on.
+  This is good to get the maximum amount of performance on a standalone system, but in a heterogeneous cluster, this doesn't quite work.
+  -->
+  これは Incus が、実行しているマシンから、すべての CPU フラグを常に公開するためです。
+  これは、スタンドアロンのシステムで最大限のパフォーマンスを得るには適しています。しかし、異機種クラスターではうまく機能しません。
+
+  <!--
+  With this release, Incus will now automatically compute the set of common CPU flags across all servers for a given CPU architecture and use that as the CPU definition for any instance running with live-migration enabled (`migration.stateful=true`).
+  -->
+  このリリースで、Incus は、特定のアーキテクチャーのすべてのサーバーで共通の CPU フラグの組を自動的に計算するようになります。そして、ライブマイグレーションが有効（`migration.stateful=true`）で実行されているすべてのインスタンスで CPU 定義として使用します。
+
+  ## `io.bus` と `io.cache` のファイルシステムサポート <!-- Filesystem support for `io.bus` and `io.cache` -->
+  <!--
+  The `io.bus` and `io.cache` options have been around for VM disks for a little while now.
+  With `io.bus` offering the option of `virtio-scsi`, `virtio-blk` or `nvme` and `io.cache` allowing for `none`, `writeback` or `unsafe` caching.
+  -->
+  `io.bus` と `io.cache` オプションは、少し前から VM のディスク用に存在していました。
+  `io.bus` では、`virtio-scsi`、`virtio-blk`、`nvme` オプションが提供され、`io.cache` では `none`、`writeback`、`unsafe` キャッシュが使用できます。
+
+  <!--
+  Those config keys are now also supported when passing in filesystems rather than disks.
+  Their values in such cases are a bit different with `io.bus` being one of `auto` (default), `9p` or `virtiofs` and `io.cache` supporting `none` (default), `metadata` or `unsafe`.
+  -->
+  これらの設定キーを、ディスクでなく、ファイルシステムを指定するときでもサポートするようになりました。
+  ファイルシステムを指定するときの値は少し異なり、`io.bus` は `auto`（デフォルト）、`9p`、`virtiofs` のいずれか、`io.cache` は `none`（デフォルト）、`metadata`、`unsafe` をサポートします。
+
+  <!--
+  This effectively allows controlling exactly how a filesystem is exposed to the VM and then tweaking caching behavior when using virtiofs.
+  -->
+  これにより、ファイルシステムが VM に公開される方法を正確に制御し、virtiofs を使用するときにキャッシュ動作を微調整できます。
+
+  ## `incus top` の改良 <!-- Improvements to `incus top` -->
+  <!--
+  Incus 6.2 introduced the new `incus top` command.
+  With this release, we're making it more useful by having it work against remote servers, properly support clustered environments and also handling projects.
+  -->
+  Incus 6.2 で、新たに `incus top` コマンドを導入しました。
+  このリリースでは、リモートサーバーに対しても動作し、クラスター化された環境を適切にサポートし、プロジェクトも処理することで、より有用になりました。
+
+
+      +---------+---------------+-------------+-----------+-----------+
+      | PROJECT | INSTANCE NAME | CPU TIME(S) |  MEMORY   |   DISK    |
+      +---------+---------------+-------------+-----------+-----------+
+      | default | incus-ui      | 63.40       | 12.76MiB  | 1.54GiB   |
+      +---------+---------------+-------------+-----------+-----------+
+      | default | kernel-test   | 1865037.10  | 578.01MiB | 32.84GiB  |
+      +---------+---------------+-------------+-----------+-----------+
+      | default | speedtest     | 84.10       | 23.14MiB  | 400.12MiB |
+      +---------+---------------+-------------+-----------+-----------+
+      | default | win11         | 1865.11     | 15.51GiB  |           |
+      +---------+---------------+-------------+-----------+-----------+
+      | demo    | mysql         | 6.77        | 464.20MiB | 276.62MiB |
+      +---------+---------------+-------------+-----------+-----------+
+      | demo    | wordpress     | 1.81        | 53.66MiB  | 386.62MiB |
+      +---------+---------------+-------------+-----------+-----------+
+      | vpn     | vpn-dev       | 102.97      | 36.83MiB  | 412.00MiB |
+      +---------+---------------+-------------+-----------+-----------+
+      | vpn     | vpn-lab       | 57.29       | 27.03MiB  | 347.75MiB |
+      +---------+---------------+-------------+-----------+-----------+
+      Press 'd' + ENTER to change delay
+      Press 's' + ENTER to change sorting method
+      Press CTRL-C to exit
+
+      Delay: 10s
+      Sorting Method: Alphabetical
+
+  ## サーバーリソースの CPU フラグ <!-- CPU flags in server resources -->
+  <!--
+  The resources API which is used to expose a lot of details about the machine's hardware configuration has now been updated to expose the CPU flags.
+  -->
+  マシンのハードウェア構成に関する多くの詳細情報を公開するのに使うリソース API が更新され、CPU フラグが公開されるようになりました。
+
+  <!--
+  This was required to implement the baseline CPU feature mentioned previously.
+  The new data can be found in the API directly and is provided for each CPU core.
+  -->
+  この機能は、先に紹介したベースライン CPU 機能の実装に必要でした。
+  新しいデータは、API で直接見つけることができ、CPU コアごとに提供されます。
+
+      stgraber@dakara:~$ incus query /1.0/resources | jq .cpu.sockets[0].cores[0].flags -c
+      ["fpu","vme","de","pse","tsc","msr","pae","mce","cx8","apic","sep","mtrr","pge","mca","cmov","pat","pse36","clflush","mmx","fxsr","sse","sse2","ht","syscall","nx","mmxext","fxsr_opt","pdpe1gb","rdtscp","lm","constant_tsc","rep_good","nopl","xtopology","nonstop_tsc","cpuid","extd_apicid","aperfmperf","rapl","pni","pclmulqdq","monitor","ssse3","fma","cx16","sse4_1","sse4_2","x2apic","movbe","popcnt","aes","xsave","avx","f16c","rdrand","lahf_lm","cmp_legacy","svm","extapic","cr8_legacy","abm","sse4a","misalignsse","3dnowprefetch","osvw","ibs","skinit","wdt","tce","topoext","perfctr_core","perfctr_nb","bpext","perfctr_llc","mwaitx","cpb","cat_l3","cdp_l3","hw_pstate","ssbd","mba","ibrs","ibpb","stibp","vmmcall","fsgsbase","bmi1","avx2","smep","bmi2","erms","invpcid","cqm","rdt_a","rdseed","adx","smap","clflushopt","clwb","sha_ni","xsaveopt","xsavec","xgetbv1","xsaves","cqm_llc","cqm_occup_llc","cqm_mbm_total","cqm_mbm_local","clzero","irperf","xsaveerptr","rdpru","wbnoinvd","cppc","arat","npt","lbrv","svm_lock","nrip_save","tsc_scale","vmcb_clean","flushbyasid","decodeassists","pausefilter","pfthreshold","avic","v_vmsave_vmload","vgif","v_spec_ctrl","umip","pku","ospke","vaes","vpclmulqdq","rdpid","overflow_recov","succor","smca","fsrm","debug_swap"]
+
+  ## `incus-simplestreams add` の 統合イメージサポート <!-- Unified image support in `incus-simplestreams` -->
+  <!--
+  The `incus-simplestreams` tool which is used to manage a static web server hosting Incus images using the simplestreams index format has now been updated to support not just split images but also unified images.
+  -->
+  `incus-simplestreams` ツールは、simplestream インデックスフォーマットを使って、Incus イメージをホスティングする静的な Web サーバーを管理するために使います。このツールが更新され、分割イメージだけでなく統合イメージもサポートされるようになりました。
+
+  <!--
+  Incus images can either be made of two files, one containing the metadata files and one containing the rootfs or root disk, or a single tarball which contains both the metadata and then the rootfs or root disk as a directory/file inside of that single tarball.
+  -->
+  Incus イメージは、メタデータファイルと 1 つの rootfs もしくはルートディスクからなる 2 つのファイルで構成される場合と、メタデータと rootfs もしくはルートディスクを、ディレクトリー/ファイルとして含む単一の tarball で構成される場合（統合イメージ）があります。
+
+  <!--
+  To add a unified image to the server, simply call `incus-simplestreams add` with a single file rather than the usual two.
+  -->
+  統合イメージをサーバーに追加するには、`incus-simplestreams add` を、通常使うケースのように 2 つのファイルを指定するのではなく、単一のファイルを指定するだけです。
+
+  ## libovsdb 使用への移行の完了 <!-- Completion of libovsdb transition -->
+  <!--
+  For the past 4-5 releases, we've been slowly migrating more and more logic from direct calls to the `ovs-vsctl`, `ovn-nbctl` and `ovn-sbctl` command line tools to instead using a native OVSDB client.
+  -->
+  過去 4〜5 リリースで、直接 `ovs-vsctl` や `ovn-nbctl` や `ovn-sbctl` といったコマンドラインツールを直接呼び出す実装から、代わりにネイティブの OVSDB クライアントを使う実装に徐々に移行してきました。
+
+  <!--
+  This work is now complete and Incus no longer requires any of the OVS/OVN tools be present on the system to interact with OVN.
+  -->
+  この作業がついに終わり、Incus では、OVN を使うために、もうシステム上に OVS/OVN ツールが存在している必要はなくなりました。
+
+  <!--
+  The new logic keeps a persistent connection to the relevant databases, significantly reducing the time and CPU overhead needed to interact with OVN. This persistent connection will also allow receiving and reacting to events directly from OVN, something which wasn't possible with the previous approach.
+  -->
+  新しいロジックでは、関連するデータベースへの永続的な接続を維持し、OVN とのやり取りに必要な時間と CPU オーバーヘッドを大幅に削減します。この永続的な接続により、以前のアプローチでは不可能だった、OVN から直接イベントを受信して​​反応することも可能になります。
+
+  # すべての変更点 <!-- Complete changelog -->
+  <!--
+  Here is a complete list of all changes in this release:
+  -->
+  このリリースのすべての変更のリストは次の通りです（翻訳なし）:
+
+  [details="すべてのChangeLogを見る"]
+   - incus/project: Fix bad --show-access output
+   - cmd/incus-user: Avoid double user-user- in network description
+   - Translated using Weblate (German)
+   - Translated using Weblate (Japanese)
+   - incus/admin_sql: Fix description
+   - incus/storage_bucket: Fix string quoting
+   - incus/profile: Fix examples
+   - incus/project: Fix examples
+   - incus/snapshot: Improve restore example
+   - incus/storage_bucket: Fix typoes in examples
+   - incus/storage_bucket: Fix export example
+   - incus/exec: Add some examples
+   - i18n: Update translation templates
+   - incus-user: Don't needlessly update the default profile
+   - incus/top: Support remote servers
+   - incus/top: Properly handle projects
+   - incus/top: Handle clusters
+   - incusd/instance/qemu: Avoid endianness issues with vsockIDInt
+   - internal/linux: Define some IOCTLs
+   - incusd/instance/qemu: Don't use hardcoded ioctl
+   - incusd/storage/btrfs: Don't use hardcoded ioctl
+   - incusd/devices: Simplify ioctl logic
+   - shared/cliconfig: Remove old migration logic
+   - shared/cliconfig: Generalize logic
+   - incusd/seccomp: Fix sysinfo logic on 32bit platforms
+   - shared/cliconfig: Always fill in the protocol
+   - incus: Generalize image server logic
+   - incus/console: Re-shuffle logic a bit
+   - incus: Handle stopped containers in --console
+   - incus/console: Don't export an internal function
+   - doc: update documentation for forming cluster with existing server
+   - github: Cleanup workflow file
+   - github: Build go tip
+   - github: Change Go releases in tests
+   - test/lint/golangci: Properly pull the parent ref
+   - cmd/incusd: Fix typo in forknet
+   - api: resources_cpu_flags
+   - shared/api: Add Flags to ResourceCPUCore
+   - doc/rest-api: Refresh swagger YAML
+   - incusd/resources: Add CPU Flags to ResourceCPUCore
+   - incusd/network/ovn: Port CreateLogicalRouterRoute to libovsdb
+   - incusd/network/ovn: Port DeleteLogicalRouterRoute to libovsdb
+   - incusd/network: Update for OVN function changes
+   - incusd/network/ovn: Port DeleteLogicalRouterPort to libovsdb
+   - incusd/network/ovn: Remove LogicalRouterPortDeleteIPv6Advertisements
+   - incusd/network: Update for OVN function changes
+   - incusd/network/ovn: Port DeleteLogicalSwitch to libovsdb
+   - incusd/network: Update for OVN function changes
+   - incusd/network/ovn: Remove logicalSwitchFindAssociatedPortGroups
+   - doc/instances_console: Tweak wording on SPICE clients
+   - incusd/network/ovn: Special handling for Load Balancer table
+   - incusd/network/ovn: Align functions context handling
+   - incusd/network/ovn: Port DeleteLogicalSwitchDHCPOption to libovsdb
+   - incusd/network/ovn: Port GetLogicalSwitchPortLocation to libovsdb
+   - incusd/network/ovn: Port GetLogicalSwitchPortUUID to libovsdb
+   - incusd/network/ovn: Port GetLogicalRouterPortHardwareAddress to libovsdb
+   - incusd/network/ovn: Add GetLogicalRouter
+   - incusd/network/ovn: Port DeleteLoadBalancer to libovsdb
+   - incusd/network/acl: Update for OVN function changes
+   - incusd/network: Update for OVN function changes
+   - incusd/network: Simplify OVN network deletion logic
+   - incus/network_load_balancer: Fix example
+   - i18n: Update translation templates
+   - incusd/network/ovn: Port UpdateLogicalSwitchIPAllocation to libovsdb
+   - incusd/network/ovn: Port UpdateLogicalSwitchDHCPv4Revervations to libovsdb
+   - incusd/network/ovn: Port GetLogicalSwitchDHCPv4Revervations to libovsdb
+   - incusd/network/ovn: Port GetLogicalSwitchDHCPOptions to libovsdb
+   - incusd/network/ovn: Port UpdateLogicalSwitchDHCPv4Options to libovsdb
+   - incusd/network/ovn: Port UpdateLogicalSwitchDHCPv6Options to libovsdb
+   - incusd/network: Update for OVN function changes
+   - incusd/networks: Properly finalize OVN networks
+   - incusd/networks: Properly record description
+   - incusd/response: Add Code function
+   - incusd/operations: Implement Code function
+   - incusd: Implement Code function
+   - incus-agent: Implement Code function
+   - client: Fix OIDC re-authentication on POST
+   - client: Fix OIDC re-authentication on websocket
+   - incus/network: Add missing stdin handling
+   - i18n: Update translation templates
+   - lxd-to-incus: Handle volume config keys
+   - incusd/project: Don't fail creation on authorizer
+   - doc/instance_units: Clarify usage
+   - incusd/network/ovn: Port logicalSwitchPortACLRules to libovsdb
+   - incusd/network/ovn: Port GetLogicalSwitchPorts to libovsdb
+   - incusd/network/ovn: Port UpdateLogicalSwitchPortOptions to libovsdb
+   - incusd/network/ovn: Port CreatePortGroup to libovsdb
+   - incusd/network: Update for OVN function changes
+   - incusd/device/nic: Update for OVN function changes
+   - incusd/network/acl: Update for OVN function changes
+   - incusd/network/ovn: Port GetPortGroupsByProject to libovsdb
+   - incusd/network/ovn: Port CreateAddressSet to libovsdb
+   - incusd/network/ovn: Port UpdateAddressSetAdd to libovsdb
+   - incusd/network/ovn: Port UpdateAddressSetRemove to libovsdb
+   - incusd/network/ovn: Port DeleteAddressSet to libovsdb
+   - incusd/network/acl: Update for OVN function changes
+   - incusd/network: Update for OVN function changes
+   - incusd/network/ovn: Port UpdateLogicalSwitchPortLinkRouter to libovsdb
+   - incusd/network/ovn: Port UpdateLogicalSwitchPortLinkProviderNetwork to libovsdb
+   - incusd/network/ovn: Port GetLogicalSwitchIPs to libovsdb
+   - incusd/network/ovn: Port GetLogicalSwitchPortDNS to libovsdb
+   - incusd/network: Update for OVN function changes
+   - incusd/network/ovn: Port UpdateLogicalSwitchPortDNS to libovsdb
+   - incusd/network/ovn: Port UpdatePortGroupMembers to libovsdb
+   - incusd/network/ovn: Port UpdateLogicalRouterPolicy to libovsdb
+   - incusd/network: Update for OVN function changes
+   - incusd/network/ovn: Port CreateLoadBalancer to libovsdb
+   - incusd/network/ovn: Port GetLogicalRouterRoutes to libovsdb
+   - incusd/network/ovn: Port DeleteLogicalRouterPeering to libovsdb
+   - incusd/network: Update for OVN function changes
+   - incusd/apparmor: Update for current QEMU
+   - incusd/apparmor: Allow /dev/shm in forkproxy
+   - incusd/network/ovn: Port CreateLogicalRouterPeering to libovsdb
+   - incusd/network: Update for OVN function changes
+   - Translated using Weblate (Chinese (Simplified))
+   - incusd/network/ovn: Port logicalSwitchPortDeleteDNSOperations to libovsdb
+   - incusd/network/ovn: Port DeleteLogicalSwitchPortDNS to libovsdb
+   - incusd/network/ovn: Port logicalSwitchPortDeleteOperations to libovsdb
+   - incusd/network/ovn: Port CleanupLogicalSwitchPort to libovsdb
+   - incusd/network/ovn: Port aclRuleDeleteOperations to libovsdb
+   - incusd/network/ovn: Port aclRuleAddOperations to libovsdb
+   - incusd/network/ovn: Port ClearPortGroupPortACLRules to libovsdb
+   - incusd/network/ovn: Port UpdatePortGroupPortACLRules to libovsdb
+   - incusd/network/ovn: Port UpdateLogicalSwitchACLRules to libovsdb
+   - incusd/network/ovn: Port UpdatePortGroupACLRules to libovsdb
+   - incusd/network/acl: Update for OVN function changes
+   - incusd/network: Update for OVN function changes
+   - incusd/network/ovn: Remove nbctl
+   - api: disk_io_bus_cache_filesystem
+   - incusd/device/disk: Extend io.bus option
+   - incusd/device/disk: Extend io.cache option
+   - incusd/device/disk: Add support for io.cache on virtiofs
+   - incusd/device/disk: Add support for io.bus on filesystems
+   - incusd/instance/driver_qemu: Handle 9p being disabled
+   - doc: Update configs
+   - doc/installing: Update Debian/Ubuntu build instructions
+   - doc/installing: Mention installing Go from upstream
+   - incusd/instance/edk2: Add new package to track EDK2 firmwares
+   - incusd/instance/qemu: Update to the new edk2 package
+   - incusd/apparmor: Update to the new edk2 package
+   - doc: Cleanup OVMF/EDK2 handling to cover aarch64
+   - doc/installing: Use Incus 6.0.0 as example
+   - incusd/instance/qemu: Fix handling of virtiofs-only disks
+   - incus/storage_volume: Tweak help messages
+   - i18n: Update translation templates
+   - incus/storage_volume: Fix lint
+   - doc/installing: Mention incus-tools package
+   - incus-simplestreams: Add support for unified images
+   - incus-simplestreams: Tweak help message
+   - incus-simplestreams: Refactor unified logic
+   - gomod: Update dependencies
+   - incusd/apparmor: Allow devpts mounts
+   - incusd: Improve profile rename errors
+   - incusd/sys: Add cluster resources cache path
+   - incusd/daemon: Locally cache other server resources
+   - incusd/instance/drivers/qmp: Add QueryCPUModel
+   - incusd/instance/qemu: Use cluster CPU flags for migration.stateful
+   - incus-user: Use shorter interrface name for long UIDs
+   - incusd/device/network: Fix Tap interface MTU when in OVN
+   - incusd/isntance: Don't expose all internal flags in INFO message
+   - incusd/instance/lxc: Allow calling Update from a Create operation
+   - cmd/incusd: Add forknet dhcp
+   - shared/subprocess: Allow building on Windows
+   - api: instance_oci
+   - client: Add basic OCI registry client
+   - incus: Add OCI remote support
+   - shared/cliconfig: Add OCI remote support
+   - incusd: Add OCI registry support
+   - incusd/instance/lxc: Basic OCI support
+   - internal/instance: Add volatile.container.oci
+   - incusd/instance/lxc: Add volatile.container.oci
+   - incus: Add support for volatile.container.oci
+   - incusd/instance: Handle OCI config on create from image
+   - tests: Add basic OCI test
+   - gomod: Update dependencies
+   - doc: Update configs
+   - doc: Add OCI to wordlist
+   - i18n: Update translation templates
+   - shared/subprocess: Fix gofmt
+   - incusd/storage/lvmcluster: Don't allow buckets
+   - incusd/storage/lvmcluster: Don't exclusively lock ISO volumes
+   - incusd/device/disk: Allow attaching the same ISO to multiple instances
+   - incusd/device/disk: Allow live-migration with agent/cloud-init disks
+   - incusd/instance/qemu: Fix live-migration with agent/cloud-init disks
+   - incusd/device/disk: Don't crash on uninitialized pool
+   - incusd/storage/lvmcluster: Always use shared access
+   - incusd/instance/lxc: Don't report filesystem metrics when no per-instance value
+   - incus/top: Set interval to 10s (minimum server-side is 8)
+   - incus/top: Hide zero values
+   - incusd/device/disk: Mark virtual disks as always migratable
+   - tests: Update metrics test for recent change
+  [/details]
+
+  # ドキュメント <!-- Documentation -->
+  <!--
+  The Incus documentation can be found at:
+  -->
+  Incus のドキュメントはこちらです:
+  https://incus-ja.readthedocs.io/ja/latest/ （日本語訳）
+  https://linuxcontainers.org/incus/docs/main/ （原文）
+
+  # パッケージ <!-- Packages -->
+  <!--
+  There are no official Incus packages as Incus upstream only releases regular release tarballs. Below are some available options to get Incus up and running.
+  -->
+  Incus の開発元は、通常リリースの tarball のみをリリースするため、公式の Incus パッケージはありません。Incus を実行するために使えるオプションを以下にいくつか示します。
+
+  ## Linux 上に Incus サーバーをインストールする <!-- Installing the Incus server on Linux -->
+  <!--
+  Incus is available for most common Linux distributions. You'll find detailed installation instructions in our documentation.
+  -->
+  Incus はほとんどの一般的な Linux ディストリビューションで利用できます。インストール手順の詳細は、Incus のドキュメントを参照してください。
+
+  https://incus-ja.readthedocs.io/ja/latest/installing/ （日本語訳）
+  https://linuxcontainers.org/incus/docs/main/installing/ （原文）
+
+  ## Incus クライアントの Homebrew パッケージ <!-- Homebrew package for the Incus client -->
+  <!--
+  The client tool is available through HomeBrew for both Linux and MacOS.
+  -->
+  HomeBrew 経由で、Linux と macOS 向けにクライアントツールが利用できます。
+
+  https://formulae.brew.sh/formula/incus
+
+  ## Incus クライアントの Chocolatey パッケージ <!-- Chocolatey package for the Incus client -->
+  <!--
+  The client tool is available through Chocolatey for Windows users.
+  -->
+  Chocolatey 経由で、Windows ユーザー向けにクライアントツールが利用できます。
+
+  https://community.chocolatey.org/packages/incus/6.3.0
+
+  ## Incus クライアントの Winget パッケージ <!-- Winget package for the Incus client -->
+  <!--
+  The client tool is also available through Winget for Windows users.
+  -->
+  Winget 経由で、Windows ユーザー向けにクライアントツールが利用できます。
+
+  https://winstall.app/apps/LinuxContainers.Incus
+
+  # サポート <!-- Support -->
+  <!--
+  Monthly feature releases are only supported up until the next release comes out.  Users needing a longer support length and less frequent changes should consider using Incus 6.0 LTS instead.
+  -->
+  月次のフィーチャーリリースは、次のリリースがリリースされるまでのみサポートされます。より長いサポート期間と少ない変更頻度が必要な場合、代わりに Incus 6.0 LTS の使用を検討すべきです。
+
+  コミュニティサポートはこちらから <!-- Community support is provided at -->: https://discuss.linuxcontainers.org
+  商用サポートはこちらから <!-- Commercial support is available through -->: https://zabbly.com/incus
+  バグはこちらから報告できます <!-- Bugs can be reported at -->: https://github.com/lxc/incus/issues
