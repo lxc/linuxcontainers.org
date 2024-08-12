@@ -59,7 +59,7 @@ content: |-
   <!--
   For example, `incus cluster group set foo instances.vm.cpu.x86_64.baseline=kvm64 instances.vm.cpu.x86_64.flags=auto` will have Incus automatically go through the servers in the `foo` cluster group and then fill in the `flags` configuration key with the set of common CPU flags.
   -->
-  例えば、`incus cluster group set foo instances.vm.cpu.x86_64.baseline=kvm64` `instances.vm.cpu.x86_64.flags=auto` とすると、Incus は自動的に foo クラスターグループ内のサーバーを自動的に調べ、共通の CPU フラグのセットをフラグ設定キーに入力します。
+  例えば、`incus cluster group set foo instances.vm.cpu.x86_64.baseline=kvm64 instances.vm.cpu.x86_64.flags=auto` とすると、Incus は自動的に foo クラスターグループ内のサーバーを自動的に調べ、共通の CPU フラグのセットを `flag` 設定キーに入力します。
 
   <!--
   But this also allows setting up your own completely custom CPU defintion, for example, `incus cluster group set foo instances.vm.cpu.x86_64.baseline=EPYCv2 instances.vm.cpu.x86_64.flags=-svm` will expose a basic 2nd generation AMD EPYC CPU with the virtualization extension (svm) disabled.
