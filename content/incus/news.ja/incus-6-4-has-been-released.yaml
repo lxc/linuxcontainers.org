@@ -1,0 +1,706 @@
+title: Incus 6.4 リリースのお知らせ
+date: 2024/08/09 18:08
+origin: https://discuss.linuxcontainers.org/t/incus-6-4-has-been-released/21323
+content: |-
+  # はじめに <!-- Introduction -->
+  <!--
+  The Incus team is pleased to announce the release of Incus 6.4!
+  -->
+  Incus チームは、Incus 6.4 のリリースのアナウンスができてうれしいです！
+
+  <!--
+  This is a very balanced release with something new for everyone!
+  -->
+  これは、誰にとっても新しい何かを備えた、非常にバランスのとれたリリースです。
+
+  <!--
+  It comes with a number of bugfixes and new features to help with the OCI support added in the previous release. It also brings in a number of new features for more complex shared/cluster environments. And it's jam packed with bugfixes, fixing a lot of annoyances around storage, clustering, OpenID authentication, auditing and more.
+  -->
+  このリリースは、多数のバグフィックスと、前のリリースで追加された OCI サポートを支援するための新機能が搭載されています。また、より複雑な共有環境・クラスター環境のための多数の新機能も導入されています。また、ストレージ、クラスタリング、OpenID 認証、監査まわりの厄介な問題などの修正が満載です。
+
+  [![image|690x309](https://discuss.linuxcontainers.org/uploads/default/original/2X/0/0c127c883d1015a00720b7389c82e6b5af8ff381.png)](https://linuxcontainers.org/incus/try-it/)
+
+  <!--
+  As usual, you can try it for yourself online: https://linuxcontainers.org/incus/try-it/
+  -->
+  いつものように、オンラインでご自身で試せます: https://linuxcontainers.org/incus/try-it/
+
+  Enjoy!
+
+  # 新機能 <!-- New features -->
+  ## クラスターグループの設定 <!-- Cluster group configuration -->
+  <!--
+  Cluster groups now have a standard configuration table like most other Incus objects.
+  -->
+  クラスターグループは、他のほとんどの Incus オブジェクトと同様の、標準の設定テーブルを持つようになりました。
+
+  <!--
+  This means the usual set of commands and APIs:
+  -->
+  これは、コマンドと API の通常のセットを意味します:
+
+   - `incus cluster group edit`
+   - `incus cluster group get`
+   - `incus cluster group set`
+   - `incus cluster group show`
+   - `incus cluster group unset`
+
+  ## クラスターグループごとの CPU ベースラインと VM に対するフラグ <!-- Per-cluster group CPU baseline and flags for VMs -->
+  <!--
+  Building on top of that support for cluster group configuration, we now have support for defining the VM CPU baseline on a per cluster group basis.
+  -->
+  クラスターグループの設定サポートをベースに、クラスターグループごとに VM の CPU ベースラインを定義するためのサポートが追加されました。
+
+  <!--
+  This makes it possible to have one cluster group per CPU model/generation and have Incus compute the common set of CPU flags for those servers.
+  -->
+  これにより、CPU モデル・世代ごとに 1 つのクラスターグループを持ち、Incus がそれらのサーバーに共通の CPU フラグのセットを計算できるようになります。
+
+  <!--
+  For example, `incus cluster group set foo instances.vm.cpu.x86_64.baseline=kvm64 instances.vm.cpu.x86_64.flags=auto` will have Incus automatically go through the servers in the `foo` cluster group and then fill in the `flags` configuration key with the set of common CPU flags.
+  -->
+  例えば、`incus cluster group set foo instances.vm.cpu.x86_64.baseline=kvm64 instances.vm.cpu.x86_64.flags=auto` とすると、Incus は自動的に foo クラスターグループ内のサーバーを自動的に調べ、共通の CPU フラグのセットを `flag` 設定キーに入力します。
+
+  <!--
+  But this also allows setting up your own completely custom CPU defintion, for example, `incus cluster group set foo instances.vm.cpu.x86_64.baseline=EPYCv2 instances.vm.cpu.x86_64.flags=-svm` will expose a basic 2nd generation AMD EPYC CPU with the virtualization extension (svm) disabled.
+  -->
+  ただし、これにより、完全にカスタムの CPU 定義を設定することもできます。例えば、`incus cluster group set foo instances.vm.cpu.x86_64.baseline=EPYCv2` `instances.vm.cpu.x86_64.flags=-svm` とすると、仮想化拡張機能（svm）を無効にした、基本的な第 2 世代の AMD EPYC CPU が公開されます。
+
+  ## ディスクとしてボリュームのサブパスの使用 <!-- Using a sub-path of a volume as a disk -->
+  <!--
+  It's now possible to use a path within an existing custom volume as the source for a disk entry.
+  -->
+  既存のカスタムボリューム内のパスを、ディスクエントリーのソースとして使えるようになりました。
+
+      stgraber@castiana:~$ incus launch images:ubuntu/24.04 demo
+      Launching demo
+      stgraber@castiana:~$ incus launch images:ubuntu/24.04 demo-sub
+      Launching demo-sub
+      stgraber@castiana:~$ incus storage volume create default demovol
+      Storage volume demovol created
+      stgraber@castiana:~$ incus config device add demo demovol disk pool=default source=demovol path=/mnt/demovol
+      Device demovol added to demo
+      stgraber@castiana:~$ incus exec demo bash
+      root@demo:~# mkdir -p /mnt/demovol/sub/path/
+      root@demo:~# echo world > /mnt/demovol/sub/path/hello
+      root@demo:~#·
+      exit
+      stgraber@castiana:~$ incus config device add demo-sub demovol disk pool=default source=demovol/sub/path path=/mnt/demovol
+      Device demovol added to demo-sub
+      stgraber@castiana:~$ incus exec demo-sub bash
+      root@demo-sub:~# cat /mnt/demovol/hello·
+      world
+
+  <!--
+  In this example, a `demovol` custom volume is created, then attached to the `demo` container, a sub-directory is created in that volume and that sub-directory is then attached to another container, `demo-sub`.
+  -->
+  この例では、`demovol` カスタムボリュームが作られ、`demo` コンテナにアタッチされ、そのボリューム内にサブディレクトリーが作成され、そのサブディレクトリーが別のコンテナ `demo-sub` にアタッチされます。
+
+  ## ストレージプールごとのプロジェクト制限 <!-- Per storage pool projects limits -->
+  <!--
+  Incus projects can have resource limits applied to them, ideal when providing access to a project to a third party. Up until now, it was possible to limit the total disk usage within a project, but that would apply to all storage pools.
+  -->
+  Incus プロジェクトはリソース制限を持つことができます。これは、プロジェクトへのアクセスを第三者に提供する場合に理想的です。これまでは、プロジェクト内のトータルのディスク使用量を制限できました。しかし、これは全ストレージプールに適用されていました。
+
+  <!--
+  As it's common to have different storage pools representing different storage characteristics (local vs remote) or class (ssd vs hdd), it's useful to have a way to provide limits per storage pool.
+  -->
+  異なるストレージの特性（ローカル vs リモート）やクラス（ssd vs hdd）を表す、異なるストレージプールを持つことは一般的ですので、ストレージプールごとに制限を提供する方法があると便利です。
+
+  <!--
+  To do so, a new configuration key, `limits.disk.pool.POOLNAME` is now available in project configuration. Setting the limit to `0` fully disables that storage pool and causes it to disappear from the storage pool listing in that project.
+  -->
+  これを行うために、新しい設定キーである、`limits.disk.pool.POOLNAME` がプロジェクト内で利用できるようになりました。制限を `0` に設定すると、そのストレージプールは完全に無効になり、そのプロジェクトにリストされているストレージプールから消えます。
+
+      stgraber@dakara:~$ incus project info test-limits
+      +------------------+-----------+-------+
+      |     RESOURCE     |   LIMIT   | USAGE |
+      +------------------+-----------+-------+
+      | CONTAINERS       | UNLIMITED | 0     |
+      +------------------+-----------+-------+
+      | CPU              | UNLIMITED | 0     |
+      +------------------+-----------+-------+
+      | DISK             | UNLIMITED | 0B    |
+      +------------------+-----------+-------+
+      | INSTANCES        | UNLIMITED | 0     |
+      +------------------+-----------+-------+
+      | MEMORY           | UNLIMITED | 0B    |
+      +------------------+-----------+-------+
+      | NETWORKS         | UNLIMITED | 0     |
+      +------------------+-----------+-------+
+      | PROCESSES        | UNLIMITED | 0     |
+      +------------------+-----------+-------+
+      | VIRTUAL-MACHINES | UNLIMITED | 0     |
+      +------------------+-----------+-------+
+      stgraber@dakara:~$ incus storage list
+      +---------+--------+-------------+---------+---------+
+      |  NAME   | DRIVER | DESCRIPTION | USED BY |  STATE  |
+      +---------+--------+-------------+---------+---------+
+      | default | zfs    |             | 45      | CREATED |
+      +---------+--------+-------------+---------+---------+
+      | foo     | dir    |             | 0       | CREATED |
+      +---------+--------+-------------+---------+---------+
+      stgraber@dakara:~$ incus project set test-limits limits.disk.pool.foo=0 limits.disk.pool.default=5GiB limits.disk=10GiB
+      stgraber@dakara:~$ incus project info test-limits
+      +------------------+-----------+-------+
+      |     RESOURCE     |   LIMIT   | USAGE |
+      +------------------+-----------+-------+
+      | CONTAINERS       | UNLIMITED | 0     |
+      +------------------+-----------+-------+
+      | CPU              | UNLIMITED | 0     |
+      +------------------+-----------+-------+
+      | DISK             | 10.00GiB  | 0B    |
+      +------------------+-----------+-------+
+      | DISK (DEFAULT)   | 5.00GiB   | 0B    |
+      +------------------+-----------+-------+
+      | INSTANCES        | UNLIMITED | 0     |
+      +------------------+-----------+-------+
+      | MEMORY           | UNLIMITED | 0B    |
+      +------------------+-----------+-------+
+      | NETWORKS         | UNLIMITED | 0     |
+      +------------------+-----------+-------+
+      | PROCESSES        | UNLIMITED | 0     |
+      +------------------+-----------+-------+
+      | VIRTUAL-MACHINES | UNLIMITED | 0     |
+      +------------------+-----------+-------+
+      stgraber@dakara:~$ incus storage list
+      +---------+--------+-------------+---------+---------+
+      |  NAME   | DRIVER | DESCRIPTION | USED BY |  STATE  |
+      +---------+--------+-------------+---------+---------+
+      | default | zfs    |             | 45      | CREATED |
+      +---------+--------+-------------+---------+---------+
+      stgraber@dakara:~$ incus create images:ubuntu/24.04 c1 --storage default -d root,size=5GiB
+      Creating c1
+      
+      The instance you are starting doesn't have any network attached to it.
+        To create a new network, use: incus network create
+        To attach a network to an instance, use: incus network attach
+      
+      stgraber@dakara:~$ incus create images:ubuntu/24.04 c2 --storage default -d root,size=5GiB
+      Creating c2
+      Error: Failed instance creation: Failed checking if instance creation allowed: Reached maximum aggregate value "5GiB" for "limits.disk.pool.default" in project "test-limits"
+      stgraber@dakara:~$ incus project set test-limits limits.disk.pool.foo=5GiB
+      stgraber@dakara:~$ incus create images:ubuntu/24.04 c2 --storage foo -d root,size=5GiB
+      Creating c2
+      
+      The instance you are starting doesn't have any network attached to it.
+        To create a new network, use: incus network create
+        To attach a network to an instance, use: incus network attach
+      
+      stgraber@dakara:~$ incus project info test-limits
+      +------------------+-----------+----------+
+      |     RESOURCE     |   LIMIT   |  USAGE   |
+      +------------------+-----------+----------+
+      | CONTAINERS       | UNLIMITED | 2        |
+      +------------------+-----------+----------+
+      | CPU              | UNLIMITED | 0        |
+      +------------------+-----------+----------+
+      | DISK             | 10.00GiB  | 10.00GiB |
+      +------------------+-----------+----------+
+      | DISK (DEFAULT)   | 5.00GiB   | 5.00GiB  |
+      +------------------+-----------+----------+
+      | DISK (FOO)       | 5.00GiB   | 5.00GiB  |
+      +------------------+-----------+----------+
+      | INSTANCES        | UNLIMITED | 2        |
+      +------------------+-----------+----------+
+      | MEMORY           | UNLIMITED | 0B       |
+      +------------------+-----------+----------+
+      | NETWORKS         | UNLIMITED | 0        |
+      +------------------+-----------+----------+
+      | PROCESSES        | UNLIMITED | 0        |
+      +------------------+-----------+----------+
+      | VIRTUAL-MACHINES | UNLIMITED | 0        |
+      +------------------+-----------+----------+
+      stgraber@dakara:~$
+
+  <!--
+  Here we can see a project get set up with a disk limit, first hiding one of the pools, then filling the other before setting a limit on the previously hidden pool.
+  -->
+  ここでは、プロジェクトがディスク制限付きでセットアップされ、最初にプールの 1 つを非表示にし、それから前に非表示にしたプールに制限を設定する前に、他のプールを埋める様子を見ることができます。
+
+  ## 隔離された OVN ネットワーク（アップリンクなし）<!-- Isolated OVN networks (no uplink) -->
+  <!--
+  Up until now, all OVN networks have had a uplink network set (`network` property).
+  That's the network on which the external facing router port will sit and through which all ingress/egress into/out-of the OVN network will happen.
+  -->
+  これまで、すべての OVN ネットワークは、アップリンクのネットワークのセット（`network` プロパティ）を持っていました。
+  これは、外部に面したルーターのポートが配置され、OVN ネットワークへの入出力がすべてこのネットワーク経由で行われるネットワークです。
+
+  <!--
+  Incus picks an IPv4 (and/or IPv6) address on that uplink network and then uses it to route all the traffic out of the virtual network and onto the physical network.
+  -->
+  Incus は、そのアップリンクネットワーク上の IPv4（および・もしくは IPv6）アドレスを選択し、それを使用して、仮想ネットワークから物理ネットワークへのすべてのトラフィックをルーティングします。
+
+  <!--
+  Now a special value of `none` for that `network` property will instruct Incus to create an OVN network which is not connected to any uplink and is threfore fully isolated.
+  -->
+  このネットワークプロパティの特別な値である `none` は、Incus に対して、いかなるアップリンクとも接続されない、完全に分離したネットワークを作成するように指示をします。
+
+      root@server01:~# incus network create ovn-isolated network=none --type=ovn
+      Network ovn-isolated created
+      root@server01:~# incus launch images:ubuntu/24.04 c1 --network ovn-isolated
+      Launching c1
+      root@server01:~# incus list
+      +------+---------+--------------------+-----------------------------------------------+-----------+-----------+----------+
+      | NAME |  STATE  |        IPV4        |                     IPV6                      |   TYPE    | SNAPSHOTS | LOCATION |
+      +------+---------+--------------------+-----------------------------------------------+-----------+-----------+----------+
+      | c1   | RUNNING | 10.248.34.2 (eth0) | fd42:669c:8431:b3cc:216:3eff:fef3:fdb2 (eth0) | CONTAINER | 0         | server01 |
+      +------+---------+--------------------+-----------------------------------------------+-----------+-----------+----------+
+      root@server01:~# incus exec c1 bash
+      root@c1:~# ping 1.1.1.1
+      PING 1.1.1.1 (1.1.1.1) 56(84) bytes of data.
+      ^C
+      --- 1.1.1.1 ping statistics ---
+      2 packets transmitted, 0 received, 100% packet loss, time 1031ms
+
+  <!--
+  Here we can see an isolated network being created and a container being placed on it.
+  The network provides IPv4 and IPv6 addresses as usual, but no traffic can come out.
+  -->
+  ここでは、完全に分離されたネットワークが作成され、コンテナがそこに配置されていることがわかります。
+  通常どおり、ネットワークは IPv6 と IPv6 アドレスを提供しますが、トラフィックは送信されません。
+
+  ## インスタンスごとの LXCFS <!-- Per-instance LXCFS -->
+  <!--
+  A new server configuration key, `instances.lxcfs.per_instance` can now be enabled to have Incus start a dedicated LXCFS instance for every container.
+  -->
+  新しいサーバー設定キーである `instances.lxcfs.per_instance` が利用できるようになりました。これにより、Incus が、コンテナごとに専用の LXCFS インスタンスを起動します。
+
+  <!--
+  This is in contrast to the default of having a single LXCFS instance run for the entire system.
+  -->
+  これは、システム全体で 1 つの LXCFS インスタンスを起動するというデフォルトとは対照的です。
+
+  <!--
+  Enabling this comes at a slightly higher resource usage per container, but reduces the risk of one container flooding the shared LXCFS instance as well as make it so a LXCFS crash only affects one container.
+  -->
+  これを有効にすると、コンテナあたりのリソース消費はわずかに増加します。しかし、特定のコンテナが共通の LXCFS インスタンスを使用できなくなるリスクを減らし、LXCFS のクラッシュは 1 つのコンテナにのみ影響するようになります。
+
+      stgraber@castiana:~$ pgrep -a lxcfs
+      1101 /opt/incus/bin/lxcfs /var/lib/incus-lxcfs
+      stgraber@castiana:~$ incus config set instances.lxcfs.per_instance=true
+      stgraber@castiana:~$ incus restart demo
+      stgraber@castiana:~$ pgrep -a lxcfs
+      1101 /opt/incus/bin/lxcfs /var/lib/incus-lxcfs
+      962122 lxcfs -f -p /run/incus/demo/lxcfs.pid --runtime-dir /run/incus/demo/lxcfs /var/lib/incus/devices/demo/lxcfs
+
+  ## create/launch実行時の環境変数ファイルのサポート <!-- Support for environment file at create/launch time -->
+  <!--
+  To make it easier to run OCI containers, it's now possible to specify environment variables through an environment variable file which gets read at creation time and converted to Incus configuration options.
+  -->
+  OCI コンテナを簡単に実行できるようにするために、環境変数ファイル経由で環境変数を指定できるようになりました。このファイルは、起動時に読み込まれ、Incus の設定オプションに変換されます。
+
+      stgraber@castiana:~$ cat mysql.env
+      MYSQL_DATABASE=wordpress
+      MYSQL_USER=wordpress
+      MYSQL_PASSWORD=wordpress
+      MYSQL_RANDOM_ROOT_PASSWORD=1
+      
+      stgraber@castiana:~$ incus launch docker:mysql mysql --environment-file mysql.env 
+      Launching mysql
+      
+      stgraber@castiana:~$ incus config show mysql
+      architecture: x86_64
+      config:
+        environment.GOSU_VERSION: "1.17"
+        environment.HOME: /root
+        environment.MYSQL_DATABASE: wordpress
+        environment.MYSQL_MAJOR: innovation
+        environment.MYSQL_PASSWORD: wordpress
+        environment.MYSQL_RANDOM_ROOT_PASSWORD: "1"
+        environment.MYSQL_SHELL_VERSION: 9.0.1-1.el9
+        environment.MYSQL_USER: wordpress
+        environment.MYSQL_VERSION: 9.0.1-1.el9
+        environment.PATH: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+        environment.TERM: xterm
+        image.architecture: x86_64
+        image.description: docker.io/library/mysql (OCI)
+        image.type: oci
+        volatile.base_image: d8df069848906979fd7511db00dc22efeb0a33a990d87c3c6d3fcdafd6fc6123
+        volatile.cloud-init.instance-id: f12e3ddb-ac93-4942-b3e1-dcd560893140
+        volatile.container.oci: "true"
+        volatile.eth0.host_name: vethac8631aa
+        volatile.eth0.hwaddr: 00:16:3e:20:32:87
+        volatile.idmap.base: "0"
+        volatile.idmap.current: '[{"Isuid":true,"Isgid":false,"Hostid":1000000,"Nsid":0,"Maprange":1000000000},{"Isuid":false,"Isgid":true,"Hostid":1000000,"Nsid":0,"Maprange":1000000000}]'
+        volatile.idmap.next: '[{"Isuid":true,"Isgid":false,"Hostid":1000000,"Nsid":0,"Maprange":1000000000},{"Isuid":false,"Isgid":true,"Hostid":1000000,"Nsid":0,"Maprange":1000000000}]'
+        volatile.last_state.idmap: '[]'
+        volatile.last_state.power: RUNNING
+        volatile.uuid: 5ed7f63b-5b6c-4c89-9dfa-117c2b785370
+        volatile.uuid.generation: 5ed7f63b-5b6c-4c89-9dfa-117c2b785370
+      devices: {}
+      ephemeral: false
+      profiles:
+      - default
+      stateful: false
+      description: ""
+
+  <!--
+  In this example, we see a `mysql` container created from an OCI image and using environment variables defined in `mysql.env`.
+  -->
+  これは、OCI イメージから作成され、`mysql.env` ファイルで定義された環境変数を使う、`mysql` コンテナの例です。
+
+  # すべての変更点 <!-- Complete changelog -->
+  <!--
+  Here is a complete list of all changes in this release:
+  -->
+  このリリースのすべての変更のリストは次の通りです（翻訳なし）:
+
+  [details="すべてのChangeLogを見る"]
+   - incus-simplestreams: Fix split images
+   - [lxd-import] github: stop purging core20
+   - [lxd-import] github: purge disabled/superseded snaps
+   - [lxd-import] github: move snap removal to "Reclaim some space" step
+   - [lxd-import] github: put docker removal its own step
+   - [lxd-import] github: mask lxc{,-net}.service in a singe command
+   - [lxd-import] lxd/instance/drivers/driver/qemu: Don't leak file descriptor when probing for Direct I/O support
+   - [lxd-import] lxd/network/acl: Change protocol field for ovn logs
+   - [lxd-import] lxd/instance: Reject limits.kernel config for VMs
+   - [lxd-import] doc: `limits.kernel` only applies to containers (see #12874)
+   - [lxd-import] lxd/storage: Fix resize for pools with custom zfs.pool_name
+   - [lxd-import] lxd/storage/drivers/driver_zfs_utils: fix typos
+   - [lxd-import] lxd/storage/drivers/driver_zfs_utils: make it explicit that blocksize is in bytes
+   - [lxd-import] lxd/task/group: Make cancel type of context.CancelFunc for clarity
+   - [lxd-import] doc: Add paragraph on how to delete images
+   - [lxd-import] test: Add exec exit code test
+   - [lxd-import] lxd/apparmor: allow confined services to receive required signals
+   - [lxd-import] lxd/rsync: Consistently compare files on nanosecond basis
+   - [lxd-import] test/suites/migration: Check for file contents after refresh
+   - [lxd-import] test/suites/migration: Check local and remote instance refreshes based on nanoseconds
+   - [lxd-import] doc: add paragraph on how to delete images
+   - [lxd-import] doc: enable multiprocessing for pyspelling
+   - [lxd-import] Makefile: have run-parts report which script it runs
+   - [lxd-import] lxd/storage/drivers/ceph: Disable filesystem config keys on block volumes
+   - [lxd-import] lxd/storage/drivers/lvm: Disable filesystem config keys on block volumes
+   - [lxd-import] test: Add check to restore custom volumes of type block
+   - [lxd-import] lxd/storage/drivers/ceph: Update UnmountVolumeSnapshot docstring
+   - [lxd-import] lxd: Improve error check for existing certificates
+   - [lxd-import] shared/api: Updates swagger description for certificate field.
+   - [lxd-import] shared/api: Fix lint errors (receiver-naming).
+   - [lxd-import] lxd/db/cluster: Fix lint error (revive: var-naming).
+   - [lxd-import] lxd-migrate: Ignore lint error (revive: deep-exit).
+   - [lxd-import] lxc/remote: Fix lint errors (revive: exported).
+   - [lxd-import] lxd/storage/backend: Don't validate custom storage volumes twice
+   - [lxd-import] lxd-generate: Return helpful error instead of panicking.
+   - [lxd-import] lxd/storage/backend: Use quotes consistently for error messages
+   - [lxd-import] lxd/project: Don't panic on StorageVolumeParts
+   - [lxd-import] github: don't abort on remount failures
+   - [lxd-import] test/main: add log grouping (GHA)
+   - [lxd-import] test/main: show dmesg on failure
+   - [lxd-import] lxd/api/internal: Use correct quoting for error in internalImportFromBackup
+   - [lxd-import] lxd/db/cluster/devices: Use correct string quoting of device type for error in NewDeviceType
+   - [lxd-import] lxd/instances/post: Improve error in createFromBackup
+   - [lxd-import] lxd/storage/backend/lxd: Update backup.yaml after instance and volume DB records have been generated in CreateInstanceFromBackup
+   - [lxd-import] test/main: don't wrap tests logs in log groups
+   - [lxd-import] lxd/device/disk: Remove config.iso file when the cloud-init:config disk device is removed
+   - [lxd-import] lxd/images: Add project to error in autoSyncImages
+   - [lxd-import] lxd/project/project: Remove optimisation from StorageVolumeProject
+   - [lxd-import] lxd/storage/volumes: Remove unnecessary 2 line variable definition in doCustomVolumeRefresh
+   - [lxd-import] lxd/storage/volumes: Remove unnecessary 2 line variable definition in doVolumeCreateOrCopy
+   - [lxd-import] lxd/storage/volumes: Validate source project in doCustomVolumeRefresh
+   - [lxd-import] [lxd-import] lxd/storage/volumes: Validate source project in doVolumeCreateOrCopy
+   - [lxd-import] lxd/db/cluster: Remove redunant parentheses.
+   - [lxd-import] lxd/db/cluster: Rename "node" to "cluster member".
+   - [lxd-import] lxd/migrate/storage/volumes: Use volume name from DB in migrationSourceWs.DoStorage
+   - [lxd-import] lxd/network/network/utils: Fix incorrect conversion from int64 to int in inRoutingTable
+   - [lxd-import] lxd/network/network/utils: Remove unnecessary call to fmt.Sprintf by passing base to ParseInt
+   - [lxd-import] lxd/response: Use SmartError if SyncResponse success=false
+   - [lxd-import] lxd/storage/drivers/driver/zfs/volumes: Fix error scoping in CreateVolumeFromCopy
+   - [lxd-import] lxd/storage/drivers/driver/zfs/volumes: Define send/receive channels together in CreateVolumeFromCopy
+   - [lxd-import] lxd/storage/drivers/driver/zfs/volumes: Kill sender if receiver fails in CreateVolumeFromCopy
+   - [lxd-import] lxd/storage/drivers/driver/zfs/volumes: Handle multi-line errors in CreateVolumeFromCopy
+   - [lxd-import] lxd/storage/drivers/driver/btrfs/volumes: Fix hang when btrfs receive fails in RefreshVolume
+   - [lxd-import] lxd/storage/drivers/driver/btrfs/volumes: Handle multi-line errors in RefreshVolume
+   - [lxd-import] lxd/storage/drivers/driver/zfs/volumes: Aligns RefreshVolume with BTRFS driver
+   - [lxd-import] lxd/response: Fallback to error response after setting headers
+   - [lxd-import] lxd/storage/backend/lxd: Use volume name from VolumeDBGet in BackupCustomVolume
+   - [lxd-import] lxd/storage/drivers/btrfs: Clarify fallback in case UUID discovery times out
+   - incusd/db/cluster: Fix import shadowing
+   - doc/rest-api: Refresh swagger YAML
+   - [lxd-import] lxd/db/cluster: Update error messages in unit tests.
+   - [lxd-import] lxd/storage/drivers: Add volume param to roundVolumeBlockSizeBytes
+   - [lxd-import] lxd/storage/drivers/zfs: Round to zfs.blocksize or 16KiB
+   - [lxd-import] test/storage: Add non-power-of-two sized storage check
+   - [lxd-import] test/storage: Remove zfs rounding test
+   - [lxd-import] lxd/storage/drivers: Refactor volume size rounding logic
+   - [lxd-import] lxd/storage/drivers/zfs: Wait for device to appear when activating a volume
+   - [lxd-import] lxd/storage/drivers/zfs: Check for non /dev/zvol/* paths
+   - incusd/storage/zfs: Fix import shadowing
+   - doc/storage_backup: Fix command example
+   - doc/requirements: Add OCI requirements
+   - doc/images: Mention OCI images
+   - incusd/instance/edk2: Support OVMF filenames on arm64
+   - incusd/instance/drivers/qemu: Limit CPU flag calculation to x86_64
+   - incus/s3: Fix mcli minio client executable name check
+   - incusd/instance/qemu: Fix architecture check being backward
+   - incusd/instance: Fix initial configuration handling for OCI
+   - client/oci: Add errors for missing skopeo
+   - client/oci: Add errors for missing umoci
+   - Change RunDir file mode to 0711
+   - incusd/instance/lxc: Handle OCI containers using real PID1
+   - incusd/apparmor/qemu: Relax apparmor rules a bit
+   - incus-simplestreams: Handle removal of combined images
+   - incusd/instance/lxc: Add basic Mounts handling for OCI
+   - incusd/apparmor/qemu: Fix typo in rule
+   - incusd/apparmor/dnsmasq: Relax rules a bit
+   - incusd/db/node: Fix version check in GetAPI
+   - incusd/db: Allow cluster startup with differing API extensions
+   - incusd: Extend heartbeat data for minimum API extension count
+   - incusd/storage: Use writeback mode for qemu-img convert
+   - incusd/storage: Improve unpacking message
+   - incusd/operations: Handle percentage only updates
+   - incusd/storage: Pass through tracker to qemu-img
+   - incusd/db/cluster: Update tests for relaxed API extensions checks
+   - incusd/apparmor: Implement progress tracker for qemu-img
+   - incusd/cgroup: Handle unknown devices in io.stat
+   - incusd/instance_post: Always set the target project
+   - incusd/storage/drivers: Consistently set VolumeMultiNode
+   - incusd/storage/lvm: Require an exclusive lock during snapshot
+   - incusd/storage/lvm: Properly handle activation during resize
+   - incusd/storage: Properly detect filesystem on remote block
+   - incusd/cluster: Always attempt to forward custom volume requests
+   - client: Always set GetBody
+   - client: Report OIDC refresh failure
+   - incus/remote: Forward OIDC auth failures
+   - Make run-parts running compatible with different versions
+   - client: Retry when told to by the proxy
+   - Use qemu-img convert output to update progress
+   - incusd/cluster: Add flagFormat
+   - internal/cmd: Add support for format options
+   - incusd/isntance/edk2: Move seabios to /usr/share/qemu
+   - incusd/isntance/edk2: Add ArchLinux x86_64 paths
+   - tests: Use future values in property test
+   - incusd/db/cluster: Cleanup indentation
+   - incusd/db/cluster: Update schema
+   - incusd/db/generate: Add exception for cluster tables
+   - api: clustering_groups_config
+   - incusd/db/cluster: Add cluster_groups_config
+   - incusd/db/cluster: Update schema
+   - shared/api: Add Config to ClusterGroupPut
+   - doc/rest-api: Refresh swagger YAML
+   - incusd/db/cluster: Update functions for new cluster group config table
+   - incusd/cluster: Add cluster group config logic
+   - doc: Update configs
+   - incus/completion: Add cmpClusterGroupConfigs
+   - incus/cluster/group: Add get/set/unset
+   - i18n: Update translation templates
+   - doc: Add cluster group config
+   - tests: Add cluster group config test
+   - incusd/resources: Add sortedMapKeys
+   - incusd/resources/cpu: Sort sockets, cores and threads
+   - incusd/auth: Fill missing local volume location
+   - incusd/cluster: Correctly record volatile.cluster.group on move
+   - incusd/migration: Show source errors first
+   - incusd/instance/qemu: Clarify live migration error
+   - incusd/cluster: Attempt to ping the server prior to healing
+   - incusd/instance/qemu: Fix bad timeout errors
+   - api: instances_lxcfs_per_instance
+   - incusd/instance/qemu: Send two ACPI events on shutdown
+   - incusd/instance: Add progress tracking to export
+   - incusd/server/config: Add instances.lxcfs.per_instance
+   - incusd/instance/lxc: Add support for per-instance LXCFS
+   - doc: Update configs
+   - client: Remove GetBody when can't seek back
+   - client: Add Seek call to GetBody
+   - Translated using Weblate (Chinese (Simplified))
+   - incusd: Simplify image replication
+   - incusd/images: Only remove from authorizer once
+   - incusd/images: Correctly record new aliases
+   - incusd/images: Correctly remove aliases
+   - incusd/images: Set authorizer entries at the correct time
+   - incusd/images: Don't alter image info on cluster copy
+   - incusd/storage_pools: Set authorizer for pending pools
+   - incusd/networks: Set authorizer for pending networks
+   - incusd/network: Handle long interface names
+   - incus/cluster: Cleanup certificate update message
+   - i18n: Update translation templates
+   - incus/top: Properly filter disk usage
+   - incusd/state: Add Cluster gateway
+   - incusd/daemon: Sort state fields
+   - incusd/daemon: Add cluster gateway to state
+   - incusd/acme: Update for state change
+   - incusd/images: Update for state change
+   - incusd/operations: Update for state change
+   - incusd/instances: Update for state change
+   - incusd/patches: Update for state change
+   - incusd/cluster: Update for state change
+   - incusd/instances: Use targetGroupPrefix
+   - incusd/cluster: Split files
+   - incusd/cluster: Fix import shadowing
+   - incusd/cluster: Re-factor healing logic
+   - incusd/cluster: Improve logging
+   - incusd/cluster: Reduce dqlite logging
+   - incusd/cluster: Extend HasConnectivity to do API checking
+   - incusd/cluster: Add HasConnectivity check to event handling
+   - incusd: Don't block on startup for cluster queries
+   - incusd/cluster: Rework offline server detection
+   - incusd/cluster/evacuation: Add separate healing mode
+   - incusd/cluster/healing: Try up to 5 times
+   - incusd/cluster/healing: Add logging
+   - incusd/device/disk: Fix bad CanMigrate logic
+   - incusd/storage/lvm: Properly activate/deactivate ISOs
+   - incusd/images: Expose image type as header
+   - client: Skip image hash if OCI
+   - incusd/instance/lxc: Add /init to OCI init paths
+   - incusd/device: Don't fail on LXCFS device entry
+   - client: Report source errors too on copy
+   - incusd/storage: Have roundVolumeBlockSizeBytes return an error
+   - incusd/instance_post: Fix cross-server live-migration
+   - incus/image: Correct image copy logic
+   - incusd/storage/lvm: Hardden common functions
+   - incusd/api: Don't panic on missing config
+   - incusd/storage: Add Deactivate flag
+   - incusd/storage/lvm: Add deactivation step for clusters
+   - incusd/cluster: Return clear status for servers currently starting up
+   - incusd/instance/lxc: Reduce logging level
+   - incusd/instance/qemu: Reduce logging level
+   - incusd/migrate: Reduce logging
+   - incusd/storage: Reduce logging
+   - incusd/instance/qemu: Remove double lifecycle event
+   - tests/clustering: Use correct target project argument
+   - incusd/isntance/edk2: Fix CSM handling
+   - incusd/storage/zfs: Always call tryGetVolumeDiskPathFromDataset
+   - incusd/network/ovn: Require functional uplink
+   - doc: add colima instructions
+   - doc: Update incus_alias.md
+   - incus/network/load_balancer: Fix example
+   - i18n: Update translation templates
+   - incusd/network/ovn: Fix crash on uninitialized external IDs
+   - doc/instances: Add VM agent install instructions
+   - shared/api: Add Config to ServerUntrusted
+   - doc/rest-api: Refresh swagger YAML
+   - incusd/api_1.0: Expose user.ui config keys to all clients
+   - doc/server: Mention user.ui config keys
+   - incusd/auth/oidc: Better handle logout
+   - incusd/networks: Emit lifecycle event and authz entries for OVN networks
+   - incusd/network/ovn: Fix indent
+   - doc/storage_volume: Fix snapshot command
+   - shared/api: Add EventLifecycleInstanceMigrated
+   - shared/api: Sort lifecycle events
+   - incusd/lifecycle: Add InstanceMigrated
+   - incusd/lifecycle: Sort lifecycle events
+   - incusd/isntance/operationlock: Add ActionMigrate
+   - incusd/instance/common: Add support for migration operation
+   - incusd/instance/qemu: Add support for migration operation and lifecycle
+   - incusd/instance/lxc: Add support for migration operation and lifecycle
+   - shared/api: Add lifecycle events for cluster evacuation and healing
+   - incusd/lifecycle: Add lifecycle events for cluster evacuation and healing
+   - incusd/cluster: Add lifecycle events for evacuation
+   - incusd/request: Strip port from event address
+   - incusd/instance: Properly link instance and operation
+   - incusd/operations: Add CopyRequestor for nested operations
+   - incusd/instance: Track operation during exec/console
+   - doc/clustering: Better document healing
+   - incusd/instance: Track operation during creation
+   - incusd/instance: Track operation during deletion
+   - incusd/instance: Keep track of API operations
+   - incusd/instance: Set operations on snapshot
+   - incus-migrate: Properly handle projects
+   - incusd/apparmor: Allow mounting zfs when delegation is supported
+   - doc/clustering: Add howto on cluster access
+   - cmd/incusd: Set keep-alive timeout
+   - incusd/auth/oidc: Handle cases where we can't set cookies
+   - incusd/instance/qemu: Deref ceph config path
+   - incusd/apparmor/qemu: Guess ceph config paths
+   - Translated using Weblate (Chinese (Simplified))
+   - Translated using Weblate (Chinese (Simplified))
+   - Translated using Weblate (Chinese (Simplified))
+   - incusd/instance/lxc: Respect LXCFS_OPTS
+   - api: clustering_groups_vm_cpu_definition
+   - incusd/cluster_groups: Add CPU definition keys
+   - doc: Update configs
+   - incusd/instance/qemu: Use cluster group config
+   - incusd/instance/drivers: Extract GetClusterCPUFlags
+   - incusd/cluster/group: Support for auto CPU flags
+   - incusd: Switch OVN to a getter function
+   - incusd/network: Port to new OVN state function
+   - incus: Add support for environment file (.env)
+   - i18n: Update translation templates
+   - incusd/storage/lvm: Re-try activation/deactivation
+   - incusd/storage/lvm: Don't activate volumes during cold migration
+   - Translated using Weblate (Chinese (Simplified))
+   - Translated using Weblate (Chinese (Simplified))
+   - shared/cliconfig: Add CacheDir
+   - incus: Configure a cache directory
+   - api: disk_volume_subpath
+   - incusd/device/disk: Allow relative paths within custom volumes
+   - doc/devices_disk: Mention sub-paths
+   - tests: Test volume subpaths
+   - api: projects_limits_disk_pool
+   - incusd/projects: Add new limits.disk.pool config key
+   - doc: Update configs
+   - incus/project: Handle pool disk limits
+   - incusd/project: Add per-pool disk limits
+   - incusd/project: Add HiddenStoragePools
+   - incusd/storage: Hide pools with a zero limit
+   - tests: Add test for per pool limits
+   - incus/image/alias: Add support for column selection
+   - i18n: Update translation templates
+   - incusd/main_forknet: Make it so our DHCP client never fails
+   - Translated using Weblate (Chinese (Simplified))
+   - api: network_ovn_isolated
+   - incusd/network/ovn: Harden deletion logic
+   - doc/network/ovn: Cover isolated networks
+   - incusd/networks: Reserve "none" for uplinks
+   - incusd/network/ovn: Allow creating isolated OVN networks (no uplink)
+   - incusd/device/nic_ovn: Handle networks without uplinks
+   - gomod: Update dependencies
+   - Release Incus 6.4
+  [/details]
+
+  # ドキュメント <!-- Documentation -->
+  <!--
+  The Incus documentation can be found at:
+  -->
+  Incus のドキュメントはこちらです:
+  https://incus-ja.readthedocs.io/ja/latest/ （日本語訳）
+  https://linuxcontainers.org/incus/docs/main/ （原文）
+
+  # パッケージ <!-- Packages -->
+  <!--
+  There are no official Incus packages as Incus upstream only releases regular release tarballs. Below are some available options to get Incus up and running.
+  -->
+    Incus の開発元は、通常リリースの tarball のみをリリースするため、公式の Incus パッケージはありません。Incus を実行するために使えるオプションを以下にいくつか示します。
+
+  ## Linux 上に Incus サーバーをインストールする <!-- Installing the Incus server on Linux -->
+  <!--
+  Incus is available for most common Linux distributions. You'll find detailed installation instructions in our documentation.
+  -->
+  Incus はほとんどの一般的な Linux ディストリビューションで利用できます。インストール手順の詳細は、Incus のドキュメントを参照してください。
+
+  https://incus-ja.readthedocs.io/ja/latest/installing/ （日本語訳）
+  https://linuxcontainers.org/incus/docs/main/installing/ （原文）
+
+  ## Incus クライアントの Homebrew パッケージ <!-- Homebrew package for the Incus client -->
+  <!--
+  The client tool is available through HomeBrew for both Linux and MacOS.
+  -->
+  HomeBrew 経由で、Linux と macOS 向けにクライアントツールが利用できます。
+
+  https://formulae.brew.sh/formula/incus
+
+  ## Incus クライアントの Chocolatey パッケージ <!-- Chocolatey package for the Incus client -->
+  <!--
+  The client tool is available through Chocolatey for Windows users.
+  -->
+  Chocolatey 経由で、Windows ユーザー向けにクライアントツールが利用できます。
+
+  https://community.chocolatey.org/packages/incus/6.4.0
+
+  ## Incus クライアントの Winget パッケージ <!-- Winget package for the Incus client -->
+  <!--
+  The client tool is also available through Winget for Windows users.
+  -->
+  Winget 経由で、Windows ユーザー向けにクライアントツールが利用できます。
+
+  https://winstall.app/apps/LinuxContainers.Incus
+
+  # サポート <!-- Support -->
+  <!--
+  Monthly feature releases are only supported up until the next release comes out.  Users needing a longer support length and less frequent changes should consider using Incus 6.0 LTS instead.
+  -->
+  月次のフィーチャーリリースは、次のリリースがリリースされるまでのみサポートされます。より長いサポート期間と少ない変更頻度が必要な場合、代わりに Incus 6.0 LTS の使用を検討すべきです。
+
+  コミュニティサポートはこちらから <!-- Community support is provided at -->: https://discuss.linuxcontainers.org
+  商用サポートはこちらから <!-- Commercial support is available through -->: https://zabbly.com/incus
+  バグはこちらから報告できます <!-- Bugs can be reported at -->: https://github.com/lxc/incus/issues
