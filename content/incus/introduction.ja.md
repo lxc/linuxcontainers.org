@@ -2,9 +2,15 @@
 
 # Incus とは? <!-- What is Incus? -->
 <!--
-Incus is a next generation system container and virtual machine manager. It offers a unified user experience around full Linux systems running inside containers or virtual machines.
+Incus is a next generation system container and virtual machine manager. 
 -->
-Incus は、次世代のシステムコンテナと仮想マシンのマネージャーです。コンテナや仮想マシン内で動く、完全な Linux システムに対する統一したユーザー体験を提供します。
+Incus は、次世代のシステムコンテナと仮想マシンのマネージャーです。
+
+<!--
+It provides a user experience similar to that of a public cloud. With it, you can easily mix and match both containers and virtual machines, sharing the same underlying storage and network.
+-->
+Incus は、パブリッククラウドと同じようなユーザー体験を提供します。これにより、同じ基盤のストレージとネットワークを共有しながら、コンテナと仮想マシンの両方を簡単に組み合わせることができます。
+
 
 <!--
 Incus is image based and provides images for a [wide number of Linux distributions](https://images.linuxcontainers.org). It provides flexibility and scalability for various use cases, with support for different storage backends and network types and the option to install on hardware ranging from an individual laptop or cloud instance to a full server rack.
@@ -17,9 +23,10 @@ When using Incus, you can manage your instances (containers and VMs) with a simp
 Incus を使用すると、インスタンスをシンプルなコマンドラインツールを使ったり、直接 REST API を使ったり、サードパーティーのツールやインテグレーションを通したりして、インスタンスを管理できます。Incus は、ローカルとリモートのアクセス両方に単一の REST API を実装しています。
 
 <!--
-The Incus project was created by Aleksa Sarai as a community driven fork of Canonical's LXD. See here for the [announcement](/incus/announcement/).
+The Incus project [was created](/incus/announcement/) by Aleksa Sarai as a community driven alternative to Canonical's LXD.
+Today, it's led and maintained by many of the same people that once created LXD.
 -->
-Incus プロジェクトは、Canonical の LXD のコミュニティー主導のフォークとして Aleksa Sarai によって作られました。[アナウンス](/ja/incus/announcement/)をご覧ください。
+Incus プロジェクトは、Canonical の LXD に代わるコミュニティ主導の代替プロダクトとして、Aleksa Sarai により[作成されました](/ja/incus/announcement/)。
 
 ## はじめてみよう <!-- Get started -->
 <!--
@@ -136,9 +143,9 @@ In addition, the Incus client is available for Windows and macOS. You can use th
 さらに、Incus クライアントは Windows と macOS で利用できます。クライアントを使い、Linux マシン上で動く Incus サーバーに接続できます。
 
 <!--
-More details can be found in our [installation guide](/incus/docs/main/reference/devices/).
+Current installation instructions can be found in our [installation guide](/incus/docs/main/installing/).
 -->
-詳細は、[インストールガイド](https://incus-ja.readthedocs.io/ja/latest/installing/)をご覧ください。
+現時点のインストール手順については[インストールガイド](https://incus-ja.readthedocs.io/ja/latest/installing/)をご覧ください。
 
 # サポート <!-- Support -->
 <!--
