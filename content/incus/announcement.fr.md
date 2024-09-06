@@ -24,6 +24,7 @@ Aleksa created the fork shortly after Canonical’s decision to take LXD away fr
 Mais en plus de tout cela, il a également été pendant longtemps le responsable du paquetage de LXD dans OpenSUSE.
 Aleksa a créé ce fork peu après la décision de Canonical de retirer LXD de Linux Containers, le nom Incus ayant été introduit immédiatement après la sortie de LXD 5.16. Ce fork a d’abord été conçu comme un projet personnel, mais il a depuis suscité beaucoup d’intérêt de la part de la communauté et d’anciens contributeurs de LXD.
 
+
 <!--
 After some discussion with Aleksa and a fair bit of encouragement from our community, we have made the decision to take Incus under the umbrella of Linux Containers and will commit to it the infrastructure which was previously made available to LXD.
 -->
