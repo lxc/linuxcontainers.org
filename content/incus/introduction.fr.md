@@ -24,7 +24,7 @@ En utilisant Incus, vous pouvez gérer vos instances (conteneurs et VM) avec son
 
 <!--
 The Incus project [was created](/incus/announcement/) by Aleksa Sarai as a community driven alternative to Canonical's LXD.
-Today, it's led and maintained by much of the same people that once created LXD.
+Today, it's led and maintained by many of the same people that once created LXD.
 -->
 Le projet Incus a [été créé](/incus/announcement/) par Aleksa Sarai comme une alternative à Canonical LXD gérée par la communauté.
 Aujourd’hui, il est dirigé et maintenu par bon nombre des personnes qui ont créé LXD.
@@ -123,6 +123,7 @@ Configurabilité
   * [Gestion du réseau](/incus/docs/main/explanation/networks/) (création de bridges, de tunnels entre hôtes…)
   * [Contrôle avancé des ressources](/incus/docs/main/reference/instance_options/#resource-limits) (gestion des processeurs, de la mémoire, des E/S du réseau et des périphériques, de l’utilisation des disques et des ressources du noyau)
   * [Passthrough de périphériques](/incus/docs/main/reference/devices/) (USB, GPU, périphériques en mode caractère ou bloc, cartes réseau, disques et chemins d’accès)
+
 
 <!--
 # Availability
