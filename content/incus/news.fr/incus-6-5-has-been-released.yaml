@@ -1,0 +1,831 @@
+title: Incus 6.5 est maintenant disponible
+date: 2024/09/06 23:09
+origin: https://discuss.linuxcontainers.org/t/incus-6-5-has-been-released/21544
+content: |-
+  <!--
+  # Introduction
+  The Incus team is pleased to announce the release of Incus 6.5!
+  -->
+  # Introduction
+  L’équipe d’Incus est heureuse d’annoncer la sortie d’Incus 6.5 !
+
+  <!-
+  A strong focus for this release was on performance. Costly internal calls like resolving large number of profiles and devices have been optimized significantly leading to up to a 20-30x performance improvement. Similarly, handling of systems with thousands of instances per server has also been greatly improved, cutting down startup checks from tens of minutes down to tens of seconds.
+  -->
+  Cette version met en particulier l’accent sur les performances. Les appels internes coûteux en ressources comme la résolution d’un grand nombre de profils et de périphériques ont été optimisés de façon significative, avec des gains de performance de l’ordre de 20 à 30 ×. De même, la gestion des systèmes comportant des milliers d’instances par serveur a également été grandement améliorée, réduisant les vérifications au démarrage de plusieurs dizaines de minutes à quelques dizaines de secondes.
+
+  <!--
+  But this isn't just a bugfix release, Incus 6.5 also introduces quite a few new features and other improvements. From making our CLI experience more consistent, to making it easier to perform low-level actions on virtual machines, to improving the life of application container users and through a number of great new features for OVN users, this release should have something for everyone!
+  -->
+  Mais cette version ne fait pas que résoudre des bugs ; Incus 6.5 introduit également quelques nouvelles fonctionnalités et améliorations. Qu’il s’agisse d’augmenter la cohérence de notre CLI, de simplifier l’exécution d’opérations de bas niveau sur les machines virtuelles, d’améliorer la vie des utilisateurs de conteneurs d’application, ou de proposer de nouvelles fonctionnalités aux utilisateurs d’OVN, cette version devrait avoir quelque chose à proposer à tout le monde.
+
+  [![image|690x190](https://discuss.linuxcontainers.org/uploads/default/original/2X/b/bee53d51aebde7ae3f4a0726f88f34d37bb80720.png)](https://linuxcontainers.org/incus/try-it/)
+
+  <!--
+  As usual, you can try it for yourself online: https://linuxcontainers.org/incus/try-it/
+  -->
+  Comme d’habitude, vous pouvez l’essayer vous-même en ligne : https://linuxcontainers.org/incus/try-it/
+
+  <!--
+  Enjoy!
+  -->
+
+  <!--
+  # New features
+  ## Instance auto-restart
+  A common request ever since we first rolled out application containers support in Incus, the ability to have instances automatically restart when they exit makes it easier to handle applications crashing or reloading.
+  -->
+  # Nouvelles fonctionnalités
+  ## Redémarrage automatique d’instances
+  Depuis que nous avons ajouté le support des conteneurs d’application dans Incus, une demande récurrente était de pouvoir redémarrer automatiquement les instances lorsqu’elles se terminent, rendant plus facile la gestion des application qui plantent ou se rechargent.
+
+  <!--
+  This is controlled through a new `boot.autorestart` configuration key which when set to `true` will have Incus attempt to restart a given instance up to 10 times over a 1 minute time span.
+  -->
+  Ce comportement est maintenant contrôlé par une nouvelle clef de configuration, `boot.autorestart`, qui, lorsqu’elle est définie à `true`, permet à Incus de tenter un redémarrage de l’instance jusqu’à 10 fois sur une période d’une minute.
+
+  <!--
+  User requested instance shutdown/stop do not trigger the auto-restart logic.
+  -->
+  Les arrêts des instances demandés par les utilisateurs ne déclenchent pas la logique de redémarrage automatique.
+
+      stgraber@castiana:~$ incus launch docker:nginx nginx -c boot.autorestart=true
+      Launching nginx
+      stgraber@castiana:~$ incus info nginx | grep PID
+      PID: 178789
+      stgraber@castiana:~$ sudo kill -9 178789
+      stgraber@castiana:~$ incus list nginx
+      +-------+---------+----------------------+-----------------------------------------------+-----------------+-----------+
+      | NAME  |  STATE  |         IPV4         |                     IPV6                      |      TYPE       | SNAPSHOTS |
+      +-------+---------+----------------------+-----------------------------------------------+-----------------+-----------+
+      | nginx | RUNNING | 10.178.240.76 (eth0) | fd42:8384:a6f8:63a0:216:3eff:fef4:5a27 (eth0) | CONTAINER (APP) | 0         |
+      +-------+---------+----------------------+-----------------------------------------------+-----------------+-----------+
+      stgraber@castiana:~$
+
+
+  <!--
+  Documentation: https://linuxcontainers.org/incus/docs/main/reference/instance_options/#boot-related-options
+  -->
+  Documentation : https://linuxcontainers.org/incus/docs/main/reference/instance_options/#boot-related-options
+
+  <!--
+  ## Column selection in all list commands
+  Over the past few releases, we've been working on improving the consistency of the `incus` CLI commands. This started with making sure that all our `list` commands support `--format` and now with this release, all `list` commands also now support `--columns`.
+  -->
+  ## Sélection des colonnes dans toutes les commandes de listage
+  Sur les dernières versions, nous avons travaillé à l’amélioration de la cohérence des commandes de la CLI `incus`. Nous avons tout d’abord ajouté le support de `--format` à toutes les commandes `list`, et dans cette nouvelle version, toutes les commandes `list` acceptent désormais `--columns`.
+
+  <!--
+  This allows for easily customizing the output you're getting, as well as making it much easier to script the `incus` command by combining both `--format=csv` with `--column=` to select just the relevant column(s).
+  -->
+  Cela permet de personnaliser facilement le résultat de la commande `incus` et de la scripter, en combinant à la fois `--format=csv` et `--columns=` pour sélectionner les colonnes pertinentes.
+
+      stgraber@castiana:~$ incus snapshot list v1 --columns=nT --format=csv
+      snap0,2024/09/06 15:04 EDT
+      snap1,2024/09/06 15:04 EDT
+
+  <!--
+  ## QMP command hooks and scriptlet
+  Incus currently relies on QEMU to run its virtual machines.
+  -->
+  ## Hooks et scriptlet QMP
+  Incus s’appuie actuellement sur QEMU pour faire fonctionner ses machines virtuelles.
+
+  <!--
+  The way Incus interacts with QEMU can be a bit complex at times as it's effectively done through three different mechanisms:
+  -->
+  La manière dont Incus interagit avec QEMU peut être parfois assez complexe, car cela peut être effectué au travers de trois mécanismes différents :
+
+  <!--
+   - QEMU command line
+   - QEMU configuration file
+   - QEMU Machine Protocol (QMP)
+  -->
+   - La ligne de commande de QEMU
+   - Le fichier de configuration de QEMU
+   - Le protocole QMP (QEMU Machine Protocol)
+
+  <!--
+  We usually try to avoid polluting the command line as much as possible, so this is kept to a minimum, but we allow the user to pass in additional arguments through `raw.qemu`.
+  -->
+  Nous essayons généralement d’éviter de polluer la ligne de commande autant que possible, c’est pourquoi elle est réduite au minimum, mais nous permettons de lui passer des paramètres supplémentaires avec `raw.qemu`.
+
+  <!--
+  Our preference for any device which doesn't need live-updating or doesn't need to ever be hotplugged or hot removed is the use of the QEMU configuration file. This is easily templated and can pretty easily be tested. We have the `raw.qemu.conf` configuration option that can be used to extend or override the content of that configuration file.
+  -->
+  Notre préférence pour tout périphérique qui n’a pas besoin d’être mis à jour dynamiquement ou n’a pas besoin d’être débranché et rebranché à chaud est l’utilisation du fichier de configuration de QEMU. Il peut être facilement généré à l’aide de templates, et peut aisément être testé. L’option de configuration `raw.qemu.conf` peut être utilisée pour étendre ou remplacer le contenu de ce fichier de configuration.
+
+  <!--
+  And then we have QMP which we use for anything hotpluggable, so effectively all disks, network interfaces, USB devices or any other PCI devices. As the QEMU team is slowly trying to deprecate the configuration file, we expect to progressively be moving more and more of the VM configuration over to QMP.
+  -->
+  Enfin, nous avons QMP, que nous utilisons pour tout ce qui est branchable à chaud, à savoir tous les disques, interfaces réseau, et périphériques USB et PCI. L’équipe en charge de QEMU essaie peu à peu de déprécier l’utilisation du fichier de configuration, nous incitant à utiliser de plus en plus QMP pour la configuration des VM.
+
+  <!--
+  The main issue with QMP so far has been that unlike the QEMU command line or a config file, it's very opaque. It's not possible to easily see what's been configured and because any of those objects will have been configured after QEMU started, it wasn't possible to override or re-configure them through the existing mechanisms.
+  -->
+  Le principal problème avec QMP jusqu’à présent est que, contrairement à la ligne de commande et au fichier de configuration de QEMU, le protocole est très opaque. Il n’est pas possible de voir facilement ce qui a été configuré, et comme tous les objets ont été configurés après le démarrage de QEMU, il n’était pas possible de remplacer ou reconfigurer ceux-ci avec les mécanismes existants.
+
+  <!--
+  But things are different now thanks to a few new configuration options:
+  -->
+  Mais les choses sont désormais différentes grâce à ces nouvelles options de configuration :
+
+   - `raw.qemu.qmp.early`
+   - `raw.qemu.qmp.pre-start`
+   - `raw.qemu.qmp.post-start`
+   - `raw.qemu.scriptlet`
+
+  <!--
+  The first three take a JSON list of QMP commands. QMP commands are normally already all JSON encoded, so that makes it easy to add a number of custom commands to the instance configuration. The commands will be run in order at one of the specified times.
+  -->
+  Les trois premières prennent une liste de commandes QMP encodée en JSON. Les commandes QMP sont en principe déjà encodées en JSON, donc leur ajout à la configuration des instances est très simple. Les commandes sont lancées dans l’ordre pour chacune des étapes suivantes.
+
+  <!--
+  `early` runs prior to Incus having added anything through QMP, `pre-start` runs after Incus has added all its devices through QMP and `post-start` runs immediately after QEMU was instructed to start the VM.
+  -->
+  `early` correspond au moment précédent toute exécution de commandes QMP de la part d’Incus, `pre-start` correspond au moment où Incus a ajouté tous ses périphériques en QMP, avant le lancement de la VM, et `post-start` correspond au moment où la VM vient d’être lancée par QEMU.
+
+  <!--
+  `raw.qemu.scriptlet` is an even more flexible option as it takes a sriptlet (python-like syntax) which must define a function named `qemu_hook` and passes it the `stage` as an argument. That stage is one of `early`, `pre-start` or `post-start`. The different between that and the `raw.qemu.qmp` options is that a scriptlet can handle command responses and have logic to react to it.
+  -->
+  `raw.qemu.scriptlet` est une option encore plus flexible, car elle prend un scriptlet (dans une syntaxe proche de Python) qui doit définir une fonction `qemu_hook` à laquelle un argument `stage` (correspondant à l’une des étapes précédentes, `early`, `pre-start` et `post-start`) est passé. La différence par rapport aux options `raw.qemu.qmp` est que le scriptlet peut gérer les réponses aux commandes QMP et avoir une logique pour y réagir.
+
+  <!--
+  That means that this QEMU scriptlet can call the `run_qmp` command, pass a custom QMP command, read through its return value and issue more commands if needed, allowing for dynamic re-configuration of the VM.
+  -->
+  Cela signifie que ce scriptlet QEMU peut appeler la fonction `run_qmp`, lui passer une commande QMP, lire sa valeur de retour, et envoyer plus de commandes si besoin, permettant la reconfiguration dynamique de la VM.
+
+  <!--
+  Note that this is a very low level mechanism which we only expect expert users to use in very specific cases. As with any `raw` configuration key, its use is effectively unsupported by the Incus team and it should also be kept disabled for any untrusted projects. 
+  -->
+  Notez qu’il s’agit d’un mécanisme de très bas niveau que seuls les utilisateurs experts sont censés utiliser, dans des cas très spécifiques. Comme pour toutes les clefs de configuration `raw`, son utilisation n’est pas supportée par l’équipe d’Incus, et elle doit être désactivée pour tout projet qui n’est pas considéré comme fiable.
+
+  <!--
+  ## Live disk resize support in virtual machines
+  It's now possible to resize either the VM root disk or any attached disk and have the VM be notified of the change. This then causes the operating system to update the size of the disk and allows the user to immediately make use of the additional space without having to restart the VM.
+  -->
+  ## Support du redimensionnement des disques à chaud pour les machines virtuelles
+  Il est désormais possible de redimensionner le disque racine ou tout autre disque attaché à une VM, et d’informer la VM du changement. Le système d’exploitation met alors à jour la taille du disque et permet à l’utilisateur de profiter de cet espace additionnel sans avoir à redémarrer la VM.
+
+      stgraber@castiana:~$ incus exec v1 bash
+      root@v1:~# lsblk
+      NAME   MAJ:MIN RM  SIZE RO TYPE MOUNTPOINTS
+      sda      8:0    0   10G  0 disk
+      ├─sda1   8:1    0  100M  0 part /boot/efi
+      └─sda2   8:2    0  9.9G  0 part /
+      root@v1:~#
+      exit
+      
+      stgraber@castiana:~$ incus config device override v1 root size=20GiB
+      Device root overridden for v1
+      
+      stgraber@castiana:~$ incus exec v1 bash
+      root@v1:~# lsblk
+      NAME   MAJ:MIN RM  SIZE RO TYPE MOUNTPOINTS
+      sda      8:0    0   20G  0 disk
+      ├─sda1   8:1    0  100M  0 part /boot/efi
+      └─sda2   8:2    0  9.9G  0 part /
+      root@v1:~#
+
+  <!--
+  ## PCI devices hotplug
+  Adding and removing PCI devices on a VM can now be done live.
+  This now matches the behavior found in NIC, GPU and disk devices.
+  -->
+  ## Hotplug des périphériques PCI
+  L’ajout et la suppression de périphériques PCI sur une VM peuvent désormais être effectués à chaud.
+  La fonctionnalité est similaire à ce qui était fait pour les cartes réseau, les GPU et les disques.
+
+  <!--
+  ## OVN load-balancer health checks
+  Incus' support for OVN load-balancers has so far been pretty basic, essentially being limited to just basic load-balancing of traffic on a set of target with no monitoring of the backend.
+  -->
+  ## Surveillance de l’état des load-balancers OVN
+  Le support d’Incus pour les load-balancers OVN a jusqu’à présent été très basique, se limitant essentiellement à de l’équilibrage de trafic simple sans monitoring.
+
+  <!--
+  But this is now changing with initial support for OVN's load-balancer health checks.
+  This is configured through a set of configuration keys on the load-balancer:
+  -->
+  Mais cela est en train de changer, avec la prise en charge initiale de la surveillance de l’état de santé des load-balancers OVN.
+  Ceci est configuré avec les clefs de configuration suivantes sur le load-balancer :
+
+  <!--
+   - `healthcheck` => Enables health checking
+   - `healthcheck.failure_count` => Number of failed attempts to consider backend as failed
+   - `healthcheck.interval` => How often to check the backends (in seconds)
+   - `healthcheck.success_count` => Number of successful attempts to consider backend as online
+   - `healthcheck.timeout` => How long to wait for a response before considering it failed
+  -->
+   - `healthcheck` => Active la surveillance de l’état de santé
+   - `healthcheck.failure_count` => Nombre de tentatives échouées avant de considérer le backend comme défaillant
+   - `healthcheck.interval` => Intervalle de vérification des backends (en secondes)
+   - `healthcheck.success_count` => Nombre de tentatives réussies avant de considérer le backend comme fonctionnel
+   - `healthcheck.timeout` => Temps d’attente d’une réponse avant de considérer une requête comme échouée
+
+  <!--
+  Only `healthcheck` is required, all the others have reasonable defaults.
+  -->
+  Seul `healthcheck` est requis ; toutes les autres clefs ont des valeurs par défaut raisonnables.
+
+      root@server01:~# incus launch images:ubuntu/24.04 c1
+      Launching c1
+      root@server01:~# incus exec c1 -- apt-get install --yes nginx
+      Reading package lists... Done
+      Building dependency tree... Done
+      Reading state information... Done
+      The following additional packages will be installed:
+        nginx-common
+      Suggested packages:
+        fcgiwrap nginx-doc ssl-cert
+      The following NEW packages will be installed:
+        nginx nginx-common
+      0 upgraded, 2 newly installed, 0 to remove and 0 not upgraded.
+      Need to get 552 kB of archives.
+      After this operation, 1596 kB of additional disk space will be used.
+      Get:1 http://archive.ubuntu.com/ubuntu noble/main amd64 nginx-common all 1.24.0-2ubuntu7 [31.2 kB]
+      Get:2 http://archive.ubuntu.com/ubuntu noble/main amd64 nginx amd64 1.24.0-2ubuntu7 [521 kB]
+      Fetched 552 kB in 1s (619 kB/s)
+      Preconfiguring packages ...
+      Selecting previously unselected package nginx-common.
+      (Reading database ... 16176 files and directories currently installed.)
+      Preparing to unpack .../nginx-common_1.24.0-2ubuntu7_all.deb ...
+      Unpacking nginx-common (1.24.0-2ubuntu7) ...
+      Selecting previously unselected package nginx.
+      Preparing to unpack .../nginx_1.24.0-2ubuntu7_amd64.deb ...
+      Unpacking nginx (1.24.0-2ubuntu7) ...
+      Setting up nginx (1.24.0-2ubuntu7) ...
+      Setting up nginx-common (1.24.0-2ubuntu7) ...
+      Created symlink /etc/systemd/system/multi-user.target.wants/nginx.service → /usr/lib/systemd/system/nginx.service.
+      root@server01:~# incus launch images:ubuntu/24.04 c2
+      Launching c2
+      root@server01:~# incus list
+      +------+---------+--------------------+-----------------------------------------------+-----------+-----------+----------+
+      | NAME |  STATE  |        IPV4        |                     IPV6                      |   TYPE    | SNAPSHOTS | LOCATION |
+      +------+---------+--------------------+-----------------------------------------------+-----------+-----------+----------+
+      | c1   | RUNNING | 10.104.61.2 (eth0) | fd42:73ae:9013:c530:216:3eff:feff:ddf2 (eth0) | CONTAINER | 0         | server01 |
+      +------+---------+--------------------+-----------------------------------------------+-----------+-----------+----------+
+      | c2   | RUNNING | 10.104.61.3 (eth0) | fd42:73ae:9013:c530:216:3eff:fec4:611 (eth0)  | CONTAINER | 0         | server02 |
+      +------+---------+--------------------+-----------------------------------------------+-----------+-----------+----------+
+      
+      root@server01:~# incus network load-balancer create default 172.31.254.50
+      Network load balancer 172.31.254.50 created
+      root@server01:~# incus network load-balancer backend add default 172.31.254.50 c1 10.104.61.2
+      root@server01:~# incus network load-balancer backend add default 172.31.254.50 c2 10.104.61.3
+      root@server01:~# incus network load-balancer port add default 172.31.254.50 tcp 80 c1,c2
+      
+      root@server01:~# incus launch images:ubuntu/24.04 t1
+      Launching t1
+      root@server01:~# incus exec t1 -- nc -v 172.31.254.50 80
+      nc: connect to 172.31.254.50 port 80 (tcp) failed: Connection refused
+      root@server01:~# incus exec t1 -- nc -v 172.31.254.50 80
+      nc: connect to 172.31.254.50 port 80 (tcp) failed: Connection refused
+      root@server01:~# incus exec t1 -- nc -v 172.31.254.50 80
+      Connection to 172.31.254.50 80 port [tcp/http] succeeded!
+      
+      root@server01:~# incus network load-balancer set default 172.31.254.50 healthcheck=true
+      
+      root@server01:~# incus exec t1 -- nc -v 172.31.254.50 80
+      Connection to 172.31.254.50 80 port [tcp/http] succeeded!
+      ^Croot@server01:~# incus exec t1 -- nc -v 172.31.254.50 80
+      Connection to 172.31.254.50 80 port [tcp/http] succeeded!
+      ^Croot@server01:~# incus exec t1 -- nc -v 172.31.254.50 80
+      Connection to 172.31.254.50 80 port [tcp/http] succeeded!
+      ^Croot@server01:~# incus exec t1 -- nc -v 172.31.254.50 80
+      Connection to 172.31.254.50 80 port [tcp/http] succeeded!
+      ^Croot@server01:~# incus exec t1 -- nc -v 172.31.254.50 80
+      Connection to 172.31.254.50 80 port [tcp/http] succeeded!
+
+  <!--
+  Documentation: https://linuxcontainers.org/incus/docs/main/howto/network_load_balancers/
+  -->
+  Documentation : https://linuxcontainers.org/incus/docs/main/howto/network_load_balancers/
+
+  <!--
+  ## ECMP support for OVN interconnect
+  The network integration support for OVN interconnect has been extended in a few small ways:
+  -->
+  ## Support d’ECMP pour les interconnexions OVN
+  Le support des interconnexions OVN par les intégrations réseau a été étendu de plusieurs manières différentes :
+
+  <!--
+   - The `ovn.transit.pattern` configuration option now supports a new `peerName` variable
+   - It's now possible to have multiple peers on a network targeting the same network integration
+   - IP allocation on the transit switch is now recorded directly in the OVN database rather than relying on random subnets
+  -->
+   - L’option de configuration `ovn.transit.pattern` accepte désormais une nouvelle variable `peerName`
+   - Il est maintenant possible d’avoir plusieurs peers sur un réseau ciblant la même intégration réseau
+   - L’allocation d’IP sur le switch de transit est désormais enregistrée directement dans la base de données OVN, plutôt que de s’appuyer sur des sous-réseaux aléatoires
+
+  <!--
+  The end result is that it's now possible to change the default `core.transit.pattern` to include `peerName` in the template and then add multiple peers to a network, all pointing to the same interconnection.
+  -->
+  Enfin, il est maintenant possible de changer la valeur par défaut `core.transit.pattern` pour inclure `peerName` dans le template, afin d’ajouter plusieurs peers à un réseau pointant tous sur la même interconnexion.
+
+  <!--
+  This internally will result in mutliple transit switches being created and so long as the peer names match on all participating systems, traffic will be balanced between those switches through ECMP.
+  -->
+  En interne, cela se traduit par la création de plusieurs switchs de transit et, tant que les noms des peers correspondent sur tous les systèmes, le trafic sera équilibré entre ces switchs en ECMP.
+
+  <!--
+  Doing so allows for very effective load-balancing of interconnection traffic.
+  -->
+  Cela permet d’équilibrer très efficacement la charge du trafic d’interconnexion.
+
+      root@chulak:~# incus list ic
+      +---------+---------+--------------------+-----------------------------------------------+-----------+-----------+----------+
+      |  NAME   |  STATE  |        IPV4        |                     IPV6                      |   TYPE    | SNAPSHOTS | LOCATION |
+      +---------+---------+--------------------+-----------------------------------------------+-----------+-----------+----------+
+      | ic-test | RUNNING | 10.47.238.2 (eth0) | fd42:4a11:5600:6807:216:3eff:feb5:2c79 (eth0) | CONTAINER | 0         | chulak   |
+      +---------+---------+--------------------+-----------------------------------------------+-----------+-----------+----------+
+      root@chulak:~# incus exec ic-test bash
+      root@ic-test:~# ping 10.170.69.2
+      PING 10.170.69.2 (10.170.69.2) 56(84) bytes of data.
+      From 45.45.148.162 icmp_seq=1 Destination Net Unreachable
+      --- 10.170.69.2 ping statistics ---
+      1 packets transmitted, 0 received, +1 errors, 100% packet loss, time 0ms
+      root@ic-test:~#
+      
+      root@chulak:~# incus network peer create ovn-ic-test peer1 dcmtl --type=remote
+      Network peer peer1 created
+      root@chulak:~# incus network peer create ovn-ic-test peer2 dcmtl --type=remote
+      Network peer peer2 created
+      root@chulak:~# incus network peer create ovn-ic-test peer3 dcmtl --type=remote
+      Network peer peer3 created
+      root@chulak:~# incus network peer create ovn-ic-test peer4 dcmtl --type=remote
+      Network peer peer4 created
+      
+      root@chulak:~# incus exec ic-test bash
+      root@ic-test:~# ping 10.170.69.2
+      PING 10.170.69.2 (10.170.69.2) 56(84) bytes of data.
+      64 bytes from 10.170.69.2: icmp_seq=1 ttl=62 time=11.8 ms
+      64 bytes from 10.170.69.2: icmp_seq=2 ttl=62 time=6.01 ms
+      --- 10.170.69.2 ping statistics ---
+      2 packets transmitted, 2 received, 0% packet loss, time 1002ms
+      rtt min/avg/max/mdev = 6.012/8.930/11.848/2.918 ms
+
+  <!--
+  Documentation: https://linuxcontainers.org/incus/docs/main/howto/network_integrations/
+  -->
+  Documentation : https://linuxcontainers.org/incus/docs/main/howto/network_integrations/
+
+  <!--
+  ## Promiscuous mode for OVN NICs
+  A new `security.promiscuous` configuration key is now available on OVN NICs.
+  -->
+  ## Mode promiscuous pour les cartes réseau OVN
+  Une nouvelle clef de configuration `security.promiscuous` est maintenant disponible pour les cartes réseau OVN.
+
+  <!--
+  When it's enabled, any OVN traffic that has an unknown MAC address as its destination will now be sent over to the OVN NIC.
+  -->
+  Lorsqu’elle est activée, tout le trafic OVN dont la destination est une adresse MAC inconnue est envoyé vers la carte réseau OVN.
+
+  <!--
+  The main use for this is for nested environments where you want to have some nested containers or VMs directly sit on the parent OVN network without having their own dedicated ports.
+  This is typically a development/testing use case as promiscuous mode causes a lot of unnecessary network traffic to hit the NIC.
+  -->
+  L’utilisation principale de cette fonctionnalité est dans les environnements imbriqués, dans lesquels vous pouvez vouloir des conteneurs ou des VM imbriqués directement connectés au réseau OVN parent, sans port dédié.
+  Ce cas d’usage relève du développement ou du test, car le mode promiscuous provoque beaucoup de trafic inutile sur la carte réseau.
+
+      root@server01:~# incus launch images:ubuntu/24.04 t1
+      Launching t1
+      root@server01:~# incus exec t1 bash
+      root@t1:~# ip l
+      1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN mode DEFAULT group default qlen 1000
+          link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+      48: eth0@if49: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1422 qdisc noqueue state UP mode DEFAULT group default qlen 1000
+          link/ether 00:16:3e:f3:d4:3e brd ff:ff:ff:ff:ff:ff link-netnsid 0
+      root@t1:~# ip link set eth0 address 00:16:3e:f3:d4:30
+      root@t1:~# ip -4 a add dev eth0 10.104.61.100/24
+      root@t1:~# ping 10.104.61.1
+      PING 10.104.61.1 (10.104.61.1) 56(84) bytes of data.
+      ^C
+      --- 10.104.61.1 ping statistics ---
+      2 packets transmitted, 0 received, 100% packet loss, time 1009ms
+      
+      root@t1:~#
+      exit
+      
+      root@server01:~# incus config device override t1 eth0 security.promiscuous=true
+      Device eth0 overridden for t1
+      root@server01:~# incus exec t1 bash
+      root@t1:~# ip link set eth0 address 00:16:3e:f3:d4:30
+      root@t1:~# ip -4 a add dev eth0 10.104.61.100/24
+      root@t1:~# ping 10.104.61.1
+      PING 10.104.61.1 (10.104.61.1) 56(84) bytes of data.
+      64 bytes from 10.104.61.1: icmp_seq=1 ttl=254 time=1.20 ms
+      ^C
+      --- 10.104.61.1 ping statistics ---
+      1 packets transmitted, 1 received, 0% packet loss, time 0ms
+      rtt min/avg/max/mdev = 1.197/1.197/1.197/0.000 ms
+      root@t1:~#
+
+  <!--
+  Documentation: https://linuxcontainers.org/incus/docs/main/reference/devices_nic/#nictype-ovn
+  -->
+  Documentation : https://linuxcontainers.org/incus/docs/main/reference/devices_nic/#nictype-ovn
+
+  <!--
+  ## Ability to run off IP allocation on OVN NICs
+  Another new OVN NIC option is the ability to turn off IP allocation completely.
+  -->
+  ## Possibilité de désactiver l’allocation d’IP sur les cartes réseau OVN
+  Toujours avec OVN, une nouvelle option permet de désactiver complètement l’allocation d’IP sur une carte réseau.
+
+  <!--
+  This is often related to the previous case where a promiscuous NIC typically doesn't need to have its own IPv4 and IPv6 address. To handle this, it's now possible to set both `ipv4.address` and `ipv6.address` to `none`, disabling allocations.
+  -->
+  Cette fonctionnalité va souvent de pair avec la fonctionnalité précédente, puisque les cartes réseau en mode promiscuous n’ont généralement pas besoin d’avoir leurs propres adresses IPv4 et IPv6. Pour gérer cela, il est désormais possible de définir `ipv4.address` et `ipv6.address` à `none`, désactivant les allocations.
+
+  <!--
+  Note that OVN doesn't allow disabling just one protocol, so both keys must currently be set to `none` for this to work.
+  -->
+  Notez qu’OVN ne permet pas de désactiver un seul de ces deux protocoles, donc les deux clefs doivent actuellement être définies à `none` pour que cela fonctionne.
+
+      root@server01:~# incus config device set t1 eth0 ipv4.address=none ipv6.address=none
+      root@server01:~# incus start t1
+      root@server01:~# incus exec t1 bash
+      root@t1:~# ip -4 a
+      1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+          inet 127.0.0.1/8 scope host lo
+             valid_lft forever preferred_lft forever
+      root@t1:~#
+
+  <!--
+  Documentation: https://linuxcontainers.org/incus/docs/main/reference/devices_nic/#nictype-ovn
+  -->
+  Documentation : https://linuxcontainers.org/incus/docs/main/reference/devices_nic/#nictype-ovn
+
+  <!--
+  ## Customizable OIDC scope request
+  It's now possible to configure the list of OpenID Connect Scopes that are being requested.
+  -->
+  ## Personnalisation des requêtes de scopes OIDC
+  Il est maintenant possible de configurer la liste des scopes OpenID Connect qui sont requêtées.
+
+  <!--
+  Setting `oidc.scopes` in the server config will override the default of `openid, offline_access` and can be useful to pull in additional information through scopes like `profile`.
+  -->
+  Le paramètre `oidc.scopes` dans la configuration du serveur permet de remplacer la valeur par défaut `openid, offline_access`, et peut être utile pour obtenir des informations supplémentaires avec des scopes comme `profile`.
+
+  <!--
+  Documentation: https://linuxcontainers.org/incus/docs/main/server_config/#openid-connect-configuration
+  -->
+  Documentation : https://linuxcontainers.org/incus/docs/main/server_config/#openid-connect-configuration
+
+  <!--
+  ## Configurable LVM PV metadata size
+  Very very large LVM volumes groups containing thousands of logical volumes may exceed the reserved metadata size.
+  -->
+  ## Configuration de la taille des métadonnées des PV LVM
+  Les très grands groupes de volumes LVM contenant des milliers de volumes logiques peuvent avoir des métadonnées dépassant la taille allouée.
+
+  <!--
+  This was already configurable on LVM thin provisioned pools (default), but for thick provisioning, there was no matching configuration.
+  -->
+  Cette taille était déjà configurable pour les pools LVM en thin provisioning (par défaut), mais pour le thick provisioning, ce n’était pas possible.
+
+  <!--
+  Now the `lvm.metadata_size` configuration key can be set to override LVM's default.
+  Note that this can only be done at creation time.
+  -->
+  Désormais, la clef de configuration `lvm.metadata_size` peut être définie, pour remplacer la valeur par défaut de LVM.
+  Notez que cela ne peut être fait qu’à la création du pool.
+
+      stgraber@castiana:~$ incus storage create demo lvm lvm.use_thinpool=false
+      Storage pool demo created
+      stgraber@castiana:~$ sudo vgs -o name,mda_size
+        VG   VMdaSize
+        demo  1020.00k
+      stgraber@castiana:~$ incus storage delete demo
+      Storage pool demo deleted
+      
+      stgraber@castiana:~$ incus storage create demo lvm lvm.use_thinpool=false lvm.metadata_size=100MiB
+      Storage pool demo created
+      stgraber@castiana:~$ sudo vgs -o name,mda_size
+        VG   VMdaSize
+        demo  <101.00m
+      stgraber@castiana:~$ incus storage delete demo
+      Storage pool demo deleted
+
+  <!--
+  Documentation: https://linuxcontainers.org/incus/docs/main/reference/storage_lvm/#configuration-options
+  -->
+  Documentation : https://linuxcontainers.org/incus/docs/main/reference/storage_lvm/#configuration-options
+
+  <!--
+  ## Configurable OVS socket path
+  There are a few cases where OpenVSwitch doesn't run at the usual address.
+  -->
+  ## Configuration des chemins des sockets OVS
+  Il y a quelques configurations dans lesquelles OpenVSwitch n’est pas lancé à son adresse habituelle.
+
+  <!--
+  The most common case of this would be MicroOVN users where the OpenVSwitch socket is instead stored within `/var/snap/microovn/common/...`.
+  -->
+  Le cas le plus courant est celui des utilisateurs de MicroOVN, pour lequel le socket OpenVSwitch est stocké dans `/var/snap/microovn/common/...`.
+
+  <!--
+  Until now, those users had to jump through some hoops to get a working OVS socket in `/run` so Incus would properly connect to it.
+  -->
+  Jusqu’à présent, il fallait faire des pieds et des mains pour avoir un socket OVS fonctionnel dans `/run` afin qu’Incus puisse correctement s’y connecter.
+
+  <!--
+  With this change, it's now possible to set the `network.ovs.connection` configuration key to a valid OVSDB connection string and have Incus reach OpenVSwitch through that. The default value is `unix:/run/openvswitch/db.sock`.
+  -->
+  Avec ce changement, il est maintenant possible de définir la clef de configuration `network.ovs.connection` avec un chemin valide de connexion OVSDB, pour permettre à Incus de communiquer avec OpenVSwitch. La valeur par défaut est `unix:/run/openvswitch/db.sock`.
+
+  <!--
+  Documentation: https://linuxcontainers.org/incus/docs/main/server_config/#server-options-misc
+  -->
+  Documentation : https://linuxcontainers.org/incus/docs/main/server_config/#server-options-misc
+
+  <!--
+  # Complete changelog
+  Here is a complete list of all changes in this release:
+  -->
+  # Liste complète des changements
+  Voici une liste complète de tous les changements apportés par cette version :
+
+  <!--
+  [details="Full commit list"]
+  -->
+  [details="Liste complète des commits"]
+   - incus/remote/list: Add support for column selection
+   - i18n: Update translation templates
+   - incus/cluster/group/list: Add support for column selection
+   - i18n: Update translation templates
+   - Translated using Weblate (Chinese (Simplified))
+   - Translated using Weblate (Chinese (Simplified))
+   - client: import examples for docs
+   - client: name var for docs
+   - client: alias & server/procotol default for docs
+   - incusd/storage: Fix UsedBy values for sub-directory volumes
+   - incusd/instance: Fix backup file locking issue
+   - incusd/projects: Don't fail project creation on missing pools
+   - incusd/device/pci: Allow hotplug
+   - incusd/instance/qmp: Add CheckPCIDevice
+   - incusd/instance/qemu: Use monitor.CheckPCIDevice
+   - incusd/instance/qemu: Tweak comments on deviceStart
+   - incusd/instance/qemu: Add hotplug support for generic PCI
+   - client: fix typo in example
+   - Translated using Weblate (Chinese (Simplified))
+   - incus/operation/list: Add support for column selection
+   - i18n: Update translation templates
+   - doc/firewalld: Update Docker link
+   - incus/network/zone/list: Add support for column selection
+   - i18n: Update translation templates
+   - incusd/instance/drivers/qmp: Export RunJSON
+   - api: qemu_raw_qmp
+   - incusd/instance: Add raw QMP config options
+   - doc: Add QMP to wordlist
+   - doc: Update configs
+   - incusd/instance/qemu: Add QMP hooks
+   - incusd/project: Update low-level properties
+   - incus/network/forward/list: Add support for column selection
+   - i18n: Update translation templates
+   - Translated using Weblate (Chinese (Simplified))
+   - cmd/incusd: Add hostname to dhcp request
+   - incus/network/list-leases: Add support for column selection
+   - i18n: Update translation templates
+   - Translated using Weblate (Chinese (Simplified))
+   - doc: Update incus_alias.md
+   - incus/network/list-allocations: Add support for column selection
+   - i18n: Update translation templates
+   - api: network_load_balancer_health_check
+   - incusd/network/ovn: Simplify CreateLoadBalancer
+   - incusd/network: Update for CreateLoadBalancer changes
+   - incusd/network/ovn: Add healthcheck support in LoadBalancer
+   - incusd/network: Add healthcheck config options
+   - incusd/network/ovn: Add healthcheck options
+   - incusd/network/ovn: Reserve the last IPv4 address
+   - doc/network/load_balancer: Add configuration options
+   - doc: Update configs
+   - incus/admin/init: Prompt for dir storage location
+   - tests: Update for extra step in init
+   - i18n: Update translation templates
+   - incus/network/integration/list: Add support for column selection
+   - i18n: Update translation templates
+   - incus/storage/bucket/list: Add support for column selection
+   - i18n: Update translation templates
+   - api: oidc_scopes
+   - incusd/config: Add oidc.scopes
+   - incusd/oidc: Add custom scopes support
+   - doc: Update configs
+   - incus/storage/bucket: Add support for column selection in key list
+   - i18n: Update translation templates
+   - incus/snapshot/list: Add support for column selection
+   - i18n: Update translation templates
+   - incusd/storage/lvm: Fix resize logic to conserve LV state
+   - incusd/network/ovn: Set missing send_periodic field
+   - incusd/profiles: Improve listing performance
+   - incusd/server/db: Increase transaction deadline to 30s
+   - incusd/db/profiles: Support device cache in ToAPI
+   - incusd: Pass profile device cache to ToAPI calls when possible
+   - incusd/db/instances: Support device cache to ToAPI
+   - incusd: Pass instance device cache to ToAPI calls when possible
+   - incusd/db/instances: Allow passing profile devices to instance ToAPI
+   - incusd: Pass profile device cache to instance ToAPI calls when possible
+   - incusd/instances: Remove old retry logic
+   - incusd/network_integration: Fix typo in doc string
+   - doc: Update configs
+   - incusd/main_forknet: Tweak DHCP client to apply DNS first
+   - incusd/network/ovn: Use stable random for IC gateway chassis priority
+   - api: network_integrations_peer_name
+   - incusd/network_integrations: Add peerName to ovn.transit.pattern
+   - incusd/network/ovn: Expose peerName to ovn.transit.pattern
+   - doc: Update configs
+   - incus/cluster/list-tokens: Add support for column selection
+   - i18n: Update translation templates
+   - incusd/storage_volumes_state: Handle unsupported response from drivers
+   - incusd/db/cluster: Remove network integration/peer unique index
+   - incusd/db/cluster: Update schema
+   - lxd-to-incus: Handle Incus socket in /run/incus/
+   - incusd/network/ovn: Record transit subnets
+   - incusd/network/ovn: Add transit switch addresss allocation functions
+   - incusd/network/ovn: Setup transit switch allocations
+   - incusd/auth/openfga: Avoid deprecated ApiSchema and ApiHost
+   - incusd/auth: Re-organize entitlement list
+   - incusd/auth/openfga: Sort entries in openfga model
+   - incusd/auth/openfga: Add missing network integration permission
+   - incusd/auth/openfga: Require admin level to create projects
+   - incusd/auth/openfga: Rebuild model
+   - incusd/auth: Fix network integration object
+   - incus/config/trust/list-tokens: Add support for column selection
+   - i18n: Update translation templates
+   - incus/network/peer/list: Add support for column selection
+   - i18n: Update translation templates
+   - incus/network/load-balancer/list: Add support for column selection
+   - i18n: Update translation templates
+   - Translated using Weblate (Chinese (Simplified))
+   - Change Cloud Init "user" to "users"
+   - shared/api: Fix incorrect struct naming for volume backups
+   - client: Update for fixed volume backup structs
+   - incus: Update for fixed volume backup structs
+   - incusd: Update for fixed volume backup structs
+   - incusd/storage_volume_backup: Fix swagger references
+   - incusd/storage_bucket_backup: Fix swagger references
+   - doc/rest-api: Refresh swagger YAML
+   - incusd/device/nic: Make burst rate dynamic for ingress traffic
+   - incusd/storage/lvm: Allow live resize
+   - incusd/storage/zfs: Allow online resize of ZFS block volumes
+   - incusd/device/disk: Add callback on resize
+   - incusd/instance/drivers/qmp: Add resize handling
+   - incusd/instance/qemu: Add disk resize handling
+   - incusd/node/config: Add network.ovs.connection
+   - doc: Switch /var/run to just /run
+   - incusd/cluster/config: Switch from /var/run to /run
+   - incusd/instance/agent-loader: Don't hardcode path
+   - incusd/syslog: Update OVS path
+   - doc: Update configs
+   - incusd/network/ovs: Make OVS database configurable
+   - incusd/state: Add OVS function
+   - incusd: Set OVS function on State
+   - incusd: Port to state.OVS
+   - incusd: Reset OVS as needed
+   - incusd/network/ovn: Limit MAC_Binding explosion
+   - incusd/network/ovn: Add ARP limits to updated routers
+   - incusd/network/ovn: Wait a bit longer for northd to allocate addresses
+   - incusd/apparmor: Don't constantly query the version and cache
+   - incusd/storage/driver/dir: Don't needlessly re-apply project id on quota changes
+   - incusd/storage/quota: Don't fail on missing paths
+   - incusd/storage/lvm: Retry setactivation skip for busy environments
+   - api: qemu_scriptlet
+   - incusd/instance: Add qemu scriptlet config options
+   - incusd: Move QEMU default values to a subpackage
+   - incusd/scriptlet: Move the logger definition
+   - incusd/scriptlet: Add helper functions
+   - incusd/scriptlet: Add Unmarshal function
+   - incusd/scriptlet: Add qemu scriptlet
+   - incusd/project: Update low-level properties
+   - doc: Update metadata
+   - incusd/scriptlet: Remove deprecated starlark.SourceProgram
+   - Makefile: Switch minimum Go to 1.22
+   - gomod: Update dependencies
+   - doc: Update requirements
+   - incusd/instance/drivers/qemu: Fix node name overflow logic
+   - incusd/instance/drivers/qemu: Add missing node name handling
+   - incusd/api_internal: Add API to notify volume resizes
+   - incusd/cluster: Fix redirect loop with shared volumes across multiple servers
+   - incusd/storage/backend: Notify instances following block custom volume resize
+   - api: instance_auto_restart
+   - incusd/instance: Add boot.autorestart
+   - doc: Update metadata
+   - incusd/instance/drivers: Implement shouldAutoRestart
+   - incusd/instance/drivers/lxc: Implement boot.autorestart
+   - incusd/instance/drivers/qemu: Implement boot.autorestart
+   - tests: Validate autorestart logic
+   - client: Fix error handling in push mode copy
+   - incusd/network/ovn: Fix send_periodic syntax
+   - incusd/project: Validate group names
+   - incusd/db: Confirm cluster group validity during placement
+   - doc/cluster_group: Mention renaming groups
+   - api: storage_lvm_metadatasize
+   - doc/storage_lvm: Add lvm.metadata_size
+   - incusd/storage/lvm: Add lvm.metadata_size
+   - incusd/storage/zfs: Only attempt to load the module if the tools exist
+   - incusd/instance/edk2: Add Void Linux x86_64 paths
+   - incusd/profiles: Empty default profile on forced deletion
+   - Revert "incusd/instance/agent-loader: Don't hardcode path"
+   - incusd/device: Add new Register function
+   - incusd/instance/drivers: Use Register function
+   - incusd/device: Don't make Register depend on validate
+   - incusd/storage/drivers: Add isDeleted flag
+   - incusd/storage/drivers/ceph: Rework parseClone
+   - incusd/storage/drivers/ceph: Rework parseParent
+   - incusd/storage/drivers/ceph: Make use of isDeleted flag
+   - incusd/instance/qemu: Allow setCPUs to re-use QMP
+   - incusd/instance/qmp: Handle QMP occasionally returning multiple responses
+   - incusd/seccomp: Update syscall numbers
+   - incusd/instance/drivers/qemu: Double number of hotplug slots
+   - incusd/instance/qemu: Rework PCI hotplug
+   - incusd/instance/drivers/edk2: Limit calls to GetenvEdk2Path
+   - incusd/instance/drivers/edk2: Actually check that the files exist
+   - incusd/device/config: Fix comment
+   - api: ovn_nic_promiscuous
+   - doc/devices/nic_ovn: Add security.promiscuous
+   - incusd/network/ovn: Only set DHCP options on LSP when not setting up a router interface
+   - incusd/network/ovn: Add support for promiscuous Logical Switch Port
+   - incusd/network/ovn: Wire in security.promiscuous
+   - incusd/device/nic: Add security.promiscuous
+   - api: ovn_nic_ip_address_none
+   - doc/devices/nic_ovn: Add none for ipv4.address/ipv6.address
+   - incusd/device/nic_ovn: Allow 'none' as value for ipv4.address/ipv6.address
+   - incusd/network/ovn: Add support for disabling allocation on LSP
+   - incusd/network/ovn: Wire in support for ipvX.address=none
+   - incusd/network/ovn: Fix BGP advertisement of load balancers
+   - incus-user: Handle deleted projects
+   - Makefile: Set minimum Go to 1.22.0
+   - Makefile: Remove deprecated flag
+   - gomod: Update dependencies
+   - incusd/auth: Update for openfga-go-sdk API breakage
+  [/details]
+
+  <!--
+  # Documentation
+  The Incus documentation can be found at:
+  https://linuxcontainers.org/incus/docs/main/
+  -->
+  # Documentation
+  La documentation d’Incus peut être consultée sur :
+  https://linuxcontainers.org/incus/docs/main/
+
+  <!--
+  # Packages
+  There are no official Incus packages as Incus upstream only releases regular release tarballs. Below are some available options to get Incus up and running.
+  -->
+  # Paquets
+  Incus ne fournit pas de paquet d’installation mais bien un tarball à chaque version. Vous trouverez ci-dessous différentes solutions pour mettre Incus en service.
+
+  <!--
+  ## Installing the Incus server on Linux
+  Incus is available for most common Linux distributions. You'll find detailed installation instructions in our documentation.
+  -->
+  ## Installation du serveur Incus sous Linux
+  Incus est disponible sur la plupart des distributions Linux courantes. Vous trouverez des instructions d’installation détaillées dans notre documentation.
+
+  https://linuxcontainers.org/incus/docs/main/installing/
+
+  <!--
+  ## Homebrew package for the Incus client
+  The client tool is available through HomeBrew for both Linux and MacOS.
+  -->
+  ## Paquet Homebrew du client Incus
+  Le client Incus est disponible sur Homebrew pour Linux et macOS.
+
+  https://formulae.brew.sh/formula/incus
+
+  <!--
+  ## Chocolatey package for the Incus client
+  The client tool is available through Chocolatey for Windows users.
+  -->
+  ## Paquet Chocolatey du client Incus
+  Le client Incus est disponible sur Chocolatey pour les utilisateurs de Windows.
+
+  https://community.chocolatey.org/packages/incus/6.5.0
+
+  <!--
+  ## Winget package for the Incus client
+  The client tool is also available through Winget for Windows users.
+  -->
+  ## Paquet Winget du client Incus
+  Le client Incus est aussi disponible sur Winget pour les utilisateurs de Windows.
+
+  https://winstall.app/apps/LinuxContainers.Incus
+
+  <!--
+  # Support
+  Monthly feature releases are only supported up until the next release comes out.  Users needing a longer support length and less frequent changes should consider using Incus 6.0 LTS instead.
+  -->
+  # Support
+  Les versions de fonctionnalité d’Incus ne sont supportées que jusqu’à la sortie de la suivante. Les personnes souhaitant un support plus long et des changements moins fréquents devraient plutôt envisager d’utiliser Incus 6.0 LTS.
+
+  <!--
+  Community support is provided at: https://discuss.linuxcontainers.org
+  Commercial support is available through: https://zabbly.com/incus
+  Bugs can be reported at: https://github.com/lxc/incus/issues
+  -->
+  Le support communautaire est disponible sur : https://discuss.linuxcontainers.org
+  Un support commercial est disponible sur : https://zabbly.com/incus
+  Les bugs peuvent être signalés sur : https://github.com/lxc/incus/issues
