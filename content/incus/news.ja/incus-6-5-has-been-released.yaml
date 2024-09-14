@@ -441,6 +441,7 @@ content: |-
   Note that this can only be done at creation time.
   -->
   `lvm.metadata_size` 設定キーを設定し、LVM のデフォルトを上書きできるようになりました。
+  これは作成時のみ実行できることに注意してください。
 
       stgraber@castiana:~$ incus storage create demo lvm lvm.use_thinpool=false
       Storage pool demo created
