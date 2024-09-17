@@ -1,0 +1,36 @@
+title: LXC 6.0.2 LTS has been released
+date: 2024/09/17 09:09
+origin: https://discuss.linuxcontainers.org/t/lxc-6-0-2-lts-has-been-released/21632
+content: |-
+  # Introduction
+  The LXC team is pleased to announce the release of LXC 6.0.2!
+
+  This is the second bugfix release for LXC 6.0 which is supported until June 2029.
+
+  # Changes
+  As usual this bugfix releases focus on stability and hardening.
+
+  Some of the highlights for this release are:
+
+   - Reduced log level on some common messages
+   - Fix compilation error on aarch64
+
+  The full list of commits is available below:
+
+  [details="Detailed changelog"]
+   - Remove unused function
+   - idmap: Lower logging level of newXidmap tools to INFO
+   - Exit 0 when there's no error
+   - doc: Fix definitions of get_config_path and set_config_path
+   - README: Update security contact
+   - fix possible clang compile error in AARCH
+  [/details]
+
+  # Support and upgrade
+  The LXC 6.0 branch is supported until June 2029.
+  Only bugfixes and securitiy issues get included into the stable bugfix releases, so it's always safe and recommended to keep up and run the latest bugfix release.
+
+  # Downloads
+
+   - Main release tarball: [lxc-6.0.2.tar.gz](https://linuxcontainers.org/downloads/lxc/lxc-6.0.2.tar.gz)
+   - GPG signature: [lxc-6.0.2.tar.gz.asc](https://linuxcontainers.org/downloads/lxc/lxc-6.0.2.tar.gz.asc)

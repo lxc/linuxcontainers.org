@@ -1,0 +1,647 @@
+title: Incus 6.0.2 LTS has been released
+date: 2024/09/17 10:09
+origin: https://discuss.linuxcontainers.org/t/incus-6-0-2-lts-has-been-released/21633
+content: |-
+  # Introduction
+  The Incus team is pleased to announce the release of Incus 6.0.2!
+
+  This is the second bugfix release for Incus 6.0 which is supported until June 2029.
+
+  # Changes
+  As usual this bugfix releases focus on stability and hardening.
+
+  Minor improvements have also been backported, specifically anything which does not require data migration, database changes or cause any unexpected change to user facing behavior.
+
+  The number of such improvements will decrease over time within the LTS branch.
+
+  Some of the highlights for this release are:
+
+   - Completion of transition to native OVSDB for OVS/OVN
+   - Baseline CPU defintiion for clustered users
+   - Filesystem support for `io.bus` and `io.cache`
+   - CPU flags in server resources
+   - Unified image support in `incus-simplestreams`
+   - Completion of libovsdb transition
+   - Using a sub-path of a volume as a disk
+   - Per storage pool projects limits
+   - Isolated OVN networks (no uplink)
+   - Per-instance LXCFS
+   - Support for environment file at create/launch time
+   - Instance auto-restart
+   - Column selection in all list commands
+   - QMP command hooks and scriptlet
+   - Live disk resize support in virtual machines
+   - PCI devices hotplug
+   - OVN load-balancer health checks
+   - Promiscuous mode for OVN NICs
+   - Ability to run off IP allocation on OVN NICs
+   - Customizable OIDC scope request
+   - Configurable LVM PV metadata size
+   - Configurable OVS socket path
+
+  The full list of commits is available below:
+
+  [details="Detailed changelog"]
+  - incusd/network/ovn: Port CreateLogicalRouterRoute to libovsdb
+   - incusd/network/ovn: Port DeleteLogicalRouterRoute to libovsdb
+   - incusd/network: Update for OVN function changes
+   - incusd/network/ovn: Port DeleteLogicalRouterPort to libovsdb
+   - incusd/network/ovn: Remove LogicalRouterPortDeleteIPv6Advertisements
+   - incusd/network: Update for OVN function changes
+   - incusd/network/ovn: Port DeleteLogicalSwitch to libovsdb
+   - incusd/network: Update for OVN function changes
+   - incusd/network/ovn: Remove logicalSwitchFindAssociatedPortGroups
+   - incusd/network/ovn: Special handling for Load Balancer table
+   - incusd/network/ovn: Align functions context handling
+   - incusd/network/ovn: Port DeleteLogicalSwitchDHCPOption to libovsdb
+   - incusd/network/ovn: Port GetLogicalSwitchPortLocation to libovsdb
+   - incusd/network/ovn: Port GetLogicalSwitchPortUUID to libovsdb
+   - incusd/network/ovn: Port GetLogicalRouterPortHardwareAddress to libovsdb
+   - incusd/network/ovn: Add GetLogicalRouter
+   - incusd/network/ovn: Port DeleteLoadBalancer to libovsdb
+   - incusd/network/acl: Update for OVN function changes
+   - incusd/network: Update for OVN function changes
+   - incusd/network: Simplify OVN network deletion logic
+   - incusd/network/ovn: Port UpdateLogicalSwitchIPAllocation to libovsdb
+   - incusd/network/ovn: Port UpdateLogicalSwitchDHCPv4Revervations to libovsdb
+   - incusd/network/ovn: Port GetLogicalSwitchDHCPv4Revervations to libovsdb
+   - incusd/network/ovn: Port GetLogicalSwitchDHCPOptions to libovsdb
+   - incusd/network/ovn: Port UpdateLogicalSwitchDHCPv4Options to libovsdb
+   - incusd/network/ovn: Port UpdateLogicalSwitchDHCPv6Options to libovsdb
+   - incusd/network: Update for OVN function changes
+   - incusd/network/ovn: Port logicalSwitchPortACLRules to libovsdb
+   - incusd/network/ovn: Port GetLogicalSwitchPorts to libovsdb
+   - incusd/network/ovn: Port UpdateLogicalSwitchPortOptions to libovsdb
+   - incusd/network/ovn: Port CreatePortGroup to libovsdb
+   - incusd/network: Update for OVN function changes
+   - incusd/device/nic: Update for OVN function changes
+   - incusd/network/acl: Update for OVN function changes
+   - incusd/network/ovn: Port GetPortGroupsByProject to libovsdb
+   - incusd/network/ovn: Port CreateAddressSet to libovsdb
+   - incusd/network/ovn: Port UpdateAddressSetAdd to libovsdb
+   - incusd/network/ovn: Port UpdateAddressSetRemove to libovsdb
+   - incusd/network/ovn: Port DeleteAddressSet to libovsdb
+   - incusd/network/acl: Update for OVN function changes
+   - incusd/network: Update for OVN function changes
+   - incusd/network/ovn: Port UpdateLogicalSwitchPortLinkRouter to libovsdb
+   - incusd/network/ovn: Port UpdateLogicalSwitchPortLinkProviderNetwork to libovsdb
+   - incusd/network/ovn: Port GetLogicalSwitchIPs to libovsdb
+   - incusd/network/ovn: Port GetLogicalSwitchPortDNS to libovsdb
+   - incusd/network: Update for OVN function changes
+   - incusd/network/ovn: Port UpdateLogicalSwitchPortDNS to libovsdb
+   - incusd/network/ovn: Port UpdatePortGroupMembers to libovsdb
+   - incusd/network/ovn: Port UpdateLogicalRouterPolicy to libovsdb
+   - incusd/network: Update for OVN function changes
+   - incusd/network/ovn: Port CreateLoadBalancer to libovsdb
+   - incusd/network/ovn: Port GetLogicalRouterRoutes to libovsdb
+   - incusd/network/ovn: Port DeleteLogicalRouterPeering to libovsdb
+   - incusd/network: Update for OVN function changes
+   - incusd/network/ovn: Port CreateLogicalRouterPeering to libovsdb
+   - incusd/network: Update for OVN function changes
+   - incusd/network/ovn: Port logicalSwitchPortDeleteDNSOperations to libovsdb
+   - incusd/network/ovn: Port DeleteLogicalSwitchPortDNS to libovsdb
+   - incusd/network/ovn: Port logicalSwitchPortDeleteOperations to libovsdb
+   - incusd/network/ovn: Port CleanupLogicalSwitchPort to libovsdb
+   - incusd/network/ovn: Port aclRuleDeleteOperations to libovsdb
+   - incusd/network/ovn: Port aclRuleAddOperations to libovsdb
+   - incusd/network/ovn: Port ClearPortGroupPortACLRules to libovsdb
+   - incusd/network/ovn: Port UpdatePortGroupPortACLRules to libovsdb
+   - incusd/network/ovn: Port UpdateLogicalSwitchACLRules to libovsdb
+   - incusd/network/ovn: Port UpdatePortGroupACLRules to libovsdb
+   - incusd/network/acl: Update for OVN function changes
+   - incusd/network: Update for OVN function changes
+   - incusd/network/ovn: Remove nbctl
+   - api: disk_io_bus_cache_filesystem
+   - incusd/device/disk: Extend io.bus option
+   - incusd/device/disk: Extend io.cache option
+   - incusd/device/disk: Add support for io.cache on virtiofs
+   - incusd/device/disk: Add support for io.bus on filesystems
+   - incusd/instance/driver_qemu: Handle 9p being disabled
+   - doc: Update configs
+   - incusd/instance/edk2: Add new package to track EDK2 firmwares
+   - incusd/instance/qemu: Update to the new edk2 package
+   - incusd/apparmor: Update to the new edk2 package
+   - doc: Cleanup OVMF/EDK2 handling to cover aarch64
+   - incusd/instance/qemu: Fix handling of virtiofs-only disks
+   - incus/storage_volume: Tweak help messages
+   - i18n: Update translation templates
+   - incus/storage_volume: Fix lint
+   - doc/installing: Mention incus-tools package
+   - incus-simplestreams: Add support for unified images
+   - incus-simplestreams: Tweak help message
+   - incus-simplestreams: Refactor unified logic
+   - gomod: Update dependencies
+   - incusd/apparmor: Allow devpts mounts
+   - incusd: Improve profile rename errors
+   - incusd/sys: Add cluster resources cache path
+   - incusd/daemon: Locally cache other server resources
+   - incusd/instance/drivers/qmp: Add QueryCPUModel
+   - incusd/instance/qemu: Use cluster CPU flags for migration.stateful
+   - incus-user: Use shorter interrface name for long UIDs
+   - incusd/device/network: Fix Tap interface MTU when in OVN
+   - incusd/isntance: Don't expose all internal flags in INFO message
+   - incusd/instance/lxc: Allow calling Update from a Create operation
+   - shared/subprocess: Allow building on Windows
+   - client: Add basic OCI registry client
+   - shared/cliconfig: Add OCI remote support
+   - shared/subprocess: Fix gofmt
+   - incusd/storage/lvmcluster: Don't allow buckets
+   - incusd/storage/lvmcluster: Don't exclusively lock ISO volumes
+   - incusd/device/disk: Allow attaching the same ISO to multiple instances
+   - incusd/device/disk: Allow live-migration with agent/cloud-init disks
+   - incusd/instance/qemu: Fix live-migration with agent/cloud-init disks
+   - incusd/device/disk: Don't crash on uninitialized pool
+   - incusd/storage/lvmcluster: Always use shared access
+   - incusd/instance/lxc: Don't report filesystem metrics when no per-instance value
+   - incus/top: Set interval to 10s (minimum server-side is 8)
+   - incus/top: Hide zero values
+   - incusd/device/disk: Mark virtual disks as always migratable
+   - tests: Update metrics test for recent change
+   - incus-simplestreams: Fix split images
+   - doc/storage_backup: Fix command example
+   - incusd/instance/edk2: Support OVMF filenames on arm64
+   - incusd/instance/drivers/qemu: Limit CPU flag calculation to x86_64
+   - incus/s3: Fix mcli minio client executable name check
+   - incusd/instance/qemu: Fix architecture check being backward
+   - Change RunDir file mode to 0711
+   - incusd/apparmor/qemu: Relax apparmor rules a bit
+   - incus-simplestreams: Handle removal of combined images
+   - incusd/apparmor/qemu: Fix typo in rule
+   - incusd/apparmor/dnsmasq: Relax rules a bit
+   - incusd/db/node: Fix version check in GetAPI
+   - incusd/db: Allow cluster startup with differing API extensions
+   - incusd: Extend heartbeat data for minimum API extension count
+   - incusd/storage: Use writeback mode for qemu-img convert
+   - incusd/storage: Improve unpacking message
+   - incusd/operations: Handle percentage only updates
+   - incusd/storage: Pass through tracker to qemu-img
+   - [lxd-import] lxd/db/cluster: Rename "node" to "cluster member".
+   - [lxd-import] lxd/db/cluster: Update error messages in unit tests.
+   - incusd/db/cluster: Update tests for relaxed API extensions checks
+   - incusd/apparmor: Implement progress tracker for qemu-img
+   - incusd/cgroup: Handle unknown devices in io.stat
+   - incusd/instance_post: Always set the target project
+   - incusd/storage/drivers: Consistently set VolumeMultiNode
+   - incusd/storage/lvm: Require an exclusive lock during snapshot
+   - incusd/storage/lvm: Properly handle activation during resize
+   - incusd/storage: Properly detect filesystem on remote block
+   - incusd/cluster: Always attempt to forward custom volume requests
+   - client: Always set GetBody
+   - client: Report OIDC refresh failure
+   - incus/remote: Forward OIDC auth failures
+   - client: Retry when told to by the proxy
+   - Use qemu-img convert output to update progress
+   - incusd/cluster: Add flagFormat
+   - internal/cmd: Add support for format options
+   - incusd/isntance/edk2: Move seabios to /usr/share/qemu
+   - incusd/isntance/edk2: Add ArchLinux x86_64 paths
+   - tests: Use future values in property test
+   - incusd/db/cluster: Cleanup indentation
+   - incusd/db/cluster: Update schema
+   - incusd/db/generate: Add exception for cluster tables
+   - incusd/resources: Add sortedMapKeys
+   - incusd/resources/cpu: Sort sockets, cores and threads
+   - incusd/auth: Fill missing local volume location
+   - incusd/cluster: Correctly record volatile.cluster.group on move
+   - incusd/migration: Show source errors first
+   - incusd/instance/qemu: Clarify live migration error
+   - incusd/cluster: Attempt to ping the server prior to healing
+   - incusd/instance/qemu: Fix bad timeout errors
+   - incusd/instance/qemu: Send two ACPI events on shutdown
+   - incusd/instance: Add progress tracking to export
+   - client: Remove GetBody when can't seek back
+   - client: Add Seek call to GetBody
+   - incusd: Simplify image replication
+   - incusd/images: Only remove from authorizer once
+   - incusd/images: Correctly record new aliases
+   - incusd/images: Correctly remove aliases
+   - incusd/images: Set authorizer entries at the correct time
+   - incusd/images: Don't alter image info on cluster copy
+   - incusd/storage_pools: Set authorizer for pending pools
+   - incusd/networks: Set authorizer for pending networks
+   - incusd/network: Handle long interface names
+   - incus/cluster: Cleanup certificate update message
+   - [lxd-import] github: stop purging core20
+   - [lxd-import] github: purge disabled/superseded snaps
+   - [lxd-import] github: move snap removal to "Reclaim some space" step
+   - [lxd-import] github: put docker removal its own step
+   - [lxd-import] github: mask lxc{,-net}.service in a singe command
+   - [lxd-import] lxd/instance/drivers/driver/qemu: Don't leak file descriptor when probing for Direct I/O support
+   - [lxd-import] lxd/network/acl: Change protocol field for ovn logs
+   - [lxd-import] lxd/instance: Reject limits.kernel config for VMs
+   - [lxd-import] doc: `limits.kernel` only applies to containers (see #12874)
+   - [lxd-import] lxd/storage: Fix resize for pools with custom zfs.pool_name
+   - [lxd-import] lxd/storage/drivers/driver_zfs_utils: fix typos
+   - [lxd-import] lxd/storage/drivers/driver_zfs_utils: make it explicit that blocksize is in bytes
+   - [lxd-import] lxd/task/group: Make cancel type of context.CancelFunc for clarity
+   - [lxd-import] doc: Add paragraph on how to delete images
+   - [lxd-import] test: Add exec exit code test
+   - [lxd-import] lxd/apparmor: allow confined services to receive required signals
+   - [lxd-import] lxd/rsync: Consistently compare files on nanosecond basis
+   - [lxd-import] test/suites/migration: Check for file contents after refresh
+   - [lxd-import] test/suites/migration: Check local and remote instance refreshes based on nanoseconds
+   - [lxd-import] doc: add paragraph on how to delete images
+   - [lxd-import] doc: enable multiprocessing for pyspelling
+   - [lxd-import] Makefile: have run-parts report which script it runs
+   - [lxd-import] lxd/storage/drivers/ceph: Disable filesystem config keys on block volumes
+   - [lxd-import] lxd/storage/drivers/lvm: Disable filesystem config keys on block volumes
+   - [lxd-import] test: Add check to restore custom volumes of type block
+   - [lxd-import] lxd/storage/drivers/ceph: Update UnmountVolumeSnapshot docstring
+   - [lxd-import] lxd: Improve error check for existing certificates
+   - [lxd-import] shared/api: Updates swagger description for certificate field.
+   - [lxd-import] shared/api: Fix lint errors (receiver-naming).
+   - [lxd-import] lxd/db/cluster: Fix lint error (revive: var-naming).
+   - [lxd-import] lxd-migrate: Ignore lint error (revive: deep-exit).
+   - [lxd-import] lxc/remote: Fix lint errors (revive: exported).
+   - [lxd-import] lxd/storage/backend: Don't validate custom storage volumes twice
+   - [lxd-import] lxd-generate: Return helpful error instead of panicking.
+   - [lxd-import] lxd/storage/backend: Use quotes consistently for error messages
+   - [lxd-import] lxd/project: Don't panic on StorageVolumeParts
+   - [lxd-import] github: don't abort on remount failures
+   - [lxd-import] test/main: add log grouping (GHA)
+   - [lxd-import] test/main: show dmesg on failure
+   - [lxd-import] lxd/api/internal: Use correct quoting for error in internalImportFromBackup
+   - [lxd-import] lxd/db/cluster/devices: Use correct string quoting of device type for error in NewDeviceType
+   - [lxd-import] lxd/instances/post: Improve error in createFromBackup
+   - [lxd-import] lxd/storage/backend/lxd: Update backup.yaml after instance and volume DB records have been generated in CreateInstanceFromBackup
+   - [lxd-import] test/main: don't wrap tests logs in log groups
+   - [lxd-import] lxd/device/disk: Remove config.iso file when the cloud-init:config disk device is removed
+   - [lxd-import] lxd/images: Add project to error in autoSyncImages
+   - [lxd-import] lxd/project/project: Remove optimisation from StorageVolumeProject
+   - [lxd-import] lxd/storage/volumes: Remove unnecessary 2 line variable definition in doCustomVolumeRefresh
+   - [lxd-import] lxd/storage/volumes: Remove unnecessary 2 line variable definition in doVolumeCreateOrCopy
+   - [lxd-import] lxd/storage/volumes: Validate source project in doCustomVolumeRefresh
+   - [lxd-import] [lxd-import] lxd/storage/volumes: Validate source project in doVolumeCreateOrCopy
+   - [lxd-import] lxd/db/cluster: Remove redunant parentheses.
+   - [lxd-import] lxd/migrate/storage/volumes: Use volume name from DB in migrationSourceWs.DoStorage
+   - [lxd-import] lxd/network/network/utils: Fix incorrect conversion from int64 to int in inRoutingTable
+   - [lxd-import] lxd/network/network/utils: Remove unnecessary call to fmt.Sprintf by passing base to ParseInt
+   - [lxd-import] lxd/response: Use SmartError if SyncResponse success=false
+   - [lxd-import] lxd/storage/drivers/driver/zfs/volumes: Fix error scoping in CreateVolumeFromCopy
+   - [lxd-import] lxd/storage/drivers/driver/zfs/volumes: Define send/receive channels together in CreateVolumeFromCopy
+   - [lxd-import] lxd/storage/drivers/driver/zfs/volumes: Kill sender if receiver fails in CreateVolumeFromCopy
+   - [lxd-import] lxd/storage/drivers/driver/zfs/volumes: Handle multi-line errors in CreateVolumeFromCopy
+   - [lxd-import] lxd/storage/drivers/driver/btrfs/volumes: Fix hang when btrfs receive fails in RefreshVolume
+   - [lxd-import] lxd/storage/drivers/driver/btrfs/volumes: Handle multi-line errors in RefreshVolume
+   - [lxd-import] lxd/storage/drivers/driver/zfs/volumes: Aligns RefreshVolume with BTRFS driver
+   - [lxd-import] lxd/response: Fallback to error response after setting headers
+   - [lxd-import] lxd/storage/backend/lxd: Use volume name from VolumeDBGet in BackupCustomVolume
+   - [lxd-import] lxd/storage/drivers/btrfs: Clarify fallback in case UUID discovery times out
+   - incusd/db/cluster: Fix import shadowing
+   - doc/rest-api: Refresh swagger YAML
+   - [lxd-import] lxd/storage/drivers: Add volume param to roundVolumeBlockSizeBytes
+   - [lxd-import] lxd/storage/drivers/zfs: Round to zfs.blocksize or 16KiB
+   - [lxd-import] test/storage: Add non-power-of-two sized storage check
+   - [lxd-import] test/storage: Remove zfs rounding test
+   - [lxd-import] lxd/storage/drivers: Refactor volume size rounding logic
+   - [lxd-import] lxd/storage/drivers/zfs: Wait for device to appear when activating a volume
+   - [lxd-import] lxd/storage/drivers/zfs: Check for non /dev/zvol/* paths
+   - incusd/storage/zfs: Fix import shadowing
+   - Make run-parts running compatible with different versions
+   - api: instances_lxcfs_per_instance
+   - incusd/server/config: Add instances.lxcfs.per_instance
+   - incusd/instance/lxc: Add support for per-instance LXCFS
+   - doc: Update configs
+   - incus/top: Properly filter disk usage
+   - incusd/state: Add Cluster gateway
+   - incusd/daemon: Sort state fields
+   - incusd/daemon: Add cluster gateway to state
+   - incusd/acme: Update for state change
+   - incusd/images: Update for state change
+   - incusd/operations: Update for state change
+   - incusd/instances: Update for state change
+   - incusd/patches: Update for state change
+   - incusd/cluster: Update for state change
+   - incusd/instances: Use targetGroupPrefix
+   - incusd/cluster: Split files
+   - incusd/cluster: Fix import shadowing
+   - incusd/cluster: Re-factor healing logic
+   - incusd/cluster: Improve logging
+   - incusd/cluster: Reduce dqlite logging
+   - incusd/cluster: Extend HasConnectivity to do API checking
+   - incusd/cluster: Add HasConnectivity check to event handling
+   - incusd: Don't block on startup for cluster queries
+   - incusd/cluster: Rework offline server detection
+   - incusd/cluster/evacuation: Add separate healing mode
+   - incusd/cluster/healing: Try up to 5 times
+   - incusd/cluster/healing: Add logging
+   - incusd/device/disk: Fix bad CanMigrate logic
+   - incusd/storage/lvm: Properly activate/deactivate ISOs
+   - incusd/images: Expose image type as header
+   - client: Skip image hash if OCI
+   - incusd/device: Don't fail on LXCFS device entry
+   - client: Report source errors too on copy
+   - incusd/storage: Have roundVolumeBlockSizeBytes return an error
+   - incusd/instance_post: Fix cross-server live-migration
+   - incus/image: Correct image copy logic
+   - incusd/storage/lvm: Hardden common functions
+   - incusd/api: Don't panic on missing config
+   - incusd/storage: Add Deactivate flag
+   - incusd/storage/lvm: Add deactivation step for clusters
+   - incusd/cluster: Return clear status for servers currently starting up
+   - incusd/instance/lxc: Reduce logging level
+   - incusd/instance/qemu: Reduce logging level
+   - incusd/migrate: Reduce logging
+   - incusd/storage: Reduce logging
+   - incusd/instance/qemu: Remove double lifecycle event
+   - tests/clustering: Use correct target project argument
+   - incusd/isntance/edk2: Fix CSM handling
+   - incusd/storage/zfs: Always call tryGetVolumeDiskPathFromDataset
+   - incusd/network/ovn: Require functional uplink
+   - doc: add colima instructions
+   - doc: Update incus_alias.md
+   - incus/network/load_balancer: Fix example
+   - i18n: Update translation templates
+   - incusd/network/ovn: Fix crash on uninitialized external IDs
+   - doc/instances: Add VM agent install instructions
+   - shared/api: Add Config to ServerUntrusted
+   - doc/rest-api: Refresh swagger YAML
+   - incusd/api_1.0: Expose user.ui config keys to all clients
+   - doc/server: Mention user.ui config keys
+   - incusd/auth/oidc: Better handle logout
+   - incusd/networks: Emit lifecycle event and authz entries for OVN networks
+   - incusd/network/ovn: Fix indent
+   - doc/storage_volume: Fix snapshot command
+   - shared/api: Add EventLifecycleInstanceMigrated
+   - shared/api: Sort lifecycle events
+   - incusd/lifecycle: Add InstanceMigrated
+   - incusd/lifecycle: Sort lifecycle events
+   - incusd/isntance/operationlock: Add ActionMigrate
+   - incusd/instance/common: Add support for migration operation
+   - incusd/instance/qemu: Add support for migration operation and lifecycle
+   - incusd/instance/lxc: Add support for migration operation and lifecycle
+   - shared/api: Add lifecycle events for cluster evacuation and healing
+   - incusd/lifecycle: Add lifecycle events for cluster evacuation and healing
+   - incusd/cluster: Add lifecycle events for evacuation
+   - incusd/request: Strip port from event address
+   - incusd/instance: Properly link instance and operation
+   - incusd/operations: Add CopyRequestor for nested operations
+   - incusd/instance: Track operation during exec/console
+   - doc/clustering: Better document healing
+   - incusd/instance: Track operation during creation
+   - incusd/instance: Track operation during deletion
+   - incusd/instance: Keep track of API operations
+   - incusd/instance: Set operations on snapshot
+   - incus-migrate: Properly handle projects
+   - incusd/apparmor: Allow mounting zfs when delegation is supported
+   - doc/clustering: Add howto on cluster access
+   - cmd/incusd: Set keep-alive timeout
+   - incusd/auth/oidc: Handle cases where we can't set cookies
+   - incusd/instance/qemu: Deref ceph config path
+   - incusd/apparmor/qemu: Guess ceph config paths
+   - incusd/instance/lxc: Respect LXCFS_OPTS
+   - incusd/instance/drivers: Extract GetClusterCPUFlags
+   - incusd: Switch OVN to a getter function
+   - incusd/network: Port to new OVN state function
+   - incus: Add support for environment file (.env)
+   - i18n: Update translation templates
+   - incusd/storage/lvm: Re-try activation/deactivation
+   - incusd/storage/lvm: Don't activate volumes during cold migration
+   - shared/cliconfig: Add CacheDir
+   - incus: Configure a cache directory
+   - api: disk_volume_subpath
+   - incusd/device/disk: Allow relative paths within custom volumes
+   - doc/devices_disk: Mention sub-paths
+   - tests: Test volume subpaths
+   - api: projects_limits_disk_pool
+   - incusd/projects: Add new limits.disk.pool config key
+   - doc: Update configs
+   - incus/project: Handle pool disk limits
+   - incusd/project: Add per-pool disk limits
+   - incusd/project: Add HiddenStoragePools
+   - incusd/storage: Hide pools with a zero limit
+   - tests: Add test for per pool limits
+   - incus/image/alias: Add support for column selection
+   - i18n: Update translation templates
+   - api: network_ovn_isolated
+   - incusd/network/ovn: Harden deletion logic
+   - doc/network/ovn: Cover isolated networks
+   - incusd/networks: Reserve "none" for uplinks
+   - incusd/network/ovn: Allow creating isolated OVN networks (no uplink)
+   - incusd/device/nic_ovn: Handle networks without uplinks
+   - gomod: Update dependencies
+   - incus/remote/list: Add support for column selection
+   - incus/cluster/group/list: Add support for column selection
+   - client: import examples for docs
+   - client: name var for docs
+   - client: alias & server/procotol default for docs
+   - incusd/storage: Fix UsedBy values for sub-directory volumes
+   - incusd/instance: Fix backup file locking issue
+   - incusd/projects: Don't fail project creation on missing pools
+   - incusd/device/pci: Allow hotplug
+   - incusd/instance/qmp: Add CheckPCIDevice
+   - incusd/instance/qemu: Use monitor.CheckPCIDevice
+   - incusd/instance/qemu: Tweak comments on deviceStart
+   - incusd/instance/qemu: Add hotplug support for generic PCI
+   - client: fix typo in example
+   - incus/operation/list: Add support for column selection
+   - doc/firewalld: Update Docker link
+   - incus/network/zone/list: Add support for column selection
+   - incusd/instance/drivers/qmp: Export RunJSON
+   - api: qemu_raw_qmp
+   - incusd/instance: Add raw QMP config options
+   - doc: Add QMP to wordlist
+   - doc: Update configs
+   - incusd/instance/qemu: Add QMP hooks
+   - incusd/project: Update low-level properties
+   - incus/network/forward/list: Add support for column selection
+   - incus/network/list-leases: Add support for column selection
+   - doc: Update incus_alias.md
+   - incus/network/list-allocations: Add support for column selection
+   - api: network_load_balancer_health_check
+   - incusd/network/ovn: Simplify CreateLoadBalancer
+   - incusd/network: Update for CreateLoadBalancer changes
+   - incusd/network/ovn: Add healthcheck support in LoadBalancer
+   - incusd/network: Add healthcheck config options
+   - incusd/network/ovn: Add healthcheck options
+   - incusd/network/ovn: Reserve the last IPv4 address
+   - doc/network/load_balancer: Add configuration options
+   - doc: Update configs
+   - incus/admin/init: Prompt for dir storage location
+   - tests: Update for extra step in init
+   - incus/network/integration/list: Add support for column selection
+   - incus/storage/bucket/list: Add support for column selection
+   - api: oidc_scopes
+   - incusd/config: Add oidc.scopes
+   - incusd/oidc: Add custom scopes support
+   - doc: Update configs
+   - incus/storage/bucket: Add support for column selection in key list
+   - incus/snapshot/list: Add support for column selection
+   - incusd/storage/lvm: Fix resize logic to conserve LV state
+   - incusd/network/ovn: Set missing send_periodic field
+   - incusd/profiles: Improve listing performance
+   - incusd/server/db: Increase transaction deadline to 30s
+   - incusd/db/profiles: Support device cache in ToAPI
+   - incusd: Pass profile device cache to ToAPI calls when possible
+   - incusd/db/instances: Support device cache to ToAPI
+   - incusd: Pass instance device cache to ToAPI calls when possible
+   - incusd/db/instances: Allow passing profile devices to instance ToAPI
+   - incusd: Pass profile device cache to instance ToAPI calls when possible
+   - incusd/instances: Remove old retry logic
+   - incusd/network_integration: Fix typo in doc string
+   - doc: Update configs
+   - incusd/network/ovn: Use stable random for IC gateway chassis priority
+   - api: network_integrations_peer_name
+   - incusd/network_integrations: Add peerName to ovn.transit.pattern
+   - incusd/network/ovn: Expose peerName to ovn.transit.pattern
+   - doc: Update configs
+   - incus/cluster/list-tokens: Add support for column selection
+   - i18n: Update translation templates
+   - incusd/storage_volumes_state: Handle unsupported response from drivers
+   - lxd-to-incus: Handle Incus socket in /run/incus/
+   - incusd/network/ovn: Record transit subnets
+   - incusd/network/ovn: Add transit switch addresss allocation functions
+   - incusd/network/ovn: Setup transit switch allocations
+   - incusd/auth/openfga: Avoid deprecated ApiSchema and ApiHost
+   - incusd/auth: Re-organize entitlement list
+   - incusd/auth/openfga: Sort entries in openfga model
+   - incusd/auth/openfga: Add missing network integration permission
+   - incusd/auth/openfga: Require admin level to create projects
+   - incusd/auth/openfga: Rebuild model
+   - incusd/auth: Fix network integration object
+   - incus/config/trust/list-tokens: Add support for column selection
+   - incus/network/peer/list: Add support for column selection
+   - incus/network/load-balancer/list: Add support for column selection
+   - Change Cloud Init "user" to "users"
+   - shared/api: Fix incorrect struct naming for volume backups
+   - client: Update for fixed volume backup structs
+   - incus: Update for fixed volume backup structs
+   - incusd: Update for fixed volume backup structs
+   - incusd/storage_volume_backup: Fix swagger references
+   - incusd/storage_bucket_backup: Fix swagger references
+   - doc/rest-api: Refresh swagger YAML
+   - incusd/device/nic: Make burst rate dynamic for ingress traffic
+   - incusd/storage/lvm: Allow live resize
+   - incusd/storage/zfs: Allow online resize of ZFS block volumes
+   - incusd/device/disk: Add callback on resize
+   - incusd/instance/drivers/qmp: Add resize handling
+   - incusd/instance/qemu: Add disk resize handling
+   - incusd/node/config: Add network.ovs.connection
+   - doc: Switch /var/run to just /run
+   - incusd/cluster/config: Switch from /var/run to /run
+   - incusd/instance/agent-loader: Don't hardcode path
+   - incusd/syslog: Update OVS path
+   - doc: Update configs
+   - incusd/network/ovs: Make OVS database configurable
+   - incusd/state: Add OVS function
+   - incusd: Set OVS function on State
+   - incusd: Port to state.OVS
+   - incusd: Reset OVS as needed
+   - incusd/network/ovn: Limit MAC_Binding explosion
+   - incusd/network/ovn: Add ARP limits to updated routers
+   - incusd/network/ovn: Wait a bit longer for northd to allocate addresses
+   - i18n: Update translations templates
+   - incusd/apparmor: Don't constantly query the version and cache
+   - incusd/storage/driver/dir: Don't needlessly re-apply project id on quota changes
+   - incusd/storage/quota: Don't fail on missing paths
+   - incusd/storage/lvm: Retry setactivation skip for busy environments
+   - api: qemu_scriptlet
+   - incusd/instance: Add qemu scriptlet config options
+   - incusd: Move QEMU default values to a subpackage
+   - incusd/scriptlet: Move the logger definition
+   - incusd/scriptlet: Add helper functions
+   - incusd/scriptlet: Add Unmarshal function
+   - incusd/scriptlet: Add qemu scriptlet
+   - incusd/project: Update low-level properties
+   - doc: Update metadata
+   - incusd/scriptlet: Remove deprecated starlark.SourceProgram
+   - Makefile: Switch minimum Go to 1.22
+   - gomod: Update dependencies
+   - doc: Update requirements
+   - incusd/instance/drivers/qemu: Fix node name overflow logic
+   - incusd/instance/drivers/qemu: Add missing node name handling
+   - incusd/api_internal: Add API to notify volume resizes
+   - incusd/cluster: Fix redirect loop with shared volumes across multiple servers
+   - incusd/storage/backend: Notify instances following block custom volume resize
+   - api: instance_auto_restart
+   - incusd/instance: Add boot.autorestart
+   - doc: Update metadata
+   - incusd/instance/drivers: Implement shouldAutoRestart
+   - incusd/instance/drivers/lxc: Implement boot.autorestart
+   - incusd/instance/drivers/qemu: Implement boot.autorestart
+   - tests: Validate autorestart logic
+   - client: Fix error handling in push mode copy
+   - incusd/network/ovn: Fix send_periodic syntax
+   - incusd/project: Validate group names
+   - incusd/db: Confirm cluster group validity during placement
+   - doc/cluster_group: Mention renaming groups
+   - api: storage_lvm_metadatasize
+   - doc/storage_lvm: Add lvm.metadata_size
+   - incusd/storage/lvm: Add lvm.metadata_size
+   - incusd/storage/zfs: Only attempt to load the module if the tools exist
+   - incusd/instance/edk2: Add Void Linux x86_64 paths
+   - incusd/profiles: Empty default profile on forced deletion
+   - Revert "incusd/instance/agent-loader: Don't hardcode path"
+   - incusd/device: Add new Register function
+   - incusd/instance/drivers: Use Register function
+   - incusd/device: Don't make Register depend on validate
+   - incusd/storage/drivers: Add isDeleted flag
+   - incusd/storage/drivers/ceph: Rework parseClone
+   - incusd/storage/drivers/ceph: Rework parseParent
+   - incusd/storage/drivers/ceph: Make use of isDeleted flag
+   - incusd/instance/qemu: Allow setCPUs to re-use QMP
+   - incusd/instance/qmp: Handle QMP occasionally returning multiple responses
+   - incusd/seccomp: Update syscall numbers
+   - incusd/instance/drivers/qemu: Double number of hotplug slots
+   - incusd/instance/qemu: Rework PCI hotplug
+   - incusd/instance/drivers/edk2: Limit calls to GetenvEdk2Path
+   - incusd/instance/drivers/edk2: Actually check that the files exist
+   - incusd/device/config: Fix comment
+   - api: ovn_nic_promiscuous
+   - doc/devices/nic_ovn: Add security.promiscuous
+   - incusd/network/ovn: Only set DHCP options on LSP when not setting up a router interface
+   - incusd/network/ovn: Add support for promiscuous Logical Switch Port
+   - incusd/network/ovn: Wire in security.promiscuous
+   - incusd/device/nic: Add security.promiscuous
+   - api: ovn_nic_ip_address_none
+   - doc/devices/nic_ovn: Add none for ipv4.address/ipv6.address
+   - incusd/device/nic_ovn: Allow 'none' as value for ipv4.address/ipv6.address
+   - incusd/network/ovn: Add support for disabling allocation on LSP
+   - incusd/network/ovn: Wire in support for ipvX.address=none
+   - incusd/network/ovn: Fix BGP advertisement of load balancers
+   - incus-user: Handle deleted projects
+   - Makefile: Set minimum Go to 1.22.0
+   - Makefile: Remove deprecated flag
+   - gomod: Update dependencies
+   - incusd/auth: Update for openfga-go-sdk API breakage
+   - incus/network: Fix capitalization in network list
+   - i18n: Update translation templates
+   - incusd/storage/drivers/lvm: Cache VG extent size
+   - incusd/instance/qemu: Always re-generate the nvram symlink
+   - incusd/network/ovn: LSP dynamic allocation can't be done per protocol
+   - incusd/instance/qemu: Set O_DIRECT when passing in FDs
+   - incusd/apparmor: Only initialize with the daemon
+   - incusd/instance/qemu: Make O_DIRECT conditional on directCache
+   - incusd/instance/qemu: Force threads I/O mode for unsafe/writeback
+   - incusd/instance/qemu: Move away from deprecated fd: syntax
+   - doc: Fix network load-balancer typo
+   - incusd/network/ovn: Fix group of load-balancer config keys
+   - doc: Update metadata
+   - incusd/apparmor: Add sys_rawio for QEMU 9.1
+   - doc: Fix limits.memory default value unit
+   - incusd/storage/zfs: Make sure the zvol is a block device
+   - incusd/apparmor: Don't attempt unloading profiles when apparmor is disabled
+   - internal/instance: Fix unit for limits.memory
+   - doc: Update metadata
+   - shared/archive: Add VMDK images to list of supported formats
+   - doc/installing: Add Rocky Linux 9
+   - cmd/incus-migrate: Report detected source format when importing VM image
+   - incus/storage_volume: Fix snapshot listing
+   - internal/server/instance/drivers: Disable 9p and vsock for Windows VMs
+   - cmd/incus-migrate: Convert qcow2 and vmdk images to raw format before importing
+   - doc: List image formats supported by incus-migrate
+   - scripts: fix empty-incus.sh instances delete
+   - i18n: Update translation templates
+   - gomod: Update dependencies
+  [/details]
+
+  # Notice for packagers
+  With this release, the `INCUS_OVMF_PATH` environment variable was renamed to `INCUS_EDK2_PATH` to avoid the use of the architecture-specific name (arm64 uses AAVMF) and instead rely on the generic name of the firmware.
+
+  # Support and upgrade
+  The Incus 6.0 branch is supported until June 2029. It's always strongly recommended to keep up and run the latest LTS bugfix release.
+
+  # Downloads
+
+   - Main release tarball: [incus-6.0.2.tar.xz](https://linuxcontainers.org/downloads/incus/incus-6.0.2.tar.xz)
+   - GPG signature: [incus-6.0.2.tar.xz.asc](https://linuxcontainers.org/downloads/incus/incus-6.0.2.tar.xz.asc)
