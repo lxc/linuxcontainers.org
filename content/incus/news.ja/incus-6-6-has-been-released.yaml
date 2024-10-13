@@ -1,0 +1,473 @@
+title: Incus 6.6 リリースのお知らせ
+date: 2024/10/03 16:10
+origin: https://discuss.linuxcontainers.org/t/incus-6-6-has-been-released/21762
+content: |-
+  # はじめに <!-- Introduction -->
+  <!--
+  The Incus team is pleased to announce the release of Incus 6.6!
+  -->
+  Incus チームは、Incus 6.6 のリリースのアナウンスができてうれしいです！
+
+  <!--
+  A slightly less busy release this time, mostly due to traveling to the Linux Plumbers Conference and associated events a few weeks ago.
+  -->
+  Linux Plumbers Conference と、関連するイベントに出張したことで、リリースはそれほど忙しくありませんでした。
+
+  <!--
+  But still far from a boring release. On top of the usual bugfix and performance improvements, we're getting a number of nice additions for virtual machines, improved clustered LVM support, improvements to incus-migrate and a number of new network features!
+  -->
+  しかし、退屈なリリースからはほど遠いリリースです。通常のバグフィックスとパフォーマンスの改善に加え、多数の仮想マシンに対するすばらしい機能追加、クラスター化 LVM のサポートの改良、incus-migrate の改良、多数のネットワーク機能が追加されています。
+
+  [![image|597x346](https://discuss.linuxcontainers.org/uploads/default/original/2X/1/12f0e0262b35e5d841de72e4bc4feb602929c110.png)](https://linuxcontainers.org/incus/try-it/)
+
+  <!--
+  As usual, you can try it for yourself online: https://linuxcontainers.org/incus/try-it/
+  -->
+  いつものように、オンラインでご自身で試せます: https://linuxcontainers.org/incus/try-it/
+
+  Enjoy!
+
+  # 新機能 <!-- New features -->
+  ## 仮想マシンの OS 情報 <!-- OS info for virtual machines -->
+  <!--
+  The Incus VM agent has been extended to pull some additional details about the virtual machine.
+  -->
+  Incus VM エージェントが拡張され、仮想マシンについての詳細を追加で取得できるようになりました。
+
+      stgraber@dakara:~$ incus info v1
+      Name: v1
+      Status: RUNNING
+      Type: virtual-machine
+      Architecture: x86_64
+      PID: 3753543
+      Created: 2024/09/24 10:02 EDT
+      Last Used: 2024/10/03 11:29 EDT
+      Started: 2024/10/03 11:29 EDT
+      
+      Operating System:
+        OS: Ubuntu
+        OS Version: 24.04.1 LTS (Noble Numbat)
+        Kernel Version: 6.10.11-zabbly+
+        Hostname: v1
+        FQDN: v1
+      
+      Resources:
+        Processes: 35
+        Disk usage:
+          root: 1.02GiB
+        CPU usage:
+          CPU usage (in seconds): 4
+        Memory usage:
+          Memory (current): 374.78MiB
+        Network usage:
+          enp5s0:
+            Type: broadcast
+            State: UP
+            Host interface: tap84ebf5ff
+            MAC address: 00:16:3e:75:89:6e
+            MTU: 1500
+            Bytes received: 3.13kB
+            Bytes sent: 1.30kB
+            Packets received: 27
+            Packets sent: 12
+            IP addresses:
+              inet:  172.17.250.94/24 (global)
+              inet6: 2602:fc62:c:250:216:3eff:fe75:896e/64 (global)
+              inet6: fe80::216:3eff:fe75:896e/64 (link)
+          lo:
+            Type: loopback
+            State: UP
+            MTU: 65536
+            Bytes received: 5.92kB
+            Bytes sent: 5.92kB
+            Packets received: 80
+            Packets sent: 80
+            IP addresses:
+              inet:  127.0.0.1/8 (local)
+              inet6: ::1/128 (local)
+
+  <!--
+  This information is only available for virtual machines at this time as containers don't run an agent and directly fetching that information from the container's filesystem can be unsafe.
+  -->
+  コンテナではエージェントは実行しておらず、コンテナのファイルシステムから直接情報を取得するのは安全ではない可能性があるため、この情報は、現時点では仮想マシンでのみ利用可能です。
+
+  ## 仮想マシンのコンソールヒストリー <!-- Console history for virtual machines -->
+  <!--
+  Console access with containers has always been pretty flexible with both interactive access (`incus console`) and non-interactive text log (`incus console --show-log`) both being available.
+  -->
+  コンテナのコンソールアクセスは、対話的なアクセス（`incus console`）と、非対話的なテキストログ（`incus console --show-log`）の両方が利用でき、常に非常に柔軟に使えます。
+
+  <!--
+  For virtual machines however, things were a bit more limited as QEMU didn't allow us to simultaneously send the console to an interactive device as well as recording everything into a ring buffer.
+  -->
+  しかし仮想マシンでは、QEMU がコンソールを対話的デバイスに送信すると同時にリングバッファーに記録できなかったため、少し制限された状況でした。
+
+  <!--
+  But we have since found a way to make it work by having QEMU switch between an interactive backend and a ringbuffer depending on whether someone is connected to the console.
+  -->
+  しかし、誰がコンソールに接続しているかどうかによって、QEMU が対話的バックエンドとリングバッファーを切り替えることで、機能させる方法を見つけました。
+
+  <!--
+  The end result is that `incus console --show-log` now works for virtual machines too!
+  -->
+  その結果、`incus console --show-log` が仮想マシンでも動作するようになりました。
+
+      stgraber@dakara:~$ incus console --show-log v1
+      BdsDxe: loading Boot0006 "Ubuntu" from HD(1,GPT,B7DD04C0-15CE-482C-A6AC-7278FDA10CF6,0x800,0x32000)/\EFI\ubuntu\shimx64.efi
+      BdsDxe: starting Boot0006 "Ubuntu" from HD(1,GPT,B7DD04C0-15CE-482C-A6AC-7278FDA10CF6,0x800,0x32000)/\EFI\ubuntu\shimx64.efi
+      rootfs: clean, 58918/6393600 files, 1074908/13081339 blocks
+      
+      Ubuntu 24.04.1 LTS v1 ttyS0
+      
+      v1 login: 
+
+  ## クラスター化された LVM ボリュームグループの作成機能 <!-- Ability to create clustered LVM volume groups -->
+  <!--
+  Incus has supported clustered LVM for a few releases now, but up until now, the shared volume group had to be pre-created by the user.
+  -->
+  Incus は、ここ数回のリリースでクラスター化された LVM をサポートしてきました。しかしこれまでは、共有ボリュームグループをユーザーが前もって作っておく必要がありました。
+
+  <!--
+  Now Incus allows you to directly specify the shared block device and have it create the volume group.
+  -->
+  このリリースで、Incus から共有ブロックデバイスを直接指定し、ボリュームグループを作成できるようになりました。
+
+      root@server01:~# incus storage create demo-lvm lvmcluster source=/dev/disk/by-id/scsi-0QEMU_QEMU_HARDDISK_incus_demo--shared --target server01
+      Storage pool demo-lvm pending on member server01
+      root@server01:~# incus storage create demo-lvm lvmcluster source=/dev/disk/by-id/scsi-0QEMU_QEMU_HARDDISK_incus_demo--shared --target server02
+      Storage pool demo-lvm pending on member server02
+      root@server01:~# incus storage create demo-lvm lvmcluster source=/dev/disk/by-id/scsi-0QEMU_QEMU_HARDDISK_incus_demo--shared --target server03
+      Storage pool demo-lvm pending on member server03
+      root@server01:~# incus storage create demo-lvm lvmcluster source=/dev/disk/by-id/scsi-0QEMU_QEMU_HARDDISK_incus_demo--shared --target server04
+      Storage pool demo-lvm pending on member server04
+      root@server01:~# incus storage create demo-lvm lvmcluster
+      Storage pool demo-lvm created
+
+  ## `incus-migrate` の QCOW2 と VMDK サポート <!-- QCOW2 and VMDK support in `incus-migrate` -->
+  <!--
+  The standalone `incus-migrate` tool can now import existing QCOW2 and VMDK based virtual machines. This relies on `qemu-img` being available on the system to handle the conversion.
+  -->
+  スタンドアローンの `incus-migrate` ツールが、既存の QCOW2 と VMDK ベースの仮想マシンをインポートできるようになりました。これは、変換を処理するシステム上で、`qemu-img` が利用可能であることに依存します。
+
+      root@dakara:~# incus-migrate 
+      The local Incus server is the target [default=yes]: 
+      Would you like to create a container (1) or virtual-machine (2)?: 2
+      Project to create the instance in [default=default]: 
+      Name of the new instance: foo
+      Please provide the path to a disk, partition, or qcow2/raw/vmdk image file: /home/stgraber/demo/rhel9.qcow2
+      Does the VM support UEFI booting? [default=yes]: 
+      Does the VM support UEFI Secure Boot? [default=yes]: 
+      
+      Instance to be created:
+        Name: foo
+        Project: default
+        Type: virtual-machine
+        Source: /home/stgraber/demo/rhel9.qcow2
+        Source format: qcow2
+      
+      Additional overrides can be applied at this stage:
+      1) Begin the migration with the above configuration
+      2) Override profile list
+      3) Set additional configuration options
+      4) Change instance storage pool or volume size
+      5) Change instance network
+      
+      Please pick one of the options above [default=1]:  
+      Converting image "/home/stgraber/demo/rhel9.qcow2" to raw format before importing
+      Instance foo successfully created
+
+  ## 設定可能な macvlan モード <!-- Configurable macvlan mode -->
+  <!--
+  Up until now, the macvlan mode was always fixed to `bridged`.
+  This can now be customized, allowing the other modes, such as `vepa`, `passthru` and `private` to be used too.
+  -->
+  これまで macvlan のモードは、常に `bridged` に固定されていました。
+  これをカスタマイズできるようになり、`vepa`、`passthru`、`private` など他のモードも使えるようになりました。
+
+      stgraber@dakara:~$ incus create images:ubuntu/24.04 c1
+      Creating c1
+      stgraber@dakara:~$ incus config device add c1 eth0 nic nictype=macvlan parent=enp35s0 mode=private name=eth0
+      Device eth0 added to c1
+      stgraber@dakara:~$ incus start c1
+
+  ## ロードバランサーのヘルス情報 <!-- Load-balancer health information -->
+  <!--
+  With the recent addition of health monitoring to our OVN load-balancers, it made sense to further extend the API to also expose that health information.
+  -->
+  最近、OVN ロードバランサーにヘルスモニタリングが追加されたため、API をさらに拡張してヘルス情報も公開することが理にかなっています。
+
+      root@server01:~# incus network load-balancer show default 172.31.254.50
+      description: ""
+      config:
+        healthcheck: "true"
+      backends:
+      - name: c1
+        description: ""
+        target_port: ""
+        target_address: 10.104.61.10
+      - name: c2
+        description: ""
+        target_port: ""
+        target_address: 10.104.61.11
+      ports:
+      - description: ""
+        protocol: tcp
+        listen_port: "80"
+        target_backend:
+        - c1
+        - c2
+      - description: ""
+        protocol: tcp
+        listen_port: "22"
+        target_backend:
+        - c1
+        - c2
+      listen_address: 172.31.254.50
+      location: ""
+      
+      root@server01:~# incus network load-balancer info default 172.31.254.50
+      Backend health:
+        c1 (10.104.61.10):
+          - tcp/80: online
+          - tcp/22: offline
+      
+        c2 (10.104.61.11):
+          - tcp/80: offline
+          - tcp/22: online
+
+  ## OVN ネットワークの外部インターフェース <!-- External interfaces for OVN networks -->
+  <!_-
+  It's now possible to attach an external physical interface on a specific server to a virtual OVN network. This allows bridging the gap between physical and virtual networking.
+  -->
+  特定のサーバー上の外部物理インターフェースを、仮想 OVN ネットワークに接続できるようになりました。これにより、物理ネットワークと仮想ネットワーク間のギャップを埋められます。
+
+      root@server01:~# incus network set bar bridge.external_interfaces=foo --target server02
+      root@server01:~# incus network info bar
+      Name: bar
+      MAC address: 00:16:3e:e6:b6:10
+      MTU: 1422
+      State: up
+      Type: broadcast
+      
+      IP addresses:
+        inet	10.179.82.1/24 (link)
+        inet6	fd42:3f01:28ef:4257::1/64 (link)
+      
+      Network usage:
+        Bytes received: 0B
+        Bytes sent: 0B
+        Packets received: 0
+        Packets sent: 0
+      
+      OVN:
+        Chassis: server01
+        Logical router: incus-net25-lr
+      root@server01:~# ovn-nbctl lsp-list incus-net25-ls-int
+      e7070089-c979-4bc1-b6f2-1f63008af44b (incus-net25-external-n2-foo)
+      65eba7f1-e150-4dce-b054-180e389e4d58 (incus-net25-ls-int-lsp-router)
+
+  ## クラスターの退避・リストアの並列化 <!-- Parallel cluster evacuation/restore -->
+  <!--
+  Cluster evacuation and restoration can be a pretty lengthy process, especially on clusters running a lot of instances.
+  -->
+  クラスターの退避とリストアは、特に多数のインスタンスを実行しているクラスターでは、かなり長いプロセスになる可能性があります。
+
+  <!--
+  To improve this, we will now automatically parallelize this process.
+  In order to limit the impact, this is done pretty conservatively and only adds an extra parallel migration per 16 CPU threads. So even one of the beefiest servers out there with 512 threads will only see 32 instances be moved concurrently.
+  -->
+  これを改善するために、このプロセスを自動的に並列化するようになりました。
+  影響を限定的にするために、これはかなり慎重に行われます。16 CPU スレッドごとに追加の並列の移行が追加されるだけです。そのため、512 スレッドを備えた強力なサーバーでも、同時に移動するのは 32 インスタンスだけです。
+
+  # すべての変更点 <!-- Complete changelog -->
+  <!--
+  Here is a complete list of all changes in this release:
+  -->
+  このリリースのすべての変更のリストは次の通りです（翻訳なし）:
+
+  [details="すべてのChangeLogを見る"]
+   - incus/network: Fix capitalization in network list
+   - i18n: Update translation templates
+   - incusd/storage/drivers/lvm: Cache VG extent size
+   - incusd/instance/qemu: Always re-generate the nvram symlink
+   - incusd/network/ovn: LSP dynamic allocation can't be done per protocol
+   - incusd/instance/qemu: Set O_DIRECT when passing in FDs
+   - Translated using Weblate (French)
+   - incusd/apparmor: Only initialize with the daemon
+   - incusd/instance/qemu: Make O_DIRECT conditional on directCache
+   - incusd/instance/qemu: Force threads I/O mode for unsafe/writeback
+   - incusd/instance/qemu: Move away from deprecated fd: syntax
+   - doc: Fix network load-balancer typo
+   - incusd/network/ovn: Fix group of load-balancer config keys
+   - doc: Update metadata
+   - incusd/apparmor: Add sys_rawio for QEMU 9.1
+   - doc: Fix limits.memory default value unit
+   - incusd/storage/zfs: Make sure the zvol is a block device
+   - incusd/apparmor: Don't attempt unloading profiles when apparmor is disabled
+   - internal/instance: Fix unit for limits.memory
+   - doc: Update metadata
+   - Added translation using Weblate (Norwegian Bokmål)
+   - Translated using Weblate (Norwegian Bokmål)
+   - shared/archive: Add VMDK images to list of supported formats
+   - doc/installing: Add Rocky Linux 9
+   - cmd/incus-migrate: Report detected source format when importing VM image
+   - incus/storage_volume: Fix snapshot listing
+   - i18n: Update translation templates
+   - Added translation using Weblate (Indonesian)
+   - internal/server/instance/drivers: Disable 9p and vsock for Windows VMs
+   - cmd/incus-migrate: Convert qcow2 and vmdk images to raw format before importing
+   - doc: List image formats supported by incus-migrate
+   - scripts: fix empty-incus.sh instances delete
+   - incusd/network/ovn: Properly handle lack of a protocol on LB checker
+   - doc/installing: Add link to Arch Wiki for Incus
+   - internal/server/instance/drivers: Cleanup spice socket when VM stops
+   - internal/server/instance/drivers: Switch default backend for QEMU console to ringbuf
+   - incus/console: Add completion
+   - internal/server/instance/drivers/qmp: Add commands for reading a ringbuf and swaping backends for chardevs
+   - internal/server/instance/drivers: Implement ConsoleLog() for qemu driver
+   - internal/server/instance/drivers: Add functions to switch console's backend
+   - cmd/incusd: Allow VMs to pull console history similar to containers
+   - cmd: Properly handle `--project` in error messages
+   - i18n: Update translation templates
+   - incusd/project: Don't fail project deletion on authorizer
+   - incusd/project: Don't fail project rename on authorizer
+   - incus-user: Handle existing network
+   - incusd/networks: Return HTTP Conflict on existing network
+   - incusd/networks: Apply project restrictions to list of network names
+   - incusd/auth/tls: Allow access to inherited resources
+   - instance/config: Add @startup to documentation
+   - doc: Update metadata
+   - shared/validate: Better validate simple CPU limits
+   - incusd/operations: Fix operation cancelation
+   - incusd/storage_volumes: Handle rename of volumes with sub-paths
+   - incusd/storage/utils: Only show actual errors in growFileSystem
+   - internal/server/instance/drivers: Don't return an error if console log file doesn't exist
+   - incusd/instance/qemu: Properly plumb I/O limits
+   - incusd/apparmor: Allow all mounts in unprivileged containers
+   - cleanup: Replace use of os.IsNotExist(err) with errors.Is(err, fs.ErrNotExist)
+   - incusd/network: Allow to use `dns.search` when only IPv4 is enabled
+   - incusd/apparmor: Remove nosymfollow check (unused)
+   - doc: add notes for Nvidia gpu usage when installing in OpenSUSE
+   - api: instances_state_os_info
+   - shared/api: Add OSInfo to InstanceState
+   - doc/rest-api: Refresh swagger YAML
+   - cmd/incus-agent: Populate OS information when returning instance state
+   - cmd/incus: Print OS info from state, if available
+   - i18n: Update translation templates
+   - tests: Don't over-provision test volume
+   - Translated using Weblate (German)
+   - cmd/incus-migrate: Don't copy converted VM image
+   - incusd/instance_console: Check result of type assertion
+   - incusd/images: Fix image access through secret
+   - doc: add prerequisites section for building documentation
+   - Translated using Weblate (German)
+   - api: network_load_balancer_state
+   - shared/api: Add NetworkLoadBalancerState
+   - incusd/network/ovn/sb: Add GetServiceHealth
+   - incusd/network: Add LoadBalancerState
+   - incusd/network/load-balancer: Add API for state
+   - doc/rest-api: Refresh swagger YAML
+   - client: Add GetNetworkLoadBalancerState
+   - incus/network_load_balancer: Add info command
+   - i18n: Update translation templates
+   - incusd: Only emit image-created if an image was actually created
+   - incusd/instances: Call placement scriptlet when target specified
+   - internal/server/instance/drivers/qmp: Ensure that the device passed to RingbufRead() is a ring buffer
+   - internal/server/instance/drivers: Don't return an error if VM's console device isn't a ringbuf
+   - internal/server/instance/drivers: Don't conflict with live migration operation
+   - incus/alias: Handle quoted values
+   - incus/alias: Stable sorting of alias names
+   - incusd/instance/qemu: Fix issues with old NVRAM
+   - incusd/device/nic: Add configuration for macvlan mode
+   - doc/devices/nic: Add mode for macvlan devices
+   - api: instance_nic_macvlan_mode
+   - alpine linux enable edge repositories
+   - cmd/incusd: gateway parameter wasn't actually used anywhere
+   - cmd/incusd: Run cluster evacuate and restore in parallel
+   - formatting: Move goroutines to their own functions
+   - Translated using Weblate (German)
+   - internal/instance: Allows the VM's limits.memory configuration to be set to a percentage value
+   - incusd/network/ovn: Fix CIDR size check
+   - incusd/instance/lxc: Mount /run if the path exists
+   - doc: Add uncomment to the word list
+   - incus/file/delete: Use SFTP client instead of file API
+   - incus/file/delete: Add --force flag
+   - i18n: Update translation templates
+   - doc/network/resolved: Fix systemd unit
+   - internal/instance: Fix doc for boot.host_shutdown_action
+   - doc: Update metadata
+   - client: Capture original OCI image identifier
+   - incus/file/delete: Cache the SFTP client
+   - shared/subprocess: Add TryRunCommandAttemptsDuration() which allows the caller to specify the number of attempts and duration between each attempt
+   - internal/server/storage/drivers: Add support for creating shared VGs
+   - doc: Incus can now create a shared VG directly
+   - api: storage_lvm_cluster_create
+   - Translated using Weblate (Indonesian)
+   - incusd/network/ovn: Allow adding external interfaces to an OVN network
+   - doc/network/ovn: Add description for bridge.external_interfaces parameter
+   - api: network_ovn_external_interfaces
+   - incusd/network: De-duplicate external interfaces validation
+   - gomod: Update dependencies
+   - incusd/instance/qemu: Simplify console switching
+   - incusd/instance/qemu: Handle existing console connections
+   - incusd/instance/qemu: Fix shutdown race
+   - doc/devices/proxy: Fix incorrect bind= example
+   - incusd/network/bridge: Bring up external interfaces
+  [/details]
+
+  # ドキュメント <!-- Documentation -->
+  <!--
+  The Incus documentation can be found at:
+  -->
+  Incus のドキュメントはこちらです:
+  https://incus-ja.readthedocs.io/ja/latest/ （日本語訳）
+  https://linuxcontainers.org/incus/docs/main/ （原文）
+
+  # パッケージ <!-- Packages -->
+  <!--
+  There are no official Incus packages as Incus upstream only releases regular release tarballs. Below are some available options to get Incus up and running.
+  -->
+  Incus の開発元は、通常リリースの tarball のみをリリースするため、公式の Incus パッケージはありません。Incus を実行するために使えるオプションを以下にいくつか示します。
+
+  ## Linux 上に Incus サーバーをインストールする <!-- Installing the Incus server on Linux -->
+  <!--
+  Incus is available for most common Linux distributions. You'll find detailed installation instructions in our documentation.
+  -->
+  Incus はほとんどの一般的な Linux ディストリビューションで利用できます。インストール手順の詳細は、Incus のドキュメントを参照してください。
+
+  https://incus-ja.readthedocs.io/ja/latest/installing/ （日本語訳）
+  https://linuxcontainers.org/incus/docs/main/installing/ （原文）
+
+  ## Incus クライアントの Homebrew パッケージ <!-- Homebrew package for the Incus client -->
+  <!--
+  The client tool is available through HomeBrew for both Linux and MacOS.
+  -->
+  HomeBrew 経由で、Linux と macOS 向けにクライアントツールが利用できます。
+
+  https://formulae.brew.sh/formula/incus
+
+  ## Incus クライアントの Chocolatey パッケージ <!-- Chocolatey package for the Incus client -->
+  <!--
+  The client tool is available through Chocolatey for Windows users.
+  -->
+  Chocolatey 経由で、Windows ユーザー向けにクライアントツールが利用できます。
+
+  https://community.chocolatey.org/packages/incus/6.6.0
+
+  ## Incus クライアントの Winget パッケージ <!-- Winget package for the Incus client -->
+  <!--
+  The client tool is also available through Winget for Windows users.
+  -->
+  Winget 経由で、Windows ユーザー向けにクライアントツールが利用できます。
+
+  https://winstall.app/apps/LinuxContainers.Incus
+
+  # サポート <!-- Support -->
+  <!--
+  Monthly feature releases are only supported up until the next release comes out.  Users needing a longer support length and less frequent changes should consider using Incus 6.0 LTS instead.
+  -->
+  月次のフィーチャーリリースは、次のリリースがリリースされるまでのみサポートされます。より長いサポート期間と少ない変更頻度が必要な場合、代わりに Incus 6.0 LTS の使用を検討すべきです。
+
+  コミュニティサポートはこちらから <!-- Community support is provided at -->: https://discuss.linuxcontainers.org
+  商用サポートはこちらから <!-- Commercial support is available through -->: https://zabbly.com/incus
+  バグはこちらから報告できます <!-- Bugs can be reported at -->: https://github.com/lxc/incus/issues
