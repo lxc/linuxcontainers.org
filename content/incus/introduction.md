@@ -1,7 +1,7 @@
 [TOC]
 
 # What is Incus?
-Incus is a next generation system container and virtual machine manager.
+Incus is a next-generation system container, application container, and virtual machine manager.
 
 It provides a user experience similar to that of a public cloud. With it, you can easily mix and match both containers and virtual machines, sharing the same underlying storage and network.
 
@@ -18,9 +18,11 @@ To get a better idea of what Incus is and what it does, you can [try it online](
 Then if you want to run it locally, take a look at our [getting started guide](/incus/docs/main/tutorial/first_steps/).
 
 ## Containers and virtual machines
-Incus provides support for system containers and virtual machines.
+Incus provides support for system containers, application containers, and virtual machines.
 
 When running a system container, Incus simulates a virtual version of a full operating system. To do this, it uses the functionality provided by the kernel running on the host system.
+
+When running an application container, Incus runs isolated applications within the host's operating system using container images, similar to how Docker operates.
 
 When running a virtual machine, Incus uses the hardware of the host system, but the kernel is provided by the virtual machine. Therefore, virtual machines can be used to run, for example, a different operating system.
 
