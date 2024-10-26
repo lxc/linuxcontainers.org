@@ -1,0 +1,104 @@
+title: Distrobuilder 3.1 has been released
+date: 2024/10/26 16:10
+origin: https://discuss.linuxcontainers.org/t/distrobuilder-3-1-has-been-released/21955
+content: |-
+  # Introduction
+  The distrobuilder team is proud to announce the release of distrobuilder 3.1!
+
+  This is primarily a bugfix release, fixing a lot of small issues for a number of distributions as well as cleaning up some of our systemd and SELinux handling logic. Highlights are:
+
+   - Improvement to Windows ISO repacking logic (should support more .iso images)
+   - Fully removed LXD support
+   - Better support for running on Red Hat derivative distros
+
+  The full list of commits is available below:
+
+  [details="Detailed changelog"]
+   - gomod: Bump to Go 1.20 minimum
+   - Fix small logging issues
+   - image: Use per-test temp dirs
+   - README: Add note about minimum Go version
+   - main: Fix VM builds when using `build-lxd` command
+   - sources: Fix openeuler tests
+   - nixos-http: support versioned releases
+   - managers: Rebranding Macaroni OS Package Manager
+   - Bump golang.org/x/crypto from v0.15.0 to v0.17.0
+   - Bump github.com/containerd/containerd from v1.7.8 to v1.7.11
+   - sources: Fix openEuler tests
+   - main: Add missing `--sources-dir` to `build-incus` command
+   - Update README.md Install Instructions
+   - Update README.md
+   - incus-agent: Refresh files
+   - build(deps): bump github.com/opencontainers/runc from 1.1.10 to 1.1.12
+   - incus-agent: Fix systemd unit name under LXD
+   - Makefile: Bump minimum Go version to 1.21
+   - README: Bump minimum Go version to 1.21
+   - github: Replace Go 1.20 with 1.22 in tests
+   - gomod: Update dependencies
+   - Makefile: Bump golangci-lint to 1.56.0
+   - A comment to describe the 4294967295 constant
+   - Use indented heredoc syntax
+   - Inject a comment into generated files
+   - Expand grep -a to --text for readability
+   - Make lxc.generator shellcheck clean
+   - Break between systemd unit sections
+   - incus-agent: Fix SELinux
+   - Bump pongo2 to v4
+   - Remove race in tests
+   - debootstrap: Pass --no-merged-usr on noble
+   - Debian sid no-merged-usr
+   - Replace util.ValueInSlice with slices.Contains
+   - Fixed hardcoded root partition device name sda2
+   - Updated ubuntu example to use ROOTFS_DEVICE_UUID
+   - gomod: Update dependencies
+   - incus: Bump to 6.0
+   - Make run-parts running compatible with different versions
+   - Set repack-windows drivers default value
+   - Clean up iso mount gen warnings
+   - Refactory find boot.wim and install.wim logic
+   - Refactor WIM info parsing
+   - Support x86 architecture and refactor the detecting logic
+   - gomod: Update dependencies
+   - sphinx: Avoid myst-parser >=3.0.0
+   - sources/funtoo: Use symlinks
+   - archlinux: Move to zst
+   - Repack windows bios boot support
+   - Refactor copy driver files
+   - Refactor parse inf driver class guid
+   - Update actions.md
+   - lxc.generator: Handle pre-release systemd
+   - systemd v256 seems to require overriding ImportCredential= for all containers
+   - Fixed duplicated umount action
+   - Support http-proxy keyserver options for gpg recv-keys
+   - Refactor import gpg public keys
+   - distrobuilder: Remove LXD support
+   - gomod: Update dependencies
+   - gomod: Remove excludes
+   - Fixed multiple sys files not copied issue
+   - Update README.md
+   - Update README.md
+   - Fixed device major minor parse failure
+   - vm: Fix lsblk parsing logic
+   - Revert "vm: Fix lsblk parsing logic"
+   - Revert "Fixed device major minor parse failure"
+   - Fixed device major minor parse failure
+   - Run unit tests via sudo
+   - debootstrap: Remove no-merged-usr/merged-usr logic
+   - debootstrap: Add workaround for devuan
+   - sources: Fix openEuler tests
+   - workflows/tests: drop 1.21, add 1.23
+   - gomod: Update dependencies
+   - Makefile: Align golangci-lint with Incus
+   - global: Fix golangci-lint errors
+   - nixos-http: use incus-specific image for unstable
+   - Add handling of ESD files
+   - Makefile: Bump to Go 1.22.7 base
+   - gomod: Update dependencies
+   - sources: Remove dead code
+   - source: Add mkisofs support
+  [/details]
+
+  # Downloads
+
+   - Main release tarball: [distrobuilder-3.1.tar.gz](https://linuxcontainers.org/downloads/distrobuilder/distrobuilder-3.1.tar.gz)
+   - GPG signature: [distrobuilder-3.1.tar.gz.asc](https://linuxcontainers.org/downloads/distrobuilder/distrobuilder-3.1.tar.gz.asc)
