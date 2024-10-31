@@ -29,12 +29,9 @@
                 <ul class="p-navigation__dropdown" id="{{ entry[1] }}-menu" aria-hidden="true">
                   {% for sub_entry in entry[0] %}
                     {% if not sub_entry[0] and sub_entry[0] is string %}
-                      <!-- SEPARATOR / HEADING -->
                       <li>
+                        <!-- SEPARATOR / HEADING -->
                         <hr class="u-no-margin--bottom">
-                        {% if sub_entry[1] %}
-                          <h3 class="p-heading--5 p-navigation__link u-no-margin--bottom">{{ sub_entry[1] }}</h3>
-                        {% endif %}
                       </li>
                     {% else %}
                       <li>
