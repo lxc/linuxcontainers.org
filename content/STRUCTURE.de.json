@@ -138,9 +138,6 @@
      "meta": {"dir": "/downloads/lxc",
               "input": "lxc/downloads.md"}},
 
-    {"path": "/lxc/external-resources/",
-     "menu": ["LXC", "External resources"]},
-
     {"path": "/lxc/articles/",
      "title": "LXC - Articles",
      "menu": ["LXC", "Articles"],
@@ -226,9 +223,6 @@
      "meta": {"dir": "/downloads/lxcfs",
               "input": "lxcfs/downloads.md"}},
 
-    {"path": "/lxcfs/external-resources/",
-     "menu": ["LXCFS", "External resources"]},
-
     {"path": "/lxcfs/forum/",
      "menu": ["LXCFS", "Forum"],
      "generator": "link",
@@ -293,9 +287,6 @@
      "generator": "downloads",
      "meta": {"dir": "/downloads/distrobuilder",
               "input": "distrobuilder/downloads.de.md"}},
-
-    {"path": "/distrobuilder/external-resources/",
-     "menu": ["distrobuilder", "External resources"]},
 
     {"path": "/distrobuilder/forum/",
      "menu": ["distrobuilder", "Forum"],
@@ -373,9 +364,6 @@
      "generator": "downloads",
      "meta": {"dir": "/downloads/cgmanager",
               "input": "cgmanager/downloads.de.md"}},
-
-    {"path": "/cgmanager/external-resources/",
-     "menu": ["CGManager", "External resources"]},
 
     {"path": "/cgmanager/articles/",
      "title": "CGManager - Articles",

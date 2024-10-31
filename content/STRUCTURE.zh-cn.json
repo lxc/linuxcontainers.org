@@ -141,9 +141,6 @@
      "meta": {"dir": "/downloads/lxc",
               "input": "lxc/downloads.md"}},
 
-    {"path": "/lxc/external-resources/",
-     "menu": ["LXC", "外部资源"]},
-
     {"path": "/lxc/articles/",
      "title": "LXC - 文章",
      "menu": ["LXC", "文章"],
@@ -227,9 +224,6 @@
      "meta": {"dir": "/downloads/lxcfs",
               "input": "lxcfs/downloads.md"}},
 
-    {"path": "/lxcfs/external-resources/",
-     "menu": ["LXCFS", "外部资源"]},
-
     {"path": "/lxcfs/forum/",
      "menu": ["LXCFS", "论坛"],
      "generator": "link",
@@ -294,9 +288,6 @@
      "generator": "downloads",
      "meta": {"dir": "/downloads/distrobuilder",
               "input": "distrobuilder/downloads.md"}},
-
-    {"path": "/distrobuilder/external-resources/",
-     "menu": ["distrobuilder", "外部资源"]},
 
     {"path": "/distrobuilder/forum/",
      "menu": ["distrobuilder", "论坛"],
@@ -374,9 +365,6 @@
      "generator": "downloads",
      "meta": {"dir": "/downloads/cgmanager",
               "input": "cgmanager/downloads.md"}},
-
-    {"path": "/cgmanager/external-resources/",
-     "menu": ["CGManager", "外部资源"]},
 
     {"path": "/cgmanager/articles/",
      "title": "CGManager - 文章",

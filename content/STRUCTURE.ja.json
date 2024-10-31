@@ -137,9 +137,6 @@
      "meta": {"dir": "/downloads/lxc",
               "input": "lxc/downloads.ja.md"}},
 
-    {"path": "/lxc/external-resources/",
-     "menu": ["LXC", "外部リソース"]},
-
     {"path": "/lxc/articles/",
      "title": "LXC - 記事",
      "menu": ["LXC", "記事"],
@@ -222,9 +219,6 @@
      "meta": {"dir": "/downloads/lxcfs",
               "input": "lxcfs/downloads.ja.md"}},
 
-    {"path": "/lxcfs/external-resources/",
-     "menu": ["LXCFS", "外部リソース"]},
-
     {"path": "/lxcfs/forum/",
      "menu": ["LXCFS", "フォーラム"],
      "generator": "link",
@@ -289,9 +283,6 @@
      "generator": "downloads",
      "meta": {"dir": "/downloads/distrobuilder",
               "input": "distrobuilder/downloads.ja.md"}},
-
-    {"path": "/distrobuilder/external-resources/",
-     "menu": ["distrobuilder", "外部リソース"]},
 
     {"path": "/distrobuilder/forum/",
      "menu": ["distrobuilder", "フォーラム"],
@@ -362,9 +353,6 @@
      "menu": ["CGManager", "ダウンロード"],
      "meta": {"dir": "/downloads/cgmanager",
               "input": "cgmanager/downloads.ja.md"}},
-
-    {"path": "/cgmanager/external-resources/",
-     "menu": ["CGManager", "外部リソース"]},
 
     {"path": "/cgmanager/articles/",
      "title": "CGManager - 記事",
