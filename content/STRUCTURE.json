@@ -314,13 +314,11 @@
 
     {"path": "/cgmanager/introduction/",
      "title": "CGManager - Introduction",
-     "menu": ["CGManager", "Introduction"],
      "generator": "markdown",
      "meta": {"input": "cgmanager/introduction.md"}},
 
     {"path": "/cgmanager/news/",
      "title": "CGManager - News",
-     "menu": ["CGManager", "News"],
      "generator": "markdown",
      "meta": {"input": "cgmanager/news.md",
               "toc_depth": "2-3",
@@ -329,56 +327,46 @@
 
     {"path": "/cgmanager/getting-started/",
      "title": "CGManager - Getting started",
-     "menu": ["CGManager", "Getting started"],
      "generator": "markdown",
      "meta": {"input": "cgmanager/getting-started.md"}},
 
     {"path": "/cgmanager/dbus-api/",
      "title": "CGManager - D-Bus API",
-     "menu": ["CGManager", "D-Bus API"],
      "generator": "markdown",
      "meta": {"input": "cgmanager/dbus-api.md"}},
 
     {"path": "/cgmanager/manpages/",
      "title": "CGManager - Manpages",
-     "menu": ["CGManager", "Manpages"],
      "generator": "manpages",
      "meta": {"dir": "/manpages/cgmanager"}},
 
     {"path": "/cgmanager/contribute/",
      "title": "CGManager - Contribute",
-     "menu": ["CGManager", "Contribute"],
      "generator": "markdown",
      "meta": {"input": "cgmanager/contribute.md"}},
 
     {"path": "/cgmanager/downloads/",
      "title": "CGManager - Downloads",
-     "menu": ["CGManager", "Downloads"],
      "generator": "downloads",
      "meta": {"dir": "/downloads/cgmanager",
               "input": "cgmanager/downloads.md"}},
 
-    {"path": "/cgmanager/external-resources/",
-     "menu": ["CGManager", "External resources"]},
+    {"path": "/cgmanager/external-resources/"},
 
     {"path": "/cgmanager/articles/",
      "title": "CGManager - Articles",
-     "menu": ["CGManager", "Articles"],
      "generator": "markdown",
      "meta": {"input": "cgmanager/articles.md"}},
 
     {"path": "/cgmanager/mailing-lists/",
-     "menu": ["CGManager", "Mailing lists"],
      "generator": "link",
      "meta": {"url": "https://lists.linuxcontainers.org"}},
 
     {"path": "/cgmanager/irc/",
-     "menu": ["CGManager", "IRC"],
      "generator": "link",
      "meta": {"url": "https://web.libera.chat/#lxc"}},
 
     {"path": "/cgmanager/github/",
-     "menu": ["CGManager", "GitHub"],
      "generator": "link",
      "meta": {"url": "https://github.com/lxc/cgmanager"}}
 ]
