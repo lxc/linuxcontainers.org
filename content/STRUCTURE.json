@@ -50,6 +50,9 @@
      "meta": {"dir": "/downloads/incus",
               "input": "incus/downloads.md"}},
 
+    {"path": "/incus/external-resources/",
+     "menu": ["Incus", "External resources"]},
+
     {"path": "/incus/github/",
      "menu": ["Incus", "GitHub"],
      "generator": "link",
@@ -69,6 +72,11 @@
      "menu": ["Incus", "Mailing lists"],
      "generator": "link",
      "meta": {"url": "https://lists.linuxcontainers.org"}},
+
+    {"path": "/incus/image-server/",
+     "menu": ["Incus", "Image server"],
+     "generator": "link",
+     "meta": {"url": "https://images.linuxcontainers.org"}},
 
 
     {"path": "/lxd/",
@@ -141,42 +149,30 @@
     {"path": "/lxc/external-resources/",
      "menu": ["LXC", "External resources"]},
 
-    {"path": "/lxc/articles/",
-     "title": "LXC - Articles",
-     "menu": ["LXC", "Articles"],
-     "generator": "markdown",
-     "meta": {"input": "lxc/articles.md"}},
+    {"path": "/lxc/github/",
+     "menu": ["LXC", "GitHub"],
+     "generator": "link",
+     "meta": {"url": "https://github.com/lxc/lxc"}},
 
     {"path": "/lxc/forum/",
      "menu": ["LXC", "Forum"],
      "generator": "link",
      "meta": {"url": "https://discuss.linuxcontainers.org"}},
 
-    {"path": "/lxc/mailing-lists/",
-     "menu": ["LXC", "Mailing lists"],
-     "generator": "link",
-     "meta": {"url": "https://lists.linuxcontainers.org"}},
-
     {"path": "/lxc/irc/",
      "menu": ["LXC", "IRC"],
      "generator": "link",
      "meta": {"url": "https://web.libera.chat/#lxc"}},
 
-    {"path": "/lxc/github/",
-     "menu": ["LXC", "GitHub"],
+    {"path": "/lxc/mailing-lists/",
+     "menu": ["LXC", "Mailing lists"],
      "generator": "link",
-     "meta": {"url": "https://github.com/lxc/lxc"}},
+     "meta": {"url": "https://lists.linuxcontainers.org"}},
 
-    {"path": "/lxc/github-actions/",
-     "menu": ["LXC", "GitHub Actions"],
+    {"path": "/lxc/image-server/",
+     "menu": ["LXC", "Image server"],
      "generator": "link",
-     "meta": {"url": "https://github.com/lxc/lxc/actions"}},
-
-    {"path": "/lxc/jenkins-ci/",
-     "menu": ["LXC", "Jenkins CI"],
-     "generator": "link",
-     "meta": {"url": "https://jenkins.linuxcontainers.org/view/LXC/"}},
-
+     "meta": {"url": "https://images.linuxcontainers.org"}},
 
 
 
@@ -229,31 +225,25 @@
     {"path": "/lxcfs/external-resources/",
      "menu": ["LXCFS", "External resources"]},
 
+    {"path": "/lxcfs/github/",
+     "menu": ["LXCFS", "GitHub"],
+     "generator": "link",
+     "meta": {"url": "https://github.com/lxc/lxcfs"}},
+
     {"path": "/lxcfs/forum/",
      "menu": ["LXCFS", "Forum"],
      "generator": "link",
      "meta": {"url": "https://discuss.linuxcontainers.org"}},
-
-    {"path": "/lxcfs/mailing-lists/",
-     "menu": ["LXCFS", "Mailing lists"],
-     "generator": "link",
-     "meta": {"url": "https://lists.linuxcontainers.org"}},
 
     {"path": "/lxcfs/irc/",
      "menu": ["LXCFS", "IRC"],
      "generator": "link",
      "meta": {"url": "https://web.libera.chat/#lxc"}},
 
-    {"path": "/lxcfs/github/",
-     "menu": ["LXCFS", "GitHub"],
+    {"path": "/lxcfs/mailing-lists/",
+     "menu": ["LXCFS", "Mailing lists"],
      "generator": "link",
-     "meta": {"url": "https://github.com/lxc/lxcfs"}},
-
-    {"path": "/lxcfs/github-actions/",
-     "menu": ["LXCFS", "GitHub Actions"],
-     "generator": "link",
-     "meta": {"url": "https://github.com/lxc/lxcfs/actions"}},
-
+     "meta": {"url": "https://lists.linuxcontainers.org"}},
 
 
     {"path": "/distrobuilder/",
@@ -297,31 +287,25 @@
     {"path": "/distrobuilder/external-resources/",
      "menu": ["distrobuilder", "External resources"]},
 
+    {"path": "/distrobuilder/github/",
+     "menu": ["distrobuilder", "GitHub"],
+     "generator": "link",
+     "meta": {"url": "https://github.com/lxc/distrobuilder"}},
+
     {"path": "/distrobuilder/forum/",
      "menu": ["distrobuilder", "Forum"],
      "generator": "link",
      "meta": {"url": "https://discuss.linuxcontainers.org"}},
-
-    {"path": "/distrobuilder/mailing-lists/",
-     "menu": ["distrobuilder", "Mailing lists"],
-     "generator": "link",
-     "meta": {"url": "https://lists.linuxcontainers.org"}},
 
     {"path": "/distrobuilder/irc/",
      "menu": ["distrobuilder", "IRC"],
      "generator": "link",
      "meta": {"url": "https://web.libera.chat/#lxc"}},
 
-    {"path": "/distrobuilder/github/",
-     "menu": ["distrobuilder", "GitHub"],
+    {"path": "/distrobuilder/mailing-lists/",
+     "menu": ["distrobuilder", "Mailing lists"],
      "generator": "link",
-     "meta": {"url": "https://github.com/lxc/distrobuilder"}},
-
-    {"path": "/distrobuilder/github-actions/",
-     "menu": ["distrobuilder", "GitHub Actions"],
-     "generator": "link",
-     "meta": {"url": "https://github.com/lxc/distrobuilder/actions"}},
-
+     "meta": {"url": "https://lists.linuxcontainers.org"}},
 
 
     {"path": "/cgmanager/",
