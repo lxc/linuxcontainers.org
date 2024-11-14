@@ -420,7 +420,7 @@ def gen_page(entry, override, prefix, **variables):
                                         page_raw_path, section, entry),
                                     page_title="%s - %s" % (item['title'],
                                                             entry),
-                                    page_menu=item['menu'] + [entry],
+                                    page_menu=item.get('menu', []) + [entry],
                                     content=content,
                                     **variables))
 
