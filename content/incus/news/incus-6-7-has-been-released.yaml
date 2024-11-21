@@ -1,0 +1,328 @@
+title: Incus 6.7 has been released
+date: 2024/11/15 19:11
+origin: https://discuss.linuxcontainers.org/t/incus-6-7-has-been-released/22099
+content: |-
+  # Introduction
+  The Incus team is pleased to announce the release of Incus 6.7!
+
+  This is another one of those pretty well rounded releases with new features and improvements for everyone from standalone users to those running a small homelab all the way to large scale cluster users, there's something for everyone!
+
+  ![image|690x459](https://discuss.linuxcontainers.org/uploads/default/optimized/2X/6/61c91f4bdf538de31d7c1ec095f98074a80711ea_2_690x459.png)
+
+  As usual, you can try it for yourself online: https://linuxcontainers.org/incus/try-it/
+
+  Enjoy!
+
+  # New features
+  ## Easy access to the Incus web interface
+  A frequent source of frustration for our users have been about how to access the Incus web UI.
+
+  That's because out of the box, Incus doesn't listen on the network at all, then once configured to listen on the network, it only does so over HTTPS and unless running in an environment with a central OpenID Connect authentication server, it only authenticates through TLS client certificates.
+
+  It's certainly possible to make it work, but the process would normally look like:
+
+  1) Enable Incus to listen on the network
+  2) Access Incus from a web browser
+  3) Dismiss the certificate warning
+  4) Generate a client certificate from within the browser
+  5) Trust the public half through the Incus CLI
+  6) Import the public+private keypair into the browser as a user certificate
+  7) Reload the browser and hope it properly authenticates with that user certificate
+
+  Now there is a significantly simpler alternative to all that which still provides much of the same security, just run `incus webui`.
+
+  Running that command causes the Incus client tool to run a small HTTP web server on a random port of the loopback device. Access to that web server is limited to a unique token, used to prevent another user or piece of software on the system from interacting with Incus without authorization, when presented the correct token, all further interactions are proxied through to the Incus server using the same credentials as the client tool.
+
+  ## Automatic cluster re-balancing
+  With Incus clusters supporting VM live-migration, having pretty flexible scheduling/placement logic and the ability to automatically heal when a server goes down, the next logic piece was to add the ability for automatic re-balancing of the cluster.
+
+  This is now possible and can be configured through a few new configuration keys:
+
+  - `cluster.rebalance.batch` controls how many instances to relocate during one round
+  - `cluster.rebalance.cooldown` controls how long to wait before an instance can be moved again
+  - `cluster.rebalance.interval` controls how often to consider relocating instances
+  - `cluster.rebalance.threshold` controls how much difference (in percent) of estimated load difference is needed between two servers to trigger a re-balancing
+
+  Incus effectively calculates a score for each server within the cluster, then compares the one with the highest score to the one with the lowest score, if the difference exceeds the threshold, then a number of instances will be moved between the two.
+
+  The score is currently based on the server's 1min load average adjusted for the number of CPUs on the system and how much memory is available.
+
+  Only live-migratable virtual machines are moved and only when they meet all migration requirements both as far as their configuration and any restrictions applied to them in their project.
+
+  Documentation: https://linuxcontainers.org/incus/docs/main/howto/cluster_manage/#cluster-re-balancing
+
+  ## DHCP renewal for OCI containers
+  A somewhat common issue with running OCI containers on Incus has been related to network configuration. OCI containers generally don't perform their own network configuration, they expect to start up and find a fully configured network stack (address, route, DNS).
+
+  To make that work, Incus has been running a small DHCP client during the instance initialization stage, setting up the networking. However this was a one-time process, leading to issues such as DNS records expiring when the DHCP lease would go un-renewed.
+
+  Starting with Incus 6.7, the DHCP client now goes into the background and joins the container, allowing it to handle lease renewal, avoiding such issues.
+
+  ## Partial instance/volume refresh
+  A commonly used feature for Incus instance backups is to use `copy --refresh`, this effectively has Incus compare the source and target instances, transferring any missing snapshots to the target before also synchronizing the current state.
+
+  This works quite well but there are cases where it makes sense to do some cleanup on the backup server and delete some of those snapshots. Unfortunately, the next refresh would then bring back anything that was deleted, even if those were older snapshots that didn't make much sense to keep around.
+
+  One solution to that is of course to go and delete the snapshots on the source, but there are cases where the source would like to hold on to those snapshots, effectively keeping more history than the backup server.
+
+  To accommodate that, a new `--refresh-exclude-older` flag has been added which when passed in combination with `--refresh`, will look for the most recent shared snapshot and only transfer any snapshots created after that point, effectively ignoring any missing older snapshots on the target.
+
+  ## Configurable columns, formatting and refresh time for `incus top`
+  `incus top` now joins a long list of commands in supporting `--format` and `--columns`, allowing to customize how and what to render.
+
+  Additionally, it also gets a `--refresh` flag to configure how often to refresh the output.
+
+  ## Support for DHCP address ranges on OVN networks
+  The `ipv4.dhcp.ranges` configuration option now also applies to OVN networks.
+
+  This allows for having just a subset of the network subnet be used for dynamic IP allocation, leaving the rest reserved for static IP assignments or for other uses.
+
+  ## Changing of parent device for physical networks
+  It's now possible to change the value of the `parent` property on a managed network of type `physical`. This allows for moving an OVN uplink network to a different device as sometimes may happen when the physical network is reconfigured or physical network interfaces are replaced.
+
+  ## Additional QMP helpers in QEMU scriptlet
+  A number of additional functions are now available to the QEMU scriptlet.
+
+  This includes a new `run_command` which is a convenience wrapper around `run_qmp` and makes it easier to run a simple command
+
+  As well as simple wrappers for the following commands:
+
+   - `blockdev_add`
+   - `blockdev_del`
+   - `chardev_add`
+   - `chardev_change`
+   - `chardev_remove`
+   - `device_add`
+   - `device_del`
+   - `netdev_add`
+   - `netdev_del`
+   - `object_add`
+   - `object_del`
+   - `qom_get`
+   - `qom_list`
+   - `qom_set`
+
+
+  ## New log file for QEMU QMP commands
+  A new `qemu.qmp.log` file is now available on virtual-machines and keeps a log of most interactions between Incus and QEMU.
+
+
+      root@castiana:~# incus list v1
+      +------+---------+-----------------------+-------------------------------------------------+-----------------+-----------+
+      | NAME |  STATE  |         IPV4          |                      IPV6                       |      TYPE       | SNAPSHOTS |
+      +------+---------+-----------------------+-------------------------------------------------+-----------------+-----------+
+      | v1   | RUNNING | 10.178.240.4 (enp5s0) | fd42:8384:a6f8:63a0:216:3eff:fe4d:5cad (enp5s0) | VIRTUAL-MACHINE | 0         |
+      +------+---------+-----------------------+-------------------------------------------------+-----------------+-----------+
+      root@castiana:~# cat /var/log/incus/v1/qemu.qmp.log 
+      [2024-11-15T13:11:52-05:00] QUERY: {"execute":"query-cpus-fast"}
+      [2024-11-15T13:11:52-05:00] REPLY: {"return": [{"thread-id": 443303, "props": {"core-id": 0, "thread-id": 0, "node-id": 0, "socket-id": 0}, "qom-path": "/machine/unattached/device[0]", "cpu-index": 0, "target": "x86_64"}]}
+      
+      [2024-11-15T13:11:52-05:00] QUERY: {"execute":"netdev_add","arguments":{"fds":"/dev/net/tun.0:/dev/net/tun.1","id":"incus_eth0","type":"tap","vhost":true,"vhostfds":"/dev/vhost-net.0:/dev/vhost-net.1"}}
+      [2024-11-15T13:11:52-05:00] REPLY: {"return": {}}
+      
+      [2024-11-15T13:11:52-05:00] QUERY: {"execute":"device_add","arguments":{"addr":"00.0","bootindex":"1","bus":"qemu_pcie4","driver":"virtio-net-pci","id":"dev-incus_eth0","mac":"00:16:3e:4d:5c:ad","mq":"on","netdev":"incus_eth0","vectors":"6"}}
+      [2024-11-15T13:11:52-05:00] REPLY: {"return": {}}
+      
+      [2024-11-15T13:11:52-05:00] QUERY: {"execute":"blockdev-add","arguments":{"aio":"native","cache":{"direct":true,"no-flush":false},"discard":"unmap","driver":"host_device","filename":"/dev/fdset/0","locking":"off","node-name":"incus_root","read-only":false}}
+      [2024-11-15T13:11:52-05:00] REPLY: {"return": {}}
+      
+      [2024-11-15T13:11:52-05:00] QUERY: {"execute":"device_add","arguments":{"bootindex":"0","bus":"qemu_scsi.0","channel":"0","drive":"incus_root","driver":"scsi-hd","id":"dev-incus_root","lun":"1","serial":"incus_root"}}
+      [2024-11-15T13:11:52-05:00] REPLY: {"return": {}}
+      
+      [2024-11-15T13:11:52-05:00] QUERY: {"execute":"system_reset"}
+      [2024-11-15T13:11:52-05:00] REPLY: {"return": {}}
+      
+      [2024-11-15T13:11:52-05:00] QUERY: {"execute":"set-action","arguments":{"panic":"pause","reboot":"shutdown","shutdown":"poweroff"}}
+      [2024-11-15T13:11:52-05:00] REPLY: {"return": {}}
+      
+      [2024-11-15T13:11:52-05:00] QUERY: {"execute":"cont"}
+      [2024-11-15T13:11:52-05:00] REPLY: {"return": {}}
+      
+      [2024-11-15T13:11:52-05:00] QUERY: {"execute":"query-status"}
+      [2024-11-15T13:11:52-05:00] REPLY: {"return": {"status": "running", "running": true}}
+
+  ## New `get_instances_count` command for placement scriptlet
+  A new `get_instances_count` function was added to the placement scriptlet.
+
+  This can be used to get a quick count of the number of instances in total, or within a project/location combination. It can also be made to include instances currently being created rather than just those that are already fully created.
+
+  As part of this addition, a small change was also made to the list of candidates provided to the scriptlet, the candidate list is now sorted based on the total number of instances that they hold (from least to most busy).
+
+  ## Support of `--format` in `incus admin sql`
+  `incus admin sql` now supports the usual `--format` option.
+
+  This is particularly useful when querying a single SQL column and using `--format=csv` as this then allows getting the raw value in a format already usable within scripts.
+
+  # Complete changelog
+  Here is a complete list of all changes in this release:
+
+  [details="Full commit list"]
+   - doc: Correct name of macvlan modes
+   - incusd/device/nic: Correct name of macvlan modes
+   - fix: fix slice init length
+   - internal/instance: fix live update VM's limits.memory configuration when use a percentage value
+   - incusd/instance/lxc: Remove restrictions on /run
+   - Translated using Weblate (German)
+   - Translated using Weblate (German)
+   - Translated using Weblate (Dutch)
+   - incus-simplestreams list -f json: output field names. fixes lxc#1308
+   - incus-agent: Add timeout for DNS query
+   - incusd/db/profiles: Support config caching
+   - incusd: Update calls to profile ToAPI
+   - incusd/cluster/profiles: Fix import shadowing
+   - incusd/instance/qemu: Don't fail on console retrival issue
+   - incusd/network: Make IsUsed configurable
+   - incusd/network: Update for IsUsed argument
+   - incusd/network/physical: Fix typo
+   - incusd/network/physical: Handle changes in parent value
+   - incus: Fix display of current project in projects list
+   - incus/admin/sql: Add support for `--format`
+   - i18n: Update translation templates
+   - incusd/instance/common: Cleanup volatile on device add failure
+   - incusd/internal/server/instance/drivers: Add support for Chimera Linux edk2 pkg file names
+   - shared: Move internal "revert" library into shared
+   - incusd/network/bgp: Only advertise networks with BGP configuration
+   - incusd/cluster: Fix resource data caching
+   - incusd/cluster: Actually use YAML for resources cache
+   - shared: Update import path for "revert" library
+   - incusd/instance/lxc: Simplify idmapSize
+   - incusd/instance/lxc: Simplify findIdmap
+   - incusd/isntance/lxc: Respect restrict.idmap.size on un-isolated containers
+   - incusd/instance/lxc: Refactor findIdmap
+   - incusd/instance/lxc: Fix off by one idmap check
+   - shared: Move internal "ask" library into shared
+   - shared: Update import path for "ask" library
+   - shared: Add godoc comment for NewAsker
+   - doc/network/resolved: Add disabling DNSSEC and DNSOverTLS
+   - incusd/device/nic/bridged: Handle invalid configuration
+   - doc/explenation/instances: Update for application containers
+   - doc/howto/instances_create: Add an example of application container
+   - doc: Add Kubernetes to wordlist
+   - incusd/storage_volumes_snapshots: Respect pattern on manual creation
+   - tests: Add test for custom storage volume snapshots pattern
+   - incusd/main_forknet: Port DHCP client to nclient4
+   - incusd/main_forknet: Attach to the container PID namespace
+   - incusd/main_forknet: Handle background renewals
+   - shared/cgo: Add setproctitle
+   - incusd/main_forknet: Set process title
+   - doc/installing: Update for Chimera Linux
+   - shared/cgo: Don't use strlcpy
+   - incus/top: Fix usage
+   - shared/util: Add OpenBrowser
+   - incus/remote/proxy: Add token authentication
+   - incusd/api: Only expose UI if index.html exists
+   - incus: Add webui command
+   - i18n: Update translation templates
+   - incusd/scriptlet: Make set_target fail with invalid members
+   - tests: Update for scriptlet placement error handling
+   - incusd/instance/qmp: Make Run public
+   - incusd/scriptlet: Add useful QMP functions
+   - doc/ref/instance_options: Mention QEMU raw QMP commands
+   - incusd/network/ovn: Add support to ipv4.dhcp.ranges
+   - api: instances_scriptlet_get_instances_count
+   - incusd/scriptlet/instances: Fix error messages
+   - incusd/db/instances: Add GetInstancesCount
+   - incusd/scriptlet/instances: Add get_instances_count
+   - doc/cluster/placement: Add get_instances_count
+   - incusd/db/node: Sort members in GetCandidateMembers
+   - incusd/instances: Rely on candidateMembers being sorted
+   - incusd/db/node: Remove unused GetNodeWithLeastInstances
+   - incusd/db/node: Update tests to use GetCandidateMembers
+   - internal/server: Log QMP interaction to a file
+   - incusd/instance/qemu: Log QEMU command line
+   - tests: Update instance placement tests for new ordering
+   - incusd/instance_logs: Update log file list
+   - incusd/network/ovn/sb: Only monitor required tables
+   - incusd/network/ovn: Implement OVN SB event handlers
+   - incusd/instance/qmp: Handle disabling log file
+   - incusd/instance/qemu: Don't use QMP log for feature checks
+   - incusd/instance/lxc: Fix LXCFS per-instance path
+   - doc/idmap: Clarify subuid/subgid configuration
+   - incusd/instance/qmp: Fix logging with no log file
+   - client: Add a GetOIDCTokens() method
+   - cmd/project: Add get-current to show current project
+   - tests: Add get-current to show current project
+   - i18n: Update translation templates
+   - incus/file/create: Use SFTP client instead of file API
+   - internal/instance: Allow 0 as value to limits.cpu.nodes
+   - Translated using Weblate (Indonesian)
+   - Translated using Weblate (Indonesian)
+   - Translated using Weblate (French)
+   - internal/linux: Add NetlinkInterfaces
+   - incus-agent: Use NetlinkInterfaces
+   - incus/top: Add additional flags
+   - i18n: Update translation templates
+   - gomod: Update dependencies
+   - incus/monitor: Include location in cluster logging
+   - incusd/instance: Add ResourceUsage
+   - incusd/scriptlet/instance: Use ResourceUsage
+   - api: cluster_rebalance
+   - incusd/cluster/config: Add cluster re-balance configuration keys
+   - incusd/instance/config: Add volatile re-balance configuration key
+   - doc: Update configs
+   - incusd: Add cluster rebalance task
+   - incusd/internal: Add rebalance endpoint
+   - doc/cluster: Add mention of re-balancing
+   - api: custom_volume_refresh_exclude_older_snapshots
+   - shared/api: Add RefreshExcludeOlder to InstanceSource and StorageVolumeSource
+   - client: Add RefreshExcludeOlder flag to StoragePoolVolumeCopyArgs and InstanceCopyArgs
+   - incus: Adding refresh-exclude-older flag to 'copy' and 'storage volume copy'
+   - incusd/migration: Add refresh-exclude-older flag
+   - internal: Adding refresh-exclude-older flag implementation
+   - i18n: Update translation templates
+   - doc/rest-api: Refresh swagger YAML
+   - incus/top: Fix gofmt
+   - incusd/instance/drivers: Make Export return a pointer to metadata
+   - incusd/images: Update for changes to Export
+   - incusd/instances/publish: Fix base metadata
+   - incusd/bgp: Don't add duplicates
+   - incusd/network/bgp: Only skip BGP if unconfigured and not on OVN
+   - incusd/network: Move loadBalancerBGPSetupPrefixes to OVN driver
+   - incusd/network/ovn/sb: Add CheckLoadBalancerOnline
+   - incusd/network/ovn/nb: Add GetLoadBalancer and GetLoadBalancersByStatusUpdate
+   - incusd/network/ovn: Add load-balancer health event handler
+   - incusd/network/ovn: Don't advertise offline load-balancers on startup
+   - shared/subprocess: Allow overriding Cwd
+   - incusd/device/tpm: Fix handling of long instance names
+   - incusd/instance/qemu: Don't take over operations on console retrieval
+   - incusd/instance_post: Provide target project to relocation scriptlet
+   - incusd/cluster/request: Add new internal user-agent
+   - incusd/instances_post: Don't re-run placement on internal requests
+   - incusd/api: Handle new user agent
+   - incusd/instance_post: Pass in internal user agent during relocation
+   - incusd/instance/qemu: Don't overtake operations on console retrieval
+  [/details]
+
+  # Documentation
+  The Incus documentation can be found at:
+  https://linuxcontainers.org/incus/docs/main/
+
+  # Packages
+  There are no official Incus packages as Incus upstream only releases regular release tarballs. Below are some available options to get Incus up and running.
+
+  ## Installing the Incus server on Linux
+  Incus is available for most common Linux distributions. You'll find detailed installation instructions in our documentation.
+
+  https://linuxcontainers.org/incus/docs/main/installing/
+
+  ## Homebrew package for the Incus client
+  The client tool is available through HomeBrew for both Linux and MacOS.
+
+  https://formulae.brew.sh/formula/incus
+
+  ## Chocolatey package for the Incus client
+  The client tool is available through Chocolatey for Windows users.
+
+  https://community.chocolatey.org/packages/incus/6.7.0
+
+  ## Winget package for the Incus client
+  The client tool is also available through Winget for Windows users.
+
+  https://winstall.app/apps/LinuxContainers.Incus
+
+  # Support
+  Monthly feature releases are only supported up until the next release comes out.  Users needing a longer support length and less frequent changes should consider using Incus 6.0 LTS instead.
+
+  Community support is provided at: https://discuss.linuxcontainers.org
+  Commercial support is available through: https://zabbly.com/incus
+  Bugs can be reported at: https://github.com/lxc/incus/issues
