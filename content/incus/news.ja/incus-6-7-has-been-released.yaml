@@ -71,7 +71,7 @@ content: |-
   - `cluster.rebalance.batch controls` は、1 ラウンドで再配置するインスタンス数 <!-- `cluster.rebalance.batch controls` how many instances to relocate during one round -->
   - `cluster.rebalance.cooldown` は、インスタンスを再度移動できるようになるまでの待機時間を制御します <!-- `cluster.rebalance.cooldown` controls how long to wait before an instance can be moved again -->
   - `cluster.rebalance.interval` は、インスタンスの再配置を検討する頻度を制御します <!-- `cluster.rebalance.interval` controls how often to consider relocating instances -->
-  - `cluster.rebalance.threshold` は、2 つのサーバー間のリバランスをトリガーするのに必要な負荷の差の見積もり量の差（パーセント単位）を制御します <!-- `cluster.rebalance.threshold` controls how much difference (in percent) of estimated load difference is needed between two servers to trigger a re-balancing -->
+  - `cluster.rebalance.threshold` は、2 つのサーバー間のリバランスをトリガーするのに必要な負荷の見積もり量の差（パーセント単位）を制御します <!-- `cluster.rebalance.threshold` controls how much difference (in percent) of estimated load difference is needed between two servers to trigger a re-balancing -->
 
   <!--
   Incus effectively calculates a score for each server within the cluster, then compares the one with the highest score to the one with the lowest score, if the difference exceeds the threshold, then a number of instances will be moved between the two.
@@ -81,7 +81,7 @@ content: |-
   <!--
   The score is currently based on the server's 1min load average adjusted for the number of CPUs on the system and how much memory is available.
   -->
-  スコアは現時点では、システム上の CPU 数と使用可能なメモリー量に合わせて調整された 1 分間のロードアベレージに基づいています。
+  スコアは現時点では、システム上の CPU 数に合わせて調整された 1 分間のロードアベレージと使用可能なメモリー量に基づいています。
 
   <!--
   Only live-migratable virtual machines are moved and only when they meet all migration requirements both as far as their configuration and any restrictions applied to them in their project.
@@ -125,7 +125,7 @@ content: |-
   <!--
   To accommodate that, a new `--refresh-exclude-older` flag has been added which when passed in combination with `--refresh`, will look for the most recent shared snapshot and only transfer any snapshots created after that point, effectively ignoring any missing older snapshots on the target.
   -->
-  refresh` と一緒に与えると、最新の共有スナップショットが検索され、それ以降に作成されたスナップショットのみが転送され、実質的にターゲット上で欠落している古いスナップショットは無視されます。
+  これに対応するため、新しい `--refresh-exclude-older` フラグが追加されました。このフラグを `--refresh` と一緒に与えると、最新の共有スナップショットが検索され、それ以降に作成されたスナップショットのみが転送され、実質的にターゲット上で欠落している古いスナップショットは無視されます。
 
   ## カラムの設定とフォーマット、更新頻度が設定できるようになった `incus top` <!-- Configurable columns, formatting and refresh time for `incus top` -->
 
@@ -154,7 +154,7 @@ content: |-
   <!--
   It's now possible to change the value of the `parent` property on a managed network of type `physical`. This allows for moving an OVN uplink network to a different device as sometimes may happen when the physical network is reconfigured or physical network interfaces are replaced.
   -->
-  `physical` タイプの管理ネットワーク上の親プロパティの値を変更できるようになりました。これにより、物理ネットワークが再構成されたり、物理ネットワークインターフェースが交換されたりしたときに必要に鳴る可能性がある、OVN アップリンクネットワークの別のデバイスへの移動ができるようになりました。
+  `physical` タイプの管理ネットワーク上の親プロパティの値を変更できるようになりました。これにより、物理ネットワークが再構成されたり、物理ネットワークインターフェースが交換されたりしたときに必要になる可能性がある、OVN アップリンクネットワークの別のデバイスへの移動ができるようになりました。
 
   ## QEMU スクリプトレットの追加の QMP ヘルパー <!-- Additional QMP helpers in QEMU scriptlet -->
   <!--
