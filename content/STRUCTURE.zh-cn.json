@@ -1,10 +1,14 @@
 [
     {"path": "/",
      "title": "",
-     "menu": ["主页"],
+     "menu": ["首页","主页"],
      "generator": "html",
      "meta": {"input": "index.zh-cn.html"}},
 
+     {"path": "/jobs/",
+     "menu": ["首页", "工作机会"],
+     "generator": "link",
+     "meta": {"url": "https://discuss.linuxcontainers.org/c/jobs/17"}},
 
 
      {"path": "/incus/",

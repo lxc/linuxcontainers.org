@@ -1,9 +1,14 @@
 [
     {"path": "/",
      "title": "",
-     "menu": ["Home"],
+     "menu": ["Home","Home Page"],
      "generator": "html",
      "meta": {"input": "index.html"}},
+
+     {"path": "/jobs/",
+     "menu": ["Home", "Jobs"],
+     "generator": "link",
+     "meta": {"url": "https://discuss.linuxcontainers.org/c/jobs/17"}},
 
 
     {"path": "/incus/",

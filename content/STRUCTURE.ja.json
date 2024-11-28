@@ -1,9 +1,14 @@
 [
     {"path": "/",
      "title": "",
-     "menu": ["ホーム"],
+     "menu": ["ホーム", "ホームページ"],
      "generator": "html",
      "meta": {"input": "index.ja.html"}},
+
+     {"path": "/jobs/",
+     "menu": ["ホーム", "採用情報"],
+     "generator": "link",
+     "meta": {"url": "https://discuss.linuxcontainers.org/c/jobs/17"}},
 
 
     {"path": "/incus/",
