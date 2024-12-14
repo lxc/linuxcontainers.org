@@ -1,0 +1,386 @@
+title: Incus 6.8 リリースのお知らせ
+date: 2024/12/13 07:12
+origin: https://discuss.linuxcontainers.org/t/incus-6-8-has-been-released/22344
+content: |-
+  # はじめに <!-- Introduction -->
+  <!--
+  The Incus team is pleased to announce the release of Incus 6.8!
+  -->
+  Incus チームは、Incus 6.8 のリリースのアナウンスができてうれしいです!
+
+  <!--
+  This is the last release for 2024 but it still packs a punch with a bunch of VM related improvements, including the ability to move a running VM between storage pools, a new authorization backend, improvements to volume handling for application containers and more.
+  -->
+  このリリースは 2024 年の最後のリリースです。実行中の VM をストレージプール間で移動する機能、新しい認証バックエンド、アプリケーションコンテナのボリューム処理の改善など、VM に関係する多くの改善が加えられています。
+
+  [![image|689x232](https://discuss.linuxcontainers.org/uploads/default/original/2X/c/c58861925b2350ff09c2d65998acd6d39ce89888.png)](https://linuxcontainers.org/incus/try-it/)
+
+  <!--
+  As usual, you can try it for yourself online: https://linuxcontainers.org/incus/try-it/
+  -->
+  いつものように、オンラインでご自身で試せます: https://linuxcontainers.org/incus/try-it/
+
+  Happy holidays!
+
+  # 新機能 <!-- New features -->
+  ## VM ストレージのライブマイグレーション <!-- Storage live migration for VMs -->
+  <!--
+  It's now possible to move a VM between storage pools while it's running.
+  Note however that for this to work, the VM must also be moved to another server within a cluster, that's needed to avoid having two instances of QEMU for the same VM running on any one server during the migration
+  -->
+  VM の実行中に、ストレージプール間で VM を移動できるようになりました。
+  しかし、これを動作させるには、VM はクラスター内の別のサーバーに移動する必要があることに注意が必要です。これは、マイグレーション中に、同じ VM の 2 つの QEMU インスタンスが、1 つのサーバー上で実行されることを防ぐために必要です。
+
+  <!--
+  Moving from one pool to another can be done with:
+  -->
+  あるプールから別のプールへの移動は次のように実行できます:
+
+      incus move NAME --storage NEW-POOL --target ANOTHER-SERVER
+
+  ## 認可スクリプトレット <!-- Authorization scriptlet -->
+  <!--
+  A new authorization control method has been introduced in the form of an authorization scriptlet.
+  This allows for custom built-in authorization control which can be combined with TLS or OIDC authentication.
+  -->
+  新たな認可制御方法が、認可スクリプトレットの形で導入されました。これにより、TLS または OIDC 認証を組み合わせることができる、カスタムのビルトイン認証制御が可能になります。
+
+  ドキュメント <!-- Documentation -->: https://linuxcontainers.org/incus/docs/main/authorization/#scriptlet-authorization
+
+  ## VM コンソールのスクリーンショット<!-- Console screenshots for VMs -->
+  <!--
+  To make it easier to develop GUI or WebUI clients for Incus, we now have an easy way to get a one off screenshot of VM VGA consoles.
+  -->
+  Incus 用の GUI や WebUI クライアントの開発を簡単にするために、VM の VGA コンソールの 1 回限りのスクリーンショットを簡単に取得できるようになりました。
+
+  <!--
+  Doing so has the advantage of being pretty lightweight and can be done even when a user is currently connected to the VGA console.
+  -->
+  これは非常に軽量で、ユーザーが VGA コンソールに接続しているときでも実行できるという利点があります。
+
+  <!--
+  To get a PNG screenshot of a VM, just hit `GET /1.0/instances/NAME/console?type=vga`
+  -->
+  VM の PNG スクリーンショットを取得するためには、`GET /1.0/instances/NAME/console?type=vga` でアクセスするだけです。
+
+  ## カスタムストレージボリュームの初期オーナーとモード<!-- Initial owner and mode for custom storage volumes -->
+  <!--
+  To make it easier to create custom storage volumes used for storage of OCI containers data, a few new custom storage volume configuration options have been added:
+  -->
+  OCI コンテナのデータに使われるストレージボリュームの作成を簡単にするために、カスタムストレージボリュームの設定オプションがいくつか追加されました:
+
+   - initial.uid
+   - initial.gid
+   - initial.mode
+
+  <!--
+  Those can be passed at volume creation time and as the name imply, will set the initial values for the uid, gid and mode of the root directory within that volume.
+  -->
+  これらはボリューム作成時に与えることができます。名前が示すように、そのボリューム内のルート ディレクトリの uid、gid、モードの初期値を設定します。
+
+  例 <!-- Example -->:
+
+      incus storage volume create default my-volume size=5GiB initial.uid=1000 initial.gid=1000 initial.mode=0700
+
+  ## OpenFGA モデルの小規模なアップデート <!-- Small updates to the OpenFGA model -->
+  <!--
+  The OpenFGA access model has been slightly tweaked with this release.
+  -->
+  このリリースで、OpenFGA アクセスモデルが少し調整されました。
+
+  <!--
+  The initial permission of `user:* viewer server:incus` which was allowing basic read-only access to global resources for any authenticated user has now been replaced by the equivalent `user:* authenticated server:incus`.
+  -->
+  `user:* viewer server:incus` の初期パーミッションは、認証されたユーザーに対してグローバルリソースへの読み取り専用アクセスを許可していました。これが同等の `user:*authenticated server:incus` に置き換えられました。
+
+  <!--
+  And in turn the `viewer` permission can now directly be assigned to users and grants full server-wide read-only access (not just global resources).
+  -->
+  さらに `viewer` パーミッションがユーザーに直接与えられるようになり、（グローバルリソースだけでなく）サーバー全体の完全な読み取り専用アクセスが許可されます。
+
+  <!--
+  The permission will automatically get updated on update.
+  -->
+  権限は更新時に自動的に更新されます。
+
+  <!--
+  Additionally a new `can_view_sensitive` entitlement has been added which allows controlling who can read sensitive configuration like the server configuration.
+  -->
+  さらに、新しい `can_view_sensitive` 資格が追加され、サーバー設定などの機密設定を読み取れるユーザーを制御できるようになりました。
+
+  ## インポート時のイメージエイリアス再利用 <!-- Image alias reuse on import -->
+  <!--
+  Similar to what's been around in `incus publish`, it's now possible to run `incus image import \-\-reuse \-\-alias ALIAS image.tar.xz` to have the image imported and have it replace the image identified by the alias `ALIAS`.
+  -->
+  `incus publish` で行われていたのと同様に、`incus image import --reuse --alias ALIAS image.tar.xz` を実行してイメージをインポートし、`ALIAS` というエイリアスで識別されるイメージを置き換えられるようになりました。
+
+  ## 新しい `incus-simplestreams prune` コマンド <!-- New `incus-simplestreams prune` command -->
+  <!--
+  A new `incus-simplestreams prune` command has been added to keep simplestreams image servers clean. When run it will identify and cleanup:
+  -->
+  simplestream サーバーをクリーンに保つため、新たに `incus-simplestreams prune` コマンドが追加されました。実行すると、次のものが認識され、クリーンアップされます:
+
+   - インデックス内のどのイメージにも属さないイメージファイル<!-- Image files that don't belong to any image in the index -->
+   - イメージファイルが存在しないインデックスエントリー <!-- Index entries for which image files are missing -->
+   - 古いインデックスエントリー（デフォルトでは前の 2 つのイメージが保持される）<!-- Older index entries (defaults to keeping the previous 2 images) -->
+
+  ## コンソールアクセスのロック<!-- Console access locking -->
+  <!--
+  Console access has always been limited to a single user at a time.
+  Previously whoever would connect last would take over any existing session.
+  -->
+  コンソールへのアクセスは、常に 1 人のユーザーに限定されてきました。
+  以前は、最後に接続したユーザーが既存のセッションを引き継ぎました。
+
+  <!--
+  As this was often the source of some surprise and issues, console access is now under a lock. Connecting when a session is already active results in an error which can be overriden with the force flag.
+  -->
+  これはよく驚きや問題の原因になるため、コンソールアクセスはロックされるようになりました。セッションがすでにアクティブなときに接続するとエラーになります。このエラーは強制フラグでオーバーライドできます。
+
+  例<!-- Example -->:
+
+      incus console remote-server:windows-2022 --force
+
+  # すべての変更点 <!-- Complete changelog -->
+  <!--
+  Here is a complete list of all changes in this release:
+  -->
+  このリリースのすべての変更のリストは次の通りです（翻訳なし）:
+
+  [details="すべてのChangeLogを見る"]
+   - Consume websocket pings for stderr
+   - incus-simplestreams: Add prune command
+   - internal/instance: Fix validation of volatile.cpu.nodes
+   - shared/util: Add a function to clone maps
+   - Use `util.CloneMap` where appropriate
+   - cgo/process_utils: fix 32bit builds
+   - golangci: Enable goimports
+   - global: Initial goimports run
+   - incusd: Fix duplicate imports
+   - incusd: Fix import ordering
+   - instance/config: Mark user keys as live updatable
+   - doc: Update configs
+   - Fix incorrect Vars file mapping in edk2 driver
+   - incusd/storage/zfs: Fix deletion of unavailable pools
+   - zfs: load keys for encrypted datasets during pool import
+   - tests: zfs: add native zfs encryption tests
+   - incusd/instance: Lock image access
+   - incus/image: Make use of server-side alias handling
+   - client: Fix image aliases in push mode
+   - client: Fix image aliases in relay mode
+   - incusd/cluster: Validate address on join too
+   - incusd/network: Remove duplicated logic
+   - incusd/util: Cover DNS and wildcard coverage
+   - incusd/storage: Add initial.* config options for storage volume
+   - incusd/storage/drivers: Add ability to set the initial owner of a custom volume
+   - tests: Add test for setting initial owner of a cutom volume
+   - api: Add storage_initial_owner extension
+   - doc/reference: Add initial.* config keys
+   - shared/cliconfig: Improve configuration loading
+   - incus: Simplify configuration loading
+   - incus: Add aliases completion
+   - i18n: Update translation templates
+   - incusd/storage/drivers/lvm: Remove metadata info from space usage calculation
+   - incus/migration: Add StoragePool to VolumeTargetArgs and StorageMove to VolumeSourceArgs
+   - incus/instance: Add StoragePool to MigrateArgs
+   - incus/drivers: Add support for local live-migration between storage pools
+   - incusd: Add support for local live-migration between storage pools
+   - api: Add storage_live_migration extension
+   - golangci: Add local prefixes for goimports
+   - client: invalidate simple streams cache
+   - incusd/instances_post: Fix cluster internal migrations
+   - incusd/instances_post: Only update pool in DB if pool is expected to change
+   - incusd/instances_post: Account for profiles when overriding pool in DB
+   - incusd/main_forknet: Don't attach DHCP client to the container PID namespace
+   - incusd/instance/lxc: Cleanup DHCP client
+   - incusd/main_forknet: Tweak process title
+   - incus/image: Add reuse flag
+   - incus/publish: Use common helper function deleteImagesByAliases
+   - i18n: Update translation templates
+   - tests: Add a reuse flag test for the 'incus image import'
+   - incusd/instance/qemu: Set instance path ownership on startup
+   - api: instance_console_screenshot
+   - incusd/instance/qmp: Add Screendump command
+   - incusd/response: Allow overrriding Content-Type in FileResponse
+   - incusd/instance: Add ConsoleScreenshot to VM interface
+   - incusd/instance/qemu: Implement ConsoleScreenshot
+   - incusd/instance_console: Add screenshot support to console API
+   - doc/rest-api: Refresh swagger YAML
+   - incusd/task: Fix wait group logic (more entries than running tasks)
+   - incusd/instance: Add ETag function
+   - incusd/instance/qemu: Fix random ordering in ETag
+   - incusd/instance/lxc: Fix random ordering in ETag
+   - incusd: Use new ETag instance function
+   - api: image_import_alias
+   - client: Set X-Incus-aliases on image imports
+   - incusd/image: Allow passing alias list through X-Incus-aliases
+   - doc/rest-api: Refresh swagger YAML
+   - incusd/image: Fix context for alias add
+   - incusd/image: Handle all alias cases
+   - Makefile: Use fga for model conversion
+   - incusd/auth: Introduce EntitlementCanViewSensitive
+   - incusd/api_10: Use EntitlementCanViewSensitive
+   - incusd/auth/openfga: Introduce server-wide read-only access
+   - incusd/auth/openfga: Rebuild model
+   - incusd/auth/openfga: Migrate public permissions
+   - incusd/auth: Implement ApplyPatch
+   - incusd/auth/fga: Change model refresh logic to rely on patches
+   - incusd/patches: Add auth patch logic
+   - incusd/patches: Skip patches until their assigned stage
+   - doc/authorization: Remove outdated OpenFGA model description
+   - tests: Tweak openfga test
+   - incusd/migrate: Set CreationDate during custom volume snapshot copy with refresh
+   - incusd/storage: Add CreatedAt during custom volume copy with refresh
+   - tests: Update copy with refresh test
+   - doc/instance/properties: Add missing instance properties
+   - incusd/daemon_storage: Ensure corect symlinks for images/backups
+   - incusd/storage/lvm: Handle newer LVM
+   - doc/sphinx: Upgrade MyST
+   - doc/manpage: Tweak manpage synopsis rendering
+   - incusd/storage/lvm: Require 512-bytes physical block size for VM images
+   - incus: Improve instance and remote names completion
+   - incusd: Fill ExpiryDate and remove LastUsedDate in volumeSnapshotToProtobuf
+   - incusd/device/tpm: Wait for swtpm to be ready
+   - incus: Improve completion for `file push` and `file pull`
+   - incusd/auth/tls: Restrict config access to non-admin
+   - incusd/storage: Handle default disk size in GetInstanceUsage
+   - incus: Improve completion for `file create`
+   - incus: Improve completion for `file delete`
+   - incus: Improve completion for `file edit`
+   - incus: Improve completion for `file mount`
+   - incus: Fix completion for `profile copy`
+   - doc/installing: Update Fedora instructions
+   - incus: Add a function to complete image fingerprints
+   - incus: Add completion for `image alias` subcommands
+   - incusd/daemon: Skip non-PKI issued trusted certificates when in PKI mode
+   - incusd/cluster: Update tests for change to trustedCerts
+   - tests: Validate all non-PKI certs are blocked in PKI mode
+   - incus: Fix completion for `image alias create`
+   - doc/network_forwards: Split configuration into own table
+   - util: Improve readability with early return
+   - incusd/db: Improve readability with eraly return
+   - incus/top: Ignore CPU idle time
+   - incus: Display the alias expansion when execution of an alias fails
+   - i18n: Update translation templates
+   - util: code structure error handling
+   - incusd/db: do not shadow Go builtin function
+   - lint: disallow restricted licenses in go-licenses
+   - incus: Fix alias arguments handling
+   - incus/file: Expand setOwnerMode
+   - incus/file/push Use SFTP client instead of file API
+   - incusd/instance/qemu: Set CLOEXEC for TPM sockets
+   - incusd/patches: Run auth patches on all servers
+   - incusd/auth/openfga: Get rid of applyPatches
+   - incusd/auth/openfga: Force OpenFGA update on initial config and patching
+   - incus: Clarify device override syntax
+   - i18n: Update translation templates
+   - incusd/auth/openfga: refresh model before applying patches
+   - internal/scriptlet: Fix typo
+   - incusd/scriptlet: refactor marshal
+   - incusd/scriptlet: Refactor log
+   - incusd/scriptlet: Add authorization scriptlet
+   - incusd/auth: Refactor drivers
+   - incusd/config: Add scriptlet authorization key
+   - incusd/auth: Add authorization scriptlet driver
+   - incusd/daemon: Handle authorization scriptlet reset
+   - incusd/auth: Comment exported methods and types
+   - incusd/scriptlet: Add project and instance authorization getters
+   - doc: Update configs
+   - api: authorization_scriptlet
+   - doc/authorization: Add authorization scriptlet
+   - tests: Authorization scriptlet
+   - doc: add openSUSE installation instructions
+   - incusd/scriptlet: Rename prefixAuthorization to nameAuthorization
+   - incusd/scriptlet: Add function checks in scriptlet validation
+   - client/oci: Add debug logging for subprocess commands
+   - incusd/daemon_images: Fix error string typo for OCI connect errors
+   - incusd/scriptlet: Add function args checks in scriptlet validation
+   - incus/project: Fix get-current for default (unset) project
+   - Translated using Weblate (Japanese)
+   - incusd: Add support for '--force' flag
+   - cmd/console: Add '--force' flag
+   - shared/api: Add Force field to InstanceConsolePost
+   - client: Check 'console_force' API extenstion
+   - api: Add console_force extension
+   - doc/rest-api: Refresh swagger YAML
+   - i18n: Update translation templates
+   - internal/cmd: Have RenderTable take in an io.Writer
+   - incus: Update for RenderTable
+   - incus-simplestreams: Update for RenderTable
+   - incusd: Update for RenderTable
+   - incusd: Cleanup in cmdClusterListDatabase
+   - doc/reference/network_bridge: Add missing backsticks for variable escaping
+   - incusd/instance/lxc: Skip instances without idmap allocation yet
+   - incusd/cluster: Skip project restrictions during join
+   - shared/ask: Add AskPassword/AskPasswordOnce to Asker
+   - shared/ask: Fix redefinition of the built-in types
+   - cmd/incus: Use AskPasswordOnce from asker
+   - incusd/storage/drivers/common: Truncate/Discard ahead of sparse write
+   - inucsd: Add additional check to Cancel method for ConsoleShow operation
+   - incusd/instance_console: Remove redundant (and unsafe) write
+   - incus/console: Make sure we leave the console in a clean state
+   - incusd/instance_console: Don't fail on failure to write reset sequence
+   - client: Improve SFTP performance
+   - incusd/main_forkfile: Improve SFTP performance
+   - incusd/network/ovn: Return ErrTooMany when getting multiple records
+   - incusd/network/ovn: Clear all existing records
+   - gomod: Update dependencies
+   - incusd/instance_post: Expand profiles in scriptlet context
+  [/details]
+
+  # ドキュメント <!-- Documentation -->
+  <!--
+  The Incus documentation can be found at:
+  -->
+  Incus のドキュメントはこちらです:
+  https://incus-ja.readthedocs.io/ja/latest/ （日本語訳）
+  https://linuxcontainers.org/incus/docs/main/ （原文）
+
+  # パッケージ <!-- Packages -->
+  <!--
+  There are no official Incus packages as Incus upstream only releases regular release tarballs. Below are some available options to get Incus up and running.
+  -->
+  Incus の開発元は、通常リリースの tarball のみをリリースするため、公式の Incus パッケージはありません。Incus を実行するために使えるオプションを以下にいくつか示します。
+
+  ## Linux 上に Incus サーバーをインストールする <!-- Installing the Incus server on Linux -->
+  <!--
+  Incus is available for most common Linux distributions. You'll find detailed installation instructions in our documentation.
+  -->
+  Incus はほとんどの一般的な Linux ディストリビューションで利用できます。インストール手順の詳細は、Incus のドキュメントを参照してください。
+
+  https://incus-ja.readthedocs.io/ja/latest/installing/ （日本語訳）
+  https://linuxcontainers.org/incus/docs/main/installing/ （原文）
+
+  ## Incus クライアントの Homebrew パッケージ <!-- Homebrew package for the Incus client -->
+  <!--
+  The client tool is available through HomeBrew for both Linux and MacOS.
+  -->
+  HomeBrew 経由で、Linux と macOS 向けにクライアントツールが利用できます。
+
+  https://formulae.brew.sh/formula/incus
+
+  ## Incus クライアントの Chocolatey パッケージ <!-- Chocolatey package for the Incus client -->
+  <!--
+  The client tool is available through Chocolatey for Windows users.
+  -->
+  Chocolatey 経由で、Windows ユーザー向けにクライアントツールが利用できます。
+
+  https://community.chocolatey.org/packages/incus/6.8.0
+
+  ## Incus クライアントの Winget パッケージ <!-- Winget package for the Incus client -->
+  <!--
+  The client tool is also available through Winget for Windows users.
+  -->
+  Winget 経由で、Windows ユーザー向けにクライアントツールが利用できます。
+
+  https://winstall.app/apps/LinuxContainers.Incus
+
+  # サポート <!-- Support -->
+  <!--
+  Monthly feature releases are only supported up until the next release comes out.  Users needing a longer support length and less frequent changes should consider using Incus 6.0 LTS instead.
+  -->
+  月次のフィーチャーリリースは、次のリリースがリリースされるまでのみサポートされます。より長いサポート期間と少ない変更頻度が必要な場合、代わりに Incus 6.0 LTS の使用を検討すべきです。
+
+  コミュニティサポートはこちらから <!-- Community support is provided at -->: https://discuss.linuxcontainers.org
+  商用サポートはこちらから <!-- Commercial support is available through -->: https://zabbly.com/incus
+  バグはこちらから報告できます <!-- Bugs can be reported at -->: https://github.com/lxc/incus/issues
