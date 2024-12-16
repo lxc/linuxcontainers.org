@@ -1,0 +1,432 @@
+title: Incus 6.8 est maintenant disponible
+date: 2024/12/13 07:12
+origin: https://discuss.linuxcontainers.org/t/incus-6-8-has-been-released/22344
+content: |-
+  <!--
+  # Introduction
+  The Incus team is pleased to announce the release of Incus 6.8!
+  -->
+  # Introduction
+  L’équipe d’Incus est heureuse d’annoncer la sortie d’Incus 6.8 !
+
+  <!-
+  This is the last release for 2024 but it still packs a punch with a bunch of VM related improvements, including the ability to move a running VM between storage pools, a new authorization backend, improvements to volume handling for application containers and more.
+  -->
+  Il s’agit de la dernière version de 2024, et elle vient avec son lot de nouveautés : la possibilité de déplacer une VM en fonctionnement sur un autre pool de stockage, un nouveau backend d’autorisation, des améliorations dans la gestion des volumes pour les conteneurs d’application, et bien d’autres.
+
+  [![image|689x232](https://discuss.linuxcontainers.org/uploads/default/original/2X/c/c58861925b2350ff09c2d65998acd6d39ce89888.png)](https://linuxcontainers.org/incus/try-it/)
+
+  <!--
+  As usual, you can try it for yourself online: https://linuxcontainers.org/incus/try-it/
+  -->
+  Comme d’habitude, vous pouvez l’essayer vous-même en ligne : https://linuxcontainers.org/incus/try-it/
+
+  <!--
+  Happy holidays!
+  -->
+  Joyeuses fêtes !
+
+  <!--
+  # New features
+  ## Storage live migration for VMs
+  It's now possible to move a VM between storage pools while it's running.
+  Note however that for this to work, the VM must also be moved to another server within a cluster, that's needed to avoid having two instances of QEMU for the same VM running on any one server during the migration
+  -->
+  # Nouvelles fonctionnalités
+  ## Migration à chaud de pool de stockage pour les VM
+  Il est désormais possible de déplacer une VM entre deux pools de stockage différents sans l’arrêter.
+  Notez cependant que pour éviter d’avoir deux instances de QEMU exécutant la même VM sur le même serveur, celle-ci doit être également migrée vers un autre serveur du même cluster.
+
+  <!--
+  Moving from one pool to another can be done with:
+  -->
+  Le déplacement d’un pool à l’autre se fait ainsi :
+
+  <!--
+      incus move NAME --storage NEW-POOL --target ANOTHER-SERVER
+  -->
+      incus move NOM --storage NOUVEAU-POOL --target AUTRE-SERVEUR
+
+  <!--
+  ## Authorization scriptlet
+  A new authorization control method has been introduced in the form of an authorization scriptlet.
+  This allows for custom built-in authorization control which can be combined with TLS or OIDC authentication.
+  -->
+  ## Scriptlet d’autorisation
+  Une nouvelle méthode d’autorisation a été ajoutée, sous la forme d’un scriptlet d’autorisation.
+  Cela permet d’avoir un mécanisme d’autorisation personnalisé, qui peut être combiné à l’authentification TLS ou OIDC.
+
+  <!--
+  Documentation: https://linuxcontainers.org/incus/docs/main/authorization/#scriptlet-authorization
+  -->
+  Documentation : https://linuxcontainers.org/incus/docs/main/authorization/#scriptlet-authorization
+
+  <!--
+  ## Console screenshots for VMs
+  To make it easier to develop GUI or WebUI clients for Incus, we now have an easy way to get a one off screenshot of VM VGA consoles.
+  -->
+  ## Capture d’écran des consoles des VM
+  Pour simplifier le développement d’interfaces graphiques et de clients web pour Incus, nous avons à présent une manière simple de prendre des captures d’écran des consoles VGA des VM.
+
+  <!--
+  Doing so has the advantage of being pretty lightweight and can be done even when a user is currently connected to the VGA console.
+  -->
+  Cette opération a l’avantage d’être assez simple et peut être effectuée même lorsqu’un utilisateur est connecté à la console VGA.
+
+  <!--
+  To get a PNG screenshot of a VM, just hit `GET /1.0/instances/NAME/console?type=vga`
+  -->
+  Pour récupérer une capture d’écran d’une VM en PNG, il suffit de faire une requête `GET /1.0/instances/NOM/console?type=vga`.
+
+  <!--
+  ## Initial owner and mode for custom storage volumes
+  To make it easier to create custom storage volumes used for storage of OCI containers data, a few new custom storage volume configuration options have been added:
+  -->
+  ## Propriétaire et mode initiaux pour des volumes de stockage personnalisés
+  Pour simplifier la création de volumes de stockage personnalisés pour stocker les données des conteneurs OCI, plusieurs nouvelles options ont été ajoutées :
+
+   - initial.uid
+   - initial.gid
+   - initial.mode
+
+  <!--
+  Those can be passed at volume creation time and as the name imply, will set the initial values for the uid, gid and mode of the root directory within that volume.
+  -->
+  Ces options peuvent être passées à la création d’un volume, et, comme leurs noms le suggèrent, définissent les valeurs initiales de l’uid, du gid, et du mode du répertoire racine du volume.
+
+  <!--
+  Example:
+  -->
+  Exemple :
+
+      incus storage volume create default my-volume size=5GiB initial.uid=1000 initial.gid=1000 initial.mode=0700
+
+  <!--
+  ## Small updates to the OpenFGA model
+  The OpenFGA access model has been slightly tweaked with this release.
+  -->
+  ## Mises à jour du modèle OpenFGA
+  Le modèle d’accès OpenFGA a été légèrement modifié dans cette version.
+
+  <!--
+  The initial permission of `user:* viewer server:incus` which was allowing basic read-only access to global resources for any authenticated user has now been replaced by the equivalent `user:* authenticated server:incus`.
+  -->
+  La permission initiale `user:* viewer server:incus`, qui permettait un accès en lecture seule aux ressources globales pour tous les utilisateurs authentifiés, a été remplacée par la permission équivalente `user:* authenticated server:incus`.
+
+  <!--
+  And in turn the `viewer` permission can now directly be assigned to users and grants full server-wide read-only access (not just global resources).
+  -->
+  En parallèle, la permission `viewer` peut être désormais directement assignée aux utilisateurs et donne un accès en lecture seule complet sur le serveur (et plus seulement aux ressources globales).
+
+  <!--
+  The permission will automatically get updated on update.
+  -->
+  La permission sera automatiquement modifiée lors de la mise à jour.
+
+  <!--
+  Additionally a new `can_view_sensitive` entitlement has been added which allows controlling who can read sensitive configuration like the server configuration.
+  -->
+  De plus, un nouveau droit `can_view_sensitive` a été ajouté afin de permettre le contrôle de qui peut lire les informations sensibles de configuration, comme la configuration du serveur.
+
+  <!--
+  ## Image alias reuse on import
+  Similar to what's been around in `incus publish`, it's now possible to run `incus image import --reuse --alias ALIAS image.tar.xz` to have the image imported and have it replace the image identified by the alias `ALIAS`.
+  -->
+  ## Import d’image avec réutilisation d’alias
+  Comme c’était le cas pour `incus publish`, il est maintenant possible de lancer `incus image import --reuse --alias ALIAS image.tar.xz` pour importer une image en remplaçant celle qui était identifiée par l’alias `ALIAS`.
+
+  <!--
+  ## New `incus-simplestreams prune` command
+  A new `incus-simplestreams prune` command has been added to keep simplestreams image servers clean. When run it will identify and cleanup:
+  -->
+  ## Nouvelle commande `incus-simplestreams prune`
+  Une nouvelle commande `incus-simplestreams prune` a été ajoutée pour nettoyer les serveurs simplestreams. Lorsque la commande est lancée, celle-ci identifie et nettoie :
+
+  <!--
+   - Image files that don't belong to any image in the index
+   - Index entries for which image files are missing
+   - Older index entries (defaults to keeping the previous 2 images)
+  -->
+   - Les fichiers d’images qui n’appartiennent à aucune image dans l’index
+   - Les entrées d’index pour lesquelles des fichiers d’images sont manquantes
+   - Les anciennes entrées d’index (par défaut, les 2 précédentes images sont conservées)
+
+  <!--
+  ## Console access locking
+  Console access has always been limited to a single user at a time.
+  Previously whoever would connect last would take over any existing session. 
+  -->
+  ## Verrouillage de l’accès console
+  L’accès à la console a toujours été limité à un unique utilisateur à la fois.
+  Cependant, la personne se connectant en dernier récupérait toujours le contrôle sur la console.
+
+  <!--
+  As this was often the source of some surprise and issues, console access is now under a lock. Connecting when a session is already active results in an error which can be overriden with the force flag.
+  -->
+  Puisque cela était souvent la source de surprises et de problèmes, l’accès à la console est désormais protégé. Lorsque l’on tente de se connecter alors qu’une session est déjà active, une erreur est retournée ; la connexion peut être forcée avec l’option correspondante.
+
+  <!--
+  Example:
+  -->
+  Exemple :
+
+      incus console remote-server:windows-2022 --force
+
+  <!--
+  # Complete changelog
+  Here is a complete list of all changes in this release:
+  -->
+  # Liste complète des changements
+  Voici une liste complète de tous les changements apportés par cette version :
+
+  <!--
+  [details="Full commit list"]
+  -->
+  [details="Liste complète des commits"]
+   - Consume websocket pings for stderr
+   - incus-simplestreams: Add prune command
+   - internal/instance: Fix validation of volatile.cpu.nodes
+   - shared/util: Add a function to clone maps
+   - Use `util.CloneMap` where appropriate
+   - cgo/process_utils: fix 32bit builds
+   - golangci: Enable goimports
+   - global: Initial goimports run
+   - incusd: Fix duplicate imports
+   - incusd: Fix import ordering
+   - instance/config: Mark user keys as live updatable
+   - doc: Update configs
+   - Fix incorrect Vars file mapping in edk2 driver
+   - incusd/storage/zfs: Fix deletion of unavailable pools
+   - zfs: load keys for encrypted datasets during pool import
+   - tests: zfs: add native zfs encryption tests
+   - incusd/instance: Lock image access
+   - incus/image: Make use of server-side alias handling
+   - client: Fix image aliases in push mode
+   - client: Fix image aliases in relay mode
+   - incusd/cluster: Validate address on join too
+   - incusd/network: Remove duplicated logic
+   - incusd/util: Cover DNS and wildcard coverage
+   - incusd/storage: Add initial.* config options for storage volume
+   - incusd/storage/drivers: Add ability to set the initial owner of a custom volume
+   - tests: Add test for setting initial owner of a cutom volume
+   - api: Add storage_initial_owner extension
+   - doc/reference: Add initial.* config keys
+   - shared/cliconfig: Improve configuration loading
+   - incus: Simplify configuration loading
+   - incus: Add aliases completion
+   - i18n: Update translation templates
+   - incusd/storage/drivers/lvm: Remove metadata info from space usage calculation
+   - incus/migration: Add StoragePool to VolumeTargetArgs and StorageMove to VolumeSourceArgs
+   - incus/instance: Add StoragePool to MigrateArgs
+   - incus/drivers: Add support for local live-migration between storage pools
+   - incusd: Add support for local live-migration between storage pools
+   - api: Add storage_live_migration extension
+   - golangci: Add local prefixes for goimports
+   - client: invalidate simple streams cache
+   - incusd/instances_post: Fix cluster internal migrations
+   - incusd/instances_post: Only update pool in DB if pool is expected to change
+   - incusd/instances_post: Account for profiles when overriding pool in DB
+   - incusd/main_forknet: Don't attach DHCP client to the container PID namespace
+   - incusd/instance/lxc: Cleanup DHCP client
+   - incusd/main_forknet: Tweak process title
+   - incus/image: Add reuse flag
+   - incus/publish: Use common helper function deleteImagesByAliases
+   - i18n: Update translation templates
+   - tests: Add a reuse flag test for the 'incus image import'
+   - incusd/instance/qemu: Set instance path ownership on startup
+   - api: instance_console_screenshot
+   - incusd/instance/qmp: Add Screendump command
+   - incusd/response: Allow overrriding Content-Type in FileResponse
+   - incusd/instance: Add ConsoleScreenshot to VM interface
+   - incusd/instance/qemu: Implement ConsoleScreenshot
+   - incusd/instance_console: Add screenshot support to console API
+   - doc/rest-api: Refresh swagger YAML
+   - incusd/task: Fix wait group logic (more entries than running tasks)
+   - incusd/instance: Add ETag function
+   - incusd/instance/qemu: Fix random ordering in ETag
+   - incusd/instance/lxc: Fix random ordering in ETag
+   - incusd: Use new ETag instance function
+   - api: image_import_alias
+   - client: Set X-Incus-aliases on image imports
+   - incusd/image: Allow passing alias list through X-Incus-aliases
+   - doc/rest-api: Refresh swagger YAML
+   - incusd/image: Fix context for alias add
+   - incusd/image: Handle all alias cases
+   - Makefile: Use fga for model conversion
+   - incusd/auth: Introduce EntitlementCanViewSensitive
+   - incusd/api_10: Use EntitlementCanViewSensitive
+   - incusd/auth/openfga: Introduce server-wide read-only access
+   - incusd/auth/openfga: Rebuild model
+   - incusd/auth/openfga: Migrate public permissions
+   - incusd/auth: Implement ApplyPatch
+   - incusd/auth/fga: Change model refresh logic to rely on patches
+   - incusd/patches: Add auth patch logic
+   - incusd/patches: Skip patches until their assigned stage
+   - doc/authorization: Remove outdated OpenFGA model description
+   - tests: Tweak openfga test
+   - incusd/migrate: Set CreationDate during custom volume snapshot copy with refresh
+   - incusd/storage: Add CreatedAt during custom volume copy with refresh
+   - tests: Update copy with refresh test
+   - doc/instance/properties: Add missing instance properties
+   - incusd/daemon_storage: Ensure corect symlinks for images/backups
+   - incusd/storage/lvm: Handle newer LVM
+   - doc/sphinx: Upgrade MyST
+   - doc/manpage: Tweak manpage synopsis rendering
+   - incusd/storage/lvm: Require 512-bytes physical block size for VM images
+   - incus: Improve instance and remote names completion
+   - incusd: Fill ExpiryDate and remove LastUsedDate in volumeSnapshotToProtobuf
+   - incusd/device/tpm: Wait for swtpm to be ready
+   - incus: Improve completion for `file push` and `file pull`
+   - incusd/auth/tls: Restrict config access to non-admin
+   - incusd/storage: Handle default disk size in GetInstanceUsage
+   - incus: Improve completion for `file create`
+   - incus: Improve completion for `file delete`
+   - incus: Improve completion for `file edit`
+   - incus: Improve completion for `file mount`
+   - incus: Fix completion for `profile copy`
+   - doc/installing: Update Fedora instructions
+   - incus: Add a function to complete image fingerprints
+   - incus: Add completion for `image alias` subcommands
+   - incusd/daemon: Skip non-PKI issued trusted certificates when in PKI mode
+   - incusd/cluster: Update tests for change to trustedCerts
+   - tests: Validate all non-PKI certs are blocked in PKI mode
+   - incus: Fix completion for `image alias create`
+   - doc/network_forwards: Split configuration into own table
+   - util: Improve readability with early return
+   - incusd/db: Improve readability with eraly return
+   - incus/top: Ignore CPU idle time
+   - incus: Display the alias expansion when execution of an alias fails
+   - i18n: Update translation templates
+   - util: code structure error handling
+   - incusd/db: do not shadow Go builtin function
+   - lint: disallow restricted licenses in go-licenses
+   - incus: Fix alias arguments handling
+   - incus/file: Expand setOwnerMode
+   - incus/file/push Use SFTP client instead of file API
+   - incusd/instance/qemu: Set CLOEXEC for TPM sockets
+   - incusd/patches: Run auth patches on all servers
+   - incusd/auth/openfga: Get rid of applyPatches
+   - incusd/auth/openfga: Force OpenFGA update on initial config and patching
+   - incus: Clarify device override syntax
+   - i18n: Update translation templates
+   - incusd/auth/openfga: refresh model before applying patches
+   - internal/scriptlet: Fix typo
+   - incusd/scriptlet: refactor marshal
+   - incusd/scriptlet: Refactor log
+   - incusd/scriptlet: Add authorization scriptlet
+   - incusd/auth: Refactor drivers
+   - incusd/config: Add scriptlet authorization key
+   - incusd/auth: Add authorization scriptlet driver
+   - incusd/daemon: Handle authorization scriptlet reset
+   - incusd/auth: Comment exported methods and types
+   - incusd/scriptlet: Add project and instance authorization getters
+   - doc: Update configs
+   - api: authorization_scriptlet
+   - doc/authorization: Add authorization scriptlet
+   - tests: Authorization scriptlet
+   - doc: add openSUSE installation instructions
+   - incusd/scriptlet: Rename prefixAuthorization to nameAuthorization
+   - incusd/scriptlet: Add function checks in scriptlet validation
+   - client/oci: Add debug logging for subprocess commands
+   - incusd/daemon_images: Fix error string typo for OCI connect errors
+   - incusd/scriptlet: Add function args checks in scriptlet validation
+   - incus/project: Fix get-current for default (unset) project
+   - Translated using Weblate (Japanese)
+   - incusd: Add support for '--force' flag
+   - cmd/console: Add '--force' flag
+   - shared/api: Add Force field to InstanceConsolePost
+   - client: Check 'console_force' API extenstion
+   - api: Add console_force extension
+   - doc/rest-api: Refresh swagger YAML
+   - i18n: Update translation templates
+   - internal/cmd: Have RenderTable take in an io.Writer
+   - incus: Update for RenderTable
+   - incus-simplestreams: Update for RenderTable
+   - incusd: Update for RenderTable
+   - incusd: Cleanup in cmdClusterListDatabase
+   - doc/reference/network_bridge: Add missing backsticks for variable escaping
+   - incusd/instance/lxc: Skip instances without idmap allocation yet
+   - incusd/cluster: Skip project restrictions during join
+   - shared/ask: Add AskPassword/AskPasswordOnce to Asker
+   - shared/ask: Fix redefinition of the built-in types
+   - cmd/incus: Use AskPasswordOnce from asker
+   - incusd/storage/drivers/common: Truncate/Discard ahead of sparse write
+   - inucsd: Add additional check to Cancel method for ConsoleShow operation
+   - incusd/instance_console: Remove redundant (and unsafe) write
+   - incus/console: Make sure we leave the console in a clean state
+   - incusd/instance_console: Don't fail on failure to write reset sequence
+   - client: Improve SFTP performance
+   - incusd/main_forkfile: Improve SFTP performance
+   - incusd/network/ovn: Return ErrTooMany when getting multiple records
+   - incusd/network/ovn: Clear all existing records
+   - gomod: Update dependencies
+   - incusd/instance_post: Expand profiles in scriptlet context
+  [/details]
+
+  <!--
+  # Documentation
+  The Incus documentation can be found at:
+  https://linuxcontainers.org/incus/docs/main/
+  -->
+  # Documentation
+  La documentation d’Incus peut être consultée sur :
+  https://linuxcontainers.org/incus/docs/main/
+
+  <!--
+  # Packages
+  There are no official Incus packages as Incus upstream only releases regular release tarballs. Below are some available options to get Incus up and running.
+  -->
+  # Paquets
+  Incus ne fournit pas de paquet d’installation mais bien un tarball à chaque version. Vous trouverez ci-dessous différentes solutions pour mettre Incus en service.
+
+  <!--
+  ## Installing the Incus server on Linux
+  Incus is available for most common Linux distributions. You'll find detailed installation instructions in our documentation.
+  -->
+  ## Installation du serveur Incus sous Linux
+  Incus est disponible sur la plupart des distributions Linux courantes. Vous trouverez des instructions d’installation détaillées dans notre documentation.
+
+  https://linuxcontainers.org/incus/docs/main/installing/
+
+  <!--
+  ## Homebrew package for the Incus client
+  The client tool is available through HomeBrew for both Linux and MacOS.
+  -->
+  ## Paquet Homebrew du client Incus
+  Le client Incus est disponible sur Homebrew pour Linux et macOS.
+
+  https://formulae.brew.sh/formula/incus
+
+  <!--
+  ## Chocolatey package for the Incus client
+  The client tool is available through Chocolatey for Windows users.
+  -->
+  ## Paquet Chocolatey du client Incus
+  Le client Incus est disponible sur Chocolatey pour les utilisateurs de Windows.
+
+  https://community.chocolatey.org/packages/incus/6.8.0
+
+  <!--
+  ## Winget package for the Incus client
+  The client tool is also available through Winget for Windows users.
+  -->
+  ## Paquet Winget du client Incus
+  Le client Incus est aussi disponible sur Winget pour les utilisateurs de Windows.
+
+  https://winstall.app/apps/LinuxContainers.Incus
+
+  <!--
+  # Support
+  Monthly feature releases are only supported up until the next release comes out.  Users needing a longer support length and less frequent changes should consider using Incus 6.0 LTS instead.
+  -->
+  # Support
+  Les versions de fonctionnalité d’Incus ne sont supportées que jusqu’à la sortie de la suivante. Les personnes souhaitant un support plus long et des changements moins fréquents devraient plutôt envisager d’utiliser Incus 6.0 LTS.
+
+  <!--
+  Community support is provided at: https://discuss.linuxcontainers.org
+  Commercial support is available through: https://zabbly.com/incus
+  Bugs can be reported at: https://github.com/lxc/incus/issues
+  -->
+  Le support communautaire est disponible sur : https://discuss.linuxcontainers.org
+  Un support commercial est disponible sur : https://zabbly.com/incus
+  Les bugs peuvent être signalés sur : https://github.com/lxc/incus/issues
