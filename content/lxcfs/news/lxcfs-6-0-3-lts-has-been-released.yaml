@@ -1,0 +1,53 @@
+title: LXCFS 6.0.3 LTS has been released
+date: 2024/12/19 21:12
+origin: https://discuss.linuxcontainers.org/t/lxcfs-6-0-3-lts-has-been-released/22401
+content: |-
+  # Introduction
+  The LXCFS team is pleased to announce the release of LXCFS 6.0.3!
+
+  This is the third bugfix release for LXCFS 6.0 which is supported until June 2029.
+
+  # Changes
+  Some of the highlights for this release are:
+
+   - Better detection of swap accounting support
+   - Reworked testsuite including support for 64-bit Arm
+
+  The full list of commits is available below:
+
+  [details="Detailed changelog"]
+   - lxcfs_read: Added LXCFS_TYPE macro to all FUSE filesystem calls
+   - lxcfs: fix readdir for procfs subtree
+   - tests: add proc readdir test
+   - cgroups/cgfsng: improve swap accounting support detection
+   - github: Bump Ubuntu version
+   - github: Simplify tests workflow
+   - github: Add arm64 tests
+   - tests: Make sure to enable cpuset controller
+   - github: Use shared logic
+   - github: Update coverity workflow
+   - github: Simplify build action
+   - github: Update checkout to v4
+   - github: Cleanup testsuite action
+   - github: Improve progress reporting
+  [/details]
+
+  # Support and upgrade
+  The LXCFS 6.0 branch is supported until June 2029.
+  Only bugfixes and securitiy issues get included into the stable bugfix releases, so it's always safe and recommended to keep up and run the latest bugfix release.
+
+  # Downloads
+
+   - Main release tarball: [lxcfs-6.0.3.tar.gz](https://linuxcontainers.org/downloads/lxcfs/lxcfs-6.0.3.tar.gz)
+   - GPG signature: [lxcfs-6.0.3.tar.gz.asc](https://linuxcontainers.org/downloads/lxcfs/lxcfs-6.0.3.tar.gz.asc)
+
+  # Thanks
+  This LTS release update was made possible thanks to funding provided by the Sovereign Tech Fund (now part of the Sovereign Tech Agency).
+
+  [![ST-Fund-Logo-Default-White-RGB|690x219](https://discuss.linuxcontainers.org/uploads/default/original/2X/7/7799c947413019d3c5cd4fa201568495de1db2c4.png)](https://sovereign.tech)
+
+  [quote]
+  The Sovereign Tech Fund supports the development, improvement, and maintenance of open digital infrastructure. Its goal is to sustainably strengthen the open source ecosystem, focusing on security, resilience, technological diversity, and the people behind the code.
+  [/quote]
+
+  Find out more at: https://www.sovereign.tech

@@ -1,0 +1,60 @@
+title: LXC 6.0.3 LTS has been released
+date: 2024/12/19 21:12
+origin: https://discuss.linuxcontainers.org/t/lxc-6-0-3-lts-has-been-released/22402
+content: |-
+  # Introduction
+  The LXC team is pleased to announce the release of LXC 6.0.3!
+
+  This is the third bugfix release for LXC 6.0 which is supported until June 2029.
+
+  # Changes
+  As usual this bugfix releases focus on stability and hardening.
+
+  Some of the highlights for this release are:
+
+   - Added support for PuzzleFS images in lxc-oci
+   - SIGHUP is now propagated through lxc.init
+   - Reworked testsuite including support for 64-bit Arm
+
+  The full list of commits is available below:
+
+  [details="Detailed changelog"]
+   - meson.build: add -ffat-lto-objects
+   - meson.build: drop suggest-attribute=noreturn build option
+   - Add suppport for PuzzleFS images in the oci template
+   - create_run_template: don't use txtuid and txtguid out of scope
+   - Avoid null pointer dereference when using shared rootfs. rootfs->storage not set by lxc_storage_prepare when using a shared rootfs.
+   - meson: fix minor typo
+   - lxc-net: Replace random IPv6 subnet
+   - fix return code of recursive all of cgroup_tree_prune
+   - lxccontainer: fix enter_net_ns helper to work when netns is inherited
+   - lxc.init: Switch to sigaction
+   - lxc.init: Ignore user signals coming from inside the contianer
+   - lxc.init: Allow SIGHUP from outside the container
+   - github: Update coverity workflow
+   - github: Introduce shared build logic
+   - github: Introduce shared testsuite logic
+   - github: Rework test workflow
+   - github: Cleanup OSS-fuzz
+   - github: Improve progress reporting
+  [/details]
+
+  # Support and upgrade
+  The LXC 6.0 branch is supported until June 2029.
+  Only bugfixes and securitiy issues get included into the stable bugfix releases, so it's always safe and recommended to keep up and run the latest bugfix release.
+
+  # Downloads
+
+   - Main release tarball: [lxc-6.0.3.tar.gz](https://linuxcontainers.org/downloads/lxc/lxc-6.0.3.tar.gz)
+   - GPG signature: [lxc-6.0.3.tar.gz.asc](https://linuxcontainers.org/downloads/lxc/lxc-6.0.3.tar.gz.asc)
+
+  # Thanks
+  This LTS release update was made possible thanks to funding provided by the Sovereign Tech Fund (now part of the Sovereign Tech Agency).
+
+  [![ST-Fund-Logo-Default-White-RGB|690x219](https://discuss.linuxcontainers.org/uploads/default/original/2X/7/7799c947413019d3c5cd4fa201568495de1db2c4.png)](https://sovereign.tech)
+
+  [quote]
+  The Sovereign Tech Fund supports the development, improvement, and maintenance of open digital infrastructure. Its goal is to sustainably strengthen the open source ecosystem, focusing on security, resilience, technological diversity, and the people behind the code.
+  [/quote]
+
+  Find out more at: https://www.sovereign.tech
