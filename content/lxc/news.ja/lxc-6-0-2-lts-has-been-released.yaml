@@ -1,0 +1,55 @@
+title: LXC 6.0.2 LTS リリースのお知らせ
+date: 2024/09/17 09:09
+origin: https://discuss.linuxcontainers.org/t/lxc-6-0-2-lts-has-been-released/21632
+content: |-
+  # はじめに <!-- Introduction -->
+  <!--
+  The LXC team is pleased to announce the release of LXC 6.0.2!
+  -->
+  LXC チームが LXC 6.0.2 LTS のリリースをお知らせします!
+
+  <!--
+  This is the second bugfix release for LXC 6.0 which is supported until June 2029.
+  -->
+  このリリースは、LXC 6.0 の 2 度目のバグフィックスリリースで、2029 年 6 月までサポートされます。
+
+  # 変更点 <!-- Changes -->
+  <!--
+  As usual this bugfix releases focus on stability and hardening.
+  -->
+  いつもどおり、このバグ修正リリースは、安定性とセキュリティ強化にフォーカスを当てています。
+
+  <!--
+  Some of the highlights for this release are:
+  -->
+  このリリースのハイライトは次のとおりです:
+
+   - 一般的なメッセージのいくつかのログレベルを下げました <!-- Reduced log level on some common messages -->
+   - aarch64 でのコンパイルエラーの修正 <!-- Fix compilation error on aarch64 -->
+
+  <!--
+  The full list of commits is available below:
+  -->
+  コミットのすべてのリストは次のとおりです（翻訳なし）:
+
+  [details="すべてのChangeLogを見る"]
+   - Remove unused function
+   - idmap: Lower logging level of newXidmap tools to INFO
+   - Exit 0 when there's no error
+   - doc: Fix definitions of get_config_path and set_config_path
+   - README: Update security contact
+   - fix possible clang compile error in AARCH
+  [/details]
+
+  # サポートとアップグレード <!-- Support and upgrade -->
+  <!--
+  The LXC 6.0 branch is supported until June 2029.
+  Only bugfixes and securitiy issues get included into the stable bugfix releases, so it's always safe and recommended to keep up and run the latest bugfix release.
+  -->
+  LXC 6.0 ブランチは 2029 年 6 月までサポートされます。
+  Stable 版のバグ修正リリースには、バグ修正とセキュリティの問題の修正のみが含まれます。このため、常に最新のバグ修正リリースを実行し、セキュリティーを確保することが安全であり、推奨されます。
+
+  # ダウンロード <!-- Downloads -->
+
+   - リリース tarball <!-- Main release tarball -->: [lxc-6.0.2.tar.gz](https://linuxcontainers.org/downloads/lxc/lxc-6.0.2.tar.gz)
+   - GPG シグネチャー <!-- GPG signature -->: [lxc-6.0.2.tar.gz.asc](https://linuxcontainers.org/downloads/lxc/lxc-6.0.2.tar.gz.asc)

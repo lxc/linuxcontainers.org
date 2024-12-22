@@ -1,0 +1,88 @@
+title: LXC 6.0.3 LTS リリースのお知らせ
+date: 2024/12/19 21:12
+origin: https://discuss.linuxcontainers.org/t/lxc-6-0-3-lts-has-been-released/22402
+content: |-
+  # はじめに <!-- Introduction -->
+  <!--
+  The LXC team is pleased to announce the release of LXC 6.0.3!
+  -->
+  LXC チームが LXC 6.0.3 LTS のリリースをお知らせします!
+
+  <!--
+  This is the third bugfix release for LXC 6.0 which is supported until June 2029.
+  -->
+  このリリースは、LXC 6.0 の 3 度目のバグフィックスリリースで、2029 年 6 月までサポートされます。
+
+  # 変更点 <!-- Changes -->
+  <!--
+  As usual this bugfix releases focus on stability and hardening.
+  -->
+  いつもどおり、このバグ修正リリースは、安定性とセキュリティ強化にフォーカスを当てています。
+
+  <!--
+  Some of the highlights for this release are:
+  -->
+  このリリースのハイライトは次のとおりです:
+
+   - lxc-oci に PuzzleFS のサポートを追加 <!-- Added support for PuzzleFS images in lxc-oci -->
+   - lxc.init を通した SIGHUP の伝搬 <!-- SIGHUP is now propagated through lxc.init -->
+   - 64 ビット Arm サポートを含む、テストスイートの再構築 <!-- Reworked testsuite including support for 64-bit Arm -->
+
+  <!--
+  The full list of commits is available below:
+  -->
+  コミットのすべてのリストは次のとおりです（翻訳なし）:
+
+  [details="すべてのChangeLogを見る"]
+   - meson.build: add -ffat-lto-objects
+   - meson.build: drop suggest-attribute=noreturn build option
+   - Add suppport for PuzzleFS images in the oci template
+   - create_run_template: don't use txtuid and txtguid out of scope
+   - Avoid null pointer dereference when using shared rootfs. rootfs->storage not set by lxc_storage_prepare when using a shared rootfs.
+   - meson: fix minor typo
+   - lxc-net: Replace random IPv6 subnet
+   - fix return code of recursive all of cgroup_tree_prune
+   - lxccontainer: fix enter_net_ns helper to work when netns is inherited
+   - lxc.init: Switch to sigaction
+   - lxc.init: Ignore user signals coming from inside the contianer
+   - lxc.init: Allow SIGHUP from outside the container
+   - github: Update coverity workflow
+   - github: Introduce shared build logic
+   - github: Introduce shared testsuite logic
+   - github: Rework test workflow
+   - github: Cleanup OSS-fuzz
+   - github: Improve progress reporting
+  [/details]
+
+  # サポートとアップグレード <!-- Support and upgrade -->
+  <!--
+  The LXC 6.0 branch is supported until June 2029.
+  Only bugfixes and securitiy issues get included into the stable bugfix releases, so it's always safe and recommended to keep up and run the latest bugfix release.
+  -->
+  LXC 6.0 ブランチは 2029 年 6 月までサポートされます。
+  Stable 版のバグ修正リリースには、バグ修正とセキュリティの問題の修正のみが含まれます。このため、常に最新のバグ修正リリースを実行し、セキュリティーを確保することが安全であり、推奨されます。
+
+  # ダウンロード <!-- Downloads -->
+
+   - リリース tarball <!-- Main release tarball -->: [lxc-6.0.3.tar.gz](https://linuxcontainers.org/downloads/lxc/lxc-6.0.3.tar.gz)
+   - GPG シグネチャー <!-- GPG signature -->: [lxc-6.0.3.tar.gz.asc](https://linuxcontainers.org/downloads/lxc/lxc-6.0.3.tar.gz.asc)
+
+  # 感謝 <!-- Thanks -->
+  <!--
+  This LTS release update was made possible thanks to funding provided by the Sovereign Tech Fund (now part of the Sovereign Tech Agency).
+  -->
+  この LTS リリースアップデートは、Sovereign Tech Fund（現在は Sovereign Tech Agency の一部）からの資金提供により実現しました。
+
+  [![ST-Fund-Logo-Default-White-RGB|690x219](https://discuss.linuxcontainers.org/uploads/default/original/2X/7/7799c947413019d3c5cd4fa201568495de1db2c4.png)](https://sovereign.tech)
+
+  <!--
+  [quote]
+  The Sovereign Tech Fund supports the development, improvement, and maintenance of open digital infrastructure. Its goal is to sustainably strengthen the open source ecosystem, focusing on security, resilience, technological diversity, and the people behind the code.
+  [/quote]
+  -->
+  > Sovereign Tech Fund は、オープンデジタルインフラストラクチャーの開発、改良、保守をサポートします。その目標は、セキュリティ、レジリエンス、技術の多様性、コードの背後にいる人々に焦点を当て、オープンソースエコシステムを持続的に強化することです。
+
+  <!--
+  Find out more at: https://www.sovereign.tech
+  -->
+  詳細は https://www.sovereign.tech をご覧ください。
