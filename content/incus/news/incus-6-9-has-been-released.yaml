@@ -1,0 +1,262 @@
+title: Incus 6.9 has been released
+date: 2025/01/24 19:01
+origin: https://discuss.linuxcontainers.org/t/incus-6-9-has-been-released/22679
+content: |-
+  # Introduction
+  Happy new year!
+
+  The Incus team is pleased to announce the release of Incus 6.9!
+
+  This is a bit of a lighter release given the holiday break, but it features some nice feature additions on top of the usual health dose of bugfixes.
+
+  [![image|690x429](https://discuss.linuxcontainers.org/uploads/default/original/2X/7/7695a246163a1b6b5e964db33c34223fd9d8a2e9.png)](https://linuxcontainers.org/incus/try-it/)
+
+  As usual, you can try it for yourself online: https://linuxcontainers.org/incus/try-it/
+
+  Enjoy!
+
+  # New features
+  ## Instance network ACL on bridge networks
+  Network ACLs can now be directly applied to instances running on a managed network bridge, so long as the system is using `nft` for its firewalling (can be checked with `incus info`).
+
+  This allows for networking micro-segmentation by having various instances running on the same bridged network having individual ingress/egress firewall rules applied to them.
+
+  Network ACLs can be created and managed through `incus network acl` and then applied to the relevant NIC interfaces using the `security.acls` configuration key.
+
+  ACL documentation: https://linuxcontainers.org/incus/docs/main/howto/network_acls/
+  Bridge documentation: https://linuxcontainers.org/incus/docs/main/reference/network_bridge/
+  NIC documentation: https://linuxcontainers.org/incus/docs/main/reference/devices_nic/#nic-bridged
+
+  ## Enhancements to QEMU scriptlet
+  The QEMU scriptlet has been further improved in this release.
+
+  All scriptlet calls now provide the full instance structure, offering access to the instance configuration, list of profiles, ...
+
+  A new `config` hook was also added which runs prior to QEMU being started at all.
+  This hook cannot be used to send QMP commands, but it allows calling new functions to alter the QEMU configuration file or command line arguments:
+
+   - `get_qemu_cmdline`
+   - `set_qemu_cmdline`
+   - `get_qemu_conf`
+   - `set_qemu_conf`
+
+  Documentation: https://linuxcontainers.org/incus/docs/main/reference/instance_options/#advanced-use
+
+  ## VM memory dumps
+  A new `incus debug memory-dump` command and matching API has been added to provide an easy way to get a virtual machine memory dump.
+
+  Incus VMs also now include the necessary additional device to allow for Windows virtual machines to provide memory debug information allowing for a memory dump that can be loaded in the Windows debugger.
+
+      stgraber@dakara:~$ incus launch images:debian/12 v1 --vm
+      Launching v1
+      stgraber@dakara:~$ incus debug dump-memory v1 debug --format=elf
+      stgraber@dakara:~$ file debug
+      debug: ELF 64-bit LSB core file, x86-64, version 1 (SYSV), SVR4-style
+
+  ## Uplink addresses in OVN network state
+  It's now possible to get the uplink IPv4 and IPv6 addresses directly from `incus network info`.
+
+      stgraber@athos:~# incus network info default
+      Name: default
+      MAC address: 00:16:3e:8d:51:b6
+      MTU: 1500
+      State: up
+      Type: broadcast
+      
+      IP addresses:
+        inet   10.22.45.1/24 (link)
+        inet6  2602:fc62:b:8006::1/64 (link)
+      
+      Network usage:
+        Bytes received: 0B
+        Bytes sent: 0B
+        Packets received: 0
+        Packets sent: 0
+      
+      OVN:
+        Chassis: delmak
+        Logical router: incus-net13-lr
+        IPv4 uplink address: 172.17.200.106
+        IPv6 uplink address: 2602:fc62:b:200::106
+
+  ## Creation of storage volumes through server preseed file
+  It's now possible to define some initial storage volumes directly through the server preseed file.
+  This can be useful to set up some shared volumes to be used by a profile that's also part of the preseed, or as a way to define volumes to be used for Incus images or backups storage.
+
+  Documentation: https://linuxcontainers.org/incus/docs/main/howto/initialize/#configuration-format
+
+  ## Setting description in `create` commands
+  All `create` commands now have a `--description` option which can be used to directly set the description field on the object.
+
+      stgraber@dakara:~$ incus profile create foo --description "Example profile"
+      Profile foo created
+      stgraber@dakara:~$ incus profile list
+      +---------+-----------------------+---------+
+      |  NAME   |      DESCRIPTION      | USED BY |
+      +---------+-----------------------+---------+
+      | default | Default Incus profile | 6       |
+      +---------+-----------------------+---------+
+      | foo     | Example profile       | 0       |
+      +---------+-----------------------+---------+
+
+  # Complete changelog
+  Here is a complete list of all changes in this release:
+
+  [details="Full commit list"]
+   - Translated using Weblate (Japanese)
+   - incusd/scriptlet: Refactor load package
+   - incusd/scriptlet: Add support for checking optional functions and improve error messages
+   - Translated using Weblate (Japanese)
+   - Translated using Weblate (Japanese)
+   - incusd/storage/drivers: Force blkdiscard and ignore errors
+   - incusd/auth: fix FGA online data race
+   - incusd/storage/drivers: Log on blkdiscard failure
+   - incusd/storage: Add storage volume db entries when storage is changed
+   - client: Propagate HTTP TLS dialer to websocket
+   - api: network_ovn_state_addresses
+   - shared/api: Expand OVN state with uplink addresses
+   - doc/rest-api: Refresh swagger YAML
+   - internal/server: Add uplink addresses to ovn state
+   - incus/network/info: Add uplink addresses for ovn network
+   - i18n: Update translation templates
+   - incus: Add --description flag to create commands
+   - i18n: Update translation templates
+   - tests: Add tests for --description flag on create commands
+   - incusd/scriptlet: Fix qemu_hook required argument
+   - doc: Fix qemu_hook required argument
+   - Add simple shell.nix
+   - client: Add proxy host to skopoe calls
+   - incusd/cluster: Add missing error handling
+   - incusd/cluster: Clarify error on DB failure
+   - incusd/instance/qemu: Fix QMP arguments typing
+   - incusd/instance/qemu: QEMU device naming consistency
+   - Encode mc alias for storage buckets to match allowed characters
+   - doc: Contributing section restructuring
+   - incusd/network/ovn: Allow creation of OVN network with no uplink
+   - incusd/network/ovn: Handle missing logical router in state
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - lxd-to-incus: Clear volatile.uuid from instances
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - Added translation using Weblate (Chinese (Traditional Han script))
+   - Translated using Weblate (Chinese (Traditional Han script))
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - github: Bump most workflows to 24.04
+   - github: Split testsuite to separate action
+   - github: Add aarch64 tests
+   - tests: Skip nftables test on old kernels
+   - Added translation using Weblate (Tamil)
+   - shared/util: Add IsNoneOrEmpty
+   - incusd/network/bridge: Tweak dnsmasq startup condition
+   - shared/cgo: Add finalize_userns
+   - shared/cgo: Export in_same_namespace
+   - incusd/main_forkproxy: Join all namespaces at once
+   - incusd/main_forkfile: Join all namespaces at once
+   - internal/linux: Add ClearBlock
+   - incusd/storage: Switch to linux.ClearBlock
+   - internal/linux/discard: Remove leftover debugging
+   - internal/linux/discard: Use marker length for buffer
+   - internal/linux/discard: Add support for offset
+   - incusd/storage/generic: Pass offset to ClearBlock
+   - incusd/storage/lvm: Discard the new blocks on resize
+   - incusd/storage/lvm: Run ClearBlock on all new thick block volumes
+   - cmd: support header line for csv output
+   - cmd: update --format flag description
+   - i18n: Update translation templates
+   - cmd: add validation for --format flag
+   - doc: fix ref for vendor-data
+   - devcontainer: initial version
+   - Makefile: add target for unit tests as root
+   - Makefile: add missing installations for gotags and openfga
+   - incusd/network/ovn: Skip remote peers when iterating peer networks
+   - incusd/storage/lvm: Move resize clearing to SetVolumeQuota
+   - incusd/storage: Make use of qemu-img's target-is-zero option
+   - incusd/device/disk: Remove virtfs-proxy-helper dependency
+   - tests: Remove 9p proxy driver
+   - incusd/instance: Split startupHook function
+   - incusd/main_cluster: Tweak to have help refer to correct command name
+   - incusd/instance: Pass an *api.Instance to the scriptlet program
+   - incusd/scriptlet/qemu: Add instance parameter to the QEMU scriptlet
+   - incusd/instance: Rewire QEMU config generation
+   - incusd/instance: Make QEMU config types public
+   - incusd/scriptlet/qemu: Fix Starlark function name
+   - incusd/scriptlet/qemu: Prevent calling QMP functions at config stage
+   - incusd/device/disk: Better handle partitions
+   - Fixed link to point to correct manpage.
+   - lxd-to-incus: Be more lenient on database changes
+   - incusd/storage/drivers: Handle 4k sector sizes
+   - incusd/dnsmasq: Don't put the project name in the DNS record
+   - incusd/device/disk: disable 9p if idmap requested
+   - incusd/scriptlet/qemu: Add QEMU configuration getters
+   - incusd/scriptlet/qemu: Add QEMU configuration setters
+   - api: qemu_scriptlet_config
+   - doc/ref/instance_options: Update QEMU scriptlet documentation
+   - incusd/instance: Update unit test
+   - incusd/instance/drivers: Introduce ReloadDevice
+   - api: network_bridge_acl_devices
+   - incusd/device/nic: ACL support for bridge NIC device
+   - incusd/server/firewall: ACL for bridge NIC device
+   - doc/device/nic: Add ACL support to bridge NICs
+   - doc/network_acl: Document usage with bridged NICs
+   - tests: nftable test with ACL rules
+   - github: Switch to Github's hosted arm64 runners
+   - doc: typo
+   - doc: Updated storage_zfs.md
+   - incusd/device/disk: Update correct mount options
+   - incus/file/pull: Port to SFTP
+   - i18n: Update translation templates
+   - api: instance_debug_memory
+   - incusd/instances/qemu: Add vmcoreinfo device
+   - incusd/instances/qemu: Add dump-guset-memory implementation for instance memory debugging
+   - incusd: Add GET /1.0/instances/NAME/debug/memory
+   - doc/rest-api: Refresh swagger YAML
+   - client: Add API implementation for instance memory debugging
+   - incus: Add "debug dump-memory" command
+   - i18n: Update translation templates
+   - doc: Force white background for swagger API
+   - gomod: Update dependencies
+   - api: init_preseed_storage_volumes
+   - client: Add storage volume initialization
+   - shared/api: Add storage volume initialization
+   - doc: Include storage initialization example
+   - doc/rest-api: Refresh swagger YAML
+   - tests: Include storage volume to init test
+   - incusd/instance/qemu: Fix device_id warning on 9.2.x
+   - incus: Fix example description for debug dump-memory command
+   - i18n: Update translation templates
+  [/details]
+
+  # Documentation
+  The Incus documentation can be found at:
+  https://linuxcontainers.org/incus/docs/main/
+
+  # Packages
+  There are no official Incus packages as Incus upstream only releases regular release tarballs. Below are some available options to get Incus up and running.
+
+  ## Installing the Incus server on Linux
+  Incus is available for most common Linux distributions. You'll find detailed installation instructions in our documentation.
+
+  https://linuxcontainers.org/incus/docs/main/installing/
+
+  ## Homebrew package for the Incus client
+  The client tool is available through HomeBrew for both Linux and MacOS.
+
+  https://formulae.brew.sh/formula/incus
+
+  ## Chocolatey package for the Incus client
+  The client tool is available through Chocolatey for Windows users.
+
+  https://community.chocolatey.org/packages/incus/6.9.0
+
+  ## Winget package for the Incus client
+  The client tool is also available through Winget for Windows users.
+
+  https://winstall.app/apps/LinuxContainers.Incus
+
+  # Support
+  Monthly feature releases are only supported up until the next release comes out.  Users needing a longer support length and less frequent changes should consider using Incus 6.0 LTS instead.
+
+  Community support is provided at: https://discuss.linuxcontainers.org
+  Commercial support is available through: https://zabbly.com/incus
+  Bugs can be reported at: https://github.com/lxc/incus/issues
