@@ -1,0 +1,525 @@
+title: Incus 6.0.3 LTS est maintenant disponible
+date: 2024/12/19 22:12
+origin: https://discuss.linuxcontainers.org/t/incus-6-0-3-lts-has-been-released/22403
+content: |-
+  <!--
+  # Introduction
+  The Incus team is pleased to announce the release of Incus 6.0.3!
+  -->
+  # Introduction
+  L’équipe d’Incus est heureuse d’annoncer la sortie d’Incus 6.0.3 !
+
+  <!--
+  This is the third bugfix release for Incus 6.0 which is supported until June 2029.
+  -->
+  Il s’agit de la troisième version apportant des corrections de bugs pour Incus 6.0, dont le support est assuré jusqu’en juin 2029
+
+  <!--
+  # Changes
+  As usual this bugfix releases focus on stability and hardening.
+  -->
+  # Changements
+  Comme d’habitude, cette version se concentre sur la stabilité et le hardening.
+
+  <!--
+  Minor improvements have also been backported, specifically anything which does not require data migration, database changes or cause any unexpected change to user facing behavior.
+  -->
+  Des améliorations mineures ont également été rétroportées, en particulier tout ce qui ne nécessite pas de migrations de données, de modifications dans la base de données, ou ne cause pas de changements inattendus dans le comportement observé par l’utilisateur.
+
+  <!--
+  The number of such improvements will decrease over time within the LTS branch.
+  -->
+  Le nombre de ces améliorations pour la branche LTS est amené à diminuer avec le temps.
+
+  <!--
+  Some of the highlights for this release are:
+  -->
+  Les points marquants de cette version sont :
+
+  <!--
+   - OS info for virtual machines (`incus info`)
+   - Console history for virtual machines (`incus console --show-log`)
+   - Ability to create clustered LVM pools directly through Incus
+   - QCOW2 and VMDK support in `incus-migrate`
+   - Configurable macvlan mode (`bridge`, `vepa`, `passthru` or `private`)
+   - Load-balancer health information (`incus network load-balancer info`)
+   - External interfaces in OVN networks (support for `bridge.external_interfaces`)
+   - Parallel cluster evacuation/restore (on systems with large number of CPUs)
+   - Introduction of `incus webui` as a quick way to access the web interface
+   - Automatic cluster re-balancing
+   - Partial instance/volume refresh (`incus copy --refresh-exclude-older --refresh`)
+   - Configurable columns, formatting and refresh time in `incus top`
+   - Support for DHCP ranges in OVN (`ipv4.dhcp.ranges`)
+   - Support for changing the backing interface of a managed physical network
+   - Extended QEMU scriptlet (additional functions)
+   - New log file for QEMU QMP traffic (`qemu.qmp.log`)
+   - New `get_instances_count` function available in placement scriptlet
+   - Support for `--format` in `incus admin sql`
+   - Storage live migration for virtual machines
+   - New authorization scriptlet as an alternative to OpenFGA
+   - API to retrieve console screenshots
+   - Configurable initial owner for custom storage volumes (`initial.uid`, `initial.gid`, `initial.mode`)
+   - Image alias reuse on import (`incus image import --reuse --alias`)
+   - New `incus-simplestreams prune` command
+   - Console access locking (`incus console --force` to override)
+  -->
+   - Informations sur l’OS des machines virtuelles (`incus info`)
+   - Historique de la console des machines virtuelles (`incus console --show-log`)
+   - Possibilité de créer des pools LVM en cluster directement via Incus
+   - Support de QCOW2 et VMDK dans `incus-migrate`
+   - Mode macvlan configurable (`bridge`, `vepa`, `passthru` or `private`)
+   - Informations sur l’état des load-balancers (`incus network load-balancer info`)
+   - Interfaces externes dans les réseaux OVN (support de `bridge.external_interfaces`)
+   - Évacuation/restauration d’un cluster en parallèle (sur les systèmes avec beaucoup de cœurs)
+   - Ajout de `incus webui` pour accéder rapidement à l’interface web
+   - Rééquilibrage automatique de cluster
+   - Rafraîchissement partiel d’instances et de volumes (`incus copy --refresh-exclude-older --refresh`)
+   - Colonnes, formattage et temps de rafraîchissement configurables pour `incus top`
+   - Support pour les plages d’adresses DHCP dans OVN(`ipv4.dhcp.ranges`)
+   - Support de la modification de l'interface parent des réseaux physiques
+   - Extension du scriptlet QEMU (ajout de fonctions)
+   - Nouveau fichier de journal pour les commandes QMP (`qemu.qmp.log`)
+   - Nouvelle commande `get_instances_count` pour le scriptlet de placement d’instances
+   - Support de l’option `--format` dans `incus admin sql`
+   - Migration à chaud de pool de stockage pour les VM
+   - Nouveau scriptlet d’autorisation comme alternative à OpenFGA
+   - API pour capturer l’écran des consoles
+   - Propriétaire initial personnalisable pour les volumes de stockage personnalisés (`initial.uid`, `initial.gid`, `initial.mode`)
+   - Import d’image avec réutilisation d’alias (`incus image import --reuse --alias`)
+   - Nouvelle commande `incus-simplestreams prune`
+   - Verrouillage de l’accès console (`incus console --force` to override)
+
+  <!--
+  The full list of commits is available below:
+  -->
+  La liste complète des commits est présentée ci-dessous :
+
+  <!--
+  [details="Detailed changelog"]
+  -->
+  [details="Liste détaillée des changements"]
+   - incusd/network/ovn: Properly handle lack of a protocol on LB checker
+   - doc/installing: Add link to Arch Wiki for Incus
+   - internal/server/instance/drivers: Cleanup spice socket when VM stops
+   - internal/server/instance/drivers: Switch default backend for QEMU console to ringbuf
+   - incus/console: Add completion
+   - internal/server/instance/drivers/qmp: Add commands for reading a ringbuf and swaping backends for chardevs
+   - internal/server/instance/drivers: Implement ConsoleLog() for qemu driver
+   - internal/server/instance/drivers: Add functions to switch console's backend
+   - cmd/incusd: Allow VMs to pull console history similar to containers
+   - cmd: Properly handle `--project` in error messages
+   - incusd/project: Don't fail project deletion on authorizer
+   - incusd/project: Don't fail project rename on authorizer
+   - incus-user: Handle existing network
+   - incusd/networks: Return HTTP Conflict on existing network
+   - incusd/networks: Apply project restrictions to list of network names
+   - incusd/auth/tls: Allow access to inherited resources
+   - instance/config: Add @startup to documentation
+   - doc: Update metadata
+   - shared/validate: Better validate simple CPU limits
+   - incusd/operations: Fix operation cancelation
+   - incusd/storage_volumes: Handle rename of volumes with sub-paths
+   - incusd/storage/utils: Only show actual errors in growFileSystem
+   - internal/server/instance/drivers: Don't return an error if console log file doesn't exist
+   - incusd/instance/qemu: Properly plumb I/O limits
+   - incusd/apparmor: Allow all mounts in unprivileged containers
+   - cleanup: Replace use of os.IsNotExist(err) with errors.Is(err, fs.ErrNotExist)
+   - incusd/network: Allow to use `dns.search` when only IPv4 is enabled
+   - incusd/apparmor: Remove nosymfollow check (unused)
+   - doc: add notes for Nvidia gpu usage when installing in OpenSUSE
+   - api: instances_state_os_info
+   - shared/api: Add OSInfo to InstanceState
+   - doc/rest-api: Refresh swagger YAML
+   - cmd/incus-agent: Populate OS information when returning instance state
+   - cmd/incus: Print OS info from state, if available
+   - tests: Don't over-provision test volume
+   - cmd/incus-migrate: Don't copy converted VM image
+   - incusd/instance_console: Check result of type assertion
+   - incusd/images: Fix image access through secret
+   - doc: add prerequisites section for building documentation
+   - api: network_load_balancer_state
+   - shared/api: Add NetworkLoadBalancerState
+   - incusd/network/ovn/sb: Add GetServiceHealth
+   - incusd/network: Add LoadBalancerState
+   - incusd/network/load-balancer: Add API for state
+   - doc/rest-api: Refresh swagger YAML
+   - client: Add GetNetworkLoadBalancerState
+   - incus/network_load_balancer: Add info command
+   - incusd: Only emit image-created if an image was actually created
+   - incusd/instances: Call placement scriptlet when target specified
+   - internal/server/instance/drivers/qmp: Ensure that the device passed to RingbufRead() is a ring buffer
+   - internal/server/instance/drivers: Don't return an error if VM's console device isn't a ringbuf
+   - internal/server/instance/drivers: Don't conflict with live migration operation
+   - incus/alias: Handle quoted values
+   - incus/alias: Stable sorting of alias names
+   - incusd/instance/qemu: Fix issues with old NVRAM
+   - incusd/device/nic: Add configuration for macvlan mode
+   - doc/devices/nic: Add mode for macvlan devices
+   - api: instance_nic_macvlan_mode
+   - alpine linux enable edge repositories
+   - cmd/incusd: gateway parameter wasn't actually used anywhere
+   - cmd/incusd: Run cluster evacuate and restore in parallel
+   - formatting: Move goroutines to their own functions
+   - internal/instance: Allows the VM's limits.memory configuration to be set to a percentage value
+   - incusd/network/ovn: Fix CIDR size check
+   - doc: Add uncomment to the word list
+   - incus/file/delete: Use SFTP client instead of file API
+   - incus/file/delete: Add --force flag
+   - doc/network/resolved: Fix systemd unit
+   - internal/instance: Fix doc for boot.host_shutdown_action
+   - doc: Update metadata
+   - incus/file/delete: Cache the SFTP client
+   - shared/subprocess: Add TryRunCommandAttemptsDuration() which allows the caller to specify the number of attempts and duration between each attempt
+   - internal/server/storage/drivers: Add support for creating shared VGs
+   - doc: Incus can now create a shared VG directly
+   - api: storage_lvm_cluster_create
+   - incusd/network/ovn: Allow adding external interfaces to an OVN network
+   - doc/network/ovn: Add description for bridge.external_interfaces parameter
+   - api: network_ovn_external_interfaces
+   - incusd/network: De-duplicate external interfaces validation
+   - incusd/instance/qemu: Simplify console switching
+   - incusd/instance/qemu: Handle existing console connections
+   - incusd/instance/qemu: Fix shutdown race
+   - doc/devices/proxy: Fix incorrect bind= example
+   - incusd/network/bridge: Bring up external interfaces
+   - i18n: Update translation templates
+   - doc: Correct name of macvlan modes
+   - incusd/device/nic: Correct name of macvlan modes
+   - fix: fix slice init length
+   - internal/instance: fix live update VM's limits.memory configuration when use a percentage value
+   - incus-simplestreams list -f json: output field names. fixes lxc#1308
+   - incus-agent: Add timeout for DNS query
+   - incusd/db/profiles: Support config caching
+   - incusd: Update calls to profile ToAPI
+   - incusd/cluster/profiles: Fix import shadowing
+   - incusd/instance/qemu: Don't fail on console retrival issue
+   - incusd/network: Make IsUsed configurable
+   - incusd/network: Update for IsUsed argument
+   - incusd/network/physical: Fix typo
+   - incusd/network/physical: Handle changes in parent value
+   - incus: Fix display of current project in projects list
+   - incus/admin/sql: Add support for `--format`
+   - incusd/instance/common: Cleanup volatile on device add failure
+   - incusd/internal/server/instance/drivers: Add support for Chimera Linux edk2 pkg file names
+   - shared: Move internal "revert" library into shared
+   - incusd/network/bgp: Only advertise networks with BGP configuration
+   - incusd/cluster: Fix resource data caching
+   - incusd/cluster: Actually use YAML for resources cache
+   - shared: Update import path for "revert" library
+   - incusd/instance/lxc: Simplify idmapSize
+   - incusd/instance/lxc: Simplify findIdmap
+   - incusd/isntance/lxc: Respect restrict.idmap.size on un-isolated containers
+   - incusd/instance/lxc: Refactor findIdmap
+   - incusd/instance/lxc: Fix off by one idmap check
+   - shared: Move internal "ask" library into shared
+   - shared: Update import path for "ask" library
+   - shared: Add godoc comment for NewAsker
+   - doc/network/resolved: Add disabling DNSSEC and DNSOverTLS
+   - incusd/device/nic/bridged: Handle invalid configuration
+   - doc: Add Kubernetes to wordlist
+   - incusd/storage_volumes_snapshots: Respect pattern on manual creation
+   - tests: Add test for custom storage volume snapshots pattern
+   - doc/installing: Update for Chimera Linux
+   - incus/top: Fix usage
+   - shared/util: Add OpenBrowser
+   - incus/remote/proxy: Add token authentication
+   - incusd/api: Only expose UI if index.html exists
+   - incus: Add webui command
+   - incusd/scriptlet: Make set_target fail with invalid members
+   - tests: Update for scriptlet placement error handling
+   - incusd/instance/qmp: Make Run public
+   - incusd/scriptlet: Add useful QMP functions
+   - doc/ref/instance_options: Mention QEMU raw QMP commands
+   - incusd/network/ovn: Add support to ipv4.dhcp.ranges
+   - api: instances_scriptlet_get_instances_count
+   - incusd/scriptlet/instances: Fix error messages
+   - incusd/db/instances: Add GetInstancesCount
+   - incusd/scriptlet/instances: Add get_instances_count
+   - doc/cluster/placement: Add get_instances_count
+   - incusd/db/node: Sort members in GetCandidateMembers
+   - incusd/instances: Rely on candidateMembers being sorted
+   - incusd/db/node: Remove unused GetNodeWithLeastInstances
+   - incusd/db/node: Update tests to use GetCandidateMembers
+   - internal/server: Log QMP interaction to a file
+   - incusd/instance/qemu: Log QEMU command line
+   - tests: Update instance placement tests for new ordering
+   - incusd/instance_logs: Update log file list
+   - incusd/network/ovn/sb: Only monitor required tables
+   - incusd/network/ovn: Implement OVN SB event handlers
+   - incusd/instance/qmp: Handle disabling log file
+   - incusd/instance/qemu: Don't use QMP log for feature checks
+   - incusd/instance/lxc: Fix LXCFS per-instance path
+   - doc/idmap: Clarify subuid/subgid configuration
+   - incusd/instance/qmp: Fix logging with no log file
+   - client: Add a GetOIDCTokens() method
+   - cmd/project: Add get-current to show current project
+   - tests: Add get-current to show current project
+   - incus/file/create: Use SFTP client instead of file API
+   - internal/instance: Allow 0 as value to limits.cpu.nodes
+   - internal/linux: Add NetlinkInterfaces
+   - incus-agent: Use NetlinkInterfaces
+   - incus/top: Add additional flags
+   - incus/monitor: Include location in cluster logging
+   - incusd/instance: Add ResourceUsage
+   - incusd/scriptlet/instance: Use ResourceUsage
+   - api: cluster_rebalance
+   - incusd/cluster/config: Add cluster re-balance configuration keys
+   - incusd/instance/config: Add volatile re-balance configuration key
+   - doc: Update configs
+   - incusd: Add cluster rebalance task
+   - incusd/internal: Add rebalance endpoint
+   - doc/cluster: Add mention of re-balancing
+   - api: custom_volume_refresh_exclude_older_snapshots
+   - shared/api: Add RefreshExcludeOlder to InstanceSource and StorageVolumeSource
+   - client: Add RefreshExcludeOlder flag to StoragePoolVolumeCopyArgs and InstanceCopyArgs
+   - incus: Adding refresh-exclude-older flag to 'copy' and 'storage volume copy'
+   - incusd/migration: Add refresh-exclude-older flag
+   - internal: Adding refresh-exclude-older flag implementation
+   - doc/rest-api: Refresh swagger YAML
+   - incus/top: Fix gofmt
+   - incusd/instance/drivers: Make Export return a pointer to metadata
+   - incusd/images: Update for changes to Export
+   - incusd/instances/publish: Fix base metadata
+   - incusd/bgp: Don't add duplicates
+   - incusd/network/bgp: Only skip BGP if unconfigured and not on OVN
+   - incusd/network: Move loadBalancerBGPSetupPrefixes to OVN driver
+   - incusd/network/ovn/sb: Add CheckLoadBalancerOnline
+   - incusd/network/ovn/nb: Add GetLoadBalancer and GetLoadBalancersByStatusUpdate
+   - incusd/network/ovn: Add load-balancer health event handler
+   - incusd/network/ovn: Don't advertise offline load-balancers on startup
+   - shared/subprocess: Allow overriding Cwd
+   - incusd/device/tpm: Fix handling of long instance names
+   - incusd/instance/qemu: Don't take over operations on console retrieval
+   - incusd/instance_post: Provide target project to relocation scriptlet
+   - incusd/cluster/request: Add new internal user-agent
+   - incusd/instances_post: Don't re-run placement on internal requests
+   - incusd/api: Handle new user agent
+   - incusd/instance_post: Pass in internal user agent during relocation
+   - Consume websocket pings for stderr
+   - incus-simplestreams: Add prune command
+   - internal/instance: Fix validation of volatile.cpu.nodes
+   - shared/util: Add a function to clone maps
+   - Use `util.CloneMap` where appropriate
+   - golangci: Enable goimports
+   - global: Initial goimports run
+   - incusd: Fix duplicate imports
+   - incusd: Fix import ordering
+   - instance/config: Mark user keys as live updatable
+   - doc: Update configs
+   - Fix incorrect Vars file mapping in edk2 driver
+   - incusd/storage/zfs: Fix deletion of unavailable pools
+   - zfs: load keys for encrypted datasets during pool import
+   - tests: zfs: add native zfs encryption tests
+   - incusd/instance: Lock image access
+   - incus/image: Make use of server-side alias handling
+   - client: Fix image aliases in push mode
+   - client: Fix image aliases in relay mode
+   - incusd/cluster: Validate address on join too
+   - incusd/network: Remove duplicated logic
+   - incusd/util: Cover DNS and wildcard coverage
+   - incusd/storage: Add initial.* config options for storage volume
+   - incusd/storage/drivers: Add ability to set the initial owner of a custom volume
+   - tests: Add test for setting initial owner of a cutom volume
+   - api: Add storage_initial_owner extension
+   - doc/reference: Add initial.* config keys
+   - shared/cliconfig: Improve configuration loading
+   - incus: Simplify configuration loading
+   - incus: Add aliases completion
+   - incusd/storage/drivers/lvm: Remove metadata info from space usage calculation
+   - incus/migration: Add StoragePool to VolumeTargetArgs and StorageMove to VolumeSourceArgs
+   - incus/instance: Add StoragePool to MigrateArgs
+   - incus/drivers: Add support for local live-migration between storage pools
+   - incusd: Add support for local live-migration between storage pools
+   - api: Add storage_live_migration extension
+   - golangci: Add local prefixes for goimports
+   - client: invalidate simple streams cache
+   - incusd/instances_post: Fix cluster internal migrations
+   - incusd/instances_post: Only update pool in DB if pool is expected to change
+   - incusd/instances_post: Account for profiles when overriding pool in DB
+   - incus/image: Add reuse flag
+   - incus/publish: Use common helper function deleteImagesByAliases
+   - tests: Add a reuse flag test for the 'incus image import'
+   - incusd/instance/qemu: Set instance path ownership on startup
+   - api: instance_console_screenshot
+   - incusd/instance/qmp: Add Screendump command
+   - incusd/response: Allow overrriding Content-Type in FileResponse
+   - incusd/instance: Add ConsoleScreenshot to VM interface
+   - incusd/instance/qemu: Implement ConsoleScreenshot
+   - incusd/instance_console: Add screenshot support to console API
+   - doc/rest-api: Refresh swagger YAML
+   - incusd/task: Fix wait group logic (more entries than running tasks)
+   - incusd/instance: Add ETag function
+   - incusd/instance/qemu: Fix random ordering in ETag
+   - incusd/instance/lxc: Fix random ordering in ETag
+   - incusd: Use new ETag instance function
+   - api: image_import_alias
+   - client: Set X-Incus-aliases on image imports
+   - incusd/image: Allow passing alias list through X-Incus-aliases
+   - doc/rest-api: Refresh swagger YAML
+   - incusd/image: Fix context for alias add
+   - incusd/image: Handle all alias cases
+   - Makefile: Use fga for model conversion
+   - incusd/auth: Introduce EntitlementCanViewSensitive
+   - incusd/api_10: Use EntitlementCanViewSensitive
+   - incusd/auth/openfga: Introduce server-wide read-only access
+   - incusd/auth/openfga: Rebuild model
+   - incusd/auth/openfga: Migrate public permissions
+   - incusd/auth: Implement ApplyPatch
+   - incusd/auth/fga: Change model refresh logic to rely on patches
+   - incusd/patches: Add auth patch logic
+   - incusd/patches: Skip patches until their assigned stage
+   - doc/authorization: Remove outdated OpenFGA model description
+   - tests: Tweak openfga test
+   - incusd/migrate: Set CreationDate during custom volume snapshot copy with refresh
+   - incusd/storage: Add CreatedAt during custom volume copy with refresh
+   - tests: Update copy with refresh test
+   - doc/instance/properties: Add missing instance properties
+   - incusd/daemon_storage: Ensure corect symlinks for images/backups
+   - incusd/storage/lvm: Handle newer LVM
+   - doc/sphinx: Upgrade MyST
+   - doc/manpage: Tweak manpage synopsis rendering
+   - incusd/storage/lvm: Require 512-bytes physical block size for VM images
+   - incus: Improve instance and remote names completion
+   - incusd: Fill ExpiryDate and remove LastUsedDate in volumeSnapshotToProtobuf
+   - incusd/device/tpm: Wait for swtpm to be ready
+   - incus: Improve completion for `file push` and `file pull`
+   - incusd/auth/tls: Restrict config access to non-admin
+   - incusd/storage: Handle default disk size in GetInstanceUsage
+   - incus: Improve completion for `file create`
+   - incus: Improve completion for `file delete`
+   - incus: Improve completion for `file edit`
+   - incus: Improve completion for `file mount`
+   - incus: Fix completion for `profile copy`
+   - doc/installing: Update Fedora instructions
+   - incus: Add a function to complete image fingerprints
+   - incus: Add completion for `image alias` subcommands
+   - incusd/daemon: Skip non-PKI issued trusted certificates when in PKI mode
+   - incusd/cluster: Update tests for change to trustedCerts
+   - tests: Validate all non-PKI certs are blocked in PKI mode
+   - incus: Fix completion for `image alias create`
+   - doc/network_forwards: Split configuration into own table
+   - util: Improve readability with early return
+   - incusd/db: Improve readability with eraly return
+   - incus/top: Ignore CPU idle time
+   - Makefile: Bump minimum to 1.22.7
+   - gomod: Update dependencies
+   - i18n: Update translation templates
+   - incus/remote: Use errors.new
+   - incus: Display the alias expansion when execution of an alias fails
+   - util: code structure error handling
+   - incusd/db: do not shadow Go builtin function
+   - lint: disallow restricted licenses in go-licenses
+   - incus: Fix alias arguments handling
+   - incus/file: Expand setOwnerMode
+   - incus/file/push Use SFTP client instead of file API
+   - incusd/instance/qemu: Set CLOEXEC for TPM sockets
+   - incusd/patches: Run auth patches on all servers
+   - incusd/auth/openfga: Get rid of applyPatches
+   - incusd/auth/openfga: Force OpenFGA update on initial config and patching
+   - incus: Clarify device override syntax
+   - incusd/auth/openfga: refresh model before applying patches
+   - internal/scriptlet: Fix typo
+   - incusd/scriptlet: refactor marshal
+   - incusd/scriptlet: Refactor log
+   - incusd/scriptlet: Add authorization scriptlet
+   - incusd/auth: Refactor drivers
+   - incusd/config: Add scriptlet authorization key
+   - incusd/auth: Add authorization scriptlet driver
+   - incusd/daemon: Handle authorization scriptlet reset
+   - incusd/auth: Comment exported methods and types
+   - incusd/scriptlet: Add project and instance authorization getters
+   - doc: Update configs
+   - api: authorization_scriptlet
+   - doc/authorization: Add authorization scriptlet
+   - tests: Authorization scriptlet
+   - doc: add openSUSE installation instructions
+   - incusd/scriptlet: Rename prefixAuthorization to nameAuthorization
+   - incusd/scriptlet: Add function checks in scriptlet validation
+   - client/oci: Add debug logging for subprocess commands
+   - incusd/scriptlet: Add function args checks in scriptlet validation
+   - incus/project: Fix get-current for default (unset) project
+   - incusd: Add support for '--force' flag
+   - cmd/console: Add '--force' flag
+   - shared/api: Add Force field to InstanceConsolePost
+   - client: Check 'console_force' API extenstion
+   - api: Add console_force extension
+   - doc/rest-api: Refresh swagger YAML
+   - internal/cmd: Have RenderTable take in an io.Writer
+   - incus: Update for RenderTable
+   - incus-simplestreams: Update for RenderTable
+   - incusd: Update for RenderTable
+   - incusd: Cleanup in cmdClusterListDatabase
+   - doc/reference/network_bridge: Add missing backsticks for variable escaping
+   - incusd/instance/lxc: Skip instances without idmap allocation yet
+   - incusd/cluster: Skip project restrictions during join
+   - shared/ask: Add AskPassword/AskPasswordOnce to Asker
+   - shared/ask: Fix redefinition of the built-in types
+   - cmd/incus: Use AskPasswordOnce from asker
+   - incusd/storage/drivers/common: Truncate/Discard ahead of sparse write
+   - inucsd: Add additional check to Cancel method for ConsoleShow operation
+   - incusd/instance_console: Remove redundant (and unsafe) write
+   - incus/console: Make sure we leave the console in a clean state
+   - incusd/instance_console: Don't fail on failure to write reset sequence
+   - client: Improve SFTP performance
+   - incusd/main_forkfile: Improve SFTP performance
+   - incusd/network/ovn: Return ErrTooMany when getting multiple records
+   - incusd/network/ovn: Clear all existing records
+   - incusd/instance_post: Expand profiles in scriptlet context
+   - i18n: Update translation templates
+   - gomod: Update dependencies
+   - incusd/scriptlet: Refactor load package
+   - incusd/scriptlet: Add support for checking optional functions and improve error messages
+   - incusd/storage/drivers: Force blkdiscard and ignore errors
+   - incusd/auth: fix FGA online data race
+   - incusd/storage/drivers: Log on blkdiscard failure
+   - incusd/storage: Add storage volume db entries when storage is changed
+   - client: Propagate HTTP TLS dialer to websocket
+   - incusd/scriptlet: Fix qemu_hook required argument
+   - doc: Fix qemu_hook required argument
+   - incusd/cluster: Add missing error handling
+   - incusd/cluster: Clarify error on DB failure
+   - incusd/instance/qemu: Fix QMP arguments typing
+   - incusd/instance/qemu: QEMU device naming consistency
+  [/details]
+
+  <!--
+  # Support and upgrade
+  The Incus 6.0 branch is supported until June 2029. It's always strongly recommended to keep up and run the latest LTS bugfix release.
+  -->
+  # Support et mise à niveau
+  La branche Incus 6.0 est supportée jusqu’en juin 2029. Il est toujours fortement recommandé d’utiliser la dernière version de correction de bugs.
+
+  <!--
+  # Downloads
+  -->
+  # Téléchargements
+
+  <!--
+   - Main release tarball: [incus-6.0.3.tar.xz](https://linuxcontainers.org/downloads/incus/incus-6.0.3.tar.xz)
+   - GPG signature: [incus-6.0.3.tar.xz.asc](https://linuxcontainers.org/downloads/incus/incus-6.0.3.tar.xz.asc)
+  -->
+   - Tarball d’Incus : [incus-6.0.3.tar.xz](https://linuxcontainers.org/downloads/incus/incus-6.0.3.tar.xz)
+   - Signature GPG : [incus-6.0.3.tar.xz.asc](https://linuxcontainers.org/downloads/incus/incus-6.0.3.tar.xz.asc)
+
+  <!--
+  # Thanks
+  This LTS release update was made possible thanks to funding provided by the Sovereign Tech Fund (now part of the Sovereign Tech Agency).
+  -->
+  # Remerciements
+  Cette version LTS a été rendue possible grâce au financement du Sovereign Tech Fund (qui fait maintenant partie de la Sovereign Tech Agency).
+
+  [![ST-Fund-Logo-Default-White-RGB|690x219](https://discuss.linuxcontainers.org/uploads/default/original/2X/7/7799c947413019d3c5cd4fa201568495de1db2c4.png)](https://sovereign.tech)
+
+  <!--
+  [quote]
+  The Sovereign Tech Fund supports the development, improvement, and maintenance of open digital infrastructure. Its goal is to sustainably strengthen the open source ecosystem, focusing on security, resilience, technological diversity, and the people behind the code.
+  [/quote]
+  -->
+  [quote]
+  Le Sovereign Tech Fund soutient le développement, l'amélioration et la maintenance des infrastructures numériques ouvertes. Son objectif est de renforcer durablement l'écosystème open source, en mettant l'accent sur la sécurité, la résilience, la diversité technologique et les personnes qui sont derrière le code.
+  [/quote]
+
+  <!--
+  Find out more at: https://www.sovereign.tech
+  -->
+  Pour en savoir plus, consultez https://www.sovereign.tech
