@@ -10,7 +10,8 @@ For production environment, try to stick to LXC 5.0.x or 4.0.x as these are the 
 
 LXC has three active git branches:
 
- * **master**: Current development branch
+ * **main**: Current development branch
+ * **stable-6.0**: Stable update branch for LXC 6.0.x
  * **stable-5.0**: Stable update branch for LXC 5.0.x
  * **stable-4.0**: Stable update branch for LXC 4.0.x
 
