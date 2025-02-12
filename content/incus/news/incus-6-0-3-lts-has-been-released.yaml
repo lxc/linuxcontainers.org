@@ -440,10 +440,12 @@ content: |-
   # Thanks
   This LTS release update was made possible thanks to funding provided by the Sovereign Tech Fund (now part of the Sovereign Tech Agency).
 
-  [![ST-Fund-Logo-Default-White-RGB|690x219](https://discuss.linuxcontainers.org/uploads/default/original/2X/7/7799c947413019d3c5cd4fa201568495de1db2c4.png)](https://sovereign.tech)
+  <p style="background-color: #25106c; display: inline-block; padding: 40px;>
+    <a href="https://sovereign.tech">
+      <img src="https://discuss.linuxcontainers.org/uploads/default/original/2X/7/7799c947413019d3c5cd4fa201568495de1db2c4.png" alt="Sovereign Tech Fund Logo" width="690" height="219" style="display: block;">
+    </a>
+  </p>
 
-  [quote]
-  The Sovereign Tech Fund supports the development, improvement, and maintenance of open digital infrastructure. Its goal is to sustainably strengthen the open source ecosystem, focusing on security, resilience, technological diversity, and the people behind the code.
-  [/quote]
+  > The Sovereign Tech Fund supports the development, improvement, and maintenance of open digital infrastructure. Its goal is to sustainably strengthen the open source ecosystem, focusing on security, resilience, technological diversity, and the people behind the code.
 
   Find out more at: https://www.sovereign.tech
