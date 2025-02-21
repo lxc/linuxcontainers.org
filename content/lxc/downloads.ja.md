@@ -25,7 +25,8 @@ LXC has two active git branches:
 -->
 LXC にはアクティブな git ブランチが 3 つ存在します:
 
- * **master**: 現在の開発ブランチ <!-- Current development branch -->
+ * **main**: 現在の開発ブランチ <!-- Current development branch -->
+ * **stable-6.0**: LXC 6.0.x 向けの Stable 更新用ブランチ <!-- Stable update branch for LXC 6.0.x -->
  * **stable-5.0**: LXC 5.0.x 向けの Stable 更新用ブランチ <!-- Stable update branch for LXC 5.0.x -->
  * **stable-4.0**: LXC 4.0.x 向けの Stable 更新用ブランチ <!-- Stable update branch for LXC 4.0.x -->
 
