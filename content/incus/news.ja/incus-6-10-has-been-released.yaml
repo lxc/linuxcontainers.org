@@ -1,0 +1,362 @@
+title: Incus 6.10 リリースのお知らせ
+date: 2025/02/28 17:02
+origin: https://discuss.linuxcontainers.org/t/incus-6-10-has-been-released/23077
+content: |-
+  # はじめに <!-- Introduction -->
+  <!--
+  The Incus team is pleased to announce the release of Incus 6.10!
+  -->
+  Incus チームは、Incus 6.10 のリリースのアナウンスができてうれしいです!
+
+  <!--
+  This release brings in an easier way to run Incus on a valid HTTPS certificate, a new way to send through provisioning data to VMs, a very welcome API enhancement and much more!
+  -->
+  このリリースでは、有効な HTTPS 証明書で Incus を実行する簡単な方法や、プロビジョニングデータを VM に送る新しい方法、とても歓迎される API の強化などが導入されています。
+
+  [![image|659x280](https://discuss.linuxcontainers.org/uploads/default/original/2X/f/f14665b64a738f06fcff180072fd57512f787d5a.png)](https://linuxcontainers.org/incus/try-it/)
+
+  <!--
+  As usual, you can try it for yourself online: https://linuxcontainers.org/incus/try-it/
+  -->
+  いつものように、オンラインでご自身で試せます: https://linuxcontainers.org/incus/try-it/
+
+  Enjoy!
+
+  # 新機能 <!-- New features -->
+  ## ACME DNS-01 バリデーション <!-- ACME DNS-01 validation -->
+  <!--
+  New configuration keys have been added to allow for the DNS-01 challenge through ACME (most commonly Let's Encrypt).
+  -->
+  ACME（もっとも一般的には Let's Encrypt）を使った DNS-01 チャレンジを可能にするための新しい設定キーが追加されました。
+
+  <!--
+  This may provide an easier path at getting a valid TLS certificate on Incus servers.
+  -->
+  これにより、Incus サーバー上で有効な TLS 証明書を取得するための簡単なパスが提供できます。
+
+  <!--
+  Example configuration:
+  -->
+  設定例:
+
+      acme.agree_tos: true
+      acme.domain: foo.example.net
+      acme.email: admin@foo.example.net
+      acme.challenge: DNS-01
+      acme.provider: cloudflare
+      acme.provider.environment: |-
+        CLOUDFLARE_EMAIL=admin@foo.example.net
+        CLOUDFLARE_API_KEY=XYZ
+
+  ドキュメント<!-- Documentation -->: https://linuxcontainers.org/incus/docs/main/server_config/#server-options-acme
+
+  ## API 全体でフィルタリングをサポート <!-- API wide filtering support -->
+  <!--
+  Incus already supported server-side filtering for instances, images and storage volumes.
+  The same logic has now been expanded to all remaining API collections.
+  -->
+  Incus は、インスタンス、イメージ、ストレージボリュームのサーバー側でのフィルタリングすでにサポートしています。同じロジックが残りすべての API コレクションに拡張されました。
+
+  <!--
+  All of them support the `filter` parameter with the same OData filters.
+  We expect to see the Incus command line tool making use of this over the next few releases.
+  -->
+  これらはすべて同じ OData フィルターで `filter` パラメータをサポートしています。
+  今後数回のリリースで、Incus のコマンドラインツールがこれを使うようになるでしょう。
+
+  ドキュメント<!-- Documentation -->: https://linuxcontainers.org/incus/docs/main/rest-api/#filtering
+
+  ## VM で SMBIOS11 プロビジョニングをサポート <!-- Support for SMBIOS11 provisioning in VMs -->
+  <!--
+  On systems with DMI tables (x86_64 or aarch64), it is now possible to seed data into the SMBIOS Type 11 table. This is a way for the hypervisor to provide data to the system without requiring a separate communication channel (network, serial, ...).
+  -->
+  DMI テーブルを備えたシステム（x86_64 もしくは aarch64）では、SMBIOS タイプ 11 テーブルにデータを与えることができるようになりました。これは、ハイパーバイザーに対して別の通信チャンネル（ネットワーク、シリアルなど）を必要とせずに、システムにデータを提供する方法です。
+
+  <!--
+  This is most notably supported by systemd where it can be used to pass in some provisioning data: https://www.freedesktop.org/software/systemd/man/latest/smbios-type-11.html
+  -->
+  これは特に systemd がサポートしており、プロビジョニングデータを渡すために使用できます: https://www.freedesktop.org/software/systemd/man/latest/smbios-type-11.html
+
+  <!--
+  Example:
+  -->
+  例:
+
+      stgraber@dakara:~$ incus launch images:debian/12 d12 --vm -c smbios11.io.systemd.credential:foo=bar
+      Launching d12
+      stgraber@dakara:~$ incus exec d12 -- systemd-creds --system cat foo
+      bar
+
+  ## VM での IOMMU サポート <!-- IOMMU support in VMs -->
+  <!--
+  Incus VMs now automatically get IOMMU support which will help with security and device passthrough. For most users, this is a completely invisible change.
+  -->
+  Incus の VM は、セキュリティやデバイスパススルーの助けになる IOMMU サポートを自動的に取得するようになりました。ほとんどのユーザーにとっては、これは完全に目に見えない変更です。
+
+      root@u1:~# dmesg | grep -i iommu
+      [    0.406474] iommu: Default domain type: Translated
+      [    0.406481] iommu: DMA domain TLB invalidation policy: strict mode
+      [    0.534812] virtio_iommu virtio0: input address: 48 bits
+      [    0.534820] virtio_iommu virtio0: page mask: 0xfffffffffffff000
+      [    0.637345] pcieport 0000:00:02.0: Adding to iommu group 0
+      [    0.642755] pcieport 0000:00:02.1: Adding to iommu group 1
+      [    0.649614] pcieport 0000:00:02.2: Adding to iommu group 2
+      [    0.656700] pcieport 0000:00:02.3: Adding to iommu group 3
+      [    0.663517] pcieport 0000:00:02.4: Adding to iommu group 4
+      [    0.669419] pcieport 0000:00:02.5: Adding to iommu group 5
+      [    0.675831] pcieport 0000:00:02.6: Adding to iommu group 6
+      [    0.682967] pcieport 0000:00:02.7: Adding to iommu group 7
+      [    0.688303] pcieport 0000:00:03.0: Adding to iommu group 8
+      [    0.695646] pcieport 0000:00:03.1: Adding to iommu group 9
+      [    0.700994] pcieport 0000:00:03.2: Adding to iommu group 10
+      [    0.709613] pcieport 0000:00:03.3: Adding to iommu group 11
+      [    0.715130] pcieport 0000:00:03.4: Adding to iommu group 12
+      [    0.722208] virtio-pci 0000:01:00.0: Adding to iommu group 13
+      [    0.728419] virtio-pci 0000:01:00.1: Adding to iommu group 13
+      [    0.732362] virtio-pci 0000:01:00.2: Adding to iommu group 13
+      [    0.737953] virtio-pci 0000:01:00.3: Adding to iommu group 13
+      [    0.746652] virtio-pci 0000:01:00.4: Adding to iommu group 13
+      [    0.752491] virtio-pci 0000:01:00.5: Adding to iommu group 13
+      [    0.781052] virtio-pci 0000:02:00.0: Adding to iommu group 14
+      [    0.791255] virtio-pci 0000:03:00.0: Adding to iommu group 15
+      [    0.799383] virtio-pci 0000:03:00.1: Adding to iommu group 15
+      [    0.809692] virtio-pci 0000:04:00.0: Adding to iommu group 16
+      [    0.820005] virtio-pci 0000:05:00.0: Adding to iommu group 17
+      [    1.399721] xhci_hcd 0000:01:00.6: Adding to iommu group 13
+
+  ## VRF support for routed NICs
+  <!--
+  Systems using multiple VRFs (Virtual Routing and Forwarding) can now have specific `routed` NICs land in the VRF of their choice.
+  -->
+  複数の VRF（Virtual Routing and Forwarding）を使用するシステムでは、特定の `routed` NIC を任意の VRF に配置できるようになりました。
+
+  <!--
+  This is done through a new `vrf` property on `routed` type `nic` devices.
+  -->
+  これは、`routed` タイプの `nic` デバイス上で、新しい `vrf` プロパティを使うことで行われます。
+
+  ドキュメント <!-- Documentation -->: https://linuxcontainers.org/incus/docs/main/reference/devices_nic/#nictype-routed
+
+  ## 事前に与える構成ファイルでのプロジェクト内のプロファイルの作成 <!-- Creating profiles in a project through preseed -->
+  <!--
+  The Incus server preseed logic has been expanded to allow for profiles to be created in specific projects.
+  -->
+  Incus サーバーの、事前に与える構成ファイル（preseed）を使うロジックが拡張されました。特定のプロジェクト内でプロファイルが作成できます。
+
+  <!--
+  This is done through a new `project` key on the relevant `profile` entry.
+  The project then needs to also be defined within the preseed.
+  -->
+  これは、関連する `profile` エントリーの `project` キーを通して行えます。
+  そして、プロジェクトも事前に与える構成ファイル内で定義する必要があります。
+
+  ドキュメント <!-- Documentation -->: https://linuxcontainers.org/incus/docs/main/howto/initialize/#configuration-format
+
+  ## バックアップとイメージで LZ4 をサポート <!-- LZ4 support for backups and images -->
+  <!--
+  `lz4` is now a fully supported compression format within Incus.
+  Provided the matching tool is installed on the system, it's now possible to use LZ4 for both instance, volume and bucket backups (import/export) as well as for images.
+  -->
+  `lz4` が、Incus 内で完全にサポートされている圧縮フォーマットになりました。
+  対応するツールがシステムにインストールされている場合、インスタンス、ボリューム、バケットのバックアップ（インポート・エクスポート）とイメージの両方に LZ4 が使えるようになりました。
+
+  # すべての変更点 <!-- Complete changelog -->
+  <!--
+  Here is a complete list of all changes in this release:
+  -->
+  このリリースのすべての変更のリストは次の通りです（翻訳なし）:
+
+  [details="すべてのChangeLogを見る"]
+   - incusd/instance/drivers/qmp: Handle missing log directory
+   - cmd/incus-user: keep track of socket path used to connect to the server
+   - cmd/incus-user: unify logging, support --verbose and --debug
+   - api: init_preseed_profile_project
+   - shared/api: Add project support to profiles in preseed init
+   - client: Add project support to profiles in preseed init
+   - doc/rest-api: Refresh swagger YAML
+   - incus/admin/init: use api.InitProfileProjectPost
+   - incusd/network/ovn: Fix bad route check
+   - incus/file/pull: Ensure we have a leading / in all paths
+   - github: Fix shellcheck
+   - doc/installing: mention incus group on NixOS
+   - incus/file/pull: Read files in chunks
+   - incus/file/pull: Actually make read buffer 1MiB
+   - incusd/network/bridge: Fix deletion of tunnels and dummy devices
+   - incusd/device/disk: Allow virtiofsd on non-x86
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - incusd/instance/drivers/qemu: Add IOMMU device
+   - incus/file: Remove unused function
+   - i18n: Update translation templates
+   - incus/network/info (ovn): Fix object not found.
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - incusd/instance/drivers: Improve NUMA balancing
+   - incus/file: Move from path to filepath
+   - github: Add linux-modules-extra (for vrf)
+   - shared/archive: Added LZ4 support
+   - api: instance_nic_routed_host_address
+   - incus/server/ip: Add `Master` parameter for veth and tuntap
+   - incus/server/ip: Add VRF parameter for IP Route
+   - incus/server/device: Add vrf parameter for routed NIC devices
+   - tests: Add test for routed NIC with VRF
+   - doc: Add description for routed-nic VRF parameter
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - generate-database: Move into cmd package
+   - generate-config: Move to cmd package
+   - incus/storage/drivers: Fix issue with lvmcluster storage pool creation
+   - generate-database: Rename from incus-generate
+   - generate-config: Rename from incus-doc
+   - github: Workaround permission problems
+   - internal/instance: Move user config key doc string
+   - internal/instance: Add environment config keys docstring
+   - incusd/internal/server/instance: Add qemuEscapeCmdline
+   - incusd/internal/server/instance: Use qemuEscapeCmdline
+   - api: instance_smbios
+   - internal/instance: Add smbios config keys
+   - incusd/instance/drivers/qemu: Implement smbios config keys
+   - doc: Update configs
+   - incus: Fix instance copy error when using '--refresh' flag
+   - doc/network_load_balancers: Fix backend add instructions
+   - doc: Add frontend to wordlist
+   - incusd/main_nsexec: Fix change_namespaces fallback to handle multiple namespaces
+   - incusd/instance/utils: Only check uid/gid for containers
+   - generate-database: Use types.Package
+   - generate-database: Remove support for separate database package
+   - generate-database: Separate Go package loading
+   - incusd/instance/drivers: Check if disk is remote when migrating with an extra disk
+   - incusd/instance/edk2: Look for bios.bin in /usr/share/seabios
+   - generate-database: Add unified generate command
+   - incusd/db: Use generate command
+   - generate-database: Remove obsolete commands stmt and method
+   - generate-database: Update README.md
+   - generate-database: Reduce to single go:generate per package
+   - incusd/db: Use Single generate per package
+   - golangci: Update for new generate-database syntax
+   - internal/cmd/table: Improve errors on modifiers
+   - incusd: Add additional validation when joining a new cluster member
+   - incusd: Upgrade flosch/pongo2 to v6
+   - doc: Bump minimum kernel to 5.15
+   - Makefile: Bump minimal Go to 1.23
+   - doc: Bump minimum Go to 1.23
+   - gomod: Update dependencies
+   - github: Re-order code tests tasks
+   - incusd/resources: Prevent concurrent runs and cache data for 10s
+   - incusd/backup: Implement compatibility with old backups
+   - incusd/backup: Detect incompatible backup files
+   - fix: Don't attempt to download signatures for oci
+   - incusd: Ensure directories have 755 permissions in 'incus file push -p' command
+   - tests: Fix test for verifying directory permissions
+   - devcontainer: Update Go to 1.23
+   - generate-database: Make "Code generated" comment Go conformant
+   - db/cluster: Update code generated by generate-database
+   - generate-database: Add internal tool disclaimer
+   - generate-config: Formatting README.md
+   - generate-config: Add internal tool disclaimer
+   - incusd/storage/drivers: Truncate the block file during custom volume migration
+   - incusd/instance/qemu: Don't attempt to hotplug over the virtual IOMMU
+   - incusd/device/disk: Remove diskAddRootUserNSEntry
+   - incusd/device/disk: Use virtiofsd uid/gid handling
+   - generate-database: Add error mapping
+   - incusd/db: Use error mapping
+   - incusd/db: Update generated code
+   - generate-database: Make self-sufficient
+   - incusd/db: Update generated code
+   - generate-database: Improve case handling
+   - incus/list: Remove unused arguments and parameters
+   - incus/top: Fix handling of all-projects
+   - incusd/storage/drivers: Refactor ceph discovery
+   - incusd/instance/drivers: Let QEMU handle Ceph itself
+   - incus/file: Simplify sftpCreateFile
+   - incus/file: Change recursiveFilePush to use SFTP
+   - incus/file: Change recursiveMkdir to use SFTP
+   - incus/file: Change recursivePullFile to use SFTP
+   - incus/file: Re-use SFTP as much as possible
+   - internal/filter: Handle multiple in-line structs
+   - api: api_filtering_extended
+   - incusd: Add filtering to /1.0/networks
+   - incusd: Add filtering to /1.0/networks/{networkName}/forwards
+   - incusd: Add filtering to /1.0/networks/{networkName}/load-balancers
+   - incusd: Add filtering to /1.0/networks/{networkName}/peers
+   - incusd: Add filtering to /1.0/network-acls
+   - incusd: Add filtering to /1.0/network-integrations
+   - incusd: Add filtering to /1.0/network-zones
+   - incusd: Add filtering to /1.0/network-zones/{zone}/records
+   - incusd: Add filtering to /1.0/storage-pools
+   - incusd: Add filtering to /1.0/storage-pools/{poolName}/buckets
+   - incusd: Add filtering to /1.0/certificates
+   - incusd: Add filtering to /1.0/profiles
+   - incusd: Add filtering to /1.0/projects
+   - doc/rest-api: Refresh swagger YAML
+   - tests: Test more API filters
+   - doc: Remove mention of limitations on filtering
+   - gomod: Update dependencies
+   - api: acme_dns01
+   - incusd/cluster/config: Add extra ACME config keys
+   - incusd/acme: Add DNS-01 support
+   - gomod: Update dependencies
+   - doc: Add resolvers to wordlist
+   - doc: Update configs
+  [/details]
+
+  # ドキュメント <!-- Documentation -->
+  <!--
+  The Incus documentation can be found at:
+  https://linuxcontainers.org/incus/docs/main/
+  -->
+  Incus のドキュメントはこちらです:
+  https://incus-ja.readthedocs.io/ja/latest/ （日本語訳）
+  https://linuxcontainers.org/incus/docs/main/ （原文）
+
+  # パッケージ <!-- Packages -->
+  <!--
+  There are no official Incus packages as Incus upstream only releases regular release tarballs. Below are some available options to get Incus up and running.
+  -->
+  Incus の開発元は、通常リリースの tarball のみをリリースするため、公式の Incus パッケージはありません。Incus を実行するために使えるオプションを以下にいくつか示します。
+
+  ## Linux 上に Incus サーバーをインストールする <!-- Installing the Incus server on Linux -->
+  <!--
+  Incus is available for most common Linux distributions. You'll find detailed installation instructions in our documentation.
+  -->
+  Incus はほとんどの一般的な Linux ディストリビューションで利用できます。インストール手順の詳細は、Incus のドキュメントを参照してください。
+
+  https://incus-ja.readthedocs.io/ja/latest/installing/ （日本語訳）
+  https://linuxcontainers.org/incus/docs/main/installing/ （原文）
+
+  ## Incus クライアントの Homebrew パッケージ <!-- Homebrew package for the Incus client -->
+  <!--
+  The client tool is available through HomeBrew for both Linux and MacOS.
+  -->
+  HomeBrew 経由で、Linux と macOS 向けにクライアントツールが利用できます。
+
+  https://formulae.brew.sh/formula/incus
+
+  ## Incus クライアントの Chocolatey パッケージ <!-- Chocolatey package for the Incus client -->
+  <!--
+  The client tool is available through Chocolatey for Windows users.
+  -->
+  Chocolatey 経由で、Windows ユーザー向けにクライアントツールが利用できます。
+
+  https://community.chocolatey.org/packages/incus/6.10.0
+
+  ## Incus クライアントの Winget パッケージ <!-- Winget package for the Incus client -->
+  <!--
+  The client tool is also available through Winget for Windows users.
+  -->
+  Winget 経由で、Windows ユーザー向けにクライアントツールが利用できます。
+
+  https://winstall.app/apps/LinuxContainers.Incus
+
+  # サポート <!-- Support -->
+  <!--
+  Monthly feature releases are only supported up until the next release comes out.  Users needing a longer support length and less frequent changes should consider using Incus 6.0 LTS instead.
+  -->
+  月次のフィーチャーリリースは、次のリリースがリリースされるまでのみサポートされます。より長いサポート期間と少ない変更頻度が必要な場合、代わりに Incus 6.0 LTS の使用を検討すべきです。
+
+  コミュニティサポートはこちらから <!-- Community support is provided at -->: https://discuss.linuxcontainers.org
+  商用サポートはこちらから <!-- Commercial support is available through -->: https://zabbly.com/incus
+  バグはこちらから報告できます <!-- Bugs can be reported at -->: https://github.com/lxc/incus/issues
