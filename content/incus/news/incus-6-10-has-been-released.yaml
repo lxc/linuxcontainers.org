@@ -54,7 +54,9 @@ content: |-
       bar
 
   ## IOMMU support in VMs
-  Incus VMs now automatically get IOMMU support which will help with security and device passthrough. For most users, this is a completely invisible change.
+  Incus VMs now automatically get IOMMU support which will help with security and device passthrough.
+
+  This was introduced as default behavior in Incus 6.10.0, but following serveral reports of guest kernel and host platform combinations that led to broken PCIe in the guest, it has been moved to opt-in starting with Incus 6.10.1 using the `security.iommu` configuration option to control it.
 
       root@u1:~# dmesg | grep -i iommu
       [    0.406474] iommu: Default domain type: Translated
