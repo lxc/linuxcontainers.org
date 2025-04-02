@@ -16,7 +16,7 @@ content: |-
   La fonctionnalité phare de cette version est sans aucun doute la prise en charge initiale de LINSTOR comme nouveau driver de stockage pour les personnes cherchant une alternative à Ceph !
   Mais c’est loin d’être la seule nouveauté de cette version, avec un grand nombre de fonctionnalités pour les VM, les conteneurs d’application, et le réseau.
 
-  [![image|690x251](upload://fKQrAf3tdiwm62FZznsEBqtQqbz.jpeg)](https://linuxcontainers.org/incus/try-it/)
+  [![image|690x251](https://discuss.linuxcontainers.org/uploads/default/original/2X/6/6e6c3fd567e057eb6d5131cb1d382b440d45e965.jpeg)](https://linuxcontainers.org/incus/try-it/)
 
   <!--
   As usual, you can try it for yourself online: https://linuxcontainers.org/incus/try-it/

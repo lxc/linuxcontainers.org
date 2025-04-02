@@ -8,7 +8,7 @@ content: |-
   Without a doubt, the headline feature for this release is initial support for Linstor as a new storage driver for those looking for an alternative to Ceph!
   But that's far from all that this Incus release brings to the table. It also comes with a lot of new VM, OCI and networking features!
 
-  [![image|690x251](upload://fKQrAf3tdiwm62FZznsEBqtQqbz.jpeg)](https://linuxcontainers.org/incus/try-it/)
+  [![image|690x251](https://discuss.linuxcontainers.org/uploads/default/original/2X/6/6e6c3fd567e057eb6d5131cb1d382b440d45e965.jpeg)](https://linuxcontainers.org/incus/try-it/)
 
   As usual, you can try it for yourself online: https://linuxcontainers.org/incus/try-it/
 
