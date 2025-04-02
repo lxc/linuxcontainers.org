@@ -192,7 +192,10 @@ content: |-
   # Liste complète des changements
   Voici une liste complète de tous les changements apportés par cette version :
 
+  <!--
   [details="Full commit list"]
+  -->
+  [details="Liste complète des commits"]
    - incusd/instance/drivers/qmp: Handle missing log directory
    - cmd/incus-user: keep track of socket path used to connect to the server
    - cmd/incus-user: unify logging, support --verbose and --debug
