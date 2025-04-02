@@ -1,0 +1,687 @@
+title: Incus 6.11 est maintenant disponible
+date: 2025/03/28 06:03
+origin: https://discuss.linuxcontainers.org/t/incus-6-11-has-been-released/23322
+content: |-
+  <!--
+  # Introduction
+  The Incus team is pleased to announce the release of Incus 6.11!
+  -->
+  # Introduction
+  L’équipe d’Incus est heureuse d’annoncer la sortie d’Incus 6.11 !
+
+  <!--
+  Without a doubt, the headline feature for this release is initial support for Linstor as a new storage driver for those looking for an alternative to Ceph!
+  But that's far from all that this Incus release brings to the table. It also comes with a lot of new VM, OCI and networking features!
+  -->
+  La fonctionnalité phare de cette version est sans aucun doute la prise en charge initiale de LINSTOR comme nouveau driver de stockage pour les personnes cherchant une alternative à Ceph !
+  Mais c’est loin d’être la seule nouveauté de cette version, avec un grand nombre de fonctionnalités pour les VM, les conteneurs d’application, et le réseau.
+
+  [![image|690x251](upload://fKQrAf3tdiwm62FZznsEBqtQqbz.jpeg)](https://linuxcontainers.org/incus/try-it/)
+
+  <!--
+  As usual, you can try it for yourself online: https://linuxcontainers.org/incus/try-it/
+  -->
+  Comme d’habitude, vous pouvez l’essayer vous-même en ligne : https://linuxcontainers.org/incus/try-it/
+
+  <!--
+  Enjoy!
+  -->
+
+  <!--
+  # New features
+  ## Linstor storage driver
+  Incus now supports Linstor as an alternative to Ceph for clustered storage.
+  You can read more about Linstor itself on their website: https://linbit.com/linstor/
+  -->
+  # Nouvelles fonctionnalités
+  ## Driver de stockage LINSTOR
+  Incus supporte à présent LINSTOR comme alternative à Ceph pour le stockage en cluster.
+  Vous pouvez en apprendre plus sur LINSTOR sur leur site web : https://linbit.com/linstor/
+
+  <!--
+  In short, Linstor is a managed layer on top of Linux's DRBD mechanism which is used for block device replication between multiple servers.
+  -->
+  En résumé, LINSTOR est une couche logicielle reposant sur DRBD, permettant la réplication de périphériques en mode bloc entre plusieurs serveurs.
+
+  <!--
+  This allows for block volumes to be generated for containers and virtual machines with typically the primary copy existing on the server running the instance itself and a replica existing on another server in the cluster.
+  -->
+  Cela permet aux volumes en bloc d’être créés pour les conteneurs et les machines virtuelles, avec une copie primaire présente typiquement sur le serveur sur lequel l’instance tourne, et une copie répliquée présente sur un autre serveur du cluster.
+
+  <!--
+  Driver documentation: https://linuxcontainers.org/incus/docs/main/reference/storage_linstor/
+  Howto: https://linuxcontainers.org/incus/docs/main/howto/storage_linstor_setup/
+  Internals: https://linuxcontainers.org/incus/docs/main/reference/storage_linstor_internals/
+  -->
+  Documentation du driver : https://linuxcontainers.org/incus/docs/main/reference/storage_linstor/
+  Guide d’utilisation : https://linuxcontainers.org/incus/docs/main/howto/storage_linstor_setup/
+  Documentation technique : https://linuxcontainers.org/incus/docs/main/reference/storage_linstor_internals/
+
+  <!--
+  ## New MAC address range
+  Both LXC and Incus have been using the `00:16:3e` MAC address range.
+  -->
+  ## Nouvelle plage d’adresses MAC
+  LXC et Incus utilisaient tous deux jusqu’à présent la plage d’adresses MAC `00:16:3e`.
+
+  <!--
+  This range comes from the Xen project allocation and while there's no risk of clashing with a real physical device MAC, it's had the downside of not allowing for easy distinguishing between LXC/Incus instances and those running on Xen.
+  -->
+  Cette plage était en réalité allouée au projet Xen et, bien qu’il n’y ait pas de risque de collision avec des adresses MAC de périphériques physiques, celle-ci ne permettait pas de distinguer facilement entre des instances LXC/Incus et des instances Xen.
+
+  <!--
+  To make things cleaner moving forward, Zabbly has acquired a dedicated address MAC range from IEEE specifically for use by LXC and Incus, `10:66:6a`.
+  -->
+  Pour rendre cela plus propre, Zabbly a obtenu de l’IEEE une plage d’adresses MAC pour un usage par LXC et Incus, `10:66:6a`.
+
+  <!-- 
+  The new range will automatically be used for all new instances and networks.
+  Existing instances and networks remain unchanged.
+  -->
+  La nouvelle plage sera automatiquement utilisée pour les instances et réseaux nouvellement créés.
+  Les instances et les réseaux existants restent inchangés.
+
+  <!--
+  ## USB NICs in VMs
+  A new `io.bus` configuration key has been added to network interfaces in VMs.
+  This supports two values, `virtio` (default) and `usb`.
+  -->
+  ## Cartes réseau USB pour les VM
+  Une nouvelle clef de configuration, `io.bus`, a été ajoutée pour les interfaces réseau des VM.
+  Elle peut prendre deux valeurs : `virtio` (par défaut) et `usb`.
+
+  <!--
+  When setting `io.bus=usb`, the network interface will show up as a generic USB network adapter rather than the usual PCI device.
+  -->
+  En définissant `io.bus=usb`, l’interface réseau apparaîtra comme un adaptateur réseau USB générique plutôt qu’un périphérique PCI.
+
+  <!--
+  This should help with getting some older guest OS get networking as well as help newer ones get online to fetch the virtio drivers before switching the NIC back to its default `virtio` bus.
+  -->
+  Cela devrait permettre à certains anciens OS invités d’accéder au réseau, ainsi qu’aux plus récents de se connecter à Internet pour récupérer les drivers VirtIO avant de retourner sur le bus `virtio` par défaut.
+
+  <!--
+  Documentation: https://linuxcontainers.org/incus/docs/main/reference/devices_nic/
+  -->
+  Documentation : https://linuxcontainers.org/incus/docs/main/reference/devices_nic/
+
+  <!--
+  ## USB disks in VMs
+  It's also now possible to attach disks to VMs through the USB bus.
+  When doing that, those disks show up as generic USB mass storage devices.
+  -->
+  ## Disques USB pour les VM
+  Il est maintenant également possible d’attacher des disques aux VM via un bus USB.
+  Ce faisant, les disques apparaîtront comme des périphériques de stockage de masse USB.
+
+  <!--
+  This is done by setting `io.bus=usb` on the disk device.
+  -->
+  Pour utiliser la fonctionnalité, il faut définir `io.bus=usb` sur le périphérique disque.
+
+  <!--
+  Documentation: https://linuxcontainers.org/incus/docs/main/reference/devices_disk/
+  -->
+  Documentation : https://linuxcontainers.org/incus/docs/main/reference/devices_disk/
+
+  <!--
+  ## Tracking of VM machine definition
+  Incus now tracks what the exact QEMU machine definition is during startup, allowing for live-migration between QEMU versions so long as the target is on the same QEMU release or newer.
+  -->
+  ## Suivi des définitions des machines QEMU
+  Incus garde désormais en mémoire la définition des machines QEMU au démarrage des VM, permettant la migration à chaud entre plusieurs versions de QEMU dès lors que le service QEMU cible est au moins aussi récent que le service source.
+
+  <!--
+  This is done through a new `volatile.vm.definition` configuration key.
+  -->
+  Cela se fait par l’intermédiaire d’une nouvelle clef de configuration, `volatile.vm.definition`.
+
+  <!--
+  ## Configurable OCI entrypoint
+  It's now possible to configure the entry point for OCI containers.
+  -->
+  ## Configuration du point d’entrée pour les conteneurs OCI
+  Il est désormais possible de configurer le point d’entrée des conteneurs OCI.
+
+  <!--
+  On container creation, the entry point data is extracted from the OCI configuration and turned into editable configuration on the container.
+  -->
+  À la création d’un conteneur OCI, le point d’entrée est extrait de la configuration OCI et est transformé en clefs de configuration du conteneur.
+
+  <!--
+  This is done through four new configuration options:
+  -->
+  Les clefs de configuration sont les suivantes :
+
+   - `oci.entrypoint`
+   - `oci.cwd`
+   - `oci.uid`
+   - `oci.gid`
+
+  <!--
+  Those can be overriden during instance creation or changed at will afterwards.
+  -->
+  Celles-ci peuvent être modifiées à la création de l’instance, ou changées par la suite.
+
+      stgraber@castiana:~$ incus launch oci-docker:nginx nginx
+      Launching nginx
+      stgraber@castiana:~$ incus config show nginx | grep oci\\.
+        oci.cwd: /
+        oci.entrypoint: /docker-entrypoint.sh nginx -g 'daemon off;'
+        oci.gid: "0"
+        oci.uid: "0"
+
+  <!--
+  Documentation: https://linuxcontainers.org/incus/docs/main/reference/instance_options/
+  -->
+  Documentation : https://linuxcontainers.org/incus/docs/main/reference/instance_options/
+
+  <!--
+  ## Unprivileged ICMP (ping) in OCI containers
+  OCI containers are now able to send ICMP packets as regular users.
+  This is allowed as application containers are designed to run a single application and so don't really benefit from having this be restricted to the root user.
+  -->
+  ## Accès à l’ICMP (ping) dans les conteneurs OCI pour les utilisateurs non privilégiés
+  Les conteneurs OCI peuvent désormais envoyer des paquets ICMP en tant qu’utilisateurs ordinaires.
+  Les conteneurs d’application étant conçus pour exécuter une seule application, il n’y a pas grand intérêt à restreindre les pings au seul utilisateur root.
+
+  <!--
+  ## Unprivileged low ports in OCI containers
+  OCI containers are now able to bind low ports as regular users.
+  This is allowed as application containers are designed to run a single application and so don't really benefit from having this be restricted to the root user.
+  -->
+  ## Accès aux ports privilégiés dans les conteneurs OCI pour les utilisateurs non privilégiés
+  Les conteneurs OCI peuvent désormais utiliser les ports privilégiés en tant qu’utilisateurs ordinaires.
+  Les conteneurs d’épplication étant conçus pour exécuter une seule application, il n’y a pas grand intérêt à restreindre les ports privilégiés au seul utilisateur root.
+
+  <!--
+  ## Allocated CPU time in instance state API
+  A new `allocated_time` value is exposed as part of the CPU instance state information.
+  It's used is to report how much CPU time (in nanoseconds) could be consumed per second, should the container be using as much as it's allowed.
+  -->
+  ## Temps CPU alloué dans l’API de consultation de l’état des instances
+  Une nouvelle valeur `allocated_time` est exposée dans l’API permettant de consulter l’état des instances.
+  Elle donne combien de temps CPU (en nanosecondes) peut être utilisé par seconde par l’instance, au maximum de ses capacités allouées.
+
+  <!--
+  This effectively allows calculating a percentage of CPU usage for a container when combined with multiple CPU usage datapoints over a known period of time.
+  -->
+  Cela permet de calculer un pourcentage d’utilisation CPU lorsque cette valeur est combinée avec plusieurs mesures de l'utilisation CPU sur une période de temps donnée.
+
+      stgraber@castiana:~$ incus query /1.0/instances/nginx/state | jq .cpu
+      {
+        "allocated_time": 1000000000,
+        "usage": 163062000
+      }
+
+  <!--
+  ## Configurable DNS servers
+  A new `dns.nameservers` configuration option is now available on both `bridge` and `ovn` networks. It takes a comma separated list of DNS servers to use rather than the default one.
+  -->
+  ## Configuration des serveurs DNS
+  Une nouvelle option de configuration, `dns.nameservers`, est désormais disponibles pour les réseaux `bridge` et `ovn`.
+
+  <!--
+  This can be useful when running a dedicated set of DNS resolvers that should be used directly by all instances, or for environments where you want specific networks to bypass all local resolving and go to public resolvers instead.
+  -->
+  Cela peut être utile lorsqu’un ensemble de résolveurs DNS dédiés doivent être utilisés par l’intégralité des instances, ou dans des environnements dans lesquels certains réseaux doivent ignorer la résolution locale pour utiliser des résolveurs publics.
+
+  <!--
+  Documentation (bridge): https://linuxcontainers.org/incus/docs/main/reference/network_bridge/
+  Documentation (OVN): https://linuxcontainers.org/incus/docs/main/reference/network_ovn/
+  -->
+  Documentation (bridge) : https://linuxcontainers.org/incus/docs/main/reference/network_bridge/
+  Documentation (OVN) : https://linuxcontainers.org/incus/docs/main/reference/network_ovn/
+
+  <!--
+  ## Extra IPv4 routes through DHCP
+  A new `ipv4.dhcp.routes` configuration option is now available on both `bridge` and `ovn` networks. It allows advertising additional routes through DHCP.
+  -->
+  ## Routes IPv4 supplémentaires en DHCP
+  Une nouvelle option de configuration, `ipv4.dhcp.routes`, est désormais disponible sur les réseaux `bridge` et `ovn`. Elle permet d’annoncer des routes supplémentaires en DHCP.
+
+  <!--
+  Documentation (bridge): https://linuxcontainers.org/incus/docs/main/reference/network_bridge/
+  Documentation (OVN): https://linuxcontainers.org/incus/docs/main/reference/network_ovn/
+  -->
+  Documentation (bridge) : https://linuxcontainers.org/incus/docs/main/reference/network_bridge/
+  Documentation (OVN) : https://linuxcontainers.org/incus/docs/main/reference/network_ovn/
+
+  <!--
+  ## Configurable IPv4 DHCP lease expiry on OVN
+  The `ipv4.dhcp.expiry` configuration option is now available to OVN networks too.
+  This allows reducing or extending the default DHCP lease duration.
+  -->
+  ## Configuration de l’expiration des baux DHCP en IPv4 pour OVN
+  L’option de configuration `ipv4.dhcp.expiry` est à présent aussi disponible pour les réseaux OVN.
+  Elle permet de réduire ou d’étendre la durée par défaut des baux DHCP.
+
+  <!--
+  Documentation: https://linuxcontainers.org/incus/docs/main/reference/network_ovn/
+  -->
+  Documentation : https://linuxcontainers.org/incus/docs/main/reference/network_ovn/
+
+  <!--
+  ## OVN logical switch name now part of network state
+  The OVN logical switch name is now reported as part of the OVN network information.
+  This can make debugging a fair bit easier, especially for networks that are isolated (no uplinks) and so may be lacking a logical router.
+  -->
+  ## Extension de l’état des réseaux pour inclure le nom du switch local OVN
+  Le nom du switch local OVN fait désormais partie des informations réseau OVN.
+  Cela simplifie le débogage, en particulier pour des réseaux isolés (sans uplink) ou qui n’ont pas de routeur logique.
+
+      root@server01:~# incus network info default
+      Name: default
+      MAC address: 00:16:3e:54:62:a9
+      MTU: 1500
+      State: up
+      Type: broadcast
+      
+      IP addresses:
+        inet	10.104.61.1/24 (link)
+        inet6	fd42:73ae:9013:c530::1/64 (link)
+      
+      OVN:
+        Chassis: server01
+        Logical router: incus-net20-lr
+        Logical switch: incus-net20-ls-int
+        IPv4 uplink address: 172.31.254.10
+        IPv6 uplink address: fd00:1e4d:637d:1234:216:3eff:fe54:62a9
+
+  <!--
+  # Notice for packagers
+  With this release Incus now uses the `lego` tool externally for ACME handling.
+  This is to significantly reduce the size of the Incus binary itself, but means that `lego` should be added as a dependency.
+  -->
+  # Avis pour les packagers
+  Dans cette version, Incus utilise l’outil externe `lego` pour la gestion du protocole ACME.
+  Cela a pour effet de réduire significativement la taille du binaire d’Incus, mais l’outil `lego` devient donc une dépendance qu’il s’agirait de déclarer comme telle.
+
+  <!--
+  # Complete changelog
+  Here is a complete list of all changes in this release:
+  -->
+  # Liste complète des changements
+  Voici une liste complète de tous les changements apportés par cette version :
+
+  <!--
+  [details="Full commit list"]
+  -->
+  [details="Liste complète des commits"]
+   * doc: Clarify virtiofsd requirements
+   * incusd/instance/lxc: Allow unprivileged users to use ping in application containers
+   * incusd/instance/lxc: Allow unprivileged users in application containers to bind to all ports
+   * incusd/migration: Change field type of Snapshots in VolumeTargetArgs
+   * incusd: Adjust code for VolumeTargetArgs Snapshots type change
+   * incusd/instance/drivers: Adjust code for VolumeTargetArgs Snapshots type change
+   * incusd/storage: Adjust code for VolumeTargetArgs Snapshots type change
+   * incusd/db: Add missing go:generate directive
+   * incusd/db: Update generated code
+   * incusd/device/disk: Do not allow mounting of custom block volume snapshots
+   * generate-database: Abstract DB connection / DB transaction
+   * incusd/db: Update generated code
+   * lint: Add short import exception for *.mapper.go
+   * generate-database: Accept interface instead of concrete type for PrepareStmts
+   * incusd/db: Update generated code
+   * cmd/list: Simplify evaluateShorthandFilter by reducing nesting levels
+   * incusd/storage: Don't use sparse writer on thick LVM
+   * shared/util: Add IsTruthy
+   * generate-database: Validate struct tags
+   * generate-database: Add marshal=json
+   * generate-database: Update generated code
+   * incusd/instance/edk2: Fix typo in function name
+   * incusd/instance/edk2: Fix EDK2 path overwrite issue
+   * incusd/instance/qemu: Propagate errors from edk2
+   * incusd/instance_types: Introduce INCUS_SKIP_INSTANCE_TYPES
+   * doc/environment: Add INCUS_SKIP_INSTANCE_TYPES
+   * doc/environment: Sort the environment variables
+   * incusd/ip: Error message styling
+   * incusd/ip: Only parse MAC on ethernet links
+   * internal/instance: Clarify security.secureboot setting
+   * doc: Update configs
+   * incusd/network/ovn: Fallback to OVN router address as DNS server
+   * api: network_ipv4_dhcp_routes
+   * shared/validate: Add IsDHCPRouteList
+   * incusd/network/ovn: Add ipv4.dhcp.routes
+   * incusd/network/bridge: Add ipv4.dhcp.routes
+   * cmd/incusd/forknet: Add classless static route support to the forknet dhcp client
+   * tests: Add tests for ipv4.dhcp.routes
+   * doc: Add documentation for ipv4.dhcp.routes config
+   * github: Pass shell type to shellcheck
+   * incusd/instance: Revert on OCI creation failure
+   * generate-database: Handle constraint err in Create
+   * incusd/db: Update generated code
+   * generate-database: Check for tx if necessary
+   * incusd/db: Update generated code
+   * cmd/incus: Use the file extension of the edited file for the temp file, to help with syntax highlighting
+   * incusd/api_internal: Centralize all internal API endpoints
+   * tests: Update for re-organized internal endpoints
+   * incus/drivers: Fix ZFS CreateVolume deletes pre-existing data on failure
+   * incus/rebuild: Correct help message
+   * i18n: Update translation templates
+   * incusd/cluster/config: Set default value for acme.ca_url
+   * incusd/cluster/config: Return acme.provider.environment as a slice
+   * incusd/acme: Remove DNS-01 provider (now using lego externally)
+   * incusd/acme: Move DNS-01 to external lego binary
+   * incusd/api_1_0: Trigger ACME on all ACME config options
+   * gomod: Update dependencies
+   * incus/file: Always use 1MB chunks for SFTP
+   * incusd/instance/lxc: Fail immediately if no idmap found
+   * incusd/acme: use correct path
+   * incusd/bgp: Rework start/stop logic
+   * incusd/network/ovn: Skip existing static routes
+   * incusd/instance/qemu: Set caching-mode with intel-iommu
+   * incus-agent: Improve SFTP performance
+   * incusd/instance/qemu: Move Windows check to a function
+   * incusd/instance/qemu: Set RTC base to localtime on Windows
+   * doc/api-extensions: Fix formatting
+   * api: network_state_ovn_ls
+   * incusd/network/ovn: Export LogicalRouter and LogicalSwitch names as needed
+   * shared/api: Add LogicalSwitch to OVN state
+   * incus/network: Add Logical Switch for OVN
+   * i18n: Update translation templates
+   * incus/network: Better handle partial OVN state
+   * doc/rest-api: Refresh swagger YAML
+   * incus/network: Support for missing counters
+   * shared/api: Make NetworkStateCounters a pointer
+   * incusd/resources: Update for Counters being a pointer
+   * incus/copy: Clear full device when overriding with type=none
+   * doc/instance/create: Cover behavior on Windows
+   * api: network_dns_nameservers
+   * incusd/network/bridge: Add dns.nameservers
+   * incusd/network/ovn: Add dns.nameservers
+   * doc/network: Add dns.nameservers to bridge and OVN
+   * incusd/network/ovn: Correctly remove individual DHCP options from OVN when they are unset
+   * incusd/ports: Cleanup consts
+   * api: acme_http01_port
+   * incusd/cluster/config: Add acme.http.port
+   * doc/rest-api: Refresh swagger YAML
+   * incusd/acme: Use lego for HTTP-01
+   * gomod: Update dependencies
+   * incusd/instance/qmp: Add MachineDefinition function
+   * internal/instance: Add volatile.vm.definition
+   * doc: Update configs
+   * incusd/instance/qemu: Use saved machine definition when restoring running VM
+   * incusd/instance/qemu: Handle firmware vars name matching internal one
+   * incusd: Switch MAC generation to Zabbly prefix
+   * incusd: Switch to new MAC prefix
+   * doc: Switch to new MAC prefix
+   * incus: Switch to new MAC prefix
+   * lxc-to-incus: Switch to new MAC prefix
+   * shared/api: Switch to new MAC prefix
+   * tests: Switch to new MAC prefix
+   * doc/rest-api: Refresh swagger YAML
+   * i18n: Update translation templates
+   * client: Fix spelling errors found by codespell
+   * incusd/instance/edk2: Select SecureBoot capable firmware on Debian
+   * api: network_ovn_ipv4_dhcp_expiry
+   * incusd/network/ovn: Add option ipv4.dhcp.expiry for OVN networks
+   * doc/reference/network_ovn: Add ipv4.dhcp.expiry
+   * incusd/main_forknet: Remove unreachable code
+   * incusd/dns: Use shared mutex
+   * incusd/network/ovn: Add UpdateLogicalSwitchPortDHCP
+   * incusd/network/ovn: Reconfigure DHCP option on existing logical switch ports when DHCP is enabled on the network
+   * client: Fix gofumpt
+   * generate-config: Fix gofumpt
+   * lxd-to-incus: Fix gofumpt
+   * incus-agent: Fix gofumpt
+   * incus-benchmark: Fix gofumpt
+   * incus-migrate: Fix gofumpt
+   * incus-simplestreams: Fix gofumpt
+   * incus-user: Fix gofumpt
+   * lxc-to-incus: Fix gofumpt
+   * incus: Fix gofumpt
+   * incusd: Fix gofumpt
+   * shared/tls: Fix gofumpt
+   * shared/termios: Fix gofumpt
+   * shared/subprocess: Fix gofumpt
+   * shared/simplestreams: Fix gofumpt
+   * shared/logger: Fix gofumpt
+   * shared/idmap: Fix gofumpt
+   * shared/cliconfig: Fix gofumpt
+   * internal/version: Fix gofumpt
+   * internal/util: Fix gofumpt
+   * internal/usbid: Fix gofumpt
+   * internal/rsync: Fix gofumpt
+   * internal/linux: Fix gofumpt
+   * internal/io: Fix gofumpt
+   * incusd/storage: Fix gofumpt
+   * incusd/network: Fix gofumpt
+   * incusd/instance: Fix gofumpt
+   * incusd/apparmor: Fix gofumpt
+   * incusd/backup: Fix gofumpt
+   * incusd/cgroup: Fix gofumpt
+   * incusd/cluster: Fix gofumpt
+   * incusd/config: Fix gofumpt
+   * incusd/db: Fix gofumpt
+   * incusd/device: Fix gofumpt
+   * incusd/dnsmasq: Fix gofumpt
+   * incusd/endpoints: Fix gofumpt
+   * incusd/events: Fix gofumpt
+   * incusd/firewall: Fix gofumpt
+   * incusd/ip: Fix gofumpt
+   * incusd/metrics: Fix gofumpt
+   * incusd/operations: Fix gofumpt
+   * incusd/resources: Fix gofumpt
+   * incusd/scriptlet: Fix gofumpt
+   * incusd/seccomp: Fix gofumpt
+   * incusd/sys: Fix gofumpt
+   * incusd/util: Fix gofumpt
+   * Makefile: Switch to gofumpt
+   * golangci: Switch to gofumpt
+   * generate-config: Use RunE
+   * internal/linux: Fix missing export comments
+   * incusd/seccomp: Fix import shadowing
+   * incusd/cluster: Remove duplicate type declaration
+   * incusd/bgp: Fix comment
+   * incusd/network/ovn: Don't run bgpSetup twice
+   * incusd/network/physical: Do full start following change of parent
+   * incusd/apparmor: Move AppArmor profiles to separate files
+   * cmd: Fix spelling errors found by codespell
+   * doc: Fix spelling errors found by codespell
+   * internal: Fix spelling errors found by codespell
+   * shared: Fix spelling errors found by codespell
+   * tests: Fix spelling errors found by codespell
+   * lint: Run codespell automatically
+   * i18n: Update translation templates
+   * incusd/instance/common: Check PID validity
+   * incus/file: Properly handle relative source paths
+   * cmd/storage: Typo 'Examples:' create storage
+   * i18n: Update translation templates
+   * incusd/events: Don't open needless transactions
+   * incusd/instances: Re-order evacuated check to limit DB calls
+   * incusd: Limit calls to LocalNodeIsEvacuated
+   * incusd/instances_post: Move non-DB logic outside of transaction
+   * incusd/network/ovn: Fix default DNS IPv4 server
+   * shared/osarch: Extend OS detection logic
+   * incus-agent: Update for osarch change
+   * incusd: Update for osarch change
+   * internal/version: Update UserAgent logic for osarch change
+   * api: instance_state_cpu_time
+   * shared/api: Add AllocatedTime CPU field
+   * incusd/cgroup: Add GetCPUCfsLimit
+   * incusd/instance/lxc: Add AllocatedTime CPU field
+   * incusd/instance/qemu: Add AllocatedTime CPU field
+   * doc/rest-api: Refresh swagger YAML
+   * test: Check CPU allocated time
+   * incusd/certificates: Properly handle bad PEM data
+   * cmd/generate-database/lex: Fix pluralization
+   * cmd/generate-database/db: Consider marshal tagged fields as columns
+   * cmd/generate-database/db: Support multi-package parsing
+   * cmd/generate-database/db: Import entities from non-local packages
+   * cmd/generate-database/db: Add GetNames
+   * cmd/generate-database: Update docs
+   * cmd/generate-database/file/boilerplate: Use tx for multi-queries
+   * internal/server/db/cluster: Update generated code
+   * cmd/generate-database/db: Fix generator tests
+   * incusd/network/common: Handle missing BGP peer
+   * incusd/cluster/evacuate: Don't live-migrate stopped instances
+   * cmd/generate-database/db: Directly pass reference table and column names
+   * internal/server/db/cluster: Specify table name on method declarations
+   * internal/server/db/cluster: Update generated code
+   * cmd/incusd: Update calls to generated code
+   * cmd/generate-database/db: Make linter happy (defer loops)
+   * api: network_io_bus
+   * incusd/device/config: Add USB bus override
+   * incusd/instance: Add support for USB NICs
+   * incusd/device/nic: Add support for io.bus
+   * incusd/storage/s3 Fixed minio client mc too ambious issue
+   * doc/device/nic: Add support for io.bus
+   * incusd/instance/qemu enable s4 by default
+   * doc/instance_options: Updates raw.qemu.conf example
+   * incusd/networks: Validate configuration on join too
+   * Makefile: Bump base Go 1.23 version
+   * gomod: Update dependencies
+   * cmd/generate-database/db: Fix GetNames spacing
+   * github: Rework issue templates
+   * internal/server/storage/s3: Add `minio-client` to list of potential binary names
+   * doc: Update Debian installation documentation
+   * internal/server/storage/s3: Update logic for checking MinIO version from multiple possible binary names
+   * incusd/auth: Tweak SQL queries
+   * incusd/auth: Properly handle network integrations
+   * incusd/db/cluster/entities: Sort maps
+   * doc/network-integration: Document properties
+   * incusd/instance/lxc: Cleanup OCI mount paths
+   * api: disk_io_bus_usb
+   * incusd/device/disk: Add support for USB bus
+   * incusd/instance/qemu: Add support for USB disks
+   * doc: Update configs
+   * golangci: Upgrade to version 2
+   * incusd/storage/s3 minio client check enhancement
+   * golangci: Disable STI005 error checks
+   * test: Fix deprecated chown syntax
+   * test: Fix test cleanup
+   * shared/validate: Add string length validator
+   * shared/validate: Add minimum duration validator
+   * incusd/sys: Add Hostname to OS struct
+   * incusd/instance/drivers: Populate StorageMove and StoragePool when migrating lxc instances
+   * incusd/storage: Populate StorageMove and StoragePool when migrating volumes
+   * incusd/storage: Add more parameters to MigrationTypes
+   * incusd/network/ovn: Remove internal routes to forward/load-balancers
+   * doc/ref/storage_ceph: Fix typo
+   * tests: Tweak volume sizes
+   * tests: Be more specific on selecting property
+   * incusd/instance/edk2: Always prefer the EDK2 override
+   * api: storage_driver_linstor
+   * doc: Linstor driver documentation
+   * incusd/cluster/config: Add cluster-level LINSTOR config options
+   * incusd/node/config: Add node-level LINSTOR config options
+   * incusd/migration: Add linstor to migration protobuf
+   * incusd/storage/linstor: Linstor client setup
+   * incusd/storage/linstor: Wrap golinstor logger
+   * incusd/state: Add Linstor client to server state
+   * incusd: Trigger Linstor client setup on server config changes
+   * incusd/storage/linstor: Storage pool creation and deletion
+   * incusd/storage/linstor: Volume creation and deletion
+   * incusd/storage: Implement the Filler function for Linstor volumes
+   * incusd/storage/linstor: Add mount and unmount support for volumes
+   * incusd/storage/linstor: Add trivial renaming support for volumes
+   * incusd/storage/linstor: Remove filesystem volume and mount path
+   * incusd/storage/linstor: Add common volume config validation
+   * incusd/storage/linstor: Copy volumes on the same pool
+   * incusd/storage/linstor: Add basic snapshot support
+   * incusd/storage/linstor: Add support for mounting and unmounting snapshot volumes
+   * incusd/storage/linstor: Add support for resizing volumes
+   * incusd/storage/linstor: Add basic support for same-pool migration
+   * incusd/storage/linstor: Add support for optimized images
+   * incusd/storage/linstor: List snapshots to support non optimized copying of volumes with snapshots
+   * incusd/storage/linstor: Implement GetResources
+   * incusd/storage/linstor: Add support for updating storage pool config
+   * incusd/storage/linstor: Add support for generic refreshing of volumes
+   * incusd/storage/linstor: Add support for fetching volume disk usage
+   * incusd/storage/linstor: Add support for non optimized backups
+   * incusd/storage/linstor: Encode snapshot names in metadata
+   * incusd/storage/linstor: Add support for listing volumes
+   * incusd/storage/linstor: Use aux property to map incus names to linstor resource definitions
+   * incusd/storage/linstor: Ensure volumes are available locally when retrieving device paths
+   * incusd/storage/linstor: Fallback to generic migration implementation
+   * incusd/storage/linstor: Freeze and sync filesystem when snapshotting volumes
+   * incusd/storage/linstor: Cleanup temporary resource definitions from snapshots
+   * incusd/storage/linstor: Delete diskless resources when unmounting volumes
+   * incusd/storage/linstor: Add drbd resource config options
+   * tests: Add standalone LINSTOR tests
+   * tests: Add clustered LINSTOR tests
+   * internal/migration: Update protobuf
+   * doc: Update configs
+   * gomod: Tidy dependencies and add LINSTOR
+   * github: Add LINSTOR CI tests
+   * incusd/storage/linstor: Add linstor.remove_snapshots config option
+   * doc: Document linstor.remove_snapshots config option
+   * test: Add tests for linstor.remove_snapshots config option
+   * doc/support: Update feature release version
+   * incusd/instance: Don't enforce device/config validation on snapshots
+   * gomod: Update dependencies
+   * api: instance_oci_entrypoint
+   * internal/instance: Add OCI entrypoint configuration
+   * incusd/instance/lxc: Add OCI entrypoint configuration
+   * incusd/instance: Set instance OCI config from OCI data
+   * doc: Update config
+  [/details]
+
+  <!--
+  # Documentation
+  The Incus documentation can be found at:
+  https://linuxcontainers.org/incus/docs/main/
+  -->
+  # Documentation
+  La documentation d’Incus peut être consultée sur :
+  https://linuxcontainers.org/incus/docs/main/
+
+  <!--
+  # Packages
+  There are no official Incus packages as Incus upstream only releases regular release tarballs. Below are some available options to get Incus up and running.
+  -->
+  # Paquets
+  Incus ne fournit pas de paquet d’installation mais bien un tarball à chaque version. Vous trouverez ci-dessous différentes solutions pour mettre Incus en service.
+
+  <!--
+  ## Installing the Incus server on Linux
+  Incus is available for most common Linux distributions. You'll find detailed installation instructions in our documentation.
+  -->
+  ## Installation du serveur Incus sous Linux
+  Incus est disponible sur la plupart des distributions Linux courantes. Vous trouverez des instructions d’installation détaillées dans notre documentation.
+
+  https://linuxcontainers.org/incus/docs/main/installing/
+
+  <!--
+  ## Homebrew package for the Incus client
+  The client tool is available through HomeBrew for both Linux and MacOS.
+  -->
+  ## Paquet Homebrew du client Incus
+  Le client Incus est disponible sur Homebrew pour Linux et macOS.
+
+  https://formulae.brew.sh/formula/incus
+
+  <!--
+  ## Chocolatey package for the Incus client
+  The client tool is available through Chocolatey for Windows users.
+  -->
+  ## Paquet Chocolatey du client Incus
+  Le client Incus est disponible sur Chocolatey pour les utilisateurs de Windows.
+
+  https://community.chocolatey.org/packages/incus/6.11.0
+
+  <!--
+  ## Winget package for the Incus client
+  The client tool is also available through Winget for Windows users.
+  -->
+  ## Paquet Winget du client Incus
+  Le client Incus est aussi disponible sur Winget pour les utilisateurs de Windows.
+
+  https://winstall.app/apps/LinuxContainers.Incus
+
+  <!--
+  # Support
+  Monthly feature releases are only supported up until the next release comes out.  Users needing a longer support length and less frequent changes should consider using Incus 6.0 LTS instead.
+  -->
+  # Support
+  Les versions de fonctionnalité d’Incus ne sont supportées que jusqu’à la sortie de la suivante. Les personnes souhaitant un support plus long et des changements moins fréquents devraient plutôt envisager d’utiliser Incus 6.0 LTS.
+
+  <!--
+  Community support is provided at: https://discuss.linuxcontainers.org
+  Commercial support is available through: https://zabbly.com/incus
+  Bugs can be reported at: https://github.com/lxc/incus/issues
+  -->
+  Le support communautaire est disponible sur : https://discuss.linuxcontainers.org
+  Un support commercial est disponible sur : https://zabbly.com/incus
+  Les bugs peuvent être signalés sur : https://github.com/lxc/incus/issues
