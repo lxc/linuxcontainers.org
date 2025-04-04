@@ -1,0 +1,47 @@
+title: LXCFS 6.0.4 LTS has been released
+date: 2025/04/04 02:04
+origin: https://discuss.linuxcontainers.org/t/lxcfs-6-0-4-lts-has-been-released/23389
+content: |-
+  # Introduction
+  The LXCFS team is pleased to announce the release of LXCFS 6.0.4!
+
+  This is the fourth bugfix release for LXCFS 6.0 which is supported until June 2029.
+
+  # Changes
+  Some of the highlights for this release are:
+
+   - Properly handle SLAB reclaimable memory in meminfo
+   - Handle empty cpuset strings
+   - Fix potential sleep interval overflows
+
+  The full list of commits is available below:
+
+  [details="Detailed changelog"]
+   - meminfo: Add slab_reclaimable to MemAvailable
+   - tests/test-read: call close(2) only if there is an fd
+   - utils: fix wait_for_sock to use time_t instead of int
+   - cpuset_parse: make a check for an empty string in cpu_in_cpuset()
+   - utils: move strlcpy/strlcat helpers from cgroup_utils to utils
+   - lxcfs: use strlcpy when handle runtime-dir parameter
+   - proc_loadavg: Prevent integer overflow calculating the sleep interval
+  [/details]
+
+  # Support and upgrade
+  The LXCFS 6.0 branch is supported until June 2029.
+  Only bugfixes and security issues get included into the stable bugfix releases, so it's always safe and recommended to keep up and run the latest bugfix release.
+
+  # Downloads
+
+   - Main release tarball: [lxcfs-6.0.4.tar.gz](https://linuxcontainers.org/downloads/lxcfs/lxcfs-6.0.4.tar.gz)
+   - GPG signature: [lxcfs-6.0.4.tar.gz.asc](https://linuxcontainers.org/downloads/lxcfs/lxcfs-6.0.4.tar.gz.asc)
+
+  # Thanks
+  This LTS release update was made possible thanks to funding provided by the Sovereign Tech Fund (now part of the Sovereign Tech Agency).
+
+  [![ST-Fund-Logo-Default-White-RGB|690x219](https://discuss.linuxcontainers.org/uploads/default/original/2X/7/7799c947413019d3c5cd4fa201568495de1db2c4.png)](https://sovereign.tech)
+
+  [quote]
+  The Sovereign Tech Fund supports the development, improvement, and maintenance of open digital infrastructure. Its goal is to sustainably strengthen the open source ecosystem, focusing on security, resilience, technological diversity, and the people behind the code.
+  [/quote]
+
+  Find out more at: https://www.sovereign.tech

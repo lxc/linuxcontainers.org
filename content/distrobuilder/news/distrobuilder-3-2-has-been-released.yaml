@@ -1,0 +1,73 @@
+title: Distrobuilder 3.2 has been released
+date: 2025/04/04 00:04
+origin: https://discuss.linuxcontainers.org/t/distrobuilder-3-2-has-been-released/23385
+content: |-
+  # Introduction
+  The distrobuilder team is proud to announce the release of distrobuilder 3.2!
+
+  This is primarily a bugfix release, updating some necessary logic to handle newer versions of the various distributions that distrobuilder supports.
+
+  Highlights are:
+
+   - Improve Windows driver handling
+   - Support for newer NixOS releases
+   - systemd generator handles newer Linux distributions
+   - Support for Alpaquita
+
+  The full list of commits is available below:
+
+  [details="Detailed changelog"]
+   - distrobuilder: Adjust name of driver inf files
+   - distrobuilder: Also install exes when injecting drivers
+   - windows: Refactor code for injecting drivers into a library for easier shared use
+   - fedora: Add support for OCI images
+   - ubuntu.yaml: add Noble, Oracular, Plucky
+   - Move to geaaru/docker-companion fork
+   - gomod: Update dependencies
+   - opensuse: Temporarily switch to mirrorcache-eu to fix downloads
+   - nixos: correctly handle 24.11
+   - Update README.md
+   - lxc.generator: Workaround issue with nsresourced
+   - lxc.generator: Fix systemd-networkd on recent distros
+   - Makefile: Sync update-gomod with Incus
+   - imports: replace gopkg.in/antchfx/htmlquery.v1
+   - gomod: Update dependencies
+   - systemd: Relax read-only path workaround
+   - remove nixos 24.05
+   - Update openwrt-http_test.go to support v24.10 (and drop v21.x)
+   - Update openwrt-http.go to support v24.10 (and drop v21.x)
+   - Update builds.yml to v4 artifact actions
+   - Change naming of INF files
+   - docs: update supported Windows versions list
+   - doc: Add XP (for Windows XP) to wordlist
+   - Makefile: Bump minimum Go to 1.23.0
+   - gomod: Update dependencies
+   - github: Update base Ubuntu version
+   - github: Update to use Go oldstable/stable
+   - github: Bump actions version
+   - Makefile: Remove deprecated -d flag
+   - Makefile: Remove GOCACHE
+   - README: Fix badge
+   - sources: Add Alpaquita downloader
+   - managers/apk: Support packages.repositories[].key
+   - Add user/group ID mapping from passwd and group files
+   - README: Add missing packages
+   - systemd: Remove unused logic
+   - systemd: Cleanup generator script
+   - systemd: Apply overrides even when nesting is enabled
+   - Fix spelling errors found by codespell
+   - Update README.md - replace libguestfs-tools with libwin-hivex-perl
+   - lint: Run codespell automatically
+   - lxc.generator Fixed typo in comments
+   - doc: Document runtime deps for building VM images
+   - Makefile: Bump Go to 1.23.7
+   - Update dependencies
+   - golang-ci: Upgrade to v2
+   - Fix golang-ci reported issues
+   - sources: Alpaquita - use source.variant not image.variant
+  [/details]
+
+  # Downloads
+
+   - Main release tarball: [distrobuilder-3.2.tar.gz](https://linuxcontainers.org/downloads/distrobuilder/distrobuilder-3.2.tar.gz)
+   - GPG signature: [distrobuilder-3.2.tar.gz.asc](https://linuxcontainers.org/downloads/distrobuilder/distrobuilder-3.2.tar.gz.asc)

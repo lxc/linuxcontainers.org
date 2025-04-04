@@ -1,0 +1,59 @@
+title: LXC 6.0.4 LTS has been released
+date: 2025/04/04 02:04
+origin: https://discuss.linuxcontainers.org/t/lxc-6-0-4-lts-has-been-released/23390
+content: |-
+  # Introduction
+  The LXC team is pleased to announce the release of LXC 6.0.4!
+
+  This is the fourth bugfix release for LXC 6.0 which is supported until June 2029.
+
+  # Changes
+  As usual this bugfix releases focus on stability and hardening.
+
+  Some of the highlights for this release are:
+
+   - Switch to the Zabbly MAC address prefix
+   - New LXC_IPV6_ENABLE lxc-net configuration key to turn IPv6 on/off
+   - Fixed ability to attach to application containers with non-root entry point
+
+  The full list of commits is available below:
+
+  [details="Detailed changelog"]
+   - LXC attach should exit on SIGCHLD
+   - confile-vlanid: undefined is not a zero value
+   - conf: log name of invalid capability in error
+   - dbus: replace hardcoded dbus address with environment variable
+   - conf: warn when capabilities are disabled or libcap is not found
+   - lxc/attach: Revert "- LXC attach should exit on SIGCHLD"
+   - config-bcast: fix incorrect broadcast address calculation
+   - github: Switch to native arm64 runners
+   - Added LXC_IPV6_ENABLE option for lxc-net to enable or disable IPv6
+   - sysconfig/lxc: remove false comment
+   - global: Switch MAC generation to Zabbly prefix
+   - global: Switch to new MAC prefix
+   - github: Add packaging workflow
+   - tools/lxc_attach: fix ENFORCE_MEMFD_REXEC checks
+   - lxc/conf: handle rootfs open_at error in lxc_mount_rootfs
+   - lxc/caps: fix open /proc/sys/kernel/cap_last_cap
+   - lxc/start: do prctl(PR_SET_DUMPABLE) after last uid/gid switch
+  [/details]
+
+  # Support and upgrade
+  The LXC 6.0 branch is supported until June 2029.
+  Only bugfixes and securitiy issues get included into the stable bugfix releases, so it's always safe and recommended to keep up and run the latest bugfix release.
+
+  # Downloads
+
+   - Main release tarball: [lxc-6.0.4.tar.gz](https://linuxcontainers.org/downloads/lxc/lxc-6.0.4.tar.gz)
+   - GPG signature: [lxc-6.0.4.tar.gz.asc](https://linuxcontainers.org/downloads/lxc/lxc-6.0.4.tar.gz.asc)
+
+  # Thanks
+  This LTS release update was made possible thanks to funding provided by the Sovereign Tech Fund (now part of the Sovereign Tech Agency).
+
+  [![ST-Fund-Logo-Default-White-RGB|690x219](https://discuss.linuxcontainers.org/uploads/default/original/2X/7/7799c947413019d3c5cd4fa201568495de1db2c4.png)](https://sovereign.tech)
+
+  [quote]
+  The Sovereign Tech Fund supports the development, improvement, and maintenance of open digital infrastructure. Its goal is to sustainably strengthen the open source ecosystem, focusing on security, resilience, technological diversity, and the people behind the code.
+  [/quote]
+
+  Find out more at: https://www.sovereign.tech
