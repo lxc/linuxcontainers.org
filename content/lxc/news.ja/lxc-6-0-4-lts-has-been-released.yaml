@@ -1,0 +1,87 @@
+title: LXC 6.0.4 LTS リリースのお知らせ
+date: 2025/04/04 02:04
+origin: https://discuss.linuxcontainers.org/t/lxc-6-0-4-lts-has-been-released/23390
+content: |-
+  # はじめに <!-- Introduction -->
+  <!--
+  The LXC team is pleased to announce the release of LXC 6.0.4!
+  -->
+  LXC チームが LXC 6.0.4 LTS のリリースをお知らせします!
+
+  <!--
+  This is the fourth bugfix release for LXC 6.0 which is supported until June 2029.
+  -->
+  このリリースは、2029 年 6 月までサポートされる LXC 6.0 の 4 度目のバグフィックスリリースです。
+
+  # 変更点 <!-- Changes -->
+  <!--
+  As usual this bugfix releases focus on stability and hardening.
+  -->
+  いつもどおり、このバグ修正リリースは、安定性とセキュリティ強化にフォーカスを当てています。
+
+  <!--
+  Some of the highlights for this release are:
+  -->
+  このリリースのハイライトは次のとおりです:
+
+   - Zabbly のアドレスプレフィックスへの変更（訳注: LXCが使用する MAC アドレス） <!-- Switch to the Zabbly MAC address prefix -->
+   - IPv6 をオン・オフするための lxc-net の新しい設定キー `LXC_IPV6_ENABLE` <!-- New LXC_IPV6_ENABLE lxc-net configuration key to turn IPv6 on/off -->
+   - 非 root のエントリーポイントを持つアプリケーションコンテナにアタッチするための機能の修正 <!-- Fixed ability to attach to application containers with non-root entry point -->
+
+  <!--
+  The full list of commits is available below:
+  -->
+  コミットのすべてのリストは次のとおりです（翻訳なし）:
+
+  [details="すべてのChangeLogを見る"]
+   - LXC attach should exit on SIGCHLD
+   - confile-vlanid: undefined is not a zero value
+   - conf: log name of invalid capability in error
+   - dbus: replace hardcoded dbus address with environment variable
+   - conf: warn when capabilities are disabled or libcap is not found
+   - lxc/attach: Revert "- LXC attach should exit on SIGCHLD"
+   - config-bcast: fix incorrect broadcast address calculation
+   - github: Switch to native arm64 runners
+   - Added LXC_IPV6_ENABLE option for lxc-net to enable or disable IPv6
+   - sysconfig/lxc: remove false comment
+   - global: Switch MAC generation to Zabbly prefix
+   - global: Switch to new MAC prefix
+   - github: Add packaging workflow
+   - tools/lxc_attach: fix ENFORCE_MEMFD_REXEC checks
+   - lxc/conf: handle rootfs open_at error in lxc_mount_rootfs
+   - lxc/caps: fix open /proc/sys/kernel/cap_last_cap
+   - lxc/start: do prctl(PR_SET_DUMPABLE) after last uid/gid switch
+  [/details]
+
+  # サポートとアップグレード <!-- Support and upgrade -->
+  <!--
+  The LXC 6.0 branch is supported until June 2029.
+  Only bugfixes and securitiy issues get included into the stable bugfix releases, so it's always safe and recommended to keep up and run the latest bugfix release.
+  -->
+  LXC 6.0 ブランチは 2029 年 6 月までサポートされます。
+  Stable 版のバグ修正リリースには、バグ修正とセキュリティの問題の修正のみが含まれます。このため、常に最新のバグ修正リリースを実行し、セキュリティーを確保することが安全であり、推奨されます。
+
+  # ダウンロード <!-- Downloads -->
+
+   - リリース tarball <!-- Main release tarball -->: [lxc-6.0.4.tar.gz](https://linuxcontainers.org/downloads/lxc/lxc-6.0.4.tar.gz)
+   - GPG シグネチャー <!-- GPG signature -->: [lxc-6.0.4.tar.gz.asc](https://linuxcontainers.org/downloads/lxc/lxc-6.0.4.tar.gz.asc)
+
+  # 感謝 <!-- Thanks -->
+  <!--
+  This LTS release update was made possible thanks to funding provided by the Sovereign Tech Fund (now part of the Sovereign Tech Agency).
+  -->
+  この LTS リリースアップデートは、Sovereign Tech Fund（現在は Sovereign Tech Agency の一部）からの資金提供により実現しました。
+
+  [![ST-Fund-Logo-Default-White-RGB|690x219](https://discuss.linuxcontainers.org/uploads/default/original/2X/7/7799c947413019d3c5cd4fa201568495de1db2c4.png)](https://sovereign.tech)
+
+  <!--
+  [quote]
+  The Sovereign Tech Fund supports the development, improvement, and maintenance of open digital infrastructure. Its goal is to sustainably strengthen the open source ecosystem, focusing on security, resilience, technological diversity, and the people behind the code.
+  [/quote]
+  -->
+  > Sovereign Tech Fund は、オープンデジタルインフラストラクチャーの開発、改良、保守をサポートします。その目標は、セキュリティ、レジリエンス、技術の多様性、コードの背後にいる人々に焦点を当て、オープンソースエコシステムを持続的に強化することです。
+
+  <!--
+  Find out more at: https://www.sovereign.tech
+  -->
+  詳細は https://www.sovereign.tech をご覧ください。
