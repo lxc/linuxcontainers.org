@@ -454,7 +454,6 @@ And finally removing it with:
     lxc-destroy --name mycontainer
 
 # Distribution LXC Documentation
-- [Ubuntu](https://ubuntu.com/server/docs/containers-lxc)
 - [Debian](https://wiki.debian.org/LXC/CGroupV2#LXC_containers_started_by_non-root)
 - [Arch Linux](https://wiki.archlinux.org/title/Linux_Containers#Enable_support_to_run_unprivileged_containers_(optional))
 - [Fedora](https://fedoraproject.org/wiki/LXC)
