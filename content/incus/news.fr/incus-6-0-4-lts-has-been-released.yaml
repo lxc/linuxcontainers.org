@@ -1,0 +1,642 @@
+title: Incus 6.0.4 LTS est maintenant disponible
+date: 2025/04/04 02:04
+origin: https://discuss.linuxcontainers.org/t/incus-6-0-4-lts-has-been-released/23391
+content: |-
+  <!--
+  # Introduction
+  The Incus team is pleased to announce the release of Incus 6.0.4!
+  -->
+  # Introduction
+  L’équipe d’Incus est heureuse d’annoncer la sortie d’Incus 6.0.4 !
+
+  <!--
+  This is the fourth bugfix release for Incus 6.0 which is supported until June 2029.
+  -->
+  Il s’agit de la quatrième version apportant des corrections de bugs pour Incus 6.0, dont le support est assuré jusqu’en juin 2029
+
+  <!--
+  # Changes
+  As usual this bugfix releases focus on stability and hardening.
+  -->
+  # Changements
+  Comme d’habitude, cette version se concentre sur la stabilité et le hardening.
+
+  <!--
+  Minor improvements have also been backported, specifically anything which does not require data migration, database changes or cause any unexpected change to user facing behavior.
+  -->
+  Des améliorations mineures ont également été rétroportées, en particulier tout ce qui ne nécessite pas de migrations de données, de modifications dans la base de données, ou ne cause pas de changements inattendus dans le comportement observé par l’utilisateur.
+
+  <!--
+  The number of such improvements will decrease over time within the LTS branch.
+  -->
+  Le nombre de ces améliorations pour la branche LTS est amené à diminuer avec le temps.
+
+  <!--
+  Some of the highlights for this release are:
+  -->
+  Les points marquants de cette version sont :
+
+  <!--
+   - Instance network ACLs on bridge networks
+   - Enhanced QEMU scriptlets
+   - VM memory dumps
+   - Extended OVN network state information
+   - Extended server preseed file support
+   - ACME DNS-01 support
+   - API wide collection filtering
+   - SMBIOS11 VM provisioning support
+   - IOMMU support for VMs
+   - VRF support for routed NICs
+   - New MAC address range
+   - USB NICs in VMs
+   - USB disks in VMs
+   - Configurable DNS servers in networks
+   - Extra IPv4 routes through DHCP
+  -->
+   - ACL réseau par instance pour les réseaux de type bridge
+   - Scriptlets QEMU améliorés
+   - Dumps de mémoire pour les VM
+   - Informations supplémentaires sur l’état des réseaux OVN
+   - Amélioration du fichier de preseed du serveur
+   - Support de ACME DNS-01
+   - Support du provisionnement des VM via SMBIOS11
+   - Support de l’IOMMU pour les VM
+   - Support des VRF pour les cartes réseau routées
+   - Nouvelle plage d’adresses MAC
+   - Cartes réseau USB pour les VM
+   - Disques USB pour les VM
+   - Serveurs DNS configurables par réseau
+   - Routes IPv4 supplémentaires en DHCP
+
+  <!--
+  The full list of commits is available below:
+  -->
+  La liste complète des commits est présentée ci-dessous :
+
+  <!--
+  [details="Detailed changelog"]
+  -->
+  [details="Liste détaillée des changements"]
+   - api: network_ovn_state_addresses
+   - shared/api: Expand OVN state with uplink addresses
+   - doc/rest-api: Refresh swagger YAML
+   - internal/server: Add uplink addresses to ovn state
+   - incus/network/info: Add uplink addresses for ovn network
+   - incus: Add --description flag to create commands
+   - tests: Add tests for --description flag on create commands
+   - Add simple shell.nix
+   - Encode mc alias for storage buckets to match allowed characters
+   - doc: Contributing section restructuring
+   - incusd/network/ovn: Allow creation of OVN network with no uplink
+   - incusd/network/ovn: Handle missing logical router in state
+   - lxd-to-incus: Clear volatile.uuid from instances
+   - github: Bump most workflows to 24.04
+   - github: Split testsuite to separate action
+   - github: Add aarch64 tests
+   - tests: Skip nftables test on old kernels
+   - shared/util: Add IsNoneOrEmpty
+   - incusd/network/bridge: Tweak dnsmasq startup condition
+   - shared/cgo: Add finalize_userns
+   - shared/cgo: Export in_same_namespace
+   - incusd/main_forkproxy: Join all namespaces at once
+   - incusd/main_forkfile: Join all namespaces at once
+   - internal/linux: Add ClearBlock
+   - incusd/storage: Switch to linux.ClearBlock
+   - internal/linux/discard: Remove leftover debugging
+   - internal/linux/discard: Use marker length for buffer
+   - internal/linux/discard: Add support for offset
+   - incusd/storage/generic: Pass offset to ClearBlock
+   - incusd/storage/lvm: Discard the new blocks on resize
+   - incusd/storage/lvm: Run ClearBlock on all new thick block volumes
+   - cmd: support header line for csv output
+   - cmd: update --format flag description
+   - cmd: add validation for --format flag
+   - doc: fix ref for vendor-data
+   - devcontainer: initial version
+   - Makefile: add target for unit tests as root
+   - Makefile: add missing installations for gotags and openfga
+   - incusd/network/ovn: Skip remote peers when iterating peer networks
+   - incusd/storage/lvm: Move resize clearing to SetVolumeQuota
+   - incusd/storage: Make use of qemu-img's target-is-zero option
+   - incusd/device/disk: Remove virtfs-proxy-helper dependency
+   - tests: Remove 9p proxy driver
+   - incusd/instance: Split startupHook function
+   - incusd/main_cluster: Tweak to have help refer to correct command name
+   - incusd/instance: Pass an *api.Instance to the scriptlet program
+   - incusd/scriptlet/qemu: Add instance parameter to the QEMU scriptlet
+   - incusd/instance: Rewire QEMU config generation
+   - incusd/instance: Make QEMU config types public
+   - incusd/scriptlet/qemu: Fix Starlark function name
+   - incusd/scriptlet/qemu: Prevent calling QMP functions at config stage
+   - incusd/device/disk: Better handle partitions
+   - Fixed link to point to correct manpage.
+   - lxd-to-incus: Be more lenient on database changes
+   - incusd/storage/drivers: Handle 4k sector sizes
+   - incusd/dnsmasq: Don't put the project name in the DNS record
+   - incusd/device/disk: disable 9p if idmap requested
+   - incusd/scriptlet/qemu: Add QEMU configuration getters
+   - incusd/scriptlet/qemu: Add QEMU configuration setters
+   - api: qemu_scriptlet_config
+   - doc/ref/instance_options: Update QEMU scriptlet documentation
+   - incusd/instance: Update unit test
+   - incusd/instance/drivers: Introduce ReloadDevice
+   - api: network_bridge_acl_devices
+   - incusd/device/nic: ACL support for bridge NIC device
+   - incusd/server/firewall: ACL for bridge NIC device
+   - doc/device/nic: Add ACL support to bridge NICs
+   - doc/network_acl: Document usage with bridged NICs
+   - tests: nftable test with ACL rules
+   - github: Switch to Github's hosted arm64 runners
+   - doc: typo
+   - doc: Updated storage_zfs.md
+   - incusd/device/disk: Update correct mount options
+   - incus/file/pull: Port to SFTP
+   - api: instance_debug_memory
+   - incusd/instances/qemu: Add vmcoreinfo device
+   - incusd/instances/qemu: Add dump-guset-memory implementation for instance memory debugging
+   - incusd: Add GET /1.0/instances/NAME/debug/memory
+   - doc/rest-api: Refresh swagger YAML
+   - client: Add API implementation for instance memory debugging
+   - incus: Add "debug dump-memory" command
+   - doc: Force white background for swagger API
+   - i18n: Update translation templates
+   - gomod: Update dependencies
+   - api: init_preseed_storage_volumes
+   - client: Add storage volume initialization
+   - shared/api: Add storage volume initialization
+   - doc: Include storage initialization example
+   - doc/rest-api: Refresh swagger YAML
+   - tests: Include storage volume to init test
+   - incusd/instance/qemu: Fix device_id warning on 9.2.x
+   - incus: Fix example description for debug dump-memory command
+   - incusd/instance/drivers/qmp: Handle missing log directory
+   - cmd/incus-user: keep track of socket path used to connect to the server
+   - cmd/incus-user: unify logging, support --verbose and --debug
+   - api: init_preseed_profile_project
+   - shared/api: Add project support to profiles in preseed init
+   - client: Add project support to profiles in preseed init
+   - doc/rest-api: Refresh swagger YAML
+   - incus/admin/init: use api.InitProfileProjectPost
+   - incusd/network/ovn: Fix bad route check
+   - incus/file/pull: Ensure we have a leading / in all paths
+   - github: Fix shellcheck
+   - gomod: Update dependencies
+   - doc/installing: mention incus group on NixOS
+   - incus/file/pull: Read files in chunks
+   - incus/file/pull: Actually make read buffer 1MiB
+   - incusd/network/bridge: Fix deletion of tunnels and dummy devices
+   - incusd/device/disk: Allow virtiofsd on non-x86
+   - incusd/instance/drivers/qemu: Add IOMMU device
+   - incus/file: Remove unused function
+   - incus/network/info (ovn): Fix object not found.
+   - incusd/instance/drivers: Improve NUMA balancing
+   - incus/file: Move from path to filepath
+   - github: Add linux-modules-extra (for vrf)
+   - shared/archive: Added LZ4 support
+   - api: instance_nic_routed_host_address
+   - incus/server/ip: Add `Master` parameter for veth and tuntap
+   - incus/server/ip: Add VRF parameter for IP Route
+   - incus/server/device: Add vrf parameter for routed NIC devices
+   - tests: Add test for routed NIC with VRF
+   - doc: Add description for routed-nic VRF parameter
+   - generate-database: Move into cmd package
+   - generate-config: Move to cmd package
+   - incus/storage/drivers: Fix issue with lvmcluster storage pool creation
+   - generate-database: Rename from incus-generate
+   - generate-config: Rename from incus-doc
+   - github: Workaround permission problems
+   - internal/instance: Move user config key doc string
+   - internal/instance: Add environment config keys docstring
+   - incusd/internal/server/instance: Add qemuEscapeCmdline
+   - incusd/internal/server/instance: Use qemuEscapeCmdline
+   - api: instance_smbios
+   - internal/instance: Add smbios config keys
+   - incusd/instance/drivers/qemu: Implement smbios config keys
+   - doc: Update configs
+   - incus: Fix instance copy error when using '--refresh' flag
+   - doc/network_load_balancers: Fix backend add instructions
+   - doc: Add frontend to wordlist
+   - incusd/main_nsexec: Fix change_namespaces fallback to handle multiple namespaces
+   - incusd/instance/utils: Only check uid/gid for containers
+   - generate-database: Use types.Package
+   - generate-database: Remove support for separate database package
+   - generate-database: Separate Go package loading
+   - incusd/instance/drivers: Check if disk is remote when migrating with an extra disk
+   - incusd/instance/edk2: Look for bios.bin in /usr/share/seabios
+   - generate-database: Add unified generate command
+   - incusd/db: Use generate command
+   - generate-database: Remove obsolete commands stmt and method
+   - generate-database: Update README.md
+   - generate-database: Reduce to single go:generate per package
+   - incusd/db: Use Single generate per package
+   - golangci: Update for new generate-database syntax
+   - internal/cmd/table: Improve errors on modifiers
+   - incusd: Add additional validation when joining a new cluster member
+   - incusd: Upgrade flosch/pongo2 to v6
+   - Makefile: Bump minimal Go to 1.23
+   - doc: Bump minimum Go to 1.23
+   - github: Re-order code tests tasks
+   - incusd/resources: Prevent concurrent runs and cache data for 10s
+   - incusd/backup: Implement compatibility with old backups
+   - incusd/backup: Detect incompatible backup files
+   - incusd: Ensure directories have 755 permissions in 'incus file push -p' command
+   - tests: Fix test for verifying directory permissions
+   - devcontainer: Update Go to 1.23
+   - generate-database: Make "Code generated" comment Go conformant
+   - db/cluster: Update code generated by generate-database
+   - generate-database: Add internal tool disclaimer
+   - generate-config: Formatting README.md
+   - generate-config: Add internal tool disclaimer
+   - incusd/storage/drivers: Truncate the block file during custom volume migration
+   - incusd/instance/qemu: Don't attempt to hotplug over the virtual IOMMU
+   - incusd/device/disk: Remove diskAddRootUserNSEntry
+   - incusd/device/disk: Use virtiofsd uid/gid handling
+   - generate-database: Add error mapping
+   - incusd/db: Use error mapping
+   - gomod: Update dependencies
+   - incusd/db/cluster: Fix cluster group table
+   - incusd/db: Update generated files
+   - generate-database: Make self-sufficient
+   - incusd/db: Update generated code
+   - generate-database: Improve case handling
+   - incus/list: Remove unused arguments and parameters
+   - incus/top: Fix handling of all-projects
+   - incusd/storage/drivers: Refactor ceph discovery
+   - incusd/instance/drivers: Let QEMU handle Ceph itself
+   - incus/file: Simplify sftpCreateFile
+   - incus/file: Change recursiveFilePush to use SFTP
+   - incus/file: Change recursiveMkdir to use SFTP
+   - incus/file: Change recursivePullFile to use SFTP
+   - incus/file: Re-use SFTP as much as possible
+   - internal/filter: Handle multiple in-line structs
+   - api: api_filtering_extended
+   - incusd: Add filtering to /1.0/networks
+   - incusd: Add filtering to /1.0/networks/{networkName}/forwards
+   - incusd: Add filtering to /1.0/networks/{networkName}/load-balancers
+   - incusd: Add filtering to /1.0/networks/{networkName}/peers
+   - incusd: Add filtering to /1.0/network-acls
+   - incusd: Add filtering to /1.0/network-integrations
+   - incusd: Add filtering to /1.0/network-zones
+   - incusd: Add filtering to /1.0/network-zones/{zone}/records
+   - incusd: Add filtering to /1.0/storage-pools
+   - incusd: Add filtering to /1.0/storage-pools/{poolName}/buckets
+   - incusd: Add filtering to /1.0/certificates
+   - incusd: Add filtering to /1.0/profiles
+   - incusd: Add filtering to /1.0/projects
+   - doc/rest-api: Refresh swagger YAML
+   - tests: Test more API filters
+   - doc: Remove mention of limitations on filtering
+   - api: acme_dns01
+   - incusd/cluster/config: Add extra ACME config keys
+   - incusd/acme: Add DNS-01 support
+   - doc: Add resolvers to wordlist
+   - doc: Update configs
+   - incusd/network/bridge: Fix deletion of tunnels and dummy devices
+   - incusd/device/disk: Include cluster name and config path in RBD string
+   - incusd/instance/qemu: Provide the RBD keyring to QEMU
+   - api: security_iommu
+   - internal/instance: Add security.iommu
+   - doc: Update configs
+   - incusd/instance/qemu: Simplify Windows detection
+   - incusd/instance/qemu: Implement security.iommu
+   - incusd/instance/qemu: Add IOMMU for Windows
+   - incusd/instance/qemu: Configure irqchip for split mode with IOMMU
+   - doc: Add passthrough and IOMMU to wordlist
+   - incusd/storage/ceph: Re-introduce keyring parsing
+   - doc: Clarify virtiofsd requirements
+   - incusd/migration: Change field type of Snapshots in VolumeTargetArgs
+   - incusd: Adjust code for VolumeTargetArgs Snapshots type change
+   - incusd/instance/drivers: Adjust code for VolumeTargetArgs Snapshots type change
+   - incusd/storage: Adjust code for VolumeTargetArgs Snapshots type change
+   - incusd/db: Add missing go:generate directive
+   - incusd/db: Update generated code
+   - incusd/device/disk: Do not allow mounting of custom block volume snapshots
+   - generate-database: Abstract DB connection / DB transaction
+   - incusd/db: Update generated code
+   - lint: Add short import exception for *.mapper.go
+   - generate-database: Accept interface instead of concrete type for PrepareStmts
+   - incusd/db: Update generated code
+   - cmd/list: Simplify evaluateShorthandFilter by reducing nesting levels
+   - incusd/storage: Don't use sparse writer on thick LVM
+   - shared/util: Add IsTruthy
+   - generate-database: Validate struct tags
+   - generate-database: Add marshal=json
+   - generate-database: Update generated code
+   - incusd/instance/edk2: Fix typo in function name
+   - incusd/instance/edk2: Fix EDK2 path overwrite issue
+   - incusd/instance/qemu: Propagate errors from edk2
+   - incusd/instance_types: Introduce INCUS_SKIP_INSTANCE_TYPES
+   - doc/environment: Add INCUS_SKIP_INSTANCE_TYPES
+   - doc/environment: Sort the environment variables
+   - incusd/ip: Error message styling
+   - incusd/ip: Only parse MAC on ethernet links
+   - internal/instance: Clarify security.secureboot setting
+   - doc: Update configs
+   - incusd/network/ovn: Fallback to OVN router address as DNS server
+   - api: network_ipv4_dhcp_routes
+   - shared/validate: Add IsDHCPRouteList
+   - incusd/network/ovn: Add ipv4.dhcp.routes
+   - incusd/network/bridge: Add ipv4.dhcp.routes
+   - tests: Add tests for ipv4.dhcp.routes
+   - doc: Add documentation for ipv4.dhcp.routes config
+   - github: Pass shell type to shellcheck
+   - generate-database: Handle constraint err in Create
+   - incusd/db: Update generated code
+   - generate-database: Check for tx if necessary
+   - incusd/db: Update generated code
+   - cmd/incus: Use the file extension of the edited file for the temp file, to help with syntax highlighting
+   - incusd/api_internal: Centralize all internal API endpoints
+   - tests: Update for re-organized internal endpoints
+   - incus/drivers: Fix ZFS CreateVolume deletes pre-existing data on failure
+   - incus/rebuild: Correct help message
+   - incusd/cluster/config: Set default value for acme.ca_url
+   - incusd/cluster/config: Return acme.provider.environment as a slice
+   - incusd/acme: Remove DNS-01 provider (now using lego externally)
+   - incusd/acme: Move DNS-01 to external lego binary
+   - incusd/api_1_0: Trigger ACME on all ACME config options
+   - incus/file: Always use 1MB chunks for SFTP
+   - incusd/instance/lxc: Fail immediately if no idmap found
+   - incusd/acme: use correct path
+   - incusd/bgp: Rework start/stop logic
+   - incusd/network/ovn: Skip existing static routes
+   - incusd/instance/qemu: Set caching-mode with intel-iommu
+   - incus-agent: Improve SFTP performance
+   - incusd/instance/qemu: Move Windows check to a function
+   - incusd/instance/qemu: Set RTC base to localtime on Windows
+   - doc/api-extensions: Fix formatting
+   - api: network_state_ovn_ls
+   - incusd/network/ovn: Export LogicalRouter and LogicalSwitch names as needed
+   - shared/api: Add LogicalSwitch to OVN state
+   - incus/network: Add Logical Switch for OVN
+   - incus/network: Better handle partial OVN state
+   - doc/rest-api: Refresh swagger YAML
+   - incus/network: Support for missing counters
+   - shared/api: Make NetworkStateCounters a pointer
+   - incusd/resources: Update for Counters being a pointer
+   - incus/copy: Clear full device when overriding with type=none
+   - doc/instance/create: Cover behavior on Windows
+   - api: network_dns_nameservers
+   - incusd/network/bridge: Add dns.nameservers
+   - incusd/network/ovn: Add dns.nameservers
+   - doc/network: Add dns.nameservers to bridge and OVN
+   - incusd/network/ovn: Correctly remove individual DHCP options from OVN when they are unset
+   - incusd/ports: Cleanup consts
+   - api: acme_http01_port
+   - incusd/cluster/config: Add acme.http.port
+   - doc/rest-api: Refresh swagger YAML
+   - incusd/acme: Use lego for HTTP-01
+   - gomod: Update dependencies
+   - i18n: Update translation templates
+   - incusd/db: Add missing error mapper
+   - incusd/instance/qmp: Add MachineDefinition function
+   - internal/instance: Add volatile.vm.definition
+   - doc: Update configs
+   - incusd/instance/qemu: Use saved machine definition when restoring running VM
+   - incusd/instance/qemu: Handle firmware vars name matching internal one
+   - incusd: Switch MAC generation to Zabbly prefix
+   - incusd: Switch to new MAC prefix
+   - doc: Switch to new MAC prefix
+   - incus: Switch to new MAC prefix
+   - lxc-to-incus: Switch to new MAC prefix
+   - shared/api: Switch to new MAC prefix
+   - tests: Switch to new MAC prefix
+   - doc/rest-api: Refresh swagger YAML
+   - client: Fix spelling errors found by codespell
+   - incusd/instance/edk2: Select SecureBoot capable firmware on Debian
+   - api: network_ovn_ipv4_dhcp_expiry
+   - incusd/network/ovn: Add option ipv4.dhcp.expiry for OVN networks
+   - doc/reference/network_ovn: Add ipv4.dhcp.expiry
+   - incusd/dns: Use shared mutex
+   - incusd/network/ovn: Add UpdateLogicalSwitchPortDHCP
+   - incusd/network/ovn: Reconfigure DHCP option on existing logical switch ports when DHCP is enabled on the network
+   - generate-config: Fix gofumpt
+   - lxd-to-incus: Fix gofumpt
+   - incus-agent: Fix gofumpt
+   - incus-benchmark: Fix gofumpt
+   - incus-migrate: Fix gofumpt
+   - incus-simplestreams: Fix gofumpt
+   - incus-user: Fix gofumpt
+   - lxc-to-incus: Fix gofumpt
+   - incus: Fix gofumpt
+   - shared/tls: Fix gofumpt
+   - shared/termios: Fix gofumpt
+   - shared/subprocess: Fix gofumpt
+   - shared/simplestreams: Fix gofumpt
+   - shared/logger: Fix gofumpt
+   - shared/idmap: Fix gofumpt
+   - shared/cliconfig: Fix gofumpt
+   - internal/version: Fix gofumpt
+   - internal/util: Fix gofumpt
+   - internal/usbid: Fix gofumpt
+   - internal/rsync: Fix gofumpt
+   - internal/linux: Fix gofumpt
+   - internal/io: Fix gofumpt
+   - incusd/storage: Fix gofumpt
+   - incusd/network: Fix gofumpt
+   - incusd/apparmor: Fix gofumpt
+   - incusd/backup: Fix gofumpt
+   - incusd/cgroup: Fix gofumpt
+   - incusd/cluster: Fix gofumpt
+   - incusd/config: Fix gofumpt
+   - incusd/db: Fix gofumpt
+   - incusd/device: Fix gofumpt
+   - incusd/dnsmasq: Fix gofumpt
+   - incusd/endpoints: Fix gofumpt
+   - incusd/events: Fix gofumpt
+   - incusd/firewall: Fix gofumpt
+   - incusd/ip: Fix gofumpt
+   - incusd/metrics: Fix gofumpt
+   - incusd/operations: Fix gofumpt
+   - incusd/resources: Fix gofumpt
+   - incusd/scriptlet: Fix gofumpt
+   - incusd/seccomp: Fix gofumpt
+   - incusd/sys: Fix gofumpt
+   - incusd/util: Fix gofumpt
+   - Makefile: Switch to gofumpt
+   - golangci: Switch to gofumpt
+   - generate-config: Use RunE
+   - internal/linux: Fix missing export comments
+   - incusd/seccomp: Fix import shadowing
+   - incusd/cluster: Remove duplicate type declaration
+   - incusd/bgp: Fix comment
+   - incusd/network/ovn: Don't run bgpSetup twice
+   - incusd/network/physical: Do full start following change of parent
+   - incusd/apparmor: Move AppArmor profiles to separate files
+   - doc: Fix spelling errors found by codespell
+   - shared: Fix spelling errors found by codespell
+   - tests: Fix spelling errors found by codespell
+   - lint: Run codespell automatically
+   - incusd/instance/common: Check PID validity
+   - client: Fix gofumpt
+   - incusd: Fix gofumpt
+   - incusd/instance: Fix gofumpt
+   - cmd: Fix spelling errors found by codespell
+   - internal: Fix spelling errors found by codespell
+   - incus/file: Properly handle relative source paths
+   - cmd/storage: Typo 'Examples:' create storage
+   - incusd/events: Don't open needless transactions
+   - incusd/instances: Re-order evacuated check to limit DB calls
+   - incusd: Limit calls to LocalNodeIsEvacuated
+   - incusd/instances_post: Move non-DB logic outside of transaction
+   - incusd/network/ovn: Fix default DNS IPv4 server
+   - shared/osarch: Extend OS detection logic
+   - incus-agent: Update for osarch change
+   - incusd: Update for osarch change
+   - internal/version: Update UserAgent logic for osarch change
+   - api: instance_state_cpu_time
+   - shared/api: Add AllocatedTime CPU field
+   - incusd/cgroup: Add GetCPUCfsLimit
+   - incusd/instance/lxc: Add AllocatedTime CPU field
+   - incusd/instance/qemu: Add AllocatedTime CPU field
+   - doc/rest-api: Refresh swagger YAML
+   - test: Check CPU allocated time
+   - incusd/certificates: Properly handle bad PEM data
+   - cmd/generate-database/lex: Fix pluralization
+   - cmd/generate-database/db: Consider marshal tagged fields as columns
+   - cmd/generate-database/db: Support multi-package parsing
+   - cmd/generate-database/db: Import entities from non-local packages
+   - cmd/generate-database/db: Add GetNames
+   - cmd/generate-database: Update docs
+   - cmd/generate-database/file/boilerplate: Use tx for multi-queries
+   - internal/server/db/cluster: Update generated code
+   - cmd/generate-database/db: Fix generator tests
+   - incusd/network/common: Handle missing BGP peer
+   - incusd/cluster/evacuate: Don't live-migrate stopped instances
+   - cmd/generate-database/db: Directly pass reference table and column names
+   - internal/server/db/cluster: Specify table name on method declarations
+   - internal/server/db/cluster: Update generated code
+   - cmd/incusd: Update calls to generated code
+   - cmd/generate-database/db: Make linter happy (defer loops)
+   - api: network_io_bus
+   - incusd/device/config: Add USB bus override
+   - incusd/instance: Add support for USB NICs
+   - incusd/device/nic: Add support for io.bus
+   - incusd/storage/s3 Fixed minio client mc too ambious issue
+   - doc/device/nic: Add support for io.bus
+   - incusd/instance/qemu enable s4 by default
+   - doc/instance_options: Updates raw.qemu.conf example
+   - incusd/networks: Validate configuration on join too
+   - Makefile: Bump base Go 1.23 version
+   - gomod: Update dependencies
+   - cmd/generate-database/db: Fix GetNames spacing
+   - github: Rework issue templates
+   - internal/server/storage/s3: Add `minio-client` to list of potential binary names
+   - doc: Update Debian installation documentation
+   - internal/server/storage/s3: Update logic for checking MinIO version from multiple possible binary names
+   - incusd/auth: Tweak SQL queries
+   - incusd/auth: Properly handle network integrations
+   - incusd/db/cluster/entities: Sort maps
+   - doc/network-integration: Document properties
+   - api: disk_io_bus_usb
+   - incusd/device/disk: Add support for USB bus
+   - incusd/instance/qemu: Add support for USB disks
+   - doc: Update configs
+   - golangci: Upgrade to version 2
+   - incusd/storage/s3 minio client check enhancement
+   - golangci: Disable STI005 error checks
+   - test: Fix deprecated chown syntax
+   - test: Fix test cleanup
+   - shared/validate: Add string length validator
+   - shared/validate: Add minimum duration validator
+   - incusd/sys: Add Hostname to OS struct
+   - incusd/instance/drivers: Populate StorageMove and StoragePool when migrating lxc instances
+   - incusd/storage: Populate StorageMove and StoragePool when migrating volumes
+   - incusd/storage: Add more parameters to MigrationTypes
+   - incusd/network/ovn: Remove internal routes to forward/load-balancers
+   - doc/ref/storage_ceph: Fix typo
+   - tests: Tweak volume sizes
+   - tests: Be more specific on selecting property
+   - incusd/instance/edk2: Always prefer the EDK2 override
+   - doc/support: Update feature release version
+   - incusd/instance: Don't enforce device/config validation on snapshots
+   - i18n: Update translation templates
+   - incus: Replace interface{} by any
+   - internal/server/ip: Replace interface{} by any
+   - shared/logger: Replace interface{} by any
+   - client: Capture original OCI image identifier
+   - fix: Don't attempt to download signatures for oci
+   - client/oci: Add errors for missing umoci
+   - client: Add proxy host to skopoe calls
+   - client/oci: Add errors for missing skopeo
+   - client: Use strings.ReplaceAll
+   - lxd-to-incus: Use strings.ReplaceAll
+   - generate-database: Use strings.ReplaceAll
+   - incusd/db/cluster: Update generated code
+   - incus: Use strings.ReplaceAll
+   - internal/linux: Use strings.ReplaceAll
+   - incusd/apparmor: Use strings.ReplaceAll
+   - incusd/auth: Use strings.ReplaceAll
+   - incusd/db/cluster: Use strings.ReplaceAll
+   - incusd/db: Use strings.ReplaceAll
+   - incusd/device: Use strings.ReplaceAll
+   - incusd/instance: Use strings.ReplaceAll
+   - incusd/ip: Use strings.ReplaceAll
+   - incusd/network: Use strings.ReplaceAll
+   - incusd/storage: Use strings.ReplaceAll
+   - incus/utils: Check type assertion
+   - incusd/instance: Remove needless embedded fields
+   - incusd/storage/s3: Simplify variable declaration
+   - incusd: Fix missing line breaks
+   - README: Fix typo
+   - lxd-to-incus: Fix typo in trigger
+   - incusd/instance/edk2: Limit test to UEFI architectures
+   - doc/devices/disk: Fix restriction on `path` option
+   - doc: Update configs
+   - doc: Tweak ACME documentation
+   - incusd/instances/qemu: Handle deprecation of runas
+   - incusd/instance/lxc: Pass limited environment to forkstart
+   - incusd/instance/qemu: Avoid unnecessary snapshot loading
+   - incusd/migrate: Bump timeouts to 30s
+   - incusd/storage: Add missing forwarding on snapshot list
+   - client: Pass ETag in UpdateWarning
+   - client: Pass ETag in UpdateCluster
+   - client/oci: Only replace the first match
+   - incusd/instance/common: Fix concurrent restarts
+   - generate-database: Fix documentation for `ignore`
+   - incus: Remove unused functions
+  [/details]
+
+  <!--
+  **Note for packagers**: Incus now relies on the external `lego` command for its ACME support rather than pulling in all of that logic into the `incusd` binary itself. Make sure to have Incus depend on lego if you want to maintain support for ACME certificate issuance.
+  -->
+  **Avis pour les packagers** : Incus utilise à présent l’outil externe `lego` pour la gestion du protocole ACME, plutôt que d’en intégrer la logique dans le binaire `incusd`. Veuillez prendre en compte cette dépendance si vous souhaitez préserver le support des certificats via ACME.
+
+  <!--
+  # Support and upgrade
+  The Incus 6.0 branch is supported until June 2029. It's always strongly recommended to keep up and run the latest LTS bugfix release.
+  -->
+  # Support et mise à niveau
+  La branche Incus 6.0 est supportée jusqu’en juin 2029. Il est toujours fortement recommandé d’utiliser la dernière version de correction de bugs.
+
+  <!--
+  # Downloads
+  -->
+  # Téléchargements
+
+  <!--
+   - Main release tarball: [incus-6.0.4.tar.xz](https://linuxcontainers.org/downloads/incus/incus-6.0.4.tar.xz)
+   - GPG signature: [incus-6.0.4.tar.xz.asc](https://linuxcontainers.org/downloads/incus/incus-6.0.4.tar.xz.asc)
+  -->
+   - Tarball d’Incus : [incus-6.0.4.tar.xz](https://linuxcontainers.org/downloads/incus/incus-6.0.4.tar.xz)
+   - Signature GPG : [incus-6.0.4.tar.xz.asc](https://linuxcontainers.org/downloads/incus/incus-6.0.4.tar.xz.asc)
+
+  <!--
+  # Thanks
+  This LTS release update was made possible thanks to funding provided by the Sovereign Tech Fund (now part of the Sovereign Tech Agency).
+  -->
+  # Remerciements
+  Cette version LTS a été rendue possible grâce au financement du Sovereign Tech Fund (qui fait maintenant partie de la Sovereign Tech Agency).
+
+  [![ST-Fund-Logo-Default-White-RGB|690x219](https://discuss.linuxcontainers.org/uploads/default/original/2X/7/7799c947413019d3c5cd4fa201568495de1db2c4.png)](https://sovereign.tech)
+
+  <!--
+  [quote]
+  The Sovereign Tech Fund supports the development, improvement, and maintenance of open digital infrastructure. Its goal is to sustainably strengthen the open source ecosystem, focusing on security, resilience, technological diversity, and the people behind the code.
+  [/quote]
+  -->
+  > Le Sovereign Tech Fund soutient le développement, l'amélioration et la maintenance des infrastructures numériques ouvertes. Son objectif est de renforcer durablement l'écosystème open source, en mettant l'accent sur la sécurité, la résilience, la diversité technologique et les personnes qui sont derrière le code.
+
+  <!--
+  Find out more at: https://www.sovereign.tech
+  -->
+  Pour en savoir plus, consultez https://www.sovereign.tech

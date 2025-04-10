@@ -92,6 +92,7 @@ content: |-
   A new `incus debug memory-dump` command and matching API has been added to provide an easy way to get a virtual machine memory dump.
   -->
   ## Dumps de mémoire pour les VM
+  Une nouvelle commande `incus debug memory-dump` et son API associée ont été ajoutées pour fournir un moyen simple de récupérer un dump mémoire d’une machine virtuelle.
 
   <!--
   Incus VMs also now include the necessary additional device to allow for Windows virtual machines to provide memory debug information allowing for a memory dump that can be loaded in the Windows debugger.
