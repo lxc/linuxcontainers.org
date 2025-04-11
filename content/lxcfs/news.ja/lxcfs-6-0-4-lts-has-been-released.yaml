@@ -1,0 +1,72 @@
+title: LXCFS 6.0.4 LTS リリースのお知らせ
+date: 2025/04/04 02:04
+origin: https://discuss.linuxcontainers.org/t/lxcfs-6-0-4-lts-has-been-released/23389
+content: |-
+  # はじめに <!-- Introduction -->
+  <!--
+  The LXCFS team is pleased to announce the release of LXCFS 6.0.4!
+  -->
+  LXCFS チームが LXCFS 6.0.4 のリリースをお知らせします!
+
+  <!--
+  This is the fourth bugfix release for LXCFS 6.0 which is supported until June 2029.
+  -->
+  このリリースは、LXCFS 6.0 の 4 度目のバグ修正リリースです。このリリースは 2029 年 6 月までサポートされます。
+
+  # 変更点 <!-- Changes -->
+  <!--
+  Some of the highlights for this release are:
+  -->
+  このリリースのハイライトは次のとおりです:
+
+   - meminfo 内で SLAB の回収可能メモリーを適切に処理するようになりました <!-- Properly handle SLAB reclaimable memory in meminfo -->
+   - 空の cpuset 文字列を処理します <!-- Handle empty cpuset strings -->
+   - 潜在的なスリープ間隔のオーバーフローを修正 <!-- Fix potential sleep interval overflows -->
+
+  <!--
+  The full list of commits is available below:
+  -->
+  コミットのすべてのリストは次のとおりです（翻訳なし）:
+
+  [details="すべてのChangeLogを見る"]
+   - meminfo: Add slab_reclaimable to MemAvailable
+   - tests/test-read: call close(2) only if there is an fd
+   - utils: fix wait_for_sock to use time_t instead of int
+   - cpuset_parse: make a check for an empty string in cpu_in_cpuset()
+   - utils: move strlcpy/strlcat helpers from cgroup_utils to utils
+   - lxcfs: use strlcpy when handle runtime-dir parameter
+   - proc_loadavg: Prevent integer overflow calculating the sleep interval
+  [/details]
+
+  # サポートとアップグレード <!-- Support and upgrade -->
+  <!--
+  The LXCFS 6.0 branch is supported until June 2029.
+  Only bugfixes and securitiy issues get included into the stable bugfix releases, so it's always safe and recommended to keep up and run the latest bugfix release.
+  -->
+  LXCFS 6.0 ブランチは 2029 年 6 月までサポートされます。
+  Stable 版のバグ修正リリースには、バグ修正とセキュリティの問題の修正のみが含まれます。このため、常に最新のバグ修正リリースを実行し、セキュリティーを確保することが安全で、推奨されます。
+
+  # ダウンロード <!-- Downloads -->
+
+   - リリース tarball <!-- Main release tarball -->: [lxcfs-6.0.4.tar.gz](https://linuxcontainers.org/downloads/lxcfs/lxcfs-6.0.4.tar.gz)
+   - GPG シグネチャー <!-- GPG signature -->: [lxcfs-6.0.4.tar.gz.asc](https://linuxcontainers.org/downloads/lxcfs/lxcfs-6.0.4.tar.gz.asc)
+
+  # 謝辞 <!-- Thanks -->
+  <!--
+  This LTS release update was made possible thanks to funding provided by the Sovereign Tech Fund (now part of the Sovereign Tech Agency).
+  -->
+  この LTS リリースアップデートは、Sovereign Tech Fund（現在は Sovereign Tech Agency の一部）からの資金提供により実現しました。
+
+  [![ST-Fund-Logo-Default-White-RGB|690x219](https://discuss.linuxcontainers.org/uploads/default/original/2X/7/7799c947413019d3c5cd4fa201568495de1db2c4.png)](https://sovereign.tech)
+
+  <!--
+  [quote]
+  The Sovereign Tech Fund supports the development, improvement, and maintenance of open digital infrastructure. Its goal is to sustainably strengthen the open source ecosystem, focusing on security, resilience, technological diversity, and the people behind the code.
+  [/quote]
+  -->
+  > Sovereign Tech Fund は、オープンデジタルインフラストラクチャーの開発、改良、保守をサポートします。その目標は、セキュリティ、レジリエンス、技術の多様性、コードの背後にいる人々に焦点を当て、オープンソースエコシステムを持続的に強化することです。
+
+  <!--
+  Find out more at: https://www.sovereign.tech
+  -->
+  詳細は https://www.sovereign.tech をご覧ください。
