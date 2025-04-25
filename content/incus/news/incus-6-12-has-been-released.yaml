@@ -1,0 +1,459 @@
+title: Incus 6.12 has been released
+date: 2025/04/25 00:04
+origin: https://discuss.linuxcontainers.org/t/incus-6-12-has-been-released/23556
+content: |-
+  # Introduction
+  The Incus team is pleased to announce the release of Incus 6.12!
+
+  This release comes with some very long awaited improvements such as online growth of virtual machine memory, network address sets for easier network ACLs, revamped logging support and more!
+
+  On top of the new features, this release also features quite a few welcome performance improvements, especially for systems with a lot of snapshots and with extra performance enhancements for those using ZFS.
+
+  [![image|690x303](https://discuss.linuxcontainers.org/uploads/default/original/2X/a/a93ceed3b442f89172a770334894353ac6364ec2.png)](https://linuxcontainers.org/incus/try-it/)
+
+  As usual, you can try it for yourself online: https://linuxcontainers.org/incus/try-it/
+
+  Enjoy!
+
+  # New features
+  ## Network address sets
+  To simplify management of complex network ACL rules, Incus now has support for address sets.
+
+  Address sets are tied to projects similarly to ACLs and each set can contain a variety of IPv4 and IPv6 addresses. Sets can then be referenced from within ACLs for either the source or destination field.
+
+      stgraber@dakara:~$ incus network address-set create cloudflare-dns
+      Network address set cloudflare-dns created
+      stgraber@dakara:~$ incus network address-set add cloudflare-dns 1.0.0.1
+      stgraber@dakara:~$ incus network address-set add cloudflare-dns 1.1.1.1
+      stgraber@dakara:~$ incus network address-set add cloudflare-dns 2606:4700:4700::1001
+      stgraber@dakara:~$ incus network address-set add cloudflare-dns 2606:4700:4700::1111
+      
+      stgraber@dakara:~$ incus network acl create my-acl
+      Network ACL my-acl created
+      stgraber@dakara:~$ incus network acl rule add my-acl egress action=allow state=enabled
+      stgraber@dakara:~$ incus network acl rule add my-acl egress action=reject state=enabled destination='$cloudflare-dns'
+      
+      stgraber@dakara:~$ incus config device override d13 eth0 security.acls=my-acl
+      Device eth0 overridden for d13
+
+      stgraber@dakara:~$ incus exec d13 -- ping linuxcontainers.org -c1 -W1
+      PING linuxcontainers.org (2602:fc62:a:1::7) 56 data bytes
+      64 bytes from rproxy.dcmtl.stgraber.org (2602:fc62:a:1::7): icmp_seq=1 ttl=59 time=8.60 ms
+
+      --- linuxcontainers.org ping statistics ---
+      1 packets transmitted, 1 received, 0% packet loss, time 0ms
+      rtt min/avg/max/mdev = 8.599/8.599/8.599/0.000 ms
+      
+      stgraber@dakara:~$ incus exec d13 -- ping one.one.one.one -c1 -W1
+      PING one.one.one.one (2606:4700:4700::1111) 56 data bytes
+
+      --- one.one.one.one ping statistics ---
+      1 packets transmitted, 0 received, 100% packet loss, time 0ms
+
+  Documentation: https://linuxcontainers.org/incus/docs/main/howto/network_address_sets/
+
+  ## Memory hotplug support in VMs
+  One of the very few remaining gaps between the container and VM experience under Incus was that memory could only be reduced in a VM and never grown.
+
+  This has now been fixed as we now support hotplugging memory into a guest, allowing for `limits.memory` to be increased at runtime, making that memory instantly available inside of the VM.
+
+      stgraber@dakara:~$ incus launch images:debian/13 d13 --vm
+      Launching d13
+      stgraber@dakara:~$ incus exec d13 -- free -m
+                     total        used        free      shared  buff/cache   available
+      Mem:             879         238         662          19         102         640
+      Swap:              0           0           0
+      stgraber@dakara:~$ incus config set d13 limits.memory=4GiB
+      stgraber@dakara:~$ incus exec d13 -- free -m
+                     total        used        free      shared  buff/cache   available
+      Mem:            3951         351        3684          19         102        3600
+      Swap:              0           0           0
+
+  ## Reworked logging handling & remote syslog
+  Incus logging has so far been limited to two options:
+
+   - Local syslog logging
+   - Remote Loki logging (with a single endpoint)
+
+  That's now changing with this release as we've rolled out a new much more flexible logging mechanism which allows for an unlimited number of logging targets which can either be `loki` or `syslog` and with support for selecting what events to include.
+
+  Example:
+
+      logging.loki01.target.type: loki
+      logging.loki01.target.address: https://loki01.int.example.net
+      logging.loki01.target.username: foo
+      logging.loki01.target.password: bar
+      logging.loki01.types: lifecycle,network-acl
+      logging.loki01.lifecycle.types: instance
+
+      logging.syslog01.target.type: syslog
+      logging.syslog01.target.address: syslog01.int.example.net
+      logging.syslog01.target.facility: security
+      logging.syslog01.types: logging
+      logging.syslog01.logging.level: warning
+
+  This example defines two logging targets, `loki01` and `syslog01`, with the former receiving Loki logging traffic through an authenticated endpoint (reverse proxy) and only sends lifecycle events (specifically those affecting instances) as well as network ACL hits. The latter uses syslog logging and sends logging messages of priority warning or higher.
+
+  Documentation: https://linuxcontainers.org/incus/docs/main/server_config/#server-options-logging
+
+  ## SNAT support on complex network forwards
+  Network forwards can be pretty flexible in how ports and port ranges are allowed.
+  For example, you can forward port `80` and `443` externally to an internal IP on port `1234` and `2345` respectively.
+
+  This works fine in most cases, but in specific situations, such as WebRTC applications using UDP ports, some of the traffic will be initiated from the instance rather than from an external client. In this scenario, traffic coming out of the instance from port `2345` should appear externally as coming from the forward address and port `443`.
+
+  This is what the new `snat` property on individual ports within a network forward is here for. It sets up a matching SNAT rule for traffic originating from the instance.
+
+  The feature is limited to network forwards on regular bridges (not OVN) and only on systems using `nftables` for firewalling.
+
+  Documentation: https://linuxcontainers.org/incus/docs/main/howto/network_forwards/#port-properties
+
+  ## Authentication through access_token parameter
+  Incus supports two main authentication mechanisms:
+
+   - TLS client certificates
+   - OpenID Connect (OIDC)
+
+  For the former, most clients will directly consume the TLS client certificate and use it as part of the TLS connection. However this doesn't always work, either because it's difficult for the client to handle (e.g. web browsers) or because of a TLS terminating proxy getting in the way.
+
+  For this reason, we also support deriving a signed `Bearer` token from the TLS certificate and feeding that through the HTTP `Authorization` header.
+
+  Now with this release, that same `Bearer` token can be passed through the `access_token` URL parameter rather than through the HTTP header.
+
+  The primary reason for this is to allow connecting to authenticated websocket endpoints from web clients as the Javascript websocket API doesn't allow passing custom HTTP headers.
+
+  Example:
+
+      stgraber@dakara:~$ curl -k -s https://127.0.0.1:8443/1.0 | jq -r .metadata.auth
+      untrusted
+      stgraber@dakara:~$ curl -k -s https://127.0.0.1:8443/1.0?access_token=eyJhbGciOiJFUzM4NCIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZjQ3MzRhYzY3YzAzMDYxY2Y1Yzg5Y2UxYTQ2NDAwYjc4MzQ2MWRiOGI3MjlkMDhjNDZhYjE5MmM3ZDc2NTMxIiwiZXhwIjoxNzQ1NTMxOTA4LCJuYmYiOjE3NDU1MzE4NDgsImlhdCI6MTc0NTUzMTg0OH0.WcsG48XQ41fNhLUlf-nqwAyJrZKpCrfM-W8mOSNpt7cwPH-QhKZkiBDa3sFWIVOdo15_cOZBeNy1QbJu6rCnYYQ18LpNJNkSKPkcwi65-yBo7U7ync5BQCuhsOgxAQap | jq -r .metadata.auth
+      trusted
+
+  ## Improved server side filtering in the CLI
+  We've recently added support for server-side filtering of everything single object type within the Incus API. Following that, we're now slowly adding support for it to the CLI, allowing for less database and network traffic when only some specific items are requested.
+
+  With this release, the following have now been fully ported to server-side filtering:
+
+   - Instances
+   - Images
+   - Custom volumes
+   - Profiles
+
+  Example:
+
+      stgraber@dakara:~$ incus profile list description=bar
+      +------+-------------+---------+
+      | NAME | DESCRIPTION | USED BY |
+      +------+-------------+---------+
+      | foo  | bar         | 0       |
+      +------+-------------+---------+
+
+  This work was partly done by students at the University of Texas in Austin.
+
+  ## More generated documentation
+  We've continued our effort to port most of our configuration tables to be generated directly from the code, avoiding any risk of forgotten configuration keys.
+
+  With this release, the following are now extracted directly from the code:
+
+   - Network bridges
+   - Network forwards
+   - TPM devices
+   - Proxy devices
+   - GPU devices
+   - NIC devices
+   - Infiniband devices
+
+  This work was done by students at the University of Texas in Austin.
+
+  # Complete changelog
+  Here is a complete list of all changes in this release:
+
+  [details="Full commit list"]
+   - doc: Fix missing OCI section
+   - internal/instance: Tweak wording
+   - doc: Update config
+   - incus/utils: Added support for server-side filtering by instance name
+   - incus/list: Added support for server-side filtering by instance name
+   - incus/image: Adjustments made after modifying getServerSupportedFilters
+   - tests: Adjustments made after modifying getServerSupportedFilters
+   - doc: Fix config option reference on LINSTOR driver
+   - incusd/instance/lxc: Fix max gid when in a privileged container
+   - incus: Replace interface{} by any
+   - internal/server/ip: Replace interface{} by any
+   - shared/logger: Replace interface{} by any
+   - client: Use strings.ReplaceAll
+   - lxd-to-incus: Use strings.ReplaceAll
+   - generate-database: Use strings.ReplaceAll
+   - incusd/db/cluster: Update generated code
+   - incus: Use strings.ReplaceAll
+   - internal/linux: Use strings.ReplaceAll
+   - incusd/apparmor: Use strings.ReplaceAll
+   - incusd/auth: Use strings.ReplaceAll
+   - incusd/db/cluster: Use strings.ReplaceAll
+   - incusd/db: Use strings.ReplaceAll
+   - incusd/device: Use strings.ReplaceAll
+   - incusd/instance: Use strings.ReplaceAll
+   - incusd/ip: Use strings.ReplaceAll
+   - incusd/network: Use strings.ReplaceAll
+   - incusd/storage: Use strings.ReplaceAll
+   - incus/utils: Check type assertion
+   - incusd/instance: Remove needless embedded fields
+   - incusd/storage/s3: Simplify variable declaration
+   - README: Fix typo
+   - lxd-to-incus: Fix typo in trigger
+   - incusd/instance/edk2: Limit test to UEFI architectures
+   - doc/devices/disk: Fix restriction on `path` option
+   - doc: Update configs
+   - doc: Tweak ACME documentation
+   - incusd/instances/qemu: Handle deprecation of runas
+   - incusd/main_forknet: Handle missing DNS in DHCP response
+   - incusd/instance/lxc: Pass limited environment to forkstart
+   - incusd/instance/lxc: Don't reset resolv.conf
+   - incusd/main_forknet: Use Fprintf
+   - cmd/list: Support server-side filtering
+   - cmd/image: Support server-side filtering
+   - cmd/utils: Support server-side filtering
+   - internal/filter: Support server-side filtering
+   - tests: Added/Fixed tests for server-side filtering
+   - client: Add GetImagesAllProjectsWithFilter
+   - cmd/image: Use GetImagesAllProjectsWithFilter to filter images across all projects
+   - incusd/instance/qemu: Avoid unnecessary snapshot loading
+   - incusd/migrate: Bump timeouts to 30s
+   - incusd/storage: Add missing forwarding on snapshot list
+   - client: Pass ETag in UpdateWarning
+   - client: Pass ETag in UpdateCluster
+   - client: Make golangci-lint clean
+   - shared/api: Make golangci-lint clean
+   - shared/idmap: Remove unused rootfs argument to NewSetFromSystem
+   - incus-user: Update for change to shared/idmap
+   - incusd/sys: Update for change to shared/idmap
+   - shared/idmap: Rename IdmapStorageType to StorageType
+   - shared/idmap: Make golangci-lint clean
+   - incusd: Update for shared/idmap changes
+   - shared/ws: Make golangci-lint clean
+   - shared/ask: Remove deprecated functions (and clear golangci-lint)
+   - shared/validate: Make golangci-lint clean
+   - shared/tls: Make golangci-lint clean
+   - shared/osarch: Make golangci-lint clean
+   - shared/osarch: Rename ArchitectureId to ArchitectureID
+   - shared/simplestreams: Update for ArchitectureID
+   - incusd: Update for ArchitectureID
+   - client: Update for ArchitectureID
+   - incus-simplestreams: Update for ArchitectureID
+   - lxc-to-incus: Update for ArchitectureID
+   - internal/version: Update for ArchitectureID
+   - shared/osarch: Keep our all-caps architecture names
+   - client/oci: Only replace the first match
+   - incus: Remove unused functions
+   - incusd/instance/common: Fix concurrent restarts
+   - incus: Make golangci-lint clean
+   - shared/subprocess: Make golangci-lint clean
+   - shared/simplestreams: Make golangci-lint clean
+   - shared/cliconfig: Make golangci-lint clean
+   - shared/ask: Make golangci-lint clean
+   - shared/util: Make golangci-lint clean
+   - shared/revert: Make golangci-lint clean
+   - shared/proxy: Make golangci-lint clean
+   - shared/logger: Make golangci-lint clean
+   - shared/archive: Make golangci-lint clean
+   - incusd/instance/lxc: Fix import shadowing in IdmappedStorage
+   - doc/rest-api: Refresh swagger YAML
+   - generate-database: Fix documentation for `ignore`
+   - incusd/response: Remove redundant line break in error
+   - incusd/main_forknet: Don't add gateway route if classless static routes are provided (as required by RFC 3442)
+   - incusd/network/ovn: Add plumbing for state through OVN ACL functions
+   - api: network_address_set
+   - doc: Add documentation for network address sets
+   - shared/api: Add network address sets
+   - shared/api/lifecycle: Add events for network address sets
+   - incusd/auth: Add network address sets
+   - incusd/auth/openfga: Rebuild model
+   - incusd/network/ovn: Add GetAddressSet
+   - incusd/network/ovn: Add address set support
+   - incusd/network/bridge: Add address set support
+   - incusd/db/cluster: Add network_address_sets tables
+   - incusd/db: Add network address set functions
+   - incusd/network/acl: Add address set support
+   - incusd/lifecycle: Add network address set events
+   - incusd/firewall: Add address set support
+   - incusd/projects: Clear address sets on delete
+   - incusd/network/address-set: Add new API
+   - incusd/device/nic/ovn: Handle address set when cleaing ACLs
+   - client: Add network address set functions
+   - incus: Add network address-set sub-command
+   - i18n: Update translation templates
+   - tests: Add tests for address sets
+   - doc/rest-api: Refresh swagger YAML
+   - doc: Update configs
+   - incus-agent: Retry mounts to avoid kernel races
+   - incusd/instance: Add Name to ConfigReader interface
+   - incusd/storage: Use ConfigReader when possible
+   - incusd/response: Remove unused nolint
+   - incusd/storage: Add infrastructure to cache pre-fetch snapshot data
+   - incusd/instance: Use storage instance snapshot caching
+   - incusd/instance/lxc: Use existing storage pool in diskState
+   - incusd/storage/zfs: Implement snapshot size caching
+   - incusd/instance: Move instance disk usage to driver logic
+   - incusd/config: Update list of supported compressors
+   - incusd/project: Update list of supported compressors
+   - doc: Update configs
+   - incusd/operations: Fix WaitGet on op failure
+   - incusd/instance/lxc: Use pre-existing PATH when not overridden
+   - incusd/acme: Include CA in generate certificate
+   - shared/ask: Fix bad validation logic
+   - incus-migrate: Fix golangci-lint warnings
+   - incus-migrate: Rework command validation
+   - incus-migrate: Require an instance type
+   - incus-migrate: Clarify arguments
+   - client/incus: Fix non-constant format strings
+   - doc/cluster: mDNS setup for cluster access
+   - cmd/storage_volume: Support filtering by a single keyword
+   - i18n: Update translation templates
+   - incusd/instance/qemu: Clean leftover sockets on startup
+   - incusd: Implement Incus OS API forwarding
+   - incusd/network/bridge: Port to gendoc
+   - doc/network/bridge: Use gendoc
+   - doc: Update configs
+   - doc: Use `$USER` instead of YOUR-USERNAME
+   - doc: Ignore link that's blocking Azure
+   - incusd/storage: Avoid querying pending pool status
+   - incusd/storage/linstor: Fix pool size reporting
+   - incusd/patches: Refresh OpenFGA model for address sets
+   - incusd/network/common: Add gendoc comments for forward configurations
+   - doc: Update configs
+   - doc/network/forward: Use gendoc for network forwards
+   - api: server_logging
+   - incus/server/logging: Add new logging mechanism with syslog and loki support
+   - incus/server/config: Support for new logging.* config keys
+   - incusd: Use new logging mechanism
+   - incus/server/events: Fix issue with race condition
+   - incus/server/loki: Remove loki package
+   - doc: Documentation for new logging mechanism
+   - doc: Update configs
+   - incusd/device/tpm: Add gendoc comments
+   - doc: Update configs
+   - doc: Use gendoc for TPM devices
+   - incusd/firewall/nftables: Cleanup rule formatting
+   - incusd/firewall: Add basic rules on nftables
+   - incusd/storage/zfs: Make CacheVolumeSnapshots failures non-fatal
+   - incusd/instance/lxc: Restrict unprivileged ping to recent kernels
+   - api: network_forward_snat
+   - doc/network_forwards: Add snat key
+   - shared/api: Add SNAT to NetworkForwardPort
+   - doc/rest-api: Refresh swagger YAML
+   - incusd/network/common: Add validation for SNAT
+   - incusd/network: Pass SNAT field to firewall driver
+   - incusd/firewall: Add support for forward SNAT rules
+   - doc: Add SNAT/DNAT to wordlist
+   - incusd/apparmor/lxc: Allow write access to /proc/sys/user
+   - incusd/instance/lxc: Defer calls to the scheduler
+   - shared/archive: Prevent xattr errors from crashing unsquashfs
+   - incusd/storage/zfs: Extend use of the cache
+   - incusd/instance: Pre-fetch snapshot data in RenderFull
+   - incus-simplestreams: Add import and delete  aliases to add and remove
+   - incus: Add remove alias to delete
+   - incusd/http: Support passing bearer authentication token through access_token parameter
+   - tests: Test the access_token handling
+   - incusd/instance/qmp: Add utility functions for memory manipulation
+   - incusd/instance/drivers: Extract getCPUOpts for reuse
+   - incusd/instance/drivers: Add support for memory hotplug
+   - api: memory_hotplug
+   - tests: Add tests for memory hotplug helper functions
+   - incusd/instances_post: Properly handle refresh migrations
+   - incusd/storage/zfs: Rework ZFS setting enforcement
+   - incusd: Remove old routing logic
+   - incusd/instances_post: Fix bad function call
+   - incusd/devices: Don't require a serial number for USB hotplug
+   - Move tls testing functions to tlstest
+   - incusd/device/proxy: Add gendoc comments
+   - doc: Update generated configs
+   - doc/devices/proxy: Use gendoc for docs
+   - Remove Rican7/retry dependency
+   - shared/tls: Fix gofumpt
+   - incusd/device/gpu: Added gendoc comments
+   - doc: Updated configs
+   - doc: Use gendoc for gpu
+   - incusd/device/nic_bridged: Port to gendoc
+   - incusd/device/nic_macvlan: Port to gendoc
+   - incusd/device/nic_sriov: Port to gendoc
+   - incusd/device/nic_ovn: Port to gendoc
+   - incusd/device/nic_physical: Port to gendoc
+   - incusd/device/nic_ipvlan: Port to gendoc
+   - incusd/device/nic_p2p: Port to gendoc
+   - incusd/device/nic_routed: Port to gendoc
+   - doc/devices_nic: Update to use gendoc
+   - doc: Update configs
+   - incusd/device: Replace j-keck/arping with mdlayher/arp
+   - Makefile: Hold back go-jose
+   - gomod: Update dependencies
+   - incusd/sys: Remove gocapability dependency
+   - gomod: Update dependencies
+   - incusd/server/device/infiniband: Added gendoc for parent, mtu, hwaddr
+   - incusd/device/device_load.go: Added gendoc for nicType
+   - doc: Update configs
+   - doc: Use gendoc for infiniband
+   - shared/validate: Move to adhocore/gronx
+   - incusd: Move to adhocore/gronx
+   - gomod: Update dependencies
+   - incus/storage: Correct help messsage for `incus storage list`
+   - i18n: Update translation templates
+   - api/scriptlet: Add yaml struct tags
+   - incusd/storage/migration: Check instance size during migration
+   - incusd/main_forknet: Add dhcp static routes via 0.0.0.0 as scope link
+   - incusd/main_forknet: Use logrus for logging and add a command argument for the logfile path
+   - incusd/instance/lxc: Pass log file to forknet dhcp
+   - incusd/device/disk: Fix registration of custom volumes
+   - client: Add server-side filtering for profiles
+   - incus/profile: Use server-side filtering
+   - i18n: Update translation templates
+   - Fix reference passing when yaml unmarshal
+   - Limit new() calls
+   - incusd/network/bridge: Fix children interface delete issue
+   - doc/reference/instance: Clarify VM memory behavior
+   - incus/admin/init: Allow passing a file to --preseed
+   - incusd/network/ovn: Notify whole cluster on uplink changes
+   - incus: Use a random image in first use message
+   - incus-benchmark: Replace default distro
+   - incus: Replace distro examples
+   - i18n: Update translation templates
+   - doc: Replace Ubuntu in documentation examples
+   - doc/requirements: Refresh a bit
+   - scriptlet: Return proper error
+   - incusd/instance: Also consider local CPU flags
+   - gomod: Update dependencies
+   - incusd/instance/qemu: Cap maxmem to host mem maximum
+  [/details]
+
+  # Documentation
+  The Incus documentation can be found at:
+  https://linuxcontainers.org/incus/docs/main/
+
+  # Packages
+  There are no official Incus packages as Incus upstream only releases regular release tarballs. Below are some available options to get Incus up and running.
+
+  ## Installing the Incus server on Linux
+  Incus is available for most common Linux distributions. You'll find detailed installation instructions in our documentation.
+
+  https://linuxcontainers.org/incus/docs/main/installing/
+
+  ## Homebrew package for the Incus client
+  The client tool is available through HomeBrew for both Linux and MacOS.
+
+  https://formulae.brew.sh/formula/incus
+
+  ## Chocolatey package for the Incus client
+  The client tool is available through Chocolatey for Windows users.
+
+  https://community.chocolatey.org/packages/incus/6.12.0
+
+  ## Winget package for the Incus client
+  The client tool is also available through Winget for Windows users.
+
+  https://winstall.app/apps/LinuxContainers.Incus
+
+  # Support
+  Monthly feature releases are only supported up until the next release comes out.  Users needing a longer support length and less frequent changes should consider using Incus 6.0 LTS instead.
+
+  Community support is provided at: https://discuss.linuxcontainers.org
+  Commercial support is available through: https://zabbly.com/incus
+  Bugs can be reported at: https://github.com/lxc/incus/issues
