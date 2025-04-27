@@ -124,7 +124,7 @@ content: |-
       [    0.820005] virtio-pci 0000:05:00.0: Adding to iommu group 17
       [    1.399721] xhci_hcd 0000:01:00.6: Adding to iommu group 13
 
-  ## VRF support for routed NICs
+  ## routed NIC での VRF サポート <!-- VRF support for routed NICs -->
   <!--
   Systems using multiple VRFs (Virtual Routing and Forwarding) can now have specific `routed` NICs land in the VRF of their choice.
   -->
