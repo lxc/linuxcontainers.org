@@ -181,7 +181,7 @@ content: |-
   <!--
   The primary reason for this is to allow connecting to authenticated websocket endpoints from web clients as the Javascript websocket API doesn't allow passing custom HTTP headers.
   -->
-  この主な理由は、Javascript WebSocket API ではカスタムの HTTP ヘッダーを渡すことが許可されていないため、Web クライアントから認証済み WebSocket エンドポイントに接続できるようにするためです。
+  この主な理由は、JavaScript WebSocket API ではカスタムの HTTP ヘッダーを渡すことが許可されていないため、Web クライアントから認証済み WebSocket エンドポイントに接続できるようにするためです。
 
   例 <!-- Example -->:
 
