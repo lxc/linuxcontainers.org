@@ -1,0 +1,590 @@
+title: Incus 6.13 has been released
+date: 2025/05/30 21:05
+origin: https://discuss.linuxcontainers.org/t/incus-6-13-has-been-released/23899
+content: |-
+  # Introduction
+  The Incus team is pleased to announce the release of Incus 6.13!
+
+  This is a VERY busy release with a lot of new features of all sizes and for all kind of different users, so there should be something for everyone!
+
+  [![image|690x247](https://discuss.linuxcontainers.org/uploads/default/original/2X/9/908f08e603e3ae767dd2bbcf50081d09e329dd86.png)](https://linuxcontainers.org/incus/try-it/)
+
+  As usual, you can try it for yourself online: https://linuxcontainers.org/incus/try-it/
+
+  Enjoy!
+
+  # New features
+  ## Windows agent support
+  The Incus VM agent logic has been refactored to allow for it to be built on non-Linux operating systems which was then followed by an initial implementation for Windows.
+
+  This is still pretty early work as sadly Windows doesn't yet have signed VirtIO drivers for the vsock communication mechanism that Incus normally relies on for communication with its agent.
+
+  Thankfully the protocol we use over vsock is HTTPS so we were able to just use a direct HTTPS connection (over the network) to the VM instead. This works only if Incus knows the IP address of the Windows VM and if that IP address is directly reachable from the Incus host. In time we hope to replace this with a native vsock connection.
+
+  As far as supported features, it's possible to run commands through `incus exec`, get OS details with `incus info` and transfer files with `incus file`.
+
+  Getting it working typically involves adding a `source=agent:config` disk device to the Windows VM, which then provides a cd-rom drive that includes the Windows agent (if the host distribution packaged it) as well as the needed configuration files.
+
+  From that point, you can either manually start the agent directly from there or can manually add a system service.
+
+  We'd happily welcome help from folks with Windows experience who can help with polishing that experience, possibly through an install powershell script we could include in the cd-rom drive as well as work on the Windows build of the agent itself to make it to full parity with its Linux equivalent.
+
+  This multi-month effort was made possible through funding from the Sovereign Tech Fund.
+
+  ## Improvements to `incus-migrate`
+  Quite a few improvements have gone into our standalone `incus-migrate` tool.
+
+  As a reminder, this tool can be run on a remote server which should itself be converted to an Incus container or VM or is running existing containers or VMs that should be imported into Incus.
+
+  With this release, `incus-migrate` now gains support for:
+
+   - Uploading filesystem trees or disk images as new custom volumes
+   - Importing additional disks or filesystem as part of creating a new instance
+   - Importing an OVA image as a new instance
+   - Selecting a specific server or cluster group when the Incus server is a cluster
+
+  Static builds of `incus-migrate` [can be found on Github](https://github.com/lxc/incus/releases/tag/v6.13.0), those are useful when converting a system which isn't itself running Incus.
+
+  ## SFTP on custom volumes
+  We are slowly trying to get custom storage volumes (those of the filesystem variety) to support a similar file API as we have for instances.
+
+  As the first step towards that, Incus now supports SFTP operations on those volumes which for now means the `incus storage volume file mount` command. The remaining APIs and commands should make their appearance in Incus 6.14.
+
+  This work was done by students at the University of Texas in Austin.
+
+  ## Configurable instance external IP address on OVN networks
+  Two new instance NIC config keys have been added:
+
+   - `ipv4.address.external`
+   - `ipv6.address.external`
+
+  Those can be used to configure what IP address an instance should be using for instance-initiated egress traffic. Typically that's either the network's external address (default) or it can be set to a network forward address which is pointing to the instance.
+
+  Documentation: https://linuxcontainers.org/incus/docs/main/reference/devices_nic/#nictype-ovn
+
+  This work was done by students at the University of Texas in Austin.
+
+  ## Ability to pin gateway MAC address on OVN networks
+  OVN manages a list of MAC bindings, that is, the mapping between an IP address and its MAC address (equivalent to ARP or NDP table). This typically gets populated the first time OVN needs to interact with a given address and is then persisted in its database.
+
+  This isn't always ideal as networks operating with VRRP or similar virtual MAC addresses may want to pre-configure the expected MAC address for a gateway and have it be kept persistent by OVN.
+
+  This is now possible through two new configuration keys which can be set on an OVN uplink network of type `physical`:
+
+   - `ipv4.gateway.hwaddr`
+   - `ipv6.gateway.hwaddr`
+
+  Documentation: https://linuxcontainers.org/incus/docs/main/reference/network_physical/
+
+  This work was done by students at the University of Texas in Austin.
+
+  ## Clock handling in virtual machines
+  Incus now automatically sets the `invtsc` QEMU option on virtual machines that aren't expected to be migrated.
+
+  Additionally, Incus also now listens for RTC events coming out of QEMU in an effort to persist the VM's RTC clock. This should allow for better handling of Windows VMs as well as other VMs which do not rely on a UTC hardware clock.
+
+  ## New `get-client-certificate` and `get-client-token` commands
+  The CLI has new `incus remote get-client-certificate` and `incus remote get-client-token` commands which should help with scripting by making it easy to extract the client certificate or issue a JWT from the client certificate.
+
+  This work was done by students at the University of Texas in Austin.
+
+  ## DHCPv6 support for OCI
+  The built-in DHCP client used for OCI containers is now capable of both stateful and stateless DHCPv6.
+
+  This work was done by students at the University of Texas in Austin.
+
+  ## Network host tables configuration for routed NICs
+  Incus has supported controlling what routing table to put the routes for the `routed` NIC devices but this was lacking a bit on flexibility.
+
+  Instead we now have a couple of new configuration keys:
+
+   - `ipv4.host_tables`
+   - `ipv6.host_tables`
+
+  Which can take a comma separated list of tables to put the routes into.
+
+  Documentation: https://linuxcontainers.org/incus/docs/main/reference/devices_nic/#nictype-routed
+
+  This work was done by students at the University of Texas in Austin.
+
+  ## Support for split image publishing
+  Up till now, when running `incus publish`, the resulting image would always be of the unified variety. That is, a single file, typically a compressed tarball which would then include both the root disk as well as the Incus configuration.
+
+  But now we have support for generating split images instead, resulting in two files, one for the Incus-specific metadata and one for the root disk data.
+
+  In the CLI, this is controlled by passing `--format=split` to `incus publish`.
+
+  This work was done by students at the University of Texas in Austin.
+
+  ## Preseed of certificates
+  An Incus server preseed can now include certificates.
+
+  This looks like:
+
+      certificates:
+        - type: client
+          name: my-client
+          certificate: |-
+            PEM ENCODED CERTIFICATE
+
+  This feature is particularly useful when automatically provisioning systems like Incus OS.
+
+  This work was done by students at the University of Texas in Austin.
+
+  ## Configuration of list format
+  The Incus CLI configuration file (typically at `~/.config/incus/config.yml`) can now be used to select a preferred list output format.
+
+  An example would be:
+
+      defaults:
+        list_format: compact
+
+  Which would be equivalent to passing `--format=compact` to all `list` commands.
+
+  This work was done by students at the University of Texas in Austin.
+
+  ## Add aliases for create/add, delete/remove/rm
+  The Incus CLI has been designed so that:
+
+   - An object with significant state associated with it must be `created` and then be `deleted`
+   - An object or relation with no or little state will be `added` and then be `removed`
+
+  This is meant to convey some of the risk associated with a specific action but it can also give a sense of lack of consistency and make it a bit harder to script incus.
+
+  To address that, we've now added a bunch of aliases to the CLI so you're a lot more likely to find the command that you want.
+
+  This work was done by students at the University of Texas in Austin.
+
+  ## Conversion of manual DB functions to our database code generator
+  The Incus codebase includes a code generator for database access functions.
+  This is quite useful to ensure consistency in behavior and avoid a number of easy mistakes that can be made when manually writing database queries.
+
+  While it's a de-facto requirement that all new database tables use the generator, we've still got quite a few objects that aren't using it yet.
+
+  With this release, we've now completed the migration of the following objects over to generated functions:
+
+   - Network ACLs
+   - Network load balancers
+   - Network zones
+
+  While all our tests are passing, this kind of refactoring has a high risk of indroducing some subtle regressions. Should you notice any odd change in behavior with any of those object on Incus 6.13, please file an issue so we can investigate.
+
+  This work was done by students at the University of Texas in Austin.
+
+  ## Server side filtering
+  This release continues in our effort to use server-side filtering whenever possible throughout Incus.
+
+  We now have it supported for:
+
+   - `incus network list`
+   - `incus storage bucket list`
+   - `incus project list`
+   - `incus config trust list`
+
+  This work was done by students at the University of Texas in Austin.
+
+  ## Code generated documentation
+  We're also continuing in our effort to implement automatically generated documentation everywhere configuration keys are involved. With this release, we now have generated documentation for:
+
+  - PCI devices
+  - OVN networks
+  - Physical networks
+  - SR-IOV networks
+  - Macvlan networks
+
+  This work was done by students at the University of Texas in Austin.
+
+  ## OS metrics integrated with Incus metrics on Incus OS
+  When running Incus on Incus OS, the host metrics (from node-exporter) are now automatically included within the Incus metrics API.
+
+  That's done because Incus OS is trying to limit the number of open ports as much as possible and have all traffic be authenticated and authorized through a single stack (Incus itself).
+
+  # Note for packagers
+  We moved from using the external `umoci` command to using it as a Go package instead.
+
+  To get the new Windows agent support, the agent also needs to be built for Windows and be made available to Incus alongside the regular Linux one.
+
+  # Complete changelog
+  Here is a complete list of all changes in this release:
+
+  [details="Full commit list"]
+   - client: Add server-side filtering for networks
+   - incus/network: Use server-side filtering
+   - i18n: Update translation templates for network list cmd
+   - incus/network: Add config-based server-side filtering
+   - doc: Fix default value of ipv4.dhcp.gateway to IPv4 address
+   - doc: Update configs
+   - doc: Fix default value of ipv6.routes network_bridge
+   - doc: Update configs
+   - doc: Fix Debian 12 nickname
+   - incusd/firewall: Clear correct table for address sets
+   - incusd/firewall: Remove unused part of nftables structs
+   - incusd/dns: fix typo in error log
+   - incusd/device/pci: Port to gendoc
+   - doc: Update PCI documentation to use Gendoc
+   - doc: Update configs
+   - incusd/device/infiniband: Fix gendoc entity
+   - incusd/device/tpm: Fix gendoc entity
+   - doc: Update config
+   - doc: Update TPM device gendoc
+   - doc: Update Infiniband device gendoc
+   - incusd: Rename reverters from revert to reverter
+   - incus-user: Rename reverters from revert to reverter
+   - incus-agent: Rename reverters from revert to reverter
+   - internal/linux: Rename reverters from revert to reverter
+   - incusd: Rename reverters from revert to reverter
+   - incusd: Use errors.Is instead of direct error comparison Replace direct error comparison with errors.Is checks to avoid potential bugs with wrapped errors.
+   - incusd: Use errors.As instead of type switching Replace type switching on an error with errors.As to avoid potential bugs.
+   - incus-user: Use errors.Is instead of direct error comparison
+   - incus: Use errors.Is instead of direct error comparison
+   - internal/server: Use errors.Is instead of direct error comparison
+   - internal/linux: Use errors.Is instead of direct error comparison
+   - internal/eagain: Use errors.Is instead of direct error comparison
+   - internal/server: replace manual unwrap call with errors.As
+   - internal/rsync: replace manual unwrap call with errors.As
+   - internal/server: Use errors.As instead of type switching Replace type switching on an error with errors.As to avoid potential bugs.
+   - internal/linux: Use errors.As instead of type switching Replace type switching on an error with errors.As to avoid potential bugs.
+   - internal/server: make all methods on the zfs struct take a pointer
+   - internal/server: change method isAllowed on the dnsHandler struct into a static function
+   - shared/api: unify methods declared on the Instance struct to all take a pointer
+   - generate-database: unify methods declared on the Field struct to all take a pointer
+   - internal/server: refactor getting heartbeat mode name into a function
+   - internal/server: rename close to closeFunc
+   - internal/version: Rename variables to better represent what they are used for
+   - client: Rename variables because error is a builtin interface name
+   - incusd: Rename variables because recover and min are builtin functions
+   - incusd: Rename variables because they collide with builtin function names
+   - generate-database/db: Un-export joinConfig
+   - incusd: Introduce patchRun type
+   - incusd: Remove unused parameter names in cobra commands
+   - incusd: Remove unused parameters or rename unused parameters to _
+   - incusd: Un-export command functions
+   - incusd: Don't export internal websocket struct functions
+   - incusd: Don't export internal migration struct functions
+   - incusd: Fix import shadowing
+   - incusd/instance/drivers: Rewrite config entries as maps
+   - incusd/scriptlet/qemu: Remove legacy wrapper
+   - incusd/instance/drivers: Fix tests
+   - incusd/instance/drivers: Use fmt.Fprintf
+   - client: Add server-side filtering for storage buckets
+   - incus/storage_bucket: use server-side filtering
+   - incusd/firewall/nftables: Fix handling of address set deletion
+   - incusd/instance/qemu: Handle agents with limited information
+   - incus/file: Handle Windows
+   - incus-agent: Split OS specific logic
+   - incus-agent: Set base directory
+   - incus-agent: Reduce code duplication
+   - incus-agent/exec: Move away from os.File
+   - incus-agent: Add initial Windows support
+   - incusd/instance/qemu: Add support for agent over HTTPS
+   - incusd/instance/qemu: Add agent drive support for Windows
+   - github: Build incus agent for Linux and Windows
+   - incusd: remove conditional check that is always true
+   - incusd: remove outdated comment about no longer existing force option
+   - incusd: remove code that was unreachable in api_internal.go
+   - incusd: remove code that was unreachable in api_internal.go
+   - shared/archive: remove unnecessary err check
+   - incusd: refactor condition checks that are always true or false respectively
+   - cmd/incus: refactor unnecessary err condition checks
+   - internal/linux: refactor unnecessary err condition check
+   - client: remove unnecessary err check and unused variable ioErr
+   - incusd: refactor process kill error being ignored
+   - incusd/instance: fix device finding logic
+   - incusd/instance/drivers: Make test ignore host-nodes order
+   - incus: refactor admin_init.go config initialization
+   - incusd/network/ovn: Wait up to 10s for OVN northd to allocate an IP
+   - incusd/dnsmasq: refactor DHCPValidIP condition checks
+   - incusd: Prevent panic when VolumeSize is missing
+   - incusd/migrate: Set write time limit for sendControl method
+   - client: Add CreateStoragePoolVolumeFromMigration
+   - incus-migrate: Prepare migration code for adding custom volume support
+   - incus-migrate: Support for uploading filesystems and disks as custom volumes
+   - incusd/network/bridge: Add missing line breaks
+   - client: Add GetProjectsWithFilter
+   - incus: Add filtering support for project list
+   - incusd/network/ovn: Port to gendoc
+   - doc/reference/network_ovn: Port to gendoc
+   - doc: Update configs
+   - incusd/network/bridge: Add BGP keys to gendoc
+   - doc/reference/network_bridge: Add BGP configuration
+   - incusd/network/physical: Port to gendoc
+   - doc/reference/network_physical: Convert to gendoc
+   - doc: Update configs
+   - Remove gopkg.in/tomb.v2 dependency
+   - incusd/instance/qemu: Don't allow hotplug when at maxmem
+   - incusd/device/nic_routed: Fix spacing
+   - incusd/network: Clear gofumpt
+   - api: instance_nic_routed_host_tables
+   - incusd/server/device/nic_routed.go: Added host_tables
+   - incusd/device/nic_routed: Deprecate ipv4.host_table and ipv6.host_table
+   - doc: Update configs
+   - incusd: rename variable `mux` to `router` so it does not collide with the package of the same name
+   - cmd/incus-agent: rename variable `mux` to `router` so it does not collide with the package of the same name
+   - incusd: rename all instances of sha256.New() to hash256 so they dont collide with the package name
+   - client: rename all instances of sha256.New() to hash256 so they dont collide with the package name
+   - cmd/incus-migrate: add missing switch case with explicit comment
+   - incusd: internalize the default case into the switch so it covers all iota constants
+   - internal/filter: internalize the default case into the switch so it covers all iota constants
+   - incusd: add missing err handling for transactions
+   - incusd/storage: Fix migration error due to rounding
+   - incusd/storage/zfs: Optimize snapshot deletion
+   - incusd: add more ErrorList tests for error formatting
+   - incusd: refactor Error implementation of ErrorList
+   - incusd: make all functions on ErrorList take a pointer receiver
+   - incusd: rename Error struct and make it private
+   - internal/iprange: add tests for the iprange.Range struct
+   - internal/dnsutil: remove unused package dnsutil
+   - incusd: rename instanceActionToOptype to instanceActionToOpType
+   - incusd/instance/drivers: Rewrite QEMU config override logic
+   - incusd/instance/drivers: Adapt the tests to the new override logic
+   - incusd/instance/drivers: Drop old RegEx parser and return proper errors
+   - incusd/instance/drivers: Update tests
+   - tools: Add govulncheck
+   - incusd: remove redundant size 0 initialization for maps
+   - cmd/generate-config: remove redundant size 0 initialization for maps
+   - cmd/lxc-to-incus: remove redundant size 0 initialization for maps
+   - incusd/certificates: Properly handle PEM encoding on POST
+   - incusd/network/macvlan: Add gendoc comments
+   - doc: Update configs
+   - doc: Use gendoc for macvlan
+   - incusd/instance/qemu: Don't allow QEMU RSS to exceed memory limit
+   - lint: Exclude generated docs from codespell
+   - lint: Exclude generated manpages from codespell
+   - incusd/network/macvlan: Run gofumpt
+   - client: Add server-side filtering for certificates
+   - incus/config_trust: Use server-side filtering
+   - incus-migrate: introduce Migrator interface with separate structs
+   - incus-migrate: Add support for additional disks
+   - cmd/generate-database/lex: Support pluralizing entities ending in y
+   - cmd/generate-database/db: Support multi-word association tables
+   - cmd/generate-database/db: Don't duplicate join statements
+   - incusd/dns: Restart DNS server on failure
+   - incusd/instance/qemu: Limit memory hotplug slots to 8
+   - incusd/network/sriov: Port to gendoc
+   - doc: Use gendoc for network sriov
+   - doc: Update configs
+   - api: instance_publish_split
+   - shared/api: Add field for image type to ImagePost struct
+   - incusd/instance: Change instance interface to add support for exporting to split images
+   - incusd/instance/lxc: Add support for publishing split images for containers
+   - incusd/instance/qemu: Add support for publishing split images for VMs
+   - incusd/images: Add support for publishing split images
+   - incus/publish: Add new flag to publish command for split images
+   - shared/cliconfig: Added DefaultSettings to Config Struct
+   - incus: Added defaultListFormat helper function
+   - incus: Added Default List Format calls in List Commands
+   - tests: Add test for publishing split images
+   - i18n: Update translation templates
+   - doc/rest-api: Refresh swagger YAML
+   - incusd/device/sriov: Handle cards without configurable spoof checking
+   - incusd/firewall/nftables: disable UDP checksum validation for packets on bridged network
+   - cmd/generate-database/db: Use snake case entity names for ID column names
+   - incusd/db/network_acls: Move to generated functions
+   - incusd: Switch to new GetNetworkACLs
+   - api: init_preseed_certificates
+   - client: Add certificate handling to ApplyServerPreseed
+   - shared/api: Add Certificates to InitLocalPreseed
+   - doc/rest-api: Refresh swagger YAML
+   - incusd: Switch to new GetNetworkACLsAllProjects
+   - shared/api: Add URL function on NetworkACL
+   - incusd: Switch to new GetNetworkACLURIs
+   - incusd: Switch to new DeleteNetworkACL
+   - incusd: Switch to new RenameNetworkACL
+   - incusd: Switch to new CreateNetworkACL
+   - incusd: Switch to new GetNetworkACLNameAndProjectWithID
+   - incusd: Switch to new GetNetworkACLIDsByNames
+   - incusd: Move remaining network ACLs DB functions
+   - client: Fix required extension for GetNetworkAddressSetsAllProjects
+   - incusd: Move cluster resource caching logic
+   - incusd/main_forknet: Implement stateful DHCPv6
+   - incusd/main_forknet: Add delay to wait for IPv6 link-local
+   - incusd/main_forknet: Add stateless DHCPv6 support
+   - gomod: Update dependencies
+   - lint/govulncheck: Don't test stdlib
+   - incus: Move sshfs helpers to utils
+   - CONTRIBUTING: Clearly ban LLMs
+   - doc/wordlist: Extend acronyms
+   - incusd/response: Move SFTPResponse
+   - api: custom_volume_sftp
+   - incusd/storage_volumes: Add SFTP endpoint
+   - client: Add GetStoragePoolVolumeFileSFTPConn
+   - incus: Add incus storage volume file mount
+   - i18n: Update translation templates
+   - doc/rest-api: Refresh swagger YAML
+   - incus/remote: Add "get-client-certificate" and "get-client-token"
+   - i18n: Update translation templates
+   - incus-migrate: Add support for .OVA import
+   - incus: Add add aliases to incus commands
+   - incus: Add create aliases to add commands
+   - incus: Add delete and rm aliases to remove commands
+   - incus: Add remove aliases to delete commands
+   - incus-agent: Skip /dev/incus on Windows
+   - incusd/instance/qemu: Don't block on Windows agent
+   - internal/util: Add Incus OS detection
+   - incusd: Use IsIncusOS
+   - incusd/metrics: Include OS metrics on Incus OS
+   - incusd/instance/lxc: Refactor inheritInitPidFd
+   - Removed useless else in Makefile
+   - incusd/storage/ceph: Fix parent tracking for VMs
+   - incusd/main_forknet: Don't touch resolv.conf when no leases
+   - incusd/storage/ceph: Fix typo in parseParent
+   - tests: Switch clustering test subnet
+   - incusd/storage/linstor: Prevent mounting unreachable pools
+   - incusd: Simplify code by using modern constructs
+   - internal/util: Simplify code by using modern constructs
+   - internal/linux: Simplify code by using modern constructs
+   - internal/filter: Simplify code by using modern constructs
+   - generate-config: Simplify code by using modern constructs
+   - generate-database: Simplify code by using modern constructs
+   - incus-agent: Simplify code by using modern constructs
+   - incus-benchmark: Simplify code by using modern constructs
+   - incusd: Simplify code by using modern constructs
+   - lxc-to-incus: Simplify code by using modern constructs
+   - incus: Simplify code by using modern constructs
+   - shared/api: Simplify code by using modern constructs
+   - shared/cliconfig: Simplify code by using modern constructs
+   - shared/idmap: Simplify code by using modern constructs
+   - shared/ioprogress: Simplify code by using modern constructs
+   - shared/osarch: Simplify code by using modern constructs
+   - shared/subprocess: Simplify code by using modern constructs
+   - test: Simplify code by using modern constructs
+   - Translated using Weblate (Spanish)
+   - incusd/instances: Tweak storage migration errors
+   - incusd/instances_post: Prevent pointless device overrides
+   - incusd/instance: Fix incorrect cluster.Connect call
+   - incusd/instance/qemu: Enable invtsc CPU extension when not migratable
+   - Makefile: Pin tablewriter (API breakage)
+   - client: Use the umoci Go package instead of the command
+   - doc: Remove mentions of the umoci command
+   - gomod: Update dependencies
+   - tests: Update godeps
+   - tests: Skip rootless-containers/proto/go-proto (Apache 2.0)
+   - internal/server/device: remove no-op rewriteHostAddr
+   - incusd/forkproxy: join the correct mntns for listen
+   - tests: add tests for bind=container with proxy device
+   - client: Don't needlessly use format string functions
+   - tests: Don't needlessly use format string functions
+   - lxd-to-incus: Don't needlessly use format string functions
+   - lxc-to-incus: Don't needlessly use format string functions
+   - incus-simplestreams: Don't needlessly use format string functions
+   - generate-config: Don't needlessly use format string functions
+   - generate-database: Don't needlessly use format string functions
+   - incus-agent: Don't needlessly use format string functions
+   - fuidshift: Don't needlessly use format string functions
+   - incus-user: Don't needlessly use format string functions
+   - incus-migrate: Don't needlessly use format string functions
+   - incus: Don't needlessly use format string functions
+   - shared/validate: Don't needlessly use format string functions
+   - shared/util: Don't needlessly use format string functions
+   - shared/tls: Don't needlessly use format string functions
+   - shared/tcp: Don't needlessly use format string functions
+   - shared/subprocess: Don't needlessly use format string functions
+   - shared/simplestreams: Don't needlessly use format string functions
+   - shared/logger: Don't needlessly use format string functions
+   - shared/ioprogress: Don't needlessly use format string functions
+   - shared/idmap: Don't needlessly use format string functions
+   - shared/cliconfig: Don't needlessly use format string functions
+   - shared/cancel: Don't needlessly use format string functions
+   - shared/ask: Don't needlessly use format string functions
+   - shared/archive: Don't needlessly use format string functions
+   - shared/api: Don't needlessly use format string functions
+   - internal/util: Don't needlessly use format string functions
+   - internal/usbid: Don't needlessly use format string functions
+   - internal/rsync: Don't needlessly use format string functions
+   - internal/netutils: Don't needlessly use format string functions
+   - internal/migration: Don't needlessly use format string functions
+   - internal/linux: Don't needlessly use format string functions
+   - internal/instance: Don't needlessly use format string functions
+   - internal/filter: Don't needlessly use format string functions
+   - internal/cmd: Don't needlessly use format string functions
+   - incusd: Don't needlessly use format string functions
+   - incus-migrate: Prompt for cluster target
+   - incus/instance/qmp: Implement our own QMP client
+   - incusd/instance/qmp: Add tests for in-house QMP
+   - incusd/instance/qmp: Switch to our own QMP client
+   - gomod: Update dependencies
+   - incusd/instance/qmp: Don't export internal QMP implementation
+   - Make sure limits.memory <= root.size.state
+   - incusd/instance/qmp: if else if to switch case
+   - incusd/instance/qmp: Remove weird qemu qmp bug handling
+   - incusd/instance/qmp: Refactor qmpWriteMsg
+   - incusd/db/node: Add GetPendingNodeByName
+   - api: network_ovn_external_nic_address
+   - incusd/device/nic_ovn: Added the two new nic options
+   - incusd/network/ovn: Add support for applying external address
+   - doc: Update config
+   - incusd/db/cluster: Update generated files
+   - api: network_physical_gateway_hwaddr
+   - incusd/network/ovn: Bump base schema to 23.03.0
+   - incusd/network/physical: Add gateway hwaddr config
+   - incusd/network/ovn: Add StaticBinding functions
+   - incusd/network/ovn: Add support for static MAC binding
+   - doc: Update config
+   - typo: mountabble -> mountable
+   - typo: DIsk -> Disk
+   - typo: mount -> unmount
+   - incusd/storage: fix squashfs unpacking to NFS destinations
+   - incusd/cluster: Add support for pending nodes in Leave and Purge functions
+   - client: Add DeletePendingClusterMember
+   - incusd: Remove cluster member on join failure
+   - incusd/instance/qmp: Associate request/reply with a command ID
+   - incusd/instance/qmp: Add command ID to runWithFile
+   - incusd/instance/qmp: Add command ID to RunJSON
+   - incusd/instance/qemu: Use switch statement
+   - internal/instance: Add RTC volatile keys
+   - incusd/instance/qemu: Handle RTC base adjustments
+   - doc: Update config
+   - incusd: Return empty slice instead of nil when no storage pool is present
+   - tests: Fix LINSTOR preconfiguration
+   - incusd/instance/drivers: Clear the volatile.cpu.nodes if needed
+   - incusd/storage/drivers: Add support for specifying username in CephFS commands
+   - incusd/device: Pass username in CephFS commands
+   - incusd/db/cluster: Rename network ACL files
+   - incusd/db/cluster: Port load balancers to database generator
+   - vscode: Add VSCode launch.json for incusd "Run and Debug" functionality
+   - incusd: Update for generated load-balancer functions
+   - incus/network_zone: Fix typo in help description
+   - po: Update translation template
+   - incusd/db: Port network zone to database generator
+   - incusd: Port to new database functions
+   - incusd/instance/drivers: Allow updating root disk size and root io.bus simultaneously
+   - incusd/db: Fix network ACL generation
+   - incusd/db: Properly remove node/location from load balancers
+   - incusd/network/load_balancer: Fix update logic
+   - incusd/network: Fix ACL regression
+   - gomod: Update dependencies
+  [/details]
+
+  # Documentation
+  The Incus documentation can be found at:
+  https://linuxcontainers.org/incus/docs/main/
+
+  # Packages
+  There are no official Incus packages as Incus upstream only releases regular release tarballs. Below are some available options to get Incus up and running.
+
+  ## Installing the Incus server on Linux
+  Incus is available for most common Linux distributions. You'll find detailed installation instructions in our documentation.
+
+  https://linuxcontainers.org/incus/docs/main/installing/
+
+  ## Homebrew package for the Incus client
+  The client tool is available through HomeBrew for both Linux and MacOS.
+
+  https://formulae.brew.sh/formula/incus
+
+  ## Chocolatey package for the Incus client
+  The client tool is available through Chocolatey for Windows users.
+
+  https://community.chocolatey.org/packages/incus/6.13.0
+
+  ## Winget package for the Incus client
+  The client tool is also available through Winget for Windows users.
+
+  https://winstall.app/apps/LinuxContainers.Incus
+
+  # Support
+  Monthly feature releases are only supported up until the next release comes out.  Users needing a longer support length and less frequent changes should consider using Incus 6.0 LTS instead.
+
+  Community support is provided at: https://discuss.linuxcontainers.org
+  Commercial support is available through: https://zabbly.com/incus
+  Bugs can be reported at: https://github.com/lxc/incus/issues
