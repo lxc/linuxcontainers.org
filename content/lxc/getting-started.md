@@ -399,10 +399,15 @@ Next up is `/etc/lxc/lxc-usernet` which is used to set network devices quota for
 
 This means that "your-username" is allowed to create up to 10 veth devices connected to the lxcbr0 bridge.
 
+Create the `~/.local/share/lxc` directory if it doesn't exist and ensure `~/.local` is executable.
+
+    mkdir -p ~/.local/share/lxc && chmod +x ~/.local ~/.local/share ~/.local/share/lxc
+
 With that done, the last step is to create an LXC configuration file.
 
 * Create the `~/.config/lxc` directory if it doesn't exist.
 * Copy `/etc/lxc/default.conf` to `~/.config/lxc/default.conf`
+* Set `lxc.apparmor.profile = lxc-container-default`
 * Append the following two lines to it:
     * `lxc.idmap = u 0 100000 65536`
     * `lxc.idmap = g 0 100000 65536`
