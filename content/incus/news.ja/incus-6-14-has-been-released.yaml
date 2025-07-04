@@ -316,7 +316,7 @@ content: |-
   <!--
   The client tool is available through HomeBrew for both Linux and MacOS.
   -->
-  HomeBrew 経由で、Linux と macOS 向けにクライアントツールが利用できます。
+  Homebrew 経由で、Linux と macOS 向けにクライアントツールが利用できます。
 
   https://formulae.brew.sh/formula/incus
 
