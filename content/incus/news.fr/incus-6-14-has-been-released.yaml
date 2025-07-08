@@ -1,0 +1,376 @@
+title: Incus 6.14 est maintenant disponible
+date: 2025/06/28 18:06
+origin: https://discuss.linuxcontainers.org/t/incus-6-14-has-been-released/24092
+content: |-
+  <!--
+  # Introduction
+  The Incus team is pleased to announce the release of Incus 6.14!
+  -->
+  # Introduction
+  L’équipe d’Incus est heureuse d’annoncer la sortie d’Incus 6.14 !
+
+  <!--
+  This is a lighter release with quite a few welcome bugfixes and performance improvements, wrapping up some of the work with the University of Texas students and adding a few smaller features.
+  -->
+  C’est une version avec de plus modestes apports : quelques corrections de bugs et améliorations de performances, concluant une partie du travail mené avec les étudiants de l’Université du Texas, et quelques nouvelles fonctionnalités.
+
+  <!--
+  It also fixes a couple of security issues affecting those using network ACLs on bridge networks using nftables and network isolation.
+  -->
+  Elle corrige également quelques vulnérabilités affectant les personnes utilisant des ACL sur des réseaux bridge avec un pare-feu nftables.
+
+  [![image|690x263](https://discuss.linuxcontainers.org/uploads/default/original/2X/0/00a6b37636fb584570c8af0fd2a56fb2378acc92.png)](https://linuxcontainers.org/incus/try-it/)
+
+  <!--
+  As usual, you can try it for yourself online: https://linuxcontainers.org/incus/try-it/
+  -->
+  Comme d’habitude, vous pouvez l’essayer vous-même en ligne : https://linuxcontainers.org/incus/try-it/
+
+  <!--
+  Enjoy!
+  -->
+
+  <!--
+  # Security fixes
+  This release fixes two security issues reported by Olivier BAL-PETRE of ANSSI (French Cybersecurity Agency).
+  -->
+  # Correctifs de sécurité
+  Cette nouvelle version corrige deux vulnérabilités rapportées par Olivier BAL-PETRE, de l’ANSSI (agence française de sécurité des systèmes d'information).
+
+  <!--
+  Both issues related to the use of Incus network ACLs on local bridges using nftables for firewalling and in combination with some of our network isolation features.
+  -->
+  Les deux vulnérabilités étaient liées à l’utilisation par Incus d’ACL réseau sur des bridges locaux utilisant un pare-feu nftables, en combinaison avec certaines de nos fonctionnalités d’isolation réseau.
+
+  <!--
+  A recent change to the ACL logic in Incus 6.12 allowed for some of the isolation to be bypassed and allowing for root in an instance in that environment to either cause a denial of service attack or even spoof the host and potentially intercept some traffic from instances sharing the same network.
+  -->
+  Un changement récent dans la logique des ACL dans Incus 6.12 permettait d’outrepasser certains mécanismes d’isolation et d’autoriser l’utilisateur root sur une instance à causer une attaque par déni de service ou à se faire passer pour l’hôte et potentiellement intercepter du trafic d’instances du même réseau.
+
+   * [CVE-2025-52890](https://github.com/advisories/GHSA-p7fw-vjjm-2rwp) (Incus creates nftables rules that partially bypass security options)
+   * [CVE-2025-52889](https://github.com/advisories/GHSA-9q7c-qmhm-jv86) (Incus Allocation of Resources Without Limits allows firewall rule bypass on managed bridge networks)
+
+  <!--
+  As mentioned, affected releases are Incus 6.12 and Incus 6.13. Both of those are regular monthly releases and are now unsupported following the release of Incus 6.14.
+  The latest LTS release isn't affected by this issue.
+  -->
+  Comme mentionné, les versions concernées sont Incus 6.12 et Incus 6.13. Ces deux versions mensuelles d’Incus ne sont à présent plus supportées du fait de la sortie d’Incus 6.14.
+  La dernière version LTS n’est pas affectée par ces vulnérabilités.
+
+  <!--
+  # New features
+  ## S3 upload of instance and volume backups
+  Both instance and storage volume backups can now be automatically uploaded to an S3 bucket. This is currently only available through the API as something that backup systems are likely to find interesting.
+  -->
+  # Nouvelles fonctionnalités
+  ## Téléversement de sauvegardes d’instances et de volumes via S3
+  Les sauvegardes d’instances et de volumes peuvent désormais être automatiquement téléversées dans un bucket S3. Cette fonctionnalité est pour l’instant uniquement disponible au travers de l’API, pour une éventuelle utilisation par des systèmes de sauvegarde.
+
+  <!--
+  Incus will generate a backup file as normal and then immediately proceed with uploading it to the target bucket before deleting its local copy.
+  -->
+  Incus générera comme d’habitude un fichier de sauvegarde, puis le téléversera vers le bucket cible avant de supprimer sa copie locale.
+
+      stgraber@dakara:~$ incus launch images:alpine/edge a1
+      Launching a1
+      stgraber@dakara:~$ incus query -X POST /1.0/instances/a1/backups -d '{"optimized_storage": true, "target": {"protocol": "s3", "url": "https://storage.googleapis.com", "bucket_name": "incus_backups", "path": "my-backup.tar.gz", "access_key": "ACCESS-KEY", "secret_key": "SECRET-KEY"}}' --wait
+      {
+      	"class": "task",
+      	"created_at": "2025-06-28T13:46:21.781378949-04:00",
+      	"description": "Backing up instance",
+      	"err": "",
+      	"id": "89936d87-25b3-44d2-930e-92b579cc2ee0",
+      	"location": "none",
+      	"may_cancel": false,
+      	"metadata": null,
+      	"resources": {
+      		"backups": [
+      			"/1.0/instances/a1/backups/backup0"
+      		],
+      		"instances": [
+      			"/1.0/instances/a1"
+      		]
+      	},
+      	"status": "Success",
+      	"status_code": 200,
+      	"updated_at": "2025-06-28T13:46:21.781378949-04:00"
+      }
+
+  <!--
+  This work was done by students at the University of Texas in Austin.
+  -->
+  Ce travail a été mené par des étudiants de l’Université du Texas à Austin.
+
+  <!--
+  ## Customizable expiry on snapshot creation
+  A new `--expiry` flag has been added to both `incus snapshot create` and `incus storage volume snapshot create`. This allows overriding the expiry of the snapshot directly as it gets created, overriding the server-side default.
+  -->
+  ## Personnalisation de l’expiration des instantanés à leur création
+  Une nouvelle option `--expiry` a été ajoutée aux commandes `incus snapshot create` et `incus storage volume snapshot create`. Celle-ci permet de modifier la date d’expiration d’un instantané à sa création, changeant la valeur par défaut du serveur.
+
+      stgraber@dakara:~$ incus snapshot create a1 foo --expiry=2d
+      stgraber@dakara:~$ incus snapshot list a1
+      +------+----------------------+----------------------+----------+
+      | NAME |       TAKEN AT       |      EXPIRES AT      | STATEFUL |
+      +------+----------------------+----------------------+----------+
+      | foo  | 2025/06/28 13:50 EDT | 2025/06/30 13:50 EDT | NO       |
+      +------+----------------------+----------------------+----------+
+
+  <!--
+  ## Alternative default expiry for manually created snapshots
+  A different default snapshot expiry can now be configured through the `snapshots.expiry.manual` configuration key. When not set, Incus falls back to `snapshots.expiry` which is what's also used for scheduled snapshots.
+  -->
+  ## Modification du délai d’expiration par défaut pour les instantanés créés manuellement
+  Le délai d’expiration par défaut peut maintenant être modifié par l’intermédiaire de la clef de configuration `snapshots.expiry.manual`. Lorsqu’elle n’est pas définie, Incus utilise la valeur `snapshots.expiry`, qui est également utilisée pour les instantanés créés automatiquement.
+
+      stgraber@dakara:~$ incus config set a1 snapshots.expiry=7d
+      stgraber@dakara:~$ incus snapshot create a1 first
+      stgraber@dakara:~$ incus config set a1 snapshots.expiry.manual=2d
+      stgraber@dakara:~$ incus snapshot create a1 second
+      stgraber@dakara:~$ incus snapshot list a1
+      +--------+----------------------+----------------------+----------+
+      |  NAME  |       TAKEN AT       |      EXPIRES AT      | STATEFUL |
+      +--------+----------------------+----------------------+----------+
+      | first  | 2025/06/28 13:53 EDT | 2025/07/05 13:53 EDT | NO       |
+      +--------+----------------------+----------------------+----------+
+      | second | 2025/06/28 13:54 EDT | 2025/06/30 13:54 EDT | NO       |
+      +--------+----------------------+----------------------+----------+
+
+  <!--
+  ## Live migration tweaks and progress reporting
+  To reduce the migration time for VMs that very actively modify their memory, we have made a few tweaks to the memory transfer logic.
+  -->
+  ## Ajustements dans la migration à chaud et information d’avancement
+  Pour réduire le temps de migration pour les VM qui modifient activement leur mémoire, nous avons effectué quelques ajustements dans la logique de transfert de la mémoire.
+
+  <!--
+  Incus will now more aggressively throttle the CPU of VMs being migrated starting with a 50% throttle after the first attempt and going lower and lower as changes are still detected at a high rate.
+  -->
+  Incus va à présent limiter plus agressivement le CPU des VM en cours de migration, en commençant par une limitation à 50 % de sa capacité après la première tentative de migration, puis en la limitant davantage si beaucoup de changements ont eu lieu en RAM.
+
+  <!--
+  On top of this, Incus will now provide memory migration progress.
+  -->
+  Enfin, Incus va à présent fournir des informations sur l’avancement de la migration.
+
+  ![image|689x247](upload://wEZRnY04nU3AGgPF2VLDGMh2DVA.jpeg)
+
+  <!--
+  ## Reporting of CPU address sizes in the resources API
+  Different CPUs and different platforms have varying physical and virtual address sizes to address their memory.
+  -->
+  ## Information sur la taille des adresses CPU dans l’API des ressources
+  D’un CPU et d’une plateforme à l’autre, les adresses physiques et virtuelles peuvent avoir des tailles différentes.
+
+  <!--
+  This affects the total amount of memory that can be made available to a virtual machine, either right at startup or later through hotplug.
+  -->
+  Cela contraint la quantité de mémoire maximale disponible pour une machine virtuelle, que ce soit au démarrage ou après un hotplug.
+
+  <!--
+  For that reason, Incus needs to keep track of those values to adjust the maximum amount of hotpluggable memory in VMs.
+  -->
+  Pour cette raison, Incus a besoin de surveiller ces valeurs pour ajuster la quantité maximale de mémoire hotpluggable dans les VM.
+
+      stgraber@castiana:~$ incus query /1.0/resources | jq .cpu.sockets[0].address_sizes
+      {
+        "physical_bits": 48,
+        "virtual_bits": 48
+      }
+
+  <!--
+  ## Database logic moved to our code generator
+  We completed the transition of a variety of network objects to using our code generator for their database functions.
+  -->
+  ## Transition des traitements en base de données vers notre générateur de code
+  Nous avons procédé à la transition d’un certain nombre d’objets réseau vers notre générateur de code pour les traitements en base de données.
+
+  <!--
+  In this release, the following two object types were converted:
+  -->
+  Dans cette version, les deux objets suivants ont été convertis :
+
+  <!--
+  - Network forwards
+  - Network peers
+  -->
+  - Redirections réseau
+  - Peers réseau
+
+  <!--
+  This work was done by students at the University of Texas in Austin.
+  -->
+  Ce travail a été mené par des étudiants de l’Université du Texas à Austin.
+
+  <!--
+  # Complete changelog
+  Here is a complete list of all changes in this release:
+  -->
+  # Liste complète des changements
+  Voici une liste complète de tous les changements apportés par cette version :
+
+  <!--
+  [details="Full commit list"]
+  -->
+  [details="Liste complète des commits"]
+   - incus: Make sure we parse the config early enough
+   - incus/main_aliases: Avoid parsing loops
+   - incusd/instance/qemu: Skip invtsc on non-x86 and when running nested
+   - incusd/instance/qmp remove net Conn
+   - api: backup_s3_upload
+   - shared/api: Add backup target for instance and volume
+   - doc/rest-api: Refresh swagger YAML
+   - incusd/backup: Add upload function
+   - incusd: Add backup upload logic
+   - incusd/device/nic_physical: Check for parent being a bridge
+   - incusd/device/nic_physical: Handle managed physical network being a bridge
+   - incusd/instance/lxc: Tweak OCI entrypoint escaping
+   - incusd/network/ovn: Add dhcpv6_stateless flag
+   - incusd/network/ovn: Tweak DNS server logic
+   - incusd/network/ovn: Set stateless DHCPv6 flag
+   - incusd/main_forknet: Don't crash on missing status code
+   - incusd/server/network: correct complement range calculation for DHCP reservations
+   - test/storage/zfs: add test for incus:content_type after clone
+   - incusd/storage/zfs: Fix missing incus:content_type after cloning a custom volume
+   - incusd/instance/qmp move logfile to qmp
+   - incusd/instance/qmp add qmp log implementation
+   - incusd/instance/qmp base qmp log on new implementation
+   - incusd/instances: Fix operation plumbing
+   - incusd/instance/qemu/qmp: Add MigrateSetParameters
+   - incusd/instance/qemu: Tweak migration parameters
+   - incusd/instance/qemu/qmp: Add QueryMigrate
+   - incusd/instance/qemu: Report migration progress
+   - incus/profile: Fix a typo in profile set usage text
+   - i18n: Update translation templates for profile set cmd
+   - incusd/storage: Handle missing storage bucket listener
+   - incusd/instance/qmp added qmp event log
+   - incus-migrate: Fix calculating volume size for block device
+   - incusd/instance/qmp: Prevent initialization of qmpLog with an empty log file path
+   - incus/info: Fix --show-log
+   - incusd: Remove target check when server clustered
+   - Translated using Weblate (Portuguese)
+   - client: Don't swallow error if incusParseResponse is successful
+   - Translated using Weblate (Portuguese)
+   - incusd/cluster: Return the cluster certificate after bootstrap
+   - Translated using Weblate (Portuguese)
+   - Translated using Weblate (Portuguese)
+   - incusd/network/ovn: Fix regression in stateful DHCPv6 handling
+   - incusd/db/cluster: Port network peer to database generator
+   - incusd: Update for new network peer functions
+   - gomod: Update dependencies
+   - incusd/apparmor/forkproxy: Expand /dev exception
+   - Translated using Weblate (Portuguese)
+   - Translated using Weblate (Portuguese)
+   - internal/instance: Add exported error
+   - incus/snapshot: Implement --expiry
+   - incus/storage/snapshot: Implement --expiry
+   - i18n: Update translation templates
+   - api: snapshot_manual_expiry
+   - doc/storage: Add snapshots.expiry.manual
+   - internal/instance: Add snapshots.expiry.manual
+   - doc: Update config
+   - incusd/storage: Add snapshots.expiry.manual validation
+   - incusd/instance_snapshot: Add snapshots.expiry.manual
+   - incusd/storage_volume_snapshot: Add snapshots.expiry.manual
+   - shared/tls: Export TLSConfigWithTrustedCert
+   - internal/server/db/cluster: Generate functions using DB generator
+   - incusd/scriptlet: Allow sets
+   - internal/server/network: Port to generated functions
+   - Translated using Weblate (Portuguese)
+   - Translated using Weblate (Portuguese)
+   - lxc-to-incus: Add lxc.apparmor.allow_nesting
+   - tests: Workaround old socat bug
+   - tests: Update for newer easyrsa
+   - tests: Recent XFS requires a minimum volume size of 300MiB
+   - github: Switch to ZFS backend for Linstor
+   - github: Switch tests to Ubuntu 24.04
+   - api: resources_cpu_address_sizes
+   - incusd/resources: Track CPU address sizes
+   - incusd/instance/qemu: Be smarter about max memory hotplug
+   - doc/rest-api: Refresh swagger YAML
+   - incusd/instance/qemu: Cap hotplug memory to 1TB
+   - incusd/cluster: Fix incorrect handling of server address
+   - incusd/instance/qmp: Fix typo
+   - incusd/device/disk: Allow degraded zpools
+   - incusd/storage_volumes: Fix cross-project cluster volume copy/move
+   - incusd/firewall/nftables: Fix rule ordering for ARP/NDP
+   - incusd/firewall/nftables: Fix ordering of basic rules
+   - incusd/storage/lvm: Avoid concurrent activation/deactivation
+   - devcontainer: Add gofumpt
+   - incus/config/set: Add example using stdin
+   - i18n: Update translation templates
+   - incusd/instance/qemu: Only compress qcow2 if publishing a split image
+   - incusd/instance/qemu: Don't flood the debug log
+   - incusd/storage/zfs: Handle re-use of delegated dataset
+   - incus/file: Remove OS-specific handling from SSHFS logic
+   - gomod: Update dependencies
+   - Translated using Weblate (Portuguese)
+  [/details]
+
+  <!--
+  # Documentation
+  The Incus documentation can be found at:
+  https://linuxcontainers.org/incus/docs/main/
+  -->
+  # Documentation
+  La documentation d’Incus peut être consultée sur :
+  https://linuxcontainers.org/incus/docs/main/
+
+  <!--
+  # Packages
+  There are no official Incus packages as Incus upstream only releases regular release tarballs. Below are some available options to get Incus up and running.
+  -->
+  # Paquets
+  Incus ne fournit pas de paquet d’installation mais bien un tarball à chaque version. Vous trouverez ci-dessous différentes solutions pour mettre Incus en service.
+
+  <!--
+  ## Installing the Incus server on Linux
+  Incus is available for most common Linux distributions. You'll find detailed installation instructions in our documentation.
+  -->
+  ## Installation du serveur Incus sous Linux
+  Incus est disponible sur la plupart des distributions Linux courantes. Vous trouverez des instructions d’installation détaillées dans notre documentation.
+
+  https://linuxcontainers.org/incus/docs/main/installing/
+
+  <!--
+  ## Homebrew package for the Incus client
+  The client tool is available through HomeBrew for both Linux and MacOS.
+  -->
+  ## Paquet Homebrew du client Incus
+  Le client Incus est disponible sur Homebrew pour Linux et macOS.
+
+  https://formulae.brew.sh/formula/incus
+
+  <!--
+  ## Chocolatey package for the Incus client
+  The client tool is available through Chocolatey for Windows users.
+  -->
+  ## Paquet Chocolatey du client Incus
+  Le client Incus est disponible sur Chocolatey pour les utilisateurs de Windows.
+
+  https://community.chocolatey.org/packages/incus/6.14.0
+
+  <!--
+  ## Winget package for the Incus client
+  The client tool is also available through Winget for Windows users.
+  -->
+  ## Paquet Winget du client Incus
+  Le client Incus est aussi disponible sur Winget pour les utilisateurs de Windows.
+
+  https://winstall.app/apps/LinuxContainers.Incus
+
+  <!--
+  # Support
+  Monthly feature releases are only supported up until the next release comes out.  Users needing a longer support length and less frequent changes should consider using Incus 6.0 LTS instead.
+  -->
+  # Support
+  Les versions de fonctionnalité d’Incus ne sont supportées que jusqu’à la sortie de la suivante. Les personnes souhaitant un support plus long et des changements moins fréquents devraient plutôt envisager d’utiliser Incus 6.0 LTS.
+
+  <!--
+  Community support is provided at: https://discuss.linuxcontainers.org
+  Commercial support is available through: https://zabbly.com/incus
+  Bugs can be reported at: https://github.com/lxc/incus/issues
+  -->
+  Le support communautaire est disponible sur : https://discuss.linuxcontainers.org
+  Un support commercial est disponible sur : https://zabbly.com/incus
+  Les bugs peuvent être signalés sur : https://github.com/lxc/incus/issues
