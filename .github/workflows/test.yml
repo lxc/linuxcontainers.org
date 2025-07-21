@@ -30,10 +30,11 @@ jobs:
       - name: Install Python dependencies
         run: |
           pip3 install -r requirements.txt
-          pip3 install pycodestyle
+          pipx install black
 
       - name: Static analysis
-        run: pycodestyle generate
+        run: |
+          black --check generate sync-forum extensions/
 
       - name: Build website
         run: ./generate
