@@ -115,12 +115,12 @@
             <pre>incus list</pre>
             <p>いくつかインスタンスを起動してみましょう。<!-- Start by launching a few instances. -->
               <ol>
-                <li>Ubuntu 20.04 イメージを使って "first" という名前のコンテナを起動します: <!-- Launch a container called "first" using the Ubuntu 20.04 image: -->
-                  <pre>incus launch images:ubuntu/20.04 first</pre>
+                <li>Ubuntu 24.04 イメージを使って "first" という名前のコンテナを起動します: <!-- Launch a container called "first" using the Ubuntu 24.04 image: -->
+                  <pre>incus launch images:ubuntu/24.04 first</pre>
                   最初はイメージをダウンロードして展開しなければならないため、コンテナの起動には少し時間がかかることに注意してください。<!-- Note that launching this container takes a few seconds, because the image must be downloaded and unpacked first. -->
                 </li>
                 <li>同じイメージを使って "second" という名前のコンテナを起動します:<!-- Launch a container called "second" using the same image: -->
-                  <pre>incus launch images:ubuntu/20.04 second</pre>
+                  <pre>incus launch images:ubuntu/24.04 second</pre>
                   イメージを取得済みなので、最初の（first）コンテナの起動に比べると早く起動します: <!-- Launching this container is quicker than launching the first, because the image is already available. -->
                 </li>
                 <li>最初の（first）コンテナを "third" という名前のコンテナとしてコピーします: <!-- Copy the first container into a container called "third": -->
@@ -209,7 +209,7 @@ incus info debian</pre>
             <p>リソース制限を持つインスタンスをもう 1 つ作ってみましょう。<!-- Let's create another instance with some resource limits. -->
               <ol>
                 <li>コンテナを起動し、1vCPU と 192MiB メモリーの制限を設定します: <!-- Launch a container and limit it to one vCPU and 192 MiB of RAM: -->
-                  <pre>incus launch images:ubuntu/20.04 limited -c limits.cpu=1 -c limits.memory=192MiB</pre>
+                  <pre>incus launch images:ubuntu/24.04 limited -c limits.cpu=1 -c limits.memory=192MiB</pre>
                 <li>現在の設定を確認し、制限が設定されていない最初の（first）コンテナの設定と比べてみましょう: <!-- Check the current configuration and compare it to the configuration of the first (unlimited) instance: -->
                   <pre>incus config show limited
 incus config show first</pre>

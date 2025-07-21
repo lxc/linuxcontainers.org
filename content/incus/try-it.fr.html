@@ -174,12 +174,12 @@
             <p>Commencez par lancer quelques instances.
               <ol>
 <!--
-                <li>Launch a container called "first" using the Ubuntu 20.04 image:
-                  <pre>incus launch images:ubuntu/20.04 first</pre>
+                <li>Launch a container called "first" using the Ubuntu 24.04 image:
+                  <pre>incus launch images:ubuntu/24.04 first</pre>
                   Note that launching this container takes a few seconds, because the image must be downloaded and unpacked first.
                 </li>
                 <li>Launch a container called "second" using the same image:
-                  <pre>incus launch images:ubuntu/20.04 second</pre>
+                  <pre>incus launch images:ubuntu/24.04 second</pre>
                   Launching this container is quicker than launching the first, because the image is already available.
                 </li>
                 <li>Copy the first container into a container called "third":
@@ -192,12 +192,12 @@
                   <pre>incus launch images:debian/12 debian --vm</pre>
                 </li>
 -->
-                <li>Lancez un conteneur nommé « first » utilisant l’image Ubuntu 20.04 :
-                  <pre>incus launch images:ubuntu/20.04 first</pre>
+                <li>Lancez un conteneur nommé « first » utilisant l’image Ubuntu 24.04 :
+                  <pre>incus launch images:ubuntu/24.04 first</pre>
                   Notez que le lancement du conteneur prend quelques secondes, car l’image doit préalablement être téléchargée et décompressée.
                 </li>
                 <li>Lancez un conteneur nommé « second » utilisant la même image :
-                  <pre>incus launch images:ubuntu/20.04 second</pre>
+                  <pre>incus launch images:ubuntu/24.04 second</pre>
                   Le lancement de ce conteneur est plus rapide que pour le premier, car l’image est déjà disponible.
                 </li>
                 <li>Copiez le premier conteneur dans un conteneur nommé « third » :
@@ -335,7 +335,7 @@ incus info debian</pre>
             <p>Let's create another instance with some resource limits.
               <ol>
                 <li>Launch a container and limit it to one vCPU and 192 MiB of RAM:
-                  <pre>incus launch images:ubuntu/20.04 limited -c limits.cpu=1 -c limits.memory=192MiB</pre>
+                  <pre>incus launch images:ubuntu/24.04 limited -c limits.cpu=1 -c limits.memory=192MiB</pre>
                 <li>Check the current configuration and compare it to the configuration of the first (unlimited) instance:
                   <pre>incus config show limited
 incus config show first</pre>
@@ -359,7 +359,7 @@ incus exec limited -- nproc</pre>
             <p>Créons une autre instance avec des limites de ressources.
               <ol>
                 <li>Lancez un conteneur et limitez-le à un vCPU et 192 Mio de RAM :
-                  <pre>incus launch images:ubuntu/20.04 limited -c limits.cpu=1 -c limits.memory=192MiB</pre>
+                  <pre>incus launch images:ubuntu/24.04 limited -c limits.cpu=1 -c limits.memory=192MiB</pre>
                 <li>Vérifiez la configuration actuelle et comparez-la à la configuration (sans limite) de la première instance :
                   <pre>incus config show limited
 incus config show first</pre>

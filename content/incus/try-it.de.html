@@ -116,13 +116,13 @@
             <pre>incus list</pre>
             <p>Beginnen Sie, indem Sie einige Instanzen starten.
             <ol>
-              <li>Starten Sie einen Container namens "first" mit dem Ubuntu 20.04-Image:
-                <pre>incus launch images:ubuntu/20.04 first</pre>
+              <li>Starten Sie einen Container namens "first" mit dem Ubuntu 24.04-Image:
+                <pre>incus launch images:ubuntu/24.04 first</pre>
                 Beachten Sie, dass das Starten dieses Containers einige Sekunden dauert, da das Image zuerst
                 heruntergeladen und entpackt werden muss.
               </li>
               <li>Starten Sie einen Container namens "second" mit demselben Image:
-                <pre>incus launch images:ubuntu/20.04 second</pre>
+                <pre>incus launch images:ubuntu/24.04 second</pre>
                 Das Starten dieses Containers geht schneller als das Starten des ersten, da das Image bereits verfügbar
                 ist.
               </li>
@@ -217,7 +217,7 @@
             <p>Erstellen wir eine weitere Instanz mit einigen Ressourcengrenzen.
             <ol>
               <li>Starten Sie einen Container und begrenzen Sie ihn auf eine vCPU und 192 MiB RAM:
-                <pre>incus launch images:ubuntu/20.04 limited -c limits.cpu=1 -c limits.memory=192MiB</pre>
+                <pre>incus launch images:ubuntu/24.04 limited -c limits.cpu=1 -c limits.memory=192MiB</pre>
               </li>
               <li>Überprüfen Sie die aktuelle Konfiguration und vergleichen Sie sie mit der Konfiguration der ersten
                 (unbegrenzten) Instanz:
