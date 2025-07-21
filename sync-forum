@@ -43,35 +43,38 @@ for project in PROJECTS:
 
         try:
             dis_topic = load_json(old_entry["origin"])
-            dis_post = load_json("/posts/%s" %
-                                 dis_topic["post_stream"]["posts"][0]["id"])
+            dis_post = load_json(
+                "/posts/%s" % dis_topic["post_stream"]["posts"][0]["id"]
+            )
         except Exception:
             print("Failed to load: %s" % old_entry["origin"])
             continue
 
-        entry = yaml.load("""
+        entry = yaml.load(
+            """
 title: foo
 date: bar
 origin: baz
 content: |-
-  blah""")
+  blah"""
+        )
         entry["content"] = dis_post["raw"]
 
         soup = BS(dis_post["cooked"], features="html.parser")
-        for imgtag in soup.find_all('img'):
+        for imgtag in soup.find_all("img"):
             try:
-                img_hash = imgtag['data-base62-sha1']
-                img_src = imgtag['src']
+                img_hash = imgtag["data-base62-sha1"]
+                img_src = imgtag["src"]
                 entry["content"] = entry["content"].replace(
-                    "upload://%s.png" % img_hash, img_src)
+                    "upload://%s.png" % img_hash, img_src
+                )
             except KeyError:
                 pass
 
         entry["title"] = dis_topic["title"]
         date = dateutil.parser.parse(dis_topic["created_at"])
         entry["date"] = date.strftime("%Y/%m/%d %H:%m")
-        entry["origin"] = "%s/t/%s/%s" % (API_URL, dis_topic["slug"],
-                                          dis_topic["id"])
+        entry["origin"] = "%s/t/%s/%s" % (API_URL, dis_topic["slug"], dis_topic["id"])
 
         if entry != old_entry:
             with open(post, "w+") as fd:
@@ -91,8 +94,7 @@ for topic in news["topic_list"]["topics"]:
 
     try:
         dis_topic = load_json("/t/%s" % topic["id"])
-        dis_post = load_json("/posts/%s" %
-                             dis_topic["post_stream"]["posts"][0]["id"])
+        dis_post = load_json("/posts/%s" % dis_topic["post_stream"]["posts"][0]["id"])
     except Exception:
         print("Failed to load: %s" % topic["id"])
         continue
@@ -107,34 +109,38 @@ for topic in news["topic_list"]["topics"]:
         path = "content/%s/news/%s.yaml" % (project, dis_topic["slug"])
         break
     else:
-        print("%s => skipping (unknown project: %s)" % (dis_topic["title"],
-                                                        dis_topic["tags"]))
+        print(
+            "%s => skipping (unknown project: %s)"
+            % (dis_topic["title"], dis_topic["tags"])
+        )
         continue
 
     yaml = ruamel.yaml.YAML()
-    entry = yaml.load("""
+    entry = yaml.load(
+        """
 title: foo
 date: bar
 origin: baz
 content: |-
-  blah""")
+  blah"""
+    )
     entry["content"] = dis_post["raw"]
 
     soup = BS(dis_post["cooked"], features="html.parser")
-    for imgtag in soup.find_all('img'):
+    for imgtag in soup.find_all("img"):
         try:
-            img_hash = imgtag['data-base62-sha1']
-            img_src = imgtag['src']
+            img_hash = imgtag["data-base62-sha1"]
+            img_src = imgtag["src"]
             entry["content"] = entry["content"].replace(
-                "upload://%s.png" % img_hash, img_src)
+                "upload://%s.png" % img_hash, img_src
+            )
         except KeyError:
             pass
 
     entry["title"] = dis_topic["title"]
     date = dateutil.parser.parse(dis_topic["created_at"])
     entry["date"] = date.strftime("%Y/%m/%d %H:%m")
-    entry["origin"] = "%s/t/%s/%s" % (API_URL, dis_topic["slug"],
-                                      dis_topic["id"])
+    entry["origin"] = "%s/t/%s/%s" % (API_URL, dis_topic["slug"], dis_topic["id"])
 
     with open(path, "w+") as fd:
         yaml.dump(entry, fd)
