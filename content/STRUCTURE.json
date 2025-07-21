@@ -43,6 +43,13 @@
               "str_older": "Older news",
               "str_back": "Back to the news overview"}},
 
+    {"path": "/incus/news.rss",
+     "title": "Incus - News RSS Feed",
+     "generator": "rss",
+     "meta": {"dir": "/content/incus/news/",
+              "description": "Latest Incus news and release announcements",
+              "base_url": "https://linuxcontainers.org"}},
+
     {"path": "/incus/docs/",
      "menu": ["Incus", "Documentation"],
      "generator": "link",
@@ -109,6 +116,13 @@
               "toc_depth": "2-3",
               "str_older": "Older news",
               "str_back": "Back to the news overview"}},
+
+    {"path": "/lxc/news.rss",
+     "title": "LXC - News RSS Feed",
+     "generator": "rss",
+     "meta": {"dir": "/content/lxc/news/",
+              "description": "Latest LXC news and release announcements",
+              "base_url": "https://linuxcontainers.org"}},
 
     {"path": "/lxc/getting-started/",
      "title": "LXC - Getting started",
@@ -202,6 +216,13 @@
               "str_older": "Older news",
               "str_back": "Back to the news overview"}},
 
+    {"path": "/lxcfs/news.rss",
+     "title": "LXCFS - News RSS Feed",
+     "generator": "rss",
+     "meta": {"dir": "/content/lxcfs/news/",
+              "description": "Latest LXCFS news and release announcements",
+              "base_url": "https://linuxcontainers.org"}},
+
     {"path": "/lxcfs/getting-started/",
      "title": "LXCFS - Getting started",
      "menu": ["LXCFS", "Getting started"],
@@ -270,6 +291,13 @@
               "toc_depth": "2-3",
               "str_older": "Older news",
               "str_back": "Back to the news overview"}},
+
+    {"path": "/distrobuilder/news.rss",
+     "title": "distrobuilder - News RSS Feed",
+     "generator": "rss",
+     "meta": {"dir": "/content/distrobuilder/news/",
+              "description": "Latest distrobuilder news and release announcements",
+              "base_url": "https://linuxcontainers.org"}},
 
     {"path": "/distrobuilder/documentation",
      "menu": ["distrobuilder", "Documentation"],
