@@ -95,7 +95,7 @@ content: |-
 
   On top of this, Incus will now provide memory migration progress.
 
-  ![image|689x247](upload://wEZRnY04nU3AGgPF2VLDGMh2DVA.jpeg)
+  ![image|689x247](https://discuss.linuxcontainers.org/uploads/default/optimized/2X/e/e4e7f8d7da9f8db8a49489b77d6a22ceed88e48e_2_689x247.jpeg)
 
   ## Reporting of CPU address sizes in the resources API
   Different CPUs and different platforms have varying physical and virtual address sizes to address their memory.
