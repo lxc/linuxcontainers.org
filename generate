@@ -285,6 +285,83 @@ def gen_page(entry, override, prefix, **variables):
         # Skip the virtual entries (external links, splitters)
         return
 
+    # Handle RSS generator early (it needs a different output path)
+    if item["generator"] == "rss":
+        # Generate RSS feed
+        articles = []
+        news_path = item["meta"]["dir"].lstrip("/")
+
+        # Load all articles
+        for entry in os.listdir(news_path):
+            with open(os.path.join(news_path, entry), "r") as fd:
+                article = yaml.safe_load(fd)
+                if not article:
+                    continue
+                articles.append(article)
+
+        # Sort articles by date (newest first)
+        articles = sorted(articles, key=lambda article: article["date"], reverse=True)
+
+        # Limit to most recent articles (e.g., last 20)
+        articles = articles[:20]
+
+        # Generate RSS XML content
+        rss_items = []
+        for article in articles:
+            date = datetime.datetime.strptime(article["date"], "%Y/%m/%d %H:%M")
+
+            # Convert to RFC 2822 format for RSS
+            rss_date = date.strftime("%a, %d %b %Y %H:%M:%S +0000")
+
+            # Clean up content for RSS (convert markdown to HTML if needed)
+            description = article.get("content", "")
+
+            # Create a simple HTML description
+            description = description.replace("\n", "<br/>")
+
+            # Build the RSS item
+            rss_item = f"""    <item>
+      <title>{article["title"]}</title>
+      <description><![CDATA[{description}]]></description>
+      <pubDate>{rss_date}</pubDate>"""
+
+            if "origin" in article:
+                rss_item += f"""
+      <link>{article["origin"]}</link>
+      <guid>{article["origin"]}</guid>"""
+
+            rss_item += "\n    </item>"
+            rss_items.append(rss_item)
+
+        # Build the complete RSS feed
+        feed_title = item.get("title", "News Feed")
+        feed_description = item["meta"].get("description", "Latest news and updates")
+        base_url = item["meta"].get("base_url", "https://linuxcontainers.org")
+        feed_link = f"{base_url}{item['path'].replace('.rss', '/')}"
+
+        current_date = datetime.datetime.now().strftime("%a, %d %b %Y %H:%M:%S +0000")
+
+        content = f"""<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>{feed_title}</title>
+    <description>{feed_description}</description>
+    <link>{feed_link}</link>
+    <lastBuildDate>{current_date}</lastBuildDate>
+    <generator>linuxcontainers.org static generator</generator>
+{''.join(rss_items)}
+  </channel>
+</rss>"""
+
+        # Write RSS content directly (no template needed)
+        output_path = "%s%s" % (TARGET_PATH, item["path"])
+        if not os.path.exists(os.path.dirname(output_path)):
+            os.makedirs(os.path.dirname(output_path))
+
+        with open(output_path, "w+") as fd:
+            fd.write(content)
+        return
+
     # Generate the target path and create any missing directory
     output_path = "%s%s/index.html" % (TARGET_PATH, item["path"])
     if not os.path.exists(os.path.dirname(output_path)):
@@ -439,7 +516,7 @@ def gen_page(entry, override, prefix, **variables):
                         page_title="%s - %s" % (item["title"], entry),
                         page_menu=item.get("menu", []) + [entry],
                         content=content,
-                        **variables
+                        **variables,
                     )
                 )
 
@@ -533,7 +610,7 @@ def gen_page(entry, override, prefix, **variables):
                             % (item["meta"]["str_back"], article_content),
                             item["meta"],
                         ),
-                        **variables
+                        **variables,
                     )
                 )
 
@@ -562,7 +639,7 @@ def gen_page(entry, override, prefix, **variables):
                 page_title=item["title"],
                 page_menu=item["menu"] if "menu" in item else None,
                 content=content,
-                **variables
+                **variables,
             )
         )
 

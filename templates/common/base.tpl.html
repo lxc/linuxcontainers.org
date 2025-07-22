@@ -32,6 +32,27 @@
   <link rel="stylesheet" href="https://assets.ubuntu.com/v1/vanilla-framework-version-4.1.0.min.css" />
   <link rel="stylesheet" href="/static/css/local.css" />
   <link rel="stylesheet" href="/static/css/pygments.css" />
+
+  <!-- RSS feed discovery -->
+  {% if page_path.startswith('/incus/') %}
+  <link rel="alternate" type="application/rss+xml" title="Incus News" href="/incus/news.rss">
+  {% endif %}
+  {% if page_path.startswith('/lxc/') %}
+  <link rel="alternate" type="application/rss+xml" title="LXC News" href="/lxc/news.rss">
+  {% endif %}
+  {% if page_path.startswith('/lxcfs/') %}
+  <link rel="alternate" type="application/rss+xml" title="LXCFS News" href="/lxcfs/news.rss">
+  {% endif %}
+  {% if page_path.startswith('/distrobuilder/') %}
+  <link rel="alternate" type="application/rss+xml" title="distrobuilder News" href="/distrobuilder/news.rss">
+  {% endif %}
+  {% if page_path == '/' %}
+  <!-- Homepage includes all project RSS feeds -->
+  <link rel="alternate" type="application/rss+xml" title="Incus News" href="/incus/news.rss">
+  <link rel="alternate" type="application/rss+xml" title="LXC News" href="/lxc/news.rss">
+  <link rel="alternate" type="application/rss+xml" title="LXCFS News" href="/lxcfs/news.rss">
+  <link rel="alternate" type="application/rss+xml" title="distrobuilder News" href="/distrobuilder/news.rss">
+  {% endif %}
   {% endblock %}
 </head>
 
