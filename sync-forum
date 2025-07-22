@@ -68,6 +68,9 @@ content: |-
                 entry["content"] = entry["content"].replace(
                     "upload://%s.png" % img_hash, img_src
                 )
+                entry["content"] = entry["content"].replace(
+                    "upload://%s.jpeg" % img_hash, img_src
+                )
             except KeyError:
                 pass
 
@@ -133,6 +136,9 @@ content: |-
             img_src = imgtag["src"]
             entry["content"] = entry["content"].replace(
                 "upload://%s.png" % img_hash, img_src
+            )
+            entry["content"] = entry["content"].replace(
+                "upload://%s.jpeg" % img_hash, img_src
             )
         except KeyError:
             pass
