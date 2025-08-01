@@ -1,0 +1,481 @@
+title: Incus 6.15 has been released
+date: 2025/08/01 05:08
+origin: https://discuss.linuxcontainers.org/t/incus-6-15-has-been-released/24333
+content: |-
+  # Introduction
+  The Incus team is pleased to announce the release of Incus 6.15!
+
+  This is one of those releases which has a bit of everything, improvements for application containers, VMs, clustering, networking and even some CLI enhancements.
+
+  [![image|690x336](https://discuss.linuxcontainers.org/uploads/default/original/2X/a/a7446512885771d9e312c8e3bb1f47baf44f38a4.png)](https://linuxcontainers.org/incus/try-it/)
+
+  As usual, you can try it for yourself online: https://linuxcontainers.org/incus/try-it/
+
+  Worth noting that we've also made some good progress on [Incus OS](https://github.com/lxc/incus-os) and now use it to run the online demo environment. We've also made a new downloading tool for it with instructions [available here](https://discuss.linuxcontainers.org/t/trying-out-incus-os/24316).
+
+  Enjoy!
+
+  # New features
+  ## Authentication support for OCI registries
+  Incus now supports the use of credentials helpers when interacting with OCI registries. The relevant helper can be specified through a new `--credentials-helper` argument to `incus remote add`.
+
+      stgraber@dakara:~$ incus remote add oci-demo https://northamerica-northeast1-docker.pkg.dev/stgraber-1525358518329/test-registry --protocol=oci --credentials-helper=docker-credential-gcloud·
+      stgraber@dakara:~$ incus image info oci-demo:alpine:latest
+      Fingerprint: ec1b05d1eac264d9204a57f4ad9d4dc35e9e756e9fedaea0674aefc7edb1d6a4
+      Size: 3.47MiB
+      Architecture: x86_64
+      Type: container
+      Public: yes
+      Timestamps:
+          Created: 2025/02/13 22:28 EST
+          Uploaded: 2025/02/13 22:28 EST
+          Expires: never
+          Last used: never
+      Properties:
+          description: northamerica-northeast1-docker.pkg.dev/stgraber-1525358518329/test-registry/alpine (OCI)
+          id: alpine:latest
+          type: oci
+          architecture: x86_64
+      Aliases:
+          - alpine:latest
+      Cached: no
+      Auto update: disabled
+      Profiles: []
+
+  ## Webhook as a logging target
+  We recently reworked our logging subsystem to support multiple loggers with a variety of filters, as part of that we introduced support for syslog logging alongside the pre-existing loki support.
+
+  With this release, we're adding yet another logging target, simple Webhooks.
+  The webhook logger supports all the same selection and filtering options as the other two and will send the matching events as JSON to the target. The JSON syntax is the same that's used for our event API.
+
+      stgraber@dakara:~$ incus config set logging.demo.target.address=http://127.0.0.1:8080/hook
+      stgraber@dakara:~$ incus config set logging.demo.target.type=webhook
+
+  This then causes the target server to start receiving events like this:
+
+      POST /hook (application/json, 231 bytes)
+      {"type":"lifecycle","timestamp":"2025-07-31T23:34:12.714974583-04:00","metadata":{"action":"config-updated","source":"/1.0","requestor":{"username":"stgraber","protocol":"unix","address":"@"}},"location":"none","project":"default"}
+
+  Documentation: https://linuxcontainers.org/incus/docs/main/server_config/#server-options-logging
+
+  ## More control over memory hotplug behavior
+  A couple of release ago, we introduced memory hotplug in virtual machines.
+  With it came quite a few issues related to determining the maximum amount of memory that a VM could receive through hotplug.
+
+  This can be a bit tricky because there are physical limits at play (physical and virtual memory address sizes) as well as some overhead which can't always be accurately predicted. We have made quite a few tweaks to the logic over those past few releases and have something that appears to generally be working for the vast majority of users.
+
+  That being said, this showed that having more control on how much memory can be hotplugged and having support for completely turning off the feature in some situations would be a good idea.
+
+  So we've now introduced `limits.memory.hotplug` which is an instance configuration key that can either be the total amount of memory that a VM can have including hotplugged memory. Setting it to `0` will completely turn off the feature.
+
+      stgraber@dakara:~$ incus config set d13 limits.memory.hotplug=0
+      stgraber@dakara:~$ incus start d13
+      stgraber@dakara:~$ incus config set d13 limits.memory=2GiB
+      Error: Failed updating memory limit: Memory hotplug feature is disabled
+
+  Documentation: https://linuxcontainers.org/incus/docs/main/reference/instance_options/#instance-resource-limits:limits.memory.hotplug
+
+  ## Persistent CD-ROM ejection in VMs
+  We now keep track of whether a CD-ROM has been ejected by the guest OS.
+  This is done through a new `attached` property on the `disk` device which will be automatically set to `false` following media ejection.
+
+      stgraber@dakara:~$ incus config device add d13 virtio disk pool=default source=virtio-drivers
+      Device virtio added to d13
+      
+      stgraber@dakara:~$ incus config show d13
+      architecture: x86_64
+      config:
+        image.architecture: amd64
+        image.description: Debian trixie amd64 (20250731_05:24)
+        image.os: Debian
+        image.release: trixie
+        image.serial: "20250731_05:24"
+        image.type: disk-kvm.img
+        image.variant: default
+        volatile.base_image: 340aab0e87de46062c1363cab4beb7d30d0474adceca5bf450b5162d8c2cc2c5
+        volatile.cloud-init.instance-id: 5a79a550-143d-4db0-a223-74191e968ea3
+        volatile.eth0.host_name: tap8ca1eb54
+        volatile.eth0.hwaddr: 10:66:6a:8e:8e:93
+        volatile.last_state.power: RUNNING
+        volatile.uuid: af7f680b-7824-47ca-be9a-9189881ade90
+        volatile.uuid.generation: af7f680b-7824-47ca-be9a-9189881ade90
+        volatile.vm.definition: pc-q35-10.0
+        volatile.vm.rtc_adjustment: "0"
+        volatile.vm.rtc_offset: "-1"
+        volatile.vsock_id: "1524898578"
+      devices:
+        virtio:
+          pool: default
+          source: virtio-drivers
+          type: disk
+      ephemeral: false
+      profiles:
+      - default
+      stateful: false
+      description: ""
+      
+      stgraber@dakara:~$ incus exec d13 -- eject /dev/cdrom
+      
+      stgraber@dakara:~$ incus config show d13
+      architecture: x86_64
+      config:
+        image.architecture: amd64
+        image.description: Debian trixie amd64 (20250731_05:24)
+        image.os: Debian
+        image.release: trixie
+        image.serial: "20250731_05:24"
+        image.type: disk-kvm.img
+        image.variant: default
+        volatile.base_image: 340aab0e87de46062c1363cab4beb7d30d0474adceca5bf450b5162d8c2cc2c5
+        volatile.cloud-init.instance-id: 5a79a550-143d-4db0-a223-74191e968ea3
+        volatile.eth0.host_name: tap8ca1eb54
+        volatile.eth0.hwaddr: 10:66:6a:8e:8e:93
+        volatile.last_state.power: RUNNING
+        volatile.uuid: af7f680b-7824-47ca-be9a-9189881ade90
+        volatile.uuid.generation: af7f680b-7824-47ca-be9a-9189881ade90
+        volatile.vm.definition: pc-q35-10.0
+        volatile.vm.rtc_adjustment: "0"
+        volatile.vm.rtc_offset: "-1"
+        volatile.vsock_id: "1524898578"
+      devices:
+        virtio:
+          attached: "false"
+          pool: default
+          source: virtio-drivers
+          type: disk
+      ephemeral: false
+      profiles:
+      - default
+      stateful: false
+      description: ""
+
+  Documentation: https://linuxcontainers.org/incus/docs/main/reference/devices_disk/#devices-disk:attached
+
+  ## Configurable WWN for VM disk devices
+  A pretty niche feature, but it's now possible to set the World Wide Name (WWN) for a VM disk device. This is only supported when attached to the `virtio-scsi` bus.
+
+  This may help with some applications when passing through a physical LUN or disk into a VM. This feature can also be used as a way to test storage multipathing in a VM by providing multiple disks with the same WWN.
+
+      stgraber@dakara:~$ incus launch images:debian/13 d13 --vm
+      Launching d13
+      stgraber@dakara:~$ incus storage volume create default demo --type=block
+      Storage volume demo created
+      stgraber@dakara:~$ incus config device add d13 demo disk pool=default source=demo wwn=0x50014ee20ce3848a
+      Device demo added to d13
+      stgraber@dakara:~$ incus exec d13 bash
+      root@d13:~# ls -lh /dev/disk/by-id/wwn-0x50014ee20ce3848a·
+      lrwxrwxrwx 1 root root 9 Aug  1 03:49 /dev/disk/by-id/wwn-0x50014ee20ce3848a -> ../../sdb
+
+  Documentation: https://linuxcontainers.org/incus/docs/main/reference/devices_disk/#devices-disk:wwn
+
+  ## Dynamic IPv6 network address
+  Another small new feature that's only really relevant for a very specific use case.
+
+  When running a cluster, you often find yourself needing to run a number of support services to run things like the OVN control plane, Ceph components, monitoring stack, ...
+
+  For those to work properly, they need to be equally reachable from all servers in the cluster yet be easily relocatable between servers to handle both maintenance and server failures. Typically this would be achieved by either having the physical network provide a VLAN that's accessible to all servers with a router sitting on it, but this isn't something that we can rely on being present everywhere.
+
+  So our solution to this is to create a regular bridge network within the cluster and combine that with our existing multicast VXLAN support to have a very lightweight virtual network available cluster wide.
+
+  Then comes the problem of addressing. We can't run normal IPv4 DHCP on this because we'd need quite a bit of coordination between servers. But we can do IPv6 SLAAC as that's just derived from the MAC address.
+
+  But for this to work correctly, we need each server to use a different MAC address for their bridge and more importantly, use a different IPv6 address (within the same subnet).
+
+  To make this work, we've extended the syntax for `ipv6.address` to allow just a subnet be specified. When that's the case, the server will generate a server-specific MAC address for the bridge and then derive an IPv6 address for itself from that (using EUI64).
+
+  The result looks like this:
+
+      root@server01:~# incus network create meshbr0 tunnel.mesh.interface=enp5s0 --target server01
+      Network meshbr0 pending on member server01
+      root@server01:~# incus network create meshbr0 tunnel.mesh.interface=enp5s0 --target server02
+      Network meshbr0 pending on member server02
+      root@server01:~# incus network create meshbr0 tunnel.mesh.interface=enp5s0 --target server03
+      Network meshbr0 pending on member server03
+      root@server01:~# incus network create meshbr0 tunnel.mesh.interface=enp5s0 --target server04
+      Network meshbr0 pending on member server04
+      root@server01:~# incus network create meshbr0 ipv4.address=none ipv6.address=fd42:1234:1234:1234::/64 ipv6.nat=false tunnel.mesh.protocol=vxlan
+      Network meshbr0 created
+      
+      root@server01:~# incus launch images:debian/13 c1 --network meshbr0
+      Launching c1
+      root@server01:~# incus launch images:debian/13 c2 --network meshbr0
+      Launching c2
+      root@server01:~# incus launch images:debian/13 c3 --network meshbr0
+      Launching c3
+      
+      root@server01:~# incus list
+      +------+---------+------+------------------------------------------------+-----------+-----------+----------+
+      | NAME |  STATE  | IPV4 |                      IPV6                      |   TYPE    | SNAPSHOTS | LOCATION |
+      +------+---------+------+------------------------------------------------+-----------+-----------+----------+
+      | c1   | RUNNING |      | fd42:1234:1234:1234:1266:6aff:fe60:6aa9 (eth0) | CONTAINER | 0         | server04 |
+      +------+---------+------+------------------------------------------------+-----------+-----------+----------+
+      | c2   | RUNNING |      | fd42:1234:1234:1234:1266:6aff:fef8:b9ef (eth0) | CONTAINER | 0         | server04 |
+      +------+---------+------+------------------------------------------------+-----------+-----------+----------+
+      | c3   | RUNNING |      | fd42:1234:1234:1234:1266:6aff:fe21:1203 (eth0) | CONTAINER | 0         | server01 |
+      +------+---------+------+------------------------------------------------+-----------+-----------+----------+
+      root@server01:~# incus exec c3 bash
+      root@c3:~# ping6 -n fd42:1234:1234:1234:1266:6aff:fe60:6aa9
+      PING fd42:1234:1234:1234:1266:6aff:fe60:6aa9 (fd42:1234:1234:1234:1266:6aff:fe60:6aa9) 56 data bytes
+      64 bytes from fd42:1234:1234:1234:1266:6aff:fe60:6aa9: icmp_seq=1 ttl=64 time=1.38 ms
+      ^C
+      --- fd42:1234:1234:1234:1266:6aff:fe60:6aa9 ping statistics ---
+      1 packets transmitted, 1 received, 0% packet loss, time 0ms
+      rtt min/avg/max/mdev = 1.375/1.375/1.375/0.000 ms
+
+  ## Configurable keepalive mode in the CLI
+  The Incus CLI has had a keepalive mode for a little while now.
+  This allows keeping a connection active with the remote Incus server even after the CLI exits, making it a lot faster to run a subsequent command.
+
+  It's now possible to turn this on while adding a remote by passing the `--keepalive` argument with the desired timeout for the background process.
+
+      stgraber@dakara:~$ incus remote add cloud https://shf.cloud.zabbly.com --keepalive=30
+      URL: https://sso.zabbly.com/realms/master/device?user_code=WGSI-NFRG
+      Code: WGSI-NFRG
+      
+      stgraber@dakara:~$ incus list cloud: --project demo
+      +-----------+---------+-------------------------+---------------------------------------------------+-----------------+-----------+----------+
+      |   NAME    |  STATE  |          IPV4           |                       IPV6                        |      TYPE       | SNAPSHOTS | LOCATION |
+      +-----------+---------+-------------------------+---------------------------------------------------+-----------------+-----------+----------+
+      | haproxy01 | RUNNING | 45.45.148.243 (eth0)    | 2602:fc62:b:8006:216:3eff:fe27:a8f4 (eth0)        | CONTAINER       | 0         | delmak   |
+      |           |         | 10.22.45.7 (eth0)       | 2602:fc62:b:8006:1::1 (eth0)                      |                 |           |          |
+      +-----------+---------+-------------------------+---------------------------------------------------+-----------------+-----------+----------+
+      | ic-test   | RUNNING | 10.47.238.2 (eth0)      | fd42:4a11:5600:6807:216:3eff:feb5:2c79 (eth0)     | CONTAINER       | 0         | chulak   |
+      +-----------+---------+-------------------------+---------------------------------------------------+-----------------+-----------+----------+
+      | server01  | RUNNING | 10.46.12.1 (br-managed) | fd42:ea64:f916:62b0::1 (br-managed)               | VIRTUAL-MACHINE | 0         | chulak   |
+      |           |         | 10.22.45.3 (enp5s0)     | fd42:1234:1234:1234:1266:6aff:fe6b:48d2 (meshbr0) |                 |           |          |
+      |           |         |                         | 2602:fc62:b:8006:216:3eff:fe1a:ed0d (enp5s0)      |                 |           |          |
+      +-----------+---------+-------------------------+---------------------------------------------------+-----------------+-----------+----------+
+      | server02  | RUNNING | 10.46.12.1 (br-managed) | fd42:ea64:f916:62b0::1 (br-managed)               | VIRTUAL-MACHINE | 0         | chulak   |
+      |           |         | 10.22.45.4 (enp5s0)     | fd42:1234:1234:1234:1266:6aff:fea1:6d39 (meshbr0) |                 |           |          |
+      |           |         |                         | 2602:fc62:b:8006:216:3eff:fe56:5276 (enp5s0)      |                 |           |          |
+      +-----------+---------+-------------------------+---------------------------------------------------+-----------------+-----------+----------+
+      | server03  | RUNNING | 10.46.12.1 (br-managed) | fd42:ea64:f916:62b0::1 (br-managed)               | VIRTUAL-MACHINE | 0         | chulak   |
+      |           |         | 10.22.45.5 (enp5s0)     | fd42:1234:1234:1234:1266:6aff:fe14:8b09 (meshbr0) |                 |           |          |
+      |           |         |                         | 2602:fc62:b:8006:216:3eff:fec6:eaa8 (enp5s0)      |                 |           |          |
+      +-----------+---------+-------------------------+---------------------------------------------------+-----------------+-----------+----------+
+      | server04  | RUNNING | 10.46.12.1 (br-managed) | fd42:ea64:f916:62b0::1 (br-managed)               | VIRTUAL-MACHINE | 0         | chulak   |
+      |           |         | 10.22.45.6 (enp5s0)     | fd42:1234:1234:1234:1266:6aff:fef0:2a72 (meshbr0) |                 |           |          |
+      |           |         |                         | 2602:fc62:b:8006:216:3eff:fea3:6d (enp5s0)        |                 |           |          |
+      +-----------+---------+-------------------------+---------------------------------------------------+-----------------+-----------+----------+
+      
+      stgraber@dakara:~$ ps aux | grep remote.*proxy
+      stgraber 1411159  0.1  0.0 6258948 26704 ?       Ssl  00:19   0:00 incus remote proxy cloud /home/stgraber/.config/incus/keepalive/cloud.socket --timeout=30
+
+  ## Markdown support as an output format in the CLI
+  It's now possible to get CLI output for lists directly in markdown format, making it easier to include in documents or even on this site.
+
+      stgraber@dakara:~$ incus list --format=markdown
+      |    NAME     |  STATE  |          IPV4          |                     IPV6                     |      TYPE       | SNAPSHOTS |
+      |:-----------:|:-------:|:----------------------:|:--------------------------------------------:|:---------------:|:---------:|
+      |     d13     | RUNNING | 172.17.250.33 (enp5s0) | 2602:fc62:c:250:1266:6aff:fe8e:8e93 (enp5s0) | VIRTUAL-MACHINE |     0     |
+      |  incus-os   | RUNNING | 10.87.35.1 (incusbr0)  |      fd42:6060:5090:8d31::1 (incusbr0)       | VIRTUAL-MACHINE |     0     |
+      |             |         |                        | 2602:fc62:c:250:1266:6aff:fe91:c98 (enp5s0)  |                 |           |
+      | kernel-test | STOPPED |                        |                                              | VIRTUAL-MACHINE |     0     |
+      |   win2025   | STOPPED |                        |                                              | VIRTUAL-MACHINE |     0     |
+
+  The markdown rendered version of this looks like:
+
+  |    NAME     |  STATE  |          IPV4          |                     IPV6                     |      TYPE       | SNAPSHOTS |
+  |:-----------:|:-------:|:----------------------:|:--------------------------------------------:|:---------------:|:---------:|
+  |     d13     | RUNNING | 172.17.250.33 (enp5s0) | 2602:fc62:c:250:1266:6aff:fe8e:8e93 (enp5s0) | VIRTUAL-MACHINE |     0     |
+  |  incus-os   | RUNNING | 10.87.35.1 (incusbr0)  |      fd42:6060:5090:8d31::1 (incusbr0)       | VIRTUAL-MACHINE |     0     |
+  |             |         |                        | 2602:fc62:c:250:1266:6aff:fe91:c98 (enp5s0)  |                 |           |
+  | kernel-test | STOPPED |                        |                                              | VIRTUAL-MACHINE |     0     |
+  |   win2025   | STOPPED |                        |                                              | VIRTUAL-MACHINE |     0     |
+
+  ## More server-side filtering
+  With this release, we complete CLI support for server-side filtering of API objects.
+
+  The two commands that now support filtering are:
+
+  - `incus cluster list`
+  - `incus storage list`
+
+  ## Switched to using netlink for network configuration
+  Not a new feature per se but a pretty significant change nonetheless.
+  With this release, we replace all our manual calls to iproute2 (`ip`, `tc`, ...) with direct interactions with the Linux kernel through its netlink API.
+
+  This removes a fair bit of overhead as well as having to deal with varying versions of the tools, but with this kind of large change comes the risk of regressions.
+
+  For this reason we made the switch immediately following the 6.14 release, giving us a whole month to catch and fix regressions. We identified a half dozen or so and they have all been resolved, but there may be more that our tests didn't catch.
+
+  If you noticed any regression or change in behavior when it comes to network interface or routing configuration, please let us know and we'll track it down.
+
+  # Complete changelog
+  Here is a complete list of all changes in this release:
+
+  [details="Full commit list"]
+   - api: disk_attached
+   - incusd/ip/utils: Switch to netlink
+   - incusd/ip/addr: Switch to netlink
+   - incusd/ip/class: Switch to netlink
+   - incusd/ip/filter: Switch to netlink
+   - incusd/ip/link: Switch to netlink
+   - incusd/ip/neigh: Switch to netlink
+   - incusd/ip/neigh_proxy: Switch to netlink
+   - incusd/ip/qdisc: Switch to netlink
+   - incusd/ip/route: Switch to netlink
+   - incusd/ip/tuntap: Switch to netlink
+   - incusd/ip/vdpa: Switch to vishvananda/netlink library instead of doing netlink ourselves
+   - incusd/ip: Refactor family from string to `Family` type
+   - incusd/ip: Merge GetLinkInfoByName and LinkFromName into LinkByName
+   - Use net.IP and net.IPNet instead of strings
+   - incusd/instance/qemu: On standalone systems, cap hotplug memory to system
+   - generate-database: Add create_timestamp and update_timestamp
+   - incusd/ip: Ignore ESRCH on route deletion
+   - incusd/ip: All multicast needs to be configured as a flag
+   - incusd/patches: Fix empty JSON columns
+   - incusd/instance/qemu: Fix memory calculation logic
+   - shared/idmap: Skip ACLs that are out of range
+   - incusd/device/nic_ovn: Fix bad check
+   - incusd/ip: Fix TC regressions
+   - incusd/device/nic_ovn: Allow specifying static IPv4/IPv6 when DHCP is disabled
+   - incusd/storage/lvm: Don't rely on udev paths
+   - cmd/incus_agent: Replace gorilla/mux with http.ServeMux
+   - client: Fixed non-constant format string in call to fmt.Errorf
+   - incusd/instance/qmp/log: Don't crash on log Write calls after Close
+   - incusd: Cluster join, ensure server address
+   - incusd: Cluster join, check cluster.https_address
+   - incusd: Centralize check for node specific network config
+   - incusd: Make network config keys node specific
+   - incusd/ip: All multicast needs to be configured after link creation
+   - doc: Pin a working version of the sphinx extensions
+   - incusd/instance/lxc: Fix usage reporting on relative disks
+   - internal/instance: Introduce SplitVolumeSource
+   - incusd: Use SplitVolumeSource
+   - cli/list: Add markdown format support
+   - i18n: Updated format argument descriptions
+   - cmd/list: Crude tablewriter error handling
+   - incus/project/get-current: Rely on server reported project
+   - incus/remote: Support keepalive flag
+   - i18n: Update translation templates
+   - i18n: Manual translation update
+   - Translated using Weblate (Portuguese)
+   - incusd/cluster/config: Update certificate also on change of acme.http.port
+   - incusd/instance_logs: Perform stricter path validation
+   - [lxd-import] lxd/daemon: Validate browser fetch metadata if supplied to reject non-same-origin requests
+   - [lxd-import] test/suites/serverconfig: Check fetch metadata header is validated
+   - incusd/dev_incus: Add extra validation for monitor
+   - incusd/device/disk: Add attached configuration key
+   - incusd/instance/qemu: Refactor qmp.Connect calls
+   - incusd/instance/qemu: Handle attached state statically
+   - incusd/images: Restrict public image listing to default project
+   - incusd/images: Use identical errors for all not-found cases on public endpoints
+   - internal/util: Add recursion limit to RenderTemplate
+   - internal/util: Tweak common pongo2 parser to block dangerous functions
+   - incus/list: Fix validation of 'L' shorthand column
+   - tests: only run tests if ovn is available
+   - incus/server: fix scan order
+   - incusd/instance/qemu: Rework ejection logic and pass ejection handler
+   - incusd/device/disk: Add live attach/detach logic
+   - doc: Update metadata
+   - incusd/instance/qemu: Add indirection level to detachDisk
+   - incusd/instance/agent-loader: Use ISO label rather than disk id
+   - incusd/storage: Fix ISO renaming
+   - incusd/project: Skip processing 'limits.processes' for VM instance types
+   - incusd/instance: Add 'limits.memory.hotplug' config
+   - incusd/instance/drivers: Support for 'limits.memory.hotplug' config
+   - api: limits_memory_hotplug
+   - doc: Update configs
+   - incusd/device/config: Fix issue with live updating of user keys
+   - incusd/device/disk: Pass nil if read/write limits are not set
+   - incusd/instance/drivers: Prevent calling 'deviceAttachBlockDevice' on the root disk
+   - incusd/instance: Allow setting lxc.net config keys through raw.lxc
+   - incusd/apparmor/qemu: Allow reading gid_map/uid_map
+   - incusd/apparmor/qemuimg: Fix typo in rules
+   - doc/instances_create: Extend the Incus VM agent instructions
+   - client: Add GetClusterMembersWithFilter
+   - incusd/cluster: Add server-side filtering
+   - incus/cluster: Use server-side filtering
+   - doc/rest-api: Refresh swagger YAML
+   - client: Add GetStoragePoolsWithFilter
+   - incus/storage: Use server-side filtering
+   - i18n: Update translation templates
+   - incusd/ip: Fix filtering of routes by interface
+   - incusd/operations: Add IsSameRequestor
+   - incusd/instance_console: Ensure requestor match
+   - incusd/instance_exec: Ensure requestor match
+   - incusd/auth/openfga: Restrict operations and events access
+   - incusd/auth/openfga: Rebuild model
+   - incusd/db/network_peers: Fix querying of integrations
+   - api: disk_wwn
+   - shared/validate: Add IsWWN
+   - incusd/device/disk: Add wwn property
+   - incusd/instance/qemu: Add support for setting WWN
+   - doc: Update config
+   - Translated using Weblate (German)
+   - incusd/network/bridge: Allow automatic host-specific IPv6 addresses
+   - incusd/auth/oidc: Expose scopes list
+   - client: Use server-advertised OIDC scopes
+   - incusd/instance/qmp: Properly handle lost connections
+   - incusd/instance/qmp: Fix monitor failure test
+   - incusd/instance/qemu: Fix lifecycle events
+   - incus/remote: Add credentials helper support
+   - shared/cliconfig: Add support for credentials helper
+   - client/oci: Refactor skopeo logic and add credentials support
+   - i18n: Update translation templates
+   - incusd/device: Add IsPhysicalNICWithBridge and make hwaddr optional
+   - incusd/instance/drivers: Fill the MAC address for physical NIC with bridge parent
+   - api: server_logging_webhook
+   - incusd/logging/loki: Set default retry
+   - incusd/logging/webhook: Initial webhook logger
+   - doc: Update config
+   - doc/wordlist: Add webhook
+   - incusd/device/disk: prevent file mounts on VMs
+   - incusd/devices/disk: Improve documentation for the path key
+   - doc: Update metadata
+   - Translated using Weblate (Portuguese)
+   - doc: Sort word list
+   - tests: Bump cleanup timeouts
+   - tests/clustering: Use elif in driver conditions
+   - incusd/instance/qemu: Cleanup volume eject/detach logic
+   - incusd/db/images: Associate image with default profile from default project
+   - incusd/db/images: Set cached option for projects with 'features.images' disabled
+   - incus-agent: Handle path mount removal
+   - incus-agent/events: Remove fmt import
+   - test: Fix mountpoint detection logic
+   - incusd/instance/lxc: Only remove mountpoints in /dev
+   - shared/cliconfig: Introduce GetClientCertificate
+   - incus/remote: Use GetClientCertificate
+   - tests: Standardize indentation
+   - client: Add SkipGetEvents
+   - incusd: Consistently set SkipGetEvents and SkipGetServer
+   - client: Add configurable temp directory
+   - incusd/daemon_images: Set temporary image path
+   - gomod: Update dependencies
+   - incusd/auth/oidc: Update for current zitadel
+  [/details]
+
+  # Documentation
+  The Incus documentation can be found at:
+  https://linuxcontainers.org/incus/docs/main/
+
+  # Packages
+  There are no official Incus packages as Incus upstream only releases regular release tarballs. Below are some available options to get Incus up and running.
+
+  ## Installing the Incus server on Linux
+  Incus is available for most common Linux distributions. You'll find detailed installation instructions in our documentation.
+
+  https://linuxcontainers.org/incus/docs/main/installing/
+
+  ## Homebrew package for the Incus client
+  The client tool is available through HomeBrew for both Linux and MacOS.
+
+  https://formulae.brew.sh/formula/incus
+
+  ## Chocolatey package for the Incus client
+  The client tool is available through Chocolatey for Windows users.
+
+  https://community.chocolatey.org/packages/incus/6.15.0
+
+  ## Winget package for the Incus client
+  The client tool is also available through Winget for Windows users.
+
+  https://winstall.app/apps/LinuxContainers.Incus
+
+  # Support
+  Monthly feature releases are only supported up until the next release comes out.  Users needing a longer support length and less frequent changes should consider using Incus 6.0 LTS instead.
+
+  Community support is provided at: https://discuss.linuxcontainers.org
+  Commercial support is available through: https://zabbly.com/incus
+  Bugs can be reported at: https://github.com/lxc/incus/issues
