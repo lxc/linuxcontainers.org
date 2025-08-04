@@ -103,7 +103,7 @@ content: |-
   <!--
   So we've now introduced `limits.memory.hotplug` which is an instance configuration key that can either be the total amount of memory that a VM can have including hotplugged memory. Setting it to `0` will completely turn off the feature.
   -->
-  そこで、インスタンス設定キー `limits.memory.hotplug` を導入しました。このキーには、VM にホットプラグされたメモリーを含むトータルのメモリー量を指定できます。`0` 荷設定すると、この機能は完全に無効化されます。
+  そこで、インスタンス設定キー `limits.memory.hotplug` を導入しました。このキーには、VM にホットプラグされたメモリーを含むトータルのメモリー量を指定できます。`0` に設定すると、この機能は完全に無効化されます。
 
       stgraber@dakara:~$ incus config set d13 limits.memory.hotplug=0
       stgraber@dakara:~$ incus start d13
@@ -234,7 +234,7 @@ content: |-
   <!--
   So our solution to this is to create a regular bridge network within the cluster and combine that with our existing multicast VXLAN support to have a very lightweight virtual network available cluster wide.
   -->
-  そこで私たちの解決策は、クラスター内に通常のブリッジネットワークを作成し、既存のマルチキャスト VLAN サポートと組み合わせることで、クラスター全体で利用できる非常に軽量な仮想ネットワークを構築することでした。
+  そこで私たちの解決策は、クラスター内に通常のブリッジネットワークを作成し、既存のマルチキャスト VXLAN サポートと組み合わせることで、クラスター全体で利用できる非常に軽量な仮想ネットワークを構築することでした。
 
   <!--
   Then comes the problem of addressing. We can't run normal IPv4 DHCP on this because we'd need quite a bit of coordination between servers. But we can do IPv6 SLAAC as that's just derived from the MAC address.
