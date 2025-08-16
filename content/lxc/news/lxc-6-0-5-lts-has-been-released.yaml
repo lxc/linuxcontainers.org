@@ -1,0 +1,72 @@
+title: LXC 6.0.5 LTS has been released
+date: 2025/08/15 05:08
+origin: https://discuss.linuxcontainers.org/t/lxc-6-0-5-lts-has-been-released/24438
+content: |-
+  # Introduction
+  The LXC team is pleased to announce the release of LXC 6.0.5!
+
+  This is the fifth bugfix release for LXC 6.0 which is supported until June 2029.
+
+  # Changes
+  As usual this bugfix releases focus on stability and hardening.
+
+  Some of the highlights for this release are:
+
+   - Fixes a regression introduced in LXC 6.0.4 which was causing some hooks to fail due to no-new-priv handling
+   - Removed support for building with the bionic C library (Android) as it hadn't been functional for a long time
+   - Fixed handling of the container_ttys environment variable
+   - Added support for both `move` and `nosymfollow` mount options
+   - Improved testsuite coverage
+
+  The full list of commits is available below:
+
+  [details="Detailed changelog"]
+   - start: Re-introduce first SET_DUMPABLE call
+   - README: Remove mention of old LXC version
+   - bionic: Remove bionic detection and support
+   - bionic: Remove custom getline, openpty and prlimit
+   - meson_options.txt: don't use str when defining bool default values
+   - meson_options.txt: remove space before `:` for consistency
+   - selinux: fix typo (AppArmor)
+   - lxc/conf,start: fix setting container_ttys environment variable
+   - apparmor test: add an overlay container start
+   - meson.build: remove quirk for Ubuntu 14.04 libcap-dev
+   - src/tests/lxc-test-apparmor-generated: enable test
+   - src/tests/lxc-test-apparmor-mount: prevent fail on cleanup path
+   - src/tests/lxc-test-unpriv: prevent fail on cleanup path
+   - conf: Add support for "move" mount flag
+   - lxc/conf: support nosymfollow mount flag
+   - lxc/conf: support flag kind of mount options in lxc.mount.entry options
+   - src/tests/oss-fuzz: pin meson to 1.7.2 to workaround build failures
+   - Add loong64 to list of recognized architectures
+   - meson.build: set `LXC_DISTRO_SYSCONF` when `-Dspecfile=true`
+   - meson.build: fix checks for fsconfig and calls
+   - meson.build: use has_header_symbol() instead of get_define() to improve compatibility
+   - lxc/process_utils.h: use strsignal() or sys_siglist[] for Non-GNU distros
+   - lxc/lxccontainer: stop printing misleading errors in enter_net_ns()
+   - tests/lxc-test-rootfs: add idmapped rootfs testcase
+   - tests/lxc-test-snapdeps: try to load overlay kernel module
+   - lxc/network: null-terminate ifname string in lxc_network_recv_name_and_ifindex_from_child()
+   - lxc/conf: do not leak opts.data memory in __lxc_idmapped_mounts_child()
+   - build(deps): bump actions/checkout from 4 to 5
+  [/details]
+
+  # Support and upgrade
+  The LXC 6.0 branch is supported until June 2029.
+  Only bugfixes and securitiy issues get included into the stable bugfix releases, so it's always safe and recommended to keep up and run the latest bugfix release.
+
+  # Downloads
+
+   - Main release tarball: [lxc-6.0.5.tar.gz](https://linuxcontainers.org/downloads/lxc/lxc-6.0.5.tar.gz)
+   - GPG signature: [lxc-6.0.5.tar.gz.asc](https://linuxcontainers.org/downloads/lxc/lxc-6.0.5.tar.gz.asc)
+
+  # Thanks
+  This LTS release update was made possible thanks to funding provided by the Sovereign Tech Fund (now part of the Sovereign Tech Agency).
+
+  [![ST-Fund-Logo-Default-White-RGB|690x219](https://discuss.linuxcontainers.org/uploads/default/original/2X/7/7799c947413019d3c5cd4fa201568495de1db2c4.png)](https://sovereign.tech)
+
+  [quote]
+  The Sovereign Tech Fund supports the development, improvement, and maintenance of open digital infrastructure. Its goal is to sustainably strengthen the open source ecosystem, focusing on security, resilience, technological diversity, and the people behind the code.
+  [/quote]
+
+  Find out more at: https://www.sovereign.tech
