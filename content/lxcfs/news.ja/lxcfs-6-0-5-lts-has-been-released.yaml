@@ -1,0 +1,67 @@
+title: LXCFS 6.0.5 LTS リリースのお知らせ
+date: 2025/08/15 05:08
+origin: https://discuss.linuxcontainers.org/t/lxcfs-6-0-5-lts-has-been-released/24437
+content: |-
+  # はじめに <!-- Introduction -->
+  <!--
+  The LXCFS team is pleased to announce the release of LXCFS 6.0.5!
+  -->
+  LXCFS チームが LXCFS 6.0.5 のリリースをお知らせします!
+
+  <!--
+  This is the fifth bugfix release for LXCFS 6.0 which is supported until June 2029.
+  -->
+  このリリースは、LXCFS 6.0 の 5 度目のバグフィックスリリースです。このリリースは 2029 年 6 月までサポートされます。
+
+  # 変更点 <!-- Changes -->
+  <!--
+  There are no significant changes in this release, only a couple of minor changes to our CI scripts. We are still pushing a LXCFS update out to keep versions in sync between LXC, LXCFS and Incus, but this release is effectively identical to 6.0.4.
+  -->
+  このリリースでは、CI スクリプトにいくつか小さな変更が加えられただけで、大きな変更はありません。LXC、LXCFS、Incus のバージョンを同期するために LXCFS のアップデートをリリースしていますが、このリリースは実質的には 6.0.4 と同じです。
+
+  <!--
+  The full list of commits is available below:
+  -->
+  コミットのすべてのリストは次のとおりです（翻訳なし）:
+
+  [details="すべてのChangeLogを見る"]
+   - github: Bump actions/checkout to v5
+   - github: Use Github Arm runners
+  [/details]
+
+  # サポートとアップグレード <!-- Support and upgrade -->
+  <!--
+  The LXCFS 6.0 branch is supported until June 2029.
+  Only bugfixes and security issues get included into the stable bugfix releases, so it's always safe and recommended to keep up and run the latest bugfix release.
+  -->
+  LXCFS 6.0 ブランチは 2029 年 6 月までサポートされます。
+  Stable 版のバグ修正リリースには、バグ修正とセキュリティの問題の修正のみが含まれます。このため、常に最新のバグ修正リリースを実行し、セキュリティーを確保することが安全で、推奨されます。
+
+  # ダウンロード <!-- Downloads -->
+
+   - リリース tarball <!-- Main release tarball -->: [lxcfs-6.0.5.tar.gz](https://linuxcontainers.org/downloads/lxcfs/lxcfs-6.0.5.tar.gz)
+   - GPG シグネチャー <!-- GPG signature -->: [lxcfs-6.0.5.tar.gz.asc](https://linuxcontainers.org/downloads/lxcfs/lxcfs-6.0.5.tar.gz.asc)
+
+  # 感謝 <!-- Thanks -->
+  <!--
+  This LTS release update was made possible thanks to funding provided by the Sovereign Tech Fund (now part of the Sovereign Tech Agency).
+  -->
+  この LTS リリースアップデートは、Sovereign Tech Fund（現在は Sovereign Tech Agency の一部）からの資金提供により実現しました。
+
+  <p style="background-color: #25106c; display: inline-block; padding: 40px;>
+    <a href="https://sovereign.tech">
+      <img src="https://discuss.linuxcontainers.org/uploads/default/original/2X/7/7799c947413019d3c5cd4fa201568495de1db2c4.png" alt="Sovereign Tech Fund Logo" width="690" height="219" style="display: block;">
+    </a>
+  </p>
+
+  <!--
+  [quote]
+  The Sovereign Tech Fund supports the development, improvement, and maintenance of open digital infrastructure. Its goal is to sustainably strengthen the open source ecosystem, focusing on security, resilience, technological diversity, and the people behind the code.
+  [/quote]
+  -->
+  > Sovereign Tech Fund は、オープンデジタルインフラストラクチャーの開発、改良、保守をサポートします。その目標は、セキュリティ、レジリエンス、技術の多様性、コードの背後にいる人々に焦点を当て、オープンソースエコシステムを持続的に強化することです。
+
+  <!--
+  Find out more at: https://www.sovereign.tech
+  -->
+  詳細は https://www.sovereign.tech をご覧ください。
