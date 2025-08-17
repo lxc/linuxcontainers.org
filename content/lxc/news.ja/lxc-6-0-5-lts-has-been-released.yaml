@@ -1,0 +1,104 @@
+title: LXC 6.0.5 LTS リリースのお知らせ
+date: 2025/08/15 05:08
+origin: https://discuss.linuxcontainers.org/t/lxc-6-0-5-lts-has-been-released/24438
+content: |-
+  # はじめに <!-- Introduction -->
+  <!--
+  The LXC team is pleased to announce the release of LXC 6.0.5!
+  -->
+  LXC チームが LXC 6.0.5 のリリースをお知らせします!
+
+  <!--
+  This is the fifth bugfix release for LXC 6.0 which is supported until June 2029.
+  -->
+  このリリースは、2029 年 6 月までサポートされる LXC 6.0 の 5 度目のバグ修正リリースです。
+
+  # 変更点 <!-- Changes -->
+  <!--
+  As usual this bugfix releases focus on stability and hardening.
+  -->
+  いつもどおり、このバグフィックスリリースは、安定性とセキュリティ強化にフォーカスを当てています。
+
+  <!--
+  Some of the highlights for this release are:
+  -->
+  このリリースのハイライトは次のとおりです:
+
+  - LXC 6.0.4 で混入した、no-new-priv 処理により、いくつかのフックが失敗するという回帰問題を修正しました <!-- Fixes a regression introduced in LXC 6.0.4 which was causing some hooks to fail due to no-new-priv handling -->
+  - bionic C ライブラリー（Android）でのビルドサポートの削除。長い間機能していませんでした <!-- Removed support for building with the bionic C library (Android) as it hadn’t been functional for a long time -->
+  - container_ttys 環境変数の処理の修正 <!-- Fixed handling of the container_ttys environment variable -->
+  - `move` と `nosymfollow` マウントオプション両方のサポートを追加しました <!-- Added support for both move and nosymfollow mount options -->
+  - テストスイートのカバレッジの向上 <!-- Improved testsuite coverage -->
+
+  <!--
+  The full list of commits is available below:
+  -->
+  コミットのすべてのリストは次のとおりです（翻訳なし）:
+
+  [details="すべてのChangeLogを見る"]
+   - start: Re-introduce first SET_DUMPABLE call
+   - README: Remove mention of old LXC version
+   - bionic: Remove bionic detection and support
+   - bionic: Remove custom getline, openpty and prlimit
+   - meson_options.txt: don't use str when defining bool default values
+   - meson_options.txt: remove space before `:` for consistency
+   - selinux: fix typo (AppArmor)
+   - lxc/conf,start: fix setting container_ttys environment variable
+   - apparmor test: add an overlay container start
+   - meson.build: remove quirk for Ubuntu 14.04 libcap-dev
+   - src/tests/lxc-test-apparmor-generated: enable test
+   - src/tests/lxc-test-apparmor-mount: prevent fail on cleanup path
+   - src/tests/lxc-test-unpriv: prevent fail on cleanup path
+   - conf: Add support for "move" mount flag
+   - lxc/conf: support nosymfollow mount flag
+   - lxc/conf: support flag kind of mount options in lxc.mount.entry options
+   - src/tests/oss-fuzz: pin meson to 1.7.2 to workaround build failures
+   - Add loong64 to list of recognized architectures
+   - meson.build: set `LXC_DISTRO_SYSCONF` when `-Dspecfile=true`
+   - meson.build: fix checks for fsconfig and calls
+   - meson.build: use has_header_symbol() instead of get_define() to improve compatibility
+   - lxc/process_utils.h: use strsignal() or sys_siglist[] for Non-GNU distros
+   - lxc/lxccontainer: stop printing misleading errors in enter_net_ns()
+   - tests/lxc-test-rootfs: add idmapped rootfs testcase
+   - tests/lxc-test-snapdeps: try to load overlay kernel module
+   - lxc/network: null-terminate ifname string in lxc_network_recv_name_and_ifindex_from_child()
+   - lxc/conf: do not leak opts.data memory in __lxc_idmapped_mounts_child()
+   - build(deps): bump actions/checkout from 4 to 5
+  [/details]
+
+  # サポートとアップグレード <!-- Support and upgrade -->
+  <!--
+  The LXC 6.0 branch is supported until June 2029.
+  Only bugfixes and securitiy issues get included into the stable bugfix releases, so it's always safe and recommended to keep up and run the latest bugfix release.
+  -->
+  LXC 6.0 ブランチは 2029 年 6 月までサポートされます。
+  Stable 版のバグ修正リリースには、バグ修正とセキュリティの問題の修正のみが含まれます。このため、常に最新のバグ修正リリースを実行し、セキュリティーを確保することが安全であり、推奨されます。
+
+  # ダウンロード <!-- Downloads -->
+
+   - リリース tarball <!-- Main release tarball -->: [lxc-6.0.5.tar.gz](https://linuxcontainers.org/downloads/lxc/lxc-6.0.5.tar.gz)
+   - GPG シグネチャー <!-- GPG signature -->: [lxc-6.0.5.tar.gz.asc](https://linuxcontainers.org/downloads/lxc/lxc-6.0.5.tar.gz.asc)
+
+  # 感謝 <!-- Thanks -->
+  <!--
+  This LTS release update was made possible thanks to funding provided by the Sovereign Tech Fund (now part of the Sovereign Tech Agency).
+  -->
+  この LTS リリースアップデートは、Sovereign Tech Fund（現在は Sovereign Tech Agency の一部）からの資金提供により実現しました。
+
+  <p style="background-color: #25106c; display: inline-block; padding: 40px;>
+    <a href="https://sovereign.tech">
+      <img src="https://discuss.linuxcontainers.org/uploads/default/original/2X/7/7799c947413019d3c5cd4fa201568495de1db2c4.png" alt="Sovereign Tech Fund Logo" width="690" height="219" style="display: block;">
+    </a>
+  </p>
+
+  <!--
+  [quote]
+  The Sovereign Tech Fund supports the development, improvement, and maintenance of open digital infrastructure. Its goal is to sustainably strengthen the open source ecosystem, focusing on security, resilience, technological diversity, and the people behind the code.
+  [/quote]
+  -->
+  > Sovereign Tech Fund は、オープンデジタルインフラストラクチャーの開発、改良、保守をサポートします。その目標は、セキュリティ、レジリエンス、技術の多様性、コードの背後にいる人々に焦点を当て、オープンソースエコシステムを持続的に強化することです。
+
+  <!--
+  Find out more at: https://www.sovereign.tech
+  -->
+  詳細は https://www.sovereign.tech をご覧ください。
