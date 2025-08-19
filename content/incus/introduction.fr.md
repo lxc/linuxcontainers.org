@@ -2,10 +2,10 @@
 
 <!--
 # What is Incus?
-Incus is a next generation system container and virtual machine manager.
+Incus is a next-generation system container, application container, and virtual machine manager.
 -->
 # Qu’est-ce qu’Incus ?
-Incus est un gestionnaire nouvelle génération de conteneurs système et de machines virtuelles.
+Incus est un gestionnaire nouvelle génération de conteneurs système et d’application ainsi que de machines virtuelles.
 
 <!--
 It provides a user experience similar to that of a public cloud. With it, you can easily mix and match both containers and virtual machines, sharing the same underlying storage and network.
@@ -43,15 +43,20 @@ Ensuite, si vous souhaitez l’utiliser localement, vous pouvez consulter notre 
 
 <!--
 ## Containers and virtual machines
-Incus provides support for system containers and virtual machines.
+Incus provides support for system containers, application containers, and virtual machines.
 -->
 ## Conteneurs et machines virtuelles
-Incus prend en charge les conteneurs systèmes et les machines virtuelles.
+Incus prend en charge les conteneurs système et d’application ainsi que les machines virtuelles.
 
 <!--
 When running a system container, Incus simulates a virtual version of a full operating system. To do this, it uses the functionality provided by the kernel running on the host system.
 -->
 Lors de l’exécution d’un conteneur système, Incus simule une version virtuelle d’un système d’exploitation complet. Pour ce faire, il utilise les fonctionnalités fournies par le noyau du système hôte.
+
+<!--
+When running an application container, Incus runs isolated applications within the host's operating system using container images, similar to how Docker operates.
+-->
+Lors de l’exécution d’un conteneur d’application, Incus lance les applications isolées sur le système hôte par l’intermédiaire d’images de conteneurs, comme le fait Docker.
 
 <!--
 When running a virtual machine, Incus uses the hardware of the host system, but the kernel is provided by the virtual machine. Therefore, virtual machines can be used to run, for example, a different operating system.
