@@ -101,7 +101,7 @@ content: |-
   <!--
   This is particualrly useful for OCI containers where the container doesn't have an editable /etc/fstab with an init system applying mounts on boot.
   -->
-  これは、コンテナに編集可能は /etc/fstab がなく、ブート時に init システムによってマウントが追加される OCI コンテナで特に有用です。
+  これは、コンテナに編集可能な /etc/fstab がなく、ブート時に init システムによってマウントが追加される OCI コンテナで特に有用です。
 
   <!--
   The `tmpfs-overlay` variant allows keeping access to any pre-existing content at the mount path by having any addition/changes be stored in the tmpfs layer.
