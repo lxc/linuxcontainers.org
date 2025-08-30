@@ -1,0 +1,306 @@
+title: Incus 6.16 has been released
+date: 2025/08/29 16:08
+origin: https://discuss.linuxcontainers.org/t/incus-6-16-has-been-released/24614
+content: |-
+  # はじめに <!-- Introduction -->
+  <!--
+  The Incus team is pleased to announce the release of Incus 6.16!
+  -->
+  Incus チームは、Incus 6.16 のリリースのアナウンスができてうれしいです!
+
+  <!--
+  This release brings in a new storage driver, the ability to install Windows VMs without having to rely on a repacked ISO and support for temporary storage in containers.
+  -->
+  このリリースでは、新しいストレージドライバー、再パックされた ISO に依存せずに Windows VM をインストールする機能、コンテナ内の一時ストレージのサポートが追加されています。
+
+  [![image|690x286](https://discuss.linuxcontainers.org/uploads/default/original/2X/e/e01645fdf9334f5fa13be82e05913ffdf98803d8.png)](https://linuxcontainers.org/incus/try-it/)
+
+  <!--
+  As usual, you can try it for yourself online: https://linuxcontainers.org/incus/try-it/
+  -->
+  いつものように、オンラインでご自身で試せます: https://linuxcontainers.org/incus/try-it/
+
+  Enjoy!
+
+  # 新機能 <!-- New features -->
+  ## TrueNAS ストレージドライバー <!-- TrueNAS storage driver -->
+  <!--
+  Incus can now use a remote TrueNAS storage server as a storage pool.
+  -->
+  Incus で、リモートの TrueNAS ストレージサーバーをストレージプールとして使えるようになりました。
+
+  <!--
+  This behaves very similarly to the ZFS storage driver since that's what TrueNAS uses, but rather than interacting with ZFS locally, the driver uses the TrueNAS API to perform the various actions remotely on the storage server and then relies on iSCSI to export those volumes from the TrueNAS server and connect them on the Incus server.
+  -->
+  これは、TrueNAS が使用する ZFS ストレージドライバーと非常に似た動作をします。しかし、ローカルで ZFS とやりとりするのではなく、TrueNAS API を使用してさまざまなアクションをリモートでストレージサーバー上で実行します。そして、iSCSI を使用して TrueNAS からボリュームをエクスポートし、Incus サーバーへ接続します。
+
+  <!--
+  As a remote storage driver (alongside Ceph, Linstor and clustered LVM), this can be used to back clusters, allowing for seamless migration of instances between servers as no data needs to be moved.
+  -->
+  （Ceph や Linstor やクラスター化された LVM と並んで）リモートストレージドライバーとしてこれをクラスターで使用すると、データの移動が不要なため、サーバー間でインスタンスのシームレスなマイグレーションができるようになります。
+
+  <!--
+  NOTE: This relies on a pre-release version of TrueNAS Scale.
+  -->
+  注意: この機能は TrueNAS Scale のプレリリースバージョンに依存しています。
+
+      root@truenas-incus:~# incus storage create demo truenas source=test/demo truenas.host=192.0.2.10 truenas.api_key=MY-KEY truenas.allow_insecure=true
+      Storage pool demo created
+      root@truenas-incus:~# incus launch images:debian/13 d13 --storage demo
+      Launching d13
+      root@truenas-incus:~# incus list
+      +------+---------+---------------------+------------------------------------------------+-----------+-----------+
+      | NAME |  STATE  |        IPV4         |                      IPV6                      |   TYPE    | SNAPSHOTS |
+      +------+---------+---------------------+------------------------------------------------+-----------+-----------+
+      | d13  | RUNNING | 10.2.165.159 (eth0) | fd42:a815:51cf:d4bb:1266:6aff:fe51:ae56 (eth0) | CONTAINER | 0         |
+      +------+---------+---------------------+------------------------------------------------+-----------+-----------+
+
+  ドキュメント <!-- Documentation -->: https://linuxcontainers.org/incus/docs/main/reference/storage_truenas/
+
+  ## VM に対する USB CD-ROM の処理 <!-- USB CD-ROM handling for VMs -->
+  <!--
+  We've reworked our USB device setup for disk devices.
+  -->
+  ディスクデバイス向けの USB デバイスのセットアップを見直しました。
+
+  <!--
+  Rather than use the most basic USB mass storage driver as was done previously, we now directly set up some of the USB block transfer layer.
+  -->
+  従来のように基本的な USB マスストレージドライバーを使うのではなく、USB ブロック転送レイヤーの一部を直接セットアップするようになりました。
+
+  <!--
+  The main benefit from this is that attaching an ISO to a VM on the USB bus will now correctly result in a virtual CD-ROM drive being exposed to the VM.
+  -->
+  この変更の主な利点は、USB バス上で VM に ISO をアタッチすると、仮想 CD-ROM ドライブが VM に正しく公開されるようになりました。
+
+  <!--
+  With this, it's now possible to attach the Windows install media and VirtIO driver media to a VM using `io.bus=usb` and directly boot and install Windows without needing to rely on ISO repacking through `distrobuilder`.
+  -->
+  これにより、`io.bus=usb` を使って VM に Windows のインストールメディアや、VirtIO ドライバーのメディアを直接アタッチし、`distrobuilder` によるリパッケージを行った ISO を使う必要がなく、Windows を直接ブートして、インストールできるようになりました。
+
+  ## コンテナ向けの `tmpfs` と `tmpfs-overlay` ディスク <!-- `tmpfs` and `tmpfs-overlay` disks for containers -->
+  <!--
+  Two new "special" disk sources are now supported for use by containers:
+  -->
+  コンテナで使用できる新しい「特別な」ディスクソースが 2 つサポートされるようになりました:
+
+   - `source=tmpfs:`
+   - `source=tmpfs-overlay:`
+
+  <!--
+  Both then support the following properties:
+  -->
+  どちらも次のプロパティーをサポートします:
+
+   - `size` （tmpfs レイヤーのサイズ） <!-- (size of the tmpfs layer) -->
+   - `initial.uid` （マウント時の初期ユーザー） <!-- (Initial user for the mount) -->
+   - `initial.gid`  （マウント時の初期グループ） <!-- (Initial group for the mount) -->
+   - `initial.mode`  （マウント時の初期パーミッション） <!-- (Initial permissions for the mount) -->
+   - `path` （ディスクのマウントパス） <!-- (Mount path for the disk) -->
+
+  <!--
+  This is particualrly useful for OCI containers where the container doesn't have an editable /etc/fstab with an init system applying mounts on boot.
+  -->
+  これは、コンテナに編集可能は /etc/fstab がなく、ブート時に init システムによってマウントが追加される OCI コンテナで特に有用です。
+
+  <!--
+  The `tmpfs-overlay` variant allows keeping access to any pre-existing content at the mount path by having any addition/changes be stored in the tmpfs layer.
+  -->
+  `tmpfs-overlay` では、追加・変更を tmpfs レイヤーに保存することで、マウントパスの既存のコンテンツへのアクセスを維持できます。
+
+  ドキュメント <!-- Documentation -->: https://linuxcontainers.org/incus/docs/main/reference/devices_disk/
+
+  ## CLI でのコンソールの動作の設定 <!-- Configurable console behavior in the CLI -->
+  <!--
+  Expanding on the recently introduce set of default CLI configurations, we now have a few more configuration options to control console behavior:
+  -->
+  最近導入されたデフォルトの CLI 設定を拡張し、コンソールの動作を制御する設定オプションをいくつか追加しました。
+
+   - `console_type` （`vga` と `console` が設定可能） <!-- (can be set to `vga` or `console`) -->
+   - `console_spice_command` （コマンドを設定可能。ソケットパスのプレースホルダー値として `SOCKET` を使用）<!-- (can be set to a command, using `SOCKET` as the placeholder value for the socket path) -->
+
+  <!--
+  Those can be used to change the default console type within the CLI or even completely override the command to be run when attaching to a VGA console using SPICE.
+  -->
+  これらのオプションを使用すると、CLI 内でデフォルトのコンソールタイプを変更したり、SPICE を使って VGA コンソールに接続する際に実行されるコマンドを完全に上書きしたりできます
+
+  # すべての変更点 <!-- Complete changelog -->
+
+  <!--
+  Here is a complete list of all changes in this release:
+  -->
+  このリリースのすべての変更のリストは次の通りです（翻訳なし）:
+
+  [details="すべてのChangeLogを見る"]
+  * incus/cmd/incus/config_template.go: Adding ls alias to list command
+  * incus/cmd/incus/snapshot.go: Adding ls alias to snapshot command
+  * incus/cmd/incus/storage_volume.go: Adding ls alias to list command
+  * incusd/instance/lxc: Fix handling of multiple USB device removal
+  * Translated using Weblate (German)
+  * incusd/device: Fix logic for checking if parent is a bridge in IsPhysicalWithBridge
+  * incusd/device/disk: Enable posix ACL support for virtiofsd
+  * incusd/os: Forward within cluster
+  * incusd/ip/neigh: Fix MAC filtering
+  * incusd: Move IncusOS detection to OS struct
+  * incusd/networks: Filter network list on Incus OS
+  * incusd/storage: Fix EnsureMountPath to avoid resetting permissions
+  * shared/tls: Ignore expiration date of trusted certificates
+  * incus: Replace IsNetworkName with IsInterfaceName
+  * shared/validate: Remove unused IsNetworkName
+  * shared/validate: Implement IsAPIName
+  * doc/installing: Update Ubuntu versions in Zabbly repository
+  * incusd: Consistently validate object names
+  * tests: Fix invalid image alias name
+  * tests: We no longer allow slashes in zones
+  * incusd/instance: Move migration.stateful check to CanLiveMigrate
+  * incusd/instance/qemu: Fix zero-value check regression
+  * internal/instance: Add volatile..io.bus
+  * incusd/device/disk: Refactor bus=XXX setting logic
+  * incusd/network/bridge: Always set DHCPv6 dns-server field
+  * incusd/device/disk: Revamp virtiofs+9p handling
+  * doc: Update metadata
+  * incusd/instance/qemu: Allocate ports for 9p and virtiofs
+  * incusd/instance/qemu: Fix typing regression
+  * incusd/instance/qemu: Make virtiofs shares fully hotpluggable and refactor 9p logic
+  * Make the agent aware of the actual FSType
+  * incus-agent: Remove dual mount type handling
+  * shared/scriptlet: Move scriptlet utils to shared
+  * internal/server/scriptlet: Update usages
+  * incusd/sys/os: Tweak IncusOS detection
+  * Translated using Weblate (Japanese)
+  * generate-database: Fix sqlite3 error detection
+  * incusd/database: Re-generate code
+  * incusd/instances: Improve instance creation errors
+  * incusd/storage_volumes: Fix error message
+  * incusd/instance/qemu: Fix vTPM on arm64 systems
+  * incus/console: Add default console command in configuration file
+  * incusd/storage/zfs: Use compression and large-blocks on backups
+  * incusd/apparmor: Add support for abi4.0
+  * incusd/networks: Only include Incus OS interfaces if not already listed
+  * incusd/networks: Tweak access control
+  * incusd/network/sriov: Fix spacing
+  * incusd/network: Pass request type to validator
+  * tests/openfga: Tweak check (user is able to see local interfaces)
+  * incusd/network/ovn: Don’t validate uplink network on server-specific notification
+  * incusd/network/bridge: Don’t require dnsmasq on link-local IPv6
+  * build(deps): bump actions/checkout from 4 to 5
+  * docs: Clarify type and scope of user.\* config keys
+  * incusd/server/network: Fix update config regression
+  * tests/basic_usage: Improve auto-restart test loop
+  * api: storage_driver_truenas
+  * incusd/storage/truenas: Introduce TrueNAS driver
+  * docs: Update word list
+  * docs: Add TrueNAS storage driver
+  * tests: Add TrueNAS tests (and tweak testsuite)
+  * incusd/resources: Clean golangci-lint
+  * internal/usbid: Clean golangci-lint
+  * incusd/resources: Move usbid as sub-package
+  * incusd: Move resources package to shared package
+  * shared/resources: Restrict to Linux
+  * dhcp: stop 60s renew spam; request 51/58/59, derive sane T1, add jitter
+  * incus/file: Add some examples with stdin/stdout
+  * i18n: Update translation templates
+  * incusd/apparmor: Don’t use abi4.0
+  * incusd/config: Fix import shadowing
+  * Translated using Weblate (Portuguese)
+  * Fix typo and add clarity for project param
+  * incusd/instance/lxc: Avoid issues with nested containers and ping group range
+  * doc: Mention nft in Docker part of firewall doc
+  * doc: Tweak Docker recommendations
+  * incusd/instance/qemu: Ensure cdrom is always read-only
+  * incusd/instance/qmp: Use USB block transport to handle CD-ROM
+  * incusd/instance/qemu: Fix USB CDROM handling
+  * incus/dhcp: run DHCP on all container interfaces and aggregate DNS from all leases
+  * incusd/storage: Restrict setting description to global record
+  * incusd/main_forknet: Fix gofumpt
+  * incusd/network: Restrict setting description to global record
+  * incusd/networks: Set the description when completing the record
+  * incusd/project: Don’t empty global default profile on force deletion
+  * doc/requirements: Document minimum OVS/OVN versions
+  * lxd-to-incus: Handle typo in trigger name
+  * incus/dhcp: default routes and multiple DHCP clients for OCI containers
+  * incusd/instance_exec: Relax connection timeout
+  * incusd/network: Fix logic for UsedByInstanceDevices
+  * incusd/network/ovn: Support for directional port groups
+  * incusd/network/acl: Support for directional port groups
+  * Makefile: Bump Go to 1.24.0
+  * gomod: Update dependencies
+  * github: Disable go-swagger on Go 1.25+
+  * github: Disable Linstor tests for now
+  * incusd/instance/utils: Don’t fail instance startup due to incomplete CPU baseline
+  * incusd/patches: Migrate port groups to directional
+  * incusd/device/disk: Add tmpfs support for disk devices
+  * gomod: Update dependencies
+  * incusd/auth/tls: Don’t spam with warnings
+  * incusd/fsmonitor: Fix handler issue when flooded
+  * incusd/device/nic: Don’t apply MTU if none detected
+  * incusd/ip/tuntap: Fix handling of Master property
+  * incusd/network/ovn: Fix behavior when ACL name is used as match source
+  * incusd/network/acl: Fix behavior when ACL name is used as match source
+  * api: container_disk_tmpfs
+  * doc/device: Add documentation for tmpfs disk
+  * tests: Add test for tmpfs disk
+  * doc/installing: Update Debian install instructions
+  * shared/api: Add missing Description field to InstanceSnapshots
+  * incusd: Correctly fill in the instance snapshot description
+  * doc/rest-api: Refresh swagger YAML
+  * incusd/cluster: Don’t use the proxy for internal connections
+  [/details]
+
+  # ドキュメント <!-- Documentation -->
+  <!--
+  The Incus documentation can be found at:
+  https://linuxcontainers.org/incus/docs/main/
+  -->
+  Incus のドキュメントはこちらです:
+  https://incus-ja.readthedocs.io/ja/latest/ （日本語訳）
+  https://linuxcontainers.org/incus/docs/main/ （原文）
+
+  # パッケージ <!-- Packages -->
+  <!--
+  There are no official Incus packages as Incus upstream only releases regular release tarballs. Below are some available options to get Incus up and running.
+  -->
+  Incus の開発元は、通常リリースの tarball のみをリリースするため、公式の Incus パッケージはありません。Incus を実行するために使えるオプションを以下にいくつか示します。
+
+  ## Linux 上に Incus サーバーをインストールする <!-- Installing the Incus server on Linux -->
+  <!--
+  Incus is available for most common Linux distributions. You'll find detailed installation instructions in our documentation.
+  -->
+  Incus はほとんどの一般的な Linux ディストリビューションで利用できます。インストール手順の詳細は、Incus のドキュメントを参照してください。
+
+  https://incus-ja.readthedocs.io/ja/latest/installing/ （日本語訳）
+  https://linuxcontainers.org/incus/docs/main/installing/ （原文）
+
+  ## Incus クライアントの Homebrew パッケージ <!-- Homebrew package for the Incus client -->
+  <!--
+  The client tool is available through HomeBrew for both Linux and MacOS.
+  -->
+  Homebrew 経由で、Linux と macOS 向けにクライアントツールが利用できます。
+
+  https://formulae.brew.sh/formula/incus
+
+  ## Incus クライアントの Chocolatey パッケージ <!-- Chocolatey package for the Incus client -->
+  <!--
+  The client tool is available through Chocolatey for Windows users.
+  -->
+  Chocolatey 経由で、Windows ユーザー向けにクライアントツールが利用できます。
+
+  https://community.chocolatey.org/packages/incus/6.16.0
+
+  ## Incus クライアントの Winget パッケージ <!-- Winget package for the Incus client -->
+  <!--
+  The client tool is also available through Winget for Windows users.
+  -->
+  Winget 経由で、Windows ユーザー向けにクライアントツールが利用できます。
+
+  https://winstall.app/apps/LinuxContainers.Incus
+
+  # サポート <!-- Support -->
+  <!--
+  Monthly feature releases are only supported up until the next release comes out.  Users needing a longer support length and less frequent changes should consider using Incus 6.0 LTS instead.
+  -->
+  月次のフィーチャーリリースは、次のリリースがリリースされるまでのみサポートされます。より長いサポート期間と少ない変更頻度が必要な場合、代わりに Incus 6.0 LTS の使用を検討すべきです。
+
+  コミュニティサポートはこちらから <!-- Community support is provided at -->: https://discuss.linuxcontainers.org
+  商用サポートはこちらから <!-- Commercial support is available through -->: https://zabbly.com/incus
+  バグはこちらから報告できます <!-- Bugs can be reported at -->: https://github.com/lxc/incus/issues
