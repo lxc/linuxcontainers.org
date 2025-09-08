@@ -1,0 +1,365 @@
+title: Incus 6.16 est maintenant disponible
+date: 2025/08/29 16:08
+origin: https://discuss.linuxcontainers.org/t/incus-6-16-has-been-released/24614
+content: |-
+  <!--
+  # Introduction
+  -->
+  # Introduction
+
+  <!--
+  The Incus team is pleased to announce the release of Incus 6.16!
+  -->
+  L’équipe d’Incus est heureuse d’annoncer la sortie d’Incus 6.16 !
+
+  <!--
+  This release brings in a new storage driver, the ability to install Windows VMs without having to rely on a repacked ISO and support for temporary storage in containers.
+  -->
+  Cette nouvele version embarque un nouveau driver de stockage, la possibilité d’installer des VM Windows sans repaquetage d’ISO, et le support du stockage temporaire dans les conteneurs.
+
+  [![image|690x286](https://discuss.linuxcontainers.org/uploads/default/original/2X/e/e01645fdf9334f5fa13be82e05913ffdf98803d8.png)](https://linuxcontainers.org/incus/try-it/)
+
+  <!--
+  As usual, you can try it for yourself online: https://linuxcontainers.org/incus/try-it/
+  -->
+  Comme d’habitude, vous pouvez l’essayer vous-même en ligne : https://linuxcontainers.org/incus/try-it/
+
+  <!--
+  Enjoy!
+  -->
+
+  <!--
+  # New features
+  ## TrueNAS storage driver
+  Incus can now use a remote TrueNAS storage server as a storage pool.
+  -->
+  # Nouvelles fonctionnalités
+  ## Driver de stockage TrueNAS
+  Incus peut désormais utiliser un serveur TrueNAS distant comme pool de stockage.
+
+  <!--
+  This behaves very similarly to the ZFS storage driver since that's what TrueNAS uses, but rather than interacting with ZFS locally, the driver uses the TrueNAS API to perform the various actions remotely on the storage server and then relies on iSCSI to export those volumes from the TrueNAS server and connect them on the Incus server.
+  -->
+  Son comportement est similaire au driver de stockage ZFS (que TrueNAS utilise), mais, plutôt que d’interagir avec ZFS localement, le driver utilise l’API de TrueNAS pour effectuer les actions sur un serveur de stockage distant. Les volumes sont exposés au serveur Incus en iSCSI par le serveur TrueNAS.
+
+  <!--
+  As a remote storage driver (alongside Ceph, Linstor and clustered LVM), this can be used to back clusters, allowing for seamless migration of instances between servers as no data needs to be moved.
+  -->
+  Puisqu’il s’agit d’un driver de stockage distant (comme Ceph, Linstor et LVM en cluster), il peut être utilisé avec des clusters de serveurs Incus pour assurer des migrations fluides d’instances sans déplacement de disques.
+
+  <!--
+  NOTE: This relies on a pre-release version of TrueNAS Scale.
+  -->
+  NOTE : Cette fonctionnalité ne fonctionne qu’avec une version pré-release de TrueNAS Scale.
+
+      root@truenas-incus:~# incus storage create demo truenas source=test/demo truenas.host=192.0.2.10 truenas.api_key=MY-KEY truenas.allow_insecure=true
+      Storage pool demo created
+      root@truenas-incus:~# incus launch images:debian/13 d13 --storage demo
+      Launching d13
+      root@truenas-incus:~# incus list
+      +------+---------+---------------------+------------------------------------------------+-----------+-----------+
+      | NAME |  STATE  |        IPV4         |                      IPV6                      |   TYPE    | SNAPSHOTS |
+      +------+---------+---------------------+------------------------------------------------+-----------+-----------+
+      | d13  | RUNNING | 10.2.165.159 (eth0) | fd42:a815:51cf:d4bb:1266:6aff:fe51:ae56 (eth0) | CONTAINER | 0         |
+      +------+---------+---------------------+------------------------------------------------+-----------+-----------+
+
+  <!--
+  Documentation: https://linuxcontainers.org/incus/docs/main/reference/storage_truenas/
+  -->
+  Documentation : https://linuxcontainers.org/incus/docs/main/reference/storage_truenas/
+
+  <!--
+  ## USB CD-ROM handling for VMs
+  We've reworked our USB device setup for disk devices.
+  -->
+  ## Gestion des CD-ROM connectés en USB aux VM
+  Nous avons modifié la façon dont les disques USB sont gérés.
+
+  <!--
+  Rather than use the most basic USB mass storage driver as was done previously, we now directly set up some of the USB block transfer layer.
+  -->
+  Plutôt que d’utiliser le driver basique de stockage de masse USB de QEMU, comme c’était le cas avant, nous paramétrons désormais les périphériques plus finement.
+
+  <!--
+  The main benefit from this is that attaching an ISO to a VM on the USB bus will now correctly result in a virtual CD-ROM drive being exposed to the VM.
+  -->
+  L’avantage principal de cette approche est que l’ajout d’un ISO à une VM via le bus USB va désormais être vu par la VM comme un périphérique virtuel de type CD-ROM.
+
+  <!--
+  With this, it's now possible to attach the Windows install media and VirtIO driver media to a VM using `io.bus=usb` and directly boot and install Windows without needing to rely on ISO repacking through `distrobuilder`.
+  -->
+  Ainsi, il est maintenant possible d’attacher à une VM un disque d’installation Windows et un disque contenant les drivers VirtIO avec `io.bus=usb`, et de booter et installer directement Windows sans besoin de repaquetage avec `distrobuilder`.
+
+  <!--
+  ## `tmpfs` and `tmpfs-overlay` disks for containers
+  Two new "special" disk sources are now supported for use by containers:
+  -->
+  ## Disques `tmpfs` et `tmpfs-overlay` pour les conteneurs
+  Deux nouvelles sources « spéciales » pour les disques sont à présent supportées par les conteneurs :
+
+   - `source=tmpfs:`
+   - `source=tmpfs-overlay:`
+
+  <!--
+  Both then support the following properties:
+  -->
+  Les disques utilisant ces sources supportent les propriétés suivantes :
+
+  <!--
+   - `size` (size of the tmpfs layer)
+   - `initial.uid` (Initial user for the mount)
+   - `initial.gid` (Initial group for the mount)
+   - `initial.mode` (Initial permissions for the mount)
+   - `path` (Mount path for the disk)
+  -->
+   - `size` (taille du tmpfs)
+   - `initial.uid` (utilisateur initial du point de montage)
+   - `initial.gid` (groupe initial du point de montage)
+   - `initial.mode` (permissions initiales du point de montage)
+   - `path` (chemin de montage du disque)
+
+  <!--
+  This is particularly useful for OCI containers where the container doesn't have an editable /etc/fstab with an init system applying mounts on boot.
+  -->
+  De tels disques sont particulièrement utiles pour les conteneurs OCI qui n’ont pas de `/etc/fstab` éditable avec un système d’init qui applique les montages au démarrage.
+
+  <!--
+  The `tmpfs-overlay` variant allows keeping access to any pre-existing content at the mount path by having any addition/changes be stored in the tmpfs layer.
+  -->
+  La variante `tmpfs-overlay` permet de préserver l’accès au contenu déjà présent dans le chemin de montage, ne stockant que les additions et modifications dans le tmpfs.
+
+  <!--
+  Documentation: https://linuxcontainers.org/incus/docs/main/reference/devices_disk/
+  -->
+  Documentation : https://linuxcontainers.org/incus/docs/main/reference/devices_disk/
+
+  <!--
+  ## Configurable console behavior in the CLI
+  Expanding on the recently introduced set of default CLI configurations, we now have a few more configuration options to control console behavior:
+  -->
+  ## Configuration du comportement de la console dans la CLI
+  Pour faire suite à l’ajout récent d’un ensemble de configurations par défaut de la CLI, les options suivantes contrôlant le comportement de la console ont été ajoutées :
+
+  <!--
+   - `console_type` (can be set to `vga` or `console`)
+   - `console_spice_command` (can be set to a command, using `SOCKET` as the placeholder value for the socket path)
+  -->
+   - `console_type` (`vga` ou `console`)
+   - `console_spice_command` (commande SPICE à lancer, dans laquelle les occurrences de `SOCKET` sont remplacées par le chemin du socket SPICE)
+
+  <!--
+  Those can be used to change the default console type within the CLI or even completely override the command to be run when attaching to a VGA console using SPICE.
+  -->
+  Ces options peuvent être utilisées pour changer le type de console par défaut utilisée par la CLI, ou encore complètement remplacer la commande à lancer lors de la connexion à une console VGA via SPICE.
+
+  <!--
+  # Complete changelog
+  -->
+  # Liste complète des changements
+
+  <!--
+  Here is a complete list of all changes in this release:
+  -->
+  Voici une liste complète de tous les changements apportés par cette version :
+
+  <!--
+  [details="Full commit list"]
+  -->
+  [details="Liste complète des commits"]
+  * incus/cmd/incus/config_template.go: Adding ls alias to list command
+  * incus/cmd/incus/snapshot.go: Adding ls alias to snapshot command
+  * incus/cmd/incus/storage_volume.go: Adding ls alias to list command
+  * incusd/instance/lxc: Fix handling of multiple USB device removal
+  * Translated using Weblate (German)
+  * incusd/device: Fix logic for checking if parent is a bridge in IsPhysicalWithBridge
+  * incusd/device/disk: Enable posix ACL support for virtiofsd
+  * incusd/os: Forward within cluster
+  * incusd/ip/neigh: Fix MAC filtering
+  * incusd: Move IncusOS detection to OS struct
+  * incusd/networks: Filter network list on Incus OS
+  * incusd/storage: Fix EnsureMountPath to avoid resetting permissions
+  * shared/tls: Ignore expiration date of trusted certificates
+  * incus: Replace IsNetworkName with IsInterfaceName
+  * shared/validate: Remove unused IsNetworkName
+  * shared/validate: Implement IsAPIName
+  * doc/installing: Update Ubuntu versions in Zabbly repository
+  * incusd: Consistently validate object names
+  * tests: Fix invalid image alias name
+  * tests: We no longer allow slashes in zones
+  * incusd/instance: Move migration.stateful check to CanLiveMigrate
+  * incusd/instance/qemu: Fix zero-value check regression
+  * internal/instance: Add volatile..io.bus
+  * incusd/device/disk: Refactor bus=XXX setting logic
+  * incusd/network/bridge: Always set DHCPv6 dns-server field
+  * incusd/device/disk: Revamp virtiofs+9p handling
+  * doc: Update metadata
+  * incusd/instance/qemu: Allocate ports for 9p and virtiofs
+  * incusd/instance/qemu: Fix typing regression
+  * incusd/instance/qemu: Make virtiofs shares fully hotpluggable and refactor 9p logic
+  * Make the agent aware of the actual FSType
+  * incus-agent: Remove dual mount type handling
+  * shared/scriptlet: Move scriptlet utils to shared
+  * internal/server/scriptlet: Update usages
+  * incusd/sys/os: Tweak IncusOS detection
+  * Translated using Weblate (Japanese)
+  * generate-database: Fix sqlite3 error detection
+  * incusd/database: Re-generate code
+  * incusd/instances: Improve instance creation errors
+  * incusd/storage_volumes: Fix error message
+  * incusd/instance/qemu: Fix vTPM on arm64 systems
+  * incus/console: Add default console command in configuration file
+  * incusd/storage/zfs: Use compression and large-blocks on backups
+  * incusd/apparmor: Add support for abi4.0
+  * incusd/networks: Only include Incus OS interfaces if not already listed
+  * incusd/networks: Tweak access control
+  * incusd/network/sriov: Fix spacing
+  * incusd/network: Pass request type to validator
+  * tests/openfga: Tweak check (user is able to see local interfaces)
+  * incusd/network/ovn: Don’t validate uplink network on server-specific notification
+  * incusd/network/bridge: Don’t require dnsmasq on link-local IPv6
+  * build(deps): bump actions/checkout from 4 to 5
+  * docs: Clarify type and scope of user.\* config keys
+  * incusd/server/network: Fix update config regression
+  * tests/basic_usage: Improve auto-restart test loop
+  * api: storage_driver_truenas
+  * incusd/storage/truenas: Introduce TrueNAS driver
+  * docs: Update word list
+  * docs: Add TrueNAS storage driver
+  * tests: Add TrueNAS tests (and tweak testsuite)
+  * incusd/resources: Clean golangci-lint
+  * internal/usbid: Clean golangci-lint
+  * incusd/resources: Move usbid as sub-package
+  * incusd: Move resources package to shared package
+  * shared/resources: Restrict to Linux
+  * dhcp: stop 60s renew spam; request 51/58/59, derive sane T1, add jitter
+  * incus/file: Add some examples with stdin/stdout
+  * i18n: Update translation templates
+  * incusd/apparmor: Don’t use abi4.0
+  * incusd/config: Fix import shadowing
+  * Translated using Weblate (Portuguese)
+  * Fix typo and add clarity for project param
+  * incusd/instance/lxc: Avoid issues with nested containers and ping group range
+  * doc: Mention nft in Docker part of firewall doc
+  * doc: Tweak Docker recommendations
+  * incusd/instance/qemu: Ensure cdrom is always read-only
+  * incusd/instance/qmp: Use USB block transport to handle CD-ROM
+  * incusd/instance/qemu: Fix USB CDROM handling
+  * incus/dhcp: run DHCP on all container interfaces and aggregate DNS from all leases
+  * incusd/storage: Restrict setting description to global record
+  * incusd/main_forknet: Fix gofumpt
+  * incusd/network: Restrict setting description to global record
+  * incusd/networks: Set the description when completing the record
+  * incusd/project: Don’t empty global default profile on force deletion
+  * doc/requirements: Document minimum OVS/OVN versions
+  * lxd-to-incus: Handle typo in trigger name
+  * incus/dhcp: default routes and multiple DHCP clients for OCI containers
+  * incusd/instance_exec: Relax connection timeout
+  * incusd/network: Fix logic for UsedByInstanceDevices
+  * incusd/network/ovn: Support for directional port groups
+  * incusd/network/acl: Support for directional port groups
+  * Makefile: Bump Go to 1.24.0
+  * gomod: Update dependencies
+  * github: Disable go-swagger on Go 1.25+
+  * github: Disable Linstor tests for now
+  * incusd/instance/utils: Don’t fail instance startup due to incomplete CPU baseline
+  * incusd/patches: Migrate port groups to directional
+  * incusd/device/disk: Add tmpfs support for disk devices
+  * gomod: Update dependencies
+  * incusd/auth/tls: Don’t spam with warnings
+  * incusd/fsmonitor: Fix handler issue when flooded
+  * incusd/device/nic: Don’t apply MTU if none detected
+  * incusd/ip/tuntap: Fix handling of Master property
+  * incusd/network/ovn: Fix behavior when ACL name is used as match source
+  * incusd/network/acl: Fix behavior when ACL name is used as match source
+  * api: container_disk_tmpfs
+  * doc/device: Add documentation for tmpfs disk
+  * tests: Add test for tmpfs disk
+  * doc/installing: Update Debian install instructions
+  * shared/api: Add missing Description field to InstanceSnapshots
+  * incusd: Correctly fill in the instance snapshot description
+  * doc/rest-api: Refresh swagger YAML
+  * incusd/cluster: Don’t use the proxy for internal connections
+  [/details]
+
+  # Documentation
+
+  <!--
+  The Incus documentation can be found at:
+  -->
+  La documentation d’Incus peut être consultée sur :
+
+  https://linuxcontainers.org/incus/docs/main/
+
+  <!--
+  # Packages
+  -->
+  # Paquets
+
+  <!--
+  There are no official Incus packages as Incus upstream only releases regular release tarballs. Below are some available options to get Incus up and running.
+  -->
+  Incus ne fournit pas de paquet d’installation mais bien un tarball à chaque version. Vous trouverez ci-dessous différentes solutions pour mettre Incus en service.
+
+  <!--
+  ## Installing the Incus server on Linux
+  -->
+  ## Installation du serveur Incus sous Linux
+
+  <!--
+  Incus is available for most common Linux distributions. You’ll find detailed installation instructions in our documentation.
+  -->
+  Incus est disponible sur la plupart des distributions Linux courantes. Vous trouverez des instructions d’installation détaillées dans notre documentation.
+
+  https://linuxcontainers.org/incus/docs/main/installing/
+
+  <!--
+  ## Homebrew package for the Incus client
+  -->
+  ## Paquet Homebrew du client Incus
+
+  <!--
+  The client tool is available through HomeBrew for both Linux and MacOS.
+  -->
+  Le client Incus est disponible sur Homebrew pour Linux et macOS.
+
+  https://formulae.brew.sh/formula/incus
+
+  <!--
+  ## Chocolatey package for the Incus client
+  -->
+  ## Paquet Chocolatey du client Incus
+
+  <!--
+  The client tool is available through Chocolatey for Windows users.
+  -->
+  Le client Incus est disponible sur Chocolatey pour les utilisateurs de Windows.
+
+  https://community.chocolatey.org/packages/incus/6.16.0
+
+  <!--
+  ## Winget package for the Incus client
+  -->
+  ## Paquet Winget du client Incus
+
+  <!--
+  The client tool is also available through Winget for Windows users.
+  -->
+  Le client Incus est aussi disponible sur Winget pour les utilisateurs de Windows.
+
+  https://winstall.app/apps/LinuxContainers.Incus
+
+  # Support
+
+  <!--
+  Monthly feature releases are only supported up until the next release comes out.  Users needing a longer support length and less frequent changes should consider using Incus 6.0 LTS instead.
+  -->
+  Les versions de fonctionnalité d’Incus ne sont supportées que jusqu’à la sortie de la suivante. Les personnes souhaitant un support plus long et des changements moins fréquents devraient plutôt envisager d’utiliser Incus 6.0 LTS.
+
+  <!--
+  Community support is provided at: https://discuss.linuxcontainers.org
+  Commercial support is available through: https://zabbly.com/incus
+  Bugs can be reported at: https://github.com/lxc/incus/issues
+  -->
+  Le support communautaire est disponible sur : https://discuss.linuxcontainers.org
+  Un support commercial est disponible sur : https://zabbly.com/incus
+  Les bugs peuvent être signalés sur : https://github.com/lxc/incus/issues
