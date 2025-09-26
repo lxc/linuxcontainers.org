@@ -60,14 +60,14 @@ content: |-
    - `initial.mode` (Initial permissions for the mount)
    - `path` (Mount path for the disk)
 
-  This is particularly useful for OCI containers where the container doesn't have an editable /etc/fstab with an init system applying mounts on boot.
+  This is particualrly useful for OCI containers where the container doesn't have an editable /etc/fstab with an init system applying mounts on boot.
 
   The `tmpfs-overlay` variant allows keeping access to any pre-existing content at the mount path by having any addition/changes be stored in the tmpfs layer.
 
   Documentation: https://linuxcontainers.org/incus/docs/main/reference/devices_disk/
 
   ## Configurable console behavior in the CLI
-  Expanding on the recently introduced set of default CLI configurations, we now have a few more configuration options to control console behavior:
+  Expanding on the recently introduce set of default CLI configurations, we now have a few more configuration options to control console behavior:
 
    - `console_type` (can be set to `vga` or `console`)
    - `console_spice_command` (can be set to a command, using `SOCKET` as the placeholder value for the socket path)
