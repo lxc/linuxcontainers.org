@@ -40,7 +40,7 @@ Based on the needs and available resources from the various distributions, speci
 Other releases will typically be maintained on a best effort basis which typically means until the next stable release is out.
 
 ## Extended support
-LXC 5.0 and 4.0 are long term support releases:
+LXC 6.0 and 5.0 are long term support releases:
 
+ - LXC 6.0 will be supported until June 1st 2029
  - LXC 5.0 will be supported until June 1st 2027
- - LXC 4.0 will be supported until June 1st 2025

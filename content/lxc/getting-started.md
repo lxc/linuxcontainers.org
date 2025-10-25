@@ -29,7 +29,7 @@ Recommended libraries:
 
 In most cases, you'll find recent versions of LXC available for your Linux distribution. Either directly in the distribution's package repository or through some backport channel.
 
-For your first LXC experience, we recommend you use a recent supported release, such as a recent bugfix release of LXC 4.0.
+For your first LXC experience, we recommend you use a recent supported release, such as a recent bugfix release of LXC 6.0.
 
 If using Ubuntu, we recommend you use Ubuntu 18.04 LTS as your container host. LXC bugfix releases are available directly in the distribution package repository shortly after release and those offer a clean (unpatched) upstream experience.
 
