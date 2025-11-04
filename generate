@@ -476,7 +476,7 @@ def gen_page(entry, override, prefix, **variables):
             man2html.wait()
 
             # Remove all broken links
-            for link in soup.findAll("a"):
+            for link in soup.find_all("a"):
                 if not link.get("href", None):
                     continue
 
@@ -495,7 +495,7 @@ def gen_page(entry, override, prefix, **variables):
 
                 link.replace_with_children()
 
-            contents = soup.findAll("body")[0].contents
+            contents = soup.find_all("body")[0].contents
             content = "".join([str(entry) for entry in contents[1:]])
 
             content = "<div class='manpage'>%s</div>" % content

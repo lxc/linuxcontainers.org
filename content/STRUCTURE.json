@@ -91,6 +91,46 @@
      "meta": {"url": "https://images.linuxcontainers.org"}},
 
 
+    {"path": "/incus-os/",
+     "generator": "alias",
+     "meta": {"target": "/incus-os/introduction/"}},
+
+    {"path": "/incus-os/introduction/",
+     "title": "incus-os - Introduction",
+     "menu": ["incus-os", "Introduction"],
+     "generator": "markdown",
+     "meta": {"input": "incus-os/introduction.md"}},
+
+    {"path": "/incus-os/documentation",
+     "menu": ["incus-os", "Documentation"],
+     "generator": "link",
+     "meta": {"url": "/incus-os/docs/main/"}},
+
+    {"path": "/incus-os/downloads/",
+     "title": "incus-os - Download",
+     "menu": ["incus-os", "Download"],
+     "generator": "link",
+     "meta": {"url": "https://incusos-customizer.linuxcontainers.org"}},
+
+    {"path": "/incus-os/external-resources/",
+     "menu": ["incus-os", "External resources"]},
+
+    {"path": "/incus-os/github/",
+     "menu": ["incus-os", "GitHub"],
+     "generator": "link",
+     "meta": {"url": "https://github.com/lxc/incus-os"}},
+
+    {"path": "/incus-os/forum/",
+     "menu": ["incus-os", "Forum"],
+     "generator": "link",
+     "meta": {"url": "https://discuss.linuxcontainers.org"}},
+
+    {"path": "/incus-os/irc/",
+     "menu": ["incus-os", "IRC"],
+     "generator": "link",
+     "meta": {"url": "https://web.libera.chat/#lxc"}},
+
+
     {"path": "/lxd/",
      "title": "LXD - Has been moved to Canonical",
      "generator": "markdown",
