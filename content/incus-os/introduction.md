@@ -7,7 +7,7 @@ Updates are applied atomically using an A/B scheme allowing for an easy revert i
 
 The system itself is completely locked down with no local or remote shell, only an authenticated REST API to access Incus and manage the OS through it.
 
-<p class="zoom"><img src="/static/img/incus-os.png" alt="IncusOS screenshot" style="display:block;float:none;margin-left:auto;margin-right:auto;padding:1em 0"/></p>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/Is_HgmwayGs?si=X2BmX0DPrB7eJWAN" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
 IncusOS is ideal for anyone who's focused on building and running infrastructure on top of Incus and wants the underlying infrastructure to be reliable and easy to update.
 
