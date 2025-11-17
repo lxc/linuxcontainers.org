@@ -68,16 +68,6 @@
      "generator": "link",
      "meta": {"url": "https://discuss.linuxcontainers.org"}},
 
-    {"path": "/incus/irc/",
-     "menu": ["Incus", "IRC"],
-     "generator": "link",
-     "meta": {"url": "https://web.libera.chat/#lxc"}},
-
-    {"path": "/incus/mailing-lists/",
-     "menu": ["Incus", "メーリングリスト"],
-     "generator": "link",
-     "meta": {"url": "https://lists.linuxcontainers.org"}},
-
     {"path": "/incus/image-server/",
      "menu": ["Incus", "イメージサーバー"],
      "generator": "link",
@@ -162,16 +152,6 @@
      "generator": "link",
      "meta": {"url": "https://discuss.linuxcontainers.org"}},
 
-    {"path": "/lxc/irc/",
-     "menu": ["LXC", "IRC"],
-     "generator": "link",
-     "meta": {"url": "https://web.libera.chat/#lxc"}},
-
-    {"path": "/lxc/mailing-lists/",
-     "menu": ["LXC", "メーリングリスト"],
-     "generator": "link",
-     "meta": {"url": "https://lists.linuxcontainers.org"}},
-
     {"path": "/lxc/image-server/",
      "menu": ["LXC", "イメージサーバー"],
      "generator": "link",
@@ -238,16 +218,6 @@
      "generator": "link",
      "meta": {"url": "https://discuss.linuxcontainers.org"}},
 
-    {"path": "/lxcfs/irc/",
-     "menu": ["LXCFS", "IRC"],
-     "generator": "link",
-     "meta": {"url": "https://web.libera.chat/#lxc"}},
-
-    {"path": "/lxcfs/mailing-lists/",
-     "menu": ["LXCFS", "メーリングリスト"],
-     "generator": "link",
-     "meta": {"url": "https://lists.linuxcontainers.org"}},
-
 
     {"path": "/distrobuilder/",
      "generator": "alias",
@@ -300,16 +270,6 @@
      "generator": "link",
      "meta": {"url": "https://discuss.linuxcontainers.org"}},
 
-    {"path": "/distrobuilder/irc/",
-     "menu": ["distrobuilder", "IRC"],
-     "generator": "link",
-     "meta": {"url": "https://web.libera.chat/#lxc"}},
-
-    {"path": "/distrobuilder/mailing-lists/",
-     "menu": ["distrobuilder", "メーリングリスト"],
-     "generator": "link",
-     "meta": {"url": "https://lists.linuxcontainers.org"}},
-
 
     {"path": "/cgmanager/",
      "generator": "alias",
@@ -359,14 +319,6 @@
      "title": "CGManager - 記事",
      "generator": "markdown",
      "meta": {"input": "cgmanager/articles.ja.md"}},
-
-    {"path": "/cgmanager/mailing-lists/",
-     "generator": "link",
-     "meta": {"url": "https://lists.linuxcontainers.org"}},
-
-    {"path": "/cgmanager/irc/",
-     "generator": "link",
-     "meta": {"url": "https://web.libera.chat/#lxc"}},
 
     {"path": "/cgmanager/github/",
      "generator": "link",

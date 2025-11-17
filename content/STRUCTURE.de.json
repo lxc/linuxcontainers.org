@@ -65,16 +65,6 @@
      "generator": "link",
      "meta": {"url": "https://discuss.linuxcontainers.org"}},
 
-    {"path": "/incus/irc/",
-     "menu": ["Incus", "IRC"],
-     "generator": "link",
-     "meta": {"url": "https://web.libera.chat/#lxc"}},
-
-    {"path": "/incus/mailing-lists/",
-     "menu": ["Incus", "Mailing lists"],
-     "generator": "link",
-     "meta": {"url": "https://lists.linuxcontainers.org"}},
-
 
     {"path": "/lxd/",
      "title": "LXD - Has been moved to Canonical",
@@ -157,16 +147,6 @@
      "generator": "link",
      "meta": {"url": "https://discuss.linuxcontainers.org"}},
 
-    {"path": "/lxc/mailing-lists/",
-     "menu": ["LXC", "Mailing lists"],
-     "generator": "link",
-     "meta": {"url": "https://lists.linuxcontainers.org"}},
-
-    {"path": "/lxc/irc/",
-     "menu": ["LXC", "IRC"],
-     "generator": "link",
-     "meta": {"url": "https://web.libera.chat/#lxc"}},
-
     {"path": "/lxc/github/",
      "menu": ["LXC", "GitHub"],
      "generator": "link",
@@ -239,16 +219,6 @@
      "generator": "link",
      "meta": {"url": "https://discuss.linuxcontainers.org"}},
 
-    {"path": "/lxcfs/mailing-lists/",
-     "menu": ["LXCFS", "Mailing lists"],
-     "generator": "link",
-     "meta": {"url": "https://lists.linuxcontainers.org"}},
-
-    {"path": "/lxcfs/irc/",
-     "menu": ["LXCFS", "IRC"],
-     "generator": "link",
-     "meta": {"url": "https://web.libera.chat/#lxc"}},
-
     {"path": "/lxcfs/github/",
      "menu": ["LXCFS", "GitHub"],
      "generator": "link",
@@ -306,16 +276,6 @@
      "menu": ["distrobuilder", "Forum"],
      "generator": "link",
      "meta": {"url": "https://discuss.linuxcontainers.org"}},
-
-    {"path": "/distrobuilder/mailing-lists/",
-     "menu": ["distrobuilder", "Mailing lists"],
-     "generator": "link",
-     "meta": {"url": "https://lists.linuxcontainers.org"}},
-
-    {"path": "/distrobuilder/irc/",
-     "menu": ["distrobuilder", "IRC"],
-     "generator": "link",
-     "meta": {"url": "https://web.libera.chat/#lxc"}},
 
     {"path": "/distrobuilder/github/",
      "menu": ["distrobuilder", "GitHub"],
@@ -387,16 +347,6 @@
      "menu": ["CGManager", "Articles"],
      "generator": "markdown",
      "meta": {"input": "cgmanager/articles.de.md"}},
-
-    {"path": "/cgmanager/mailing-lists/",
-     "menu": ["CGManager", "Mailing lists"],
-     "generator": "link",
-     "meta": {"url": "https://lists.linuxcontainers.org"}},
-
-    {"path": "/cgmanager/irc/",
-     "menu": ["CGManager", "IRC"],
-     "generator": "link",
-     "meta": {"url": "https://web.libera.chat/#lxc"}},
 
     {"path": "/cgmanager/github/",
      "menu": ["CGManager", "GitHub"],
