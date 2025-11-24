@@ -2,7 +2,9 @@
 maxrequestspersecond=5
 
 [filtering]
-nofollow=https\:\/\/linuxcontainers\.org\/incus\/docs\/
+nofollow=
+    https\:\/\/linuxcontainers\.org\/incus\/docs\/
+    https\:\/\/linuxcontainers\.org\/incus-os\/docs\/
 checkextern=1
 
 [output]
