@@ -1,0 +1,350 @@
+title: Incus 6.19 has been released
+date: 2025/11/29 21:11
+origin: https://discuss.linuxcontainers.org/t/incus-6-19-has-been-released/25405
+content: |-
+  # Introduction
+  The Incus team is pleased to announce the release of Incus 6.19!
+
+  This is a slightly less busy release than usual as we've recently been spending quite a bit of time smoothing some of the initial rough edges from the [IncusOS release](https://discuss.linuxcontainers.org/t/announcing-incusos/25139).
+
+  That said, it still contains quite a few nice improvements and quite a lot of bugfixes!
+
+  [![image|690x328](https://discuss.linuxcontainers.org/uploads/default/original/2X/2/2a721e77db2741f1d09dc5d8ad0ca06faaf288a4.jpeg)](https://linuxcontainers.org/incus/try-it/)
+
+  As usual, you can try it for yourself online: https://linuxcontainers.org/incus/try-it/
+
+  Enjoy!
+
+  # New features
+  ## Initial SELinux support
+  With this release, we now have the very first steps in having native SELinux support in Incus. It's still very early in this effort and as a result, this feature is disabled by default, requiring `INCUS_SECURITY_SELINUX=true` being set in the environment to have the feature enabled.
+
+  As it stands, with the feature enabled, Incus will detect SELinux support on the system and attempt to detect one of two SELinux environments:
+
+   - The current Fedora/RHEL set of SELinux contexts
+   - The SELinux refpolicy setup for Incus
+
+  When running on a supported system, Incus will then apply the expected SELinux context to containers, including the generation of a unique set of SELinux categories.
+
+  This is effectively to prevent any potential interaction between two containers even if they otherwise share the same SELinux context.
+
+  As it stands, only the runtime context is set. Incus doesn't yet interact with the filesystem context, nor does it handle virtual machines or shared volumes and resources.
+
+  We'd encourage anyone with experience/interest in getting full SELinux support in Incus to try this out and work with us in extending our support!
+
+      [root@fedora ~]# journalctl -u incus | grep -i selinux
+      Nov 29 03:47:44 fedora incusd[8156]: time="2025-11-29T03:47:44Z" level=debug msg="Detected Fedora-style SELinux setup"
+      [root@fedora ~]# ps fauxwwZ | grep /sbin/init
+      system_u:system_r:spc_t:s0:c359,c602 1000000 6647 0.0  0.3  23156 14124 ?        Ss   03:42   0:00  \_ /sbin/init
+      system_u:system_r:spc_t:s0:c449,c951 1000000 8309 0.0  0.3  23156 14112 ?        Ss   03:47   0:00  \_ /sbin/init
+
+  ## Improved Windows agent support
+  Incus now has support for running its WIndows agent as a service, including installation scripts similar to those available on both Linux and MacOS.
+
+  With that in place, we now have a very similar user experience whether you're running Linux, MacOS or Windows in your Incus VMs.
+
+  This work was followed up with an improvement to the Ansible connection plugin to have it support all three platforms as well.
+
+  ![image|690x429](https://discuss.linuxcontainers.org/uploads/default/optimized/2X/e/e17e09773559f996eaa2b7a27eb0cdedbe31ad29_2_690x429.jpeg)
+
+  ## Serial devices in the resources API
+  This one came up from early IncusOS feedback from folks using Incus to run IoT containers with USB serial devices to interact with things like Zigbee and Z-Wave networks.
+
+  On a regular system, one could go inspect /dev/serial to figure out a stable identifier for those USB serial adapters. But with the locked down IncusOS environment, this wasn't easily possible.
+
+  To address that, the resources API now contains a list of serial devices with all the necessary details to select and pass them to a container.
+
+      stgraber@castiana:~ (incus:dev-local/default)$ incus info --resources
+      System:
+        UUID: 33c2c530-8b02-426c-b48c-30d53dbea682
+        Vendor: QEMU
+        Product: Standard PC (Q35 + ICH9, 2009)
+        Version: pc-q35-10.1
+        Type: virtual-machine
+        Chassis:
+            Vendor: QEMU
+            Type: Other
+            Version: pc-q35-10.1
+        Motherboard:
+            Vendor: LinuxContainers
+            Product: Incus
+            Version: pc-q35-10.1
+        Firmware:
+            Vendor: EDK II
+            Version: unknown
+            Date: 02/02/2022
+
+      [...SNIP...]
+
+      Serial devices:
+        Device 0:
+          Id: ttyUSB0
+          Device: 188:0
+          DeviceID: /dev/serial/by-id/usb-QEMU_QEMU_USB_SERIAL_1-0000:00:01.0:00.6-4-if00-port0
+          DevicePath: /dev/serial/by-path/pci-0000:01:00.6-usbv2-0:4:1.0-port0
+          Vendor: Future Technology Devices International, Ltd
+          Vendor ID: 0403
+          Product: FT232 Serial (UART) IC
+          Product ID: 6001
+          Driver: ftdi_sio
+        Device 1:
+          Id: ttyUSB1
+          Device: 188:1
+          DeviceID: /dev/serial/by-id/usb-QEMU_QEMU_USB_SERIAL_1-0000:00:01.0:00.6-5-if00-port0
+          DevicePath: /dev/serial/by-path/pci-0000:01:00.6-usbv2-0:5:1.0-port0
+          Vendor: Future Technology Devices International, Ltd
+          Vendor ID: 0403
+          Product: FT232 Serial (UART) IC
+          Product ID: 6001
+          Driver: ftdi_sio
+
+  ## Bandwidth limits on OVN NICs
+  OVN network interfaces can now make use of the `limits.ingress`, `limits.egress`, `limits.max` and `limits.priority` configuration keys.
+
+  Those are all converted to relevant OVN QoS rules.
+
+  ## Support for multi-object deletion in most CLI commands
+  The following CLI commands can now delete more than one item at once:
+
+   - `incus cluster group delete`
+   - `incus image alias delete`
+   - `incus network delete`
+   - `incus network acl delete`
+   - `incus network address-set delete`
+   - `incus network integration delete`
+   - `incus network zone delete`
+   - `incus operation delete`
+   - `incus profile delete`
+   - `incus project delete`
+   - `incus storage delete`
+   - `incus warning delete`
+
+  ## Ability to turn off passthrough of PCI firmware to VM
+  A new `firmware` configuration key has been added to `pci` type devices.
+  This can be set to `false` to have the device exclude its ROM section.
+
+  That's occasionally required for proper operation of PCI devices in VMs.
+
+  ## PKCS12 generation in the CLI
+  With more people getting started with the Incus web UI, a common pain point was generating a certificate file suitable for import in a web browser.
+
+  To make this easier, the existing `incus remote get-client-certificate` command has been expanded.
+
+  It now both supports writing a regular PEM encoded public certificate to a file with `incus remote get-client-certificate client.crt` as well as generating a PKCS12 certificate bundle (includes the private key) using `incus remote get-client-certificate client.pfx --format=pfx`.
+
+      stgraber@castiana:~$ incus remote get-client-certificate browser.pfx --format=pfx
+      Password for browser.pfx:·
+      stgraber@castiana:~$ ls -lh browser.pfx·
+      -rw------- 1 stgraber stgraber 1.2K Nov 29 16:35 browser.pfx
+
+  ## Option for raw units in CLI CSV output
+  A new `raw` option on top of the `csv` format in CLI lists allows for getting our various resource data as raw bytes rather than as a human readable string.
+
+      stgraber@castiana:~$ incus list -cnm -fcsv
+      c1,9.57MiB
+      dev-os,1.06GiB
+      nginx,2.14MiB
+      test,7.57MiB
+      test1,7.89MiB
+
+      stgraber@castiana:~$ incus list -cnm -fcsv,raw
+      c1,10293248
+      dev-os,1141211136
+      nginx,2240512
+      test,7938048
+      test1,8278016
+
+  # Complete changelog
+
+  Here is a complete list of all changes in this release:
+
+  [details="Full commit list"]
+   - doc/environment: Add INCUS_SECURITY_SELINUX
+   - incusd/db/warnings: Add SELinuxNotAvailable
+   - incusd/sys: Add SELinux detection
+   - incusd/instance/lxc: Set SELinux context
+   - doc: Add SELinux to the word list
+   - incusd/network/ovn: Tweak port removal logic
+   - github: Build the agent on MacOS
+   - incusd/instance/qemu: Disable virtio-snd on Windows
+   - Translated using Weblate (Portuguese)
+   - incusd/instance/qmp: Remove double line break
+   - incusd/instance/qmp: Don't log serial port changes
+   - incusd/device/disk: Skip VirtioFS Posix ACLs on Windows
+   - incusd/selinux: Add basic refpolicy support
+   - client: Add GetEventsByType and GetEventsAllProjectsByType
+   - incusd/lifecycle: Fix project prefix in volume name
+   - incusd/cluster: Use server name instead of IP
+   - cmd/generate-database/db: Fix create/update with composite keys
+   - incusd/storage_volumes: Better handle bad patterns
+   - client: Omit trailing ? for /events without query parameters
+   - incusd/apparmor/lxc: Don't bother with sys/proc protections when nesting enabled
+   - incusd/acme: Handle HTTPS proxies
+   - incusd: Fix lifecycle events being emited on pending entities
+   - incusd/network: Fix vlan/parent modification on physical uplink
+   - incus: Include admin os command on non-Linux pltforms
+   - gomod: Update incus-osd dependency
+   - gomod: Update dependencies
+   - incus/list: Add option for raw units in CSV output
+   - incusd/storage: Fix sparse writer performance
+   - incus-migrate: Write in 4MB chunks
+   - incus-migrate: Strict error checking
+   - incusd/storage: Tighten storage pool volume permissions
+   - incusd/patches: Re-apply storage permissions on update
+   - incusd/patches: Fix incorrect error check in permission patch
+   - incus/instance: Add missing godocs
+   - incusd: only apply qemu rtc adjustments if it is configured
+   - incusd/instance/qemu: Fix macOS agent
+   - incusd/instance/qemu: Properly parse dashed disk names when detaching
+   - incusd/api: Refresh OIDC on changes to oidc.scopes
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - incus/admin/sql: Allow remote interactions
+   - incus/admin/recover: Allow remote interactions
+   - i18n: Update translation templates
+   - incusd: Allow some remote internal API interactions
+   - gomod: Update dependencies
+   - Translated using Weblate (Portuguese)
+   - incusd/daemon: Setup /var/lib/incus/devices as a tmpfs
+   - incusd/daemon: Remove nodev check now that we control that path
+   - cmd/incus-agent: address errcheck lint issue
+   - cmd/incus-agent: address import shadowing
+   - cmd/incus-agent: address os.Exit being called outside of main and init
+   - cmd/incus-agent: refactor DevIncusAPIGET to use switch
+   - cmd/incus-agent: silence defer being use in loop
+   - cmd/incus-agent: address if flow in Connect
+   - cmd/incus-agent: silence warning about break in select in execWs.Do
+   - incus/util: #2636 fix linter complaints in `internal/util`
+   - doc: Remove mentions of IRC
+   - Added Windows agent install scripts.
+   - doc/howto/instances: Update Windows agent instructions
+   - doc/image_format: Tweak wording
+   - internal/linux: Add IoctlBlkZname
+   - incusd/storage/zfs: Rework zvol resolution logic
+   - Revert "tests: Skip XFS on ZFS with Ubuntu 24.04"
+   - incusd/storage/linstor: Parse URLs ourselves
+   - incus-agent: Fix gofumpt
+   - gomod: Update dependencies
+   - lint: Make govulncheck non-fatal
+   - incusd/device/unix_hotplug: Prevent duplicate uevent injection
+   - incus/storage_volume: Fix determination of target path
+   - cmd/incus-simplestream: output of golangci-lint run --fix for cmd/incus-simplestream
+   - cmd/incus-user: refactor to not use os.Exit and instead close listener
+   - cmd/lxc-to-incus: address golangci-lint issues
+   - cmd/lxc-to-incus: return error instead of using os.Exit
+   - cmd/lxc-to-incus: simplify logic to check mount validity
+   - cmd/lxc-to-incus: simplify logic to check mount validity
+   - cmd/lxc-to-incus: rename argument in protoSendError to avoid package shadowing
+   - cmd/lxd-to-incus: address golangci-lint issues
+   - cmd/lxd-to-incus: do not use os.Exit outside of main
+   - build(deps): bump actions/checkout from 5 to 6
+   - shared/resources: Skip broken udev symlinks
+   - cmd/generate-config: address golangci-lint issues
+   - incusd/network/zone: Support setting top level records
+   - cmd/incusd: recursive instance GET returns InstanceFull
+   - doc/rest-api: Refresh swagger YAML
+   - incus/remote: Add support for PFX generation
+   - i18n: Update translation templates
+   - incus/file: Fix crash on file mount
+   - incusd/auth/openfga: Add missing storage volume entitlements
+   - incusd/auth/openfga: Rebuild model
+   - incusd/patches: Upgrade OpenFGA model
+   - Translated using Weblate (Portuguese)
+   - shared/api: Remove non-existent field from StoragePoolBucketBackup
+   - incusd/backup/bucket: Remove unused field
+   - shared/api: Add missing CreatedAt on bucket backup
+   - incusd/storage/bucket: Fix backup listing endpoint
+   - api: storage_volume_full
+   - api: storage_bucket_full
+   - shared/api: Add StorageVolumeFull
+   - shared/api: Add StorageBucketFull
+   - client: Add GetStoragePoolBucketFull and GetStoragePoolVolumeFull
+   - client: Add full variants of volume and bucket list functions
+   - incusd/storage_buckets: Add recursion=1 for storage bucket get
+   - incusd/storage_volumes: Add recursion=1 for storage volume get
+   - incusd/storage_volumes: Add recursion=2 for storage volumes get
+   - incusd/storage_buckets: Add recursion=2 for storage buckets get
+   - doc/rest-api: Refresh swsagger YAML
+   - tests: Fix snapshot list testing
+   - incus: Add support for bulk deletion to all objects
+   - i18n: Update translation templates
+   - api: device_pci_firmware
+   - incusd/device/pci: Add firmware option
+   - incusd/instance/qemu: Add rom-bar to PCI template
+   - incusd/instance/qemu: Pass firmware option to qemuPCIPhysical
+   - doc: Update configs
+   - incusd/instance/qemu: Update tests
+   - api: resources_serial
+   - shared/api: Add Serial device resource types
+   - shared/resources: Add serial device resource support
+   - shared/resources: Add test cases for serial device
+   - incus/info: Add Serial devices to --resources
+   - shares/resources/usbid: Only load the database once
+   - i18n: Update translation templates
+   - doc/rest-api: Refresh swagger YAML
+   - tests: Re-structure test suite for better parallel runs
+   - github: Tweak test matrix
+   - test/metrics: Fix missing cleanup
+   - tests/tls_restrictions: Query specific certificate
+   - tests/remote: Clear the trusted certificates at beginning of test
+   - tests/includes: Fix ensure_has_localhost_remote to clear any existing remote
+   - api: ovn_nic_limits
+   - incus/server/network/ovn/nb: Add QoS function
+   - incus/server/network/ovn: Add limits support
+   - incus/server/device/nic_ovn: Add limits support
+   - doc: Update configs
+   - incusd/instances: Use /tmp for temporary screenshot storage
+   - client/oci: Use SHA256 of combined layers as digest
+   - shared/ioprogress: Cap download speed to file size
+   - incusd/network/acl: Only refresh bridge network rules if ACL is directly used
+   - incusd/device/pci: Don't attempt to bind to current driver
+   - incusd/instance/lxc: Tweak seccomp category
+   - gomod: Update dependencies
+   - api: More precise name for test
+   - api: Add DevicesMap typ to better support unmarshaling
+   - api: Use DevicesMap type for map[string]map[string]string
+   - doc/rest-api: Refresh swagger YAML
+   - tests/storage/linstor: Use correct command to check on snapshots
+   - shared/archive: Fix crash on nil tracker
+  [/details]
+
+  # Documentation
+
+  The Incus documentation can be found at:
+
+  https://linuxcontainers.org/incus/docs/main/
+
+  # Packages
+
+  There are no official Incus packages as Incus upstream only releases regular release tarballs. Below are some available options to get Incus up and running.
+
+  ## Installing the Incus server on Linux
+
+  Incus is available for most common Linux distributions. You’ll find detailed installation instructions in our documentation.
+
+  https://linuxcontainers.org/incus/docs/main/installing/
+
+  ## Homebrew package for the Incus client
+
+  The client tool is available through HomeBrew for both Linux and MacOS.
+
+  https://formulae.brew.sh/formula/incus
+
+  ## Chocolatey package for the Incus client
+
+  The client tool is available through Chocolatey for Windows users.
+
+  https://community.chocolatey.org/packages/incus/6.19.0
+
+  ## Winget package for the Incus client
+
+  The client tool is also available through Winget for Windows users.
+
+  https://winstall.app/apps/LinuxContainers.Incus
+
+  # Support
+
+  Monthly feature releases are only supported up until the next release comes out.  Users needing a longer support length and less frequent changes should consider using Incus 6.0 LTS instead.
+
+  Community support is provided at: https://discuss.linuxcontainers.org
+  Commercial support is available through: https://zabbly.com/incus
+  Bugs can be reported at: https://github.com/lxc/incus/issues
