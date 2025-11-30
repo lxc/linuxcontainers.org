@@ -1,0 +1,548 @@
+title: Incus 6.18 est maintenant disponible
+date: 2025/10/31 21:10
+origin: https://discuss.linuxcontainers.org/t/incus-6-18-has-been-released/25091
+content: |-
+  # Introduction
+
+  <!--
+  The Incus team is pleased to announce the release of Incus 6.18!
+  -->
+  L’équipe d’Incus est heureuse d’annoncer la sortie d’Incus 6.18 !
+
+  <!--
+  This is a reasonably busy release with quite a few smaller releases in every corner of Incus so there should be something for everyone!
+  -->
+  C’est une version assez dense, avec un bon nombre de nouvelles fonctionnalités aux quatre coins du logiciel ; tout le monde devrait donc y trouver son compte !
+
+  [![image|690x259](https://discuss.linuxcontainers.org/uploads/default/original/2X/1/1f6b1e80f7d53405df8e71dfd22cf6090bacf83b.png)](https://linuxcontainers.org/incus/try-it/)
+
+  <!--
+  As usual, you can try it for yourself online: https://linuxcontainers.org/incus/try-it/
+  -->
+  Comme d’habitude, vous pouvez l’essayer vous-même en ligne : https://linuxcontainers.org/incus/try-it/
+
+  <!--
+  Enjoy!
+  -->
+
+  <!--
+  # New features
+  ## Systemd credentials
+  Two new set of configuration keys are now available which allow for easily providing data to systemd in the container or VM through systemd' credential mechanism.
+  -->
+  # Nouvelles fonctionnalités
+  ## Secrets gérés par systemd
+  Deux nouvelles familles de clefs de configuration permettant de passer des secrets à systemd sont maintenant disponibles, à la fois pour les conteneurs et les machines virtuelles.
+
+  <!--
+  Those are `systemd.credential.XYZ` and `systemd.credential-binary.XYZ` with the former meant to pass in simple strings and the latter supporting passing through binary data encoded as base64.
+  -->
+  Les nouvelles clefs `systemd.credential.XYZ` et `systemd.credential-binary.XYZ` permettent respectivement de passer des chaînes de caractères et des données binaires encodées en base64.
+
+      stgraber@dakara:~$ incus create images:debian/13 c1
+      Creating c1
+      stgraber@dakara:~$ incus create images:debian/13 v1 --vm
+      Creating v1
+      stgraber@dakara:~$ incus config set c1 systemd.credential.foo=bar
+      stgraber@dakara:~$ incus config set v1 systemd.credential.foo=bar
+      stgraber@dakara:~$ incus start c1 v1
+      stgraber@dakara:~$ incus exec c1 -- systemd-creds --system cat foo
+      bar
+      stgraber@dakara:~$ incus exec v1 -- systemd-creds --system cat foo
+      bar
+
+  <!--
+  ## Storage volume file operations
+  Incus 6.13 introduced initial SFTP operations on top of custom storage volumes.
+  -->
+  # Opérations sur les fichiers des volumes
+  Incus 6.13 a introduit le support initial pour des opérations SFTP sur des volumes de stockage personnalisés.
+
+  <!--
+  We've now built on top of that to offer the same set of file operations on customer storage volumes as is available on instances.
+  -->
+  Nous avons étendu l’ensemble des opérations disponibles sur les volumes de stockage personnalisés pour correspondre à celles déjà disponibles dans les instances.
+
+      stgraber@dakara:~$ incus storage volume file
+      Usage:
+        incus storage volume file [flags]
+        incus storage volume file [command]
+
+      Available Commands:
+        create      Create files and directories in custom vollume
+        delete      Delete files in custom volume
+        edit        Edit files in storage volumes
+        mount       Mount files from custom storage volumes
+        pull        Pull files from custom volumes
+        push        Push files into custom volumes
+
+  <!--
+  ## Export of ISO volumes
+  ISO storage volumes have always been a bit odd as they cannot be created bu only imported through `incus storage volume import`, yet, they couldn't be exported back out.
+  -->
+  ## Export de volumes ISO
+  Les volumes de stockage ISO ont toujours été un peu spéciaux : ils ne peuvent pas être créés, uniquement importés avec `incus storage volume import`, mais nous n’offrions aucun moyen de les exporter jusque là.
+
+  <!--
+  This has now been corrected and `incus storage volume export` can be used to retrieve an ISO back from Incus.
+  -->
+  Désormais, `incus storage volume export` peut être utilisé pour récupérer un ISO depuis Incus.
+
+      stgraber@dakara:~$ incus storage volume export default virtio-drivers
+      Backup exported successfully!         
+      stgraber@dakara:~$ file virtio-drivers.iso 
+      virtio-drivers.iso: ISO 9660 CD-ROM filesystem data 'virtio-win-0.1.271'
+
+  <!--
+  ## BPF token delegation
+  Incus now supports delegating some BPF capabilities through BPF tokens.
+  -->
+  ## Délégation de jetons BPF
+  Incus supporte à présent de déléguer certaines capacités BPF par l’intermédiaire de jetons BPF.
+
+  <!--
+  This is implemented through a series of `security.bpffs` configuration keys that can list delegated commands, maps, programs, ...
+  -->
+  La fonctionnalité est implémentée à l’aide d’un ensemble de clefs de configuration `security.bpffs` permettant de spécifier les éléments délégués.
+
+  <!--
+  Documentation: https://linuxcontainers.org/incus/docs/main/explanation/bpf-tokens/
+  -->
+  Documentation : https://linuxcontainers.org/incus/docs/main/explanation/bpf-tokens/
+
+  <!--
+  ## MacOS support for the Incus agent
+  Incus has been slowly getting better at running MacOS on x86 platform.
+  You can find a lot more details on how to achieve this here: https://github.com/macOS-on-Incus
+  -->
+  ## Support de macOS pour l’agent Incus
+  Incus s’est progressivement amélioré au fil des versions dans sa gestion des VM macOS en x86.
+  Vous pouvez trouver davantage de détails sur comment virtualiser macOS sur Incus ici : https://github.com/macOS-on-Incus
+
+  <!--
+  But one exciting development in this release of Incus is that the Incus Agent can now be built and run on MacOS as well. This means our agent now works on Linux, Windows and MacOS though with slightly differing capabilities.
+  -->
+  Cette nouvelle version amène une fonctionnalité intéressante : l’agent Incus peut désormais fonctionner sur macOS. Cela signifie que notre agent supporte maintenant Linux, Windows et macOS, avec des capacités un peu différentes cependant d’un agent à l’autre.
+
+  <!--
+  In the MacOS case, we have full command execution (interactive and non-interactive), as well as file transfers and even the ability to pass through shared storage (using 9p). The agent can also report most system information back to Incus.
+  -->
+  Dans le cas de macOS, nous supportons l’exécution de commandes (en mode interactif et non-interactif), les transferts de fichiers, et même la possibilité de monter du stockage partagé (via 9p). Enfin, l’agent peut renvoyer la plupart des informations du système à Incus.
+
+  <!--
+  To install the agent, make sure that `image.os` is set to `MacOS`, then from within the MacOS installation, you should be able to mount the `config` 9p drive and start the agent from there.
+  -->
+  Pour installer l’agent, assurez-vous que `image.os` est défini à `macOS`, puis, depuis l’instance faisant tourner macOS, vous pouvez monter le partage 9p `config` et y démarrer l’agent.
+
+  <!--
+  ## VirtIO sound card in VMs
+  A VirtIO sound card type has been added to QEMU a little while back and is now part of our default set of devices. Though note that it is not a migratable device, so any instance that's got live-migration disabled will not have this device.
+  -->
+  ## Carte son VirtIO dans les VM
+  Le support des cartes son VirtIO a été ajouté il y a quelques temps dans QEMU, et nous les avons intégrées à notre ensemble de périphériques inclus par défaut dans les machines virtuelles. Il est important de noter que ce périphérique n’est pas migrable ; ainsi, nous le désactivons pour toutes les instances migrables à chaud.
+
+  <!--
+  The virtual sound card is connected to SPICE, so desktop sound can be sent back along the VGA console.
+  -->
+  La carte son virtuelle est connectée à SPICE, permettant à la console SPICE de récupérer les flux audio en plus des flux vidéo VGA.
+
+  <!--
+  Note that Windows doesn't currently have a driver for this, so it will mostly be useful for Linux users at this time.
+  -->
+  Notez que Windows ne dispose pas d’un driver adapté pour le moment, donc cette fonctionnalité intéressera principalement les utilisateurs de Linux.
+
+  <!--
+  ## Support for detaching USB devices without removing them
+  USB devices can now be kept in the VM configuration while being detached from the guest. This is done by setting the `attached` property to `false`.
+  -->
+  ## Support du détachement de périphériques USB
+  Les périphériques USB peuvent désormais être conservés dans la configuration des VM tout en restant détachés du système invité. Pour ce faire, il faut définir la propriété `attached` à `false`.
+
+      stgraber@dakara:~$ incus config device set v1 usb0 attached=false
+
+  <!--
+  ## `dns.mode` for OVN network
+  The built-in DNS records can now be disabled on OVN networks by setting the `dns.mode` property similarly to what's long been possible with regular bridges.
+  -->
+  ## `dns.mode` pour les réseaux OVN
+  Les enregistrements DNS gérés par OVN peuvent être désactivés pour les réseaux OVN en définissant `dns.mode` à `none`, comme cela pouvait être fait depuis longtemps avec les bridges.
+
+      root@server01:~# incus network set default dns.mode=none
+      root@server01:~# 
+
+  <!--
+  ## Configurable MAC address patterns
+  The MAC address pattern can now be tweaked on a global and per-project basis.
+  This allows organizations that have purchased their own MAC address allocation to use those MAC addresses rather than the default range from Zabbly.
+  -->
+  ## Modèles d’adresses MAC configurables
+  Le modèle d’adresses MAC peut maintenant être paramétré de manière globale ou locale par projet.
+  Cela permet aux organisations qui ont acquis leur propre préfixe d’adresses MAC de l’utiliser à la place de la plage par défaut fournie par Zabbly.
+
+  <!--
+  When changed, the new pattern applies to all newly created networks and instances.
+  -->
+  Une fois le changement effectué, le nouveau modèle s’appliquera à la création de tous les futurs réseaux et instances.
+
+      stgraber@dakara:~$ incus launch images:debian/13 c1
+      Launching c1
+      stgraber@dakara:~$ incus info c1 | grep MAC
+            MAC address: 10:66:6a:d6:80:3b
+      stgraber@dakara:~$ incus config set network.hwaddr_pattern 00:16:3e:xx:xx:xx
+      stgraber@dakara:~$ incus launch images:debian/13 c2
+      Launching c2
+      stgraber@dakara:~$ incus info c2 | grep MAC
+            MAC address: 00:16:3e:a4:54:24
+
+  <!--
+  ## Extended IncusOS CLI
+  The [IncusOS](https://github.com/lxc/incus-os) CLI under `incus admin os` has been reworked to use logic directly coming from the IncusOS repository rather than having to implement a full client in the Incus CLI.
+  -->
+  ## Extension de la CLI d’IncusOS
+  L’interface en ligne de commande d’[IncusOS](https://github.com/lxc/incus-os), présente sous `incus admin os`, a été retravaillée pour utiliser du code du dépôt d’IncusOS plutôt que d’implémenter la logique dans le code d’Incus.
+
+  <!--
+  As part of that, it also got fleshed out so that every API action, from shutting down or restarting a server through to TPM and storage specific actions are now all exposed in the CLI.
+  -->
+  La CLI a également été étendue de telle sorte que chaque action de l’API, de l’extinction ou redémarrage du serveur aux actions spécifiques sur le TPM ou encore le stockage, est désormais accessible depuis le client.
+
+      stgraber@dakara:~$ incus admin os system
+      WARNING: The IncusOS API and configuration is subject to change
+
+      Usage:
+        incus admin os system [flags]
+        incus admin os system [command]
+
+      Available Commands:
+        backup                        Backup the system
+        check-update                  Check for updates
+        delete-storage-pool           Delete the storage pool
+        edit                          Edit system configuration
+        factory-reset                 Factory reset the system
+        import-storage-encryption-key Import the storage encryption key
+        list                          List system configuration sections
+        poweroff                      Power off the system
+        reboot                        Reboot the system
+        restore                       Restore a system backup
+        show                          Show system configuration details
+        tpm-rebind                    Rebind the TPM (after using recovery key)
+        wipe-drive                    Wipe the drive
+
+  <!--
+  We're planning to re-structure things a bit more in the next release, at which point we should have a more or less stable CLI for IncusOS.
+  -->
+  Nous prévoyons quelques changements dans la structure du client dans la prochaine version, à l’issue desquels la CLI d’IncusOS pourra être considérée suffisamment stable.
+
+
+  <!--
+  # Complete changelog
+  -->
+  # Liste complète des changements
+
+  <!--
+  Here is a complete list of all changes in this release:
+  -->
+  Voici une liste complète de tous les changements apportés par cette version :
+
+  <!--
+  [details="Full commit list"]
+  -->
+  [details="Liste complète des commits"]
+   - api: Add ConfigMap type to better support unmarshaling numbers and bools to map[string]string
+   - api: Use ConfigMap type for map[string]string
+   - api: Handle pre initialized targed ConfigMap (default values)
+   - filter: Add support for api.ConfigMap
+   - server: Fix test with api.ConfigMap
+   - doc/rest-api: Refresh swagger YAML
+   - golangci-lint: Do not require period in Example comments
+   - doc: Add description for database-client role
+   - incusd/network/driver: Add support for dns.mode to OVN network
+   - incusd/network/ovn: Destroy DNS entry in CleanupLogicalSwitchPort
+   - doc: Update config
+   - doc: Change command to `snapshot delete`
+   - incusd: Use 'Patch' method for PATCH requests
+   - internal/server: Add tables on sql dump
+   - incusd: Add tables on sql dump
+   - incus/admin/sql: Add tables on sql dump
+   - i18n: Update translation templates
+   - incus/admin/os: Update for current API prefix
+   - Translated using Weblate (Portuguese)
+   - Fixed grammar in README.md
+   - incus: Add a date format with second granularity
+   - incus/admin/os: Improve debug log command
+   - i18n: Update translation templates
+   - incusd/cluster: Don't use proxy when joining
+   - incusd/device/usb: Add attached configuration key
+   - doc: Update metadata
+   - doc: Remove outdated warning
+   - incusd/device/disk: Remove dead code
+   - api: usb_attached
+   - incusd/storage: Generalize InstanceTarWriter
+   - incusd/instancewriter: Add raw instance writer
+   - incusd/storage: Add ISO volume export
+   - incus: Handle ISO export
+   - test: Incus now allows ISO export
+   - incusd/storage/generic: Use proper custom volume size for backup if possible
+   - i18n: Update translation templates
+   - api: backup_iso
+   - incusd/metrics: Always include internal metrics
+   - incusd/auth: log the error if getting the oidc provider fails
+   - Fix `file push` cmd help typo
+   - i18n: Update translation templates
+   - incusd/instance/qemu: Remove attached attribute handling for disks
+   - incusd/device/disk: Handle attached attribute early
+   - incusd/server/drivers: Add gendoc for storage config keys
+   - doc: Include doc for storage configuration from config_options.txt file
+   - doc: Update metadata
+   - incusd/storage/lvm: Clarify doc strings
+   - incusd/storage: Don't skip zeroes on qcow2 unpack to LVM
+   - incusd/device: Fix gofumpt
+   - doc: Update config
+   - Update translations from Weblate
+   - incusd/network/ovn: Check the correct config on uplink validation
+   - incusd/instance/qemu: Add support for SPICE audio
+   - incusd/console: Close remote connection on console disconnect
+   - Translated using Weblate (Portuguese)
+   - shared/resources: Fix caching mechanism
+   - shared/validate: Add IsBase64
+   - incusd/instance/config: Add systemd.credential.* and systemd.credential-binary.*
+   - incusd/instance/qemu: Add support for systemd credentials through SMBIOS-11
+   - incusd/instance/lxc: Add support for systemd credentials through CREDENTIALS_DIRECTORY
+   - incusd/instance/lxc: Allow live-updating systemd credentials
+   - doc: Update configs
+   - incus-agent: Pass more information to osUmount
+   - api: instance_systemd_credentials
+   - doc/wordlist: Update wordlist
+   - test: Add tests for systemd keys
+   - incusd/cluster: Disable proxy during cluster join
+   - gomod: Add gopsutil
+   - agent/darwin: Initial darwin agent implementation
+   - doc: Kubernetes and ClusterAPI integration
+   - doc: Add API to wordlist
+   - github: Re-enable LINSTOR tests
+   - internal/server/network: Update libovsdb import path
+   - Makefile: Update libovsdb command URL
+   - go.mod: Update libovsdb import path
+   - internal/server/network/ovn/schema: Update generated schema
+   - incus-agent/darwin: Split non-darwin-specific logic
+   - incus-agent/windows: Feature parity with Darwin
+   - test/mini-oidc: Clarify usage in README.md
+   - test/mini-oidc: Extract logic from main
+   - test/mini-oidc: Add RunTest for usage in tests
+   - test/mini-oidc: Move user file to global var
+   - test/mini-oidc: Make linter happy
+   - test/mini-oidc: Make poll interval configurable in tests
+   - test/mini-oidc: Allow setting expiration for tokens
+   - test/mini-oidc: Make linter happy
+   - test/mini-oidc: Fix missing support for device control flow
+   - incus/admin/os: Add system list command
+   - shared/cmd: Move from internal/cmd
+   - cmd: Update for shared/cmd
+   - incus: Use cli.CheckArgs
+   - incus-simplestreams: Use cli.CheckArgs
+   - shared/cmd: Add CheckArgs
+   - shared/cmd: Add Usage
+   - incus: Use cli.Usage
+   - shared/cmd: Add TextEditor
+   - cmd: Use cli.TextEditor
+   - i18n: Update translation templates
+   - incus: Switch to shared IncusOS CLI
+   - gomod: Update dependencies
+   - i18n: Update translation templates
+   - incusd: Use ExtendMetadata when possible
+   - incusd/instance/qmp: Better protect against write after close
+   - doc/rest-api: Refresh swagger YAML
+   - Update translations from weblate
+   - shared/api: Add 'UsedBy' field to 'ClusterGroup' struct
+   - incusd/db: Add 'GetClusterGroupMemberInstances' and check cluster group member usage
+   - incusd: Check if cluster group is in use
+   - api: Add cluster_group_usedby extension
+   - doc/rest-api: Refresh swagger YAML
+   - api: Add bpf_token_delegation extension
+   - incusd/main_forkbpf: Create forkbpf helper for bpf token delegation.
+   - incusd/instance: Add bpf token delegation feature.
+   - doc: Update configs
+   - doc: Add documentation for bpf token delegation
+   - incusd/project: Require lowlevel access for bpffs options
+   - tests: Add test for bpf token delegation
+   - codespell: Allow attachs (bpffs mount option)
+   - incusd/instance: Add GuestOS
+   - incusd/device/disk: Rework OS and architecture detection
+   - incus-agent/darwin: Implement interactive console
+   - incusd/instance/qemu: Add Darwin agent files
+   - incus-agent/darwin: Fix typo in comment
+   - doc/instance/create: Add details for macOS
+   - incusd/network: Check if target_address in forward is a broadcast address of the networks subnet
+   - incusd/network: Check if target_address in forward is the networkID of the networks subnet
+   - incusd/network: Add doc comment to function; Rename variable to avoid shadowing
+   - incusd/network: Make linter happy
+   - make: check if run-parts is installed
+   - Translated using Weblate (English)
+   - Translated using Weblate (German)
+   - Translated using Weblate (German)
+   - Translated using Weblate (German)
+   - Translated using Weblate (German)
+   - Translated using Weblate (German)
+   - Translated using Weblate (Spanish)
+   - Translated using Weblate (Spanish)
+   - Translated using Weblate (French)
+   - Translated using Weblate (French)
+   - Translated using Weblate (French)
+   - Translated using Weblate (French)
+   - Translated using Weblate (French)
+   - Translated using Weblate (French)
+   - Translated using Weblate (French)
+   - Translated using Weblate (French)
+   - Translated using Weblate (Italian)
+   - Translated using Weblate (Italian)
+   - Translated using Weblate (Japanese)
+   - Translated using Weblate (Japanese)
+   - Translated using Weblate (Japanese)
+   - Translated using Weblate (Dutch)
+   - Translated using Weblate (Dutch)
+   - Translated using Weblate (Portuguese (Brazil))
+   - Translated using Weblate (Portuguese (Brazil))
+   - Translated using Weblate (Russian)
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - Translated using Weblate (Portuguese)
+   - Translated using Weblate (Norwegian Bokmål)
+   - Translated using Weblate (Norwegian Bokmål)
+   - Translated using Weblate (Indonesian)
+   - Translated using Weblate (Indonesian)
+   - Translated using Weblate (Chinese (Traditional Han script))
+   - Translated using Weblate (Chinese (Traditional Han script))
+   - Translated using Weblate (Tamil)
+   - i18n: Update translation templates
+   - gomod: Refresh for latest IncusOS CLI
+   - incusd/instance/lxc: Fix handling of credentials on existing instances
+   - incusd/instance/lxc: Don't apply credentials update on stopped containers
+   - incusd/auth: Reorder 'EntitlementCanAccessFiles' and 'EntitlementCanConnectSFTP' for clarity
+   - shared/api: Add lifecycle events for storage volume files management
+   - incusd/lifecycle: Add lifecycle events for storage volume files management
+   - incusd/storage: Add support for creating SFTP server for storage volume using forkfile
+   - incusd: Extract helper function for reuse by storage volumes
+   - incusd: Add support for file management in storage volumes
+   - incus/file: Extract helper function for reuse by storage volumes
+   - incus/storage_volumes: Add support for file management in storage volumes
+   - client: Add support for file management in storage volumes
+   - tests: Add tests for storage volume files manipulation
+   - api: Add 'file_storage_volume' extension
+   - doc/rest-api: Refresh swagger YAML
+   - i18n: Update translation templates
+   - shared/osarch: Add aliases for the various x86_64 versions
+   - incus/export: Quiesce output when writing to stdout
+   - i18n: Update translation templates
+   - build(deps): bump actions/upload-artifact from 4 to 5
+   - server/operations: Remove project name from operations executed on other nodes
+   - incusd: Remove remaining project remnants from operations
+   - shared/validate: Add IsMACPattern
+   - incusd/config: Add MAC address pattern key
+   - incusd/project: Add MAC address pattern key
+   - go.mod: Update github.com/lxc/incus-os/incus-osd
+   - incus: Support remotes for "admin os" commands
+   - doc: Update configs
+   - incusd/instance: Allow customizing MAC address patterns
+   - incusd/device: Allow customizing MAC address patterns
+   - incusd/network: Allow customizing MAC address patterns
+   - api: network_hwaddr_pattern
+   - test: Add network.hwaddr_pattern tests
+   - incus/file/pull: Respect target name for symlinks
+   - incus/file/pull: Allow reading symlink content to stdout
+   - incus/file/push: Keep remote owner/mode when present and not overriden
+   - incusd/network/ovn: Fix failure on device stop for networks without uplink
+   - incusd/network/common: Handle parent field in State
+   - doc/clustering: Cover CPU baseline calculation
+   - i18n: Update translations from weblate
+   - doc/instances: clarify VM definition with abbreviation
+   - incusd/network/macvlan: Bring up parent interface and check existence on update
+   - incusd/network/macvlan: Please the static analyzer
+   - gomod: Update dependencies
+   - incusd/storage/drivers/lvmcluster: Restrict snapshotting
+  [/details]
+
+  # Documentation
+
+  <!--
+  The Incus documentation can be found at:
+  -->
+  La documentation d’Incus peut être consultée sur :
+
+  https://linuxcontainers.org/incus/docs/main/
+
+  <!--
+  # Packages
+  -->
+  # Paquets
+
+  <!--
+  There are no official Incus packages as Incus upstream only releases regular release tarballs. Below are some available options to get Incus up and running.
+  -->
+  Incus ne fournit pas de paquet d’installation mais bien un tarball à chaque version. Vous trouverez ci-dessous différentes solutions pour mettre Incus en service.
+
+  <!--
+  ## Installing the Incus server on Linux
+  -->
+  ## Installation du serveur Incus sous Linux
+
+  <!--
+  Incus is available for most common Linux distributions. You’ll find detailed installation instructions in our documentation.
+  -->
+  Incus est disponible sur la plupart des distributions Linux courantes. Vous trouverez des instructions d’installation détaillées dans notre documentation.
+
+  https://linuxcontainers.org/incus/docs/main/installing/
+
+  <!--
+  ## Homebrew package for the Incus client
+  -->
+  ## Paquet Homebrew du client Incus
+
+  <!--
+  The client tool is available through HomeBrew for both Linux and MacOS.
+  -->
+  Le client Incus est disponible sur Homebrew pour Linux et macOS.
+
+  https://formulae.brew.sh/formula/incus
+
+  <!--
+  ## Chocolatey package for the Incus client
+  -->
+  ## Paquet Chocolatey du client Incus
+
+  <!--
+  The client tool is available through Chocolatey for Windows users.
+  -->
+  Le client Incus est disponible sur Chocolatey pour les utilisateurs de Windows.
+
+  https://community.chocolatey.org/packages/incus/6.18.0
+
+  <!--
+  ## Winget package for the Incus client
+  -->
+  ## Paquet Winget du client Incus
+
+  <!--
+  The client tool is also available through Winget for Windows users.
+  -->
+  Le client Incus est aussi disponible sur Winget pour les utilisateurs de Windows.
+
+  https://winstall.app/apps/LinuxContainers.Incus
+
+  # Support
+
+  <!--
+  Monthly feature releases are only supported up until the next release comes out.  Users needing a longer support length and less frequent changes should consider using Incus 6.0 LTS instead.
+  -->
+  Les versions de fonctionnalité d’Incus ne sont supportées que jusqu’à la sortie de la suivante. Les personnes souhaitant un support plus long et des changements moins fréquents devraient plutôt envisager d’utiliser Incus 6.0 LTS.
+
+  <!--
+  Community support is provided at: https://discuss.linuxcontainers.org
+  Commercial support is available through: https://zabbly.com/incus
+  Bugs can be reported at: https://github.com/lxc/incus/issues
+  -->
+  Le support communautaire est disponible sur : https://discuss.linuxcontainers.org
+  Un support commercial est disponible sur : https://zabbly.com/incus
+  Les bugs peuvent être signalés sur : https://github.com/lxc/incus/issues
