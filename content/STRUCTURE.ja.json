@@ -73,6 +73,42 @@
      "generator": "link",
      "meta": {"url": "https://images.linuxcontainers.org"}},
 
+
+    {"path": "/incus-os/",
+     "generator": "alias",
+     "meta": {"target": "/incus-os/introduction/"}},
+
+    {"path": "/incus-os/introduction/",
+     "title": "IncusOS - イントロダクション",
+     "menu": ["IncusOS", "イントロダクション"],
+     "generator": "markdown",
+     "meta": {"input": "incus-os/introduction.ja.md"}},
+
+    {"path": "/incus-os/documentation",
+     "menu": ["IncusOS", "ドキュメント"],
+     "generator": "link",
+     "meta": {"url": "https://incus-os-ja.readthedocs.io/ja/latest/"}},
+
+    {"path": "/incus-os/downloads/",
+     "title": "IncusOS - ダウンロード",
+     "menu": ["IncusOS", "ダウンロード"],
+     "generator": "link",
+     "meta": {"url": "https://incusos-customizer.linuxcontainers.org"}},
+
+    {"path": "/incus-os/external-resources/",
+     "menu": ["IncusOS", "外部リソース"]},
+
+    {"path": "/incus-os/github/",
+     "menu": ["IncusOS", "GitHub"],
+     "generator": "link",
+     "meta": {"url": "https://github.com/lxc/incus-os"}},
+
+    {"path": "/incus-os/forum/",
+     "menu": ["IncusOS", "フォーラム"],
+     "generator": "link",
+     "meta": {"url": "https://discuss.linuxcontainers.org"}},
+
+
     {"path": "/lxd/",
      "title": "LXD - Has been moved to Canonical",
      "generator": "markdown",
