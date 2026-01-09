@@ -82,7 +82,7 @@
      "title": "IncusOS - イントロダクション",
      "menu": ["IncusOS", "イントロダクション"],
      "generator": "markdown",
-     "meta": {"input": "incus-os/introduction.md"}},
+     "meta": {"input": "incus-os/introduction.ja.md"}},
 
     {"path": "/incus-os/documentation",
      "menu": ["IncusOS", "ドキュメント"],
