@@ -38,7 +38,7 @@ The current build can also be installed directly with:
 -->
 最新の状態のビルドを直接次のようにインストールできます:
 
-    go get -v -x github.com/lxc/distrobuilder/distrobuilder
+    go install -v -x github.com/lxc/distrobuilder/distrobuilder@latest
 
 # 開発言語、ライセンス、コントリビュート <!-- Language, licensing and contributions -->
 <!--
