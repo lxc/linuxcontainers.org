@@ -167,7 +167,7 @@ Start a container shell.
 -->
 コンテナ内のシェルを起動します。
 
-    root@host:~# lxc-attach --name mycontainer
+    root@host:~# lxc-attach --name mycontainer --clear-env
 
 <!--
 Inside the container is where we really get a feeling for what a system container is and how it is like a lightweight virtual machine in many ways. The changes we make inside the container persist. If we later stop the container and restart it, our changes will still be there.
@@ -484,7 +484,7 @@ The first option requires two steps: manually create the mount target inside the
 -->
 最初のオプションには 2 ステップが必要です: コンテナ内にマウント先を手動で作成します。そしてコンテナへのマウントの設定を行います。
 
-    root@host:~# lxc-attach --name mycontainer -- mkdir -p /container/mount/point
+    root@host:~# lxc-attach --name mycontainer --clear-env -- mkdir -p /container/mount/point
 
     root@host:~# echo "lxc.mount.entry = /host/path/to/volume container/mount/point none bind 0 0" >>/var/lib/lxc/mycontainer/config
 
@@ -526,7 +526,7 @@ Start a container shell.
 -->
 コンテナでシェルを起動します。
 
-    root@host:~# lxc-attach --name mycontainer
+    root@host:~# lxc-attach --name mycontainer --clear-env
 
 <!--
 The container can see the text file and its content.
@@ -601,7 +601,7 @@ If you start a container, you can explore the uid range in use as seen from the 
 
     lxc-start --name container1
     ps aux
-    lxc-attach --name container1 -- ps aux
+    lxc-attach --name container1 --clear-env -- ps aux
 
 # root ユーザーによる独立した UID と GID の範囲を持つ非特権コンテナの作成 <!-- Create Unprivileged Containers as Root with Separate UID and GID Ranges -->
 
@@ -779,7 +779,7 @@ And get a shell inside it with:
 -->
 コンテナ内でシェルを実行するには以下のようにします:
 
-    lxc-attach --name mycontainer
+    lxc-attach --name mycontainer --clear-env
 
 <!--
 Stopping it can be done with:

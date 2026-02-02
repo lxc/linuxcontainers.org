@@ -85,7 +85,7 @@ You can see status information about all containers.
 
 Start a container shell.
 
-    root@host:~# lxc-attach --name mycontainer
+    root@host:~# lxc-attach --name mycontainer --clear-env
 
 Inside the container is where we really get a feeling for what a system container is and how it is like a lightweight virtual machine in many ways. The changes we make inside the container persist. If we later stop the container and restart it, our changes will still be there.
 
@@ -280,7 +280,7 @@ To mount the volume inside the container there are two options.
 
 The first option requires two steps: manually create the mount target inside the container and then configure the container mount.
 
-    root@host:~# lxc-attach --name mycontainer -- mkdir -p /container/mount/point
+    root@host:~# lxc-attach --name mycontainer --clear-env -- mkdir -p /container/mount/point
 
     root@host:~# echo "lxc.mount.entry = /host/path/to/volume container/mount/point none bind 0 0" >>/var/lib/lxc/mycontainer/config
 
@@ -304,7 +304,7 @@ On the host, add a text file in the volume.
 
 Start a container shell.
 
-    root@host:~# lxc-attach --name mycontainer
+    root@host:~# lxc-attach --name mycontainer --clear-env
 
 The container can see the text file and its content.
 
@@ -349,7 +349,7 @@ If you start a container, you can explore the uid range in use as seen from the 
 
     lxc-start --name container1
     ps aux
-    lxc-attach --name container1 -- ps aux
+    lxc-attach --name container1 --clear-env -- ps aux
 
 # Create Unprivileged Containers as Root with Separate UID and GID Ranges
 
@@ -443,7 +443,7 @@ You can then confirm its status with either of:
 
 And get a shell inside it with:
 
-    lxc-attach --name mycontainer
+    lxc-attach --name mycontainer --clear-env
 
 Stopping it can be done with:
 
