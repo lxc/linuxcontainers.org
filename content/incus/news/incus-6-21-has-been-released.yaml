@@ -87,7 +87,7 @@ content: |-
   ## Parallel instance startup
   Up until now all instances marked for auto-starting on system boot would be started sequentially, respecting the defined priority and delays.
 
-  To speed things up a bit on very large systems, Incus will now check each project's instance list and for any project where instances aren't using priority and delays, it will start the instances in parallel with 1 parallel instance per 4 CPU threads available on the system (so a system with 16 threads would have instances starting 4 at a time).
+  To speed things up a bit on very large systems, Incus will now check the instance list and separate instances with boot priorities/delays from those that don't. Those that don't are then batch-started with one parallel instance start per 4 CPU cores, those instances with priorities or delays will then be started sequentially as normal.
 
   ## Network restrictions through OIDC claims
   A new advanced option for those using OIDC authentication is a claim named `incus.allowed_subnets` which can contain a list of comma separated CIDR subnets that the client must be connecting from to be allowed to interact with the API.

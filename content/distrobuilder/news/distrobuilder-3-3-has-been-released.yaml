@@ -1,0 +1,90 @@
+title: Distrobuilder 3.3 has been released
+date: 2026/02/23 20:02
+origin: https://discuss.linuxcontainers.org/t/distrobuilder-3-3-has-been-released/26260
+content: |-
+  # Introduction
+  The distrobuilder team is proud to announce the release of distrobuilder 3.3!
+
+  This is primarily a bugfix release, updating some necessary logic to handle newer versions of the various distributions that distrobuilder supports.
+
+  Highlights are:
+
+   - Support for ArchLinux on riscv64
+   - Support for Windows 2025
+   - Support for AlmaLinux, CentOS Stream and RockyLinux 10
+   - Support for virtio-sock driver on Windows
+   - Fixed handling of console-getty in modern systemd distributions
+   - Reworked GPG validation and enforcement
+
+  With this release, we're switching to semver tags, this is `v3.3.0`.
+
+  The full list of commits is available below:
+
+  [details="Detailed changelog"]
+   - sources/archlinux: Add riscv64 support
+   - github: Don't run gomod update
+   - archlinux: Fix typo
+   - pacman: Add riscv64
+   - managers: Fix typo
+   - Usage: Set image.os for Windows installation
+   - Replace `gopkg.in/yaml.v2` with `github.com/goccy/go-yaml`
+   - Revert "Replace `gopkg.in/yaml.v2` with `github.com/goccy/go-yaml`"
+   - Go: Use incus 6.12
+   - shared: Update ArchitectureID import
+   - utils_test.go: TestRecvGPGKeys add missing cleanup
+   - chroot: Don't empty mount targets
+   - Makefile: Pin go-jose for Go 1.23
+   - sources/docker: Port to skopeo+umoci
+   - Update dependencies
+   - incus: Support compression=none for VMs
+   - windows: Add 2k25 to supported list
+   - openwrt: verify checksum and signature by default
+   - almalinux: Add support for AlmaLinux 10
+   - rockylinux: Add RockyLinux 10 support
+   - Revert "almalinux: Add support for AlmaLinux 10"
+   - almalinux: Align nogpgcheck with Rocky
+   - almalinux: Fix install script
+   - fedora-http: Use RsyncLocal
+   - centos: Add support for CentOS Stream 10
+   - centos: Fix GPGKey and mirror for Centos Stream 9 onwards
+   - windows: Add viosock driver
+   - windows: Write viosock service and lib files
+   - distrobuilder: Make linter happy
+   - windows: Fix lib dir location
+   - systemd-generator: Fix console-getty handling
+   - docker: use umoci library and podman image library
+   - make: use build tags to stub unnecessary dependencies
+   - Makefile: Bump minimum to Go 1.24.7
+   - gomod: Update dependencies
+   - github: Ignore unrelated GHSA
+   - sources/fedora: Remove legacy releases
+   - sources: Always use custom HTTP client
+   - sources: Tweak HTTP client to be more compatible
+   - sources: Update the tests for HTTP client
+   - gomod: Update dependencies
+   - Remove deprecated 22.03 architecture path and filename logic
+   - Update OpenWRT config to build also release candidates
+   - sources: support AlmaLinux 9 and 10 with HTTP sources
+   - sources: refactor AlmaLinux version check to use switch statement
+   - sources: enforce GPG verification across multiple distros
+   - sources/voidlinux: revert GPG validation changes VoidLinux uses signify signatures (.sig files), not GPG. This reverts voidlinux-http.go changes from commit 64b60db9.
+   - sources/centos: fix GPG verification for plain checksum files
+   - sources/gentoo: download .DIGESTS separately for GPG verification
+   - sources/rocky: implement version-specific GPG verification
+   - sources/centos-http: Support CentOS Stream 10 checksum file
+   - sources: Fix portage snapshot GPG verification
+   - source.md: source.same_is is a string
+   - systemd-generator: fix escape sequence
+   - windows: Fix viosock registry entries
+   - windows: Add Catalog index support
+   - windows: Remove catalog injection
+   - doc: Re-sync dependencies with Incus
+   - Makefile: Bump minimum version to 1.25.6
+   - gomod: Update dependencies
+   - doc: Ignore HTTP errors on docutils.sourceforge.io
+  [/details]
+
+  # Downloads
+
+   - Main release tarball: [distrobuilder-3.3.tar.gz](https://linuxcontainers.org/downloads/distrobuilder/distrobuilder-3.3.tar.gz)
+   - GPG signature: [distrobuilder-3.3.tar.gz.asc](https://linuxcontainers.org/downloads/distrobuilder/distrobuilder-3.3.tar.gz.asc)

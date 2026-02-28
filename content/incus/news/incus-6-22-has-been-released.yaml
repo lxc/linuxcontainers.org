@@ -1,0 +1,639 @@
+title: Incus 6.22 has been released
+date: 2026/02/27 18:02
+origin: https://discuss.linuxcontainers.org/t/incus-6-22-has-been-released/26300
+content: |-
+  # Introduction
+  The Incus team is pleased to announce the release of Incus 6.22!
+
+  This is quite the busy release with a lot of changes all across the board on top of a large quantities of bugfixes. There should be something for everyone!
+
+  [![image|690x245](https://discuss.linuxcontainers.org/uploads/default/original/2X/a/a3913a05d7c84f73546edc305dccc04007f0e1bc.png)](https://linuxcontainers.org/incus/try-it/)
+
+  As usual, you can try it for yourself online: https://linuxcontainers.org/incus/try-it/
+
+  Enjoy!
+
+  # New features
+  ## vsock support for the WIndows agent
+  Back when we introduced the Incus VM agent for Windows, the Virtio Vsock driver for Windows was still awaiting signature by Microsoft and Go support for vsock on Windows was completely missing.
+
+  Both of those have now been fixed and allowed us to start building our Windows agent with vsock as the transport rather than TCP. This matches the behavior we have on Linux and allows for interacting with the VM agent in environments where Incus doesn't know the IP address of the VMs it's running or where it's not allowed connecting to the VM's IP address.
+
+      stgraber@castiana:~ (incus:dev-cluster01/default)$ incus list Windows
+      +-------------+---------+---------------------------+-------------------------------------------------------------------------+-----------------+-----------+----------+
+      |    NAME     |  STATE  |           IPV4            |                                  IPV6                                   |      TYPE       | SNAPSHOTS | LOCATION |
+      +-------------+---------+---------------------------+-------------------------------------------------------------------------+-----------------+-----------+----------+
+      | Windows2016 | RUNNING | 172.17.45.252 (Ethernet0) | 2602:fc62:c:1045:992a:86ac:bed4:7643 (Ethernet0)                        | VIRTUAL-MACHINE | 0         | incus03  |
+      |             |         |                           | 2001:0:14c9:dc0e:c7f:1835:53ee:d203 (Teredo Tunneling Pseudo-Interface) |                 |           |          |
+      +-------------+---------+---------------------------+-------------------------------------------------------------------------+-----------------+-----------+----------+
+      | Windows2025 | RUNNING | 172.17.45.215 (Ethernet0) | 2602:fc62:c:1045:db35:1adc:89f5:5e9e (Ethernet0)                        | VIRTUAL-MACHINE | 0         | incus03  |
+      +-------------+---------+---------------------------+-------------------------------------------------------------------------+-----------------+-----------+----------+
+      
+      stgraber@castiana:~ (incus:dev-cluster01/default)$ incus info Windows2025
+      Name: Windows2025
+      Description: Auto-imported from VMware
+      Status: RUNNING
+      Type: virtual-machine
+      Architecture: x86_64
+      Location: incus03
+      PID: 2658
+      Created: 2026/02/25 01:36 EST
+      Last Used: 2026/02/26 16:36 EST
+      Started: 2026/02/26 16:36 EST
+      
+      Operating System:
+        OS: Windows Server 2025 Datacenter Evaluation
+        OS Version: 26100
+        Kernel Version: 6.3
+        Hostname: WIN-QVHTSU4SGJK
+        FQDN: WIN-QVHTSU4SGJK
+      
+      Resources:
+        Processes: 87
+        CPU usage:
+          CPU usage (in seconds): 57366
+        Memory usage:
+          Memory (current): 1.58GiB
+        Network usage:
+          Ethernet0:
+            Type: broadcast
+            State: UP
+            Host interface: Ethernet0
+            MAC address: 00:50:56:a9:12:b0
+            MTU: 1500
+            Bytes received: 14.34MB
+            Bytes sent: 3.48MB
+            Packets received: 13036
+            Packets sent: 8992
+            IP addresses:
+              inet6: 2602:fc62:c:1045:db35:1adc:89f5:5e9e/64 (global)
+              inet6: fe80::78a1:5e60:236:58a2/64 (link)
+              inet:  172.17.45.215/24 (global)
+          Loopback Pseudo-Interface 1:
+            Type: loopback
+            State: UP
+            Host interface: Loopback Pseudo-Interface 1
+            MTU: -1
+            Bytes received: 0B
+            Bytes sent: 0B
+            Packets received: 0
+            Packets sent: 0
+            IP addresses:
+              inet6: ::1/128 (local)
+              inet:  127.0.0.1/8 (local)
+
+  **NOTE**: To have this function properly, you need to ensure that the virtio-vsock drivers and service are installed on Windows. This typically require manually locating the correct vsock driver build in the VirtIO drivers image and then right-click and install the .inf file as the VirtIO installer doesn't appear to do that automatically at the moment.
+
+  ## Direct backup retrieval
+  Incus has a built-in backup API allowing for the creation of backups of both instances and custom storage volumes. This is meant for integration with backup systems or similar automation.
+
+  More visibly, this same mechanism is used by `incus export` and `incus storage volume export`. In both cases, those commands have been driving the creation of a backup on the Incus side, then its retrieval and finally deleting of the backup on the server side.
+
+  This is quite wasteful as this stores everything on disk just to download it and then delete it. Incus 6.22 improves that by allowing for direct backup streaming.
+
+      stgraber@dakara:~$ incus launch images:alpine/edge a1
+      Launching a1
+      stgraber@dakara:~$ incus export a1
+      Backup exported successfully!
+      stgraber@dakara:~$ ls -lh a1.tar.gz 
+      -rw-rw-r-- 1 stgraber stgraber 4.0M Feb 27 10:43 a1.tar.gz
+
+  ## Disk-only snapshot restoration
+  Incus snapshots capture far more than just disk state, they also capture the entire instance configuration and optionally runtime state. Pretty often however when you want to restore a snapshot, you're only interested in getting the storage reverted and nothing else. We now have support for doing just that with disk-only snapshot restoration.
+
+      stgraber@dakara:~$ incus snapshot restore a1 snap0 --diskonly
+
+  ## Dedicated storage volume for server logs
+  Incus logs can really accumulate over time, especially on systems running hundreds or thousands of VMs. Incus has built-in log rotation to try to keep things under control, but logs can still pile up taking GBs of storage.
+
+  We now have a new configuration key, `storage.logs_volume` which allows moving all Incus logs onto a dedicated custom storage volume, similar to what's already offered for images and backups.
+
+      stgraber@dakara:~$ incus storage volume create default logs
+      Storage volume logs created
+      stgraber@dakara:~$ incus config set storage.logs_volume default/logs
+      Error: Failed validation of "storage.logs_volume": `storage.logs_volume` cannot be changed if there are running instances
+      stgraber@dakara:~$ incus stop --all
+      stgraber@dakara:~$ incus config set storage.logs_volume default/logs
+      stgraber@dakara:~$ incus start --all
+
+  Documentation: https://linuxcontainers.org/incus/docs/main/server_config/#miscellaneous-options
+
+  ## QCOW2 storage improvements
+  As a reminder, Incus uses QCOW2 as a mechanism to provide proper snapshotting on top of `lvmcluster` for block storage. Incus can now create and manage snapshots on instances, including running ones and including live migration.
+
+  We've also now moved custom block storage volumes to also use QCOW2 as format by default with initial snapshot support there too with the remaining pieces (snapshot of volumes attached to running VMs) coming with Incus 6.23.
+
+  ## `lvmcluster` storage pool resizing
+  Incus clusters using shared block storage with the `lvmcluster` driver can now have their backing block devices grown and have Incus expand the LVM storage capacity.
+
+  You can now set the `size` property on a `lvmcluster` either to a the new size you want to grow it to or to `max` as a placeholder to grow it to the maximum size available on the underlying storage.
+
+  Documentation: https://linuxcontainers.org/incus/docs/main/reference/storage_lvm/
+
+  ## Automatic snapshot removal on restore with `lvmcluster`
+  Still on `lvmcluster`, it has the same restriction as a number of other storage backends that it can only restore the most recent snapshot, requiring more recent snapshots to be deleted first.
+
+  As a result, we have now included a `lvmcluster.remove_snapshots` configuration option to allow for automatic deletion of snapshots during restoration.
+
+  Documentation: https://linuxcontainers.org/incus/docs/main/reference/storage_lvm/
+
+  ## Full USB controller passthrough in `unix-hotplug`
+  The `unix-hotplug` device has now been extended with a new `pci` configuration key allowing for selecting a specific USB controller, automatically including every device appearing/disappearing on that controller.
+
+      stgraber@dakara:~$ incus launch images:debian/13 c1
+      Launching c1
+      stgraber@dakara:~$ incus config device add c1 usb-controller unix-hotplug pci=0000:24:00.0
+      Device usb-controller added to c1
+      stgraber@dakara:~$ incus exec c1 bash
+      root@c1:~# find /dev/bus
+      /dev/bus
+      /dev/bus/usb
+      /dev/bus/usb/005
+      /dev/bus/usb/005/023
+
+  Documentation: https://linuxcontainers.org/incus/docs/main/reference/devices_unix_hotplug/
+
+  ## Certificate information in the authorization scriptlet
+  For environments where full integration with OpenID Connect and OpenFGA isn't practical, Incus supports a simpler authorization mechanism through the authorization scriptlet.
+
+  This is effectively a python-like script which gets executed within Incus every time access needs to be validated for a given operation. The initial implementation of this provided the scriptlet with the fingerprint of the TLS certificate as well as the operation and object.
+
+  We've now extended the provided data to include all fields on the Incus certificate entry as well as the actual x509 certificate and data.
+
+  This allows making more complex policies where certificate properties like its name or restrictions can now be used to make access decisions.
+
+  Documentation: https://linuxcontainers.org/incus/docs/main/authorization/#scriptlet-authorization
+
+  ## VM fast reboot
+  Incus supports quite a lot of VM features and integrations, a number of which require pretty deep integration with the host system and operations outside of the QEMU environment.
+
+  For that reason, Incus has always caused QEMU to fully exit every time a VM gets restarted, allowing it to start with a fresh state.
+
+  While this works very reliably, it causes a console disconnection and a bit of extra delay during reboots. To improve this, Incus now keeps track of whether a full reboot is beneficial (for example following a hotplug operation) and will only trigger the full respawn of QEMU in that situation. Other reboot operations now happen much more quickly and without disconnection from the console.
+
+  ## Image server URL restrictions in projects
+  Shared Incus clusters using restricted projects will often want to control exactly what the user may access and pull into the cluster.
+
+  For this reason, we've now introduced `restricted.images.servers` as a new project restriction. It takes a comma separate list of image server domains which will be allowed for use within the project. All other servers will be rejected.
+
+  In addition to that, restricted projects are also now restricted to `push` mode migration with the `pull` mode migrations being blocked.
+
+      stgraber@dakara:~$ incus project set foo restricted=true restricted.images.servers=example.net
+      stgraber@dakara:~$ incus launch images:alpine/edge a1
+      Launching a1
+      Error: Failed instance creation: Image server "images.linuxcontainers.org" isn't allowed in this project
+      stgraber@dakara:~$ incus project set foo restricted=true restricted.images.servers=images.linuxcontainers.org
+      stgraber@dakara:~$ incus launch images:alpine/edge a1
+      Launching a1
+
+  Documentation: https://linuxcontainers.org/incus/docs/main/reference/projects/
+
+  ## URL based imports in `incus-migrate`
+  `incus-migrate` is our standalone tool to handle a variety of migration scenarios from physical-to-virtual type migration to importing existing VMs and containers images.
+
+  The tool has now been updated to allow directly consuming a remote image through a URL. This makes it trivial to import a QCOW2 or VMDK image.
+
+      stgraber@dakara:~$ incus-migrate 
+      The local Incus server is the target [default=yes]: 
+      
+      What would you like to create?
+      1) Container
+      2) Virtual Machine
+      3) Virtual Machine (from .ova)
+      4) Custom Volume
+      
+      Please enter the number of your choice: 2
+      Project to create the instance in [default=default]: 
+      Name of the new instance: talos
+      Please provide the path or URL to a disk, partition, or qcow2/raw/vmdk image file: https://factory.talos.dev/image/9ed5fecdacb36b5c5427b87d409f1065cfb2df69b0f71c58b868d9d466d8dab3/v1.12.4/metal-amd64.qcow2
+      Downloading "https://factory.talos.dev/image/9ed5fecdacb36b5c5427b87d409f1065cfb2df69b0f71c58b868d9d466d8dab3/v1.12.4/metal-amd64.qcow2"
+      Does the VM support UEFI booting? [default=yes]: 
+      Does the VM support UEFI Secure Boot? [default=yes]: no
+      
+      Instance to be created:
+        Name: talos
+        Project: default
+        Type: virtual-machine
+        Source: /tmp/3948685006
+        Source format: qcow2
+        Config:
+          security.secureboot: "false"
+      
+      Additional overrides can be applied at this stage:
+      1) Begin the migration with the above configuration
+      2) Override profile list
+      3) Set additional configuration options
+      4) Change instance storage pool or volume size
+      5) Change instance network
+      6) Add additional disk
+      7) Change additional disk storage pool
+      
+      Please pick one of the options above [default=1]: 4
+      Please provide the storage pool to use: default
+      Do you want to change the storage size? [default=no]: yes
+      Please specify the storage size: 50GiB
+      
+      Instance to be created:
+        Name: talos
+        Project: default
+        Type: virtual-machine
+        Source: /tmp/3948685006
+        Source format: qcow2
+        Storage pool: default
+        Storage pool size: 50GiB
+        Config:
+          security.secureboot: "false"
+      
+      Additional overrides can be applied at this stage:
+      1) Begin the migration with the above configuration
+      2) Override profile list
+      3) Set additional configuration options
+      4) Change instance storage pool or volume size
+      5) Change instance network
+      6) Add additional disk
+      7) Change additional disk storage pool
+      
+      Please pick one of the options above [default=1]: 1
+      Converting image "/tmp/3948685006" to raw format before importing
+      Instance talos successfully created
+      stgraber@dakara:~$ incus start talos
+
+  Documentation: https://linuxcontainers.org/incus/docs/main/howto/import_machines_to_instances/
+
+  ## Multi-domain certificates with ACME
+  Incus supports using ACME/Let's Encrypt to get a valid HTTPS certificate.
+  Up until now, we were limited to basic single-host certificates but now can support a comma separate list of domains in the `acme.domain` configuration key.
+
+      stgraber@dakara:~ (incus:dev-cluster01/default)$ incus config set acme.domain=cluster01.dev.stgraber.org,foo.dev.stgraber.org
+
+  Documentation: https://linuxcontainers.org/incus/docs/main/server_config/#server-options-acme
+
+  ## Control of trusted property on SR-IOV NICs
+  When using SR-IOV NICs, Incus typically keeps them in untrusted mode, preventing them from changing MAC addresses or VLANs.
+
+  For more trusted environments, we now have a new property, `security.trusted` which allows turning off those security restrictions.
+
+      stgraber@dakara:~$ incus create images:alpine/edge a1
+      Creating a1
+      stgraber@dakara:~$ incus config device add a1 eth0 nic nictype=sriov parent=enp1s0 name=eth0 security.trusted=true
+      Device eth0 added to a1
+      stgraber@dakara:~$ incus start a1
+
+  Documentation: https://linuxcontainers.org/incus/docs/main/reference/devices_nic/#nictype-sriov
+
+  ## Additional cluster member states to track evacuation
+  To improve proper tracking of cluster state, we've now added some intermediate cluster statuses, specifically `EVACUATING` and `RESTORING`.
+
+      stgraber@dakara:~ (incus:dev-cluster01/default)$ incus cluster list
+      +---------+-----------------------------------------------------+-----------------+--------------+----------------+-------------+--------+-------------------+
+      |  NAME   |                         URL                         |      ROLES      | ARCHITECTURE | FAILURE DOMAIN | DESCRIPTION | STATUS |      MESSAGE      |
+      +---------+-----------------------------------------------------+-----------------+--------------+----------------+-------------+--------+-------------------+
+      | incus01 | https://[2602:fc62:b:8007:1266:6aff:fe46:8bd]:8443  | database-leader | x86_64       | default        |             | ONLINE | Fully operational |
+      |         |                                                     | database        |              |                |             |        |                   |
+      +---------+-----------------------------------------------------+-----------------+--------------+----------------+-------------+--------+-------------------+
+      | incus02 | https://[2602:fc62:b:8007:1266:6aff:fe02:fa52]:8443 | database        | x86_64       | default        |             | ONLINE | Fully operational |
+      +---------+-----------------------------------------------------+-----------------+--------------+----------------+-------------+--------+-------------------+
+      | incus03 | https://[2602:fc62:b:8007:1266:6aff:fed2:70e9]:8443 | database        | x86_64       | default        |             | ONLINE | Fully operational |
+      +---------+-----------------------------------------------------+-----------------+--------------+----------------+-------------+--------+-------------------+
+      stgraber@dakara:~ (incus:dev-cluster01/default)$ incus cluster list
+      +---------+-----------------------------------------------------+-----------------+--------------+----------------+-------------+------------+--------------------------------+
+      |  NAME   |                         URL                         |      ROLES      | ARCHITECTURE | FAILURE DOMAIN | DESCRIPTION |   STATUS   |            MESSAGE             |
+      +---------+-----------------------------------------------------+-----------------+--------------+----------------+-------------+------------+--------------------------------+
+      | incus01 | https://[2602:fc62:b:8007:1266:6aff:fe46:8bd]:8443  | database-leader | x86_64       | default        |             | ONLINE     | Fully operational              |
+      |         |                                                     | database        |              |                |             |            |                                |
+      +---------+-----------------------------------------------------+-----------------+--------------+----------------+-------------+------------+--------------------------------+
+      | incus02 | https://[2602:fc62:b:8007:1266:6aff:fe02:fa52]:8443 | database        | x86_64       | default        |             | ONLINE     | Fully operational              |
+      +---------+-----------------------------------------------------+-----------------+--------------+----------------+-------------+------------+--------------------------------+
+      | incus03 | https://[2602:fc62:b:8007:1266:6aff:fed2:70e9]:8443 | database        | x86_64       | default        |             | EVACUATING | Unavailable due to maintenance |
+      +---------+-----------------------------------------------------+-----------------+--------------+----------------+-------------+------------+--------------------------------+
+      stgraber@dakara:~ (incus:dev-cluster01/default)$ incus cluster list
+      +---------+-----------------------------------------------------+-----------------+--------------+----------------+-------------+-----------+--------------------------------+
+      |  NAME   |                         URL                         |      ROLES      | ARCHITECTURE | FAILURE DOMAIN | DESCRIPTION |  STATUS   |            MESSAGE             |
+      +---------+-----------------------------------------------------+-----------------+--------------+----------------+-------------+-----------+--------------------------------+
+      | incus01 | https://[2602:fc62:b:8007:1266:6aff:fe46:8bd]:8443  | database-leader | x86_64       | default        |             | ONLINE    | Fully operational              |
+      |         |                                                     | database        |              |                |             |           |                                |
+      +---------+-----------------------------------------------------+-----------------+--------------+----------------+-------------+-----------+--------------------------------+
+      | incus02 | https://[2602:fc62:b:8007:1266:6aff:fe02:fa52]:8443 | database        | x86_64       | default        |             | ONLINE    | Fully operational              |
+      +---------+-----------------------------------------------------+-----------------+--------------+----------------+-------------+-----------+--------------------------------+
+      | incus03 | https://[2602:fc62:b:8007:1266:6aff:fed2:70e9]:8443 | database        | x86_64       | default        |             | EVACUATED | Unavailable due to maintenance |
+      +---------+-----------------------------------------------------+-----------------+--------------+----------------+-------------+-----------+--------------------------------+
+      stgraber@dakara:~ (incus:dev-cluster01/default)$ incus cluster list
+      +---------+-----------------------------------------------------+-----------------+--------------+----------------+-------------+-----------+--------------------------------+
+      |  NAME   |                         URL                         |      ROLES      | ARCHITECTURE | FAILURE DOMAIN | DESCRIPTION |  STATUS   |            MESSAGE             |
+      +---------+-----------------------------------------------------+-----------------+--------------+----------------+-------------+-----------+--------------------------------+
+      | incus01 | https://[2602:fc62:b:8007:1266:6aff:fe46:8bd]:8443  | database-leader | x86_64       | default        |             | ONLINE    | Fully operational              |
+      |         |                                                     | database        |              |                |             |           |                                |
+      +---------+-----------------------------------------------------+-----------------+--------------+----------------+-------------+-----------+--------------------------------+
+      | incus02 | https://[2602:fc62:b:8007:1266:6aff:fe02:fa52]:8443 | database        | x86_64       | default        |             | ONLINE    | Fully operational              |
+      +---------+-----------------------------------------------------+-----------------+--------------+----------------+-------------+-----------+--------------------------------+
+      | incus03 | https://[2602:fc62:b:8007:1266:6aff:fed2:70e9]:8443 | database        | x86_64       | default        |             | RESTORING | Unavailable due to maintenance |
+      +---------+-----------------------------------------------------+-----------------+--------------+----------------+-------------+-----------+--------------------------------+
+      stgraber@dakara:~ (incus:dev-cluster01/default)$ incus cluster list
+      +---------+-----------------------------------------------------+-----------------+--------------+----------------+-------------+--------+-------------------+
+      |  NAME   |                         URL                         |      ROLES      | ARCHITECTURE | FAILURE DOMAIN | DESCRIPTION | STATUS |      MESSAGE      |
+      +---------+-----------------------------------------------------+-----------------+--------------+----------------+-------------+--------+-------------------+
+      | incus01 | https://[2602:fc62:b:8007:1266:6aff:fe46:8bd]:8443  | database-leader | x86_64       | default        |             | ONLINE | Fully operational |
+      |         |                                                     | database        |              |                |             |        |                   |
+      +---------+-----------------------------------------------------+-----------------+--------------+----------------+-------------+--------+-------------------+
+      | incus02 | https://[2602:fc62:b:8007:1266:6aff:fe02:fa52]:8443 | database        | x86_64       | default        |             | ONLINE | Fully operational |
+      +---------+-----------------------------------------------------+-----------------+--------------+----------------+-------------+--------+-------------------+
+      | incus03 | https://[2602:fc62:b:8007:1266:6aff:fed2:70e9]:8443 | database        | x86_64       | default        |             | ONLINE | Fully operational |
+      +---------+-----------------------------------------------------+-----------------+--------------+----------------+-------------+--------+-------------------+
+
+  ## Cluster restore without instance migration
+  Still on cluster evacuation, it's now possible to bring a server back online without having it move back or restart any instance.
+
+      stgraber@dakara:~ (incus:dev-cluster01/default)$ incus cluster evacuate incus02
+      Are you sure you want to evacuate cluster member "incus02"? (yes/no) [default=no]: yes
+      stgraber@dakara:~ (incus:dev-cluster01/default)$ incus cluster restore incus02 --action=skip
+      Are you sure you want to restore cluster member "incus02"? (yes/no) [default=no]: yes
+
+  ## Instance boot time metrics
+  A couple of new metrics have been added to allow for instance uptime tracking.
+
+  Specifically:
+   - `incus_boot_time_seconds` as a Unix timestamp of when the instance was started
+   - `incus_time_seconds` as a current Unix timestamp
+
+  This is modeled after the same metrics from node-exporter.
+
+
+      stgraber@dakara:~$ incus list a1
+      +------+---------+---------------------+---------------------------------------------+-----------+-----------+
+      | NAME |  STATE  |        IPV4         |                    IPV6                     |   TYPE    | SNAPSHOTS |
+      +------+---------+---------------------+---------------------------------------------+-----------+-----------+
+      | a1   | RUNNING | 172.17.0.177 (eth0) | 2602:fc62:c:1000:1266:6aff:fe2d:30e5 (eth0) | CONTAINER | 0         |
+      +------+---------+---------------------+---------------------------------------------+-----------+-----------+
+      stgraber@dakara:~$ incus query /1.0/metrics | grep a1 | grep time
+      incus_boot_time_seconds{name="a1",project="default",type="container"} 1.772214792e+09
+      incus_time_seconds{name="a1",project="default",type="container"} 1.772216491e+09
+
+  Documentation: https://linuxcontainers.org/incus/docs/main/reference/provided_metrics/
+
+  # Complete changelog
+
+  Here is a complete list of all changes in this release:
+
+  [details="Full commit list"]
+   - Translated using Weblate (French)
+   - incusd/device/nic: Fix connected logic for non-NIC QEMU devices
+   - doc: Update config
+   - incusd/instance/qmp: Prevent setting link up at initialization
+   - incusd/instance/qemu: Properly initialize connected status
+   - incusd/storage/zfs: Set IncusOS storage usage property
+   - Fix typo: Supported cConditions to Supported Conditions
+   - Translated using Weblate (Japanese)
+   - shared/util: Fix SingleQuote to actually quote
+   - Translated using Weblate (French)
+   - cmd/incus: Fix get-client-certificate ignoring per-remote certs
+   - Translated using Weblate (French)
+   - Translated using Weblate (French)
+   - Translated using Weblate (French)
+   - incusd/storage/lvm: Move IncusOS check to pool creation
+   - Translated using Weblate (French)
+   - Translated using Weblate (Portuguese)
+   - Translated using Weblate (French)
+   - incus-migrate: Allow running as non-root
+   - incus-migrate: Add URL imports
+   - doc: Ignore broken links on Alpine gitlab
+   - doc: Ignore broken links on docbook website
+   - github: Deal with new Github images
+   - tests: Fix SR-IOV attached key test
+   - incusd/device/nic_physical: Allow migration of managed devices
+   - shared/cliconfig: Don't pass scheme to OCI creds helper
+   - incusd/cluster: Allow restoring a cluster without its instances
+   - incus/cluster: Add --action for restore
+   - i18n: Update translation templates
+   - internal/instance; Correct doc for boot.autostart.priority
+   - doc: Update config
+   - incusd/cluster: Restrict join token to database servers
+   - incusd/storage/lvm: Prevent use of lvmcluster with loop files
+   - incusd/operations: Prevent concurrent access to metadata
+   - incusd/storage: Add support for renaming qcow2 volumes
+   - incusd/storage/drivers: Load NBD module for lvmcluster
+   - incusd/instance/drivers: Pass information about whether migration is live
+   - incusd/storage: Add support for qcow2 volume migration
+   - incusd/storage: Add snapshot mount paths parameter to the task function
+   - incusd/device/nic_riov: Retry MAC setting logic
+   - Translated using Weblate (Portuguese)
+   - doc/howto/instances: Mention keeping agent drive attached
+   - incusd/instances/agent-loader: Silence semanage
+   - incusd/cluster: Also transfer public key on join
+   - doc/cloud-init: Fix bad link
+   - incusd: Search OVS switch external_interfaces
+   - api: nic_sriov_security_trusted
+   - incusd/ip/link: Add support for virtual function trusted property
+   - incusd/device/nic: Add `security.trusted` configuration key
+   - internal/instance: Add `volatile.<name>.last_state.vf.trusted`
+   - tests: Add tests for SR-IOV `security.trusted` property
+   - doc: Update config for SR-IOV security.trusted
+   - doc/backup: Fix MarkdownLint warnings
+   - incusd/storage_volumes_snapshot: Treat pongo templates as unique
+   - incusd/instance/drivers: Propagate error when adding qcow2 backing block device
+   - incusd/instancewriter: Make signature more generic
+   - client/instances: Add direct backup capability
+   - client/storage_volumes: Add direct backup capability
+   - client/storage_buckets: Add direct backup capability
+   - incusd/response: Add pipe response
+   - incus/export: Add direct backup capability
+   - incus/storage_volume: Add direct backup capability
+   - incus/storage_bucket: Add direct backup capability
+   - incusd/backup: Refactor S3 upload
+   - incusd/instance_backup: Add direct backup capability
+   - incusd/storage_volumes_backup: Add direct backup capability
+   - incusd/storage_buckets_backup: Add direct backup capability
+   - doc/rest-api: Refresh swagger YAML
+   - api: direct_backup
+   - incusd/instance/qemu: gofumpt
+   - incusd/device/disk: Add IsSpecialDisk
+   - incusd/instance/lxc: Skip metrics on special disks
+   - github: Resolve /dev/scratch symlink when consumed
+   - api: instance_snapshot_disk_only_restore
+   - shared/api: Add DiskOnly option in InstancePut
+   - incusd/instance_put: Add DiskOnly option and check for mismatching options
+   - incusd/instance/qemu: Implement disk-only restore logic in qemu driver
+   - incusd/instance/lxc: Implement disk-only restore logic in lxc driver
+   - incusd/instance: Adjust interface for diskOnly parameter
+   - doc/rest-api: Refresh swagger YAML
+   - client: Check for diskOnly api extension when invoked
+   - incus/snapshot: Add disk only restore
+   - i18n: Update translation templates
+   - incusd/storage: Prevent moving shared storage volumes
+   - incus/image: Add generate-metadata
+   - i18n: Update translation templates
+   - doc: Update incus-migrate documentation
+   - incusd: Validate that instance can be migrated
+   - incusd/instance/drivers: Add writable argument to NBDBlockExportAdd
+   - incusd/instance/drivers/qmp: Add NBDUnixServerStart
+   - incusd/instance: Add ExportQcow2Disk
+   - incusd/storage: Support live migration of qcow2 volumes
+   - doc: Add information about lvmcluster limitations
+   - incusd/instance: Add QCOW2 live migration support for instances with snapshots
+   - incusd/storage: Add QCOW2 live migration support for instances with snapshots
+   - incusd: Remove ensureMigratable as checks are no longer valid
+   - doc: Remove outdated doc about live QCOW2 migration limitation
+   - incusd/instance/drivers: Propagate live migration information
+   - incusd/storage: Skip final filesystem sync for VMs during migration
+   - doc/requirements: Bump minimal requirements
+   - Validate requested storage pool during instance migration
+   - incusd/instance/qemu: Rename onDisconnectEvent to initialized
+   - incusd/instance/qemu: Add EventVMReset
+   - incusd/instance/qemu: Use standard QEMU actions and catch in handler
+   - internal/instance: Add volatile.vm.needs_reset
+   - incusd/instance/qemu: Implement fast reboot
+   - doc: Update config
+   - incusd/instance/qmp: Fix cross-server live-migration
+   - incusd/instance/qemu: Report QEMU error on VM restore
+   - incus-migrate: Fix URL detection
+   - incusd/instance/drivers: Remove instance volume on revert after failed live migration
+   - incusd/instance/drivers: Propagate target migration failure to source using context cancellation
+   - incusd/storage: Prevent concurrent QCOW2 snapshot deletions
+   - incusd/instance/qemu: Require full restart after eject
+   - incusd/storage: Prevent concurrent snapshot deletions
+   - incus: Refactor CLI usage strings
+   - i18n: Update translation templates
+   - incusd/instance/qemu: Force a real reboot after applying templates
+   - incusd/storage/ceph: Use the standard error for unsupported disk usage
+   - api: unix_hotplug_pci
+   - incusd/devices/unix_hotplug: Allow selecting by PCI bus
+   - doc: Update config
+   - incusd/instance/qmp: Fix gofumpt
+   - incusd/storage/qcow2: Wait for qemu-nbd to be ready
+   - incusd/instance/drivers: Fix backing block device ordering when fetching from QEMU
+   - internal/server/instance/drivers: Get vsock client for Windows
+   - cmd/incus-agent: Add serial communication for Windows
+   - incusd/storage/drivers: Delete mount paths when deleting snapshots
+   - cmd/incus-agent: Only use TCP agent for macOS
+   - cmd/incus-agent: Use vsock for Windows agent
+   - Use vsock fork
+   - incusd/fsmonitor: Read multiple fanotify events
+   - doc/instance_units: Mention common units
+   - incusd/instance/qemu: Clarify CPU hotplug error
+   - incusd/instance/qmp: Add MemoryConfiguration
+   - incusd/instance/qemu: Improve error message on memory hotplug
+   - doc/instance: Cover CPU and memory hotplug limits
+   - incusd/storage/drivers: Allow creation of qcow2 custom volumes
+   - incusd/instance/drivers: Support detaching qcow2 custom volumes
+   - incusd/storage: Add snapshot management for qcow2 custom volumes
+   - incusd/device: Pass backing path information for disk devices
+   - incusd/storage: Block custom volume snapshot create/delete when attached to an instance
+   - api: cluster_evacuating_restoring
+   - incusd/cluster: Implement evacuating and restoring states
+   - shared/api: Align JSON and YAML behavior for preseeding
+   - client: Update for InitPreseed change
+   - incus: Update for InitPreseed change
+   - incusd: Update for InitPreseed change
+   - doc/rest-api: Refresh swagger YAML
+   - incusd/device/nic_ovn: Fix nested NIC state
+   - incusd/metrics: Implement incus_boot_time_seconds and incus_time_seconds
+   - incus-agent: Implement incus_boot_time_seconds and incus_time_seconds
+   - incusd/instance/lxc: Implement time metrics
+   - doc: Add description of incus_boot_time_seconds and incus_time_seconds
+   - incusd/storage/linstor: Propagate error when volume filler fails
+   - shared/validate: Allow a specific set of compressors
+   - incusd: Validate CompressionAlgorithm everywhere it's received
+   - tests: Check compression algorithm validation
+   - incusd/project: Prevent restricted projects from pulling data
+   - api: projects_restricted_image_servers
+   - incusd/project: Introduce restricted.images.servers
+   - doc: Update config
+   - incusd/project: Implement image server restrictions
+   - incusd/images: Check project restrictions on image download
+   - incusd/db: Turn NodeSpecificStorageConfig into driver aware function
+   - incusd: Switch usages to NodeSpecificStorageConfig function
+   - incusd/storage: Add support for expanding lvmcluster storage pool
+   - incusd/storage: Add DisallowedStorageConfigForCreation and ClusterWideStorageConfig
+   - incusd: Add additional checks fro re-sizing lvmcluster pool
+   - api: Add storage_lvmcluster_size extension
+   - doc: Update config
+   - incusd/certificates: Store full API objects in the cache
+   - incusd/project: Update permissions test for new certificate cache
+   - incusd/certificate: Allow to retrieve a single API certificate
+   - incusd/auth/scriptlet: Expose API certificate and request TLS chain to the scriptlet
+   - doc/authorization: Document new scriptlet details fields
+   - api: authorization_scriptlet_cert
+   - incusd/images: Simplify image URL check
+   - api: lvmcluster_remove_snapshots
+   - incusd/storage/drivers: Add 'lvmcluster.remove_snapshots' config key
+   - incusd/storage: Handle snapshot restore when 'lvmcluster.remove_snapshots' is set
+   - doc: Update config
+   - incus: Add validation before starting sshSFTPserver
+   - tests: Add validation for sftp checks
+   - i18n: Update translation templates
+   - incusd: Pass volume type to daemonStorageValidate
+   - api: daemon_storage_logs
+   - incusd/config: Add storage logs_volume option
+   - incusd/daemon_storage: Add storage operation for 'storage.logs_volume'
+   - incusd/api: Add validation and management of 'storage.logs_volume'
+   - incusd/instance/common: Use logs folder when configured
+   - incusd/instance/lxc: Use LogPath for forkstart
+   - incusd/instance_logs: Use LogPath
+   - doc: Update config
+   - incus/server/network/util: Add ipInPoinerRanges util function
+   - incusd/network/bridge: Trigger dependency notifcation on changes
+   - incusd/network/ovn: Resetup network on change of uplink ovn range/gateway
+   - incusd/apparmor/instance: Fix logs volume handling
+   - incus/server/network/ovn/nb: Overwrite static mac bindings if it already exists
+   - incusd/api_cluster: Fix database-client count logic
+   - incusd/instances: Properly instruct to reset NVRAM when changing secure boot config
+   - incusd/instance/config: Propagate volatile.apply_nvram to copied instances
+   - incusd/network/acl: Use 'allow-related' instead of 'allow' for default egress action
+   - incusd/daemon_storage: Don't fail on log volume unmount failure
+   - incusd/cluster: Handle evacuation on single-node clusters
+   - internal/instance: Add volatile.hotplug.memory
+   - doc: Update config
+   - incusd/instance/qemu: Record and re-use base memory configuration
+   - incusd/device/nic_bridged: Lookup ACLs in the correct project
+   - ncusd/network/zone: Include records from all relevant projects
+   - tests: Update for network zone filtering
+   - incusd/response: Store original Host in forwardedResponse
+   - shared/tls: Support multiple domains in ACME functions
+   - incusd/acme: Support multiple domains
+   - incusd/network/zone: Allow wildcard records
+   - incusd/cluster: Don't stop local networking on healing
+   - incusd/db/networks: Set Project in getPartialNetworkByProjectAndName
+   - Makefile: Bump minimum to Go 1.25
+   - gomod: Update dependencies
+  [/details]
+
+  # Documentation
+
+  The Incus documentation can be found at:
+
+  https://linuxcontainers.org/incus/docs/main/
+
+  # Packages
+
+  There are no official Incus packages as Incus upstream only releases regular release tarballs. Below are some available options to get Incus up and running.
+
+  ## Installing the Incus server on Linux
+
+  Incus is available for most common Linux distributions. You’ll find detailed installation instructions in our documentation.
+
+  https://linuxcontainers.org/incus/docs/main/installing/
+
+  ## Homebrew package for the Incus client
+
+  The client tool is available through HomeBrew for both Linux and MacOS.
+
+  https://formulae.brew.sh/formula/incus
+
+  ## Chocolatey package for the Incus client
+
+  The client tool is available through Chocolatey for Windows users.
+
+  https://community.chocolatey.org/packages/incus/6.22.0
+
+  ## Winget package for the Incus client
+
+  The client tool is also available through Winget for Windows users.
+
+  https://winstall.app/apps/LinuxContainers.Incus
+
+  # Support
+
+  Monthly feature releases are only supported up until the next release comes out.  Users needing a longer support length and less frequent changes should consider using Incus 6.0 LTS instead.
+
+  Community support is provided at: https://discuss.linuxcontainers.org
+  Commercial support is available through: https://zabbly.com/incus
+  Bugs can be reported at: https://github.com/lxc/incus/issues
