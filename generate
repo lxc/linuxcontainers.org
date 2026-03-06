@@ -262,9 +262,7 @@ def add_html_translation_warning(content, page_raw_path, prefix):
             <span class=\"p-notification__status\"> Note: </span>
             {warning}
             </p>
-            </div>""".format(
-        warning=warning
-    )
+            </div>""".format(warning=warning)
     return html + content
 
 

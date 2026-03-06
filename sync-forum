@@ -50,14 +50,12 @@ for project in PROJECTS:
             print("Failed to load: %s" % old_entry["origin"])
             continue
 
-        entry = yaml.load(
-            """
+        entry = yaml.load("""
 title: foo
 date: bar
 origin: baz
 content: |-
-  blah"""
-        )
+  blah""")
         entry["content"] = dis_post["raw"]
 
         soup = BS(dis_post["cooked"], features="html.parser")
@@ -119,14 +117,12 @@ for topic in news["topic_list"]["topics"]:
         continue
 
     yaml = ruamel.yaml.YAML()
-    entry = yaml.load(
-        """
+    entry = yaml.load("""
 title: foo
 date: bar
 origin: baz
 content: |-
-  blah"""
-    )
+  blah""")
     entry["content"] = dis_post["raw"]
 
     soup = BS(dis_post["cooked"], features="html.parser")
