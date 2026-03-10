@@ -1,0 +1,61 @@
+title: LXCFS 6.0.6 LTS リリースのお知らせ
+date: 2026/02/23 21:02
+origin: https://discuss.linuxcontainers.org/t/lxcfs-6-0-6-lts-has-been-released/26263
+content: |-
+  # はじめに <!-- Introduction -->
+  <!--
+  The LXCFS team is pleased to announce the release of LXCFS 6.0.6!
+  -->
+  LXCFS チームが LXCFS 6.0.6 のリリースをお知らせします!
+
+  <!--
+  This is the sixth bugfix release for LXCFS 6.0 which is supported until June 2029.
+  -->
+  このリリースは、LXCFS 6.0 の 6 度目のバグフィックスリリースです。このリリースは 2029 年 6 月までサポートされます。
+
+  # 変更点 <!-- Changes -->
+  <!--
+  The highlights for this release are:
+  -->
+  このリリースのハイライトは次のとおりです:
+
+   - /proc/stat の CPU カウントに関する問題を修正 <!-- Fix issue with CPU count in /proc/stat -->
+   - 起動時に cgroup2 のマウントフラグが変更される問題を修正 <!-- Fix issue causing the cgroup2 mount flags to be changed on startup -->
+
+  <!--
+  The full list of commits is available below:
+  -->
+  コミットのすべてのリストは次のとおりです（翻訳なし）:
+
+  [details="すべてのChangeLogを見る"]
+   - proc_fuse: fix proc_stat_read reporting host cpu count under cgroup v2
+   - cgroups: extract cgfsng_can_use_memory_feature() util function
+   - cgroups: replace dup() call with openat_safe()
+   - src/utils: fix in_same_namespace helper
+   - bindings: add private_data field to struct file_info
+   - meson: add "mocks" option for CI/testing purposes
+   - github: enable mocks for CI builds
+   - lxcfs: use macro to generate liblxcfs call helpers
+   - lxcfs: wire up ->write callback for /proc
+   - lxcfs: wire up ->poll callback for /proc
+   - proc_fuse: move release/releasedir at the end
+   - cgroups/cgfsng: fix whitespace errors in __cg_mount_direct
+   - cgroups/cgfsng: do not change host-wide cgroup2 superblock options
+   - github: pass LIBFUSE env variable to upgrade tests
+   - github: enable mocks for CI upgrade tests
+   - meson: don't forget to set PSI trigger mocks for liblxcfstest
+   - cgroups/cgfsng: check memory allocation in add_hierarchy
+  [/details]
+
+  # サポートとアップグレード <!-- Support and upgrade -->
+  <!--
+  The LXCFS 6.0 branch is supported until June 2029.
+  Only bugfixes and security issues get included into the stable bugfix releases, so it's always safe and recommended to keep up and run the latest bugfix release.
+  -->
+  LXCFS 6.0 ブランチは 2029 年 6 月までサポートされます。
+  Stable 版のバグ修正リリースには、バグ修正とセキュリティの問題の修正のみが含まれます。このため、常に最新のバグ修正リリースを実行し、セキュリティーを確保することが安全で、推奨されます。
+
+  # ダウンロード <!-- Downloads -->
+
+   - リリース tarball <!-- Main release tarball -->: [lxcfs-6.0.6.tar.gz](https://linuxcontainers.org/downloads/lxcfs/lxcfs-6.0.6.tar.gz)
+   - GPG シグネチャー <!-- GPG signature -->: [lxcfs-6.0.6.tar.gz.asc](https://linuxcontainers.org/downloads/lxcfs/lxcfs-6.0.6.tar.gz.asc)
