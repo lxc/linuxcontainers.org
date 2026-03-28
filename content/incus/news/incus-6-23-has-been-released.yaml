@@ -1,0 +1,611 @@
+title: Incus 6.23 has been released
+date: 2026/03/27 23:03
+origin: https://discuss.linuxcontainers.org/t/incus-6-23-has-been-released/26447
+content: |-
+  # Introduction
+  The Incus team is pleased to announce the release of Incus 6.23!
+
+  This release is going to be our last 6.x release before Incus 7.0 LTS which is due out on April 30th.
+
+  It's also quite a busy release with a good mix of security issues (mostly thanks to an ongoing analysis by 7asecurity), bug fixes and performance improvements and then a very good selection of features from expanding our OS support for VMs to adding more flexible instance storage with dependent volumes!
+
+  [![image|690x357](https://discuss.linuxcontainers.org/uploads/default/original/2X/c/c1d49ae001824f3df9d5ec32c2191199f41cfbbf.jpeg)](https://linuxcontainers.org/incus/try-it/)
+
+
+  As usual, you can try Incus for yourself online: https://linuxcontainers.org/incus/try-it/
+
+  Enjoy!
+
+  # New maintainers
+  With this Incus release the Incus project is welcoming two new maintainers:
+
+   - Benjamin Somers
+   - Piotr Resztak
+
+  They are both long time contributors to Incus who have been involved with a variety of features and bugfixes throughout the Incus codebase and who are therefore well qualified to help with code reviews and general project direction and maintenance.
+
+  They're joining the existing maintainers:
+
+   - Aleksa Sarai
+   - Christian Brauner
+   - Free Ekanayaka
+   - Serge Hallyn
+   - Stéphane Graber
+   - Tycho Andersen
+
+  # Security fixes
+  This release fixes 6 security issues:
+
+   - [CVE-2026-33711](https://github.com/lxc/incus/security/advisories/GHSA-vg76-xmhg-j5x3) (low)
+   - [CVE-2026-33542](https://github.com/lxc/incus/security/advisories/GHSA-p8mm-23gg-jc9r) (moderate)
+   - [CVE-2026-33743](https://github.com/lxc/incus/security/advisories/GHSA-vg76-xmhg-j5x3) (moderate)
+   - [CVE-2026-33898](https://github.com/lxc/incus/security/advisories/GHSA-453r-g2pg-cxxq) (high)
+   - [CVE-2026-33897](https://github.com/lxc/incus/security/advisories/GHSA-83xr-5xxr-mh92) (critical)
+   - [CVE-2026-33945](https://github.com/lxc/incus/security/advisories/GHSA-q4q8-7f2j-9h9f) (critical)
+
+  All of the above except for CVE-2026-33542 were found as part of an ongoing security review of Incus by [7asecurity](https://7asecurity.com).
+
+  Backports to our LTS branch are available in the stable-6.0 branch and the distributions shipping Incus LTS have been notified and have published or will very soon publish updated packages.
+
+  # New features
+  ## Dependent storage volumes
+  Incus now supports "dependent" volumes. Those are effectively the same as a regular custom volume attached to an instance, except that it is fully tied to the instance.
+
+  This means that deleting the instance will also delete the volume, creating an instance snapshot will create a matching snapshot on the volume, instance backups will include and restore the dependent volumes and migrating the instance will take the dependent volumes along for the ride.
+
+      stgraber@castiana:~$ incus launch images:debian/13 c1
+      Launching c1
+      stgraber@castiana:~$ incus storage volume create default c1-extra dependent=true
+      Storage volume c1-extra created
+      stgraber@castiana:~$ incus config device add c1 extra disk pool=default source=c1-extra dependent=true path=/extra
+      Device extra added to c1
+      stgraber@castiana:~$ incus storage volume snapshot create default c1-extra test
+      Error: Direct snapshots are not allowed for dependent volumes
+      stgraber@castiana:~$ incus snapshot create c1 foo
+      stgraber@castiana:~$ incus storage volume snapshot list default c1-extra
+      +------+----------------------+------------+
+      | NAME |       TAKEN AT       | EXPIRES AT |
+      +------+----------------------+------------+
+      | foo  | 2026/03/27 18:54 EDT |            |
+      +------+----------------------+------------+
+      stgraber@castiana:~$ incus snapshot delete c1 foo
+      stgraber@castiana:~$ incus storage volume snapshot list default c1-extra
+      +------+----------+------------+
+      | NAME | TAKEN AT | EXPIRES AT |
+      +------+----------+------------+
+
+  ## FreeBSD VM support
+  Incus now supports running its agent on FreeBSD.
+  Similar to the MacOS support, this relies on a network connection between Incus and the agent, requiring the VM to run on an Incus-managed network.
+
+  Daily builds of FreeBSD 14 and 15 are availabe on our image server.
+
+      stgraber@castiana:~$ incus launch images:freebsd/15.0 bsd -c security.secureboot=false --vm
+      Launching bsd
+      stgraber@castiana:~$ incus wait bsd agent && incus exec bsd sh
+      # freebsd-version·
+      15.0-RELEASE
+
+  **NOTE:** It may take a little while before all packagers include the need build recipe for the FreeBSD agent, leading to some Incus 6.23 systems being unable to get a shell out of the box. Rebooting the VM into single user mode will allow setting up a root password and using it through the console.
+
+  ## Reworked CLI parser
+  The main command line parser for the `incus` command has gone through a few improvements. It now has much better errors to indicate what argument may be wrong or missing as well as colored output to improve the legibility of the help messages.
+
+  ![image|690x192](https://discuss.linuxcontainers.org/uploads/default/optimized/2X/7/7f739d7643ef565323a879de4b9f68d3ce54f20a_2_690x192.png)
+
+  ## Support for disabling DHCP announcement of the gateway
+  It's now possible to set `ipv4.dhcp.gateway` to the special `none` value to have Incus configure its DHCP server to only configure IP addresses but not push any routes.
+
+  This can be particularly useful when some instances are connected to multiple networks with some of those networks not meant to route traffic to the outside world.
+
+  ## Support for `ipv4.dhcp.gateway` on OVN networks
+  Related to the previous feature, OVN now also supports `ipv4.dhcp.gateway`, including the new special `none` value.
+
+  This allows having another instance or machine on the OVN network act as the gateway in place of the virtual router, or configuring the OVN DHCP service to not advertised a default route at all.
+
+  ## Support for `io.bus` on OVN NICs
+  It's now possible to use `io.bus` with OVN NICs.
+
+  This effectively allows adding a USB network interface to a VM and have it be connected to an OVN network.
+
+  ## VM agent lifecycle events
+  Two new lifecycle events have been added in this release:
+
+   - instance-agent-started
+   - instance-agent-stopped
+
+  The events should be pretty self-explanatory. They are limited to Incus VMs and will be emitted as soon as Incus receives an agent notification over the serial connection.
+
+  ## Reworked `incus file pull` and `incus storage volume file pull`
+  The file pulling logic in both commands has been updated to match behavior with the popular `cp` command.
+
+  This specifically relates to handling of symlinks with the following options being now supported:
+
+   - `-L` (Always follow symbolic links in source path)
+   - `-H` (Follow command-line symbolic links in source path)
+   - `-P` (Never follow symbolic links in source path)
+
+  ## Project related metrics
+  Some new metrics have been added to provide for project-wide statistics.
+
+      stgraber@castiana:~/Code/lxc/incus (git:lxc/main)$ incus query /1.0/metrics | grep _project_
+      # HELP incus_project_resources_total Current resource count in a project.
+      # TYPE incus_project_resources_total gauge
+      incus_project_resources_total{project="default",resource="containers"} 0
+      incus_project_resources_total{project="default",resource="virtual-machines"} 3
+      incus_project_resources_total{project="default",resource="images"} 17
+      incus_project_resources_total{project="default",resource="profiles"} 1
+      incus_project_resources_total{project="default",resource="networks"} 3
+      incus_project_resources_total{project="default",resource="storage-volumes"} 6
+      incus_project_resources_total{project="demo",resource="containers"} 0
+      incus_project_resources_total{project="demo",resource="virtual-machines"} 0
+      incus_project_resources_total{project="demo",resource="images"} 0
+      incus_project_resources_total{project="demo",resource="profiles"} 1
+      incus_project_resources_total{project="demo",resource="networks"} 0
+      incus_project_resources_total{project="demo",resource="storage-volumes"} 0
+      incus_project_resources_total{project="user-1001",resource="containers"} 0
+      incus_project_resources_total{project="user-1001",resource="virtual-machines"} 0
+      incus_project_resources_total{project="user-1001",resource="images"} 2
+      incus_project_resources_total{project="user-1001",resource="profiles"} 1
+      incus_project_resources_total{project="user-1001",resource="networks"} 0
+      incus_project_resources_total{project="user-1001",resource="storage-volumes"} 0
+
+  ## Instance low-level repair API
+  A new API-only endpoint was introduced at `/1.0/instances/NAME/debug/repair`.
+  This allows Incus to expose some low-level repair actions that may need to be run especially in restricted environments where a user can't directly go look at the instance on-disk configuration or storage (IncusOS is a good example of that).
+
+  Currently a single action is supported, `rebuild-config-volume` which is available for instances using QCOW2 block storage on the clustered LVM driver and as the name suggests, allows for completely rebuilding the configuration volume to recover from specific btrfs corruption issues that may occur from a host power loss event.
+
+  # Complete changelog
+
+  Here is a complete list of all changes in this release:
+
+  [details="Full commit list"]
+   - incusd/instance: Allow custom volume snapshot create/delete when attached to running instance
+   - incusd/server: Allow custom volume snapshot create/delete when attached to running instance
+   - shared/cliconfig: Add lock to prevent panic
+   - incusd/endpoints/starttls: Report correct ServerName
+   - cmd/generate-database: fix linter complaints - #2636
+   - build(deps): bump actions/upload-artifact from 6 to 7
+   - incusd/network/bridge: Support disabling DHCPv4 router announcement
+   - incusd/network/ovn: Implement ipv4.dhcp.gateway
+   - doc: Update config
+   - internal/server/firewall: fix linter complaints - #2636
+   - internal/server/sys: fix linter complaints - #2636
+   - internal/server/project: fix linter complaints - #2636
+   - internal/server/util: fix linter complaints - #2636
+   - incusd/instance/lxc: Add /usr/bin/init to OCI PID1 list
+   - internal/server/seccomp: fix linter complaints - #2636
+   - internal/server/migration: fix linter complaints - #2636
+   - internal/server/task: fix linter complaints - #2636
+   - incus/usage: Add a way to show the user a parsing rule different from the one in use
+   - incus/usage: Small tweaks before adding parsers
+   - api: instances_debug_repair
+   - shared/api: Add InstanceDebugRepairPost
+   - doc/rest-api: Refresh swagger YAML
+   - incusd/storage: Implement ActivateTask
+   - incusd/instance/debug: Implement instance repair API
+   - incus/usage: Add parsers
+   - incus: Add --explain global flag
+   - incus/usage: Add legacy support functions
+   - incus/action: Switch to new parser
+   - incus/admin_init: Switch to new parser
+   - incus/admin_recover: Switch to new parser
+   - incus/admin_shutdown: Switch to new parser
+   - incus/admin_sql: Switch to new parser
+   - incus/admin_waitready: Switch to new parser
+   - incus/alias: Switch to new parser
+   - incus/cluster: Switch to new parser
+   - incus/cluster_group: Switch to new parser
+   - incus/cluster_role: Switch to new parser
+   - incus/config: Switch to new parser
+   - incus/config_device: Switch to new parser
+   - incus/config_metadata: Switch to new parser
+   - incus/config_template: Switch to new parser
+   - incus/config_trust: Switch to new parser
+   - incus/console: Switch to new parser
+   - incus/delete: Switch to new parser
+   - incus: Switch `copy` and `move` to new parser
+   - incus: Switch `create` and `launch` to new parser
+   - incus/debug: Switch to new parser
+   - incus/exec: Switch to new parser
+   - incus/export: Switch to new parser
+   - incus/file: Switch to new parser
+   - incus/image: Switch to new parser
+   - incus/image_alias: Switch to new parser
+   - incus/import: Switch to new parser
+   - incus/info: Switch to new parser
+   - incus/list: Switch to new parser
+   - incus/manpage: Switch to new parser
+   - incus/monitor: Switch to new parser
+   - incus/network: Switch to new parser
+   - incus/network_acl: Switch to new parser
+   - incus/network_address_set: Switch to new parser
+   - incus/network_allocations: Switch to new parser
+   - incus/network_forward: Switch to new parser
+   - incus/network_integration: Switch to new parser
+   - incus/network_load_balancer: Switch to new parser
+   - incus/network_peer: Switch to new parser
+   - incus/network_zone: Switch to new parser
+   - incus/operation: Switch to new parser
+   - incus/profile: Switch to new parser
+   - incus/project: Switch to new parser
+   - incus/publish: Switch to new parser
+   - incus/query: Switch to new parser
+   - incus/rebuild: Switch to new parser
+   - incus/remote: Switch to new parser
+   - incus/rename: Switch to new parser
+   - incus/snapshot: Switch to new parser
+   - incus/storage: Switch to new parser
+   - incus/storage_bucket: Switch to new parser
+   - incus/storage_volume: Switch to new parser
+   - incus/top: Switch to new parser
+   - incus/version: Switch to new parser
+   - incus/wait: Switch to new parser
+   - incus/warning: Switch to new parser
+   - incus/webui: Switch to new parser
+   - test: Fix `incus config set` tests
+   - test: Fix `incus profile assign` tests
+   - test: Fix `incus storage volume attach` tests
+   - test: Fix `incus storage volume snapshot show` tests
+   - test: ISO import now allows setting no volume name
+   - go.mod: Make runewidth a direct dependency
+   - Makefile: Properly set POT encoding
+   - i18n: Update translation templates
+   - Translated using Weblate (Chinese (Traditional Han script))
+   - Translated using Weblate (Chinese (Traditional Han script))
+   - Translated using Weblate (French)
+   - Translated using Weblate (French)
+   - Translated using Weblate (French)
+   - Translated using Weblate (French)
+   - Translated using Weblate (French)
+   - Translated using Weblate (French)
+   - Translated using Weblate (French)
+   - Translated using Weblate (French)
+   - Translated using Weblate (Norwegian Bokmål)
+   - Translated using Weblate (Norwegian Bokmål)
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - Translated using Weblate (Italian)
+   - Translated using Weblate (Italian)
+   - Translated using Weblate (Portuguese)
+   - Translated using Weblate (Portuguese)
+   - Translated using Weblate (Dutch)
+   - Translated using Weblate (Dutch)
+   - Translated using Weblate (Japanese)
+   - Translated using Weblate (Japanese)
+   - Translated using Weblate (Japanese)
+   - Translated using Weblate (Indonesian)
+   - Translated using Weblate (Indonesian)
+   - Translated using Weblate (Spanish)
+   - Translated using Weblate (Spanish)
+   - Translated using Weblate (Russian)
+   - Translated using Weblate (German)
+   - Translated using Weblate (German)
+   - Translated using Weblate (German)
+   - Translated using Weblate (German)
+   - Translated using Weblate (German)
+   - Translated using Weblate (Portuguese (Brazil))
+   - Translated using Weblate (Portuguese (Brazil))
+   - Translated using Weblate (Tamil)
+   - Translated using Weblate (Swedish)
+   - Translated using Weblate (Swedish)
+   - incusd/operations: Fix missing Unlock
+   - doc: Fix typo
+   - incusd: Fix typo
+   - Translated using Weblate (Portuguese)
+   - incusd/metrics: Increase node-exporter timeout to 5s
+   - doc: Add preselects to wordlist
+   - Translated using Weblate (Swedish)
+   - incusd/instance_logs: Prevent bad values for exec-output
+   - incus-migrate: Restrict OVA unpack path
+   - incus/network_allocation: Fix project handling
+   - incusd/network_allocations: Use canAccessNetwork
+   - incusd/instance/qemu: Relax SEV check
+   - incus: Fix import shadowing
+   - incusd/storage_volumes: Use switch statement
+   - incusd/network/common: Use FPrintf instead of WriteString
+   - incusd/device/nic_physical: Drop support for connected key
+   - incusd/device/nic_ovn: Add io.bus key for OVN NICs
+   - doc: Update config
+   - api: network_io_bus_ovn
+   - shared/api: add new instance-agent events
+   - internal/server: fire instance-agent events when agent status changes
+   - doc: add instance-agent entries to lifecycle events
+   - incus/usage: Defer remote connection
+   - incusd/backup: Make extra sure backup.yaml is consistent on disk
+   - incus-agent/darwin: Factor BSD-like bits out
+   - incus-agent/freebsd: Add FreeBSD agent
+   - incusd/instance/agent-loader: Add FreeBSD files
+   - incusd/instance/qemu: Support FreeBSD
+   - doc/instance/create: Add details for FreeBSD
+   - doc/wordlist: Update wordlist
+   - incusd/instance/lxc: Stop any forkfile instances prior to migration
+   - incusd/storage/zfs: Freeze ZFS instances when using block_mode
+   - incusd/storage/zfs: Don't create temporary snapshot for inactive volumes
+   - incusd/storage/zfs: Don't unmap a mounted snapshot
+   - incus/storage/volume: Fix image deletion
+   - incusd/storage: Don't allow loop pools on IncusOS
+   - Translated using Weblate (Swedish)
+   - cmd/incus: fix log in sftpRecursiveMkdir
+   - Translated using Weblate (Swedish)
+   - Translated using Weblate (Swedish)
+   - devcontainer: update Go version and pipx install command
+   - Translated using Weblate (Swedish)
+   - incus/cluster: Fix default column layout in help text
+   - i18n: Update translation templates
+   - incus: Fix indent on --sub-commands
+   - incusd/storage: Add readonly 'dependent' volume config key
+   - incusd/device: Add 'dependent' config key to disk device
+   - incusd: Prevent direct snapshot creation and deletion on dependent volumes
+   - incusd/storage: Create and delete dependent volume snapshots with instance snapshots
+   - incusd/storage: Support restoring an instance with dependent volumes from a snapshot
+   - incusd/storage/drivers: Add ability to set archive files path when exporting/importing volumes
+   - incusd/backup: Add DefaultBackupPrefix constant
+   - incusd/backup/config: Add DependentVolumes field to Config struct
+   - incusd: Pass path info when exporting/importing custom volume
+   - incusd/storage: Add support for exporting/importing dependent volumes
+   - incusd/storage/drivers: Create QCOW2 config volume snapshot during unpack if needed
+   - incusd/export: Add support for root-only flag
+   - incusd: Pass rootOnly argument where needed
+   - shared/api: Add RootOnly to InstanceBackupsPost
+   - incusd/backup: Add support for dependent volumes to backup
+   - incusd/db/cluster: Add root_only column to instances_backups
+   - incusd/db: Read and write 'root_only' field in table operations
+   - incusd/storage: Conditionally export dependent volumes
+   - incusd/instance: Pass rootOnly argument where needed
+   - tests: Add tests for dependent volumes
+   - doc/rest-api: Refresh swagger YAML
+   - doc: Update metadata
+   - api: Add dependent extension
+   - i18n: Update translation templates
+   - Introduce goreleaser
+   - incusd/daemon: Allow internal and os API during startup
+   - api: Add project_metrics extension
+   - incusd/metrics: Add project resource, limit and usage metrics
+   - doc: Add project metrics documentation
+   - incus-agent: Fix typos
+   - incusd/instance/agent-loader: Make stop kill the daemon instead of the agent
+   - incus-agent: Add hostname update logic for FreeBSD
+   - github: Disable shellcheck for rc.d services
+   - incusd/storage/drivers: Disallow  for qcow2 custom block volumes
+   - doc: Document  restriction for qcow2 custom block volumes
+   - cmd/incus: Print newly-created snapshot name if unspecified
+   - i18n: Update translation templates
+   - incus/info: Allow querying alternative log files
+   - i18n: Update translation templates
+   - incus: Add colors
+   - go.mod: Make color a direct dependency
+   - golangci: ignore errcheck for colored printers
+   - shared/cmd: Remove non-translatable colon
+   - incus: Refactor description strings
+   - incus-simplestreams: Re-add colons in description headers
+   - incusd: Re-add colons in description headers
+   - Makefile: Add missing packages to translate
+   - i18n: Update translation templates
+   - incusd/storage: Remove renaming of config volume Btrfs subvolume
+   - incusd/storage/drivers: Switch Btrfs subvolume naming to 'instance-' prefix
+   - incusd: Add patch to rename existing Btrfs subvolumes from '<instance-name>-' to 'instance-'
+   - incusd/device: Add support for partial device validation
+   - incusd: Pass partial validation flag to device validation functions
+   - incusd/instance: Pass partial validation flag to device validation functions
+   - incusd/migration: Add protobuf definitions to support dependent volume migration
+   - incusd/migration: Add structs and helper functions for dependent volume migration
+   - incusd: Switch to common VolumeSnapshotToProtobuf
+   - incusd/storage: Add support for dependent volumes migration
+   - incusd/instance: Add support for dependent volumes migration
+   - incusd: Add support for removing dependent volumes on source after migration
+   - internal/util: Fix LogPath logic to work with logs volume
+   - incusd/instances: Use internalUtil.LogPath
+   - incusd/daemon_storage: Fix log directory handling after LogPath change
+   - incus: Disable colors in parsing error messages
+   - incus: Print a new line before printing parsing errors
+   - shared/ws: Remove CheckOrigin bypass
+   - incusd/s3: Use standard TLS config on S3 API calls
+   - incusd/auth/oidc: Tighten cookie policy
+   - incus-agent: Tighten HTTP listener configuration
+   - incusd: Tighten HTTP listener configuration
+   - incusd/certificates: Prevent any type change
+   - tests: Confirm certificate type can't be changed
+   - incus: Add `no_color` config key
+   - incusd/seccomp: Limit the new mount API system calls we block
+   - shared/validate: Allow LZ4 compression
+   - incus-migrate: Fix OVA handling within os.Root
+   - incus-migrate: Allow importing OVAs from URLs
+   - client: Make ImageFileRequest require a ReadWriteSeeker
+   - incus: Update for changes to incus.ImageFileRequest
+   - incusd: Update for changes to incus.ImageFileRequest
+   - client/simplestreams: Validate the full image hash
+   - incusd/instance_console: Prevent symlink attacks
+   - incusd/storage/s3: Don't assume backup structure
+   - incusd/instance: Use restricted pongo2 parser
+   - incus/remote: Actually validate the token code in `incus webui`
+   - doc/authentication: Clarify the type of incus.allowed_subnets
+   - incusd/auth/oidc: Cleanup and tighten subnet claim handling
+   - incus-agent: Use same YAML version as rest of code base
+   - incusd/network: Switch to backoff/v5
+   - incusd/network: Switch to go-criu/v8
+   - shared/logger: Implement basic slog wrapper
+   - incusd/bgp: Port to go-bgp/v4
+   - Makefile: Bump to Go 1.25.6
+   - gomod: Update dependencies
+   - github: Allow GHSA-4p9m-8gc4-rw2h (no fix available)
+   - incus/usage: Fix edge case
+   - Translated using Weblate (Tamil)
+   - Translated using Weblate (Italian)
+   - Translated using Weblate (Italian)
+   - Translated using Weblate (Norwegian Bokmål)
+   - Translated using Weblate (Norwegian Bokmål)
+   - Translated using Weblate (Japanese)
+   - Translated using Weblate (Japanese)
+   - Translated using Weblate (Japanese)
+   - Translated using Weblate (Russian)
+   - Translated using Weblate (Dutch)
+   - Translated using Weblate (Dutch)
+   - Translated using Weblate (Indonesian)
+   - Translated using Weblate (Indonesian)
+   - Translated using Weblate (Chinese (Traditional Han script))
+   - Translated using Weblate (Chinese (Traditional Han script))
+   - Translated using Weblate (Spanish)
+   - Translated using Weblate (Spanish)
+   - Translated using Weblate (German)
+   - Translated using Weblate (German)
+   - Translated using Weblate (German)
+   - Translated using Weblate (German)
+   - Translated using Weblate (German)
+   - Translated using Weblate (Swedish)
+   - Translated using Weblate (Swedish)
+   - Translated using Weblate (Portuguese)
+   - Translated using Weblate (Portuguese)
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - Translated using Weblate (Portuguese (Brazil))
+   - Translated using Weblate (Portuguese (Brazil))
+   - Translated using Weblate (French)
+   - Translated using Weblate (French)
+   - Translated using Weblate (French)
+   - Translated using Weblate (French)
+   - Translated using Weblate (French)
+   - Translated using Weblate (French)
+   - Translated using Weblate (French)
+   - Translated using Weblate (French)
+   - doc: Remove config-options page
+   - Added translation using Weblate (Greek)
+   - incusd/instance/drivers: Refactor live migration - extract common logic
+   - incusd/storage/drivers: Prevent setting the 'snapshots.XYZ' keys on dependent volumes
+   - incusd/device: Use ValidateDependentConfigKey for dependent config validation
+   - incus: Add cp-like flags to incus file pull
+   - tests: Test cp-like flags in incus file pull
+   - incus/storage_volume: Add cp-like flags to incus storage volume file pull
+   - tests: Test cp-like flags in incus storage volume file pull
+   - i18n: Update translation templates
+   - incusd/instances_post: Add extra validation during backup import
+   - incus/import: Fix bad rendering on error
+   - incusd/device: Allow live migration of dependent disks
+   - incusd/instance/drivers: Add support for live migration of dependent disks
+   - Translated using Weblate (Japanese)
+   - Translated using Weblate (Japanese)
+   - Translated using Weblate (Japanese)
+   - Translated using Weblate (French)
+   - Translated using Weblate (French)
+   - Translated using Weblate (French)
+   - Translated using Weblate (French)
+   - Translated using Weblate (French)
+   - Translated using Weblate (French)
+   - Translated using Weblate (French)
+   - Translated using Weblate (French)
+   - Translated using Weblate (Portuguese (Brazil))
+   - Translated using Weblate (Portuguese (Brazil))
+   - Translated using Weblate (Swedish)
+   - Translated using Weblate (Swedish)
+   - Translated using Weblate (Spanish)
+   - Translated using Weblate (Spanish)
+   - Translated using Weblate (Indonesian)
+   - Translated using Weblate (Indonesian)
+   - Translated using Weblate (Tamil)
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - Translated using Weblate (Russian)
+   - Translated using Weblate (Russian)
+   - Translated using Weblate (Norwegian Bokmål)
+   - Translated using Weblate (Norwegian Bokmål)
+   - Translated using Weblate (Dutch)
+   - Translated using Weblate (Dutch)
+   - Translated using Weblate (Italian)
+   - Translated using Weblate (Italian)
+   - Translated using Weblate (Greek)
+   - Translated using Weblate (German)
+   - Translated using Weblate (German)
+   - Translated using Weblate (German)
+   - Translated using Weblate (German)
+   - Translated using Weblate (German)
+   - Translated using Weblate (Chinese (Traditional Han script))
+   - Translated using Weblate (Chinese (Traditional Han script))
+   - Translated using Weblate (Portuguese)
+   - Translated using Weblate (Portuguese)
+   - Translated using Weblate (French)
+   - Translated using Weblate (Russian)
+   - incusd/instance/qemu: Add image.requirements.cdrom_cloud_init key
+   - doc: Update config
+   - incusd/daemon_storage: Don't unmount logs path on shutdown
+   - incusd/instance/lxc: Wait after thawing
+   - incusd/instance/lxc: Confine credentials write to credentials directory
+   - incusd/response: Make sftpResponse generic
+   - incusd: Update for UpgradeResponse
+   - client: Move to generic upgrader
+   - Translated using Weblate (Russian)
+   - Translated using Weblate (Portuguese)
+   - Translated using Weblate (French)
+   - incusd/storage/lvm: Use shared access mode for ISO
+   - incusd/storage/truenas: Fix VM rename
+   - incus-agent: Fix router to avoid global match
+   - incusd/instance/lxc: Include config.json on publish
+   - doc/images_create: Mention that OCI container publishing isn't recommended
+   - incus: Complete all configs keys
+   - incusd/instance/lxc: Relax handling of initial.
+   - incusd/storage/volume/list: Fix project handling in all-projects queries
+   - incusd/seccomp: Fix mknod in /dev
+   - incus: Don't hang on password prompt when run from script
+   - gomod: Update dependencies
+   - Release Incus 6.23
+  [/details]
+
+  # Documentation
+
+  The Incus documentation can be found at:
+
+  https://linuxcontainers.org/incus/docs/main/
+
+  # Packages
+
+  There are no official Incus packages as Incus upstream only releases regular release tarballs. Below are some available options to get Incus up and running.
+
+  ## Installing the Incus server on Linux
+
+  Incus is available for most common Linux distributions. You’ll find detailed installation instructions in our documentation.
+
+  https://linuxcontainers.org/incus/docs/main/installing/
+
+  ## Homebrew package for the Incus client
+
+  The client tool is available through HomeBrew for both Linux and MacOS.
+
+  https://formulae.brew.sh/formula/incus
+
+  ## Chocolatey package for the Incus client
+
+  The client tool is available through Chocolatey for Windows users.
+
+  https://community.chocolatey.org/packages/incus/6.23.0
+
+  ## Winget package for the Incus client
+
+  The client tool is also available through Winget for Windows users.
+
+  https://winstall.app/apps/LinuxContainers.Incus
+
+  # Support
+
+  Monthly feature releases are only supported up until the next release comes out.  Users needing a longer support length and less frequent changes should consider using Incus 6.0 LTS instead.
+
+  Community support is provided at: https://discuss.linuxcontainers.org
+  Commercial support is available through: https://zabbly.com/incus
+  Bugs can be reported at: https://github.com/lxc/incus/issues
