@@ -36,7 +36,7 @@ content: |-
   # Security fixes
   This release fixes 6 security issues:
 
-   - [CVE-2026-33711](https://github.com/lxc/incus/security/advisories/GHSA-vg76-xmhg-j5x3) (low)
+   - [CVE-2026-33711](https://github.com/lxc/incus/security/advisories/GHSA-q9vp-3wcg-8p4x) (low)
    - [CVE-2026-33542](https://github.com/lxc/incus/security/advisories/GHSA-p8mm-23gg-jc9r) (moderate)
    - [CVE-2026-33743](https://github.com/lxc/incus/security/advisories/GHSA-vg76-xmhg-j5x3) (moderate)
    - [CVE-2026-33898](https://github.com/lxc/incus/security/advisories/GHSA-453r-g2pg-cxxq) (high)
