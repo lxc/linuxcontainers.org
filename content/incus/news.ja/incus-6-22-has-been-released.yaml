@@ -165,7 +165,7 @@ content: |-
   -->
   また、カスタムストレージボリュームも、QCOW2 をデフォルトのフォーマットとして採用するように変更しました。初期ではスナップショット機能もサポートしました。残る課題（実行中の VM にアタッチされたボリュームのスナップショット）は Incus 6.23 で対応予定です。
 
-  ## `lvmcluster` ストレージプールのりサイズ <!-- `lvmcluster` storage pool resizing -->
+  ## `lvmcluster` ストレージプールのリサイズ <!-- `lvmcluster` storage pool resizing -->
   <!--
   Incus clusters using shared block storage with the `lvmcluster` driver can now have their backing block devices grown and have Incus expand the LVM storage capacity.
   -->

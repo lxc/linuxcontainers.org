@@ -846,7 +846,7 @@ content: |-
   # Downloads
 
    - リリース tarball <!-- Main release tarball -->: [incus-6.0.5.tar.xz](https://linuxcontainers.org/downloads/incus/incus-6.0.5.tar.xz)
-   - GPG シグネチャー」 <!-- GPG signature -->: [incus-6.0.5.tar.xz.asc](https://linuxcontainers.org/downloads/incus/incus-6.0.5.tar.xz.asc)
+   - GPG シグネチャー <!-- GPG signature -->: [incus-6.0.5.tar.xz.asc](https://linuxcontainers.org/downloads/incus/incus-6.0.5.tar.xz.asc)
 
   # 感謝 <!-- Thanks -->
   <!--
