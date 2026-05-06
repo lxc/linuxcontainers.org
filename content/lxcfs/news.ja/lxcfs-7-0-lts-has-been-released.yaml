@@ -1,0 +1,171 @@
+title: LXCFS 7.0 LTS リリースのお知らせ <!-- LXCFS 7.0 LTS has been released -->
+date: 2026/04/29 00:04
+origin: https://discuss.linuxcontainers.org/t/lxcfs-7-0-lts-has-been-released/26607
+content: |-
+  # はじめに <!-- Introduction-->
+  <!--
+  The LXCFS team is pleased to announce the release of LXCFS 7.0 LTS!
+  -->
+  LXCFS チームが LXCFS 7.0 LTS のリリースをお知らせします!
+
+  <!--
+  This is the result of two years of work since the LXCFS 6.0 release and is the seventh LTS release for the LXCFS project. This release will be supported until June 2031.
+  -->
+  このリリースは、LXCFS 6.0 のリリース以来 2 年の作業の成果であり、LXCFS プロジェクトにとって 7 番目の LTS リリースとなります。このリリースは 2031 年 6 月までサポートされます。
+
+  # ハイライト <!-- Highlights -->
+  ## PSI（Pressure Stall Information）のサポート <!-- Support for PSI (Pressure Stall Information) -->
+  <!--
+  LXCFS now virtualizes the /proc/pressure files:
+  -->
+  LXCFS は次の /proc/pressure ファイルを仮想化するようになりました。
+
+   - /proc/pressure/cpu
+   - /proc/pressure/io
+   - /proc/pressure/memory
+
+  ## zswap サポート <!-- zswap support -->
+  <!--
+  LXCFS now exposes zswap metrics in the virtualized /proc/meminfo.
+  -->
+  LXCFS は、仮想化された /proc/meminfo に zswap メトリクスを公開するようになりました。
+
+  ## 廃止された機能 <!-- Deprecated features -->
+  <!--
+  This release removes support for:
+  -->
+  今回のリリースで、次の機能のサポートが削除されます:
+
+   - FUSE2 （以降、FUSE3 のみ）<!-- (only FUSE3 from this point) -->
+   - CGroup V1 （cgroup v2 単一階層構造のみ）<!-- (CGroup V2 unified hierarchy only) -->
+   - 仮想 cgroup ツリー（cgroup namespace が広く利用可能）<!-- Virtual cgroup tree (cgroup namespace is widely available) -->
+
+  <!--
+  This shouldn't cause any real issue as most Linux distributions have been running on CGroup V2 for a while now and they have also been typically defaulting to FUSE3.
+  -->
+  しばらく前から、ほとんどの Linux ディストリビューションは cgroup v2 で動作しており、また通常は FUSE3 をデフォルトにしているため、実際には問題にならないはずです。
+
+  ## デフォルトで PIDFD を使用 <!-- PIDFD by default -->
+  <!--
+  We're now assuming kernel support for PIDFD with this now being used by default by LXCFS (was previously under `--enable-pidfd`).
+  -->
+  現在、カーネルが PIDFD をサポートしているという想定をしています。そして、LXCFS では PIDFD をデフォルトで使用します（以前は `--enable-pidfd` を指定していました）。
+
+  # すべての変更点（翻訳なし） <!-- Full changelog -->
+
+  [details="すべてのChangeLogを見る"]
+   - proc: checks system security policy before trying to get personalities
+   - lxcfs/bindings: Refactor RUNTIME_PATH so that it can be overridden on startup
+   - lxcfs/bindings: add a flag for overriding the runtime dir
+   - github: add lxcfs live upgrade compatibility test
+   - github: update coverity test to use Ubuntu 22.04
+   - README.md: add info about how to collect a core dump
+   - github: add ISSUE_TEMPLATE.md
+   - github: add live upgrade test between stable-{5,6} branches
+   - Add missing linux/limits.h include
+   - lxcfs_read: Added LXCFS_TYPE macro to all FUSE filesystem calls
+   - lxcfs: fix readdir for procfs subtree
+   - tests: add proc readdir test
+   - cgroups/cgfsng: improve swap accounting support detection
+   - github: Bump Ubuntu version
+   - github: Simplify tests workflow
+   - github: Add arm64 tests
+   - tests: Make sure to enable cpuset controller
+   - github: Use shared logic
+   - github: Update coverity workflow
+   - github: Simplify build action
+   - github: Update checkout to v4
+   - github: Cleanup testsuite action
+   - github: Improve progress reporting
+   - proc_fuse: add psi(pressure stall information) procfs
+   - meminfo: Add slab_reclaimable to MemAvailable
+   - tests/test-read: call close(2) only if there is an fd
+   - utils: fix wait_for_sock to use time_t instead of int
+   - cpuset_parse: make a check for an empty string in cpu_in_cpuset()
+   - utils: move strlcpy/strlcat helpers from cgroup_utils to utils
+   - lxcfs: use strlcpy when handle runtime-dir parameter
+   - proc_loadavg: Prevent integer overflow calculating the sleep interval
+   - github: Bump actions/checkout to v5
+   - github: Use Github Arm runners
+   - proc_fuse: fix proc_stat_read reporting host cpu count under cgroup v2
+   - cgroups: extract cgfsng_can_use_memory_feature() util function
+   - cgroups: add zswap feature detection
+   - lxcfs: add disable-zswap opt
+   - bindings: add zswap feature detection
+   - proc_fuse: add zswap information to /proc/meminfo
+   - cgroups: replace dup() call with openat_safe()
+   - lxcfs: use macro to generate liblxcfs call helpers
+   - src/utils: fix in_same_namespace helper
+   - proc_fuse: deduplicate read() handlers code for /proc/pressure files
+   - bindings: add private_data field to struct file_info
+   - lxcfs: wire up ->write callback for /proc
+   - lxcfs: wire up ->poll callback for /proc
+   - proc_fuse: move release/releasedir at the end
+   - lxcfs: install noop signal handler for SIGRTMIN + 0
+   - proc_fuse: add /proc/pressure/{cpu, io, memory} virtualization
+   - meson: add "mocks" option for CI/testing purposes
+   - github: enable mocks for CI builds
+   - tests: add /proc/pressure/* virtualization tests
+   - lxcfs: add enable-psi-poll cmdline option
+   - cgroups/cgfsng: fix whitespace errors in __cg_mount_direct
+   - cgroups/cgfsng: do not change host-wide cgroup2 superblock options
+   - github: pass LIBFUSE env variable to upgrade tests
+   - github: enable mocks for CI upgrade tests
+   - meson: don't forget to set PSI trigger mocks for liblxcfstest
+   - cgroups/cgfsng: check memory allocation in add_hierarchy
+   - Fix issue where the pidfd_ functions are not detected during meson setup.
+   - lxcfs: fix "Write to cache was truncated" on long-running / high-core-count systems
+   - sysfs: fix duplicated /sys/devices/system/cpu/online
+   - lxcfs: add .clang-format
+   - CONTRIBUTING: add a note on AI generated code
+   - github: switch to libfuse3 and drop libfuse2
+   - lxcfs: drop libfuse2 support
+   - lxcfs: remove libfuse2-specific code
+   - tests: remove cgroupfs-related tests
+   - lxcfs: remove cgroupfs support from hook
+   - lxcfs: remove --enable-cgroup option support
+   - lxcfs: nuke the cgroupfs code
+   - lxcfs: make --enable-pidfd a default
+   - Fix compiler warning.
+   - lxcfs: remove test_cgroup
+   - tests: remove test_readdir test
+   - cgroups: remove pure cgroup1 and hybrid support
+   - tests: remove cgroup1 support
+   - tests: extend meminfo hierarchy test
+   - tests: cleanup using shellcheck
+   - tests/meminfo_hierarchy: ensure that swap total size is correct
+   - tests: refactor meminfo_hierarchy test
+   - tests: add cpuset hierarchy test
+   - tests: add cpu cfs hierarchy test
+   - tests: use SIGTERM instead of SIGKILL
+   - github: add Codecov
+   - github: drop cgroup1 related stuff
+   - lxcfs: fix gettid on glibc < 2.30
+   - tests: cover /proc/swaps in meminfo hierarchy test
+   - cpuset_parse: constify return value of cpuset_nexttok
+   - lxcfs: fix wrong cpu count when setting cfs in hierarchy
+   - chore: Remove manual cpu.max and TODO in test script
+   - Release LXCFS 7.0.0
+  [/details]
+
+  # サポートとアップグレード <!-- Support and upgrade -->
+  <!--
+  LXCFS 7.0 will be supported until June 2031 and our current LTS release, LXCFS 6.0 will now switch to a slower maintenance pace, only getting critical bugfixes and security updates.
+  -->
+  LXCFS 7.0 は 2031 年 6 月までサポートされる、現在の LTS リリースです。LXCFS 6.0 は、メンテナンスのペースが遅くなり、重要なバグ修正とセキュリティアップデートのみが提供されるようになります。
+
+  <!--
+  We strongly recommend all LXCFS users to plan an upgrade to the 7.0 branch.
+  -->
+  すべての LXCFS ユーザーは、7.0 ブランチへのアップグレードを計画することを強くおすすめします。
+
+  # ダウンロード <!-- Downloads -->
+
+   - リリース tarball <!-- Main release tarball -->: [lxcfs-7.0.0.tar.gz](https://linuxcontainers.org/downloads/lxcfs/lxcfs-7.0.0.tar.gz)
+   - GPG シグネチャー <!-- GPG signature -->: [lxcfs-7.0.0.tar.gz.asc](https://linuxcontainers.org/downloads/lxcfs/lxcfs-7.0.0.tar.gz.asc)
+
+  # コントリビューター <!-- Contributors -->
+  <!--
+  The LXCFS 7.0 release was brought to you by a total of 16 contributors.
+  -->
+  LXCFS 7.0 は、合計 16 名のコントリビューターによってリリースされました。

@@ -1,0 +1,257 @@
+title: LXC 7.0 LTS リリースのお知らせ <!-- LXC 7.0 LTS has been released -->
+date: 2026/04/30 00:04
+origin: https://discuss.linuxcontainers.org/t/lxc-7-0-lts-has-been-released/26612
+content: |-
+  # はじめに <!-- Introduction -->
+  <!--
+  The LXC team is pleased to announce the release of LXC 7.0 LTS!
+  -->
+  LXC チームが LXC 7.0 LTS のリリースをお知らせします!
+
+  <!--
+  This is the result of two years of work since the LXC 6.0 release and is the seventh LTS release for the LXC project. This release will be supported until June 2031.
+  -->
+  このリリースは、LXC 6.0 リリース以来 2 年の作業の成果です。そして、LXC プロジェクトにとって 7 回目の LTS リリースです。このリリースは 2031 年 6 月までサポートされます。
+
+  # セキュリティ <!-- Security -->
+  <!--
+  This release fixes one security issue:
+   - [CVE-2026-39402 (OVS port deletion authorization bypass in lxc-user-nic)](https://github.com/lxc/lxc/security/advisories/GHSA-3m9j-g9gc-vcvq)
+  -->
+  このリリースでは、セキュリティの問題を 1 件修正しています:
+
+   - [CVE-2026-39402 (lxc-user-nic における OVS ポート削除の認証バイパス)](https://github.com/lxc/lxc/security/advisories/GHSA-3m9j-g9gc-vcvq)
+
+  # ハイライト <!-- Highlights -->
+  ## モニタープロセスの Landlock による保護 <!-- Landlock protection of the monitor process -->
+  <!--
+  When built with `landlock-monitor`, LXC will now use Landlock to restrict what the monitor API handlers can do on the system. Effectively limiting them to interaction with the container and its filesystem.
+  -->
+  `landlock-monitor` を有効にしてビルドすると、LXC は Landlock を使用して、モニター API ハンドラーがシステム上で実行できる操作を制限するようになりました。これにより、ハンドラーは、コンテナとそのコンテナのファイルシステムのみとやりとりをするように制限されます。
+
+  ## フックと環境変数設定の分離 <!-- Split of hook and runtime environment configuration -->
+  <!--
+  Two new configuration keys have been introduced:
+  -->
+  新たな設定キーが 2 つ導入されました:
+
+   - lxc.environment.hooks
+   - lxc.environment.runtime
+
+  <!--
+  Those can be used to only expose some environment variables to the container without impacting the hooks or vice-versa.
+  -->
+  これらを使うことで、フックに影響を与えることなく、一部の環境変数のみをコンテナに公開したり、その逆を行ったりできます。
+
+  ## 廃止された機能 <!-- Deprecated features -->
+  <!--
+  This release removes support for:
+  -->
+  このリリースでは次の機能が廃止されました:
+
+   - CGroupV1
+   - PIDFD をサポートしないカーネル <!-- Kernels without PIDFD support -->
+   - 新しいマウント API をサポートしないカーネル <!-- Kernels without the new mount API -->
+
+  # すべての変更点（翻訳なし）<!-- Full changelog -->
+
+  [details="すべてのChangeLogを見る"]
+   - meson: Set DEVEL flag post release
+   - meson: fix build on NixOS
+   - github: test the lxc multicall binary builds too
+   - lxc/network: handle non-existing sysctl <ifname>/disable_ipv6
+   - network: netdev_configure_server_veth: reduce scope of disable_ipv6_fd/path vars
+   - Update lxc-attach.sgml.in
+   - Update lxc-execute.sgml.in
+   - Update lxc-{attach,execute}.sgml.in
+   - Update lxc-execute.sgml.in
+   - lxc-local: fix use of `LXC_PATH` before init
+   - lxc-local: fix incorrect path to `templates` file
+   - lxc-local: remove check for template existence before extraction
+   - apparmor: fix rule path pattern specification syntax
+   - apparmor: regenerate rules
+   - apparmor: use /{,**} instead of /**
+   - apparmor: regenerate rules
+   - github: start using ubuntu-24.04
+   - github: properly check apparmor profile changes
+   - lxc/storage/zfs: ignore false-positive use-after-free warning
+   - github: exclude clang & ubuntu-24.04 combination
+   - meson: fix build with -Dtools-multicall=true on NixOS
+   - Remove unused function
+   - idmap: Lower logging level of newXidmap tools to INFO
+   - Exit 0 when there's no error
+   - doc: Fix definitions of get_config_path and set_config_path
+   - README: Update security contact
+   - fix possible clang compile error in AARCH
+   - meson.build: add -ffat-lto-objects
+   - meson.build: drop suggest-attribute=noreturn build option
+   - Add suppport for PuzzleFS images in the oci template
+   - create_run_template: don't use txtuid and txtguid out of scope
+   - Avoid null pointer dereference when using shared rootfs. rootfs->storage not set by lxc_storage_prepare when using a shared rootfs.
+   - fix return code of recursive all of cgroup_tree_prune
+   - meson: fix minor typo
+   - lxc-net: Replace random IPv6 subnet
+   - lxccontainer: fix enter_net_ns helper to work when netns is inherited
+   - lxc.init: Switch to sigaction
+   - lxc.init: Ignore user signals coming from inside the contianer
+   - lxc.init: Allow SIGHUP from outside the container
+   - github: Update coverity workflow
+   - github: Introduce shared build logic
+   - github: Introduce shared testsuite logic
+   - github: Rework test workflow
+   - github: Cleanup OSS-fuzz
+   - github: Improve progress reporting
+   - - LXC attach should exit on SIGCHLD
+   - confile-vlanid: undefined is not a zero value
+   - conf: log name of invalid capability in error
+   - dbus: replace hardcoded dbus address with environment variable
+   - conf: warn when capabilities are disabled or libcap is not found
+   - lxc/attach: Revert "- LXC attach should exit on SIGCHLD"
+   - config-bcast: fix incorrect broadcast address calculation
+   - github: Switch to native arm64 runners
+   - Added LXC_IPV6_ENABLE option for lxc-net to enable or disable IPv6
+   - sysconfig/lxc: remove false comment
+   - global: Switch MAC generation to Zabbly prefix
+   - global: Switch to new MAC prefix
+   - github: Add packaging workflow
+   - tools/lxc_attach: fix ENFORCE_MEMFD_REXEC checks
+   - lxc/conf: handle rootfs open_at error in lxc_mount_rootfs
+   - lxc/caps: fix open /proc/sys/kernel/cap_last_cap
+   - lxc/start: do prctl(PR_SET_DUMPABLE) after last uid/gid switch
+   - start: Re-introduce first SET_DUMPABLE call
+   - README: Remove mention of old LXC version
+   - bionic: Remove bionic detection and support
+   - bionic: Remove custom getline, openpty and prlimit
+   - meson_options.txt: don't use str when defining bool default values
+   - meson_options.txt: remove space before `:` for consistency
+   - selinux: fix typo (AppArmor)
+   - lxc/conf,start: fix setting container_ttys environment variable
+   - re-add onexec for apparmor, move label assumption until after container has been setup for attach
+   - apparmor test: add an overlay container start
+   - meson.build: remove quirk for Ubuntu 14.04 libcap-dev
+   - src/tests/lxc-test-apparmor-generated: enable test
+   - src/tests/lxc-test-apparmor-mount: prevent fail on cleanup path
+   - src/tests/lxc-test-unpriv: prevent fail on cleanup path
+   - conf: Add support for "move" mount flag
+   - lxc/conf: support nosymfollow mount flag
+   - lxc/conf: support flag kind of mount options in lxc.mount.entry options
+   - src/tests/oss-fuzz: pin meson to 1.7.2 to workaround build failures
+   - Revert "re-add onexec for apparmor, move label assumption until after container has been setup for attach"
+   - Add loong64 to list of recognized architectures
+   - meson.build: set `LXC_DISTRO_SYSCONF` when `-Dspecfile=true`
+   - meson.build: fix checks for fsconfig and calls
+   - meson.build: use has_header_symbol() instead of get_define() to improve compatibility
+   - lxc/process_utils.h: use strsignal() or sys_siglist[] for Non-GNU distros
+   - lxc/lxccontainer: stop printing misleading errors in enter_net_ns()
+   - tests/lxc-test-rootfs: add idmapped rootfs testcase
+   - tests/lxc-test-snapdeps: try to load overlay kernel module
+   - lxc/network: null-terminate ifname string in lxc_network_recv_name_and_ifindex_from_child()
+   - lxc/conf: do not leak opts.data memory in __lxc_idmapped_mounts_child()
+   - build(deps): bump actions/checkout from 4 to 5
+   - README: Fix CI links
+   - Rename CONTRIBUTING to CONTRIBUTING.md
+   - README: update links
+   - commands: Fix indent
+   - meson: Add optional landlock protection for monitor
+   - start: Make lxc_handler mainloop to run in thread
+   - start: Add Landlock restrictions to monitor
+   - github: Enable landlock in tests
+   - conf: split `lxc.environment` into `runtime` and `hooks`
+   - api_extensions: add environment_runtime_hooks extension
+   - doc: add lxc.environment.{runtime, hooks}
+   - Enable systemd to create /var/lib/lxc at runtime with StateDirectory
+   - doc: add lxc.environment.{runtime,hooks} in Japanese man page
+   - Standardize log file create mode to 0640
+   - lxccontainer: check if target exists before remove in create_mount_target()
+   - Automatically detect compression format in the lxc-local template
+   - start: Only include linux/landlock.h when landlock is enabled
+   - add MFD_EXEC and MFD_NOEXEC_SEAL flag to memfd_create
+   - github: Drop focal source packages
+   - builds workflow: make .orig.tar.gz unique per build
+   - build(deps): bump actions/upload-artifact from 4 to 5
+   - config/apparmor/abstractions: Fix meson build generation of container-base
+   - config/apparmor/abstractions: Drop manually generated container-base file
+   - Update lxc.spec.in to use meson
+   - apparmor: skip /proc and /sys restrictions if nesting is enabled
+   - Ensure do_lxcapi_unfreeze returns false when getstate errors
+   - build(deps): bump actions/checkout from 5 to 6
+   - build: Check if P_PIDFD is defined
+   - meson: add meson option for running doxygen in build
+   - Enumerated all values in array
+   - Initial changes without testing
+   - checkonfig: Fixed compatible with toybox/gunzip
+   - Fallback to XDG_RUNTIME_DIR when /run not found
+   - added "--rbduser" option in "lxc-create -B rbd"
+   - added doc for --rbduser
+   - Added documentation on unprivileged LXC containers
+   - build(deps): bump actions/upload-artifact from 5 to 6
+   - start: Remove outdated comment about group dropping
+   - start: Respect lxc.init.groups also in new user namespace
+   - copy_rdepends: Don't fail on missing source file
+   - cgfsng: fix reboots when using dbus
+   - Improve the dbus scope creation error handling
+   - build: update Makefile and meson.build
+   - github: test io_uring-based event loop
+   - lxc/{terminal, file_utils}: ensure complete data writes in ptx/peer io handlers
+   - tests/lxc-attach: ensure no data corruption happens during heavy IO on pts
+   - src/confile: fix values of lxc.cap.keep and lxc.cap.drop
+   - lxc: added support OpenRC init system
+   - meson.build: fix openat2 include typo, fix with glibc-2.43 +FORTIFY
+   - meson.build: fix open_how include with glibc-2.43+
+   - lxc/network: optimize netdev_get_mtu
+   - lxc/network: save/restore physical network interfaces altnames
+   - lxc/network: define netlink uAPI constants for link properties
+   - cmd/lxc-user-nic: prevent OOB read in name_is_in_groupnames
+   - Add description for unprivileged containers to Japanese man page
+   - Add --rbuser to Japanese lxc-create(1)
+   - build(deps): bump actions/upload-artifact from 6 to 7
+   - utils: Add quotes around exec arguments
+   - utils: Update buffer size to account for quotes
+   - utils: Only single quote our own arguments
+   - Fix issue where pidfd_ functions were not being detected during meson setup.
+   - Fix issue where memfd functions were not being detected during meson setup.
+   - tests: mount_injection: ensure cleanup on test failure
+   - cgroups: Skip systemd dbus logic when not using systemd
+   - [nesting] Extend mount permissions in apparmor to allow systemd services' restrictions to work
+   - lxc/cgroups: drop cgroup1 freezer support
+   - lxc/cgroup: drop cgroup1 device cgroup support
+   - lxc/cgroups: drop special handling logic for cgroup1 cpuset controller
+   - lxc/cgroups: drop cgroup1 mounting logic
+   - lxc/conf: drop cgroup1 config options (lxc.cgroup.*)
+   - tests: use lxc.cgroup2 instead of lxc.cgroup
+   - config/templates: don't use cgroup1 settings
+   - lxc/cgroups: warn if non-unified cgroup layout detected
+   - doc: mention that legacy/hybrid hierarchy support is dropped
+   - lxc/start: assume CLONE_PIDFD and clone3 are supported
+   - lxc: assume fsopen/open_tree/mount_setattr syscalls are supported
+   - apparmor: allow nosymfollow remounts
+   - apparmor: allow nosymfollow remounts
+   - lsm/apparmor: allow binfmt_misc RW mounts
+   - tests/lxc-test-lxc-attach: Increase sleep time
+   - lvm.c: make sure tp gets freed
+   - Don't leak an open fd
+   - lxc-user-nic: clarify and fix
+   - usernic: add a test for ovs port deletion permission
+  [/details]
+
+  # サポートとアップグレード <!-- Support and upgrade -->
+  <!--
+  LXC 7.0 will be supported until June 2031 and our current LTS release, LXC 6.0 will now switch to a slower maintenance pace, only getting critical bugfixes and security updates.
+  -->
+  LXC 7.0 は 2031 年 6 月までサポートされる、現在の LTS リリースです。LXC 6.0 は、メンテナンスのペースが遅くなり、重要なバグ修正とセキュリティアップデートのみが提供されるようになります。
+
+  <!--
+  We strongly recommend all LXC users to plan an upgrade to the 7.0 branch.
+  -->
+  すべての LXC ユーザーは、7.0 ブランチへのアップグレードを計画することを強くおすすめします。
+
+  # ダウンロード <!-- Downloads -->
+
+   - リリース tarball <!-- Main release tarball -->: [lxc-7.0.0.tar.gz](https://linuxcontainers.org/downloads/lxc/lxc-7.0.0.tar.gz)
+   - GPG シグネチャー <!-- GPG signature -->: [lxc-7.0.0.tar.gz.asc](https://linuxcontainers.org/downloads/lxc/lxc-7.0.0.tar.gz.asc)
+
+  # コントリビューター <!-- Contributors -->
+  <!--
+  The LXC 7.0 release was brought to you by a total of 46 contributors.
+  -->
+  LXC 7.0 は、合計 46 名のコントリビューターによりリリースされました。
