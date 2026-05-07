@@ -1,0 +1,1092 @@
+title: Incus 7.0 LTS リリースのお知らせ
+date: 2026/05/05 16:05
+origin: https://discuss.linuxcontainers.org/t/incus-7-0-lts-has-been-released/26641
+content: |-
+  # はじめに <!-- Introduction -->
+  <!--
+  It's with great pride and pleasure that the Incus team is announcing the release of Incus 7.0 LTS!
+  -->
+  Incus チームは、Incus 7.0 LTS のリリースを発表することを大変誇りに思い、またうれしく思います!!
+
+  <!--
+  [Incus](https://linuxcontainers.org/incus/) is a modern system container, application container and virtual machine manager. It's released under the Apache 2.0 license and is run as a community led Open Source project as part of the [Linux Containers](https://linuxcontainers.org) organization.
+  -->
+  [Incus](https://linuxcontainers.org/incus/) は、最新のシステムコンテナ、アプリケーションコンテナ、仮想マシンのマネージャーです。Apache 2.0 ライセンスのもとにリリースされており、[Linux Containers](https://linuxcontainers.org) Organization の一部として、コミュニティー主導の Open Source プロジェクトとして運営されています。
+
+  <!--
+  Incus provides a cloud-like environment, creating instances from [our premade images](https://images.linuxcontainers.org) or any OCI registry and offers a wide variety of features, including the ability to seamlessly cluster servers together.
+  -->
+  Incus はクラウドのような環境を提供し、[プロジェクトが作成したイメージ](https://images.linuxcontainers.org) や任意の OCI レジストリーからインスタンスを作成し、サーバーをシームレスにクラスタリングできる機能をはじめとして、幅広い機能を提供します。
+
+  <!--
+  It supports multiple different local or remote storage options, traditional or fully distributed networking and offers most common cloud features, including a [full REST API](https://linuxcontainers.org/incus/docs/main/rest-api-spec/) and [integrations](https://linuxcontainers.org/incus/docs/main/third_party/) with common tooling like Ansible, Terraform/OpenTofu, Packr, Kubernetes Cluster API and more!
+  -->
+  複数の異なるローカルやリモートのストレージオプション、従来型、または完全に分散化されたネットワークをサポートし、[完全な REST API](https://linuxcontainers.org/incus/docs/main/rest-api-spec/)、Ansible、Terraform/OpenTofu、Packer、Kubernetes Cluster API などの一般的なツールとの[統合](https://linuxcontainers.org/incus/docs/main/third_party/)を含む、一般的なクラウド機能をほとんど提供します。
+
+  [![image|690x225](https://discuss.linuxcontainers.org/uploads/default/original/2X/0/0ea6c0aea831f27906f19c8235e8188062e7aac6.jpeg)](https://linuxcontainers.org/incus/try-it/)
+
+  <!--
+  This is the second LTS release for Incus with Incus 6.0 LTS now entering its security-only phase for the remaining 3 years of its 5 years lifespan.
+  -->
+  このリリースは、Incus にとって 2 度目の LTS リリースであり、Incus 6.0 LTS は、5 年間のライフサイクルのうちの残り 3 年間のセキュリティ修正のみのフェーズに入ります。
+
+  <!--
+  Incus 7.0 LTS joins [LXC 7.0 LTS](https://discuss.linuxcontainers.org/t/lxc-7-0-lts-has-been-released/26612/1) and [LXCFS 7.0 LTS](https://discuss.linuxcontainers.org/t/lxcfs-7-0-lts-has-been-released/26607/1) in wrapping up this round of LTS releases.
+  -->
+  Incus 7.0 LTS は、[LXC 7.0 LTS](https://discuss.linuxcontainers.org/t/lxc-7-0-lts-has-been-released/26612/1) と [LXCFS 7.0 LTS](https://discuss.linuxcontainers.org/t/lxcfs-7-0-lts-has-been-released/26607/1) に続く、今回の LTS リリースの締めくくりです。
+
+  <!--
+  Just like its sister projects, Incus 7.0 LTS will be supported until **June 2031**.
+  -->
+  姉妹プロジェクトと同様に、Incus 7.0 LTS は **2031 年 6 月** までサポートされます。
+
+  <!--
+  The first 2 years will feature bug and security fixes as well as minor usability improvements, delivered through occasional point releases (7.0.x). After that initial two years, Incus 7.0 LTS will move to security only maintenance for the remaining of its 5 years of support.
+  -->
+  最初の2年間は、バグ修正やセキュリティ対策、および軽微なユーザビリティ改善が、定期的なポイントリリース（7.0.x）を通じて提供されます。最初の2年間が経過した後、Incus 7.0 LTS は、残りの5年間のサポート期間中、セキュリティ対策のみのメンテナンスに移行します。
+
+  <!--
+  A total of 204 individuals contributed to Incus between the 6.0 LTS and 7.0 LTS releases with 45 contributing between the 6.23 and 7.0 LTS releases.
+  -->
+  6.0 LTS と 7.0 LTS リリースの間で合計 204 名が Incus に貢献し、6.23 と 7.0 LTS リリースの間では 45 名が貢献しました。
+
+  <!--
+  As usual, you can try it for yourself online: https://linuxcontainers.org/incus/try-it/
+  -->
+  いつものように、オンラインでご自身で試せます: https://linuxcontainers.org/incus/try-it/
+
+  Enjoy!
+
+  # セキュリティ修正 <!-- Security fixes -->
+  <!--
+  This release includes fixes for a total of 9 security issues.
+  Those were reported as part of a security audit of Incus performed by https://7asecurity.com
+  -->
+  このリリースには、9 件のセキュリティ問題の修正を含みます。
+  これらは、https://7asecurity.com が実施したセキュリティ監査の一部として報告されたものです。
+
+   - [CVE-2026-35527](https://github.com/lxc/incus/security/advisories/GHSA-8gw4-p4wq-4hcv) (Moderate)
+   - [CVE-2026-40195](https://github.com/lxc/incus/security/advisories/GHSA-gc7j-g665-rxr9) (Moderate)
+   - [CVE-2026-40197](https://github.com/lxc/incus/security/advisories/GHSA-r7w7-mmxr-47r9) (Moderate)
+   - [CVE-2026-40251](https://github.com/lxc/incus/security/advisories/GHSA-4m88-wxj4-9qj6) (Moderate)
+   - [CVE-2026-41647](https://github.com/lxc/incus/security/advisories/GHSA-fwj8-62r8-8p8m) (Moderate)
+   - [CVE-2026-41684](https://github.com/lxc/incus/security/advisories/GHSA-x5r6-jr56-89pv) (Moderate)
+   - [CVE-2026-41685](https://github.com/lxc/incus/security/advisories/GHSA-98vh-x9cx-9cfp) (Moderate)
+   - [CVE-2026-40243](https://github.com/lxc/incus/security/advisories/GHSA-c839-4qxr-j4x3) (Low)
+   - [CVE-2026-41648](https://github.com/lxc/incus/security/advisories/GHSA-67wx-r9xr-x75x) (Low)
+
+  # 互換性のない変更 <!-- Breaking changes -->
+  <!--
+  As this is a new major release, we have used the opportunity to make a few breaking changes.
+  -->
+  今回のリリースは、新しいメジャーリリースであるため、互換性を損なう変更をいくつか加えています。
+
+  <!--
+  The minimum system requirements have been updated:
+  -->
+  最小システム要件が更新されました:
+
+   - Go 1.25
+   - Linux 6.12
+   - QEMU 8.2
+   - LXC 6.0.0
+   - nftables 1.0.0
+   - dnsmasq 2.90
+   - openvswitch 2.15.0 （OVS や OVN 使用時）<!-- (when OVS or OVN are used) -->
+   - ovn 23.03.0 （OVN 使用時） <!-- (when OVN is used) -->
+   - ZFS 2.1.0 （ZFS 使用時）<!-- (when ZFS is used) -->
+   - LVM 2.03.11 （LVM 使用時） <!-- (when LVM is used) -->
+
+  <!--
+  In addition, some legacy system support has been removed:
+  -->
+  それに加えて、レガシーなシステムサポートが削除されました:
+
+   - cgroup v1 サポートの廃止 <!-- Deprecation of CGroupV1 support -->
+   - xtables (iptables/ip6tables/ebtables) サポートの廃止 <!-- Deprecation of xtables (iptables/ip6tables/ebtables) support -->
+
+  <!--
+  The `incus` command line tool has also seen quite a lot of improvements to its parsing logic and has done away with a lot of legacy special cases and made sure that the behavior of the various commands is consistent.
+  -->
+  `incus` コマンドラインツールも、解析ロジックが大幅に改良され、多くの古い特殊ケースが廃止され、さまざまなコマンドの動作が一貫性を保つように改良されました。
+
+  # Incus 6.23 からの変更点 <!-- Changes since Incus 6.23 -->
+  ## MinIO をビルトイン S3 リスナーへ置き換え <!-- Minio replaced by built-in S3 listener -->
+  <!--
+  With MinIO no longer being maintained upstream, we couldn't keep it as the backend provider for our storage buckets.
+  -->
+  MinIO はもはや開発元でメンテナンスされないため、ストレージバケットのバックエンドプロバイダーとしては使い続けられなくなりました。
+
+  <!--
+  Rather than move to another external dependency, with all the plumbing and integration works that comes from that. We've decided to instead implement the basic S3 operations that we need directly in Incus.
+  -->
+  他の外部依存へ移行し、それに伴う複雑な設定や統合作業を避けるため、必要となる基本的な S3 操作を Incus に直接実装することにしました。
+
+  <!--
+  Storage buckets will be automatically converted from MinIO's on-disk format to the new on-disk format (plain files with separate metadata) the first time they are accessed. This process can take up to a few minutes depending on the size of the objects present in the bucket.
+  -->
+  ストレージバケットは、初回アクセス時に MinIO のディスク上のフォーマットから、新しいディスク上のフォーマット（メタデータが別のプレーンファイル）に変換されます。この処理は、バケット内のオブジェクトのサイズによっては数分かかる場合があります。
+
+  <!--
+  The migration logic keeps the original MinIO metadata around, should it become useful.
+  -->
+  移行ロジックは、必要に応じて元の MinIO メタデータを保持します。
+
+  <!--
+  From a client's point of view, other than an initial connection delay during the conversion, there is no API difference, it's still S3.
+  -->
+  クライアントの視点では、変換時の初期の接続遅延を除いて、API に違いはなく、従来通りの S3 のままです。
+
+  ## サーバーのシャットダウン動作 <!-- Server shutdown action -->
+  <!--
+  A new `core.shutdown_action` server configuration option has been added.
+  -->
+  新たなサーバー設定オプションとして、`core.shutdown_action` が追加されました。
+
+  <!--
+  The default value of `shutdown` has all instances shutdown cleanly. The new value of`evacuate` will trigger a clustered server evacuation on shutdown, allowing for as many instances as possible to move to other servers.
+  -->
+  デフォルト値である `shutdown` では、すべてのインスタンスがクリーンにシャットダウンします。新しい値である `evacuate` を指定すると、シャットダウン時にクラスター化サーバーの退避がトリガーされ、可能な限り多くのインスタンスは他のサーバーに移行できます。
+
+  ドキュメント <!-- Documentation -->: https://linuxcontainers.org/incus/docs/main/server_config/
+
+  ## 低レベルバックアップ API <!-- Low level backup API -->
+  <!--
+  To ease integration with standard backup software, Incus now exposes an NBD API as well as APIs to control the creation of dirty bitmaps for change tracking.
+  -->
+  標準的なバックアップソフトウェアとの統合を簡単にするため、Incus は NBD API と、変更追跡用のダーティビットマップの作成を制御する API を公開するようになりました。
+
+  <!--
+  The combination of those two features allows for easy backup of virtual machines, including support for incremental transfers and restores.
+  -->
+  これら 2 つの機能を組み合わせることで、増分での転送やリストアを含む、容易な仮想マシンのバックアップが可能になります。
+
+  <!--
+  As NBD is carried over the Incus API, the Incus CLI tool can be used to handle the backend connection and have a local NBD listener setup for regular NBD clients to interface.
+  -->
+  NBD は Incus API を通して提供されるため、Incus CLI ツールがバックエンドコネクションを処理し、通常の NBD クライアントとのインターフェースとなる NBD リスナーをセットアップできます。
+
+      stgraber@castiana:~$ incus storage volume nbd default virtual-machine/v1 --address=127.0.0.1:1234
+      NBD listening on 127.0.0.1:1234
+
+  ## ストレージプールのプロジェクト制限 <!-- Storage pool project restriction -->
+  <!--
+  A new `restricted.storage-pools.access` project configuration key has been added allowing for a comma separated list of storage pools which can be accessed from within that project.
+  -->
+  新たにプロジェクトの設定キーに `restricted.storage-pools.access` が追加されました。これにより、プロジェクト内からアクセス可能なストレージプールのカンマ区切りのリストを指定できます。
+
+  <!--
+  It behaves similarly to settinga 0-byte quota for that storage pool within the project, but allows for an allow-list approach rather than a deny-list one.
+  -->
+  これは、プロジェクト内でストレージプールに対して 0 バイトのクォータを設定するのと同様に動作しますが、拒否リストではなく、許可リスト形式を採用しています。
+
+  ドキュメント <!-- Documentation -->: https://linuxcontainers.org/incus/docs/main/reference/projects/
+
+  ## クラスターリバランス時の配置スクリプトレット呼び出し <!-- Placement scriptlet call on cluster rebalance -->
+  <!--
+  The instance placement scriptlet now gets a dedicated `rebalance` call when the cluster re-balance feature is enabled and Incus is looking at moving instances around to spread the load.
+  -->
+  クラスターのリバランス機能が有効になり、Incus が負荷分散のためにインスタンスの移動を検討している場合、インスタンス配置スクリプトレットは専用の `rebalance` コールを受け取るようになりました。
+
+  <!--
+  The list of candidate servers is sorted from least loaded to most loaded.
+  -->
+  候補サーバーのリストは、負荷が低い方から高い方へソートされます。
+
+  ドキュメント <!-- Documentation -->: https://linuxcontainers.org/incus/docs/main/explanation/clustering/
+
+  ## ファイル転送コマンドは `cp` コマンドと同様に <!-- File transfer commands now aligned with `cp` -->
+  <!--
+  Both the `incus file push` and `incus file pull` commands now follow a cp-like behavior and matching set of flags:
+  -->
+  `incus file push` と `incus file pull` コマンドは、cp コマンドと合致するオプションを使い、cp コマンド同様に動作するようになりました:
+
+      -p, --create-dirs      Create any directories necessary
+      -L, --dereference      Always follow symbolic links in source path
+      -H, --follow           Follow command-line symbolic links in source path
+      -P, --no-dereference   Never follow symbolic links in source path
+      -r, --recursive        Recursively transfer files
+
+  <!--
+  This should offer a more predictable experience when transferring files in and out of Incus instances.
+  -->
+  これにより、Incus インスタンス間でのファイル転送がより予測どおりになります。
+
+  ## `incus image copy` の `--reuse` フラグ <!-- \-\-reuse flag in `incus image copy` -->
+  <!--
+  The `incus image copy` command now supports a `\-\-reuse` flag which when used alongside `\-\-copy-aliases` causes the newly copied image to take over any of the pre-existing aliases.
+  -->
+  `incus image copy` コマンドに `--reuse` フラグが追加されました。このフラグを `--copy-aliases` と同時に使うと、新たにコピーされたイメージが、既存のエイリアスをすべて引き継ぎます。
+
+  # Incus 6.0.6 LTS 以降の変更 <!-- Changes since Incus 6.0.6 LTS -->
+  <!--
+  We have been pretty aggressively backporting changes from the Incus 6.x releases back to the 6.0.x LTS releases. As a result, the list of new features for those coming from 6.0.6 LTS is reasonably short.
+  -->
+  これまで、Incus 6.x リリースから 6.0.x LTS リリースへのバックポートをかなり積極的に行いました。その結果、6.0.6 LTS から移行するユーザーにとっての新機能リストは比較的短いです。
+
+  <!--
+  Those features primarily focus on changes that required large on-disk or database schema changes and were therefore unsuitable for backporting to the LTS.
+  -->
+  これらの新機能は主に、ディスク上の大規模な変更やデータベーススキーマの変更を必要とするため、LTS へのバックポートには適さなかった変更にフォーカスを当てています。
+
+  ## ここまで紹介したすべての新機能 <!-- All features listed above -->
+  <!--
+  Incus 6.0.6 LTS was released just before Incus 6.23, as a result, all the new features listed above also apply to those coming from Incus 6.0.6 LTS.
+  -->
+  Incus 6.0.6 LTS は、Incus 6.23 の直前にリリースされたため、ここまでで紹介したすべての新機能は、Incus 6.0.6 LTS から移行するユーザーにも適用されます。
+
+  ## OCI サポート <!-- OCI support -->
+  <!--
+  First introduced in Incus 6.3, it's now possible to create application containers from OCI images.
+  -->
+  Incus 6.3 で初めて導入された機能として、OCI イメージからアプリケーションコンテナを作成できるようになりました。
+
+  <!--
+  All of the Incus container configuration options, whether resource limits, system call interception, ... all apply to those containers too. They're also all run in the same safe container environment as our system containers.
+  -->
+  リソース制限や、システムコールインターセプションなど、Incus コンテナのすべての設定オプションは、これらの OCI イメージから作成したコンテナにもすべて適用されます。
+
+      stgraber@dakara:~$ incus remote add docker https://docker.io --protocol=oci
+      stgraber@dakara:~$ incus launch docker:mysql mysql \
+      > -c environment.MYSQL_DATABASE=wordpress \
+      > -c environment.MYSQL_USER=wordpress \
+      > -c environment.MYSQL_PASSWORD=wordpress \
+      > -c environment.MYSQL_RANDOM_ROOT_PASSWORD=1
+      Launching mysql
+
+      stgraber@dakara:~$ incus list mysql
+      +-------+---------+----------------------+------------------------------------------+-----------------+-----------+
+      | NAME  |  STATE  |         IPV4         |                   IPV6                   |      TYPE       | SNAPSHOTS |
+      +-------+---------+----------------------+------------------------------------------+-----------------+-----------+
+      | mysql | RUNNING | 172.17.250.26 (eth0) | 2602:fc62:c:250:216:3eff:fefa:468 (eth0) | CONTAINER (APP) | 0         |
+      +-------+---------+----------------------+------------------------------------------+-----------------+-----------+
+
+      stgraber@dakara:~$ incus launch docker:wordpress wordpress \
+      > -c environment.WORDPRESS_DB_HOST=172.17.250.26 \
+      > -c environment.WORDPRESS_DB_USER=wordpress \
+      > -c environment.WORDPRESS_DB_PASSWORD=wordpress \
+      > -c environment.WORDPRESS_DB_NAME=wordpress
+      Launching wordpress
+
+      stgraber@dakara:~$ incus list wordpress
+      +-----------+---------+-----------------------+-------------------------------------------+-----------------+-----------+
+      |   NAME    |  STATE  |         IPV4          |                   IPV6                    |      TYPE       | SNAPSHOTS |
+      +-----------+---------+-----------------------+-------------------------------------------+-----------------+-----------+
+      | wordpress | RUNNING | 172.17.250.119 (eth0) | 2602:fc62:c:250:216:3eff:fe61:c1fc (eth0) | CONTAINER (APP) | 0         |
+      +-----------+---------+-----------------------+-------------------------------------------+-----------------+-----------+
+      stgraber@dakara:~$
+
+  ## 依存ストレージボリューム <!-- Dependent storage volumes -->
+  <!--
+  First introduced in Incus 6.23, it's now possible to have custom volumes be fully tied to an instance,having them get matching snapshots, migrate alongside the instance, get included in backups and deleted when the instance gets deleted.
+  -->
+  Incus 6.23 で初めて導入されたこの機能により、インスタンスと完全にひも付いたカスタムボリュームを持つことができるようになりました。一致するスナップショットを取得したり、インスタンスとともに移行したり、バックアップに含めたり、インスタンスが削除されると同時に削除したりできるようになりました。（訳注：インスタンスを削除すると同時にボリュームも削除され、インスタンスのスナップショットを作成するとボリューム上に一致するスナップショットが作成され、インスタンスのバックアップには依存ボリュームが含まれる）
+
+
+      stgraber@castiana:~$ incus launch images:debian/13 c1
+      Launching c1
+      stgraber@castiana:~$ incus storage volume create default c1-extra dependent=true
+      Storage volume c1-extra created
+      stgraber@castiana:~$ incus config device add c1 extra disk pool=default source=c1-extra dependent=true path=/extra
+      Device extra added to c1
+      stgraber@castiana:~$ incus storage volume snapshot create default c1-extra test
+      Error: Direct snapshots are not allowed for dependent volumes
+      stgraber@castiana:~$ incus snapshot create c1 foo
+      stgraber@castiana:~$ incus storage volume snapshot list default c1-extra
+      +------+----------------------+------------+
+      | NAME |       TAKEN AT       | EXPIRES AT |
+      +------+----------------------+------------+
+      | foo  | 2026/03/27 18:54 EDT |            |
+      +------+----------------------+------------+
+      stgraber@castiana:~$ incus snapshot delete c1 foo
+      stgraber@castiana:~$ incus storage volume snapshot list default c1-extra
+      +------+----------+------------+
+      | NAME | TAKEN AT | EXPIRES AT |
+      +------+----------+------------+
+
+  ## ネットワークアドレスセット <!-- Network address sets -->
+  <!--
+  First introduced in Incus 6.12, network address sets are a convenient way to simplify network ACLs by not having to duplicate the list of source/destination addresses.
+  -->
+  Incus 6.12 で初めて導入されたネットワークアドレスセットは、送信元・送信先アドレスのリストを重複させる必要がないため、ネットワーク ACL を簡素化する便利な方法です。
+
+  <!--
+  Address sets are tied to projects similarly to ACLs and each set can contain a variety of IPv4 and IPv6 addresses. Sets can then be referenced from within ACLs for either the source or destination field.
+  -->
+  アドレスセットは、ACL と同様にプロジェクトにひもづけられ、それぞれのセットは IPv4 と IPv6 アドレスを含めることができます。セットは ACL のソースとデスティネーションフィールドから参照できます。
+
+      stgraber@dakara:~$ incus network address-set create cloudflare-dns
+      Network address set cloudflare-dns created
+      stgraber@dakara:~$ incus network address-set add cloudflare-dns 1.0.0.1
+      stgraber@dakara:~$ incus network address-set add cloudflare-dns 1.1.1.1
+      stgraber@dakara:~$ incus network address-set add cloudflare-dns 2606:4700:4700::1001
+      stgraber@dakara:~$ incus network address-set add cloudflare-dns 2606:4700:4700::1111
+      
+      stgraber@dakara:~$ incus network acl create my-acl
+      Network ACL my-acl created
+      stgraber@dakara:~$ incus network acl rule add my-acl egress action=allow state=enabled
+      stgraber@dakara:~$ incus network acl rule add my-acl egress action=reject state=enabled destination='$cloudflare-dns'
+      
+      stgraber@dakara:~$ incus config device override d13 eth0 security.acls=my-acl
+      Device eth0 overridden for d13
+
+      stgraber@dakara:~$ incus exec d13 -- ping linuxcontainers.org -c1 -W1
+      PING linuxcontainers.org (2602:fc62:a:1::7) 56 data bytes
+      64 bytes from rproxy.dcmtl.stgraber.org (2602:fc62:a:1::7): icmp_seq=1 ttl=59 time=8.60 ms
+
+      --- linuxcontainers.org ping statistics ---
+      1 packets transmitted, 1 received, 0% packet loss, time 0ms
+      rtt min/avg/max/mdev = 8.599/8.599/8.599/0.000 ms
+      
+      stgraber@dakara:~$ incus exec d13 -- ping one.one.one.one -c1 -W1
+      PING one.one.one.one (2606:4700:4700::1111) 56 data bytes
+
+      --- one.one.one.one ping statistics ---
+      1 packets transmitted, 0 received, 100% packet loss, time 0ms
+
+  ドキュメント <!-- Documentation -->: https://linuxcontainers.org/incus/docs/main/howto/network_address_sets/
+
+  ## Linstor ストレージドライバー <!-- Linstor storage driver -->
+  <!--
+  First introduced in Incus 6.11, Linstor is another remote storage option which uses DRBD for efficient data replication between systems.
+  -->
+  Incus 6.11 で初めて導入された Linstor は、DRBD を使ってシステム間で効率的なデータレプリケーションを行う、もう 1 つのリモートストレージオプションです。
+
+  <!--
+  You can read more about Linstor itself on their website: https://linbit.com/linstor/
+  -->
+  Linstor の詳細については、公式サイトをご覧ください: https://linbit.com/linstor/
+
+  <!--
+  This allows for block volumes to be generated for containers and virtual machines with typically the primary copy existing on the server running the instance itself and a replica existing on another server in the cluster.
+  -->
+  Linstor を使用すると、コンテナや仮想マシン用のブロックボリュームを生成できます。通常は、プライマリーコピーはインスタンスが稼働しているサーバー上に、レプリカはクラスター内の他のサーバー上に存在します。
+
+  ドライバードキュメント <!-- Driver documentation -->: https://linuxcontainers.org/incus/docs/main/reference/storage_linstor/
+  Howto: https://linuxcontainers.org/incus/docs/main/howto/storage_linstor_setup/
+  インターナル <!-- Internals -->: https://linuxcontainers.org/incus/docs/main/reference/storage_linstor_internals/
+
+  ## TrueNAS ストレージドライバー <!-- TrueNAS storage driver -->
+  <!--
+  First introduced in Incus 6.16, the TrueNAS storage driver allows usage of a remote TrueNAS server as a storage pool for Incus instances and volumes.
+  -->
+  Incus 6.16 で初めて導入された TrueNAS ストレージドライバーは、リモートの TrueNAS サーバーを、Incus インスタンスとボリュームのストレージプールとして使用できるようにします。
+
+  <!--
+  This behaves very similarly to the ZFS storage driver since that's what TrueNAS uses, but rather than interacting with ZFS locally, the driver uses the TrueNAS API to perform the various actions remotely on the storage server and then relies on iSCSI to export those volumes from the TrueNAS server and connect them on the Incus server.
+  -->
+  これは、TrueNAS が使用する ZFS ストレージドライバーと非常に似た動作をします。しかし、ローカルで ZFS とやりとりするのではなく、TrueNAS API を使用してさまざまなアクションをリモートでストレージサーバー上で実行します。そして、iSCSI を使用して TrueNAS からボリュームをエクスポートし、Incus サーバーへ接続します。
+
+  <!--
+  As a remote storage driver (alongside Ceph, Linstor and clustered LVM), this can be used to back clusters, allowing for seamless migration of instances between servers as no data needs to be moved.
+  -->
+  （Ceph や Linstor やクラスター化された LVM と並んで）リモートストレージドライバーとしてこれをクラスターで使用すると、データの移動が不要なため、サーバー間でインスタンスのシームレスなマイグレーションができるようになります。
+
+      root@truenas-incus:~# incus storage create demo truenas source=test/demo truenas.host=192.0.2.10 truenas.api_key=MY-KEY truenas.allow_insecure=true
+      Storage pool demo created
+      root@truenas-incus:~# incus launch images:debian/13 d13 --storage demo
+      Launching d13
+      root@truenas-incus:~# incus list
+      +------+---------+---------------------+------------------------------------------------+-----------+-----------+
+      | NAME |  STATE  |        IPV4         |                      IPV6                      |   TYPE    | SNAPSHOTS |
+      +------+---------+---------------------+------------------------------------------------+-----------+-----------+
+      | d13  | RUNNING | 10.2.165.159 (eth0) | fd42:a815:51cf:d4bb:1266:6aff:fe51:ae56 (eth0) | CONTAINER | 0         |
+      +------+---------+---------------------+------------------------------------------------+-----------+-----------+
+
+  ドキュメント <!-- Documentation -->: https://linuxcontainers.org/incus/docs/main/reference/storage_truenas/
+
+  ## クラスターグループごとの CPU ベースライン定義 <!-- CPU baseline definition in cluster groups -->
+  <!--
+  First introduced in Incus 6.4, Incus now has configurable CPU definitions within cluster groups. This allows for effecient CPU utilization and live migration within mixed clusters.
+  -->
+  Incus 6.4 で初めて導入されたこの機能で、Incus はクラスターグループ内で CPU 定義を構成できるようになりました。これにより、混在したクラスター内での効率的な CPU 利用とライブマイグレーションが可能になります。
+
+  <!--
+  This makes it possible to have one cluster group per CPU model/generation and have Incus compute the common set of CPU flags for those servers.
+  -->
+  この機能により、CPU モデル・世代ごとに 1 つのクラスターグループを持ち、Incus がそれらのサーバーに対して共通の CPU フラグのセットを計算できるようになります。
+
+  <!--
+  For example, `incus cluster group set foo instances.vm.cpu.x86_64.baseline=kvm64 instances.vm.cpu.x86_64.flags=auto` will have Incus automatically go through the servers in the `foo` cluster group and then fill in the `flags` configuration key with the set of common CPU flags.
+  -->
+  例えば、`incus cluster group set foo instances.vm.cpu.x86_64.baseline=kvm64 instances.vm.cpu.x86_64.flags=auto` とすると、Incus は自動的に foo クラスターグループ内のサーバーを自動的に調べ、共通の CPU フラグのセットを `flag` 設定キーに入力します。
+
+  <!--
+  But this also allows setting up your own completely custom CPU defintion, for example, `incus cluster group set foo instances.vm.cpu.x86_64.baseline=EPYCv2 instances.vm.cpu.x86_64.flags=-svm` will expose a basic 2nd generation AMD EPYC CPU with the virtualization extension (svm) disabled.
+  -->
+  ただし、これにより、完全にカスタムの CPU 定義を設定することもできます。例えば、`incus cluster group set foo instances.vm.cpu.x86_64.baseline=EPYCv2` `instances.vm.cpu.x86_64.flags=-svm` とすると、仮想化拡張機能（svm）を無効にした、基本的な第 2 世代の AMD EPYC CPU が公開されます。
+
+  # すべての変更点 <!-- Complete changelog -->
+  <!--
+  Here is a complete list of all changes since Incus 6.23:
+  -->
+  Incus 6.23 以降のすべての変更点のリストは次の通りです（翻訳なし）:
+
+  [details="すべてのChangeLogを見る"]
+   - shared/cliconfig: Shorten path to using keepalive proxy
+   - shared/cliconfig: Implement TLS cert/key/ca caching
+   - shared/cliconfig: Add support for encrypted TLS keys to keepalive proxy
+   - github: format INCUS_VERSION from tag in release workflow
+   - Added translation using Weblate (Georgian)
+   - client: Optionally skip blocking for OIDC authentication
+   - incus/version: Gracefully fail when server unreachable
+   - incusd/instance/agent-loader: Use Linux arch names
+   - incusd/instance/qmp: Add QuerySpice
+   - incusd/instance/qemu: Add SPICE detection logic
+   - incusd/instance/qemu: Disable SPICE on systems missing support
+   - incusd/instances/qemu: Rework qemuArchConfig
+   - incusd/instance/qmp: Add Query9pDevice
+   - incusd/instance/qemu: Add plan9 detection logic
+   - incusd/instance/qemu: Export plan9 drives only when supported
+   - incusd/instance/qemu: enable SPICE audio via feature gate
+   - incus: Un-export Command and Run functions
+   - incus-benchmark: Un-export Command and Run functions
+   - incus-simplestreams: Un-export Command and Run functions
+   - incus-agent: Un-export Command and Run functions
+   - incus-user: Un-export Command and Run functions
+   - lxd-to-incus: Un-export Command and Run functions
+   - lxc-to-incus: Un-export Command and Run functions
+   - fuidshift: Un-export Command and Run functions
+   - incus: Un-export remaining exported functions
+   - incus-migrate: Un-export remaining exported functions
+   - incus-benchmark: Un-export remaining exported functions
+   - incusd: Un-export remaining exported functions
+   - incus-benchmark: Remove unused function
+   - incusd: Fix bad type in format strings
+   - incusd/instance/qmp: Add QueryVirtioSoundDevice
+   - incusd/instance/qemu: Add virtio-sound detection logic
+   - incusd/instance/qemu: Omit audio device on systems without virtio-sound
+   - Translated using Weblate (Georgian)
+   - Translated using Weblate (Russian)
+   - incusd/storage: Delete dependent volumes on instance deletion
+   - tests: Test dependent volume deletion on instance deletion
+   - internal/incusos: Allow non-GET requests
+   - internal/incusos: Implement TriggerSystemUpdateCheck
+   - incusd: Trigger IncusOS update check on version mismatch
+   - incusd/response: Make pipeResponse flush headers ASAP
+   - incusd: Disallow setting the 'dependent' key on volume creation
+   - incusd/device: Update 'dependent' flag on device add and detach
+   - tests: Add additional tests for dependent volume handling
+   - incusd/instance/common: Don't perform costly storage actions when no snapshots
+   - incusd: Remove explicit caching mechanism in favor of implicit
+   - incusd/storage/zfs: Implement better caching
+   - incusd/storage/truenas: Implement better caching
+   - incusd/instances: Allow more concurency
+   - incusd/storage/truenas: Retry iSCSI map request
+   - shared/cliconfig: Avoid treating `=` as part of a remote name
+   - incusd/network/state: Use canAccessNetwork
+   - cmd/incus-simplestreams: Add flag for overriding product name
+   - incusd/storage/truenas: Use old-style ZFS types
+   - incusd/storage/zfs: Use old-style ZFS types
+   - Translated using Weblate (Portuguese (Brazil))
+   - Translated using Weblate (Portuguese (Brazil))
+   - Translated using Weblate (Japanese)
+   - Translated using Weblate (Japanese)
+   - Translated using Weblate (Japanese)
+   - Translated using Weblate (Portuguese)
+   - Translated using Weblate (Portuguese)
+   - Translated using Weblate (Tamil)
+   - Translated using Weblate (Georgian)
+   - Translated using Weblate (Georgian)
+   - Translated using Weblate (French)
+   - Translated using Weblate (French)
+   - Translated using Weblate (French)
+   - Translated using Weblate (French)
+   - Translated using Weblate (French)
+   - Translated using Weblate (French)
+   - Translated using Weblate (French)
+   - Translated using Weblate (French)
+   - Translated using Weblate (Chinese (Traditional Han script))
+   - Translated using Weblate (Chinese (Traditional Han script))
+   - Translated using Weblate (Spanish)
+   - Translated using Weblate (Spanish)
+   - Translated using Weblate (Russian)
+   - Translated using Weblate (Russian)
+   - Translated using Weblate (Dutch)
+   - Translated using Weblate (Dutch)
+   - Translated using Weblate (German)
+   - Translated using Weblate (German)
+   - Translated using Weblate (German)
+   - Translated using Weblate (German)
+   - Translated using Weblate (German)
+   - Translated using Weblate (Greek)
+   - Translated using Weblate (Norwegian Bokmål)
+   - Translated using Weblate (Norwegian Bokmål)
+   - Translated using Weblate (Italian)
+   - Translated using Weblate (Italian)
+   - Translated using Weblate (Indonesian)
+   - Translated using Weblate (Indonesian)
+   - Translated using Weblate (Swedish)
+   - Translated using Weblate (Swedish)
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - shared/api: Switch to go-yaml/v4
+   - shared/cliconfig: Switch to go-yaml/v4
+   - shared/cmd: Switch to go-yaml/v4
+   - shared/subprocess: Switch to go-yaml/v4
+   - shared/validate: Switch to go-yaml/v4
+   - incusd/instance/drivers: Switch to go-yaml/v4
+   - incusd/storage: Switch to go-yaml/v4
+   - incus-agent: Switch to go-yaml/v4
+   - incus-migrate: Switch to go-yaml/v4
+   - incus-simplestreams: Switch to go-yaml/v4
+   - incusd/backup: Switch to go-yaml/v4
+   - incusd/storage/drivers: Switch to go-yaml/v4
+   - incusd: Switch to go-yaml/v4
+   - incus: Switch to go-yaml/v4
+   - test: Switch to go-yaml/v4
+   - gomod: Update dependencies
+   - incus: Update for new YAML empty reader behavior
+   - test: Fix ordering of godeps.list
+   - tests: Update for slight YAML differences
+   - incusd/device: Ignore 'not found' errors when updating dependent config during device add/remove
+   - incusd/storage: Add ShouldMigrateDependentVolume
+   - incusd/instance: Add support for disk name to ExportQcow2Block
+   - incusd/instance/drivers: Add support for cross-cluster dependent volumes migration
+   - incusd/storage: Add support for cross-cluster dependent volumes migration
+   - incusd/instance: Add HasDependentDisk and ForEachDependentDiskType to instance interface
+   - incusd/storage: use ForEachDependentDiskType and HasDependentDisk from instance
+   - incusd/instance: Pass additional parameter to Delete method
+   - incusd/storage: Pass additional parameter to Delete method
+   - incusd/instance: Move dependent volume deletion from storage to instance delete()
+   - incusd/storage: Move dependent volume deletion from storage to instance delete()
+   - incusd/storage: Fix race in caching logic
+   - incusd/storage: Fix potential deadlock
+   - incusd/migration: Implement cancelation in migration logic
+   - incusd/instances: Implement cancelation in exec logic
+   - incusd: Clarify shutdown message
+   - incusd: Limit request body to 1MiB by default
+   - incusd: Configure exceptions to the 1MiB limit
+   - incusd/instance: Rename deleteDependentVolumes to cleanupDependencies
+   - incus/server/network/ovn/nb: Add function to get PortGroups by Port UUID
+   - incus/server/network/ovn/driver: Cleanup stale instance port uuids from acl port groups on instance stop
+   - incusd/storage: Support optimized storage for dependent volumes
+   - incusd/storage: Improve logging during dependent volume creation from backup
+   - incusd/storage: Rename createDependentVolumes to createDependentVolumesFromBackup
+   - incusd/device: Add cleanupDependencies argument to Remove() method
+   - incusd/instance/drivers: Pass the cleanupDependencies flag to device Remove
+   - tests: Rewrite out-of-space test to use profiles
+   - incusd/storage: Improve comments on locks
+   - incusd/forksyscall: Handle mount arguments when using idmap
+   - incusd/storage: Use device name when importing dependent volumes from backup
+   - tests: Add tests for exporting/importing dependent volumes
+   - incusd/cluster/config: Clarify description of oidc.claim option
+   - doc: Update metadata
+   - incusd/device/nic_physical: Fix device validation
+   - doc: Update config
+   - gomod: Update dependencies
+   - incusd/instance: Add support for stateful snapshots for qcow2 volumes
+   - incusd/storage: Add support for stateful snapshots for qcow2 volumes
+   - incusd: Don't expose the API extension list pre-authentication
+   - incusd/device/nic_physical: Fix bridge handling
+   - incusd/device/nic_physical: Fix inheritance from network
+   - incusd/instances/qemu: Skip vmcoreinfo on ppc64le
+   - doc/image_format: Update Pongo2 website
+   - incusd/device/nic_bridged: Handle physical NICs
+   - incusd/instance/drivers: Fix live migration of instances with snapshots
+   - incusd/instance/qemu: Scale SCSI queues with CPUs
+   - incus: Enable admin recover and admin sql on all platforms
+   - api: storage_volume_nbd
+   - incusd/auth: Add can_connect_nbd
+   - client: Add GetStoragePoolVolumeBlockNBDConn
+   - incusd/storage_volumes: Add NBD API
+   - incusd/storage: Implement NBD functions
+   - doc/rest-api: Refresh swagger YAML
+   - incusd/instance: Implement ConnectNBD
+   - incus/storage/volume: Add NBD command
+   - i18n: Update translation templates
+   - incusd/instance/qmp: Add QueryBlockExports and QueryNBDBlockExports
+   - incusd/instance/drivers: Improve error when NBD server is already running
+   - incusd/instance: Export snapshot when VM is running to ensure consistency
+   - incusd/storage: Export snapshot when VM is running to ensure consistency
+   - incusd/storage/drivers: Implement ActivateTask
+   - incusd/storage: Support NBD export in offline mode
+   - incusd/instance/qmp: Add commands to manage dirty bitmaps
+   - shared/api: Add structs for managing dirty bitmaps
+   - incusd/instance: Add methods to manage dirty bitmaps
+   - incusd/storage: Add InstanceByVolumeName
+   - incusd: Add API endpoints for managing dirty bitmaps
+   - doc/rest-api: Refresh swagger YAML
+   - incusd/instance/lxc: Don't return nil when not implemented
+   - client: Forward skopeo errors
+   - incusd/storage: Add instanceStateful flag to volume snapshot operations
+   - incusd/device: Pass instanceStateful flag during instance snapshot
+   - incusd: Pass instanceStateful flag during instance snapshot
+   - incusd/apparmor/qemuimg: Expand symlinks
+   - incus: Fix Windows absolute paths
+   - incus: Enforce stricter directory checks
+   - tests: Add strict pull checks for directories
+   - i18n: Update translation templates
+   - incusd: Return bitmap endpoints by default, objects with recursion=1
+   - doc/rest-api: Refresh swagger YAML
+   - incusd/instance/qemu: Fix RTC handling on Windows
+   - incusd/instance/drivers: Allow exposing dirty bitmaps through NBD export in online mode
+   - incusd/storage: Allow exposing dirty bitmaps through NBD export in offline mode
+   - incusd/storage/drivers: Fix ordering in Qcow2DeletionCleanup
+   - incusd/instance/drivers: Improve snapshot creation rollback handling
+   - incusd/storage: Improve snapshot creation rollback handling
+   - internal/instance: Introduce volatile.vm.boot_state
+   - incusd/instance/qemu: Rename internal structs
+   - incusd/instance/qemu: Add new migration state volatile
+   - incusd/instance/qemu: Move topology functions to new file
+   - incusd/instance/qemu: Make use of new migration state logic
+   - incusd/instance/qemu: Don't export internal vcpus and numa nodes maps
+   - doc: Update config
+   - incusd/instance/qemu: Handle stateful detection corner case
+   - incusd/migrate: Set short timeouts on read/write of control data
+   - client: Fix bad error handling
+   - incusd/response/upgrade: Add small delay for NBD
+   - incus/server/network/ovn/nb: Mark route as discord when nexthop is 'discard'
+   - incus/server/network/ovn/driver: Only add discard route if it doesn't exist already
+   - incusd/storage: Improve qcow2 volume handling
+   - incusd/storage/drivers: Add syncBtrfs
+   - incusd/storage/drivers: Use 'qemu-img info' in read-only mode
+   - incusd/instances: Don't delete ephemeral instances on system shutdown
+   - api: Add projects_restricted_storage_pool_access extension
+   - incusd/project: Add support for restricted.storage-pools.access
+   - doc: Update config
+   - incusd/project: Make checkRestrictionsAndAggregateLimits validate pool access
+   - Translated using Weblate (Tamil)
+   - Translated using Weblate (Japanese)
+   - Translated using Weblate (Japanese)
+   - Translated using Weblate (Japanese)
+   - Translated using Weblate (Spanish)
+   - Translated using Weblate (Spanish)
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - Translated using Weblate (Swedish)
+   - Translated using Weblate (Swedish)
+   - Translated using Weblate (Russian)
+   - Translated using Weblate (Russian)
+   - Translated using Weblate (Indonesian)
+   - Translated using Weblate (Indonesian)
+   - Translated using Weblate (Georgian)
+   - Translated using Weblate (Georgian)
+   - Translated using Weblate (Italian)
+   - Translated using Weblate (Italian)
+   - Translated using Weblate (Chinese (Traditional Han script))
+   - Translated using Weblate (Chinese (Traditional Han script))
+   - Translated using Weblate (Greek)
+   - Translated using Weblate (French)
+   - Translated using Weblate (French)
+   - Translated using Weblate (French)
+   - Translated using Weblate (French)
+   - Translated using Weblate (French)
+   - Translated using Weblate (French)
+   - Translated using Weblate (French)
+   - Translated using Weblate (French)
+   - Translated using Weblate (Norwegian Bokmål)
+   - Translated using Weblate (Norwegian Bokmål)
+   - Translated using Weblate (Portuguese)
+   - Translated using Weblate (Portuguese)
+   - Translated using Weblate (Dutch)
+   - Translated using Weblate (Dutch)
+   - Translated using Weblate (German)
+   - Translated using Weblate (German)
+   - Translated using Weblate (German)
+   - Translated using Weblate (German)
+   - Translated using Weblate (German)
+   - Translated using Weblate (Portuguese (Brazil))
+   - Translated using Weblate (Portuguese (Brazil))
+   - shared/archive: Improve detection and error handling
+   - shared/subprocess: Cleanup pointless check
+   - incusd/seccomp: Cleanup pointless check
+   - incusd/migrate: Bump migration timeouts
+   - shared/util: Introduce SafeCopy
+   - incus-migrate: Switch io.CopyN to util.SafeCopy
+   - incus: Switch io.CopyN to util.SafeCopy
+   - incusd: Switch io.CopyN to util.SafeCopy
+   - client: Switch io.Copy to util.SafeCopy
+   - shared/ws: Switch io.Copy to util.SafeCopy
+   - shared/cliconfig: Switch io.Copy to util.SafeCopy
+   - shared/util: Switch io.Copy to util.SafeCopy
+   - internal/util: Switch io.Copy to util.SafeCopy
+   - internal/io: Switch io.Copy to util.SafeCopy
+   - internal/rsync: Switch io.Copy to util.SafeCopy
+   - lxd-to-incus: Switch io.Copy to util.SafeCopy
+   - lxc-to-incus: Switch io.Copy to util.SafeCopy
+   - incus-simplestreams: Switch io.Copy to util.SafeCopy
+   - incus-agent: Switch io.Copy to util.SafeCopy
+   - incus-user: Switch io.Copy to util.SafeCopy
+   - incus-migrate: Switch io.Copy to util.SafeCopy
+   - incus: Switch io.Copy to util.SafeCopy
+   - incusd: Switch io.Copy to util.SafeCopy
+   - Translated using Weblate (Russian)
+   - incusd/migration: Bump timeouts to 30s
+   - Translated using Weblate (Russian)
+   - incusd/instance/qemu: Fix boot state recording
+   - incusd/devices/disk: Lock creation of ISO images
+   - incusd: Increase devices tmpfs
+   - gomod: Update dependencies
+   - incusd/device/nic: Prevent USB NICs on migratable VMs
+   - incus/cluster: Tweak error message
+   - i18n: Update translation templates
+   - incus/info: Tweak wording in resources output
+   - i18n: Update translation templates
+   - incus/export: Improve target file handling
+   - incus/import: Improve stdin handling
+   - incus/storage_volume: Improve import/export file handling
+   - incus/storage_bucket: Improve import/export file handling
+   - tests: Add import from stdin and export to stdout
+   - i18n: Update translation templates
+   - incusd/instance/drivers/qmp: Wait for block job completion after issuing block-job-complete
+   - incusd/instance/drivers: Add support for handling BLOCK_JOB_COMPLETED and BLOCK_JOB_ERROR events
+   - incusd/migrate: Limit timeout to initial handshake
+   - shared/archive: Avoid concurrent calls to Wait
+   - Translated using Weblate (Italian)
+   - Translated using Weblate (Italian)
+   - Translated using Weblate (Russian)
+   - Translated using Weblate (Russian)
+   - Translated using Weblate (Dutch)
+   - Translated using Weblate (Dutch)
+   - Translated using Weblate (Spanish)
+   - Translated using Weblate (Spanish)
+   - Translated using Weblate (Spanish)
+   - Translated using Weblate (Norwegian Bokmål)
+   - Translated using Weblate (Norwegian Bokmål)
+   - Translated using Weblate (Portuguese (Brazil))
+   - Translated using Weblate (Portuguese (Brazil))
+   - Translated using Weblate (Portuguese (Brazil))
+   - Translated using Weblate (Swedish)
+   - Translated using Weblate (Swedish)
+   - Translated using Weblate (Portuguese)
+   - Translated using Weblate (Portuguese)
+   - Translated using Weblate (Greek)
+   - Translated using Weblate (Chinese (Traditional Han script))
+   - Translated using Weblate (Chinese (Traditional Han script))
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - Translated using Weblate (Indonesian)
+   - Translated using Weblate (Indonesian)
+   - Translated using Weblate (Indonesian)
+   - Translated using Weblate (German)
+   - Translated using Weblate (German)
+   - Translated using Weblate (German)
+   - Translated using Weblate (German)
+   - Translated using Weblate (German)
+   - Translated using Weblate (Georgian)
+   - Translated using Weblate (Georgian)
+   - Translated using Weblate (Japanese)
+   - Translated using Weblate (Japanese)
+   - Translated using Weblate (Japanese)
+   - Translated using Weblate (French)
+   - Translated using Weblate (French)
+   - Translated using Weblate (French)
+   - Translated using Weblate (French)
+   - Translated using Weblate (French)
+   - Translated using Weblate (French)
+   - Translated using Weblate (French)
+   - Translated using Weblate (French)
+   - Translated using Weblate (French)
+   - Translated using Weblate (Tamil)
+   - incusd/images: Allow simpler HTTP headers
+   - incusd/storage/drivers: Extract unpackVolume and backupVolume to util
+   - incusd/storage/drivers: Make createParentSnapshotDirIfMissing public
+   - incusd/storage: Add support for export/import qcow2 in raw format
+   - Translated using Weblate (Portuguese)
+   - incusd/instance/edk2: Add support for seabios at bios-256k
+   - incus: Widen stdout checks in pull commands
+   - incus: Add cp-like flags to incus file push
+   - tests: Test cp-like flags in incus file push
+   - incus: Defer dereferencing error handling
+   - incus: Add cp-like flags to incus storage volume file push
+   - tests: Test cp-like flags in incus storage volume file push
+   - i18n: Update translation templates
+   - incusd/instance/qemu: Improve OS detection for FreeBSD
+   - incus-agent: Use psutil for process count
+   - Translated using Weblate (Portuguese)
+   - Translated using Weblate (Russian)
+   - incusd/instance/qemu: Use timeouts for agent operations
+   - incusd: Add validation for dependent volumes during copy request
+   - incusd: Allow copy only when all volumes are on remote storage
+   - incusd/storage: Include dependent disks in copy requests
+   - incusd/instance/drivers: Remove temporary snapshot block device after migration
+   - incusd/storage: Add support for migrating dependent volumes with a new name
+   - incusd/storage: Add support for copying dependent volumes on the same target when the root volume storage changes
+   - incusd/instance/drivers: Add support for live-migration of dependent volumes with a changed name
+   - incusd/instance/drivers: Add check to notify disk only during cluster move
+   - incusd/instances/qemu: Fix crash on nil qmp handler in RunJSON
+   - incusd/storage: Prevent migration of dependent volumes for snapshot instances
+   - shared/validate: Fix name validation on single character
+   - internal/linux: Add logging to ClearBlock
+   - Translated using Weblate (Russian)
+   - incusd/networks: Support targeting of network list
+   - incus/network: Add --target to network list
+   - i18n: Update translation templates
+   - doc/benchmark_performance: Mention GOPATH
+   - incus/instance/drivers/common: Add isErrorStatusCode function Signed-off-by: Leon Schoch <git@darkress.xyz>
+   - incus/instance/drivers/qemu: Early return state call in case instance is in error state Signed-off-by: Leon Schoch <git@darkress.xyz>
+   - incus/instance/drivers/lxc: Early return state call in case instance is in error state Signed-off-by: Leon Schoch <git@darkress.xyz>
+   - incusd/cgroup: Require Cgroup V2
+   - incusd/instance/lxc: Remove cgroup1 support
+   - incusd: Remove cgroup1 support
+   - incusd/apparmor: Remove cgroup1 support
+   - incusd/device: Remove cgroup1 support
+   - incusd/seccomp: Remove cgroup1 support
+   - incusd/sys: Remove cgroup1 support
+   - doc: Remove cgroup1 mentions
+   - Translated using Weblate (Russian)
+   - incus-agent: Work around issue when built with GO111MODULE=off
+   - incusd/storage/drivers: Add CanRestoreVolume
+   - incusd/storage/drivers: Run Qcow2Info in read-only mode
+   - incusd/storage: Add CanRestoreInstanceSnapshot and qcow2CanRestoreSnapshot
+   - incusd/instance/drivers: Check whether an instance snapshot can be safely restored
+   - incusd/storage/drivers: Fix migration import-shadowing
+   - incus; Fix copy/pasted list column description
+   - incus: Add missing example descriptions
+   - incus/profile: Clarify example description
+   - incus/admin_sql: Clarify behavior on standalone systems
+   - i18n: Update translation templates
+   - incus: Wrap addition of string flags
+   - incus: Wrap addition of string array flags
+   - incus: Wrap addition of integer flags
+   - incus: Wrap addition of boolean flags
+   - incus: Wrap addition of native integer flags
+   - incus: Generalize -f shorthand for --force
+   - incus: Generalize -f shorthand for --format
+   - incus: Generalize -t shorthand for --type
+   - incus: Generalize -a shorthand for --all
+   - i18n: Update translation templates
+   - incusd: Reset LXC feature detection
+   - incusd/cgroup: Update LXC baseline
+   - incusd/device: Update LXC baseline
+   - incusd/instance/lxc: Update LXC baseline
+   - incusd/seccomp: Update LXC baseline
+   - incus: Improve cp compatibility for pull operations
+   - tests: Add more thorough tests for pull/push operations
+   - client: Add bitmap manipulation functions
+   - incusd: Remove kernel feature detection
+   - incusd/sys: Update kernel baseline
+   - incusd/instance/lxc: Update kernel baseline
+   - incusd/device: Update kernel baseline
+   - incusd/apparmor: Update kernel baseline
+   - incusd/seccomp: Update kernel baseline
+   - incusd/seccomp: Update LXC baseline
+   - incusd/instance/lxc: Drop forknet info fallback in networkState
+   - incusd/forknet: Remove unused info subcommand
+   - incusd/device/proxy: Drop pidfd fallback in setupProxyProcInfo
+   - incusd/seccomp: Assume pidfd kernel support in MakePidFd
+   - incusd/instance/lxc: Drop pidfd fallback paths
+   - shared/idmap: Keep respecting INCUS_IDMAPPED_MOUNTS_DISABLE
+   - doc/requirements: Expand on minimum versions
+   - incusd: Drop kernel version checks (6.12 baseline)
+   - incusd/instance/qemu: Drop QEMU version checks below 8.2
+   - incusd/storage/zfs: Drop ZFS version checks below 2.1.0
+   - incusd/storage/btrfs: Drop btrfs version checks below 6.12.0
+   - incusd/storage/lvm: Drop LVM version checks below 2.03.11
+   - incusd/storage/truenas: Bump baseline to 0.7.7
+   - incusd/firewall/nftables: Drop nftables version checks below 1.0.0
+   - incusd/apparmor: Drop AppArmor version checks below 3.0.0
+   - incusd/rsync: Drop rsync version checks below 3.2.0
+   - incusd/network/bridge: Drop dnsmasq version checks below 2.90
+   - Translated using Weblate (Portuguese)
+   - incusd/storage/linstor: Update comment
+   - incus/config_trust: Drop legacy [<remote>:] ATOM syntax
+   - shared/cliconfig: Drop legacy <remote> syntax
+   - incus/remote_unix: Drop legacy <remote> syntax
+   - incus/color: Add warning prefix
+   - incus/usage: Add deprecation warning for the <key> <value> syntax
+   - incus/storage_volume: Drop legacy [custom/] prefix
+   - tests: Drop legacy [custom/] prefix
+   - i18n: Update translation templates
+   - incusd/firewall: Drop xtables/iptables/ebtables backend (nftables only)
+   - doc: Drop xtables/iptables/ebtables references
+   - tests: Drop xtables firewall driver support
+   - github: Automatically close untyped issues
+   - github: Add disclaimer on bug reports
+   - incusd/storage: Allow overriding pool for dependent disk during migration
+   - incusd/migration: Add DeviceName field to DependentVolume
+   - client: Pass device override information during copy
+   - incusd/migration: Add support for overriding disk device pool during migration
+   - incusd/storage: Add support for overriding disk device pool during migration
+   - incusd/instance: Add UpdateDevices
+   - incusd/instance: Add support for overriding disk device pool during migration
+   - incusd: Add support for overriding disk device pool during migration
+   - incusd: Fix cross-server migration being used instead of intra-cluster migration when storage and target are specified
+   - incusd/storage/linstor: Tune DrbdOptions/Disk/rs-discard-granularity on pool creation
+   - incus/storage: Fix typo
+   - i18n: Update translation templates
+   - incus/cluster: Fix spelling of YAML
+   - i18n: Updatee translation templates
+   - incus/network_zone: Fix missing example description
+   - i18n: Updatee translation templates
+   - incus/storage_bucket: Fix bad list column help message
+   - i18n: Updatee translation templates
+   - internal/rsync: Fix gofumpt
+   - internal/server/cgroup: Fix gofumpt
+   - incusd/instances: Fix gofump
+   - incusd/storage/s3: Add in-process S3 handler package
+   - incusd/storage/s3: Switch to new listener
+   - incusd/storage/s3: Migrate data from minio to new format
+   - incusd/storage: Remove remaining minio interactions
+   - incusd/storage/s3: Remove minio supervisor and ActivateBucket
+   - tests: Replace minio with simple built-in S3 endpoint
+   - incusd: Switch minio S3 client for AWS SDK
+   - incusd/storage/s3: Derive AWS region from S3 endpoint URL
+   - gomod: Update dependencies
+   - incusd: Patch LINSTOR to set DrbdOptions/Disk/rs-discard-granularity
+   - incus/server/network/ovn/driver: Validate that networks external ips are not used by another network, forward or loadbalancer
+   - incusd/images: Add image server restriction check in image URL download path
+   - incusd/storage/bucket: Validate expected metadata on import
+   - incusd/storage/volume: Validate snapshot entries on import
+   - incusd/storage/instance: Properly check dependent volumes on import
+   - incusd/network/ovn: Fix TLS validation logic
+   - incusd/storage/instance: Fix bad snapshot index calculation
+   - incusd/storage/s3: Fix nil pointer dereference on truncated input
+   - incusd: Limit tarball YAML reads to 1MiB
+   - incusd: Fix nil pointer dereference in instance backup restore
+   - incusd: Use QuotaWriter for backup and ISO uploads
+   - api: Add server_shutdown_action extension
+   - incusd/cluster/config: Add core.shutdown_action
+   - doc: Update metadata
+   - incusd/evacuate: Extract evacuateStopInstance and evacuateMigrateInstance helpers
+   - incusd: Implement core.shutdown_action
+   - incus/cluster: Don't attempt to connect during join
+   - incus/image/copy: Add --reuse flag for --copy-aliases
+   - i18n: Update translation templates
+   - incus/server/network/ovn/driver: Fix duplicate external network ip check on network creation
+   - doc/metrics: Mention Loki requirement
+   - incusd: Add missing path parameters
+   - doc/rest-api: Refresh swagger YAML
+   - Makefile: Add help target and remove tags target
+   - tests: Use a 5MiB test file for buckets
+   - incus/cluster: Simplify logic
+   - api: instances_placement_scriptlet_rebalance
+   - shared/api/scriptlet: Add InstancePlacementReasonRebalance
+   - incusd/cluster: Run placement scriptlet during re-balancing
+   - doc/clustering: Add new scriptlet reason
+   - incusd/instance/qemu: Fix locking around VM reset
+   - incusd/device/nic: Set next-hop based on configured IP addresses
+   - tests: Adjust to work with next-hop
+   - incusd/instance/agent-loader: Remove some trailing whitespaces
+   - incus/storage_bucket/key: Fix incorrect list column description
+   - incus/launch: Add missing example description
+   - incus/config_template: Add missing example description
+   - incus/create: Add missing example description
+   - incus/network_acl: Add missing example description
+   - incus/network_address_set: Add missing example description
+   - incus/network_integration: Add missing example description
+   - incus/network_zone: Add missing example description
+   - incus/storage: Add missing example description
+   - i18n: Update translation templates
+   - incusd/device/disk: Auto-create missing volume sub-directories
+   - incusd/instance: Allow initial keys for sub-paths
+   - doc/devices/disk: Update to cover sub-path creation
+   - doc: Update config
+   - tests: Extend sub-path tests to cover directory creation
+   - incusd/instance/qemu: Don't emit shutdown lifecycle event during restart
+   - incusd/instance/qemu: Don't restart the VM on shutdown
+   - incusd/instance/console: Emit a single instance-console event on SPICE
+   - gomod: Update dependencies
+   - Makefile: Switch to new golangci-lint install script
+   - github/workflows/tests: Configure PPAs without apt-add-repository
+   - github/workflows/tests: Install mdl from rubygems instead of snap
+   - github/workflows/tests: Build cowsql and raft from source
+   - Rewrite Go import path to v7
+   - gomod: Update dependencies
+  [/details]
+
+  # ドキュメント <!-- Documentation -->
+  <!--
+  The Incus documentation can be found at:
+  -->
+  Incus のドキュメントはこちらです:
+  https://incus-ja.readthedocs.io/ja/latest/ （日本語訳）
+  https://linuxcontainers.org/incus/docs/main/ （原文）
+
+  # インストール <!-- Installation -->
+  <!--
+  There are no official Incus packages as Incus upstream only releases regular release tarballs. Below are some available options to get Incus up and running.
+  -->
+    Incus の開発元は、通常リリースの tarball のみをリリースするため、公式の Incus パッケージはありません。Incus を実行するために使えるオプションを以下にいくつか示します。
+
+  ## Linux パッケージ <!-- Linux packages -->
+  <!--
+  Incus is available for most common Linux distributions. You'll find detailed installation instructions in our documentation.
+  -->
+  Incus はほとんどの一般的な Linux ディストリビューションで利用できます。インストール手順の詳細は、Incus のドキュメントを参照してください。
+
+  https://incus-ja.readthedocs.io/ja/latest/installing/ （日本語訳）
+  https://linuxcontainers.org/incus/docs/main/installing/ （原文）
+
+  ## Incus クライアントの Homebrew パッケージ <!-- Homebrew package for the Incus client -->
+  <!--
+  The client tool is available through HomeBrew for both Linux and MacOS.
+  -->
+  Homebrew 経由で、Linux と macOS 向けにクライアントツールが利用できます。
+
+  https://formulae.brew.sh/formula/incus
+
+  ## Incus クライアントの Chocolatey パッケージ <!-- Chocolatey package for the Incus client -->
+  <!--
+  The client tool is available through Chocolatey for Windows users.
+  -->
+  Chocolatey 経由で、Windows ユーザー向けにクライアントツールが利用できます。
+
+  https://community.chocolatey.org/packages/incus/7.0.0
+
+  ## Incus クライアントの Winget パッケージ <!-- Winget package for the Incus client -->
+  <!--
+  The client tool is also available through Winget for Windows users.
+  -->
+  Winget 経由で、Windows ユーザー向けにクライアントツールが利用できます。
+
+  https://winstall.app/apps/LinuxContainers.Incus
+
+  # LXD からの移行 <!-- Migrating from LXD -->
+  <!--
+  A `lxd-to-incus` migration tool allows for in-place migration from LXD to Incus.
+  It's been tested with LXD versions as low as 4.0 LTS and as high as the latest LXD 5.21 bugfix release.
+  -->
+  `lxd-to-incus` 移行ツールを使用すると、LXD から Incus へ直接移行できます。
+  このツールは、LXD 4.0 LTS から最新の LXD 5.21 バグ修正リリースまで、幅広いバージョンでテストされています。
+
+  <!--
+  It allows for a very quick migration from LXD over to Incus, automatically checking for potential conflicts ahead of time.
+  -->
+  事前に、潜在的なコンフリクトを自動的にチェックし、LXD から Incus への非常に素早い移行が可能です。
+
+  <!--
+  [![asciicast](upload://tEIilOgSuWcTskZUkUPXs0FyXo1.svg)](https://asciinema.org/a/650718)
+  -->
+  [![asciicast](https://discuss.linuxcontainers.org/uploads/default/original/2X/c/cfd9406f32d7e9e6ad28e55806955c004db7f7bd.svg)](https://asciinema.org/a/650718)
+
+  詳細はこちらをご覧ください <!-- More details can be found here -->: https://linuxcontainers.org/incus/docs/main/howto/server_migrate_lxd/
+
+  # サポート <!-- Support -->
+  <!--
+  Incus 7.0 LTS will be supported for a total of 5 years (until June 2031).
+  -->
+  Incus 7.0 LTS は、合計 5 年間（2031 年 6 月まで）サポートされます。
+
+  <!--
+  During the first 2 years, new point releases will be issued including a mix of bug and security fixes as well as some minor usabiltiy improvements. After that initial 2 years (after Incus 8.0 LTS is released), Incus 7.0 LTS will transition to security fixes only for the remaining 3 years.
+  -->
+  最初の 2 年間は、バグ修正やセキュリティ修正、および軽微なユーザビリティ改善を含むポイントリリースが提供されます。最初の 2 年間が経過した後（Incus 8.0 LTSのリリース後）は、Incus 7.0 LTS は残りの 3 年間はセキュリティ修正のみのサポートに移行します。
+
+  <!--
+  This matches what we've been doing for our other projects (LXC and LXCFS) over the past 10 years.
+  -->
+  これは、過去 10 年間、他のプロジェクト（LXCおよびLXCFS）で実施してきたサポートと同様です。
+
+  コミュニティサポートはこちらから <!-- Community support is provided at -->: https://discuss.linuxcontainers.org
+  商用サポートはこちらから <!-- Commercial support is available through -->: https://zabbly.com/incus
+  バグはこちらから報告できます <!-- Bugs can be reported at -->: https://github.com/lxc/incus/issues
