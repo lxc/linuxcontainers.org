@@ -43,7 +43,7 @@ content: |-
   <!--
   The first 2 years will feature bug and security fixes as well as minor usability improvements, delivered through occasional point releases (7.0.x). After that initial two years, Incus 7.0 LTS will move to security only maintenance for the remaining of its 5 years of support.
   -->
-  最初の2年間は、バグ修正やセキュリティ対策、および軽微なユーザビリティ改善が、定期的なポイントリリース（7.0.x）を通じて提供されます。最初の2年間が経過した後、Incus 7.0 LTS は、残りの5年間のサポート期間中、セキュリティ対策のみのメンテナンスに移行します。
+  最初の2年間は、バグ修正やセキュリティ対策、および軽微なユーザビリティ改善が、定期的なポイントリリース（7.0.x）を通じて提供されます。最初の2年間が経過した後、Incus 7.0 LTS は、5年間のサポート期間の残り 3 年は、セキュリティ対策のみのメンテナンスに移行します。
 
   <!--
   A total of 204 individuals contributed to Incus between the 6.0 LTS and 7.0 LTS releases with 45 contributing between the 6.23 and 7.0 LTS releases.
@@ -201,11 +201,11 @@ content: |-
   -->
   `incus file push` と `incus file pull` コマンドは、cp コマンドと合致するオプションを使い、cp コマンド同様に動作するようになりました:
 
-      -p, --create-dirs      Create any directories necessary
-      -L, --dereference      Always follow symbolic links in source path
-      -H, --follow           Follow command-line symbolic links in source path
-      -P, --no-dereference   Never follow symbolic links in source path
-      -r, --recursive        Recursively transfer files
+      -p, --create-dirs      必要なディレクトリーを作成する
+      -L, --dereference      ソースパス内のシンボリックリンクを常にたどる
+      -H, --follow           コマンドラインに指定したソースパスのみシンボリックリンクをたどる
+      -P, --no-dereference   ソースパス内のシンボリックリンクはたどらない
+      -r, --recursive        再帰的にファイルを転送する
 
   <!--
   This should offer a more predictable experience when transferring files in and out of Incus instances.
