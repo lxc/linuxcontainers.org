@@ -413,8 +413,8 @@ Those values should match those found in `/etc/subuid` and `/etc/subgid`, the va
     cp /etc/lxc/default.conf ~/.config/lxc/default.conf
     MS_UID="$(grep "$(id -un)" /etc/subuid  | cut -d : -f 2)"
     ME_UID="$(grep "$(id -un)" /etc/subuid  | cut -d : -f 3)"
-    MS_GID="$(grep "$(id -un)" /etc/subgid  | cut -d : -f 2)"
-    ME_GID="$(grep "$(id -un)" /etc/subgid  | cut -d : -f 3)"
+    MS_GID="$(grep "$(id -gn)" /etc/subgid  | cut -d : -f 2)"
+    ME_GID="$(grep "$(id -gn)" /etc/subgid  | cut -d : -f 3)"
     echo "lxc.idmap = u 0 $MS_UID $ME_UID" >> ~/.config/lxc/default.conf
     echo "lxc.idmap = g 0 $MS_GID $ME_GID" >> ~/.config/lxc/default.conf
 
