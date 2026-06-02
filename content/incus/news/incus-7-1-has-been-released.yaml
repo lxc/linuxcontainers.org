@@ -1,0 +1,840 @@
+title: Incus 7.1 has been released
+date: 2026/05/30 01:05
+origin: https://discuss.linuxcontainers.org/t/incus-7-1-has-been-released/26750
+content: |-
+  The Incus team is pleased to announce the release of Incus 7.1!
+
+  This is our first monthly feature release since Incus 7.0 LTS and it's a pretty busy one as we've had some time to clear our backlog a bit.
+
+  [![image|690x305](https://discuss.linuxcontainers.org/uploads/default/original/2X/4/4043696f5c717bfb0242221bbe1b01c426f4d7a2.png)](https://linuxcontainers.org/incus/try-it/)
+
+  As usual, you can try Incus for yourself online: [Linux Containers - Incus - Try it online](https://linuxcontainers.org/incus/try-it/)
+
+  # Security fixes
+
+  This release fixes 4 security issues:
+
+  - [CVE-2026-48753](https://github.com/lxc/incus/security/advisories/GHSA-ccjc-4qc3-jxqc) (critical)
+  - [CVE-2026-47753](https://github.com/lxc/incus/security/advisories/GHSA-8g7m-96c8-8wwc) (low)
+  - [CVE-2026-48754](https://github.com/lxc/incus/security/advisories/GHSA-4xg6-52mh-fpw8) (low)
+  - [CVE-2026-48756](https://github.com/lxc/incus/security/advisories/GHSA-xhqx-mgh3-3h7q) (low)
+
+  # New features
+  ## Rebuilding custom storage volumes
+  It's now possible to rebuild a custom storage volume through the new `incus storage volume rebuild` command.
+
+  The underlying volume is deleted and a new empty one is created with the same configuration. The rebuild is only allowed when the volume has no snapshots.
+
+  This is effectively the same behavior as `incus rebuild` for instances but now applied to custom storage volumes.
+
+      stgraber@castiana:~$ incus storage volume create default foo
+      Storage volume foo created
+      stgraber@castiana:~$ incus storage volume rebuild default foo
+      Storage volume foo rebuilt
+
+  ## Explicit CPU topology for virtual machines
+  The `limits.cpu` configuration key for virtual machines can now be used to specify an explicit CPU topology of the form `sockets=2,cores=4,threads=2`.
+
+  This allows more flexibility in what's exposed to the guest, though note that using this syntax will prevent dynamic CPU hotplug or hotremove for that VM.
+
+      stgraber@castiana:~$ incus launch images:debian/13 v1 --vm -c limits.cpu="sockets=4,cores=2,threads=4"
+      Launching v1
+      stgraber@castiana:~$ incus exec v1 bash
+      root@v1:~# lscpu | grep -E 'Socket|Core|Thread'
+      Thread(s) per core:                      4
+      Core(s) per socket:                      2
+      Socket(s):                               4
+      root@v1:~# nproc
+      32
+
+  ## Custom TPM platform certificate
+  A couple of new server configuration keys were introduced:
+
+  - `instances.tpm.platform_cert`
+  - `instances.tpm.platform_key`
+
+  This allows providing a certificate authority with which to sign the Endorsement Key of the virtual TPM device. With this, it's now possible to establish trust in the particular TPM device.
+
+      stgraber@castiana:~$ incus config get instances.tpm.platform_cert
+      -----BEGIN CERTIFICATE-----
+      MIIBjDCCATOgAwIBAgIUD0ayUKYdRlCHaXIzzSTWIDX0L4owCgYIKoZIzj0EAwMw
+      HDEaMBgGA1UEAwwRSW5jdXMgVFBNIHNpZ25pbmcwHhcNMjYwNTIzMDEyODMyWhcN
+      MzYwNTIwMDEyODMyWjAcMRowGAYDVQQDDBFJbmN1cyBUUE0gc2lnbmluZzBZMBMG
+      ByqGSM49AgEGCCqGSM49AwEHA0IABHeorFI2aDNnjcmKgaXKJgwmQFdPEUwVFbze
+      9PBYRc+157TE7WGNxfjK/x9K6/c/oo91cP7wMfhSuvtLfbVG7d+jUzBRMB0GA1Ud
+      DgQWBBTCr1gVrRuPVC54BoneUqnQpIUfaDAfBgNVHSMEGDAWgBTCr1gVrRuPVC54
+      BoneUqnQpIUfaDAPBgNVHRMBAf8EBTADAQH/MAoGCCqGSM49BAMDA0cAMEQCIFJo
+      oJ/mWxv69XLDdOMUpvmGu1INjo8cBQh9KqIgnYUYAiA/JXgYEp0u9DCpge9Eifc/
+      R3QrMmCl71nW2Lz4kZOqhw==
+      -----END CERTIFICATE-----
+      stgraber@castiana:~$ incus config get instances.tpm.platform_key
+      -----BEGIN EC PRIVATE KEY-----
+      MHcCAQEEIMdKhntzfFiQqaBZGo8IvtK16AetkUIYVbhgimeX57aAoAoGCCqGSM49
+      AwEHoUQDQgAEd6isUjZoM2eNyYqBpcomDCZAV08RTBUVvN708FhFz7XntMTtYY3F
+      +Mr/H0rr9z+ij3Vw/vAx+FK6+0t9tUbt3w==
+      -----END EC PRIVATE KEY-----
+      stgraber@castiana:~$ incus config device add v1 tpm tpm
+      Device tpm added to v1
+      stgraber@castiana:~$ incus start v1
+      stgraber@castiana:~$ incus wait v1 agent
+      stgraber@castiana:~$ incus exec v1 bash
+      root@v1:~# tpm2_getekcertificate | openssl x509 -noout -text
+      Certificate:
+          Data:
+              Version: 3 (0x2)
+              Serial Number: 2 (0x2)
+              Signature Algorithm: ecdsa-with-SHA256
+              Issuer: CN=Incus TPM signing
+              Validity
+                  Not Before: May 30 01:32:08 2026 GMT
+                  Not After : Dec 31 23:59:59 9999 GMT
+              Subject: CN=unknown
+              Subject Public Key Info:
+                  Public Key Algorithm: rsaEncryption
+                      Public-Key: (2048 bit)
+                      Modulus:
+                          00:c1:04:b8:19:52:9e:4a:a2:f0:30:1c:23:00:48:
+                          40:71:9b:62:ef:18:d0:56:71:95:da:58:0b:a9:82:
+                          1d:a3:46:b0:66:eb:ad:fe:b1:e0:c1:35:c7:33:bd:
+                          00:69:f4:eb:08:64:84:f1:7a:4f:0b:95:16:1d:88:
+                          18:17:30:ef:3b:74:28:cc:45:b7:9b:ce:be:00:d0:
+                          88:6f:74:4e:90:10:5f:5f:c4:7f:3d:d4:31:3b:5b:
+                          87:57:7d:e5:b1:d0:c4:6b:bd:e8:49:0b:4f:f6:d9:
+                          cb:58:85:91:6a:e7:02:87:bf:5d:99:a0:db:88:74:
+                          f2:47:d8:35:41:fb:09:ec:a6:ae:c4:d4:07:8f:de:
+                          95:d4:82:71:b7:a2:c9:e9:a4:3d:e9:40:73:04:03:
+                          ef:dc:7f:15:60:52:c5:b8:14:9c:ef:66:4a:28:4d:
+                          d7:79:b8:27:b2:b9:d4:58:55:44:f1:52:6a:5e:f7:
+                          a8:e4:56:39:55:65:42:41:c2:73:de:00:de:65:08:
+                          0f:d5:d3:cb:a4:82:3a:75:cf:4e:ac:b2:94:58:96:
+                          a8:9c:c0:f8:e3:3c:2e:25:76:6d:24:7e:00:58:f5:
+                          63:01:e9:90:84:8e:21:b2:e0:29:a4:d8:cb:2f:f7:
+                          d4:a6:a0:3a:e4:54:54:10:77:4f:d0:96:1b:68:b2:
+                          e4:91
+                      Exponent: 65537 (0x10001)
+              X509v3 extensions:
+                  X509v3 Extended Key Usage: 
+                      Endorsement Key Certificate
+                  X509v3 Subject Alternative Name: critical
+                      DirName:/tcg-at-tpmManufacturer=id:00001014/tcg-at-tpmModel=swtpm/tcg-at-tpmVersion=id:20240125
+                  X509v3 Basic Constraints: critical
+                      CA:FALSE
+                  X509v3 Subject Directory Attributes: 
+                      TPM Specification:
+          0:d=0  hl=2 l=  12 cons: SEQUENCE          
+          2:d=1  hl=2 l=   3 prim:  UTF8STRING        :2.0
+          7:d=1  hl=2 l=   1 prim:  INTEGER           :00
+         10:d=1  hl=2 l=   2 prim:  INTEGER           :B7
+      
+      
+                  X509v3 Authority Key Identifier: 
+                      C2:AF:58:15:AD:1B:8F:54:2E:78:06:89:DE:52:A9:D0:A4:85:1F:68
+                  X509v3 Key Usage: critical
+                      Key Encipherment
+          Signature Algorithm: ecdsa-with-SHA256
+          Signature Value:
+              30:46:02:21:00:b9:7a:97:78:fb:4d:ea:6e:93:27:24:3a:f6:
+              66:08:b9:ae:54:e8:2b:c1:c8:e9:1c:74:45:79:88:88:72:3e:
+              46:02:21:00:82:f6:c0:d9:dc:c0:1a:5e:95:cb:f3:b9:fa:00:
+              65:55:b3:5f:b4:25:7e:c5:c6:fb:b2:c4:e4:41:36:6d:76:5b
+
+  Documentation: https://linuxcontainers.org/incus/docs/main/server_config/#miscellaneous-options
+
+  ## Volume creation on attach
+  The `incus storage volume attach` command now accepts a `--create` flag.
+
+  When set, the custom storage volume is created if it doesn't already exist before being attached to the instance, saving a separate `incus storage volume create` step.
+
+      stgraber@castiana:~$ incus storage volume attach default v1-extra v1 extra --create
+      stgraber@castiana:~$ incus exec v1 bash
+      root@v1:~# lsblk
+      NAME   MAJ:MIN RM  SIZE RO TYPE MOUNTPOINTS
+      sda      8:0    0   10G  0 disk
+      ├─sda1   8:1    0  100M  0 part /boot/efi
+      └─sda2   8:2    0  9.9G  0 part /
+      sdb      8:16   0   10G  0 disk
+
+  ## Filesystem creation options for storage
+  A new `block.create_options` configuration option allows controlling the `mkfs` arguments used when creating volumes on block devices.
+
+  `btrfs.create_options` was also introduced to similarly control the `mkfs.btrfs` options used when creating a new storage pool.
+
+  Documentation: https://linuxcontainers.org/incus/docs/main/reference/storage_btrfs/#storage-btrfs
+
+  ## Low-level LINSTOR configuration
+  A new set of `linstor.raw.*` configuration keys is now available on both LINSTOR storage pools and storage volumes, allowing low-level properties to be set directly on the underlying resource groups and resource definitions.
+
+  Documentation: https://linuxcontainers.org/incus/docs/main/reference/storage_linstor/
+
+  ## IP ranges in network address sets
+  Network address sets now support IP ranges (e.g. `10.0.0.120-10.0.0.130`), matching what was already allowed in network ACL rules.
+
+  A single range may expand to at most 256 addresses; larger sets of addresses should be expressed using CIDR notation instead.
+
+      stgraber@castiana:~$ incus network address-set create demo
+      Network address set demo created
+      stgraber@castiana:~$ incus network address-set add demo 10.0.0.100-10.0.0.200
+
+  Documentation: https://linuxcontainers.org/incus/docs/main/howto/network_address_sets/
+
+  ## Multicast snooping control on bridge networks
+  A new `bridge.multicast_snooping` configuration option was added for managed bridge networks. When set to `false`, multicast snooping is disabled on the bridge.
+
+  Documentation: https://linuxcontainers.org/incus/docs/main/reference/network_bridge/
+
+  ## Multiple addresses per remote
+  The `incus remote` command now accepts multiple addresses for a single remote.
+
+  Incus keeps track of the last working address and rolls over to the other addresses on failure, making it easy to provide fallback endpoints for a clustered or highly-available server.
+
+  ## S3 object storage improvements
+  The built-in S3-compatible object storage server was expanded to support a few common extensions:
+
+  - Presigned URLs are now supported for both the SigV2 and SigV4 signature algorithms.
+  - The `CopyObject` operation is now implemented, allowing objects to be copied server-side.
+
+  # Complete changelog
+
+  Here is a complete list of all changes in this release:
+
+  [details="Full commit list"]
+  - gomod: Update dependencies
+  - incusd/instance/drivers: Round memory hotplug size up to block size
+  - incusd/instance/lxc: Allow unsetting limits.memory.swap without hitting a cgroup error
+  - tests: Update for new name restrictions
+  - doc: Update config
+  - internal/server: fire agent events after checking current state
+  - internal/instance: Add volatile.last_state.agent
+  - incusd/storage/s3: Confine multipart uploads with os.Root
+  - incusd/storage: Guard nil fields in createDependentVolumesFromBackup
+  - incusd/storage: Guard nil ExpiresAt in CreateCustomVolumeFromBackup
+  - incusd/storage: Fix unsafe access to backup data
+  - incusd/device: Encode device names in DevicesPath storage paths
+  - incusd/instance/drivers: Apply standard API object name checks
+  - doc: Update config
+  - doc: Document CPU topology support for limits.cpu
+  - incusd/instance: Support CPU topology for VM limits.cpu
+  - internal/instance: Allow CPU topology syntax for limits.cpu
+  - shared/validate: Add CPU topology parsing helper
+  - api: instance_limits_cpu_topology
+  - i18n: Update translation templates
+  - tests: Switch to recursive chown on file push
+  - incus/file: Make recursive push apply UID/GID overrides recursively
+  - incus/storage_volume: Put big subcommands into their own files
+  - incusd/devices: Cleanup leftover forkproxy on startup
+  - i18n: Update translation templates
+  - incus/config: Fix typo in usage
+  - incus/image: Improve usage
+  - incus/move: Improve usage
+  - incus/storage/volume: Improve usage
+  - incus/remote: Improve usage
+  - Translated using Weblate (Portuguese)
+  - Translated using Weblate (Swedish)
+  - Translated using Weblate (Russian)
+  - incusd/images: Revert 36f513c
+  - incusd/storage: Prevent creating daemon volumes on shared pools
+  - api: api_fragments
+  - incusd/project: Handle server objects
+  - incusd/db/cluster/entities: Add TypeServer and fix map sorting
+  - incusd/storage: Improve handling of daemon volumes
+  - shared/api/url: Add URL fragment setter
+  - client: handle absolute paths for simplestream files
+  - Translated using Weblate (Norwegian Bokmål)
+  - Translated using Weblate (Norwegian Bokmål)
+  - Translated using Weblate (Indonesian)
+  - Translated using Weblate (Indonesian)
+  - Translated using Weblate (Indonesian)
+  - Translated using Weblate (Tamil)
+  - Translated using Weblate (Dutch)
+  - Translated using Weblate (Dutch)
+  - Translated using Weblate (Russian)
+  - Translated using Weblate (Russian)
+  - Translated using Weblate (Japanese)
+  - Translated using Weblate (Japanese)
+  - Translated using Weblate (Japanese)
+  - Translated using Weblate (Japanese)
+  - Translated using Weblate (Georgian)
+  - Translated using Weblate (Georgian)
+  - Translated using Weblate (German)
+  - Translated using Weblate (German)
+  - Translated using Weblate (German)
+  - Translated using Weblate (German)
+  - Translated using Weblate (German)
+  - Translated using Weblate (Spanish)
+  - Translated using Weblate (Spanish)
+  - Translated using Weblate (Spanish)
+  - Translated using Weblate (Portuguese)
+  - Translated using Weblate (Portuguese)
+  - Translated using Weblate (Greek)
+  - Translated using Weblate (Chinese (Simplified Han script))
+  - Translated using Weblate (Chinese (Simplified Han script))
+  - Translated using Weblate (Chinese (Simplified Han script))
+  - Translated using Weblate (Chinese (Simplified Han script))
+  - Translated using Weblate (Chinese (Simplified Han script))
+  - Translated using Weblate (Chinese (Simplified Han script))
+  - Translated using Weblate (Chinese (Simplified Han script))
+  - Translated using Weblate (Chinese (Simplified Han script))
+  - Translated using Weblate (Swedish)
+  - Translated using Weblate (Swedish)
+  - Translated using Weblate (Swedish)
+  - Translated using Weblate (Chinese (Traditional Han script))
+  - Translated using Weblate (Chinese (Traditional Han script))
+  - Translated using Weblate (French)
+  - Translated using Weblate (French)
+  - Translated using Weblate (French)
+  - Translated using Weblate (French)
+  - Translated using Weblate (French)
+  - Translated using Weblate (French)
+  - Translated using Weblate (French)
+  - Translated using Weblate (French)
+  - Translated using Weblate (French)
+  - Translated using Weblate (Portuguese (Brazil))
+  - Translated using Weblate (Portuguese (Brazil))
+  - Translated using Weblate (Portuguese (Brazil))
+  - Translated using Weblate (Italian)
+  - Translated using Weblate (Italian)
+  - tests: Add storage bucket presigned URL test
+  - incus/storage/s3: Support SigV2 presigned URLs
+  - incus/storage/s3: Support SigV4 presigned URLs
+  - i18n: Update translation templates
+  - doc: Update command name
+  - incus: Keep track of last working remote
+  - incus: Remove global mutable state from the parser
+  - incus: Refactor calls to the parser
+  - incus/remote: Add support for multiple URLs
+  - global: Use strings.Builder for string concatenation in loops
+  - shared/api: Drop no-op omitempty on nested struct fields
+  - global: Use slices.Backward for reverse iteration
+  - global: Use strings.CutSuffix instead of HasSuffix/TrimSuffix
+  - global: Use strings.Cut instead of strings.Split/SplitN
+  - incusd/instance/drivers: Use the min builtin for memory capping
+  - incusd: Use unsafe.Add for pointer arithmetic in forkproxy
+  - global: Use t.Context in tests
+  - global: Use reflect.TypeFor
+  - global: Use range-over-int loops
+  - global: Use maps.Copy instead of manual copy loops
+  - global: Use sync.WaitGroup.Go for goroutine management
+  - incusd: Rename dqlite references to cowsql
+  - incusd/network/physical: Skip VLAN interface on filtered bridges
+  - incusd/network/ovn: Correctly set VLAN on uplink veth
+  - tests: Add storage volume rebuild test
+  - i18n: Update translation templates
+  - incus/storage_volume: Add rebuild command
+  - client: Add RebuildStoragePoolVolume
+  - doc/rest-api: Refresh swagger YAML
+  - incusd/storage: Add storage volume rebuild API endpoint
+  - shared/api: Add StorageVolumeRebuildPost
+  - incusd/storage: Add RebuildCustomVolume to pool backend
+  - api: storage_volumes_rebuild
+  - test/lint: Run full golangci-lint instead of only new changes
+  - incusd/instance/operationlock: Omit redundant error type from sentinel var declaration (revive:var-declaration)
+  - incusd/dnsmasq/dhcpalloc: Omit redundant error type from sentinel var declaration (revive:var-declaration)
+  - incusd/cluster: Omit redundant error type from sentinel var declaration (revive:var-declaration)
+  - incusd: Omit redundant error type from sentinel var declaration (revive:var-declaration)
+  - incusd/operations: Inline reflect.Ptr as reflect.Pointer (govet:inline)
+  - incus: Inline reflect.Ptr as reflect.Pointer (govet:inline)
+  - i18n: Update translation templates
+  - incus: Add newline after block before switch case (newline-after-block)
+  - incusd/storage/drivers: Add newline after block before switch case (newline-after-block)
+  - incusd/instance/drivers: Add newline after block before switch case (newline-after-block)
+  - incusd/device: Add newline after block before switch case (newline-after-block)
+  - incusd: Add newline after block before switch case (newline-after-block)
+  - incusd/fsmonitor/drivers: Add doc comments on exported Name methods (revive:exported)
+  - incusd/fsmonitor/drivers: Rename locals that shadow logger import (revive:import-shadowing)
+  - incusd/fsmonitor: Rename local that shadows logger import (revive:import-shadowing)
+  - incusd/seccomp: Simplify setxattr whiteout check with early return (revive:early-return)
+  - incusd/backup: Rename locals that shadow state import (revive:import-shadowing)
+  - incusd/apparmor: Omit inferred type from strings.Builder declarations (staticcheck:ST1023)
+  - incusd/apparmor: Add doc comment on nullWriteCloser.Close (revive:exported)
+  - internal/linux: Add missing doc comments on exported symbols (revive:exported)
+  - internal/linux: Drop redundant = nil from err declaration (revive:var-declaration)
+  - internal/linux: Rename devpts_fd parameter (revive:var-naming)
+  - internal/linux: Return error last from GetErrno (revive:error-return)
+  - incusd/device: Use tagged switch statements (staticcheck:QF1003)
+  - incusd/device: Apply De Morgan's law to simplify booleans (staticcheck:QF1001)
+  - incusd/device: Remove embedded StorageVolume field from selector (staticcheck:QF1008)
+  - incusd/device: Check container type assertions (revive:unchecked-type-assertion)
+  - incusd/device: Invert conditions to return early (revive:early-return)
+  - incusd/device: Remove unnecessary blank line in validateConfig (whitespace)
+  - incusd/device: Remove blank line at start of block (revive:empty-lines)
+  - incusd/device: Avoid defer inside loop in checkAttachedRunningProcesses (revive:defer)
+  - incusd/device: Rename locals that shadow imports (revive:import-shadowing)
+  - incusd/auth/oidc: Add doc comments on exported methods (revive:exported)
+  - incusd/auth/oidc: Check email claim type assertion (revive:unchecked-type-assertion)
+  - incusd/auth: Use strings.Split instead of SplitN (staticcheck:QF1004)
+  - incusd/auth: Add doc comments on exported symbols (revive:exported)
+  - incusd/auth: Rename locals that shadow logger import (revive:import-shadowing)
+  - incusd/events: Add doc comments on exported methods (revive:exported)
+  - incusd/events: Remove embedded Conn field from selectors (staticcheck:QF1008)
+  - incusd/response: Use fmt.Fprintf instead of WriteString with Sprintf (staticcheck:QF1012)
+  - incusd/response: Avoid defer inside loop in fileResponse.Render (revive:defer)
+  - incusd/response: Add doc comments on exported Render methods (revive:exported)
+  - incusd/device/config: Rename copy locals that shadow builtin (revive:redefines-builtin-id)
+  - incusd: Fix remaining identifier naming (revive:var-naming)
+  - incusd: Annotate intentional os.Exit calls (revive:deep-exit)
+  - incusd: Remove useless break in case clauses (revive:useless-break)
+  - incusd: Remove blank line at start of block (revive:empty-lines)
+  - incusd: Remove empty else block (revive:empty-block)
+  - incusd: Rename local that shadows builtin min (revive:redefines-builtin-id)
+  - incusd: Add space after comment delimiter (revive:comment-spacings)
+  - incusd: Avoid deferring inside loops (revive:defer)
+  - incusd: Drop else after return (revive:indent-error-flow)
+  - incusd: Return early to reduce nesting (revive:early-return)
+  - incusd: Use comma-ok form for type assertions (revive:unchecked-type-assertion)
+  - incusd: Rename locals that shadow imports (revive:import-shadowing)
+  - incusd: Fix identifier naming (revive:var-naming)
+  - incusd: Use tagged switch statements (staticcheck:QF1003)
+  - incusd: Remove dead source connection (staticcheck:SA4006)
+  - incusd: Fix errors.Is argument order (staticcheck:SA1032)
+  - incusd: Use fmt.Fprintf instead of Write of Sprintf (staticcheck:QF1012)
+  - incusd: Convert byte slice argument to string (staticcheck:QF1010)
+  - incusd: Merge conditional assignments into declarations (staticcheck:QF1007)
+  - incusd: Remove unnecessary trailing newline (whitespace)
+  - incusd: End comments with a period (godot)
+  - incusd: Fix import grouping (gci)
+  - incusd/config: Use fmt.Fprintf instead of WriteString (staticcheck:QF1012)
+  - incusd/bgp: Remove unused setup method (unused)
+  - incusd/firewall/drivers: Remove unused subnetMask function (unused)
+  - incusd/metadata: Add doc comment on exported var Data (revive:exported)
+  - incusd/refcount: Omit redundant type in var declaration (revive:var-declaration)
+  - incusd/ucred: Check type assertion in GetConnFromContext (revive:unchecked-type-assertion)
+  - incusd/scriptlet/log: Fix doc comment on exported CreateLogger (revive:exported)
+  - incusd/scriptlet: Use tagged switch statements (staticcheck:QF1003)
+  - incusd/metrics: Use fmt.Fprintf instead of WriteString (staticcheck:QF1012)
+  - incusd/dnsmasq/dhcpalloc: Lift break condition into loop (staticcheck:QF1006)
+  - incusd/dnsmasq: Use strings.Split instead of SplitN (staticcheck:QF1004)
+  - incusd/dns: Rename param that shadows db import (revive:import-shadowing)
+  - incusd/dns: Add doc comment on exported method ServeDNS (revive:exported)
+  - incus/usage: Remove dead assignments to renderedAtoms (staticcheck:SA4006)
+  - incus: Remove unused functions (unused)
+  - incus: Use tagged switch statement (staticcheck:QF1003)
+  - incusd/instance/drivers: Use tagged switch statements (staticcheck:QF1003)
+  - incusd/instance/drivers: Replace append loop with variadic append (staticcheck:S1011)
+  - incusd/instance/drivers: Rename locals that shadow imports (revive:import-shadowing)
+  - incusd/instance/drivers: Add doc comments on exported methods (revive:exported)
+  - incusd/instance/drivers: Check type assertions (revive:unchecked-type-assertion)
+  - incusd/instance/drivers: Return early to reduce nesting (revive:early-return)
+  - incusd/instance/drivers: Avoid deferring inside loops (revive:defer)
+  - incusd/instance/drivers: Omit inferred type from var declaration (revive:var-declaration)
+  - incusd/instance/drivers: Remove unnecessary blank line at end of block (whitespace)
+  - incusd/instance/drivers: Remove unused const and function (unused)
+  - incusd/instance: Rename locals that shadow imports (revive:import-shadowing)
+  - incusd/instance: Use fmt.Fprintf instead of WriteString (staticcheck:QF1012)
+  - incusd/instance: Return explicit values instead of bare returns (revive:bare-return)
+  - incusd/instance/drivers/qmp: Use tagged switch statement (staticcheck:QF1003)
+  - incusd/instance/drivers/qmp: Fix doc comment on exported Run method (revive:exported)
+  - incusd/logging: Use fmt.Fprintf instead of WriteString (staticcheck:QF1012)
+  - incusd/db: Omit type from strings.Builder declarations (staticcheck:ST1023)
+  - incusd/db: Add space after comment delimiter (revive:comment-spacings)
+  - incusd/db: Omit redundant types in var declarations (revive:var-declaration)
+  - incusd/db: Use fmt.Fprintf instead of WriteString (staticcheck:QF1012)
+  - incusd/db: Check type assertion result (revive:unchecked-type-assertion)
+  - incusd/db: Rename local that redefines builtin max (revive:redefines-builtin-id)
+  - incusd/db: Rename profileIds parameter to profileIDs (revive:var-naming)
+  - incusd/db: Apply De Morgan's law to simplify boolean (staticcheck:QF1001)
+  - incusd/db: Rename locals that shadow imports (revive:import-shadowing)
+  - incusd/db/cluster: Use fmt.Fprintf instead of WriteString (staticcheck:QF1012)
+  - incusd/db/cluster: Check type assertion result (revive:unchecked-type-assertion)
+  - incusd/db/cluster: Rename locals that shadow imports (revive:import-shadowing)
+  - incusd/db/cluster: Remove redundant import alias (revive:redundant-import-alias)
+  - incusd/db/schema: Rename locals that shadow imports (revive:import-shadowing)
+  - incusd/db/schema: Check error from db.Close (errcheck)
+  - incusd/db/node: Rename locals that shadow imports (revive:import-shadowing)
+  - incusd/db/query: Rename locals that shadow imports (revive:import-shadowing)
+  - incusd/db/query: Add missing doc comments on exported symbols (revive:exported)
+  - incusd/cluster: Rename locals that shadow imports (revive:import-shadowing)
+  - incusd/cluster: Avoid deferring inside loops and chains (revive:defer)
+  - incusd/cluster: Simplify with early return (revive:early-return)
+  - incusd/cluster: Add missing doc comments on exported methods (revive:exported)
+  - incusd/cluster: Drop redundant client import alias (revive:redundant-import-alias)
+  - incusd/endpoints: Rename locals that shadow import (revive:import-shadowing)
+  - incusd/operations: Rename param that shadows import (revive:import-shadowing)
+  - incusd/operations: Add missing doc comments on exported methods (revive:exported)
+  - incusd/network: Use tagged switch statements (staticcheck:QF1003)
+  - incusd/network: Lift break condition into loop (staticcheck:QF1006)
+  - incusd/network: Merge conditional assignment into declaration (staticcheck:QF1007)
+  - incusd/network: Remove embedded common field from selectors (staticcheck:QF1008)
+  - incusd/network: Remove blank line at start of block (revive:empty-lines)
+  - incusd/network: Rename locals that shadow imports (revive:import-shadowing)
+  - incusd/network: Add and fix doc comments on exported symbols (revive:exported)
+  - incusd/network/acl: Remove blank line at start of switch (revive:empty-lines)
+  - incusd/network/acl: Invert condition to return early (revive:early-return)
+  - incusd/network/acl: Merge conditional assignment into declaration (staticcheck:QF1007)
+  - incusd/network/acl: Use tagged switch on rule.Protocol (staticcheck:QF1003)
+  - incusd/network/acl: Use tagged switch on rule.Action (staticcheck:QF1002)
+  - incusd/network/acl: Rename locals that shadow imports (revive:import-shadowing)
+  - incusd/network/zone: Add and fix doc comments on exported methods (revive:exported)
+  - incusd/network/zone: Rename param that shadows state import (revive:import-shadowing)
+  - incusd/network/ovn: Use tagged switch statements (staticcheck:QF1003)
+  - incusd/network/ovs: Use strings.Split instead of SplitN (staticcheck:QF1004)
+  - incusd/network/ovs: Remove unused unquote function (unused)
+  - incusd/storage/drivers: Use tagged switch statements (staticcheck:QF1003)
+  - incusd/storage/drivers: Use strings.Split instead of SplitN (staticcheck:QF1004)
+  - incusd/storage/drivers: Omit inferable type from declaration (staticcheck:QF1011)
+  - incusd/storage/drivers: Remove extra blank lines at start of block (revive:empty-lines)
+  - incusd/storage/drivers: Simplify if/else with early return (revive:early-return)
+  - incusd/storage/drivers: Avoid deferring inside loops (revive:defer)
+  - incusd/storage/drivers: Rename locals that shadow imports (revive:import-shadowing)
+  - incusd/storage/drivers: Add missing doc comments on exported symbols (revive:exported)
+  - incusd/storage: Simplify boolean with De Morgan's law (staticcheck:QF1001)
+  - incusd/storage: Use tagged switch statements (staticcheck:QF1003)
+  - incusd/storage: Check type assertion result (revive:unchecked-type-assertion)
+  - incusd/storage: Simplify if/else with early return (revive:early-return)
+  - incusd/storage: Rename locals that shadow imports (revive:import-shadowing)
+  - incusd/storage: Add missing doc comments on exported symbols (revive:exported)
+  - tests: Update btrfs test for new behavior
+  - incusd/instance/lxc: Use os.Root for templating
+  - incusd/instance: Handle negative disk usage values
+  - incusd/storage: Return -1 as disk usage when the driver doesn't support it
+  - incus/info: Handle negative usage values (unknown)
+  - i18n: Update translation templates
+  - incus/storage_volume: Fix push behavior with UID/GID/mode overrides
+  - tests: Add thorough tests for incus file push with UID/GID/mode overrides
+  - incus/file: Fix typo
+  - incus/file: Fix push behavior with UID/GID/mode overrides
+  - incusd/instances: Only reset NVRAM on secureboot change for VMs
+  - incusd/storage/zfs: Use latest common GUID as refresh base
+  - Translated using Weblate (Russian)
+  - Translated using Weblate (Swedish)
+  - Translated using Weblate (Portuguese)
+  - Translated using Weblate (Swedish)
+  - Translated using Weblate (Russian)
+  - Translated using Weblate (Swedish)
+  - Translated using Weblate (Portuguese)
+  - Translated using Weblate (Swedish)
+  - inucsd/devices/tpm: Enable tpm live migration
+  - tests: Add IP range coverage for network address sets
+  - doc: Document IP range support in network address sets
+  - incusd/network/address-set: Support IP ranges
+  - api: network_address_set_ip_ranges
+  - doc: Update config
+  - incusd/network/ovn: Use dnat_and_snat for fully mapped external addresses
+  - api: linstor_raw
+  - tests: Add quick raw DRBD key checks
+  - incusd/storage/linstor: Allow setting raw DRBD properties on storage volumes
+  - incusd/storage/linstor: Allow setting raw DRBD properties on storage pools
+  - incusd/storage: Allow skipping validation for more prefixes
+  - gomod: Update dependencies
+  - Makefile: Use older incus-os for Go 1.25
+  - incusd/forknet: Filter the DHCPv4 raw socket
+  - incusd/forknet: Handle zero wait time for DHCPv6
+  - incusd/forknet: Time out DHCPv6 lease acquisition
+  - incusd/forknet: Time out DHCPv4 lease acquisition
+  - Translated using Weblate (Norwegian Bokmål)
+  - Translated using Weblate (Norwegian Bokmål)
+  - Translated using Weblate (Russian)
+  - Translated using Weblate (Russian)
+  - Translated using Weblate (Italian)
+  - Translated using Weblate (Italian)
+  - Translated using Weblate (Chinese (Simplified Han script))
+  - Translated using Weblate (Chinese (Simplified Han script))
+  - Translated using Weblate (Chinese (Simplified Han script))
+  - Translated using Weblate (Chinese (Simplified Han script))
+  - Translated using Weblate (Chinese (Simplified Han script))
+  - Translated using Weblate (Chinese (Simplified Han script))
+  - Translated using Weblate (Chinese (Simplified Han script))
+  - Translated using Weblate (Chinese (Simplified Han script))
+  - Translated using Weblate (Tamil)
+  - Translated using Weblate (Indonesian)
+  - Translated using Weblate (Indonesian)
+  - Translated using Weblate (Indonesian)
+  - Translated using Weblate (German)
+  - Translated using Weblate (German)
+  - Translated using Weblate (German)
+  - Translated using Weblate (German)
+  - Translated using Weblate (German)
+  - Translated using Weblate (Spanish)
+  - Translated using Weblate (Spanish)
+  - Translated using Weblate (Spanish)
+  - Translated using Weblate (Swedish)
+  - Translated using Weblate (Swedish)
+  - Translated using Weblate (Japanese)
+  - Translated using Weblate (Japanese)
+  - Translated using Weblate (Japanese)
+  - Translated using Weblate (Japanese)
+  - Translated using Weblate (French)
+  - Translated using Weblate (French)
+  - Translated using Weblate (French)
+  - Translated using Weblate (French)
+  - Translated using Weblate (French)
+  - Translated using Weblate (French)
+  - Translated using Weblate (French)
+  - Translated using Weblate (French)
+  - Translated using Weblate (French)
+  - Translated using Weblate (Chinese (Traditional Han script))
+  - Translated using Weblate (Chinese (Traditional Han script))
+  - Translated using Weblate (Portuguese)
+  - Translated using Weblate (Portuguese)
+  - Translated using Weblate (Portuguese (Brazil))
+  - Translated using Weblate (Portuguese (Brazil))
+  - Translated using Weblate (Portuguese (Brazil))
+  - Translated using Weblate (Dutch)
+  - Translated using Weblate (Dutch)
+  - Translated using Weblate (Georgian)
+  - Translated using Weblate (Georgian)
+  - Translated using Weblate (Greek)
+  - incus-simplestreams: Detect type of unified images
+  - incus-simplestreams: Support split container images
+  - shared/simplestreams: Add combined_type
+  - i18n: Update translation templates
+  - incus/config: Fix YAML file name in help text
+  - i18n: Update translation templates
+  - incus/launch: Update examples
+  - incus/network/forward: Fix typo in description
+  - i18n: Update translation templates
+  - incus/remote_unix: Clarify socket type
+  - incus/launch: Clarify examples
+  - incus/cluster: Fix typo in description
+  - Translated using Weblate (Russian)
+  - Translated using Weblate (Portuguese)
+  - doc: Add PEM to wordlist
+  - doc: Update config
+  - incusd/device/tpm: Provision vTPM with platform CA when configured
+  - incusd/cluster/config: Add instances.tpm.platform keys
+  - incusd/devices: Set volatileGet on Refresh
+  - api: instances_tpm_platform_cert
+  - shared/archive: Improved ENOSPC detection
+  - incus/utils: Tweak environment file handling to strip matching outer quotes
+  - doc: Update config
+  - tests: Add test for block.create_options
+  - incusd/storage/drivers: Add support for block.create_options
+  - api: storage_create_options
+  - Translated using Weblate (Chinese (Traditional Han script))
+  - Translated using Weblate (Chinese (Traditional Han script))
+  - Translated using Weblate (Japanese)
+  - Translated using Weblate (Japanese)
+  - Translated using Weblate (Japanese)
+  - Translated using Weblate (Japanese)
+  - Translated using Weblate (Dutch)
+  - Translated using Weblate (Dutch)
+  - Translated using Weblate (Georgian)
+  - Translated using Weblate (Georgian)
+  - Translated using Weblate (Swedish)
+  - Translated using Weblate (Swedish)
+  - Translated using Weblate (Swedish)
+  - Translated using Weblate (Portuguese)
+  - Translated using Weblate (Portuguese)
+  - Translated using Weblate (Chinese (Simplified Han script))
+  - Translated using Weblate (Chinese (Simplified Han script))
+  - Translated using Weblate (Chinese (Simplified Han script))
+  - Translated using Weblate (Chinese (Simplified Han script))
+  - Translated using Weblate (Chinese (Simplified Han script))
+  - Translated using Weblate (Chinese (Simplified Han script))
+  - Translated using Weblate (Chinese (Simplified Han script))
+  - Translated using Weblate (Chinese (Simplified Han script))
+  - Translated using Weblate (Tamil)
+  - Translated using Weblate (Italian)
+  - Translated using Weblate (Italian)
+  - Translated using Weblate (German)
+  - Translated using Weblate (German)
+  - Translated using Weblate (German)
+  - Translated using Weblate (German)
+  - Translated using Weblate (German)
+  - Translated using Weblate (Spanish)
+  - Translated using Weblate (Spanish)
+  - Translated using Weblate (Spanish)
+  - Translated using Weblate (French)
+  - Translated using Weblate (French)
+  - Translated using Weblate (French)
+  - Translated using Weblate (French)
+  - Translated using Weblate (French)
+  - Translated using Weblate (French)
+  - Translated using Weblate (French)
+  - Translated using Weblate (French)
+  - Translated using Weblate (French)
+  - Translated using Weblate (Portuguese (Brazil))
+  - Translated using Weblate (Portuguese (Brazil))
+  - Translated using Weblate (Portuguese (Brazil))
+  - Translated using Weblate (Greek)
+  - Translated using Weblate (Indonesian)
+  - Translated using Weblate (Indonesian)
+  - Translated using Weblate (Indonesian)
+  - Translated using Weblate (Russian)
+  - Translated using Weblate (Russian)
+  - Translated using Weblate (Norwegian Bokmål)
+  - Translated using Weblate (Norwegian Bokmål)
+  - i18n: Update translation templates
+  - incus/storage/volume: Align long and short description
+  - incus/project: Align description formatting
+  - incus/project: Fix typo in description
+  - incus/cluster/group: Fix typo in description
+  - incus/warning: Align description formatting
+  - incus/config/trust: Align description formatting
+  - incus/image: Align description formatting
+  - incus/network/forward: Fix typo in description
+  - incus/config/trust: Fix typo in description
+  - incus/storage/volume: Fix typo in description
+  - incus/network: Fix typo in description
+  - incus/network/zone: Align long and short descriptions
+  - incus/network: Fix typo in description
+  - incus/operation: Fix default column layout in help text
+  - incusd/instance/qemu: Add virtio vga feature gating
+  - incusd/instance/qmp: Add QueryVirtioVGADevice
+  - Extend description for OCI-compliant remotes
+  - incus/server/network/ovn/driver: Fix duplicate listening ip check in LoadBalancerCreate
+  - incus/server/network/ovn/driver: Fix duplicate listening ip check in ForwardCreate
+  - client/oci: Pass --no-tags to skopeo inspect
+  - incusd/firewall/nftables: Use terse mode to improve performance
+  - i18n: Update translation templates
+  - doc/rest-api: Refresh swagger YAML
+  - doc: Update metadata
+  - doc: Clarify snapshots.expiry
+  - cmd/incus: Clarify --expiry flag format
+  - shared/api: Fix swagger examples
+  - incusd/storage/ceph: Refuse pool deletion when unexpected images exist
+  - incus: Print console log when attaching via --console
+  - incusd/db/node: Allow using a fixed time in Offline checks
+  - incusd/forknet: Use space separator for DNS search domains
+  - incusd/device/nic_bridged: Recover orphaned veth on startup
+  - incusd/device/nic_bridged: Drop redundant accept_ra=0
+  - incusd/ip: Set NUD_PERMANENT on neighbour proxy entries
+  - incusd/networks: Parallelize network startup and OVN restart
+  - Translated using Weblate (Portuguese)
+  - incusd/storage/drivers: Add workaround for shared VG removal failures
+  - tests/storage: Add S3 CopyObject coverage
+  - incusd/storage/s3: Implement ACL placeholder
+  - tests/storage_volume_attach: Test --create on attach
+  - i18n: Update translation templates
+  - incus/storage_volume: Add --create flag to attach
+  - incusd/storage/s3: Implement S3 CopyObject
+  - doc/storage_volume: Fix outdated information
+  - test: Disable volume shrinking with LINSTOR
+  - incusd/instance/drivers/lxc: Quote values in lxc.environment
+  - incusd/instances: Skip offline members in bulk state changes
+  - incusd/network/ovn: Skip per-IP NAT for external routes when no uplink
+  - incusd/storage/zfs: Avoid recursive zfs list in GetResources
+  - incusd/cluster: Better handle misisng OVS/OVN
+  - Use correct host:port format for ClusterAddress
+  - Update list of Ubuntu LTS releases that get pre-built Incus packages
+  - doc: Update Ansible section with incus-client details
+  - incusd/storage/drivers: Restore config volume as part of VM block restoration
+  - build(deps): bump actions/dependency-review-action from 4 to 5
+  - devcontainer: fix golangci-lint install source
+  - incusd/storage: Add lock handling for NBD operations
+  - incusd/storage: Use InstanceByVolumeName in qcow2MigrateVolume
+  - incusd/locking: Add TryLock
+  - doc: Update config
+  - incusd/network/bridge: Add bridge.multicast_snooping config key
+  - api: network_bridge_multicast_snooping
+  - incusd/db/node: Cleanup node offline messages
+  - incusd/instance/qemu: Pass SMBIOS type 11 entries via files
+  - incusd/endpoints: Fix Wait() race in Tomb shutdown
+  - incusd/cluster: Re-order evacuations to happen earlier on shutdown
+  - incusd/instance/qemu: Remove deprecated QEMU flag
+  - test/network_acl: Add test for ACL used by instance in different project
+  - doc/rest-api: Refresh swagger YAML
+  - incusd/storage_volume_nbd: Fix incorrect swagger
+  - incusd/projects: Fix targeting on project delete
+  - incusd/network/acl: Fix issue with instances in different project than ACL
+  - doc/authorization: Fix reference to old "manager" relation
+  - incusd/device/nic_bridged: Fix swapped IPv4/IPv6 DNS record
+  - incusd/forknet: Add jitter to DHCPv6 renewal
+  - incusd/forknet: Properly renew stateful DHCPv6
+  - incusd/forknet: Include FQDN in DHCPv6 INFO requests
+  - incusd/forknet: Persist DHCPv6 client DUID across restarts
+  - incusd/instance/lxc: Fix swap=false failure
+  - incusd: Re-introduce core scheduling detection
+  - incusd/instance/qemu: Fix version detection for qemu-kvm
+  - Translated using Weblate (French)
+  - Translated using Weblate (Russian)
+  - Translated using Weblate (Japanese)
+  - Translated using Weblate (Swedish)
+  - Translated using Weblate (French)
+  - Translated using Weblate (Russian)
+  - Translated using Weblate (Portuguese)
+  - Translated using Weblate (Japanese)
+  - Translated using Weblate (Japanese)
+  - Translated using Weblate (Japanese)
+  - Translated using Weblate (Italian)
+  - Translated using Weblate (Italian)
+  - Translated using Weblate (Spanish)
+  - Translated using Weblate (Spanish)
+  - Translated using Weblate (Spanish)
+  - Translated using Weblate (Swedish)
+  - Translated using Weblate (Swedish)
+  - Translated using Weblate (Indonesian)
+  - Translated using Weblate (Indonesian)
+  - Translated using Weblate (Indonesian)
+  - Translated using Weblate (French)
+  - Translated using Weblate (French)
+  - Translated using Weblate (French)
+  - Translated using Weblate (French)
+  - Translated using Weblate (French)
+  - Translated using Weblate (French)
+  - Translated using Weblate (French)
+  - Translated using Weblate (French)
+  - Translated using Weblate (French)
+  - Translated using Weblate (German)
+  - Translated using Weblate (German)
+  - Translated using Weblate (German)
+  - Translated using Weblate (German)
+  - Translated using Weblate (German)
+  - Translated using Weblate (Chinese (Traditional Han script))
+  - Translated using Weblate (Chinese (Traditional Han script))
+  - Translated using Weblate (Dutch)
+  - Translated using Weblate (Dutch)
+  - Translated using Weblate (Norwegian Bokmål)
+  - Translated using Weblate (Norwegian Bokmål)
+  - Translated using Weblate (Tamil)
+  - Translated using Weblate (Greek)
+  - Translated using Weblate (Chinese (Simplified Han script))
+  - Translated using Weblate (Chinese (Simplified Han script))
+  - Translated using Weblate (Chinese (Simplified Han script))
+  - Translated using Weblate (Chinese (Simplified Han script))
+  - Translated using Weblate (Chinese (Simplified Han script))
+  - Translated using Weblate (Chinese (Simplified Han script))
+  - Translated using Weblate (Chinese (Simplified Han script))
+  - Translated using Weblate (Chinese (Simplified Han script))
+  - Translated using Weblate (Georgian)
+  - Translated using Weblate (Georgian)
+  - Translated using Weblate (Portuguese)
+  - Translated using Weblate (Portuguese)
+  - Translated using Weblate (Russian)
+  - Translated using Weblate (Russian)
+  - Translated using Weblate (Portuguese (Brazil))
+  - Translated using Weblate (Portuguese (Brazil))
+  - Translated using Weblate (Portuguese (Brazil))
+  - doc/devices/disk: Fix broken link
+  [/details]
+
+  # Documentation
+
+  The Incus documentation can be found at:
+
+  https://linuxcontainers.org/incus/docs/main/
+
+  # Packages
+
+  There are no official Incus packages as Incus upstream only releases regular release tarballs. Below are some available options to get Incus up and running.
+
+  ## Installing the Incus server on Linux
+
+  Incus is available for most common Linux distributions. You'll find detailed installation instructions in our documentation.
+
+  https://linuxcontainers.org/incus/docs/main/installing/
+
+  ## Homebrew package for the Incus client
+
+  The client tool is available through HomeBrew for both Linux and MacOS.
+
+  https://formulae.brew.sh/formula/incus
+
+  ## Chocolatey package for the Incus client
+
+  The client tool is available through Chocolatey for Windows users.
+
+  https://community.chocolatey.org/packages/incus/7.1.0
+
+  ## Winget package for the Incus client
+
+  The client tool is also available through Winget for Windows users.
+
+  https://winstall.app/apps/LinuxContainers.Incus
+
+  # Support
+
+  Monthly feature releases are only supported up until the next release comes out. Users needing a longer support length and less frequent changes should consider using Incus 7.0 LTS instead.
+
+  Community support is provided at: https://discuss.linuxcontainers.org
+  Commercial support is available through: https://zabbly.com/incus
+  Bugs can be reported at: https://github.com/lxc/incus/issues
