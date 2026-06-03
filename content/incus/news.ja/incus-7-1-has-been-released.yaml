@@ -46,6 +46,7 @@ content: |-
   <!--
   This is effectively the same behavior as `incus rebuild` for instances but now applied to custom storage volumes.
   -->
+  これは実質的に、インスタンスに対する `incus rebuild` と同じ動作ですが、カスタムストレージボリュームに適用されるようになりました。
 
       stgraber@castiana:~$ incus storage volume create default foo
       Storage volume foo created
