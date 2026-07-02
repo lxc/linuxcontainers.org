@@ -27,7 +27,7 @@ content: |-
   <!--
   This release fixes 4 security issues:
   -->
-  Cette version corrige 6 vulnérabilités :
+  Cette version corrige 4 vulnérabilités :
 
   <!--
   - [CVE-2026-48753](https://github.com/lxc/incus/security/advisories/GHSA-ccjc-4qc3-jxqc) (critical)
@@ -983,7 +983,7 @@ content: |-
   <!--
   Monthly feature releases are only supported up until the next release comes out. Users needing a longer support length and less frequent changes should consider using Incus 7.0 LTS instead.
   -->
-  Les versions de fonctionnalité d’Incus ne sont supportées que jusqu’à la sortie de la suivante. Les personnes souhaitant un support plus long et des changements moins fréquents devraient plutôt envisager d’utiliser Incus 6.0 LTS.
+  Les versions de fonctionnalité d’Incus ne sont supportées que jusqu’à la sortie de la suivante. Les personnes souhaitant un support plus long et des changements moins fréquents devraient plutôt envisager d’utiliser Incus 7.0 LTS.
 
   <!--
   Community support is provided at: https://discuss.linuxcontainers.org
