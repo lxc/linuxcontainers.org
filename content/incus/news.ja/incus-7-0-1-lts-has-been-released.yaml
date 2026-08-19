@@ -1,0 +1,747 @@
+title: Incus 7.0.1 LTS リリースのお知らせ
+date: 2026/07/10 22:07
+origin: https://discuss.linuxcontainers.org/t/incus-7-0-1-lts-has-been-released/26942
+content: |-
+  # はじめに <!-- Introduction -->
+  <!--
+  The Incus team is pleased to announce the release of Incus 7.0.1!
+  This is the first bugfix release for Incus 7.0 which is supported until June 2031.
+  -->
+  Incus チームは、Incus 7.0.1 のアナウンスができることをうれしく思います!
+  このリリースは、2031 年 6 月までサポートされる Incus 7.0 の最初のバグ修正リリースです。
+
+  <!--
+  Of note, with the 7.0.x series, we are decoupling the bugfix updates of our various projects, so there won't be an update of LXC and LXCFS at the same time as this one.
+  -->
+  なお、7.0.x シリーズでは各プロジェクトのバグ修正アップデートを切り離して実施するため、今回のアップデートと同時に LXC や LXCFS が更新されることはありません。
+
+  # 変更点 <!-- Changes -->
+  <!--
+  As usual this bugfix releases focus on stability and hardening.
+  -->
+  いつもと同様に、このバグ修正リリースは安定性とセキュリティ強化に重点を置いています。
+
+  <!--
+  Minor improvements have also been backported, specifically anything which does not require data migration, database changes or cause any unexpected change to user facing behavior.
+  -->
+  データ移行やデータベースの変更を必要としない、あるいはユーザーが動作の変更に直面するような予期せぬ変更をもたらさないような軽微な改善点もバックポートされています。
+
+  <!--
+  The number of such improvements will decrease over time within the LTS branch.
+  -->
+  LTS ブランチ内では、このような改善数は時間とともに減少していくでしょう。
+
+  <!--
+  Some of the highlights for this release are:
+  -->
+  このリリースのハイライトのいくつかは次のとおりです:
+
+   - カスタムストレージボリュームの再構築 <!-- Rebuilding custom storage volumes -->
+   - 仮想マシン向けの明示的な CPU トポロジー <!-- Explicit CPU topology for virtual machines -->
+   - カスタム TPM プラットフォーム証明書 <!-- Custom TPM platform certificate -->
+   - ボリューム作成時のアタッチ <!-- Volume creation on attach -->
+   - ストレージ用のファイルシステム作成オプション <!-- Filesystem creation options for storage -->
+   - 低レベル LINSTOR 設定 <!-- Low-level LINSTOR configuration -->
+   - ネットワークアドレスセットの IP レンジ <!-- IP ranges in network address sets -->
+   - ブリッジネットワークにおけるマルチキャストスヌーピング制御 <!-- Multicast snooping control on bridge networks -->
+   - リモートごとの複数のアドレス <!-- Multiple addresses per remote -->
+   - S3 オブジェクトストレージの改良 <!-- S3 object storage improvements -->
+   - インスタンスごとの SELinux 統合 <!-- Per-instance SELinux integration -->
+   - 新しい `incus default` CLI コマンド <!-- New `incus default` CLI command -->
+   - デフォルトでフィルタリングされたサーバー情報 <!-- Filtered server info by default -->
+   - CLI からの Keepalive タイムアウト <!-- Keepalive timeout from the CLI -->
+   - CLI 設定の OS ごとの適切な処理 <!-- Better OS-specific handling of CLI configuration -->
+   - スタンドアロンサーバーの証明書更新 <!-- Standalone server certificate update -->
+   - OCI コンテナの静的ネットワーク設定 <!-- Static network configuration for OCI containers -->
+   - インスタンスごとの BGP ルートアドバタイズ <!-- Per-instance BGP route advertisement -->
+   - プロキシー NAT モードでのダイナミックアドレス <!-- Dynamic addresses in proxy NAT mode -->
+   - VM に対する NBD アクセスの拡張 <!-- Expanded NBD access to VMs -->
+   - ストレージボリュームの Btrfs 圧縮 <!-- Btrfs compression for storage volumes -->
+   - InfiniBand の SR-IOV GUID 設定 <!-- InfiniBand SR-IOV GUID configuration -->
+   - Websocket オリジン制限 <!-- Websocket origin restriction -->
+
+  <!--
+  This update also addresses the following security issues:
+  -->
+  今回のアップデートでは、以下のセキュリティー問題にも対処しています:
+
+  * [CVE-2026-48753](https://github.com/lxc/incus/security/advisories/GHSA-ccjc-4qc3-jxqc) (critical) -  S3マルチパートアップロードにおけるパストラバーサルによる任意のファイル書き込み <!-- Arbitrary file write via path traversal in S3 multipart upload -->
+  * [CVE-2026-47753](https://github.com/lxc/incus/security/advisories/GHSA-8g7m-96c8-8wwc) (low) -  インスタンスバックアップのインポートにおける Nil ポインターデリファレンスパニック <!-- Nil-Pointer Dereference Panic via Instance Backup Import (volume omitted) -->
+  * [CVE-2026-48754](https://github.com/lxc/incus/security/advisories/GHSA-4xg6-52mh-fpw8) (low) - createDependentVolumesFromBackup 内の Nil ポインターデリファレンス <!-- Nil-pointer dereference in createDependentVolumesFromBackup -->
+  * [CVE-2026-48756](https://github.com/lxc/incus/security/advisories/GHSA-xhqx-mgh3-3h7q) (low) - CreateCustomVolumeFromBackup 内の Nil ポインターデリファレンス <!-- Nil-pointer dereference in CreateCustomVolumeFromBackup -->
+  * [CVE-2026-48749](https://github.com/lxc/incus/security/advisories/GHSA-2q3f-q5pq-g8wv) (critical) - 悪意あるイメージ内の rootfs/ シンボリックリンクを経由したホスト上の任意のファイルの読み書き <!-- Arbitrary file read+write on host via `rootfs/` symlink in malicious image -->
+  * [CVE-2026-48750](https://github.com/lxc/incus/security/advisories/GHSA-73hr-m85f-64v9) (critical) - 細工されたイメージ内の exec-output シンボリックリンクを介したホスト上の任意のファイルに対する書き込み <!-- Arbitrary file write on host via `exec-output` symlink in crafted image -->
+  * [CVE-2026-48751](https://github.com/lxc/incus/security/advisories/GHSA-48q5-w887-33wv) (critical) - 任意のコマンド実行につながるプロジェクト制限のバイパス <!-- Restricted project bypass leading to arbitrary command execution -->
+  * [CVE-2026-48752](https://github.com/lxc/incus/security/advisories/GHSA-vxp5-584q-c479) (critical) - 悪意あるイメージ内の templates/ シンボリックリンクを介したホスト上の任意のファイルの読み書き <!-- Arbitrary file read+write on host via `templates/` symlink in malicious image -->
+  * [CVE-2026-48755](https://github.com/lxc/incus/security/advisories/GHSA-v6mj-8pf4-hhw4) (critical) - 任意のファイルへの書き込みおよびコマンド実行につながる、バックアップ圧縮アルゴリズムにおける引数インジェクション <!-- Argument injection in backup compression algorithm leading to arbitrary file write and command execution -->
+  * [CVE-2026-48769](https://github.com/lxc/incus/security/advisories/GHSA-f6m5-xw2g-xc4x) (critical) - 信頼されたイメージハッシュに起因するクライアント上の任意のファイルに対する書き込み <!-- Arbitrary file write on client due to trusted image hash -->
+  * [CVE-2026-55621](https://github.com/lxc/incus/security/advisories/GHSA-64f3-v33m-w89f) (high) - プロジェクト間のカスタムボリュームコピーに対するプロジェクト制限のバイパス <!-- Project restriction bypass for custom volume copy across projects -->
+  * [CVE-2026-55622](https://github.com/lxc/incus/security/advisories/GHSA-c9f5-j9c3-mhrg) (high) - プロジェクト間のインスタンスコピーにおけるプロジェクト制限の回避 <!-- Project restriction bypass in instance copy across projects -->
+
+  <!--
+  All of those have been previously fixed in regular monthly releases and been widely backported by the various distributions shipping Incus 7.0 LTS.
+  -->
+  これらはすべて、通常の月次リリースで既に修正されており、Incus 7.0 LTS を出荷している様々なディストリビューションによって広くバックポートされています。
+
+  <!--
+  The full list of commits is available below:
+  -->
+  コミットのすべてのリストは次のとおりです（翻訳なし）:
+
+  [details="すべてのChangeLogを見る"]
+   - doc/devices/disk: Fix broken link
+   - incusd/instance/qemu: Fix version detection for qemu-kvm
+   - incusd: Re-introduce core scheduling detection
+   - incusd/instance/lxc: Fix swap=false failure
+   - incusd/forknet: Persist DHCPv6 client DUID across restarts
+   - incusd/forknet: Include FQDN in DHCPv6 INFO requests
+   - incusd/forknet: Properly renew stateful DHCPv6
+   - incusd/forknet: Add jitter to DHCPv6 renewal
+   - incusd/device/nic_bridged: Fix swapped IPv4/IPv6 DNS record
+   - doc/authorization: Fix reference to old "manager" relation
+   - incusd/network/acl: Fix issue with instances in different project than ACL
+   - incusd/projects: Fix targeting on project delete
+   - incusd/storage_volume_nbd: Fix incorrect swagger
+   - doc/rest-api: Refresh swagger YAML
+   - test/network_acl: Add test for ACL used by instance in different project
+   - incusd/instance/qemu: Remove deprecated QEMU flag
+   - incusd/cluster: Re-order evacuations to happen earlier on shutdown
+   - incusd/endpoints: Fix Wait() race in Tomb shutdown
+   - incusd/instance/qemu: Pass SMBIOS type 11 entries via files
+   - incusd/db/node: Cleanup node offline messages
+   - api: network_bridge_multicast_snooping
+   - incusd/network/bridge: Add bridge.multicast_snooping config key
+   - doc: Update config
+   - incusd/locking: Add TryLock
+   - incusd/storage: Use InstanceByVolumeName in qcow2MigrateVolume
+   - incusd/storage: Add lock handling for NBD operations
+   - devcontainer: fix golangci-lint install source
+   - build(deps): bump actions/dependency-review-action from 4 to 5
+   - incusd/storage/drivers: Restore config volume as part of VM block restoration
+   - doc: Update Ansible section with incus-client details
+   - Update list of Ubuntu LTS releases that get pre-built Incus packages
+   - Use correct host:port format for ClusterAddress
+   - incusd/cluster: Better handle misisng OVS/OVN
+   - incusd/storage/zfs: Avoid recursive zfs list in GetResources
+   - incusd/network/ovn: Skip per-IP NAT for external routes when no uplink
+   - incusd/instances: Skip offline members in bulk state changes
+   - incusd/instance/drivers/lxc: Quote values in lxc.environment
+   - test: Disable volume shrinking with LINSTOR
+   - doc/storage_volume: Fix outdated information
+   - incusd/storage/s3: Implement S3 CopyObject
+   - incus/storage_volume: Add --create flag to attach
+   - tests/storage_volume_attach: Test --create on attach
+   - incusd/storage/s3: Implement ACL placeholder
+   - tests/storage: Add S3 CopyObject coverage
+   - incusd/storage/drivers: Add workaround for shared VG removal failures
+   - incusd/networks: Parallelize network startup and OVN restart
+   - incusd/ip: Set NUD_PERMANENT on neighbour proxy entries
+   - incusd/device/nic_bridged: Drop redundant accept_ra=0
+   - incusd/device/nic_bridged: Recover orphaned veth on startup
+   - incusd/forknet: Use space separator for DNS search domains
+   - incusd/db/node: Allow using a fixed time in Offline checks
+   - incus: Print console log when attaching via --console
+   - incusd/storage/ceph: Refuse pool deletion when unexpected images exist
+   - shared/api: Fix swagger examples
+   - cmd/incus: Clarify --expiry flag format
+   - doc: Clarify snapshots.expiry
+   - doc: Update metadata
+   - doc/rest-api: Refresh swagger YAML
+   - incusd/firewall/nftables: Use terse mode to improve performance
+   - client/oci: Pass --no-tags to skopeo inspect
+   - incus/server/network/ovn/driver: Fix duplicate listening ip check in ForwardCreate
+   - incus/server/network/ovn/driver: Fix duplicate listening ip check in LoadBalancerCreate
+   - Extend description for OCI-compliant remotes
+   - incusd/instance/qmp: Add QueryVirtioVGADevice
+   - incusd/instance/qemu: Add virtio vga feature gating
+   - incus/operation: Fix default column layout in help text
+   - incus/network: Fix typo in description
+   - incus/network/zone: Align long and short descriptions
+   - incus/network: Fix typo in description
+   - incus/storage/volume: Fix typo in description
+   - incus/config/trust: Fix typo in description
+   - incus/network/forward: Fix typo in description
+   - incus/image: Align description formatting
+   - incus/config/trust: Align description formatting
+   - incus/warning: Align description formatting
+   - incus/cluster/group: Fix typo in description
+   - incus/project: Fix typo in description
+   - incus/project: Align description formatting
+   - incus/storage/volume: Align long and short description
+   - api: storage_create_options
+   - incusd/storage/drivers: Add support for block.create_options
+   - tests: Add test for block.create_options
+   - doc: Update config
+   - incus/utils: Tweak environment file handling to strip matching outer quotes
+   - shared/archive: Improved ENOSPC detection
+   - api: instances_tpm_platform_cert
+   - incusd/devices: Set volatileGet on Refresh
+   - incusd/cluster/config: Add instances.tpm.platform keys
+   - incusd/device/tpm: Provision vTPM with platform CA when configured
+   - doc: Update config
+   - doc: Add PEM to wordlist
+   - incus/cluster: Fix typo in description
+   - incus/launch: Clarify examples
+   - incus/remote_unix: Clarify socket type
+   - incus/network/forward: Fix typo in description
+   - incus/launch: Update examples
+   - incus/config: Fix YAML file name in help text
+   - shared/simplestreams: Add combined_type
+   - incus-simplestreams: Support split container images
+   - incus-simplestreams: Detect type of unified images
+   - incusd/forknet: Time out DHCPv4 lease acquisition
+   - incusd/forknet: Time out DHCPv6 lease acquisition
+   - incusd/forknet: Handle zero wait time for DHCPv6
+   - incusd/forknet: Filter the DHCPv4 raw socket
+   - Makefile: Use older incus-os for Go 1.25
+   - gomod: Update dependencies
+   - incusd/storage: Allow skipping validation for more prefixes
+   - incusd/storage/linstor: Allow setting raw DRBD properties on storage pools
+   - incusd/storage/linstor: Allow setting raw DRBD properties on storage volumes
+   - tests: Add quick raw DRBD key checks
+   - api: linstor_raw
+   - incusd/network/ovn: Use dnat_and_snat for fully mapped external addresses
+   - doc: Update config
+   - api: network_address_set_ip_ranges
+   - incusd/network/address-set: Support IP ranges
+   - doc: Document IP range support in network address sets
+   - tests: Add IP range coverage for network address sets
+   - inucsd/devices/tpm: Enable tpm live migration
+   - incusd/storage/zfs: Use latest common GUID as refresh base
+   - incusd/instances: Only reset NVRAM on secureboot change for VMs
+   - incus/file: Fix push behavior with UID/GID/mode overrides
+   - incus/file: Fix typo
+   - tests: Add thorough tests for incus file push with UID/GID/mode overrides
+   - incus/storage_volume: Fix push behavior with UID/GID/mode overrides
+   - incus/info: Handle negative usage values (unknown)
+   - incusd/storage: Return -1 as disk usage when the driver doesn't support it
+   - incusd/instance: Handle negative disk usage values
+   - incusd/instance/lxc: Use os.Root for templating
+   - tests: Update btrfs test for new behavior
+   - incusd/storage: Add missing doc comments on exported symbols (revive:exported)
+   - incusd/storage: Rename locals that shadow imports (revive:import-shadowing)
+   - incusd/storage: Simplify if/else with early return (revive:early-return)
+   - incusd/storage: Check type assertion result (revive:unchecked-type-assertion)
+   - incusd/storage: Use tagged switch statements (staticcheck:QF1003)
+   - incusd/storage: Simplify boolean with De Morgan's law (staticcheck:QF1001)
+   - incusd/storage/drivers: Add missing doc comments on exported symbols (revive:exported)
+   - incusd/storage/drivers: Rename locals that shadow imports (revive:import-shadowing)
+   - incusd/storage/drivers: Avoid deferring inside loops (revive:defer)
+   - incusd/storage/drivers: Simplify if/else with early return (revive:early-return)
+   - incusd/storage/drivers: Remove extra blank lines at start of block (revive:empty-lines)
+   - incusd/storage/drivers: Omit inferable type from declaration (staticcheck:QF1011)
+   - incusd/storage/drivers: Use strings.Split instead of SplitN (staticcheck:QF1004)
+   - incusd/storage/drivers: Use tagged switch statements (staticcheck:QF1003)
+   - incusd/network/ovs: Remove unused unquote function (unused)
+   - incusd/network/ovs: Use strings.Split instead of SplitN (staticcheck:QF1004)
+   - incusd/network/ovn: Use tagged switch statements (staticcheck:QF1003)
+   - incusd/network/zone: Rename param that shadows state import (revive:import-shadowing)
+   - incusd/network/zone: Add and fix doc comments on exported methods (revive:exported)
+   - incusd/network/acl: Rename locals that shadow imports (revive:import-shadowing)
+   - incusd/network/acl: Use tagged switch on rule.Action (staticcheck:QF1002)
+   - incusd/network/acl: Use tagged switch on rule.Protocol (staticcheck:QF1003)
+   - incusd/network/acl: Merge conditional assignment into declaration (staticcheck:QF1007)
+   - incusd/network/acl: Invert condition to return early (revive:early-return)
+   - incusd/network/acl: Remove blank line at start of switch (revive:empty-lines)
+   - incusd/network: Add and fix doc comments on exported symbols (revive:exported)
+   - incusd/network: Rename locals that shadow imports (revive:import-shadowing)
+   - incusd/network: Remove blank line at start of block (revive:empty-lines)
+   - incusd/network: Remove embedded common field from selectors (staticcheck:QF1008)
+   - incusd/network: Merge conditional assignment into declaration (staticcheck:QF1007)
+   - incusd/network: Lift break condition into loop (staticcheck:QF1006)
+   - incusd/network: Use tagged switch statements (staticcheck:QF1003)
+   - incusd/operations: Add missing doc comments on exported methods (revive:exported)
+   - incusd/operations: Rename param that shadows import (revive:import-shadowing)
+   - incusd/endpoints: Rename locals that shadow import (revive:import-shadowing)
+   - incusd/cluster: Drop redundant client import alias (revive:redundant-import-alias)
+   - incusd/cluster: Add missing doc comments on exported methods (revive:exported)
+   - incusd/cluster: Simplify with early return (revive:early-return)
+   - incusd/cluster: Avoid deferring inside loops and chains (revive:defer)
+   - incusd/cluster: Rename locals that shadow imports (revive:import-shadowing)
+   - incusd/db/query: Add missing doc comments on exported symbols (revive:exported)
+   - incusd/db/query: Rename locals that shadow imports (revive:import-shadowing)
+   - incusd/db/node: Rename locals that shadow imports (revive:import-shadowing)
+   - incusd/db/schema: Check error from db.Close (errcheck)
+   - incusd/db/schema: Rename locals that shadow imports (revive:import-shadowing)
+   - incusd/db/cluster: Remove redundant import alias (revive:redundant-import-alias)
+   - incusd/db/cluster: Rename locals that shadow imports (revive:import-shadowing)
+   - incusd/db/cluster: Check type assertion result (revive:unchecked-type-assertion)
+   - incusd/db/cluster: Use fmt.Fprintf instead of WriteString (staticcheck:QF1012)
+   - incusd/db: Rename locals that shadow imports (revive:import-shadowing)
+   - incusd/db: Apply De Morgan's law to simplify boolean (staticcheck:QF1001)
+   - incusd/db: Rename profileIds parameter to profileIDs (revive:var-naming)
+   - incusd/db: Rename local that redefines builtin max (revive:redefines-builtin-id)
+   - incusd/db: Check type assertion result (revive:unchecked-type-assertion)
+   - incusd/db: Use fmt.Fprintf instead of WriteString (staticcheck:QF1012)
+   - incusd/db: Omit redundant types in var declarations (revive:var-declaration)
+   - incusd/db: Add space after comment delimiter (revive:comment-spacings)
+   - incusd/db: Omit type from strings.Builder declarations (staticcheck:ST1023)
+   - incusd/logging: Use fmt.Fprintf instead of WriteString (staticcheck:QF1012)
+   - incusd/instance/drivers/qmp: Fix doc comment on exported Run method (revive:exported)
+   - incusd/instance/drivers/qmp: Use tagged switch statement (staticcheck:QF1003)
+   - incusd/instance: Return explicit values instead of bare returns (revive:bare-return)
+   - incusd/instance: Use fmt.Fprintf instead of WriteString (staticcheck:QF1012)
+   - incusd/instance: Rename locals that shadow imports (revive:import-shadowing)
+   - incusd/instance/drivers: Remove unused const and function (unused)
+   - incusd/instance/drivers: Remove unnecessary blank line at end of block (whitespace)
+   - incusd/instance/drivers: Omit inferred type from var declaration (revive:var-declaration)
+   - incusd/instance/drivers: Avoid deferring inside loops (revive:defer)
+   - incusd/instance/drivers: Return early to reduce nesting (revive:early-return)
+   - incusd/instance/drivers: Check type assertions (revive:unchecked-type-assertion)
+   - incusd/instance/drivers: Add doc comments on exported methods (revive:exported)
+   - incusd/instance/drivers: Rename locals that shadow imports (revive:import-shadowing)
+   - incusd/instance/drivers: Replace append loop with variadic append (staticcheck:S1011)
+   - incusd/instance/drivers: Use tagged switch statements (staticcheck:QF1003)
+   - incus: Use tagged switch statement (staticcheck:QF1003)
+   - incus: Remove unused functions (unused)
+   - incus/usage: Remove dead assignments to renderedAtoms (staticcheck:SA4006)
+   - incusd/dns: Add doc comment on exported method ServeDNS (revive:exported)
+   - incusd/dns: Rename param that shadows db import (revive:import-shadowing)
+   - incusd/dnsmasq: Use strings.Split instead of SplitN (staticcheck:QF1004)
+   - incusd/dnsmasq/dhcpalloc: Lift break condition into loop (staticcheck:QF1006)
+   - incusd/metrics: Use fmt.Fprintf instead of WriteString (staticcheck:QF1012)
+   - incusd/scriptlet: Use tagged switch statements (staticcheck:QF1003)
+   - incusd/scriptlet/log: Fix doc comment on exported CreateLogger (revive:exported)
+   - incusd/ucred: Check type assertion in GetConnFromContext (revive:unchecked-type-assertion)
+   - incusd/refcount: Omit redundant type in var declaration (revive:var-declaration)
+   - incusd/metadata: Add doc comment on exported var Data (revive:exported)
+   - incusd/firewall/drivers: Remove unused subnetMask function (unused)
+   - incusd/bgp: Remove unused setup method (unused)
+   - incusd/config: Use fmt.Fprintf instead of WriteString (staticcheck:QF1012)
+   - incusd: Fix import grouping (gci)
+   - incusd: End comments with a period (godot)
+   - incusd: Remove unnecessary trailing newline (whitespace)
+   - incusd: Merge conditional assignments into declarations (staticcheck:QF1007)
+   - incusd: Convert byte slice argument to string (staticcheck:QF1010)
+   - incusd: Use fmt.Fprintf instead of Write of Sprintf (staticcheck:QF1012)
+   - incusd: Fix errors.Is argument order (staticcheck:SA1032)
+   - incusd: Remove dead source connection (staticcheck:SA4006)
+   - incusd: Use tagged switch statements (staticcheck:QF1003)
+   - incusd: Fix identifier naming (revive:var-naming)
+   - incusd: Rename locals that shadow imports (revive:import-shadowing)
+   - incusd: Use comma-ok form for type assertions (revive:unchecked-type-assertion)
+   - incusd: Return early to reduce nesting (revive:early-return)
+   - incusd: Drop else after return (revive:indent-error-flow)
+   - incusd: Avoid deferring inside loops (revive:defer)
+   - incusd: Add space after comment delimiter (revive:comment-spacings)
+   - incusd: Rename local that shadows builtin min (revive:redefines-builtin-id)
+   - incusd: Remove empty else block (revive:empty-block)
+   - incusd: Remove blank line at start of block (revive:empty-lines)
+   - incusd: Remove useless break in case clauses (revive:useless-break)
+   - incusd: Annotate intentional os.Exit calls (revive:deep-exit)
+   - incusd: Fix remaining identifier naming (revive:var-naming)
+   - incusd/device/config: Rename copy locals that shadow builtin (revive:redefines-builtin-id)
+   - incusd/response: Add doc comments on exported Render methods (revive:exported)
+   - incusd/response: Avoid defer inside loop in fileResponse.Render (revive:defer)
+   - incusd/response: Use fmt.Fprintf instead of WriteString with Sprintf (staticcheck:QF1012)
+   - incusd/events: Remove embedded Conn field from selectors (staticcheck:QF1008)
+   - incusd/events: Add doc comments on exported methods (revive:exported)
+   - incusd/auth: Rename locals that shadow logger import (revive:import-shadowing)
+   - incusd/auth: Add doc comments on exported symbols (revive:exported)
+   - incusd/auth: Use strings.Split instead of SplitN (staticcheck:QF1004)
+   - incusd/auth/oidc: Check email claim type assertion (revive:unchecked-type-assertion)
+   - incusd/auth/oidc: Add doc comments on exported methods (revive:exported)
+   - incusd/device: Rename locals that shadow imports (revive:import-shadowing)
+   - incusd/device: Avoid defer inside loop in checkAttachedRunningProcesses (revive:defer)
+   - incusd/device: Remove blank line at start of block (revive:empty-lines)
+   - incusd/device: Remove unnecessary blank line in validateConfig (whitespace)
+   - incusd/device: Invert conditions to return early (revive:early-return)
+   - incusd/device: Check container type assertions (revive:unchecked-type-assertion)
+   - incusd/device: Remove embedded StorageVolume field from selector (staticcheck:QF1008)
+   - incusd/device: Apply De Morgan's law to simplify booleans (staticcheck:QF1001)
+   - incusd/device: Use tagged switch statements (staticcheck:QF1003)
+   - internal/linux: Return error last from GetErrno (revive:error-return)
+   - internal/linux: Rename devpts_fd parameter (revive:var-naming)
+   - internal/linux: Drop redundant = nil from err declaration (revive:var-declaration)
+   - internal/linux: Add missing doc comments on exported symbols (revive:exported)
+   - incusd/apparmor: Add doc comment on nullWriteCloser.Close (revive:exported)
+   - incusd/apparmor: Omit inferred type from strings.Builder declarations (staticcheck:ST1023)
+   - incusd/backup: Rename locals that shadow state import (revive:import-shadowing)
+   - incusd/seccomp: Simplify setxattr whiteout check with early return (revive:early-return)
+   - incusd/fsmonitor: Rename local that shadows logger import (revive:import-shadowing)
+   - incusd/fsmonitor/drivers: Rename locals that shadow logger import (revive:import-shadowing)
+   - incusd/fsmonitor/drivers: Add doc comments on exported Name methods (revive:exported)
+   - incusd: Add newline after block before switch case (newline-after-block)
+   - incusd/device: Add newline after block before switch case (newline-after-block)
+   - incusd/instance/drivers: Add newline after block before switch case (newline-after-block)
+   - incusd/storage/drivers: Add newline after block before switch case (newline-after-block)
+   - incus: Add newline after block before switch case (newline-after-block)
+   - incus: Inline reflect.Ptr as reflect.Pointer (govet:inline)
+   - incusd/operations: Inline reflect.Ptr as reflect.Pointer (govet:inline)
+   - incusd: Omit redundant error type from sentinel var declaration (revive:var-declaration)
+   - incusd/cluster: Omit redundant error type from sentinel var declaration (revive:var-declaration)
+   - incusd/dnsmasq/dhcpalloc: Omit redundant error type from sentinel var declaration (revive:var-declaration)
+   - incusd/instance/operationlock: Omit redundant error type from sentinel var declaration (revive:var-declaration)
+   - test/lint: Run full golangci-lint instead of only new changes
+   - api: storage_volumes_rebuild
+   - incusd/storage: Add RebuildCustomVolume to pool backend
+   - shared/api: Add StorageVolumeRebuildPost
+   - incusd/storage: Add storage volume rebuild API endpoint
+   - doc/rest-api: Refresh swagger YAML
+   - client: Add RebuildStoragePoolVolume
+   - incus/storage_volume: Add rebuild command
+   - tests: Add storage volume rebuild test
+   - incusd/network/ovn: Correctly set VLAN on uplink veth
+   - incusd/network/physical: Skip VLAN interface on filtered bridges
+   - incusd: Rename dqlite references to cowsql
+   - global: Use sync.WaitGroup.Go for goroutine management
+   - global: Use maps.Copy instead of manual copy loops
+   - global: Use range-over-int loops
+   - global: Use reflect.TypeFor
+   - global: Use t.Context in tests
+   - incusd: Use unsafe.Add for pointer arithmetic in forkproxy
+   - incusd/instance/drivers: Use the min builtin for memory capping
+   - global: Use strings.Cut instead of strings.Split/SplitN
+   - global: Use strings.CutSuffix instead of HasSuffix/TrimSuffix
+   - global: Use slices.Backward for reverse iteration
+   - shared/api: Drop no-op omitempty on nested struct fields
+   - global: Use strings.Builder for string concatenation in loops
+   - incus/remote: Add support for multiple URLs
+   - incus: Refactor calls to the parser
+   - incus: Remove global mutable state from the parser
+   - incus: Keep track of last working remote
+   - doc: Update command name
+   - incus/storage/s3: Support SigV4 presigned URLs
+   - incus/storage/s3: Support SigV2 presigned URLs
+   - tests: Add storage bucket presigned URL test
+   - client: handle absolute paths for simplestream files
+   - shared/api/url: Add URL fragment setter
+   - incusd/storage: Improve handling of daemon volumes
+   - incusd/db/cluster/entities: Add TypeServer and fix map sorting
+   - incusd/project: Handle server objects
+   - api: api_fragments
+   - incusd/storage: Prevent creating daemon volumes on shared pools
+   - incusd/images: Revert 36f513c
+   - incus/remote: Improve usage
+   - incus/storage/volume: Improve usage
+   - incus/move: Improve usage
+   - incus/image: Improve usage
+   - incus/config: Fix typo in usage
+   - incusd/devices: Cleanup leftover forkproxy on startup
+   - incus/storage_volume: Put big subcommands into their own files
+   - incus/file: Make recursive push apply UID/GID overrides recursively
+   - tests: Switch to recursive chown on file push
+   - api: instance_limits_cpu_topology
+   - shared/validate: Add CPU topology parsing helper
+   - internal/instance: Allow CPU topology syntax for limits.cpu
+   - incusd/instance: Support CPU topology for VM limits.cpu
+   - doc: Document CPU topology support for limits.cpu
+   - doc: Update config
+   - incusd/instance/drivers: Apply standard API object name checks
+   - incusd/device: Encode device names in DevicesPath storage paths
+   - incusd/storage: Fix unsafe access to backup data
+   - incusd/storage: Guard nil ExpiresAt in CreateCustomVolumeFromBackup
+   - incusd/storage: Guard nil fields in createDependentVolumesFromBackup
+   - incusd/storage/s3: Confine multipart uploads with os.Root
+   - internal/instance: Add volatile.last_state.agent
+   - internal/server: fire agent events after checking current state
+   - doc: Update config
+   - tests: Update for new name restrictions
+   - incusd/instance/lxc: Allow unsetting limits.memory.swap without hitting a cgroup error
+   - incusd/instance/drivers: Round memory hotplug size up to block size
+   - gomod: Update dependencies
+   - doc/authorization: Fix markdownlint
+   - shared/tls: Add support for Lego v5
+   - incusd/instance/lxc: Fix environment quoting
+   - incusd/storage/zfs: Refuse refresh only when snapshots have no common base
+   - shared/tls: Detect Lego version/behavior based on help
+   - doc/cloud-init: Clarify VM behavior
+   - github: Remove pre-installed java
+   - incus: Make unset commands accept several keys
+   - server/network: fix comment alignment
+   - server/network: fix scope of node specific network configs
+   - doc: update generated metadata
+   - server/metadata: update generated metadata
+   - internal/server/instance/drivers: Add migration-compatible hv flags with migration.stateful=true
+   - cmd/generate-database/db: Add joinas db tag
+   - cmd/generate-database/lex: Fix pluralizations ending in y
+   - incusd/storage: Fix qcow2 custom volume backups
+   - incusd/instance/qemu: Remove stale migrate.sock before qcow2 export
+   - incusd/response: Abort piped exports that fail mid-stream
+   - incusd/migration: Detect target migration errors
+   - incusd/instance/qemu: Tweak migration fallback for VMs
+   - incusd: Reject migration onto existing instance of different type
+   - incusd/migrate: Bump migration handshake timeouts to 2 minutes
+   - shared/api: Remove legacy logic
+   - incusd/cluster: Remove legacy logic
+   - Update gomod
+   - incusd: Use partial device validation when recovering instances
+   - incusd/network/ovn: Don't require an active chassis when updating tunnels
+   - incusd/network: Clean up stale OVS ports on startup
+   - incusd/cluster: Honor cluster group during evacuation
+   - incusd/cluster: Honor restricted cluster groups during evacuation
+   - incusd/cluster: Improve evacuation and restoration progress reporting
+   - global: Clean latest gofumpt
+   - incusd: Replace gorilla/mux with http.ServeMux
+   - Update go.mod
+   - api: instance_nbd
+   - client: Add GetInstanceNBDConn
+   - incusd/instances: Add NBD API
+   - incusd/storage: Implement all-disks NBD function
+   - incusd/instance/qmp: Add block snapshot transaction and node size helpers
+   - incusd/instance: Implement ConnectNBDAllDisks
+   - incusd/instance/qemu: Use empty NBD export name for single-disk exports
+   - incusd/instance/qemu: Report disk usage on stopped instances
+   - incus/debug: Add NBD command
+   - doc/rest-api: Refresh swagger YAML
+   - incusd/instance/drivers/qmp: Add locking around event handlers
+   - incusd/instance/qemu: Fully cleanup the old monitor
+   - incusd/storage/drivers: Handle sgdisk return codes
+   - incusd/auth/oidc: Refactor cookie setting logic
+   - shared/api: Add Server.Filtered()
+   - incus/info: Add --show-sensitive
+   - incusd/auth/oidc: Set expiration on authentication cookies
+   - incusd/auth/oidc: Clear cookies on terminal refresh failure
+   - shared/logger: Add WarnOnError helper
+   - incusd/instancewriter: Log deferred errors with WarnOnError
+   - incus: Log deferred errors with WarnOnError
+   - incus-agent: Log deferred errors with WarnOnError
+   - internal/incusos: Log deferred errors with WarnOnError
+   - internal/linux: Log deferred errors with WarnOnError
+   - incusd/migration: Log deferred errors with WarnOnError
+   - internal/netutils: Log deferred errors with WarnOnError
+   - internal/rsync: Log deferred errors with WarnOnError
+   - incusd/backup: Log deferred errors with WarnOnError
+   - incusd/cgroup: Log deferred errors with WarnOnError
+   - incusd/cluster: Log deferred errors with WarnOnError
+   - incusd/device: Log deferred errors with WarnOnError
+   - incusd/device/pci: Log deferred errors with WarnOnError
+   - incusd/dnsmasq: Log deferred errors with WarnOnError
+   - incusd/firewall/drivers: Log deferred errors with WarnOnError
+   - incusd/instance/drivers: Log deferred errors with WarnOnError
+   - incusd/network: Log deferred errors with WarnOnError
+   - incusd/network/acl: Log deferred errors with WarnOnError
+   - incusd/response: Log deferred errors with WarnOnError
+   - incusd/seccomp: Log deferred errors with WarnOnError
+   - incusd/storage: Log deferred errors with WarnOnError
+   - incusd/storage/quota: Log deferred errors with WarnOnError
+   - incusd/storage/s3: Log deferred errors with WarnOnError
+   - incusd/storage/s3/local: Log deferred errors with WarnOnError
+   - incusd/util: Log deferred errors with WarnOnError
+   - internal/util: Log deferred errors with WarnOnError
+   - incusd: Log deferred errors with WarnOnError
+   - incusd/storage/drivers: Log deferred errors with WarnOnError
+   - client: Log deferred errors with WarnOnError
+   - incusd/db: Log deferred errors with WarnOnError
+   - incusd/db/cluster: Log deferred errors with WarnOnError
+   - incusd/db/node: Log deferred errors with WarnOnError
+   - incusd/db/query: Log deferred errors with WarnOnError
+   - incusd/db/schema: Log deferred errors with WarnOnError
+   - shared/resources: Log deferred errors with WarnOnError
+   - shared/resources/usbid: Log deferred errors with WarnOnError
+   - shared/idmap: Log deferred errors with WarnOnError
+   - shared/cliconfig: Log deferred errors with WarnOnError
+   - shared/archive: Log deferred errors with WarnOnError
+   - shared/subprocess: Log deferred errors with WarnOnError
+   - shared/simplestreams: Log deferred errors with WarnOnError
+   - shared/util: Log deferred errors with WarnOnError
+   - incus-migrate: Log deferred errors with WarnOnError
+   - incus-benchmark: Log deferred errors with WarnOnError
+   - incus-user: Log deferred errors with WarnOnError
+   - incus-simplestreams: Log deferred errors with WarnOnError
+   - lxc-to-incus: Log deferred errors with WarnOnError
+   - generate-database/file: Log deferred errors with WarnOnError
+   - incusd: Rename forknet logger parameter to avoid shadowing
+   - incusd: Log deferred errors in main_forknet with WarnOnError
+   - github: Update DCO check
+   - incusd/api_internal: Add server-certificate endpoint
+   - incus/admin: Add update-certificate command
+   - i18n: Update translation templates
+   - incusd/device/disk: Use virtiofsd --posix-acl=auto if supported
+   - incus/client: Fix panic when cancelling
+   - incus/remote: Move OIDC and cookie jar on rename
+   - incus/cluster: Document the actions
+   - incusd/console: Read the container console without resetting it
+   - incusd/linux: Add DialUnix helper
+   - incusd/qemu: Handle long run paths for the QMP socket
+   - incusd/qemu: Handle long run paths for the SPICE socket
+   - shared/cliconfig: Remove duplicate file closing
+   - Makefile: Remove pinned incus-os
+   - Update gomod
+   - global: Update for go-yaml/v4 rc5
+   - incus/alias: Add alias add command examples with args and numbered args
+   - doc/incus-alias: Fix italic and ref modifers order to correctly apply both modifiers
+   - Makefile: Fix sphinx build script to prevent issues with terminal colors
+   - doc/incus-alias: Refactor doc to create new use-case section and provide how-to examples
+   - incus/debug: Fix NBD description
+   - client: Add reuse support to GetInstanceNBDConn
+   - incusd/instance/qmp: Add listen path support to NBDServerStart
+   - incusd/instance/qmp: Allow multiple NBD server connections
+   - incusd/instance/qemu: Update NBDServerStart calls
+   - incusd/instance: Add reuse support to ConnectNBDAllDisks
+   - incusd/storage: Add reuse support to GetInstanceAllDisksNBD
+   - incusd/instances: Add NBD reuse parameter
+   - incus/debug: Support multiple NBD client connections
+   - doc/rest-api: Refresh swagger YAML
+   - incus/server/storage/driver/ceph: Shrink images to minimal size after unpacking
+   - doc/incus-cli: Add CLI configuration file reference
+   - Makefile: add incremental spellcheck that skips the sphinx and cli setups
+   - Makefile: Improve target padding in make help
+   - incusd/linux: Add ListenUnix helper
+   - incusd/qemu: Handle long run paths for the migration socket
+   - incusd/qemu: Handle long run paths for the console socket
+   - incusd/qemu: Handle long run paths for the virtiofs socket
+   - incusd/images: Mention images available for other instance types
+   - incusd/device/nic_routed: Add neighbour proxy entries on the on-link interface
+   - incusd/network/ovn: Don't use missing router IP as DNS server
+   - doc: Update preseed description to match with reality
+   - incus/utils_copy: Fix wrong error returned
+   - doc: Ignore criu.org link checking
+   - api: network_bridge_bgp_instances
+   - incusd/network: Add BGP instance advertisement config keys
+   - incusd/device: Advertise individual instance addresses over BGP
+   - doc: Document BGP advertisement of instance addresses
+   - doc: Update config
+   - doc: Add NIC's to wordlist
+   - incusd: Use IsNoneOrEmpty helper
+   - incusd/device: Add configOrVolatile helper
+   - incus/remote: Add set-keepalive subcommand
+   - incus/keepalive: Fix comment typo
+   - doc/remote: Update docs with keepalive configuration via CLI commands
+   - incus/alias: Fix wrong example command typo
+   - api: core_https_allowed_websocket_origin
+   - shared/ws: Validate websocket origin against trusted origins
+   - incusd: Add core.https_allowed_websocket_origin server config key
+   - doc: Update config
+   - incus: close web UI probe response body
+   - ci: authenticate OpenFGA release lookups
+   - storage/zfs: factor out send receive helper
+   - storage/zfs: avoid raw sends for encrypted snapshot copies
+   - tests: cover encrypted ZFS snapshot copies
+   - incus/server/storage/driver/volume: Ensure cached image can grow to needed size and not be restricted by pool size config.
+   - tests: Add more tests for ConfigSizeFromSource
+   - doc: Update AI/LLM policy
+   - doc: Add GPG to wordlist
+   - client: Default to port 443 for raw connections
+   - incusd/util: Fix JWT validation
+   - api: Add storage_btrfs_compression extension
+   - incusd/storage/drivers: Add "btrfs.compression" volume option
+   - doc: Document the "btrfs.compression" volume option
+   - doc: Update config
+   - doc/rest-api: Refresh swagger YAML
+   - incus/server/storage/driver/ceph: Don't return error if image size is larger than cached image size
+   - build(deps): bump actions/checkout from 6 to 7
+   - incusd/instance/lxc: Restrict OCI configuration keys to OCI containers
+   - api: Add oci_network_config extension
+   - internal/instance: Simplify OCI key descriptions
+   - internal/instance: Add OCI DNS configuration keys
+   - incusd/device: Apply OCI static network configuration on NICs
+   - incusd/instance/lxc: Generate OCI container network files
+   - incusd/main_forknet: Handle static interfaces and DNS in forknet dhcp
+   - doc: Update config
+   - incusd/storage/btrfs: Fix daemon dir prefix check
+   - doc/cloud-init: Change YAML spec domain
+   - incus/server/device: Persist NIC host_name before creating interface
+   - incusd/images: Tolerate concurrent image record creation in a cluster
+   - incus/events: Forward info-level log events across the cluster
+   - incus/vm: Select OVMF.amdsev.fd firmware for SEV guests
+   - incus/vm: Skip vmcoreinfo device for SEV guests
+   - incus/console: Ignore not-exist error when removing temporary socket
+   - github: Block LLM/AI attribution in commit messages
+   - incusd: Skip br_netfilter proxy/forward handling on IncusOS
+   - incusd/storage/zfs: Batch snapshot GUID lookups
+   - incusd/endpoints: Fix infinite loop in network error log writer
+   - api: infiniband_sriov_guid
+   - incusd/ip: Add SetVfNodeGUID/SetVfPortGUID for SR-IOV
+   - incusd/device/infiniband: Add configurable port_guid/node_guid for SR-IOV
+   - doc: Update config
+   - doc: Add GUID to wordlist
+   - incusd/storage/lvm: Account for qcow2 overhead in volume sizing
+   - incusd/storage: Add patch to fix existing lvmcluster qcow2 volumes
+   - incusd: Skip NVRAM setup for unified AMD SEV firmware
+   - shared/cliconfig: Use platform-specific config directory
+   - incus: Use platform-specific cache directory
+   - incusd/device/disk: Reject pool property with special sources
+   - incusd/network/bridge: Clarify nat.order has no effect on nftables
+   - incusd/metadata: Update generated metadata
+   - shared/osinfo: Add osinfo package
+   - internal/server/instance/drivers: Use DetermineOS and osinfo.OSType for instance GuestOS value
+   - internal/server/instance/drivers: Update GuestOS usages
+   - internal/server/instance/drivers: Add OS version specific QEMU options
+   - incusd/storage/drivers: Apply nodatacow directly for btrfs.compression=none
+   - incusd/storage/drivers: Allow btrfs.compression as a pool-wide default
+   - test: Cover btrfs.compression nodatacow and pool-wide default
+   - incusd/network: Add GetNeighbourAddresses helper
+   - incusd/device: Add shared instance neighbour scan helper
+   - incusd/firewall: Allow wildcard listen address in proxy NAT
+   - incusd/device: Support dynamic addresses in proxy NAT mode
+   - doc: Update config
+   - doc: Document proxy NAT dynamic addresses
+   - tests: Add proxy NAT wildcard and dynamic address tests
+   - incusd: Rename neighbour to neighbor for US english
+   - incusd: Reject rootfs symlink for instances
+   - incusd/exec: Reject exec-output symlink
+   - incusd/instance: Enforce project restrictions on snapshot restore
+   - api: instance_selinux
+   - internal/server/sys: Extend SELinux context detection
+   - internal/server/selinux: Add SELinux package
+   - shared/validate: Add SELinux validation functions
+   - internal/instance: Add SELinux configuration keys
+   - internal/server/project: Add SELinux config permissions
+   - incusd: Rename forkstart to forklxc and forklimits to forkqemu
+   - incusd: Add SELinux exec context to forkqemu
+   - internal/server/instance/drivers: Add SELinux support
+   - doc: Update config
+   - Update gomod
+   - incusd/instance: Confine template access to instance root
+   - shared/validate: Reject compression algorithm arguments
+   - incusd/images: Validate fingerprint on direct download
+   - incusd/storage: Check source volume access on copy
+   - incusd/instances: Check source instance access on copy
+   - incus/default: Add incus default commands
+   - cmd/incusd: `isolated` on `restricted.containers.privilege` prevents setting `security.idmap.isolated` to `false`
+   - doc: regenerate configurable options index
+   - api: regenerate `/1.0/metadata/configuration` options
+   - incusd/storage: Recreate missing snapshot config subvolume
+   - incusd/storage: Fix storage patches
+   - incus: Fix gofumpt
+   - cmd/incusd: `isolated` on `restricted.containers.privilege` prevents setting `security.privileged` to `true`
+   - doc: regenerate configurable options index
+   - api: regenerate `/1.0/metadata/configuration` options
+   - doc: fix `config set` deprectation warning
+   - incusd/firewall: Fix double Wait in nftParseRuleset
+   - incusd/device: Allow static CIDR address on unmanaged bridge
+   - shared/logger: Add WarnOnErrorExcept helper
+   - incus: Avoid double-close warning on volume/bucket/instance import
+   - incusd/device: Reset VM disk I/O limits on unset
+   - incusd/devices: Allow /32 and /128 for OCI addresses
+   - incusd/operations: Fix nil deref race in Cancel
+   - cmd/generate-database/db: Manually specify uuid package
+   - incus: Avoid double-close warning on export and file pull
+   - doc/incus-cli: reword docs for configuration file path
+   - incusd/device/disk: Use resolved project for Ceph ISO RBD names
+   - incusd: Use constant-time comparison for secrets
+   - incusd: Limit websocket control message size
+   - incusd/device: Use IsAPIName for device name validation
+   - incusd/storage/s3: Pin certificate for local S3 bucket transfers
+   - incusd/db/query: Use hex blob literal in database dumps
+   - incusd/storage: Honor btrfs.compression on instances from optimized images
+   - test: Cover btrfs.compression on instances from optimized images
+   - incusd/storage/s3: Add GetBucketVersioning
+   - incusd/instance/qemu: Handle missing kvm64
+   - client: Only pass device overrides to sources supporting them
+   - incusd/instance/qemu: Serialize CPU pinning data in the CPU topology
+   - incusd/instance/qemu: Re-compute CPU pins on stateful start
+   - incus: Fix remote path handling on Windows
+   - incusd/forksyscall: Fix mknod emulation for relative paths
+   - internal/instance: Mention cgroup2 limitations
+   - doc: Update config
+   - incusd/dev_incus: Fix race in ConnPidMapper access
+   - incusd/forksyscall: Check for path truncation in mknod emulation
+   - i18n: Update translation templates
+   - Makefile: Bump to Go 1.25.11
+   - Update gomod
+  [/details]
+
+  # サポートとアップグレード <!-- Support and upgrade -->
+  <!--
+  The Incus 7.0 branch is supported until June 2031.
+  It's always strongly recommended to keep up and run the latest LTS bugfix release.
+  -->
+  Incus 7.0 ブランチは 2031 年 6 月までサポートされます。
+  常に最新の LTS バグ修正リリースを実行することを強く推奨します。
+
+  # ダウンロード <!-- Downloads -->
+
+   - リリース tarball <!-- Main release tarball -->: [incus-7.0.1.tar.xz](https://linuxcontainers.org/downloads/incus/incus-7.0.1.tar.xz)
+   - GPG シグネチャー <!-- GPG signature -->: [incus-7.0.1.tar.xz.asc](https://linuxcontainers.org/downloads/incus/incus-7.0.1.tar.xz.asc)
