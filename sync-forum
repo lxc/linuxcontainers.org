@@ -1,9 +1,11 @@
 #!/usr/bin/python3
 from bs4 import BeautifulSoup as BS
+import datetime
 import dateutil.parser
 import glob
 import json
 import os
+from urllib.parse import urlencode
 from urllib.request import urlopen, Request
 import ruamel.yaml
 import time
@@ -12,13 +14,17 @@ API_URL = "https://discuss.linuxcontainers.org"
 API_USERNAME = "system"
 API_KEY = os.environ["API_KEY"]
 
+NEWS_CATEGORY = "/c/news/13"
 PROJECTS = ("incus", "lxc", "lxcfs", "distrobuilder")
+SCAN_DAYS = 31
 
 
-def load_json(url):
+def load_json(url, params=None):
     time.sleep(1)
     url = url.split(API_URL)[-1]
     url = "%s/%s.json" % (API_URL, url)
+    if params:
+        url = "%s?%s" % (url, urlencode(params))
 
     headers = {}
     headers["Api-Key"] = API_KEY
@@ -29,93 +35,37 @@ def load_json(url):
     return json.loads(urlopen(req).read().decode())
 
 
-# Update all existing posts
-updated = []
-for project in PROJECTS:
-    for post in glob.glob("content/%s/news/*.yaml" % project):
-        yaml = ruamel.yaml.YAML()
-
-        with open(post, "r") as fd:
-            old_entry = yaml.load(fd)
-
-        if "origin" not in old_entry:
-            continue
-
-        try:
-            dis_topic = load_json(old_entry["origin"])
-            dis_post = load_json(
-                "/posts/%s" % dis_topic["post_stream"]["posts"][0]["id"]
-            )
-        except Exception:
-            print("Failed to load: %s" % old_entry["origin"])
-            continue
-
-        entry = yaml.load("""
-title: foo
-date: bar
-origin: baz
-content: |-
-  blah""")
-        entry["content"] = dis_post["raw"]
-
-        soup = BS(dis_post["cooked"], features="html.parser")
-        for imgtag in soup.find_all("img"):
-            try:
-                img_hash = imgtag["data-base62-sha1"]
-                img_src = imgtag["src"]
-                entry["content"] = entry["content"].replace(
-                    "upload://%s.png" % img_hash, img_src
-                )
-                entry["content"] = entry["content"].replace(
-                    "upload://%s.jpeg" % img_hash, img_src
-                )
-            except KeyError:
-                pass
-
-        entry["title"] = dis_topic["title"]
-        date = dateutil.parser.parse(dis_topic["created_at"])
-        entry["date"] = date.strftime("%Y/%m/%d %H:%m")
-        entry["origin"] = "%s/t/%s/%s" % (API_URL, dis_topic["slug"], dis_topic["id"])
-
-        if entry != old_entry:
-            with open(post, "w+") as fd:
-                yaml.dump(entry, fd)
-            print("%s => updated" % dis_topic["title"])
+def topic_tags(topic):
+    # Newer Discourse returns tag objects rather than plain names.
+    tags = []
+    for tag in topic.get("tags", []):
+        if isinstance(tag, dict):
+            tags.append(tag["name"])
         else:
-            print("%s => skipping (up to date)" % dis_topic["title"])
+            tags.append(tag)
 
-        updated.append(dis_topic["id"])
+    return tags
 
-# Import new posts
-news = load_json("/c/news")
-for topic in news["topic_list"]["topics"]:
-    if topic["id"] in updated:
-        print("%s => skipping (already exists)" % topic["title"])
-        continue
 
-    try:
-        dis_topic = load_json("/t/%s" % topic["id"])
-        dis_post = load_json("/posts/%s" % dis_topic["post_stream"]["posts"][0]["id"])
-    except Exception:
-        print("Failed to load: %s" % topic["id"])
-        continue
-
-    if "release" not in dis_topic["tags"]:
-        continue
+def topic_project(topic):
+    tags = topic_tags(topic)
+    if "release" not in tags:
+        return None
 
     for project in PROJECTS:
-        if project not in dis_topic["tags"]:
-            continue
+        if project in tags:
+            return project
 
-        path = "content/%s/news/%s.yaml" % (project, dis_topic["slug"])
-        break
-    else:
-        print(
-            "%s => skipping (unknown project: %s)"
-            % (dis_topic["title"], dis_topic["tags"])
-        )
-        continue
+    return None
 
+
+def load_topic(url):
+    dis_topic = load_json(url)
+    dis_post = load_json("/posts/%s" % dis_topic["post_stream"]["posts"][0]["id"])
+    return dis_topic, dis_post
+
+
+def build_entry(dis_topic, dis_post):
     yaml = ruamel.yaml.YAML()
     entry = yaml.load("""
 title: foo
@@ -141,10 +91,86 @@ content: |-
 
     entry["title"] = dis_topic["title"]
     date = dateutil.parser.parse(dis_topic["created_at"])
-    entry["date"] = date.strftime("%Y/%m/%d %H:%m")
+    entry["date"] = date.strftime("%Y/%m/%d %H:%M")
     entry["origin"] = "%s/t/%s/%s" % (API_URL, dis_topic["slug"], dis_topic["id"])
 
+    return entry
+
+
+def write_entry(path, entry):
+    yaml = ruamel.yaml.YAML()
     with open(path, "w+") as fd:
         yaml.dump(entry, fd)
 
-    print("%s => imported" % dis_topic["title"])
+
+# Update all existing posts
+updated = []
+for project in PROJECTS:
+    for post in glob.glob("content/%s/news/*.yaml" % project):
+        yaml = ruamel.yaml.YAML()
+
+        with open(post, "r") as fd:
+            old_entry = yaml.load(fd)
+
+        if "origin" not in old_entry:
+            continue
+
+        try:
+            dis_topic, dis_post = load_topic(old_entry["origin"])
+        except Exception:
+            print("Failed to load: %s" % old_entry["origin"])
+            continue
+
+        entry = build_entry(dis_topic, dis_post)
+        if entry != old_entry:
+            write_entry(post, entry)
+            print("%s => updated" % dis_topic["title"])
+        else:
+            print("%s => skipping (up to date)" % dis_topic["title"])
+
+        updated.append(dis_topic["id"])
+
+# Import new posts from the past month, newest first
+cutoff = datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(
+    days=SCAN_DAYS
+)
+page = 0
+done = False
+while not done:
+    params = {"order": "created", "page": page}
+    news = load_json("%s/l/latest" % NEWS_CATEGORY, params)
+    topics = news["topic_list"]["topics"]
+    if not topics:
+        break
+
+    for topic in topics:
+        if dateutil.parser.parse(topic["created_at"]) < cutoff:
+            done = True
+            break
+
+        if topic["id"] in updated:
+            print("%s => skipping (already exists)" % topic["title"])
+            continue
+
+        project = topic_project(topic)
+        if not project:
+            print(
+                "%s => skipping (not a project release: %s)"
+                % (topic["title"], topic_tags(topic))
+            )
+            continue
+
+        try:
+            dis_topic, dis_post = load_topic("/t/%s" % topic["id"])
+        except Exception:
+            print("Failed to load: %s" % topic["id"])
+            continue
+
+        path = "content/%s/news/%s.yaml" % (project, dis_topic["slug"])
+        write_entry(path, build_entry(dis_topic, dis_post))
+        print("%s => imported" % dis_topic["title"])
+
+    if not news["topic_list"].get("more_topics_url"):
+        break
+
+    page += 1
