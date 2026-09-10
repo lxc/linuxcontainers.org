@@ -1,6 +1,7 @@
 title: LXC/LXD/LXCFS 2.0 - End of Life announcement
-date: 2021/06/14 21:06
-origin: https://discuss.linuxcontainers.org/t/lxc-lxd-lxcfs-2-0-end-of-life-announcement/11333
+date: 2021/06/14 21:00
+origin: 
+  https://discuss.linuxcontainers.org/t/lxc-lxd-lxcfs-2-0-end-of-life-announcement/11333
 content: |-
   # Introduction
   The 2.0 LTS branch has reached its end of life.

@@ -1,6 +1,7 @@
 title: LXC/LXD/LXCFS 3.0 - End of Life announcement
-date: 2023/07/04 15:07
-origin: https://discuss.linuxcontainers.org/t/lxc-lxd-lxcfs-3-0-end-of-life-announcement/17600
+date: 2023/07/04 15:34
+origin: 
+  https://discuss.linuxcontainers.org/t/lxc-lxd-lxcfs-3-0-end-of-life-announcement/17600
 content: |-
   # Introduction
   The 3.0 LTS branch has reached its end of life.
