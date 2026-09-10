@@ -1,0 +1,986 @@
+title: Incus 7.4 has been released
+date: 2026/08/28 02:11
+origin: https://discuss.linuxcontainers.org/t/incus-7-4-has-been-released/27169
+content: |-
+  The Incus team is pleased to announce the release of Incus 7.4!
+
+  Another pretty busy month for us as we clear a lot of our Github backlog, fix quite a few longstanding bugs and land a good mix of new features too!
+
+  [![image|690x301](https://discuss.linuxcontainers.org/uploads/default/original/2X/3/3d4f14932cb45054944b17c3fd447c786b67ca32.png)](https://linuxcontainers.org/incus/try-it/)
+
+  As usual, you can try Incus for yourself online: [Linux Containers - Incus - Try it online](https://linuxcontainers.org/incus/try-it/)
+
+  # Security fixes
+
+  This release fixes 2 security issues:
+
+  - [CVE-2026-81500](https://github.com/lxc/incus/security/advisories/GHSA-9pqw-c7m4-xvg7) (medium) - Client-side path traversal when exporting an image from a malicious server
+  - [CVE-2026-81501](https://github.com/lxc/incus/security/advisories/GHSA-c6wx-8679-hpr9) (medium) - Private image import from another project by a restricted client
+
+  # New features
+  ## UEFI Secure Boot key management
+  Following the introduction of NVRAM access in Incus 7.3, this release adds a full set of tools to manage the UEFI Secure Boot databases of virtual machines.
+
+  A new `incus low-level secureboot` command allows listing, adding, removing, exporting and importing Secure Boot database entries.
+
+      stgraber@vorash:~$ incus low-level secureboot list v1 db
+      ┌──────┬───────────────────────┬──────────────┬───────────────────────────────────────┐
+      │ TYPE │    OWNER GUID NAME    │ FINGERPRINT  │                SUBJECT                │
+      ├──────┼───────────────────────┼──────────────┼───────────────────────────────────────┤
+      │ x509 │ MICROSOFT_VENDOR_GUID │ 48e99b991f57 │ Microsoft Corporation UEFI CA 2011    │
+      │      │                       ├──────────────┼───────────────────────────────────────┤
+      │      │                       │ 076f1fea90ac │ Windows UEFI CA 2023                  │
+      │      │                       ├──────────────┼───────────────────────────────────────┤
+      │      │                       │ e5be3e64c6e6 │ Microsoft Option ROM UEFI CA 2023     │
+      │      │                       ├──────────────┼───────────────────────────────────────┤
+      │      │                       │ e8e95f0733a5 │ Microsoft Windows Production PCA 2011 │
+      │      │                       ├──────────────┼───────────────────────────────────────┤
+      │      │                       │ f6124e34125b │ Microsoft UEFI CA 2023                │
+      └──────┴───────────────────────┴──────────────┴───────────────────────────────────────┘
+
+  For those wanting to fully control the initial state of the NVRAM, a new set of `initial.*` instance configuration keys are also available, allowing for the databases to be populated at instance creation time, ideal for us with profiles.
+
+  - `initial.secureboot.pk`, `initial.secureboot.kek`, `initial.secureboot.db`, `initial.secureboot.dbx`, `initial.secureboot.dbt` and `initial.secureboot.mok` to enroll Secure Boot database entries
+  - `initial.nvram.<GUID>.<name>` and `initial.nvram-binary.<GUID>.<name>` to set other arbitrary NVRAM entries
+
+  Documentation: https://linuxcontainers.org/incus/docs/main/reference/instance_options/
+
+  ## Near-live migration of containers
+  Live migration of containers through CRIU has always been somewhat fragile as it depends on the exact workload running inside of the container being compatible with CRIU.
+
+  Incus 7.4 introduces an alternative for containers on local storage, near-live migration.
+
+  Rather than transferring the memory state, the container's filesystem is transferred to the target server through a series of incremental snapshots while the container keeps running. Only the last incremental transfer requires the container to be stopped, after which it's started back up on the target server.
+
+  This isn't a live migration as the container does get restarted, but the downtime is limited to that final transfer, which is usually very quick and allows for very large containers to be moved with very limited downtime.
+
+  This is available through the new `--refresh` flag of `incus move`, both when moving between cluster members and when moving between remote servers:
+
+      stgraber@vorash:~$ incus move c1 --target incus02 --stateless --refresh
+
+  or
+
+      stgraber@vorash:~$ incus move c1 remote-server:c1 --stateless --refresh
+
+  A matching `refresh-migrate` value was added to the `cluster.evacuate` instance configuration key making it possible to enable this behavior during cluster evacuations.
+
+  Note that this is only supported on ZFS or btrfs and only for containers as other storage drivers don't have an efficient snapshot transfer mechanism for remote transfers.
+
+  Documentation: https://linuxcontainers.org/incus/docs/main/howto/move_instances/
+
+  ## One-time boot override for virtual machines
+  The `incus start` command gained a new `--override-boot` flag allowing for picking what a VM should be booting from next.
+
+  It can be given a specific boot entry, or if left empty, will show an interactive list of the boot entries present in the NVRAM to pick from.
+
+      stgraber@vorash:~$ incus start v1 --override-boot
+      ┌────┬────────────────────────────────┬────────────────────────────────────────────────────────────────────────────────────────┐
+      │ ID │          DESCRIPTION           │                                          PATH                                          │
+      ├────┼────────────────────────────────┼────────────────────────────────────────────────────────────────────────────────────────┤
+      │ 0  │ BootManagerMenuApp             │ Fv(64074afe-340a-4be6-94ba-91b5b4d0f71e)/FvFile(eec25bdc-67f2-4d95-b1d5-f81b2039d11d)  │
+      ├────┼────────────────────────────────┼────────────────────────────────────────────────────────────────────────────────────────┤
+      │ 1  │ EFI Firmware Setup             │ Fv(64074afe-340a-4be6-94ba-91b5b4d0f71e)/FvFile(462caa21-7614-4503-836e-8ab6f4662331)  │
+      ├────┼────────────────────────────────┼────────────────────────────────────────────────────────────────────────────────────────┤
+      │ 2  │ UEFI QEMU QEMU HARDDISK        │ PciRoot(0x0)/Pci(0x1,0x1)/Pci(0x0,0x0)/Scsi(0x0,0x1)                                   │
+      ├────┼────────────────────────────────┼────────────────────────────────────────────────────────────────────────────────────────┤
+      │ 3  │ UEFI PXEv4 (MAC:10666AA0CED7)  │ PciRoot(0x0)/Pci(0x1,0x4)/Pci(0x0,0x0)/MAC(10666aa0ced7,0x1)/IPv4(0.0.0.0,0x0)         │
+      ├────┼────────────────────────────────┼────────────────────────────────────────────────────────────────────────────────────────┤
+      │ 4  │ UEFI PXEv6 (MAC:10666AA0CED7)  │ PciRoot(0x0)/Pci(0x1,0x4)/Pci(0x0,0x0)/MAC(10666aa0ced7,0x1)/IPv6(::,0x0,Static)       │
+      ├────┼────────────────────────────────┼────────────────────────────────────────────────────────────────────────────────────────┤
+      │ 5  │ UEFI HTTPv4 (MAC:10666AA0CED7) │ PciRoot(0x0)/Pci(0x1,0x4)/Pci(0x0,0x0)/MAC(10666aa0ced7,0x1)/IPv4(0.0.0.0,0x0)/Uri()   │
+      ├────┼────────────────────────────────┼────────────────────────────────────────────────────────────────────────────────────────┤
+      │ 6  │ UEFI HTTPv6 (MAC:10666AA0CED7) │ PciRoot(0x0)/Pci(0x1,0x4)/Pci(0x0,0x0)/MAC(10666aa0ced7,0x1)/IPv6(::,0x0,Static)/Uri() │
+      └────┴────────────────────────────────┴────────────────────────────────────────────────────────────────────────────────────────┘
+      Select next boot entry: 1
+
+  ## Sharing networks with restricted projects
+  Projects with `features.networks` enabled can now be granted access to networks from the `default` project through the `restricted.networks.access` configuration key.
+
+  The listed networks get shared into the project, appearing in `incus network list` and being usable by instances of the project, while the project remains free to create its own OVN networks alongside. This makes it possible to offer a common bridge or physical uplink to a restricted project without giving up on per-project networking.
+
+  Documentation: https://linuxcontainers.org/incus/docs/main/reference/projects/
+
+  ## DNS NOTIFY support for network zones
+  The built-in DNS server used for network zones now sends DNS NOTIFY messages to all configured peers whenever the content of a zone changes.
+
+  This lets secondary DNS servers refresh the zone immediately rather than having to wait for the refresh interval. The regular refresh interval was therefore bumped up to 15 minutes.
+
+  Documentation: https://linuxcontainers.org/incus/docs/main/howto/network_zones/
+
+  ## New table rendering in the CLI
+  We've tweaked the rendering of the lists in the CLI, offering a more polished and slightly more compact look.
+
+      stgraber@vorash:~$ incus list
+      ┌─────────────┬─────────┬─────────────────────────┬──────────────────────────────────────────────────┬─────────────────┬───────────┐
+      │    NAME     │  STATE  │          IPV4           │                       IPV6                       │      TYPE       │ SNAPSHOTS │
+      ├─────────────┼─────────┼─────────────────────────┼──────────────────────────────────────────────────┼─────────────────┼───────────┤
+      │ caddy-test  │ STOPPED │                         │                                                  │ CONTAINER (APP) │ 0         │
+      ├─────────────┼─────────┼─────────────────────────┼──────────────────────────────────────────────────┼─────────────────┼───────────┤
+      │ dev-os      │ STOPPED │                         │                                                  │ VIRTUAL-MACHINE │ 1         │
+      ├─────────────┼─────────┼─────────────────────────┼──────────────────────────────────────────────────┼─────────────────┼───────────┤
+      │ isolated-oc │ STOPPED │                         │                                                  │ VIRTUAL-MACHINE │ 0         │
+      ├─────────────┼─────────┼─────────────────────────┼──────────────────────────────────────────────────┼─────────────────┼───────────┤
+      │ rhel10      │ RUNNING │ 10.10.10.225 (eth0)     │ 2602:fc62:ef:1010:1266:6aff:fe69:dd25 (eth0)     │ CONTAINER (APP) │ 0         │
+      ├─────────────┼─────────┼─────────────────────────┼──────────────────────────────────────────────────┼─────────────────┼───────────┤
+      │ rl9         │ RUNNING │ 10.10.10.60 (enp5s0)    │ 2602:fc62:ef:1010:fac2:13b0:9ad7:918e (enp5s0)   │ VIRTUAL-MACHINE │ 0         │
+      ├─────────────┼─────────┼─────────────────────────┼──────────────────────────────────────────────────┼─────────────────┼───────────┤
+      │ test        │ RUNNING │ 10.226.131.1 (incusbr0) │ fd42:10b9:5a70:b459::1 (incusbr0)                │ VIRTUAL-MACHINE │ 0         │
+      │             │         │ 10.10.10.73 (_venp5s0)  │ 2602:fc62:ef:1010:1266:6aff:fe11:9cfd (_venp5s0) │                 │           │
+      ├─────────────┼─────────┼─────────────────────────┼──────────────────────────────────────────────────┼─────────────────┼───────────┤
+      │ u24         │ RUNNING │ 10.10.10.66 (enp5s0)    │ 2602:fc62:ef:1010:1266:6aff:fe22:9e8 (enp5s0)    │ VIRTUAL-MACHINE │ 0         │
+      ├─────────────┼─────────┼─────────────────────────┼──────────────────────────────────────────────────┼─────────────────┼───────────┤
+      │ v1          │ RUNNING │ 10.76.140.1 (incusbr0)  │ fd42:75ef:6c01:accd::1 (incusbr0)                │ VIRTUAL-MACHINE │ 0         │
+      │             │         │ 10.10.10.69 (enp5s0)    │ 2602:fc62:ef:1010:1266:6aff:fe17:7e7f (enp5s0)   │                 │           │
+      └─────────────┴─────────┴─────────────────────────┴──────────────────────────────────────────────────┴─────────────────┴───────────┘
+
+  ## `librbd` backend for Ceph RBD
+  The `ceph` storage driver gained a `ceph.rbd.backend` configuration key.
+
+  When set to `librbd`, volumes are accessed through `librbd` rather than through the RBD kernel driver (`krbd`)
+
+  This allows using RBD features which aren't supported by the kernel driver and can help in environments where the krbd faces stability issues.
+
+  Documentation: https://linuxcontainers.org/incus/docs/main/reference/storage_ceph/
+
+  ## Recovery of shared storage pools in clusters
+  `incus admin recover` can now be used to recover shared storage pools on clustered servers, making disaster recovery possible for clusters that lost their database.
+
+  It's assumed that the exact same configuration is used on all servers within the cluster and the server processing the request will be the one initially owning everything that's imported.
+
+  Documentation: https://linuxcontainers.org/incus/docs/main/howto/disaster_recovery/
+
+  ## Remote-specific client certificates
+  `incus remote add` gained `--tls-cert`, `--tls-key` and `--tls-p12` flags making it easy to load a remote-specific client certificate.
+
+  This is useful when working in an environment where you're not just provided with the address to a server or a trust token but instead are provided with a full set of server-generated credentials.
+
+  One such example would be a corporate environment with a centrally managed CA.
+  Another example would be when downloading IncusOS and opting to have our download site generate a client certificate for you.
+
+      stgraber@vorash:~$ incus remote add incus-os https://10.10.10.100 --tls-p12 ~/Downloads/client.pfx 
+      Password for /home/stgraber/Downloads/client.pfx: 
+
+  ## Raw API requests with custom headers and data files
+  `incus query` now allows for custom HTTP headers to be set through the `-H` flag.
+
+  It's also now possible to pass in raw binary data using `incus query` with the `--data-file` option.
+
+  This makes it possible to use the raw API for endpoints which rely on headers or binary payloads, such as the instance file API.
+
+      stgraber@vorash:~$ incus query -X POST --data-file ./f.txt -H "X-Incus-type: file" -H "X-Incus-mode: 0600" /1.0/instances/c1/files?path=/root/f.txt
+
+  ## NVRAM access from QEMU scriptlets
+  The QEMU scriptlet can now inspect and modify the NVRAM through a number of new functions:
+
+  - `get_nvram_var`
+  - `has_nvram_var`
+  - `set_nvram_var`
+  - `unset_nvram_var`
+  - `get_raw_nvram_var`
+  - `set_raw_nvram_var`
+  - `list_nvram_vars`
+
+  Documentation: https://linuxcontainers.org/incus/docs/main/reference/instance_options/#qemu-scriptlet
+
+  ## OVN multicast configuration
+  OVN networks gained two new configuration keys, `bridge.multicast_snooping` and `bridge.multicast_relay`.
+
+  The former controls IGMP/MLD snooping on the virtual switch, only delivering multicast traffic to the ports which subscribed to the group, the latter allows relaying multicast traffic through the network's logical router.
+
+  Documentation: https://linuxcontainers.org/incus/docs/main/reference/network_ovn/
+
+  ## Control of IPv6 router advertisements
+  A new `ipv6.ra` configuration key is available on both `bridge` and `ovn` networks, controlling whether IPv6 router advertisements are sent on the network.
+
+  ## Burst I/O limits for disk devices
+  `disk` devices attached to VMs get new `limits.read.burst`, `limits.write.burst` and `limits.max.burst` keys that take the same syntax as the regular limits (byte/s and/or IOPS) and define the rate that the device may reach while bursting.
+
+  The matching `limits.read.burst.length`, `limits.write.burst.length` and `limits.max.burst.length` keys define how long a burst may last, defaulting to one second.
+
+  Documentation: https://linuxcontainers.org/incus/docs/main/reference/devices_disk/
+
+  ## Burst I/O limits for network devices
+  `nic` devices now get new `limits.ingress.bucket`, `limits.egress.bucket` and `limits.max.bucket` keys to define the amount of data (in bit) which may be sent in excess of the sustained limit, with `bridged`, `p2p` and `routed` NICs also taking `limits.ingress.burst`, `limits.egress.burst` and `limits.max.burst` to control the rate at which the bucket may be spent.
+
+  For `ovn` NICs, only the bucket keys are supported.
+
+  ## NIC queuing disciplines
+  `bridged`, `p2p` and `routed` NICs gained a `queue.discipline` configuration key, selecting the queuing discipline used on the host side of the NIC.
+
+  For virtual machines, the host side interface being a multi-queue TAP device, `queue.discipline.attach` controls whether the queuing discipline is attached to each transmit queue (`queue`) or to the interface root (`root`).
+
+  Documentation: https://linuxcontainers.org/incus/docs/main/reference/devices_nic/
+
+  ## Image property columns
+  `incus image list` now supports `properties:KEY` custom columns, showing the value of any image property directly in the listing.
+
+      stgraber@vorash:~$ incus image list images: debian/13 --columns lfpd,properties:os,properties:release,properties:variant
+      ┌──────────────────────────────────┬──────────────┬────────┬────────────────────────────────────────────────┬────────┬─────────┬─────────┐
+      │              ALIAS               │ FINGERPRINT  │ PUBLIC │                  DESCRIPTION                   │   OS   │ RELEASE │ VARIANT │
+      ├──────────────────────────────────┼──────────────┼────────┼────────────────────────────────────────────────┼────────┼─────────┼─────────┤
+      │ debian/13 (7 more)               │ 065c3e644af0 │ yes    │ Debian trixie amd64 (20260827_05:24)           │ Debian │ trixie  │ default │
+      │                                  ├──────────────┼────────┼────────────────────────────────────────────────┼────────┼─────────┼─────────┤
+      │                                  │ b8a6f9f60d67 │ yes    │ Debian trixie amd64 (20260827_05:24)           │ Debian │ trixie  │ default │
+      ├──────────────────────────────────┼──────────────┼────────┼────────────────────────────────────────────────┼────────┼─────────┼─────────┤
+      │ debian/13/arm64 (3 more)         │ 4189835984b2 │ yes    │ Debian trixie arm64 (20260827_05:24)           │ Debian │ trixie  │ default │
+      │                                  ├──────────────┼────────┼────────────────────────────────────────────────┼────────┼─────────┼─────────┤
+      │                                  │ e08e7964a29a │ yes    │ Debian trixie arm64 (20260827_05:24)           │ Debian │ trixie  │ default │
+      └──────────────────────────────────┴──────────────┴────────┴────────────────────────────────────────────────┴────────┴─────────┴─────────┘
+
+  ## Image locations in clusters
+  Images in a cluster now report a `locations` field with a list of all servers in the cluster which are holding a copy of that particular image.
+
+  ## Instance start protection
+  A new `security.protection.start` instance configuration key, when set to `true`, prevents the instance from being started.
+
+  This is quite useful with template instances or decomissioned/backup environments.
+
+      stgraber@vorash:~$ incus config set c1 security.protection.start=true
+      stgraber@vorash:~$ incus start c1
+      Error: Instance is protected against being started
+
+  ## Ceph Object endpoint certificate
+  The `cephobject` storage driver's `cephobject.radosgw.endpoint_cert_file` configuration key has been replaced by `cephobject.radosgw.endpoint_cert`.
+
+  Incus generally tries to avoid referring to local files in configuration given the difficultly in keeping that in sync across multiple servers in a cluster.
+
+  Documentation: https://linuxcontainers.org/incus/docs/main/reference/storage_cephobject/
+
+  ## Updated minimal requirements
+  With the release of Go 1.27, Incus has now bumped its minimum Go version to 1.26.
+
+  Additionally, recent improvements to our OVN support has also made us bump the minimal OVS to 3.3.0 and OVN to 24.03.0.
+
+  # Complete changelog
+
+  Here is a complete list of all changes in this release:
+
+  [details="Full commit list"]
+   - incus/low-level: Fix naming inconsistency
+   - i18n: Update translation templates
+   - shared/api: Hide additional sensitive config keys
+   - incusd/instance/qmp: Bump query-migrate timeout
+   - incusd/db: Have NetworkNodeConfigs only consider the requested network
+   - incusd/network/ovn: Skip empty transactions in SetChassisGroupPriority
+   - generate-database: Fix GetMany generation for entities without filters
+   - docs: Clarify the sentence about Incus owning the ZFS pool/dataset
+   - incusd/daemon: Drop else branches in project expansion
+   - incusd/bgp: Resolve neighbor address for unnumbered peers
+   - incus/remote: Restrict proxy /1.0 cache to GET and invalidate on changes
+   - incusd/endpoints: Fix proxy protocol handling
+   - incusd/storage: Unmount leftover mounts in CleanupInstancePaths
+   - incusd/device: Check interface isn't in use by host before passthrough
+   - incusd/instance/lxc: Fix mount options of OCI /run tmpfs
+   - incusd/instance/lxc: Skip OCI /run tmpfs when image populates /run
+   - incusd/cluster: Stop instances in place when evacuation has no target
+   - api: instance_protection_start
+   - internal/instance: Add security.protection.start
+   - incusd/instance: Add support for security.protection.start
+   - doc: Update config
+   - incusd/instance: Clarify protection errors
+   - incusd/forknet: Fix concurrent DHCP resolv.conf handling
+   - incusd/instance: Update oci.dns.* descriptions
+   - doc: Update config
+   - incusd/instance/lxc: Enable edns0 in OCI resolv.conf
+   - incusd/forknet: Enable edns0 in resolv.conf
+   - incus: Add support for client-side near-live migration
+   - incus: Add refresh flag to move
+   - incusd/instance/drivers: Prevent migration of dependent disk during final sync
+   - i18n: Update translation templates
+   - shared/uefi: Various device path fixes
+   - api: instance_nvram_bulk_update
+   - client: Add NVRAM bulk update
+   - incusd/instances: Add NVRAM bulk update
+   - doc/rest-api: Refresh swagger YAML
+   - incus/low-level: Accept multiple arguments for nvram set and unset
+   - client: use a copy of ProtocolIncus for WithContext
+   - incus/low-level: Allow unsetting nvram with empty set value
+   - i18n: Update translation templates
+   - client: Preserve tempPath in UseProject and UseTarget
+   - incusd/network/ovn: Replace stale SNAT rule on external address change
+   - incusd/device/nic_ovn: Allow live update of ipv4/ipv6.address.external
+   - incusd/db: Add generated network, network_config and network_node entities
+   - incusd/db: Add GetCreatedNetworksInfo
+   - incusd/network: Add LoadAllCreated
+   - incusd/network: Reduce database queries in OVN network startup
+   - incusd/networks: Reduce database queries during network startup
+   - incusd: Use cached server name for warning operations
+   - incusd/cluster: Add ConnectIfBucketIsRemote
+   - incusd: Add forwardedResponseIfBucketIsRemote
+   - incusd: Forward storage bucket requests to the cluster member holding the bucket
+   - doc: Document storage bucket handling in clusters
+   - internal/migration: Don't double close websocket writer
+   - incusd/instance/qmp: Ignore timeouts during migration
+   - incusd/network/ovn: Don't replace DNAT rules sharing a logical IP
+   - incusd/network/ovn: Use tag_request on nested switch ports
+   - tests: Add OVN test suite
+   - tests: Register OVN tests
+   - github: Add OVN tests job
+   - doc/requirements: Bump minimum OVS/OVN versions
+   - Makefile: Bump minimum OVS/OVN versions
+   - internal/server/network: Update generated OVSDB schemas
+   - incusd/network/ovn: Add logical switch port ARP proxy helpers
+   - incusd/network/ovn: Use ARP proxy for l2proxy uplink ingress
+   - incusd/network/ovn: Add GetLogicalRouterNATs
+   - incusd/patches: Convert OVN l2proxy NAT rules to ARP proxy
+   - tests: Convert OVN l2proxy NAT checks to ARP proxy
+   - Translated using Weblate (German)
+   - Translated using Weblate (German)
+   - Translated using Weblate (German)
+   - Translated using Weblate (German)
+   - Translated using Weblate (German)
+   - Translated using Weblate (Spanish)
+   - Translated using Weblate (Spanish)
+   - Translated using Weblate (Spanish)
+   - Translated using Weblate (French)
+   - Translated using Weblate (French)
+   - Translated using Weblate (French)
+   - Translated using Weblate (French)
+   - Translated using Weblate (French)
+   - Translated using Weblate (French)
+   - Translated using Weblate (French)
+   - Translated using Weblate (French)
+   - Translated using Weblate (French)
+   - Translated using Weblate (Italian)
+   - Translated using Weblate (Italian)
+   - Translated using Weblate (Japanese)
+   - Translated using Weblate (Japanese)
+   - Translated using Weblate (Japanese)
+   - Translated using Weblate (Japanese)
+   - Translated using Weblate (Dutch)
+   - Translated using Weblate (Dutch)
+   - Translated using Weblate (Portuguese (Brazil))
+   - Translated using Weblate (Portuguese (Brazil))
+   - Translated using Weblate (Portuguese (Brazil))
+   - Translated using Weblate (Russian)
+   - Translated using Weblate (Russian)
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - Translated using Weblate (Portuguese)
+   - Translated using Weblate (Portuguese)
+   - Translated using Weblate (Portuguese)
+   - Translated using Weblate (Norwegian Bokmål)
+   - Translated using Weblate (Norwegian Bokmål)
+   - Translated using Weblate (Indonesian)
+   - Translated using Weblate (Indonesian)
+   - Translated using Weblate (Indonesian)
+   - Translated using Weblate (Chinese (Traditional Han script))
+   - Translated using Weblate (Chinese (Traditional Han script))
+   - Translated using Weblate (Tamil)
+   - Translated using Weblate (Swedish)
+   - Translated using Weblate (Swedish)
+   - Translated using Weblate (Swedish)
+   - Translated using Weblate (Greek)
+   - Translated using Weblate (Georgian)
+   - Translated using Weblate (Georgian)
+   - client: Handle unmanaged networks in preseed
+   - incusd/storage/lvm: Wipe source device rather than VG name
+   - incusd: Add instanceShutdownOrForceStop
+   - incusd: Allow cluster-internal instance changes on evacuated members
+   - shared/api: Add 'Refresh' to InstancePost
+   - incus/move: Pass Refresh to InstancePost
+   - incusd: Add support for near-live migration
+   - incusd: Add support for 'refresh-migrate' action in evacuation path
+   - internal/instance: Add 'refresh-migrate' option to 'cluster.evacuate'
+   - tests: Add tests for near-live migration
+   - doc: Update config
+   - api: instance_refresh_migration
+   - doc/rest-api: Refresh swagger YAML
+   - i18n: Update translation templates
+   - client: Detect dead event connections
+   - incusd/events: Deliver events in order
+   - incusd/projects: Send project-updated after the update
+   - client: Add EventListener.SetOrdered
+   - doc: Document event ordering
+   - client: Fix Disconnect not disconnecting
+   - incusd/storage/lvm: Detect block type in ListVolumes
+   - incusd/storage: Tolerate missing snapshot record on delete
+   - incusd/storage: Repair snapshot records on refresh
+   - incus/admin_sql: Fix integer rendering
+   - api: image_locations
+   - shared/api: Add Locations to Image
+   - incusd/db/images: Fill in image locations
+   - doc/rest-api: Refresh swagger YAML
+   - api: network_ovn_multicast
+   - incusd/network/ovn: Add multicast helpers
+   - incusd/network/ovn: Add bridge.multicast_snooping and bridge.multicast_relay
+   - doc: Update configs
+   - incusd/instance/qemu: Use temporary data-file when growing metadata image
+   - Translated using Weblate (German)
+   - Translated using Weblate (German)
+   - Translated using Weblate (German)
+   - Translated using Weblate (German)
+   - Translated using Weblate (German)
+   - Translated using Weblate (Spanish)
+   - Translated using Weblate (Spanish)
+   - Translated using Weblate (Spanish)
+   - Translated using Weblate (French)
+   - Translated using Weblate (French)
+   - Translated using Weblate (French)
+   - Translated using Weblate (French)
+   - Translated using Weblate (French)
+   - Translated using Weblate (French)
+   - Translated using Weblate (French)
+   - Translated using Weblate (French)
+   - Translated using Weblate (French)
+   - Translated using Weblate (Italian)
+   - Translated using Weblate (Italian)
+   - Translated using Weblate (Japanese)
+   - Translated using Weblate (Japanese)
+   - Translated using Weblate (Japanese)
+   - Translated using Weblate (Japanese)
+   - Translated using Weblate (Dutch)
+   - Translated using Weblate (Dutch)
+   - Translated using Weblate (Portuguese (Brazil))
+   - Translated using Weblate (Portuguese (Brazil))
+   - Translated using Weblate (Portuguese (Brazil))
+   - Translated using Weblate (Russian)
+   - Translated using Weblate (Russian)
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - Translated using Weblate (Portuguese)
+   - Translated using Weblate (Portuguese)
+   - Translated using Weblate (Portuguese)
+   - Translated using Weblate (Norwegian Bokmål)
+   - Translated using Weblate (Norwegian Bokmål)
+   - Translated using Weblate (Indonesian)
+   - Translated using Weblate (Indonesian)
+   - Translated using Weblate (Indonesian)
+   - Translated using Weblate (Chinese (Traditional Han script))
+   - Translated using Weblate (Chinese (Traditional Han script))
+   - Translated using Weblate (Tamil)
+   - Translated using Weblate (Swedish)
+   - Translated using Weblate (Swedish)
+   - Translated using Weblate (Swedish)
+   - Translated using Weblate (Greek)
+   - Translated using Weblate (Georgian)
+   - Translated using Weblate (Georgian)
+   - tests: Skip OVN tests when INCUS_OFFLINE is set
+   - tests: Add cgroup test suite
+   - github: Add cgroup tests job
+   - tests: Add interception test suite
+   - github: Add interception tests job
+   - tests: Add network bridge firewall test suite
+   - github: Add network bridge firewall tests job
+   - tests: Add storage buckets drivers test suite
+   - github: Add storage buckets drivers tests job
+   - Translated using Weblate (Portuguese)
+   - doc: Document instance-migrated lifecycle event
+   - incusd/storage/linstor: Fix snapshot resource definition races
+   - incusd/storage/cephfs: Sync filesystem before snapshot creation
+   - tests: Wait for nc listeners in network address set test
+   - tests: Use a 4GiB btrfs test pool
+   - incusd: Retry transient database errors in the admin SQL endpoint
+   - incusd/db: Make AddImageToLocalNode idempotent
+   - tests: Wait for monitor subscription in dev-incus test
+   - incusd: Retry cluster role handover while another change is in progress
+   - instance: Derive process start time from proc stat
+   - incusd/storage/linstor: Mount snapshot volumes read-only
+   - incus/create: Allow --environment-file to be passed multiple times
+   - incus: Mention repeatable flags in help strings
+   - i18n: Update translation templates
+   - shared/simplestreams: Include variant in image description
+   - client: Fix crash on listener disconnect without error
+   - incusd/network/zone: Allow underscore-prefixed names
+   - incusd/patches: Upgrade OpenFGA model
+   - incusd: Use x-example in swagger operation parameters
+   - incusd: Fix header definitions in swagger comments
+   - incusd: Fix body parameters in swagger comments
+   - incusd/instance_nvram: Mark var path parameter as required
+   - incusd: Fix response examples in swagger comments
+   - shared/api: Drop invalid examples from preseed structs
+   - shared/api: Drop swagger:model from metadata map key types
+   - incusd/metadata: Fix swagger definition of configuration endpoint
+   - incusd/storage: Fix swagger body definition for volume backup rename
+   - test/lint: Validate swagger spec
+   - doc/rest-api: Refresh swagger YAML
+   - incusd: Fix storage volume project expansion
+   - tests: Cover inherited storage volume authorization
+   - incusd/storage/linstor: Retry resource definition deletion
+   - tests: Use future expiry for volume snapshot property test
+   - incusd: Make cluster role handover resilient to leader changes
+   - shared/tls: Renew certificates at 80% of validity period
+   - incusd/acme: Update for CertificateNeedsUpdate change
+   - incusd/acme: Run renewal check hourly
+   - incusd: Give up on cluster database after failed role handover
+   - incusd/images: Propagate old image deletion errors during refresh
+   - incusd/storage/btrfs: Wait for quota rescan after enabling quotas
+   - incusd: Bound global database close during shutdown
+   - incusd/instance/qemu: Record maxcpus in boot state
+   - incusd/db/cluster: Make node_cluster_group deletion a DeleteMany
+   - incusd: Fix PATCH of cluster group with multiple members
+   - global: Fix warnings on double file close
+   - incusd: Simplify global database shutdown
+   - incusd/events: Send events outside of the lock
+   - gomod: Update go-cowsql
+   - incusd/storage/linstor: Enforce minimum DRBD volume size
+   - incusd/storage/linstor: Enforce exact DRBD volume sizes
+   - incusd/storage/lvm: Only grow snapshot CoW capacity when needed
+   - incusd/qemu: Make generated configuration deterministic
+   - github: Drop storage_buckets_drivers from extended tests
+   - tests: Switch to debian/13 test image
+   - github: Run network_bridge_firewall test on arm64
+   - tests: Allow overriding the CLI command timeout
+   - tests: Add cpu vm test suite
+   - tests: Add guestapi vm test suite
+   - tests: Add network routed test suite
+   - tests: Add storage disks vm test suite
+   - tests: Add storage vm test suite
+   - tests: Add storage volumes vm test suite
+   - github: Add VM tests job
+   - Translated using Weblate (German)
+   - Translated using Weblate (German)
+   - Translated using Weblate (German)
+   - Translated using Weblate (German)
+   - Translated using Weblate (German)
+   - Translated using Weblate (Spanish)
+   - Translated using Weblate (Spanish)
+   - Translated using Weblate (Spanish)
+   - Translated using Weblate (French)
+   - Translated using Weblate (French)
+   - Translated using Weblate (French)
+   - Translated using Weblate (French)
+   - Translated using Weblate (French)
+   - Translated using Weblate (French)
+   - Translated using Weblate (French)
+   - Translated using Weblate (French)
+   - Translated using Weblate (French)
+   - Translated using Weblate (Italian)
+   - Translated using Weblate (Italian)
+   - Translated using Weblate (Japanese)
+   - Translated using Weblate (Japanese)
+   - Translated using Weblate (Japanese)
+   - Translated using Weblate (Japanese)
+   - Translated using Weblate (Dutch)
+   - Translated using Weblate (Dutch)
+   - Translated using Weblate (Portuguese (Brazil))
+   - Translated using Weblate (Portuguese (Brazil))
+   - Translated using Weblate (Portuguese (Brazil))
+   - Translated using Weblate (Russian)
+   - Translated using Weblate (Russian)
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - Translated using Weblate (Portuguese)
+   - Translated using Weblate (Portuguese)
+   - Translated using Weblate (Portuguese)
+   - Translated using Weblate (Norwegian Bokmål)
+   - Translated using Weblate (Norwegian Bokmål)
+   - Translated using Weblate (Indonesian)
+   - Translated using Weblate (Indonesian)
+   - Translated using Weblate (Indonesian)
+   - Translated using Weblate (Chinese (Traditional Han script))
+   - Translated using Weblate (Chinese (Traditional Han script))
+   - Translated using Weblate (Tamil)
+   - Translated using Weblate (Swedish)
+   - Translated using Weblate (Swedish)
+   - Translated using Weblate (Swedish)
+   - Translated using Weblate (Greek)
+   - Translated using Weblate (Georgian)
+   - Translated using Weblate (Georgian)
+   - shared/uefi: Diverse fixes
+   - shared/uefi: Refactor dissection primitives
+   - shared/uefi: Add missing writers
+   - shared/uefi: Add formatting primitives
+   - shared/uefi: Add device path string representation lexer
+   - shared/uefi: Add device path formatting
+   - shared/uefi: Add device path tests
+   - shared/uefi: Implement Boot#### formatting
+   - incus/image: Add support for properties columns in image list
+   - i18n: Update translation templates
+   - doc/storage: Add TrueNAS to data storage location table
+   - lxc: Start live migration action operation before pre-dumps
+   - incusd/network/ovn: Handle dynamic addresses and removal for ipv4/ipv6.address.external
+   - incusd/device/nic_ovn: Remove stale SNAT rules on external address update
+   - incusd/firewall: Restrict wildcard proxy NAT to local addresses
+   - tests: Update proxy NAT wildcard listen address checks
+   - incusd/images: Split pruneExpiredImage into its own function
+   - incusd/images: Hold image lock when pruning and auto-updating images
+   - Revert "client: Add EventListener.SetOrdered"
+   - client: Add EventListener.AddChannel
+   - doc: Document AddChannel/RemoveChannel
+   - doc: Fix events table alignment
+   - incus/monitor: Port to EventListener.AddChannel
+   - incus/remote: Explain trust token prompt in verbose mode
+   - incus/remote: Add --tls-cert, --tls-key and --tls-p12 to remote add
+   - incus/remote: Move client certificates on rename
+   - incus/remote: Delete client certificates on removal
+   - i18n: Update translation templates
+   - incusd/cluster: Apply cluster configuration before member init
+   - incusd/project: Require OVN for features.networks
+   - doc: Update configs
+   - tests: Handle OVN requirement for features.networks
+   - incusd/instance/qmp: Use job-complete instead of block-job-complete
+   - incusd/instance/qemu: Use -qmp chardev instead of mon config section
+   - incusd/instance/qemu: Use confidential-guest-support instead of memory-encryption
+   - incusd/instance/qemu: Remove -mem-path and -mem-prealloc
+   - incusd/instance/qemu: Move sandbox configuration to qemu.conf
+   - incusd/instance/qemu: Move RTC configuration to qemu.conf
+   - incusd/instance/qemu: Move SPICE configuration to qemu.conf
+   - lxc: Make incremental memory migration opt-in
+   - storage/ceph: Ignore detached devices during RBD sysfs scan
+   - lxc: Normalize received CRIU state ownership
+   - incusd/networks: Fix panic when a network fails to start
+   - incusd/networks: Notify cluster members before local deletion
+   - incusd/cluster: Fail fast when target member is offline
+   - incusd/cluster: Mark offline members as unavailable for event connections
+   - incusd/cluster: Avoid expensive connectivity probes in NewNotifier
+   - incusd/cluster: Add connection timeouts to intra-cluster TLS dialer
+   - incusd/images: Surface write errors from compression pipeline
+   - incusd/instance/qemu: Cancel incoming state transfer on source failure
+   - client: Reconnect operation event listener on connection failure
+   - doc: explain how to resize virtual-machine/* volumes
+   - doc: storage_volumes: prefer `key=value` over `key value`
+   - shared/subprocess: Make TryRunCommand always use C as locale
+   - incusd/storage/lvm: Force use of C locale everywhere isLVMNotFoundExitError is used
+   - incusd/storage/lvm: Check error output in isLVMNotFoundExitError
+   - incusd/storage/lvm: Preserve sanlock global lock on clustered pool deletion
+   - incusd/images: Skip offline members during image distribution
+   - incusd/storage: Don't query offline members in volume listing
+   - incusd/storage/dir: Set quota project on block volumes
+   - incusd/storage/dir: Set up quota when restoring custom volumes from backup
+   - incusd/response: Don't warn on already closed connections
+   - incusd/instance/qemu: Don't warn on already removed snapshot file
+   - incusd/instance/qemu: Return Bad Request when no NBD session is active
+   - shared/uefi: Implement Key#### formatting
+   - shared/uefi: Make formatters mandatory
+   - shared/uefi: Accept hexadecimal Boot#### variables
+   - client/oci: Move unpackOCIImage to ProtocolOCI
+   - gomod: Add opencontainers/image-spec
+   - client/oci: Strip volume mounts during unpack
+   - tests: Update client dependency list
+   - incusd/storage/drivers: Add flushBlockDeviceCache
+   - incusd/storage/linstor: Invalidate stale device caches on mount
+   - incusd/storage/linstor: Unmount volumes synchronously
+   - incusd/instance/qemu: Sync shared config volume during live migration
+   - incusd/instance/qemu: Skip config drive generation on live migration receive
+   - incusd/instance/qemu: Add IsLiveMigration
+   - incusd/device/tpm: Move swtpm control socket to the devices path
+   - incusd/device/tpm: Enable swtpm migration handling
+   - incusd/instance/qmp: Make MigrateWait event-driven
+   - incusd/instance/qemu: Enable migration status events
+   - incusd/storage: Fix source snapshot project on same-pool custom volume refresh
+   - incus/server/device/nic/ovn: hot-reloadable ovn nic limits
+   - incusd/storage/drivers/linstor: Sync filesystem instead of freezing it before snapshots
+   - incusd/storage: Add cleanupDependencies argument to DeleteInstanceSnapshot
+   - incusd/storage/drivers: Add NearLiveMigration to driver Info struct
+   - incusd: Add dependent disk support for in-cluster near-live migration
+   - incusd/instance/drivers: Add dependent disk support for in-cluster near-live migration
+   - tests: Add near-live migration dependent disks tests
+   - incusd/storage: Add skipDisks argument to GenerateDependentVolumesOffer
+   - incusd/instance: Add SkipDependentVolumes to MigrateSendArgs
+   - incusd: Add support for near-live migration for shared root storage and local dependent disks
+   - incusd/instances: Add non-volatileness check for NVRAM variables
+   - shared/uefi: Make ESL, ESLNode and ESLEntry public
+   - shared/uefi: Add Secure Boot vendor GUIDs
+   - incus/low-level: Add secureboot list subcommand
+   - incus/low-level: Add secureboot remove subcommand
+   - incus/low-level: Add secureboot add subcommand
+   - incus/low-level: Fix unmarshalling to nil pointer
+   - incus/low-level: Simplify default NVRAM list cols
+   - incus/low-level: Add column description for nvram list
+   - incus/low-level: Fix repair autocomplete
+   - incus/config_trust: Add full fingerprint column
+   - i18n: Update translation templates
+   - incusd/instance_post: Skip unchecked err
+   - golangci: Tweak static-check
+   - generate-database: Fix test on Go 1.27
+   - incusd/device: Add support for disk burst limits
+   - incusd/instance/drivers: Add support for disk burst limits
+   - tests: Add tests for disk burst limits
+   - doc: Add documentation for disk burst limits
+   - doc: Update configs
+   - api: device_burst_limits
+   - incus/query: Add --data-file flag
+   - i18n: Update translation templates
+   - incusd/device: Use network project for address set refresh on bridged NIC
+   - shared/uefi: Keep non-NV_VARIABLE_STORE regions
+   - shared/uefi: Sort GUIDs by name
+   - shared/uefi: Implement PlatformConfig dissector
+   - shared/uefi: Refactor Boot#### variable name parsing
+   - shared/uefi: Make Boot public
+   - shared/uefi: Implement BootNext dissector
+   - incus/start: Add --override-boot flag
+   - i18n: Update translation templates
+   - api: Add network_ipv6_ra extension
+   - incusd/network/bridge: Add ipv6.ra config key
+   - incusd/network/ovn: Add ipv6.ra config key
+   - doc: Update configs
+   - incusd/project: Add support for networks shared through restricted.networks.access
+   - incusd: Handle networks shared through restricted.networks.access
+   - incusd/device: Resolve shared networks for NIC devices
+   - incusd/network: Account for shared networks in usage checks
+   - incusd: Validate restricted.networks.access against project networks
+   - doc: Update configs
+   - tests: Add coverage for shared networks in projects
+   - incusd/auth: Add network shares to the authorizer interface
+   - incusd/auth: Add shared network support to OpenFGA
+   - incusd/auth: Update generated OpenFGA model
+   - incusd: Maintain OpenFGA network shares
+   - incusd: Add auth_openfga_shared_networks patch
+   - tests: Add OpenFGA shared network coverage
+   - incus/low-level: Fix unset capability of nvram set
+   - incusd/network/ovn: Add DeleteMACBindings
+   - incusd/network/ovn: Delete stale MAC bindings on instance port stop
+   - tests: Add NVRAM VM tests
+   - github: Add NVRAM VM tests job
+   - shared/uefi: Add getters and setters to the store
+   - shared/uefi: Make formatters more robust
+   - incusd/instances: Use new store interface
+   - incusd/instance/qemu: Avoid needlessly rewriting the NVRAM
+   - incusd/scriptlet/qemu: Add NVRAM manipulation funs
+   - incusd/instance/qemu: Pass NVRAM to QEMU scriptlet
+   - shared/scriptlet: Implement bytes (un)marshalling
+   - tests: Add NVRAM scriptlet test
+   - api: qemu_scriptlet_nvram
+   - doc/ref/instance_options: Update QEMU scriptlet functions
+   - i18n: Update translation templates
+   - incusd/ip: Add Addr.FlushDynamic
+   - incusd/device: Allow "none" NIC addresses without filtering
+   - incusd/forknet: Disable IPv6 autoconf on statically configured interfaces
+   - doc: Update configs
+   - incusd/ip: Add support for nic burst limits
+   - incusd/device: Add support for nic burst limits
+   - incusd/network/ovn: Add support for nic burst limits
+   - tests: Add tests for nic burst limits
+   - doc: Update configs
+   - api: device_burst_limits
+   - Translated using Weblate (German)
+   - Translated using Weblate (German)
+   - Translated using Weblate (German)
+   - Translated using Weblate (German)
+   - Translated using Weblate (German)
+   - Translated using Weblate (Spanish)
+   - Translated using Weblate (Spanish)
+   - Translated using Weblate (Spanish)
+   - Translated using Weblate (French)
+   - Translated using Weblate (French)
+   - Translated using Weblate (French)
+   - Translated using Weblate (French)
+   - Translated using Weblate (French)
+   - Translated using Weblate (French)
+   - Translated using Weblate (French)
+   - Translated using Weblate (French)
+   - Translated using Weblate (French)
+   - Translated using Weblate (Italian)
+   - Translated using Weblate (Italian)
+   - Translated using Weblate (Japanese)
+   - Translated using Weblate (Japanese)
+   - Translated using Weblate (Japanese)
+   - Translated using Weblate (Japanese)
+   - Translated using Weblate (Dutch)
+   - Translated using Weblate (Dutch)
+   - Translated using Weblate (Portuguese (Brazil))
+   - Translated using Weblate (Portuguese (Brazil))
+   - Translated using Weblate (Portuguese (Brazil))
+   - Translated using Weblate (Russian)
+   - Translated using Weblate (Russian)
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - Translated using Weblate (Chinese (Simplified Han script))
+   - Translated using Weblate (Portuguese)
+   - Translated using Weblate (Portuguese)
+   - Translated using Weblate (Portuguese)
+   - Translated using Weblate (Norwegian Bokmål)
+   - Translated using Weblate (Norwegian Bokmål)
+   - Translated using Weblate (Indonesian)
+   - Translated using Weblate (Indonesian)
+   - Translated using Weblate (Indonesian)
+   - Translated using Weblate (Chinese (Traditional Han script))
+   - Translated using Weblate (Chinese (Traditional Han script))
+   - Translated using Weblate (Tamil)
+   - Translated using Weblate (Swedish)
+   - Translated using Weblate (Swedish)
+   - Translated using Weblate (Swedish)
+   - Translated using Weblate (Greek)
+   - Translated using Weblate (Georgian)
+   - Translated using Weblate (Georgian)
+   - incusd/instance/qmp: Set a write deadline on monitor commands
+   - api: Add storage_ceph_rbd_backend extension
+   - incusd/storage/ceph: Add ceph.rbd.backend config key
+   - doc: Update configs
+   - incusd/images: Consider both architecture names when filtering
+   - incus/image: Consider both architecture names when filtering
+   - incusd: Allow recovering shared storage pools when clustered
+   - incus/admin: Allow recovering shared storage pools when clustered
+   - doc: Cover shared pool recovery on clusters
+   - Translated using Weblate (Portuguese)
+   - shared/cmd: Fix progress rendering on non-terminals
+   - incusd/events: Don't warn when the peer closed the connection first
+   - incus/network: Use global --project flag in list-allocations
+   - incus: Add shell completion for --project flag
+   - incus: Add shell completion for --target-project flag
+   - i18n: Update translation templates
+   - client: Fix event connection cleanup on listener failure
+   - client: Make operation reconnection more resilient
+   - incusd/instance/lxc: Don't fail Stop when the container stopped on its own
+   - incusd: Block instance creation from backup while evacuated
+   - incusd/cluster: Wait for ongoing instance creations before evacuating
+   - incusd/instance/qemu: Include stderr output in restore crash errors
+   - incusd/instance: Factor memory into balanced NUMA node selection
+   - incusd: Validate project in bulk instance state update
+   - incusd/cluster: Collect per-instance evacuation and restore errors
+   - incusd/instance/qmp: Add MigrateCancel
+   - incusd/instance/qemu: Treat live migration hand-over as cut-off
+   - incusd: Keep instance database location in sync after live migration hand-over
+   - shared/uefi: Add Incus GUID
+   - incus/low-level: Use new Incus vendor
+   - shared/util: Add ESLGUIDVar
+   - cmd/low-level: Use util.ESLGUIDVar
+   - shared/validate: Add IsRawNVRAMVariable and IsPEM
+   - incusd/instance/config: Add initial.nvram.*, initial.nvram-binary.* and initial.secureboot.*
+   - doc: Update configs
+   - incusd/instance/qemu: Add support for NVRAM config overrides
+   - tests: Add NVRAM config override test
+   - api: instance_nvram_config
+   - i18n: Update translation templates
+   - incusd/dns: Add NOTIFY support
+   - incusd/network/zone: Bump SOA refresh to 15min
+   - incusd/network/zone: Send NOTIFY on zone and record changes
+   - incusd/network: Add DNSNotifyZones helper
+   - incusd/network/zone: Add dnsmasq file watcher
+   - incusd: Start network zones watcher
+   - incusd/network/ovn: Send NOTIFY on port and uplink changes
+   - incusd/networks: Send NOTIFY on network create, update and delete
+   - doc: Document network zone DNS NOTIFY
+   - incusd/instance/lxc: Fix instance directory ownership with raw.idmap
+   - tests: Add raw.idmap host root mapping test
+   - api: Add storage_cephobject_endpoint_cert extension
+   - incusd/storage/cephobject: Replace endpoint_cert_file with endpoint_cert
+   - incusd/patches: Convert cephobject.radosgw.endpoint_cert_file
+   - doc: Update configs
+   - shared/validate: Make IsPEM match anchor regexes
+   - Makefile: Bump minimum to Go 1.26
+   - gomod: Bump minimum to Go 1.26
+   - doc/requirements: Bump minimum to Go 1.26
+   - Use strings.SplitSeq to iterate over split strings
+   - Use new(expr) instead of protobuf pointer helpers
+   - Use range over int in counting loops
+   - Use standard library iterators
+   - Use strings.Builder for string concatenation
+   - Use fmt.Appendf
+   - Use errors.AsType
+   - Use slices.Backward for reverse iteration
+   - Use strings.Cut
+   - incusd/cgroup: Fix parse error messages
+   - incusd/db: Return Conflict error on duplicate storage volume record
+   - incusd/storage: Fix error wrapping in VolumeDBCreate
+   - incusd/storage/linstor: Set resource definition properties at clone time
+   - incusd/storage/linstor: Implement IsImageCloneSourceReady
+   - incusd/storage: Handle concurrent image volume creation across cluster members
+   - Use httputil.ReverseProxy.Rewrite
+   - incusd/network_integrations: Validate PEM blobs
+   - incusd/cluster/config: Remove unused LokiServer
+   - incusd/cluster/config: Validate PEM blobs
+   - incus/server/config: Validate PEM blobs
+   - doc: Update configs
+   - incusd/network/ovn: Allow multiple CAs
+   - shared/tls: Add ReadCerts
+   - incusd: Allow multiple CAs
+   - incusd/storage/linstor: Allow multiple CAs
+   - incusd/network/acl: Fix OVN ACL matching for cross-chassis traffic
+   - incusd/patches: Regenerate OVN ACL rules for address set matching
+   - incus/low-level: Add secureboot export subcommand
+   - incus/low-level: Add bundle support in secureboot add
+   - incus/low-level: Add secureboot import subcommand
+   - tests: Improve low-level secureboot coverage
+   - i18n: Update translation templates
+   - incusd/firewall/nftables: Allow EUI-64 link-local address with IPv6 filtering
+   - tests: Check link-local handling with IPv6 filtering
+   - incusd/ip: Add QdiscGeneric
+   - incusd/instance: Add CPUUsage
+   - incusd/network: Add GetTXQueueCount
+   - api: device_queue_disc
+   - incusd/device: Add support for nic queuing disciplines
+   - doc: Document queuing disciplines
+   - doc: Update configs
+   - tests: Add tests for nic queuing disciplines
+   - shared/tls: Don't duplicate issuer certificates in ACME chain
+   - incusd/network/ovn: Don't wait forever for database reconnection
+   - shared/cmd: Modernize table look
+   - shared/cmd: Prevent merging the last column
+   - tests: Reduce assumptions on list format
+   - doc: Use new key=value syntax
+   - doc: Use new table layout
+   - shared/uefi: Correctly handle padded VARS files
+   - client: Add RawQueryWithHeaders
+   - incus/query: Add --header flag
+   - test: Add test for query --header
+   - i18n: Update translation templates
+   - incus/oci: Don't URL-escape credentials in skopeo authfile
+   - incusd/network: Switch to backoff/v7
+   - incus: Switch to go-viper/mapstructure/v2
+   - incusd/device: Switch to gopacket/gopacket
+   - Update gomod
+   - doc/rest-api: Refresh swagger YAML
+   - incusd/storage/zfs: Reset host-facing properties of delegated datasets
+   - tests: Check properties of delegated ZFS datasets
+   - doc/storage/zfs: Document dataset delegation
+   - incusd/images: Check access before reusing cross-project image
+   - client/images: Prevent path traversal in downloaded image name
+   - Release Incus 7.4
+  [/details]
+
+  # Documentation
+
+  The Incus documentation can be found at:
+
+  https://linuxcontainers.org/incus/docs/main/
+
+  # Packages
+
+  There are no official Incus packages as Incus upstream only releases regular release tarballs. Below are some available options to get Incus up and running.
+
+  ## Installing the Incus server on Linux
+
+  Incus is available for most common Linux distributions. You'll find detailed installation instructions in our documentation.
+
+  https://linuxcontainers.org/incus/docs/main/installing/
+
+  ## Homebrew package for the Incus client
+
+  The client tool is available through HomeBrew for both Linux and MacOS.
+
+  https://formulae.brew.sh/formula/incus
+
+  ## Chocolatey package for the Incus client
+
+  The client tool is available through Chocolatey for Windows users.
+
+  https://community.chocolatey.org/packages/incus/7.4.0
+
+  ## Winget package for the Incus client
+
+  The client tool is also available through Winget for Windows users.
+
+  https://winstall.app/apps/LinuxContainers.Incus
+
+  # Support
+
+  Monthly feature releases are only supported up until the next release comes out. Users needing a longer support length and less frequent changes should consider using Incus 7.0 LTS instead.
+
+  Community support is provided at: https://discuss.linuxcontainers.org
+  Commercial support is available through: https://zabbly.com/incus
+  Bugs can be reported at: https://github.com/lxc/incus/issues
