@@ -1,13 +1,19 @@
 [TOC]
 
 # What is Incus?
-Incus is a next-generation system container, application container, and virtual machine manager.
+Incus is a container and virtual machine management engine that can run
+on your laptop and on cloud instance on to full server racks.
 
-It provides a user experience similar to that of a public cloud. With it, you can easily mix and match both containers and virtual machines, sharing the same underlying storage and network.
+It can run a variety of instance types, whether they be system containers
+in the vein of systemd-nspawn, application containers using the same OCI
+standard as used in Docker or Podman, or virtual machines backed by Qemu
+and KVM. All of which can be managed with a simple command line tool,
+directly through the engine’s REST API, or via third-party tools and
+integrations.
 
-Incus is image based and provides images for a [wide number of Linux distributions](https://images.linuxcontainers.org). It provides flexibility and scalability for various use cases, with support for different storage backends and network types and the option to install on hardware ranging from an individual laptop or cloud instance to a full server rack.
-
-When using Incus, you can manage your instances (containers and VMs) with a simple command line tool, directly through the REST API or by using third-party tools and integrations. Incus implements a single REST API for both local and remote access.
+It provides a user experience similar to that of a public cloud. With
+it, you can easily mix and match both containers and virtual machines,
+sharing the same underlying storage, network, and configuration interfaces.
 
 The Incus project [was created](/incus/announcement/) by Aleksa Sarai as a community driven alternative to Canonical's LXD.
 Today, it's led and maintained by many of the same people that once created LXD.
