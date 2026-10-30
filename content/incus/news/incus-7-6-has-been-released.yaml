@@ -1,0 +1,807 @@
+title: Incus 7.6 has been released
+date: 2026/10/30 17:01
+origin: https://discuss.linuxcontainers.org/t/incus-7-6-has-been-released/27462
+content: |-
+  The Incus team is pleased to announce the release of Incus 7.6!
+
+  Another busy release with a strong focus on performance and smoother operations for larger environments, but that doesn't mean that standalone deployments have been left behind either with a number of improvements and new features targeting those too!
+
+  [![Screenshot 2026-10-30 at 12.18.11 PM|690x450](upload://e2tC30QboZvgV2JAMxh4PltgDfv.webp)](https://linuxcontainers.org/incus/try-it/)
+
+  As usual, you can try Incus for yourself online: https://linuxcontainers.org/incus/try-it/
+
+  # Security fixes
+  This release fixes 18 security issues:
+
+   - [GHSA-3wxw-5gh2-j2x2](https://github.com/lxc/incus/security/advisories/GHSA-3wxw-5gh2-j2x2) (critical) - Container configuration injection through OCI image config and `oci.*` keys
+   - [GHSA-5c64-j5m6-8433](https://github.com/lxc/incus/security/advisories/GHSA-5c64-j5m6-8433) (critical) - Restricted clients can create and access resources in the default project
+   - [GHSA-5pgx-q9xx-j3qv](https://github.com/lxc/incus/security/advisories/GHSA-5pgx-q9xx-j3qv) (critical) - Restricted project users can read or overwrite host files through special files, hard links or symlinks in backup or image metadata
+   - [GHSA-cwg9-8mc4-hf7j](https://github.com/lxc/incus/security/advisories/GHSA-cwg9-8mc4-hf7j) (critical) - Token operations exposed through the event stream and cancellable by any client
+   - [GHSA-jcw9-v2ff-8m79](https://github.com/lxc/incus/security/advisories/GHSA-jcw9-v2ff-8m79) (critical) - Restricted project users can create resources in the default project, bypassing project isolation (host root via dnsmasq, host file read via mkfs)
+   - [GHSA-p45f-gqqj-6qq3](https://github.com/lxc/incus/security/advisories/GHSA-p45f-gqqj-6qq3) (critical) - Path traversal through snapshot names in custom volume backups
+   - [GHSA-q9fc-p923-6vp7](https://github.com/lxc/incus/security/advisories/GHSA-q9fc-p923-6vp7) (critical) - Path traversal, crash and storage pool restriction bypass through dependent volumes in migration
+   - [GHSA-xg75-xf37-cph9](https://github.com/lxc/incus/security/advisories/GHSA-xg75-xf37-cph9) (critical) - Authentication and authorization bypass through unverified client certificate chains
+   - [GHSA-3rgf-297m-775x](https://github.com/lxc/incus/security/advisories/GHSA-3rgf-297m-775x) (high) - Local users can hijack VM NBD migration and disk-export sockets
+   - [GHSA-8r3h-vc36-6xpx](https://github.com/lxc/incus/security/advisories/GHSA-8r3h-vc36-6xpx) (high) - Restricted and view-only clients can read resources in the default project
+   - [GHSA-9c46-v3hw-v6m8](https://github.com/lxc/incus/security/advisories/GHSA-9c46-v3hw-v6m8) (high) - Rebuilding a never-started container makes it boot without a user namespace, running as privileged
+   - [GHSA-h2j8-4crh-vhfc](https://github.com/lxc/incus/security/advisories/GHSA-h2j8-4crh-vhfc) (high) - Incus exposes migration websocket secrets to project event listeners, allowing migration hijack
+   - [GHSA-v736-5xp3-jghf](https://github.com/lxc/incus/security/advisories/GHSA-v736-5xp3-jghf) (high) - Guest API caller impersonation through a forged cgroup name
+   - [GHSA-8mgx-h4v8-xqv2](https://github.com/lxc/incus/security/advisories/GHSA-8mgx-h4v8-xqv2) (medium) - S3 listener buffers signed request bodies before authentication
+   - [GHSA-9f75-5fjw-5jvv](https://github.com/lxc/incus/security/advisories/GHSA-9f75-5fjw-5jvv) (medium) - Incus broadcasts OVN ACL log events with an empty project, leaking them across projects
+   - [GHSA-f7xp-22ph-v444](https://github.com/lxc/incus/security/advisories/GHSA-f7xp-22ph-v444) (medium) - Incus guest-API image export ignores the guest's project, exposing other projects' images
+   - [GHSA-pf5w-m8m6-5265](https://github.com/lxc/incus/security/advisories/GHSA-pf5w-m8m6-5265) (medium) - Recursive and all-projects responses disclose other projects' bucket S3 keys and profile configuration to restricted clients (incomplete fix of GHSA-x8gj-2q73-qr6j)
+   - [GHSA-x6pw-mh5w-pq73](https://github.com/lxc/incus/security/advisories/GHSA-x6pw-mh5w-pq73) (medium) - Denial of service via a null snapshot entry in an instance backup
+
+  # New features
+
+  ## SR-IOV NIC live migration
+  Virtual machines using `sriov` NICs can now be live migrated between cluster members.
+
+  Two mechanisms are supported:
+
+   - A new `failover` option on both `sriov` networks and NICs takes the name of a bridge (managed or not). Incus then adds a `virtio-net` failover NIC on that bridge alongside the SR-IOV VF, letting guests which support `virtio-net` failover transparently switch to it during the migration before getting a VF back on the target.
+   - A new `variant` option selects a VFIO variant driver (currently `mlx5` for `mlx5_vfio_pci`) which allows for native VFIO live migration of the VF itself.
+
+  Initial support for `switchdev` mode was also added, with Incus configuring the VF representors as needed and allowing VLANs to be used with such NICs.
+
+      stgraber@vorash:~$ incus network create sriov0 --type=sriov parent=enp5s0f0 failover=incusbr0
+      stgraber@vorash:~$ incus launch images:debian/13 v1 --vm --network sriov0
+      stgraber@vorash:~$ incus move v1 --target server02
+
+  Documentation: https://linuxcontainers.org/incus/docs/main/reference/network_sriov/
+
+  ## Faster virtual machine live migrations
+  Live migration of virtual machines now uses QEMU's `multifd` feature, transferring memory over multiple parallel channels and significantly improving throughput on fast networks.
+
+  The memory and state transfer rate can also be capped through the new `instances.migration.bwlimit` server option, which is useful on shared networks where a single migration shouldn't be allowed to consume all the available bandwidth.
+
+      stgraber@vorash:~$ incus config set instances.migration.bwlimit=500MiB
+
+  Block volume transfers through the generic migration transport (used when the source and target storage drivers differ, as well as by `incus-migrate`) are now compressed with `lz4` when both sides support it.
+
+  Documentation: https://linuxcontainers.org/incus/docs/main/server_config/
+
+  ## Virtual machine I/O and memory performance
+  A number of changes improve the performance of virtual machines:
+
+   - `virtio` disks now run through a dedicated QEMU I/O thread, taking disk I/O off the main loop and improving both throughput and latency.
+   - Virtual machines that don't need `virtiofs` (nested virtualization with `security.nesting` set to `true`, stateful migration or hosts without `virtiofsd`) are now started with regular memory rather than shared memory, allowing transparent huge pages to be used. This makes a very significant difference for nested virtualization.
+   - Free page reporting is now enabled on the memory balloon, allowing the host to reclaim memory freed by the guest.
+   - Large `write-zeroes` requests from the guest are now split into smaller chunks so that disk I/O limits apply to them properly.
+
+  Documentation: https://linuxcontainers.org/incus/docs/main/explanation/performance_tuning/#virtual-machine-memory-allocation
+
+  ## Custom volumes can follow their instances
+  Custom storage volumes on local storage pools can now be set to move along with the virtual machine they're attached to when it's moved to another cluster member, through the new `migration.follow_instance` volume option.
+
+  This only applies to volumes attached to a single virtual machine.
+
+      stgraber@vorash:~$ incus storage volume set local data migration.follow_instance=true
+      stgraber@vorash:~$ incus move v1 --target server02
+
+  Documentation: https://linuxcontainers.org/incus/docs/main/howto/move_instances/
+
+  ## Trusting a certificate authority
+  A CA certificate can now be added to the trust store, in which case any client certificate issued by that CA is trusted as if the CA entry itself had been presented.
+
+  Such clients are identified by the fingerprint of the CA entry and inherit its type, restrictions and projects. This makes it easy to use short-lived certificates from an internal PKI without having to update the trust store on every renewal.
+
+      stgraber@vorash:~$ incus config trust add-certificate ca.crt --restricted --projects=dev
+
+  Documentation: https://linuxcontainers.org/incus/docs/main/authentication/#trusting-a-certificate-authority
+
+  ## OVN NIC security filtering
+  The `security.mac_filtering`, `security.ipv4_filtering` and `security.ipv6_filtering` options are now available on OVN NICs, matching what's available on bridged NICs.
+
+  They're implemented through OVN port security, restricting the source MAC address and, when IP filtering is enabled, the IP addresses (including any static routes) that the instance may use.
+
+      stgraber@vorash:~$ incus config device set c1 eth0 security.mac_filtering=true security.ipv4_filtering=true security.ipv6_filtering=true
+
+  Documentation: https://linuxcontainers.org/incus/docs/main/reference/devices_nic/#nic-ovn
+
+  ## OVN network re-parenting
+  The `parent` option of OVN networks, introduced in Incus 7.5, can now be changed on existing networks, moving the network from one logical router to another.
+
+  Address forwards, load balancers and the SNAT rules of NICs with external addresses are moved along to the new parent. Removing the `parent` turns the network back into a standalone network.
+
+      stgraber@vorash:~$ incus network set net2 parent=net3
+
+  Documentation: https://linuxcontainers.org/incus/docs/main/reference/network_ovn/#child-networks
+
+  ## NAT address with l2proxy ingress mode
+  The `ipv4.nat.address` and `ipv6.nat.address` options on OVN networks were previously limited to uplinks using `ovn.ingress_mode=routed`.
+
+  They're now also supported with the default `l2proxy` ingress mode, in which case the NAT address is advertised on the uplink through proxy ARP/NDP.
+
+      stgraber@vorash:~$ incus network set ovn0 ipv4.nat.address=203.0.113.10
+
+  Documentation: https://linuxcontainers.org/incus/docs/main/reference/network_ovn/
+
+  ## BGP communities
+  A new `bgp.communities` option on `bridge` and `ovn` networks takes a comma-separated list of standard BGP communities (`ASN:value`) which are attached to all the prefixes advertised by that network.
+
+      stgraber@vorash:~$ incus network set incusbr0 bgp.communities=65000:100,65000:200
+
+  Documentation: https://linuxcontainers.org/incus/docs/main/howto/network_bgp/
+
+  ## Load balancer lifecycle events
+  Network load balancers now emit `network-load-balancer-created`, `network-load-balancer-updated` and `network-load-balancer-deleted` lifecycle events.
+
+  On top of that, a `network-load-balancer-health-changed` event is sent whenever a load balancer goes healthy or unhealthy, including the status of each of its backends' service monitors.
+
+  Documentation: https://linuxcontainers.org/incus/docs/main/events/
+
+  ## Cluster healing delay
+  Cluster healing is commonly combined with external tooling that powers off the failed server through its BMC or PDU, to make sure it's not still accessing shared storage while its instances get restarted elsewhere.
+
+  To make that reliable, Incus now sends a new `cluster-member-offline` lifecycle event as soon as a member is detected as offline and a new `cluster.healing_delay` server option controls how long to wait before the evacuation actually begins.
+
+      stgraber@vorash:~$ incus config set cluster.healing_delay=60
+
+  Documentation: https://linuxcontainers.org/incus/docs/main/howto/cluster_manage/
+
+  ## TPM endorsement keys in instance state
+  When `instances.tpm.platform_cert` is set, Incus provisions new TPM devices with endorsement keys and certificates signed by the platform CA.
+
+  The public part of those endorsement keys is now exposed through the instance state (and shown in `incus info`), both as a SHA-256 fingerprint and as a PEM encoded public key, allowing an external attestation service to bind an endorsement key to a specific instance without accessing the guest.
+
+      stgraber@vorash:~$ incus query /1.0/instances/v1/state | jq .tpm
+
+  Documentation: https://linuxcontainers.org/incus/docs/main/reference/devices_tpm/#endorsement-keys
+
+  ## Disk I/O counters in instance state
+  The `disk` section of the instance state now includes a `counters` field for each disk, reporting bytes read and written along with the number of completed read and write operations.
+
+  This is currently only populated for virtual machines, using the block statistics reported by QEMU.
+
+      stgraber@vorash:~$ incus query /1.0/instances/v1/state | jq .disk
+
+  ## Boot priority improvements
+  The `boot.priority` option on NIC and disk devices can now be set to `skip` to exclude the device from the boot sequence of a virtual machine. NICs are now skipped by default, avoiding slow network boot attempts on every start.
+
+  A new `boot.pxe` instance option (defaulting to `false`) enables PXE on all the NICs that are part of the boot sequence. HTTP boot remains always enabled for those NICs.
+
+      stgraber@vorash:~$ incus config device set v1 eth0 boot.priority=10
+      stgraber@vorash:~$ incus config set v1 boot.pxe=true
+
+  Documentation: https://linuxcontainers.org/incus/docs/main/reference/devices_nic/
+
+  ## S3 backup target region
+  Instance and volume backups uploaded to an S3 compatible store can now be given a `region`, for stores whose region can't be derived from their URL.
+
+  ## Client certificate generation
+  The `incus remote generate-certificate` command now accepts `--tls-cert` and `--tls-key` to generate a separate client certificate and key at the chosen paths, as well as `--encrypt` to protect the newly generated private key with a passphrase.
+
+      stgraber@vorash:~$ incus remote generate-certificate --tls-cert ./my-client.crt --tls-key ./my-client.key --encrypt
+      stgraber@vorash:~$ incus remote add my-remote <token> --tls-cert ./my-client.crt --tls-key ./my-client.key
+
+  Documentation: https://linuxcontainers.org/incus/docs/main/remotes/#generate-a-client-certificate
+
+  ## Request details in the authorization scriptlet
+  The `details` argument passed to the authorization scriptlet now includes the request `URL`, `Path`, `Query` parameters and HTTP `Method`, allowing for much finer grained authorization decisions.
+
+  Documentation: https://linuxcontainers.org/incus/docs/main/authorization/#scriptlet
+
+  ## TLS JWT cookie login
+  Browser based clients can't set HTTP headers on WebSocket connections, which made it impossible for them to use TLS JWT tokens for things like the console or exec.
+
+  New `/tls/login` and `/tls/logout` endpoints now allow such clients to send the token once and have it stored in a `Secure`, `HttpOnly` cookie which is then accepted by all API endpoints and WebSocket connections until the token expires.
+
+  Documentation: https://linuxcontainers.org/incus/docs/main/authentication/
+
+  ## OIDC opaque access tokens
+  Incus now supports OIDC providers that issue opaque (non-JWT) access tokens.
+
+  In that case, Incus verifies the ID token instead, checking that it was issued by the configured issuer for the configured client ID. The `incus` client transparently sends the ID token alongside the opaque access token.
+
+  Documentation: https://linuxcontainers.org/incus/docs/main/authentication/#authentication-openid
+
+  ## Preliminary loongarch64 support
+  Incus can now run on `loongarch64` systems, including preliminary support for virtual machines with the matching EDK2 firmware.
+
+  Documentation: https://linuxcontainers.org/incus/docs/main/architectures/
+
+  # Complete changelog
+  Here is a complete list of all changes in this release:
+
+  [details="Full commit list"]
+   - devcontainer: bump Go to 1.26
+   - incus/server/cluster/gateway: Export IsLeader function to determine cluster leader
+   - incus/server/lifecycle/network_load_balancer: Add NetworkLoadBalancerHealthChanged event
+   - shared/api: Add NetworkLoadBalancerHealthChanged event
+   - incus/server/state: Add IsLeader to clusterGateway interface
+   - incus/server/instance/drivers/qemu: dont interpret ErrNonReusuableSucceeded as error
+   - incus/server/instance/drivers/lxc: dont interpret ErrNonReusuableSucceeded as error
+   - doc: Move warning for macOS in howto/insntances_create
+   - incusd/instance/lxc: Use IsRootDiskDevice in diskState
+   - incusd/instance/qemu: Report disk usage for all disk devices in state
+   - incusd/instance: Resolve the custom volume project in diskState
+   - shared/tls: Add PublicKeyChain
+   - shared/tls: Add GetRemoteCertificates
+   - incusd/endpoints: Return the full certificate chain from NetworkPublicKey
+   - incusd: Sync the full cluster certificate chain from the leader
+   - tests: Cover joining with a cluster certificate chain
+   - incusd/mirror: Never follow symlinks in mirrored directories
+   - incusd/instance/qemu: Seed NVRAM from the real file rather than its symlink
+   - incusd/device/tpm: Refuse a state path that isn't a real directory
+   - incus/image: Sort properties in image info
+   - incusd/endpoints: Don't block the local accept loop on the STARTTLS peek
+   - incusd/networks: Fix start priority of networks with a parent
+   - tests: Make the sparse file test independent of the page size
+   - incusd/instance/qemu: Allow live-update of security.tags
+   - incus: Allow building for NetBSD
+   - Revert "goreleaser: Temporarily disable netbsd artifacts"
+   - Update gomod
+   - incusd: Allow the server certificate update over HTTPS
+   - incus/admin: Support remotes in update-certificate
+   - i18n: Update translation templates
+   - incusd/instance: Fix nil dereference in canMigrate on device load error
+   - incusd/instance: Only let a migration inherit its own lock when stopping
+   - incusd/instance: Wait for state changes before migrating
+   - incusd/instance: Don't fail a move on source cleanup errors
+   - incusd/instance/qmp: Add agent TEMPLATED status
+   - incusd/instance/qemu: Clear template state when the agent reports applying them
+   - incus-agent: Report template application before rebooting for cloud-init
+   - tests: Add VM cloud-init test
+   - github: Run the VM cloud-init test
+   - Translated using Weblate (Georgian)
+   - shared/api: Add disk I/O counters to instance state
+   - incusd/instance/qemu: Report disk I/O counters in instance state
+   - api: instance_state_disk_counters
+   - doc/rest-api: Refresh swagger YAML
+   - api: Add instances_state_tpm extension
+   - shared/api: Add TPM state to instance state
+   - incusd/device/tpm: Record and expose endorsement keys
+   - incusd/instance: Report TPM devices in instance state
+   - incus/info: Show TPM endorsement keys
+   - doc: Document TPM endorsement key exposure
+   - doc/rest-api: Refresh swagger YAML
+   - i18n: Update translation templates
+   - incusd/network/ovn: Allow changing a networks parent
+   - doc: Update OVN network parent documentation
+   - tests: Add OVN network reparenting tests
+   - incus/server/network/driver/ovn: Fire LoadBalancerHealthChanged event
+   - doc/events: Add loadbalancer lifecycle events to doc/events.md
+   - shared/logger: Add WarnOnErrorExcept to the Logger interface
+   - shared/resources: Fix double close of ethtool socket
+   - shared/resources: Base memory usage on MemAvailable
+   - client: Drop the context-free VM agent connection debug line
+   - incusd/cluster: Fix swapped CPU and memory usage in rebalance scoring
+   - incusd/cluster: Use the instance's project when rebalancing
+   - incusd/instance: Log placement scriptlet refusals
+   - incusd/instance: Only warn on unexpected metrics and state query errors
+   - incusd/instance: Remove devices before deleting the instance volume
+   - incusd/instance: Fix error messages altered by variable rename
+   - incusd/device/nic: Only warn on MTU lookup failures for existing host interfaces
+   - incusd/storage: Don't fail UnmountInstance on a volume still in use
+   - incusd/storage/zfs: Tolerate deleted datasets when filling the property cache
+   - incusd/images: Don't ignore move errors when importing a split image from a member
+   - incusd/images: Keep expired cached image files still used by other projects
+   - incusd/images: Return not found when exporting an image whose file is missing
+   - incusd/auth/openfga: Tolerate tuple conflicts during resource sync
+   - incusd/auth/openfga: Read tuples page by page when syncing resources
+   - doc/clustering: Document member count, latency and clock requirements
+   - incusd/network/ovn: Add UpdateLogicalSwitchPortSecurity
+   - incusd/network/ovn: Apply port security to instance ports
+   - incusd/device/nic_ovn: Add security filtering options
+   - api: Add ovn_nic_security_filtering extension
+   - doc: Update configs
+   - tests: Cover OVN NIC port security filtering
+   - incusd/network/ovn: Restrict the IC southbound monitor to used tables
+   - Translated using Weblate (Portuguese)
+   - incusd/storage/zfs: Only list snapshots when a snapshot is queried
+   - incusd/storage/zfs: Wait for snapshot device removal on unmount
+   - internal/server/db/cluster: Add certificate fetch statement
+   - internal/server/warnings: Add ClusterTx methods for warning resolution
+   - cmd/incusd: Implement go-cowsql transaction.DB with Node and Cluster
+   - internal/server/cluster: Add COWSQL cluster implementations
+   - internal/server/cluster: Update cluster package
+   - internal/server/db: Add wrapper for NodeInfo
+   - internal/server/state: Update other packages
+   - cmd/incusd: Update API packages
+   - cmd/incusd: Update joiner accept logic
+   - cmd/incusd: Update daemon
+   - shared/tls: Add CertInfo constructor
+   - internal/server/cluster: Update cluster package tests
+   - internal/server: Fix linter errors
+   - incusd/apparmor: Don't allow reading everything when LD_LIBRARY_PATH is unset
+   - incusd/network: Fix OVN network creation retries
+   - tests: Cover clustered OVN network creation retries
+   - github: Run the OVN cluster retry test
+   - internal/server/instance/driver/qemu: use hashed block node name when resizing
+   - Update go-cowsql dependency
+   - internal/server/db: Add RemoveNodeByName
+   - cmd/incusd: Set raft node name on join
+   - shared/logger: Add configurable slog wrapper
+   - cmd/incusd: Remove unused latency option
+   - cmd/incusd: Fetch and compare joiner server cert
+   - cmd/incusd: Skip cert refresh if still initializing
+   - shared/subprocess: Write pid files atomically
+   - shared/subprocess: Only signal the process that was recorded
+   - incusd/dnsmasq: Remove pid file after killing dnsmasq
+   - incusd/network: Use network config to detect dnsmasq use
+   - tests: Check stale dnsmasq.pid never signals other processes
+   - incusd/instance: Add HashName
+   - incusd/instance/qemu: Use instance.HashName
+   - incus-agent: Hash long virtiofs mount tags on hotplug
+   - incusd/auth/openfga: Don't hold online lock during requests
+   - incusd/auth/openfga: Return offline error from GetPermissionChecker
+   - incusd/instance/agent-loader: Make macOS agent drive non-browsable
+   - api: authorization_scriptlet_request
+   - incusd/auth: Expose request data to the authorization scriptlet
+   - doc: Add new fields to the authorization scriptlet
+   - tests: Fix race in OVN reparenting test
+   - incusd/instance: Add boot.pxe
+   - incusd/instances/qemu: Add fw_cfg configuration
+   - incusd/device/nic: Modify boot.priority handling
+   - incusd/device/disk: Modify boot.priority handling
+   - incusd/instance/qemu: Ignore skipped boot devices
+   - doc: Update configs
+   - api: vm_boot_priority_skip
+   - doc: Add PXE to wordlist
+   - incusd/network/ovn: Allow ipv4.nat.address and ipv6.nat.address under l2proxy ingress mode
+   - api: Add network_ovn_nat_address_l2proxy extension
+   - doc: Update configs
+   - tests: Add test for NAT addresses under l2proxy ingress mode
+   - doc/network_ovn: Mention how NAT addresses are advertised
+   - incusd/device: Add DiskVMVirtiofsSupported
+   - incusd/instance/qemu: Use non-shared memory when virtiofs isn't wanted
+   - incusd/instance: Document the memory allocation of nested virtual machines
+   - doc: Update configs
+   - doc: Explain virtual machine memory allocation
+   - tests: Check virtual machine memory allocation
+   - incusd/storage: Copy dependent volumes from snapshot when copying an instance snapshot
+   - tests: Check dependent volumes on copy from instance snapshot
+   - shared: Move ESLGUIDVar from util to uefi
+   - incus/low-level: Update ESLGUIDVar
+   - incusd/instance/qemu: Update ESLGUIDVar
+   - shared/util: Add Unix to Go mode converter
+   - shared/tls: Read the ACME certificate under the name lego writes
+   - incusd/cluster/config: Validate acme.domain
+   - doc: Update configs
+   - incusd/storage/s3: Return NoSuchKey for missing objects
+   - tests: Check missing bucket objects report NoSuchKey
+   - incusd/storage: Map dependent volumes to devices for snapshot sources
+   - incusd/storage: Copy dependent volumes from the instance snapshot
+   - tests: Check copying from a snapshot uses the dependent volume snapshots
+   - incusd/storage: Refresh dependent volumes from the instance snapshot
+   - incusd: Keep the target's dependent volumes when refreshing
+   - incusd: Point copied snapshots at the new dependent volumes
+   - incus/copy: Keep the target's dependent volumes and root disk on refresh
+   - incusd/network/ovs: Fix removing one of several OVN bridge mappings
+   - tests: Check OVN bridge mapping removal
+   - incusd/network: Report OVN child networks as users of their parent
+   - tests: Check a refused OVN parent delete keeps the gateway
+   - incusd/network/acl: Skip IP addresses when collecting referenced ACLs
+   - incusd/project: Strip restricted volatile keys from backup imports
+   - incusd: Allow backup imports into restricted projects
+   - tests: Check backup import into a restricted project
+   - incus-agent: Wait 10s for exec websockets to connect
+   - client: Connect exec websockets concurrently
+   - incusd/storage/s3: Parse xl.meta structurally when detecting inline data
+   - incusd/storage/s3: Log minio bucket migrations
+   - incusd/storage/s3: Skip already migrated objects
+   - incusd/storage/lvm: Run report commands in silent mode
+   - shared/api: Support 4-character permissions in ParseFileHeaders
+   - incus/utils: Implement chmod-style mode parser
+   - incus/utils: Prevent masking sticky and setXid bits
+   - incus/file: Use new mode parser
+   - incus/storage_volume_file: Use new mode parser
+   - incus/image: Make unset-property accept a list of properties
+   - incus/usage: Enforce non-emptiness of placeholders
+   - incus/utils_sftp: Fix non-UNIX fingerprinting
+   - i18n: Update translation templates
+   - incusd/network/ovn: Only update other_config on logical switch changes
+   - incusd/network/ovn: Tolerate a missing transit switch on remote peer delete
+   - incusd/network/ovn: Clean up external interfaces on delete
+   - tests: Check OVN external interface cleanup
+   - incusd/storage/lvm: Refuse logical volume names too long for device-mapper
+   - incusd/storage/lvm: Only remove the config repair directory once unmounted
+   - incusd/storage/lvm: Fix the backing chain of copied qcow2 volumes
+   - incusd/instance/qemu: Skip the disk size probe on remote cluster moves
+   - incusd/instance/qemu: Size backed overlays from their backing node
+   - incusd/auth/oidc: Verify the ID token when the access token is opaque
+   - client: Send the ID token alongside opaque access tokens
+   - api: Add oidc_id_token extension
+   - incusd/cluster/config: Clarify OIDC options with opaque access tokens
+   - doc: Update configs
+   - doc/authentication: Mention opaque OIDC access tokens
+   - mini-oidc: Add a device client issuing opaque access tokens
+   - tests: Check OIDC login with opaque access tokens
+   - Translated using Weblate (Portuguese)
+   - incusd: Revert interrupted evacuation states at startup
+   - incusd: Wait for backup uploads to complete
+   - incusd/storage_volumes_snapshot: Block direct rename of dependent volume snapshots
+   - incusd/storage: Rename dependent volume snapshots on instance snapshot rename
+   - tests: Check dependent volume snapshot rename
+   - Fix comment for defaultConsoleSpiceCommand
+   - cmd/incus: Fix recursive keepalive proxy startup
+   - shared/scriptlet: Don't panic on marshaling uuid.UUID and other non-addressable arrays
+   - incusd/network/acl: Skip address sets when collecting referenced ACLs
+   - tests: Check address set subjects in OVN ACL rules
+   - incusd/network/ovn: Restore the health check when reverting a load balancer update
+   - incusd/storage/lvm: Don't move the GPT alt header on qcow2 volumes
+   - incusd/storage: Move the GPT alt header inside qcow2 volumes on resize
+   - incusd/instance/qemu: Resize the active node of a qcow2 chain
+   - incusd: Don't leak the backup tarball writer on failure
+   - incusd/storage/zfs: Unmount stale snapshot mounts before deletion
+   - incusd/storage/zfs: Consider the filesystem dataset in HasVolume
+   - incusd/instance/qemu: Unmount snapshots through the snapshot path
+   - incusd: Clear stale snapshot mounts at startup
+   - incusd/storage: Get snapshot sizes without mounting on ZFS
+   - internal/server/storage: Avoid nested snapshot repair transactions
+   - incusd/auth/tls: Only grant metrics access to metrics certificates
+   - incusd/cluster/config: Document core.trust_ca_certificates behavior
+   - doc: Update configs
+   - doc/authentication: Document core.trust_ca_certificates
+   - internal/server/bgp: Preserve shared peer counts
+   - cmd/incus: Enable persistent hook traversal
+   - incusd/storage: Fix qcow2 volume size after live snapshot
+   - internal/server/db/query: Report canceled transactions
+   - test/clustering: Wait for returning member readiness
+   - incusd/acme: Forward HTTP-01 challenges from all cluster members
+   - doc/authentication: Mention HTTP-01 handling in clusters
+   - incusd/instance/qemu: Add preliminary loongarch64 support
+   - incusd/instance/edk2: Add preliminary loongarch64 support
+   - incusd/device/disk: Add loongarch64 support
+   - doc/architectures: Add loongarch64 support
+   - Add: Community-Scripts in third_party.md
+   - Add 'Proxmox' to the wordlist
+   - Add 'VE' to the wordlist
+   - oss-scanner: Add build and threat model for Anthropic's OSS Scanner
+   - incusd/storage: Compare snapshot creation dates at second precision
+   - tests: Check that a refresh back to the source is incremental
+   - incusd/storage: Use the virtual size of qcow2 volumes on copy and migration
+   - incusd: Use the virtual size of qcow2 volumes on storage volume migration
+   - test/mini-oidc: Fix port selection race
+   - Translated using Weblate (French)
+   - incusd/storage/drivers: Delete conflicting subvolume on btrfs refresh
+   - incusd/storage/drivers: Use a target-held snapshot as refresh parent
+   - api: Add certificate_ca_trust extension
+   - incusd/util: Add CheckTrustStateIssuer
+   - incusd: Trust certificates issued by a trusted CA certificate
+   - doc/authentication: Document CA trust entries
+   - tests: Cover CA trust entries
+   - tests: Wait for firmware state instead of fixed sleeps in nvram_vm
+   - tests: Wait for role to propagate on cluster rebalance
+   - Update gomod
+   - doc/rest-api: Refresh swagger YAML
+   - incusd/firewall/nftables: Skip UDP checksum rules in user namespaces
+   - incusd/instance/qemu: Use the custom volume content type on live move
+   - cmd/incusd: Use the environment_runtime_hooks extension
+   - incusd/instances/lxc: Use the environment_runtime_hooks extension
+   - lxc-to-incus: support environment_runtime_hooks
+   - internal/server/bgp/server: Don't error if removePrefixByUUID cant find uuid
+   - incusd/network/ovn: Keep changed uplink addresses on uplink change
+   - incusd/instance/qemu: Keep direct I/O on the metadata image data file
+   - tests: Add clustering test on nested virtual machines
+   - github: Add clustering VM job
+   - incusd/instance/qemu: Only export root and dependent disks over NBD
+   - incusd/instance: Update NBD endpoint description
+   - doc/rest-api: Refresh swagger YAML
+   - incus/low-level: Update NBD and bitmap help text
+   - i18n: Update translation templates
+   - incusd/instance/qemu: Add a metadata image to dependent disks
+   - incusd/instance/qemu: Support the metadata image on RBD
+   - tests: Check persistent bitmaps on dependent volumes
+   - incusd/project: Allow local images with restricted.images.servers
+   - tests: Cover local images with restricted.images.servers
+   - internal/server/network/driver/ovn: Fix routerExtPortIPs outside of transaction
+   - incus/admin: Use a plain signal channel in waitready (errcheck)
+   - incusd: Use a plain signal channel in waitready (errcheck)
+   - incusd/images: Use a plain signal channel for image sync (errcheck)
+   - incusd/instance/operationlock: Use a plain signal channel (errcheck)
+   - incusd/instance: Use a plain signal channel for console disconnection (errcheck)
+   - incusd/console: Log websocket mirror errors (errcheck)
+   - incus-agent: Log websocket mirror errors (errcheck)
+   - shared/ws: Add a helper to wait for a mirror to finish
+   - client: Wait for websocket mirrors through their done channel (errcheck)
+   - incus-migrate: Wait for websocket mirrors through their done channel (errcheck)
+   - lxc-to-incus: Wait for websocket mirrors through their done channel (errcheck)
+   - incusd/forkproxy: Report relay errors from both directions (errcheck)
+   - incusd/forkproxy: Close the unix relay channel on exit
+   - api: Add network_bgp_communities extension
+   - shared/validate: Add IsBGPCommunity
+   - internal/server/bgp: Add support for communities
+   - internal/server/network/bridge: Add bgp.communities
+   - internal/server/network/ovn: Add bgp.communities
+   - doc: Add BGP communities to the BGP how-to
+   - tests: Add test for BGP communities
+   - doc: Update configs
+   - CONTRIBUTING: generated files should get their own commits
+   - client: Expose ResolveUnixSocket with fallback to /var/lib/incus
+   - incusd/callhook: Use central socket resolution
+   - incusd/instances: Log the timeout when forcefully stopping at shutdown
+   - incusd/instances: Fall back to a regular shutdown when a stateful stop fails
+   - incusd/db: Move instance warnings with the instance on cluster move
+   - incusd/db/warnings: Add InstanceForcedStop
+   - incusd/warnings: Keep restart-surviving warnings on startup
+   - incusd: Record a warning when an instance is forcefully stopped
+   - tests: Check the forced stop warning
+   - incusd/storage/s3: Don't skip keys when following a continuation token
+   - incusd/storage/s3: Support marker in ListObjects
+   - incusd/storage/s3: Return the bucket name in object listings
+   - tests: Add storage bucket listing pagination test
+   - incusd/networks: Report networks whose driver fails to load as unavailable
+   - incusd: Clearer error when the OVN southbound address isn't set
+   - tests: Check OVN networks are listed when OVN is unreachable
+   - incusd/instance/lxc: Don't crash starting an OCI container without an ID map
+   - tests: Check starting a rebuilt OCI container that was never started
+   - incusd/storage: Support migrating a QCOW2 volume snapshot
+   - incusd/instance/drivers: Send dependent volume snapshots when migrating a snapshot
+   - tests: Check copying snapshots with a dependent volume across servers
+   - cmd/generate-database: context backed prepared stmts
+   - incusd/db: Update generated cluster db mappers
+   - incus/remote: Share event streams in the keepalive proxy
+   - incus/remote: Keep spare TLS connections in the keepalive proxy
+   - client: Tolerate a late control websocket on finished exec operations
+   - shared/cliconfig: Serialize keepalive proxy startup
+   - incus/remote: Don't start a proxy over a live socket
+   - tests: Add keepalive proxy test
+   - incusd/migration: Add block transfer features to the header
+   - incusd/migration: Update protobuf
+   - incusd/migration: Add block transfer feature helpers
+   - incusd/migration: Add helpers to compress block transfers
+   - Update gomod
+   - incusd/migration: Negotiate block transfer features
+   - incusd/storage: Build fresh dependent volume headers on the target
+   - incusd/migration: Remove the dependent volume header update helper
+   - incusd/storage: Ignore block features echoed by older targets
+   - incusd/storage: Offer compression for block transfers
+   - incusd/storage: Compress block transfers when negotiated
+   - incus-migrate: Compress block transfers when supported by the server
+   - tests: Check block volume copies through the generic transport
+   - oss-scanner: Note the capability-dependent test
+   - github: Tolerate a missing linux-modules-extra package
+   - github: Build LXC and LXCFS from source
+   - github: Move repeated steps into composite actions
+   - tests: Run VMs with non-shared memory
+   - incusd/storage/qcow2: Create images with lazy refcounts
+   - incusd/storage/qcow2: Add Qcow2EnableLazyRefcounts
+   - incusd/instance/qemu: Keep discarded qcow2 clusters allocated on block devices
+   - incusd/instance/qemu: Enable lazy refcounts on existing qcow2 volumes
+   - incusd/instance/qemu: Keep helper block node names apart from devices
+   - incusd/storage/qcow2: Create images with lazy refcounts
+   - incusd/instance/qemu: Encode device names in PCI, GPU and 9p identifiers
+   - incusd/storage/qcow2: Add Qcow2EnableLazyRefcounts
+   - incusd/device/usb: Encode the device name in the QEMU identifier
+   - incusd/instance/qemu: Keep discarded qcow2 clusters allocated on block devices
+   - incusd/instance/qemu: Enable lazy refcounts on existing qcow2 volumes
+   - incusd/instance: Scope device volatile keys to their device
+   - shared/validate: Add IsDeviceName
+   - incusd/instance: Restrict device names to QEMU identifier characters
+   - incusd/instance: Track device volatile keys in a map
+   - incusd/instance: Reject device names taking over another device's volatile keys
+   - doc: Document device name restrictions
+   - tests: Check device name handling
+   - api: Add instances_migration_bwlimit extension
+   - incusd/cluster/config: Add instances.migration.bwlimit
+   - incusd/instance/qemu: Apply the migration bandwidth limit
+   - doc: Update configs
+   - incusd/instance/qemu: Enable free page reporting on the balloon
+   - shared/cliconfig: Share client key decryption
+   - cmd/incus: Add certificate generation output paths
+   - cmd/incus: Support client key encryption
+   - cmd/incus: Support encrypted client key imports
+   - tests: Cover certificate generation and encrypted imports
+   - doc: Document certificate generation and encryption
+   - i18n: Update translation templates
+   - incusd/instance/qemu: Keep disk caching on qcow2 snapshot overlays
+   - incusd/instance/qemu: Write out the commit base when deleting a running qcow2 snapshot
+   - tests: Add lvmcluster snapshot and copy tests to clustering-vm
+   - client: Fall back to verification_uri for OIDC device login
+   - incus-agent: Stop the Windows service when the HTTP server fails
+   - internal/server/device/disk: don't block migration for emulated NVMe disks
+   - incusd/acme: Only forward genuine HTTP-01 challenge paths
+   - incusd/images: Keep replaced image files while another project uses them
+   - incusd/images: Remove old image files from members after a refresh
+   - tests: Check image files after a cluster image refresh
+   - api: Add backup_s3_region extension
+   - shared/api: Add region to backup targets
+   - incusd/backup: Use the backup target region
+   - doc/rest-api: Refresh swagger YAML
+   - incusd/netutils: Resolve veth peers with a targeted netlink lookup
+   - incusd/instance: Stop dumping the host links when rendering state
+   - incusd/networks: Stop dumping the host links for each network
+   - incusd/netutils: Only check the link dump for netns id awareness
+   - incusd/network: Properly account for the failover key
+   - incusd/project: Properly restrict the failover key
+   - api: nic_sriov_migration
+   - incusd/instance/config: Add volatile.<NAME>.failover.host_name
+   - incusd/device/config: Add failover network interface support
+   - incusd/network/sriov: Add failover key and improve checks
+   - incusd/instance/qemu: Add QemuArchConfig
+   - incusd/device/nic_sriov: Implement failover bridge support
+   - doc: Update metadata
+   - incusd/instance/qemu: Remove unused argument in deviceAttachNIC
+   - incusd/instance/qemu: Implement SR-IOV NIC live migration
+   - incusd: Use /sys/class/net helpers
+   - incusd/device/infiniband: Use /sys/class/net helpers
+   - incusd/device/nic: Use /sys/class/net helpers
+   - incusd/network/physical: Use /sys/class/net helpers
+   - incusd/instance/lxc: Use /sys/class/net helpers
+   - incusd/migration: Add multifdChannels to the migration header
+   - incusd/migration: Update protobuf
+   - incusd/instance/qmp: Add unix socket migration channels
+   - incusd/migration: Allow extra connections on the state channel
+   - incusd/migration: Expose extra state connections to the instance drivers
+   - incusd/instance/qemu: Use multifd for live migration
+   - incus/console: Prevent splitting on socket path
+   - incusd/events: Don't log while holding the listener lock
+   - incusd/certificates: Accept a certificate along with a trust token
+   - doc/rest-api: Refresh swagger YAML
+   - tests: Fix and wire the remote token test
+   - tests: Cover trust token enrollment with a supplied certificate
+   - incusd/util: Accept the TLS JWT from a cookie
+   - api: auth_tls_jwt_cookie
+   - incusd: Add TLS JWT login and logout endpoints
+   - doc: Document the TLS JWT cookie login
+   - tests: Cover the TLS JWT cookie login
+   - incusd/instance: Add IsVMBootStateKey
+   - incusd/instance/qemu: Check received boot states against the limits
+   - incusd/project: Keep the VM boot state of stateful transfers
+   - incusd/instance: Keep the VM boot state when copying with state
+   - incusd/instance: Refresh the OCI entry point keys on rebuild
+   - tests: Check the OCI entry point follows the image across rebuilds
+   - incusd/storage/cephfs: Export volumes from a temporary snapshot
+   - tests: Cover cephfs volume export and import
+   - shared/api: Add the cluster-member-offline lifecycle event
+   - incusd/lifecycle: Add the cluster-member-offline action
+   - incusd/cluster/config: Add cluster.healing_delay
+   - api: cluster_healing_delay
+   - incusd/cluster: Announce offline members and wait before healing them
+   - doc: Update metadata
+   - doc/clustering: Document the healing delay and offline event
+   - tests: Cover the cluster healing delay
+   - api: Add storage_volume_migration_follow_instance extension
+   - incusd/storage: Add migration.follow_instance volume config key
+   - incusd/storage/btrfs: Document migration.follow_instance
+   - incusd/storage/dir: Document migration.follow_instance
+   - incusd/storage/lvm: Document migration.follow_instance
+   - incusd/storage/zfs: Document migration.follow_instance
+   - incusd/instance/qemu: Migrate following volumes like dependent ones
+   - incusd/device/disk: Validate volumes following their instance
+   - incusd: Delete following volumes from the source after a cluster move
+   - doc: Explain migration.follow_instance on instance moves
+   - doc: Update configs
+   - tests: Add tests for migration.follow_instance
+   - incusd/instance/qmp: Add block node dirty bitmap query
+   - incusd/instance/qemu: Fix bitmap listing during NBD exports
+   - incusd/instance/qmp: Drop unused block query
+   - incusd/instance/qmp: Match QEMU's quit shutdown reason
+   - incusd/instance/lxc: Restart from the stop hook on its own lock
+   - incusd/instance/qemu: Restart from the stop hook on its own lock
+   - incusd/instance/operationlock: Keep instance-initiated locks private
+   - incusd/instance/qemu: Find the QEMU process by UUID when the pid file is gone
+   - incusd/mirror: Only replicate deletions on the final sync
+   - incusd/network/ovn: Refresh load balancer BGP prefixes on update revert
+   - incusd/network/ovn: Refuse parent change on networks with peerings
+   - incusd/network/ovn: Refuse parent change with running l3only instances
+   - tests: Add test for OVN parent change with peerings
+   - incusd/network/ovn: Rebuild parent peerings on parent change
+   - incusd/network/ovn: Factor out forward and load balancer OVN apply
+   - incusd/network/ovn: Move forwards and load balancers on parent change
+   - incusd/network/ovn: Move NIC external address SNAT on parent change
+   - tests: Add test for OVN forwards and load balancers on parent change
+   - doc: Update OVN child network parent change
+   - incusd/device: Keep mount flags when remounting disks read-only
+   - incusd/cluster: Retry starting healed instances
+   - tests: Cover more snapshot deletes and stateful snapshots on lvmcluster
+   - incusd/instances: Copy running instances through their member
+   - tests: Copy a running instance across members on shared storage
+   - incus-simplestreams: Add --image-version
+   - incusd/migrate: Fix goroutine leak in controlChannel
+   - cmd/generate-database/db: Fix type parsing on go 1.27+
+   - incus-agent: Load configuration when running as a Windows service
+   - doc: Fix Windows incus-agent.yml path
+   - incusd/instance: Record the delete result in the operation lock
+   - incusd/instance/qemu: Don't mix metrics sources for a running VM
+   - incusd/storage/linstor: Clean up resource definitions on failed creates
+   - incusd/storage/linstor: Bound the controller dial timeout
+   - incusd/storage/linstor: Wait for replicas to sync before resizing
+   - incusd/storage/linstor: Apply drbd.* keys to pre-existing resource groups
+   - incusd/storage/linstor: Attach diskless replicas on non-autoplaceable nodes
+   - incusd/storage: Retry pool initialization every 15s
+   - incusd/instance/qmp: Wait on migration events on the target
+   - incusd/migration: Limit extra state connections to the negotiated count
+   - incusd/instance/qemu: Harden multifd migration sockets and fail on broken channels
+   - incusd/instance/qemu: Enable migration events on the target
+   - incusd/storage/btrfs: Skip quotas on ISO volumes
+   - api: nic_sriov_migration_native
+   - incusd/network/sriov: Add variant key
+   - incusd/device/nic: Allow specifying VFIO driver
+   - incusd/device/nic_sriov: Add variant key
+   - doc: Update metadata
+   - incusd/instance/qemu: Implement native VFIO migration
+   - doc: Add VFIO to wordlist
+   - incusd/device/nic_sriov: Only create failover bridge when VM is live-migratable
+   - incusd/network/sriov: Fix clearing failover key
+   - incus-simplestreams: Fix remove of a combined image next to split files
+   - incus-simplestreams: Fix remove when several products share the metadata
+   - simplestreams: Reject an empty fingerprint in GetImage
+   - Translated using Weblate (French)
+   - incusd/operations: Fix nil handler race in Connect
+   - incusd: Re-register disks when a storage pool initializes late
+   - incusd/storage/linstor: Drop inherited diskless members after a clone
+   - incusd/instance/qmp: Add GetIOThreads
+   - incusd/instance/qemu: Run virtio disks through an iothread
+   - incusd/instance/qemu: Cap guest write-zeroes requests
+   - incus/export: Randomize temporary name
+   - incus/storage_bucket: Randomize temporary export name
+   - incus/storage_volume: Randomize temporary export name
+   - test: Hardcode Microsoft db
+   - incusd/storage: Only look up qcow2 backing chains on block volumes
+   - incusd/storage/lvm: Restrict block.type to block volumes
+   - incusd/storage/lvm: Don't activate volumes just to resize them
+   - incusd/storage/lvm: Only treat VM filesystem volumes as qcow2 config volumes
+   - incusd/storage: Mount qcow2 volumes with their snapshots when resizing
+   - incusd/instance/config: Add representor and migratable volatile state keys
+   - incusd/device/nic: Support switchdev mode for SR-IOV NICs
+   - gomod: Replace vishvananda/netlink
+   - incusd/device/nic: Support setting migratable capability on SR-IOV VFs
+   - doc: Update metadata
+   - doc: Update wordlist
+   - internal/linux/nbd: Add an NBD client for kernel device attachment
+   - incusd/storage: Attach qemu-nbd exports through netlink
+   - incusd/storage: Keep qemu-nbd socket paths short
+   - incusd/storage: Flush NBD devices before disconnecting
+   - incusd/instance/lxc: Reject line breaks in LXC config values
+   - incusd/instance/lxc: Only parse config.json for OCI containers
+   - incusd/instance/lxc: Keep loader variables out of the forklxc environment
+   - incusd/dev_incus: Anchor the cgroup based monitor detection
+   - incusd: Check resource creation against the effective project
+   - incusd/auth/tls: Restrict inherited reads to the certificate's projects
+   - incusd/operations: Protect token operations from events and cancellation
+   - incusd/storage/s3: Verify signed payloads without buffering
+   - incusd/storage: Validate dependent volumes received through migration
+   - incusd/storage: Validate snapshot names from the backup index on import
+   - incusd: Only trust the key-proven client certificate
+   - incusd/dev_incus: Pin image export to the instance's project
+   - incusd/events: Restrict network-acl events to privileged viewers
+   - incusd/instance/lxc: Allocate an idmap when none is set at start
+   - incusd: Authorize effective project on resource creation
+   - incusd: Fix cross-project disclosure in recursive and all-projects listings
+   - incusd/storage: Strip non-regular files from instance metadata
+   - incusd/instance/qemu: Confine NBD migration sockets to the run directory
+   - incusd: Reject null snapshot entries on backup import
+   - incusd/operations: Keep websocket secrets out of events and queries
+   - Translated using Weblate (French)
+   - incusd/instance/qemu: Keep the stop hook's restart lock non-reusable
+   - incusd/instance/lxc: Keep the stop hook's restart lock non-reusable
+   - incusd/instance/operationlock: Let a forced stop take over a pending shutdown
+   - Makefile: Bump to Go 1.26.9
+   - Update gomod
+   - Release Incus 7.6
+  [/details]
+
+  # Documentation
+  The Incus documentation can be found at:
+  https://linuxcontainers.org/incus/docs/main/
+
+  # Packages
+  There are no official Incus packages as Incus upstream only releases regular release tarballs. The release tarball, client binaries and checksums can be found at: https://github.com/lxc/incus/releases/tag/v7.6.0
+
+  Below are some available options to get Incus up and running.
+
+  ## Installing the Incus server on Linux
+  Incus is available for most common Linux distributions. You'll find detailed installation instructions in our documentation.
+  https://linuxcontainers.org/incus/docs/main/installing/
+
+  ## Homebrew package for the Incus client
+  The client tool is available through HomeBrew for both Linux and MacOS.
+  https://formulae.brew.sh/formula/incus
+
+  ## Chocolatey package for the Incus client
+  The client tool is available through Chocolatey for Windows users.
+  https://community.chocolatey.org/packages/incus/7.6.0
+
+  ## Winget package for the Incus client
+  The client tool is also available through Winget for Windows users.
+  https://winstall.app/apps/LinuxContainers.Incus
+
+  # Support
+  Monthly feature releases are only supported up until the next release comes out. Users needing a longer support length and less frequent changes should consider using Incus 7.0 LTS instead.
+
+  Community support is provided at: https://discuss.linuxcontainers.org  
+  Commercial support is available through: https://zabbly.com/incus  
+  Bugs can be reported at: https://github.com/lxc/incus/issues

@@ -1,0 +1,170 @@
+title: Incus 6.0.7 LTS has been released
+date: 2026/10/29 21:14
+origin: https://discuss.linuxcontainers.org/t/incus-6-0-7-lts-has-been-released/27454
+content: |-
+  # Introduction
+  The Incus team is pleased to announce the release of Incus 6.0.7!
+
+  This is the seventh bugfix release for Incus 6.0 which is supported until June 2029.
+
+  With Incus 7.0 LTS now available, the 6.0 branch has moved to security-only maintenance. This is the first release in that mode, so it doesn't bring any new features or backported improvements, only security fixes and the changes needed to keep building with current toolchains.
+
+  # Changes
+  This update addresses the following security issues:
+
+  * [CVE-2026-33542](https://github.com/lxc/incus/security/advisories/GHSA-p8mm-23gg-jc9r) (medium) - Incus does not verify combined fingerprint when downloading images from simplestreams servers
+  * [CVE-2026-33711](https://github.com/lxc/incus/security/advisories/GHSA-q9vp-3wcg-8p4x) (low) - Local privilege escalation through VM screenshot path
+  * [CVE-2026-33743](https://github.com/lxc/incus/security/advisories/GHSA-vg76-xmhg-j5x3) (medium) - Denial of service through crafted bucket backup file
+  * [CVE-2026-33897](https://github.com/lxc/incus/security/advisories/GHSA-83xr-5xxr-mh92) (critical) - Arbitrary file read and write through pongo templates
+  * [CVE-2026-33898](https://github.com/lxc/incus/security/advisories/GHSA-453r-g2pg-cxxq) (high) - Authentication bypass on local Incus UI web server
+  * [CVE-2026-33945](https://github.com/lxc/incus/security/advisories/GHSA-q4q8-7f2j-9h9f) (critical) - Arbitrary file write through systemd-creds option
+  * [CVE-2026-35527](https://github.com/lxc/incus/security/advisories/GHSA-8gw4-p4wq-4hcv) (medium) - Blind SSRF via image import preflight HEAD request
+  * [CVE-2026-40195](https://github.com/lxc/incus/security/advisories/GHSA-gc7j-g665-rxr9) (medium) - Nil-pointer dereference panic via bucket metadata
+  * [CVE-2026-40197](https://github.com/lxc/incus/security/advisories/GHSA-r7w7-mmxr-47r9) (medium) - Nil-pointer dereference via custom volume import
+  * [CVE-2026-40243](https://github.com/lxc/incus/security/advisories/GHSA-c839-4qxr-j4x3) (low) - OVN TLS verification accepts peer-supplied roots
+  * [CVE-2026-40251](https://github.com/lxc/incus/security/advisories/GHSA-4m88-wxj4-9qj6) (medium) - Panic via snapshot bounds check
+  * [CVE-2026-41647](https://github.com/lxc/incus/security/advisories/GHSA-fwj8-62r8-8p8m) (medium) - Nil-pointer dereference via S3 bucket import
+  * [CVE-2026-41648](https://github.com/lxc/incus/security/advisories/GHSA-67wx-r9xr-x75x) (low) - Unbounded YAML metadata decode
+  * [CVE-2026-41684](https://github.com/lxc/incus/security/advisories/GHSA-x5r6-jr56-89pv) (medium) - Nil dereferences on restore via malformed YAML
+  * [CVE-2026-41685](https://github.com/lxc/incus/security/advisories/GHSA-98vh-x9cx-9cfp) (medium) - Unbounded binary import disk exhaustion
+  * [CVE-2026-48756](https://github.com/lxc/incus/security/advisories/GHSA-xhqx-mgh3-3h7q) (low) - Nil-pointer dereference in CreateCustomVolumeFromBackup
+  * [CVE-2026-48749](https://github.com/lxc/incus/security/advisories/GHSA-2q3f-q5pq-g8wv) (critical) - Arbitrary file read+write on host via `rootfs/` symlink in malicious image
+  * [CVE-2026-48750](https://github.com/lxc/incus/security/advisories/GHSA-73hr-m85f-64v9) (critical) - Arbitrary file write on host via `exec-output` symlink in crafted image
+  * [CVE-2026-48751](https://github.com/lxc/incus/security/advisories/GHSA-48q5-w887-33wv) (critical) - Restricted project bypass leading to arbitrary command execution
+  * [CVE-2026-48752](https://github.com/lxc/incus/security/advisories/GHSA-vxp5-584q-c479) (critical) - Arbitrary file read+write on host via `templates/` symlink in malicious image
+  * [CVE-2026-48755](https://github.com/lxc/incus/security/advisories/GHSA-v6mj-8pf4-hhw4) (critical) - Argument injection in backup compression algorithm leading to arbitrary file write and command execution
+  * [CVE-2026-48769](https://github.com/lxc/incus/security/advisories/GHSA-f6m5-xw2g-xc4x) (critical) - Arbitrary file write on client due to trusted image hash
+  * [CVE-2026-55621](https://github.com/lxc/incus/security/advisories/GHSA-64f3-v33m-w89f) (high) - Project restriction bypass for custom volume copy across projects
+  * [CVE-2026-55622](https://github.com/lxc/incus/security/advisories/GHSA-c9f5-j9c3-mhrg) (high) - Project restriction bypass in instance copy across projects
+  * [CVE-2026-62313](https://github.com/lxc/incus/security/advisories/GHSA-53cg-qvg7-m8vg) (medium) - Project isolation restriction bypass by omitting `security.idmap.isolated`
+  * [CVE-2026-62940](https://github.com/lxc/incus/security/advisories/GHSA-qw5c-v953-38gw) (critical) - Project restriction bypass via instance migration config override
+  * [CVE-2026-62941](https://github.com/lxc/incus/security/advisories/GHSA-mq9x-prm8-3vpw) (critical) - Project restriction bypass via cross-project instance copy
+  * [CVE-2026-63125](https://github.com/lxc/incus/security/advisories/GHSA-6rqx-22hc-qm36) (critical) - Arbitrary file write on host via `backup.yaml` symlink in crafted image
+  * [CVE-2026-63343](https://github.com/lxc/incus/security/advisories/GHSA-fmjx-5j3g-997p) (critical) - Arbitrary file read+write on host via `metadata.yaml` symlink in crafted image
+  * [CVE-2026-81493](https://github.com/lxc/incus/security/advisories/GHSA-p2v3-6wvc-cv3p) (critical) - Arbitrary file write on host via image fingerprint path traversal
+  * [CVE-2026-81495](https://github.com/lxc/incus/security/advisories/GHSA-67qw-68v3-36h6) (critical) - Arbitrary file write on host via path traversal in custom volume import
+  * [CVE-2026-81496](https://github.com/lxc/incus/security/advisories/GHSA-26gp-p5fw-3r2h) (critical) - Arbitrary file write on host via path traversal in instance backup import
+  * [CVE-2026-81497](https://github.com/lxc/incus/security/advisories/GHSA-4qxq-p5hm-3q3p) (high) - Arbitrary host file read+write via VM template path traversal (incomplete fix of CVE-2026-48752)
+  * [CVE-2026-81498](https://github.com/lxc/incus/security/advisories/GHSA-m3j6-p3v3-qmjv) (high) - Container configuration newline injection through `nvidia.driver.capabilities`
+  * [CVE-2026-81500](https://github.com/lxc/incus/security/advisories/GHSA-9pqw-c7m4-xvg7) (medium) - Incus CLI path traversal when exporting an image from a malicious server
+  * [CVE-2026-81501](https://github.com/lxc/incus/security/advisories/GHSA-c6wx-8679-hpr9) (medium) - Restricted client can import a private image from another project
+  * [CVE-2026-115370](https://github.com/lxc/incus/security/advisories/GHSA-443p-7392-h4v2) (medium) - Restricted project can use pull mode migration through clustered refresh
+  * [CVE-2026-115371](https://github.com/lxc/incus/security/advisories/GHSA-x8gj-2q73-qr6j) (high) - Restricted client can read storage bucket keys in the default project
+  * [CVE-2026-115373](https://github.com/lxc/incus/security/advisories/GHSA-mfwv-x733-9446) (medium) - Authorization bypass lets a restricted client read any operation in another project
+  * [CVE-2026-115376](https://github.com/lxc/incus/security/advisories/GHSA-jh4v-j34r-2mgh) (high) - Project restriction bypass for custom volume copy with omitted source type
+  * [CVE-2026-115377](https://github.com/lxc/incus/security/advisories/GHSA-579w-c4rw-c8q3) (critical) - Arbitrary file write on host via symlink in migration stream
+  * [CVE-2026-115378](https://github.com/lxc/incus/security/advisories/GHSA-wfvq-qh87-gm4j) (medium) - Incus CLI arbitrary file write via malicious `incus-agent` during recursive file pull
+  * [CVE-2026-85185 (LXD also affecting Incus)](https://github.com/canonical/lxd/security/advisories/GHSA-27q7-qwhm-c34p) (critical) - Arbitrary file write and deletion on host via unvalidated btrfs subvolume path in optimized backup and migration
+  * [CVE-2026-85526 (LXD also affecting Incus)](https://github.com/canonical/lxd/security/advisories/GHSA-h85r-gjgx-g2rv) (critical) - Path traversal via btrfs optimized backup `subvolumes[].path`
+
+  A number of additional hardening changes are also included, such as default request body limits, stricter HTTP listener timeouts, constant-time secret comparisons and tighter OIDC cookie and websocket origin handling.
+
+  All of those have been previously fixed in regular monthly releases and been widely backported by the various distributions shipping Incus 6.0 LTS.
+
+  Please note that this release raises the minimum Go version needed to build Incus to Go 1.26.
+
+  The full list of commits is available below:
+
+  [details="Detailed changelog"]
+   - shared/ws: Remove CheckOrigin bypass
+   - incusd/s3: Use standard TLS config on S3 API calls
+   - incusd/auth/oidc: Tighten cookie policy
+   - incus-agent: Tighten HTTP listener configuration
+   - incusd: Tighten HTTP listener configuration
+   - incusd/certificates: Prevent any type change
+   - tests: Confirm certificate type can't be changed
+   - incus-migrate: Fix OVA handling within os.Root
+   - client: Make ImageFileRequest require a ReadWriteSeeker
+   - incus: Update for changes to incus.ImageFileRequest
+   - incusd: Update for changes to incus.ImageFileRequest
+   - client/simplestreams: Validate the full image hash
+   - incusd/instance_console: Prevent symlink attacks
+   - incusd/storage/s3: Don't assume backup structure
+   - incusd/instance: Use restricted pongo2 parser
+   - incus/remote: Actually validate the token code in `incus webui`
+   - doc/authentication: Clarify the type of incus.allowed_subnets
+   - incusd/auth/oidc: Cleanup and tighten subnet claim handling
+   - incusd/instances_post: Add extra validation during backup import
+   - incusd/instance/lxc: Confine credentials write to credentials directory
+   - incusd: Limit request body to 1MiB by default
+   - incusd: Configure exceptions to the 1MiB limit
+   - tests: Rewrite out-of-space test to use profiles
+   - incusd: Don't expose the API extension list pre-authentication
+   - incusd/images: Add image server restriction check in image URL download path
+   - incusd/storage/bucket: Validate expected metadata on import
+   - incusd/storage/volume: Validate snapshot entries on import
+   - incusd/network/ovn: Fix TLS validation logic
+   - incusd/storage/instance: Fix bad snapshot index calculation
+   - incusd/storage/s3: Fix nil pointer dereference on truncated input
+   - incusd: Limit tarball YAML reads to 1MiB
+   - incusd: Fix nil pointer dereference in instance backup restore
+   - incusd: Use QuotaWriter for backup and ISO uploads
+   - shared/archive: Improve detection and error handling
+   - shared/validate: Fix name validation on single character
+   - incusd/instance/lxc: Use os.Root for templating
+   - incusd/storage: Guard nil ExpiresAt in CreateCustomVolumeFromBackup
+   - incusd: Reject rootfs symlink for instances
+   - incusd/exec: Reject exec-output symlink
+   - incusd/instance: Enforce project restrictions on snapshot restore
+   - shared/logger: Add WarnOnError helper
+   - incusd/instance: Confine template access to instance root
+   - shared/validate: Reject compression algorithm arguments
+   - incusd/images: Validate fingerprint on direct download
+   - incusd/storage: Check source volume access on copy
+   - incusd/instances: Check source instance access on copy
+   - incusd: Use constant-time comparison for secrets
+   - incusd: Limit websocket control message size
+   - incusd/storage: Strip unsafe symlinks in externally-supplied instance data
+   - incusd/storage: Allow expected symlinks in instance metadata
+   - internal/instance: Prevent line breaks in NVIDIA config values
+   - incusd/storage: Confine backup.yaml write to instance root
+   - incusd/instance: Confine metadata.yaml access to instance root
+   - incusd/instance/qemu: Confine template access to instance root
+   - incusd/images: Validate image fingerprint for all protocols
+   - incusd/storage: Validate volume name on ISO and backup import
+   - incusd/instances: Validate instance name on backup import
+   - incusd/instances: Re-check restrictions after copy config merge
+   - incusd/instance: Enforce project restrictions on migration overrides
+   - incusd/project: Enforce isolated restriction when idmap key omitted
+   - incusd/instance: Fix NVIDIA require.cuda and require.driver handling
+   - incusd/instance: Confine exec-output access to its directory
+   - incusd: Fail closed on unknown authorization project expansion
+   - incusd/instance/qemu: Use os.Root for template output
+   - client/images: Prevent path traversal in downloaded image name
+   - incusd/images: Check access before reusing cross-project image
+   - incusd/storage/s3: Pin certificate for local S3 bucket transfers
+   - incus/file: Contain recursive pull symlinks
+   - incusd: Don't follow symlinks when receiving migration data
+   - incusd/storage: Treat volume creation with a source as a copy
+   - incusd/storage/drivers: Confine btrfs subvolume paths
+   - incusd/operations: Check project access on operation get and wait
+   - incusd/operations: Hide access token operations from non-admins
+   - incusd/storage/buckets: Require can_edit to read bucket keys
+   - incusd/profiles: Check project restrictions on profile creation
+   - incusd/instances: Check project restrictions on clustered refresh
+   - Makefile: Switch to new golangci-lint install script
+   - gomod: Update go-cowsql
+   - shared/archive: Avoid concurrent calls to Wait
+   - doc/rest-api: Refresh swagger YAML
+   - incusd/instances/common: Fix typo
+   - github: Download MinIO from GitHub releases
+   - generate-database: Fix test on Go 1.27
+   - gomod: Update golang.org/x/tools
+   - ci: authenticate OpenFGA release lookups
+   - Makefile: Bump minimum to Go 1.26
+   - gomod: Bump minimum to Go 1.26
+   - doc/requirements: Bump minimum to Go 1.26
+   - Update gomod
+   - doc/rest-api: Refresh swagger YAML
+   - incusd: Fix bad type in format strings
+   - incusd/cgroup: Fix parse error messages
+   - tests: Use a 4GiB btrfs test pool
+  [/details]
+
+  # Support and upgrade
+  The Incus 6.0 branch is supported until June 2029. It's always strongly recommended to keep up and run the latest LTS bugfix release.
+
+  # Downloads
+
+   - Main release tarball: [incus-6.0.7.tar.xz](https://linuxcontainers.org/downloads/incus/incus-6.0.7.tar.xz)
+   - GPG signature: [incus-6.0.7.tar.xz.asc](https://linuxcontainers.org/downloads/incus/incus-6.0.7.tar.xz.asc)
