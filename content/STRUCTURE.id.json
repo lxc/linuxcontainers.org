@@ -3,7 +3,7 @@
      "title": "",
      "menu": ["Home","Home Page"],
      "generator": "html",
-     "meta": {"input": "index.html"}},
+     "meta": {"input": "index.id.html"}},
 
      {"path": "/jobs/",
      "menu": ["Home", "Jobs"],
