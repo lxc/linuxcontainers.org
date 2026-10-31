@@ -3,12 +3,6 @@ html {
   overflow-x: hidden !important;
 }
 
-@supports (font-variation-settings: normal) {
-  html {
-    font-family: 'Inter var', sans-serif;
-  }
-}
-
 body {
   padding-top: 0 !important;
 }
