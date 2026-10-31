@@ -319,7 +319,7 @@
     {"path": "/cgmanager/news/",
      "title": "CGManager - ニュース",
      "generator": "markdown",
-     "meta": {"input": "cgmanager/news.md",
+     "meta": {"input": "cgmanager/news.ja.md",
               "toc_depth": "2-3",
               "str_older": "以前のニュース",
               "str_back": "ニュースのトップページに戻る"}},
