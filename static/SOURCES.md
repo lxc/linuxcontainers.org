@@ -9,7 +9,6 @@ Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International
 | css/local.css | Written for this website | CC BY-NC-SA 4.0 (website license) |
 | css/tryit.css | Written for this website | Apache 2.0 |
 | css/xterm.css | [xterm.js](https://github.com/xtermjs/xterm.js) | MIT |
-| img/GitHub_Logo.png | [GitHub logos](https://github.com/logos) | GitHub Logos and Usage terms |
 | img/chevron_down.svg | [Material Design Icons](https://github.com/google/material-design-icons) (expand_more) | Apache 2.0 |
 | img/chevron_up.svg | [Material Design Icons](https://github.com/google/material-design-icons) (expand_less) | Apache 2.0 |
 | img/containers.png | Symlink to img/logo.png | Apache 2.0 |

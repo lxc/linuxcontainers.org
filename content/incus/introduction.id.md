@@ -216,5 +216,3 @@ Sumber kode Incus tersedia di [GitHub](https://github.com/lxc/incus).
 There are no CLA or similar legal agreements required to contribute to Incus. However, we require commits be signed-off (following the DCO - Developer Certificate of Ownership). See the [Contribution guidelines](/incus/docs/main/contributing/) for more information.
 -->
 Tidak ada CLA atau perjanjian hukum yang diwajibkan ketika akan berkontribusi ke Incus. Namun, kami mewajibkan commit signed-off (mengikuti DCO - Developer Certificate of Ownership). Kunjungi [Panduan Kontribusi](/incus/docs/main/contributing/) untuk informasi lebih lanjut.
-
-[<img src="/static/img/GitHub_Logo.png" alt="GitHub logo" style="display:block;float:none;margin-left:auto;margin-right:auto;padding:1em 0;max-height:120px"/>](https://github.com/lxc/incus)

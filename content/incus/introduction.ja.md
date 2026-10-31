@@ -191,5 +191,4 @@ There are no CLA or similar legal agreements required to contribute to Incus. Ho
 -->
 Incus に貢献するための CLA や、同様の法的同意はありません。ただし、コミットは Signed-off（the DCO - Developer Certificate of Ownership に従う）する必要があります。詳しくは[コントリビューションガイド](https://incus-ja.readthedocs.io/ja/latest/contributing/)をご覧ください。
 
-[<img src="/static/img/GitHub_Logo.png" alt="GitHub logo" style="display:block;float:none;margin-left:auto;margin-right:auto;padding:1em 0;max-height:120px"/>](https://github.com/lxc/incus)
 ******
