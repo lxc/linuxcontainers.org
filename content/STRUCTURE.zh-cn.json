@@ -138,12 +138,6 @@
     {"path": "/lxc/external-resources/",
      "menu": ["LXC", "外部资源"]},
 
-    {"path": "/lxc/articles/",
-     "title": "LXC - 文章",
-     "menu": ["LXC", "文章"],
-     "generator": "markdown",
-     "meta": {"input": "lxc/articles.md"}},
-
     {"path": "/lxc/forum/",
      "menu": ["LXC", "论坛"],
      "generator": "link",

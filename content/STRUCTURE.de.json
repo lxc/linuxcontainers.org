@@ -136,12 +136,6 @@
     {"path": "/lxc/external-resources/",
      "menu": ["LXC", "External resources"]},
 
-    {"path": "/lxc/articles/",
-     "title": "LXC - Articles",
-     "menu": ["LXC", "Articles"],
-     "generator": "markdown",
-     "meta": {"input": "lxc/articles.md"}},
-
     {"path": "/lxc/forum/",
      "menu": ["LXC", "Forum"],
      "generator": "link",
