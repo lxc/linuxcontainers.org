@@ -712,4 +712,4 @@ content: |-
 
   コミュニティサポートはこちらから <!-- Community support is provided at -->: https://discuss.linuxcontainers.org
   商用サポートはこちらから <!-- Commercial support is available through -->: https://zabbly.com/incus
-  バグはこちらから報告できます <!-- Bugs can be reported at -->: https://github.com/lxc/incus/vissues
+  バグはこちらから報告できます <!-- Bugs can be reported at -->: https://github.com/lxc/incus/issues
