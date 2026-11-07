@@ -291,7 +291,7 @@ content: |-
   <!--
   Browser based clients can't set HTTP headers on WebSocket connections, which made it impossible for them to use TLS JWT tokens for things like the console or exec.
   -->
-  ブラウザーベースのクライアントでは、WebSocket 接続で HTTP ヘッダーをセットできないため、console や exec などに TLS JWT トークンを使用することができなくなりました。
+  ブラウザーベースのクライアントでは、WebSocket 接続で HTTP ヘッダーをセットできないため、console や exec などに TLS JWT トークンを使用できませんでした。
 
   <!--
   New `/tls/login` and `/tls/logout` endpoints now allow such clients to send the token once and have it stored in a `Secure`, `HttpOnly` cookie which is then accepted by all API endpoints and WebSocket connections until the token expires.
